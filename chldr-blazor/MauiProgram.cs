@@ -1,5 +1,4 @@
-﻿using chldr_blazor.Data;
-using chldr_blazor.ViewModels;
+﻿using chldr_blazor.ViewModels;
 using Data.Interfaces;
 using Data.Services;
 using Microsoft.Extensions.Logging;
@@ -29,8 +28,6 @@ namespace chldr_blazor
             builder.Logging.AddDebug();
 #endif
 
-            builder.Services.AddSingleton<WeatherForecastService>();
-
             return builder.Build();
         }
 
@@ -43,12 +40,10 @@ namespace chldr_blazor
         public static MauiAppBuilder RegisterViewModels(this MauiAppBuilder mauiAppBuilder)
         {
             mauiAppBuilder.Services.AddSingleton<IndexViewModel>();
-            mauiAppBuilder.Services.AddSingleton<TranslationViewModel>();
             return mauiAppBuilder;
         }
         public static MauiAppBuilder RegisterViews(this MauiAppBuilder mauiAppBuilder)
         {
-          //  mauiAppBuilder.Services.AddSingleton<MainView>();
             return mauiAppBuilder;
         }
     }

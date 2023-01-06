@@ -1,5 +1,8 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+.navbar-logo {
+    width: 120px;
+}
 
 .chldr_translation_language-code {
     font-size: 14px;
