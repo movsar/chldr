@@ -1,27 +1,36 @@
 ﻿@page "/"
 @using chldr_blazor.ViewModels;
 @using chldr_blazor.Views;
-@inject IndexViewModel indexViewModel;
+@inject IndexViewModel ViewModel;
 
 <div class="chldr_header">
     Словарь Чеченского Языка!
 </div>
 
-<div class="input-group mb-3 mu-10">
+<div class="input-group mb-3 mt-3">
+
     <div class="input-group-prepend">
         <span class="input-group-text">
             <span class="bi bi-search"></span>
         </span>
     </div>
-    <InputText class="form-control" placeholder="Начните писать" @bind-Value="@indexViewModel.InputText" @oninput="(e)=> indexViewModel.Search(e)" />
+
+    <InputText class="form-control shadow-none" placeholder="Начните писать" @bind-Value="@ViewModel.InputText" @oninput="(e)=> ViewModel.Search(e)" />
+
+    <div class="ms-2">
+        <button type="button" class="btn btn-secondary" @onclick="ViewModel.ShowRandomEntries">
+            <span class="bi-arrow-repeat"></span>
+        </button>
+    </div>
+
 </div>
 
 
-@if (indexViewModel.Entries.Count != 0)
+@if (ViewModel.Entries.Count != 0)
 {
     <div class="chldr_entries">
 
-        @foreach (var entry in indexViewModel.Entries)
+        @foreach (var entry in ViewModel.Entries)
         {
             <EntryView ViewModel="@entry"></EntryView>
         }
@@ -32,7 +41,7 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        indexViewModel.PropertyChanged += async (sender, e) =>
+        ViewModel.PropertyChanged += async (sender, e) =>
         {
             await InvokeAsync(() =>
             {

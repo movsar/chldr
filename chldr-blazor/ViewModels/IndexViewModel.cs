@@ -57,10 +57,12 @@ namespace chldr_blazor.ViewModels
             _stopWatch.Stop();
         }
 
-        private void ShowRandomEntries()
+        internal void ShowRandomEntries()
         {
             Task.Run(() =>
             {
+                Entries.Clear();
+
                 var randomEntries = _dataAccess.GetRandomEntries();
                 var searchResults = new SearchResultsModel(SearchResultsModel.Mode.Random);
                 searchResults.Entries.AddRange(randomEntries);
@@ -75,9 +77,7 @@ namespace chldr_blazor.ViewModels
             _dataAccess.DoDangerousTheStuff();
 
             ShowRandomEntries();
-
         }
-
 
         internal void ShowResults(SearchResultsModel results, string inputText)
         {
