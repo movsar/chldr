@@ -1,0 +1,16 @@
+﻿@using chldr_blazor.ViewModels;
+
+<div class="chldr_translation card-subtitle">
+    <span class="chldr_translation_language-code">
+        @ViewModel.LanguageCode
+    </span>
+
+    <span class="chldr_translation_content">
+        @ViewModel.Content
+    </span>
+</div>
+
+@code {
+    [Parameter]
+    public TranslationViewModel ViewModel { get; set; }
+}

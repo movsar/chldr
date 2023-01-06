@@ -1,0 +1,57 @@
+﻿@using chldr_blazor.ViewModels;
+
+<div class="chldr_entry card card-body card-title">
+    <div class="chldr_entry_header">
+        @ViewModel.Header
+    </div>
+
+    <div class="chldr_entry_sub-header">
+        @ViewModel.Subheader
+    </div>
+
+    @foreach (var translation in ViewModel.Translations)
+    {
+        <TranslationView ViewModel="@translation"></TranslationView>
+    }
+</div>
+
+
+@*
+ <Label
+                Grid.Row="0"
+                TextColor="DarkGreen"
+                Text="{Binding Header}"
+                FontAttributes="Bold">
+            </Label>
+
+            <StackLayout
+                IsVisible="False">
+                <Label
+                    Grid.Row="1"
+                    TextColor="DarkCyan"
+                    VerticalOptions="StartAndExpand"
+                    Text="{Binding Source}"
+                    IsVisible="False">
+                </Label>
+
+            </StackLayout>
+
+            <Label
+                Grid.Row="2"
+                TextColor="DarkCyan"
+                FontSize="Caption"
+                VerticalOptions="StartAndExpand"
+                Text="{Binding Subheader}">
+            </Label>
+
+            <ListView Grid.Row="3"
+                      ItemsSource="{Binding TranslationViewModels}"
+                      ItemTemplate="{StaticResource TranslationTemplate}"
+                      SelectionMode="None">
+
+            </ListView>
+*@
+@code {
+    [Parameter]
+    public EntryViewModel ViewModel { get; set; }
+}

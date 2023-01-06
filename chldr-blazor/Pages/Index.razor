@@ -1,0 +1,44 @@
+﻿@page "/"
+@using chldr_blazor.ViewModels;
+@using chldr_blazor.Views;
+@inject IndexViewModel indexViewModel;
+
+<div class="chldr_header">
+    Словарь Чеченского Языка!
+</div>
+
+<div class="input-group mb-3 mu-10">
+    <div class="input-group-prepend">
+        <span class="input-group-text">
+            <span class="bi bi-search"></span>
+        </span>
+    </div>
+    <InputText class="form-control" placeholder="Начните писать" @bind-Value="@indexViewModel.InputText" @oninput="(e)=> indexViewModel.Search(e)" />
+</div>
+
+
+@if (indexViewModel.Entries.Count != 0)
+{
+    <div class="chldr_entries">
+
+        @foreach (var entry in indexViewModel.Entries)
+        {
+            <EntryView ViewModel="@entry"></EntryView>
+        }
+
+    </div>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        indexViewModel.PropertyChanged += async (sender, e) =>
+        {
+            await InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
+        };
+        await base.OnInitializedAsync();
+    }
+}

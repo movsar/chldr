@@ -1,0 +1,25 @@
+﻿using MongoDB.Bson;
+using Realms;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
+namespace Data.Entities
+{
+    [MapTo("Activity")]
+    public class ActivityEntity : RealmObject
+    {
+        [PrimaryKey]
+        public ObjectId Id { get; set; } = MongoDB.Bson.ObjectId.GenerateNewId();
+        public UserEntity User { get; set; }
+        public string ObjectId { get; set; }
+        public string ObjectType { get; set; }
+        public ObjectId ObjectField { get; set; }
+        public string OldValue { get; set; }
+        public string NewValue { get; set; }
+        public string Notes { get; set; }
+        public DateTimeOffset CreatedAt { get; } = DateTimeOffset.Now;
+        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
+    }
+}
