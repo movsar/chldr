@@ -35,6 +35,7 @@ namespace chldr_blazor.ViewModels
 
             if (String.IsNullOrWhiteSpace(inputText))
             {
+                Entries.Clear();
                 return;
             }
 

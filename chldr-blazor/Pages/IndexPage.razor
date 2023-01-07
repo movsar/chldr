@@ -10,7 +10,11 @@
         </span>
     </div>
 
-    <InputText class="form-control shadow-none" placeholder="@Localizer["StartTyping"]" @bind-Value="@ViewModel.InputText" @oninput="(e)=> ViewModel.Search(e)" />
+    <input class="form-control shadow-none"
+               placeholder="@Localizer["StartTyping"]"   
+               @ref="searchInputReference"
+               @bind-value="@ViewModel.InputText" 
+               @oninput="(e)=> ViewModel.Search(e)" />
 
     <div class="ms-2">
         <button type="button" class="btn btn-secondary" @onclick="ViewModel.ShowRandomEntries">
@@ -34,6 +38,16 @@
 }
 
 @code {
+    private ElementReference searchInputReference;
+
+       protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await searchInputReference.FocusAsync();
+        }
+   }
+
     protected override async Task OnInitializedAsync()
     {
         ViewModel.PropertyChanged += async (sender, e) =>

@@ -117,11 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AppTitle" xml:space="preserve">
+  <data name="App title" xml:space="preserve">
     <value>Chechen Language Dictionary</value>
+  </data>
+  <data name="Guest" xml:space="preserve">
+    <value>Guest</value>
   </data>
   <data name="Home" xml:space="preserve">
     <value>Home</value>
+  </data>
+  <data name="Log In" xml:space="preserve">
+    <value>Log In</value>
   </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
@@ -129,7 +135,7 @@
   <data name="Search" xml:space="preserve">
     <value>Search</value>
   </data>
-  <data name="StartTyping" xml:space="preserve">
+  <data name="Start typing" xml:space="preserve">
     <value>Start typing ...</value>
   </data>
 </root>

@@ -63,9 +63,18 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Chechen Language Dictionary.
         /// </summary>
-        internal static string AppTitle {
+        internal static string App_title {
             get {
-                return ResourceManager.GetString("AppTitle", resourceCulture);
+                return ResourceManager.GetString("App title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Guest.
+        /// </summary>
+        internal static string Guest {
+            get {
+                return ResourceManager.GetString("Guest", resourceCulture);
             }
         }
         
@@ -75,6 +84,15 @@ namespace chldr_blazor.Resources.Localizations {
         internal static string Home {
             get {
                 return ResourceManager.GetString("Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log In.
+        /// </summary>
+        internal static string Log_In {
+            get {
+                return ResourceManager.GetString("Log In", resourceCulture);
             }
         }
         
@@ -99,9 +117,9 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Start typing ....
         /// </summary>
-        internal static string StartTyping {
+        internal static string Start_typing {
             get {
-                return ResourceManager.GetString("StartTyping", resourceCulture);
+                return ResourceManager.GetString("Start typing", resourceCulture);
             }
         }
     }

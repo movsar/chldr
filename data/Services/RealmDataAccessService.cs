@@ -355,7 +355,8 @@ namespace Data.Services
 
             // Takes random entries and shuffles them to break the natural order
             return entries
-                .OrderBy(x => randomizer.Next(0, RandomEntriesLimit))
+                .Where(entry => entry.Rate > 0)
+                .OrderBy(x => randomizer.Next(0, 70000))
                 .Take(RandomEntriesLimit)
                 .OrderBy(entry => entry.GetHashCode())
                 .Select(entry => new EntryModel(entry));
