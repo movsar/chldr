@@ -115,6 +115,15 @@ namespace chldr_blazor.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Source.
+        /// </summary>
+        internal static string Source {
+            get {
+                return ResourceManager.GetString("Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start typing ....
         /// </summary>
         internal static string Start_typing {

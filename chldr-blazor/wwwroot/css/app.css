@@ -1,7 +1,10 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-.navbar-logo {
-    width: 120px;
+
+.chldr_translation_source{
+    color: brown;
+    font-size: 10px;
+    font-family: Arial;
 }
 
 .chldr_translation_language-code {
@@ -13,10 +16,6 @@
     font-size: 14px;
 }
 
-.chldr_entries {
-    overflow: auto;
-}
-
 .chldr_entry_header {
     font-size: 16px;
     font-weight: bold;
@@ -26,12 +25,23 @@
     font-size: 12px;
 }
 
+.chldr_entry_translations {
+}
+
+.chldr_entries {
+    overflow: auto;
+}
+
 .chldr_header {
     align-self: center;
     text-align: center;
     font-size: 30px;
     font-weight: bold;
     color: darkcyan;
+}
+
+.navbar-logo {
+    width: 120px;
 }
 
 html, body {

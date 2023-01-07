@@ -135,6 +135,9 @@
   <data name="Search" xml:space="preserve">
     <value>Search</value>
   </data>
+  <data name="Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
   <data name="Start typing" xml:space="preserve">
     <value>Start typing ...</value>
   </data>

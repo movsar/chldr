@@ -1,18 +1,39 @@
 ﻿@using chldr_blazor.ViewModels;
+@inject IStringLocalizer<AppLocalizations> Localizer;
 
 <div class="chldr_entry card card-body card-title">
     <div class="chldr_entry_header">
         @ViewModel.Header
     </div>
 
-    <div class="chldr_entry_sub-header">
-        @ViewModel.Subheader
+    @if (!String.IsNullOrWhiteSpace(@ViewModel.Subheader))
+    {
+        <div class="chldr_entry_sub-header">
+            @ViewModel.Subheader
+        </div>
+    }
+
+    @if (!String.IsNullOrWhiteSpace(@ViewModel.Notes))
+    {
+        <div class="chldr_translation_notes">
+            (@ViewModel.Notes)
+        </div>
+    }
+    
+    <div class="chldr_entry_translations mt-2">
+        @foreach (var translation in ViewModel.Translations)
+        {
+            <TranslationView ViewModel="@translation"></TranslationView>
+        }
     </div>
 
-    @foreach (var translation in ViewModel.Translations)
+    @if (!String.IsNullOrWhiteSpace(@ViewModel.Source))
     {
-        <TranslationView ViewModel="@translation"></TranslationView>
+        <div class="chldr_translation_source">
+            @Localizer["Source"]: @ViewModel.Source
+        </div>
     }
+
 </div>
 
 

@@ -58,6 +58,7 @@ namespace chldr_blazor.ViewModels
         }
 
         public string Content { get; }
+        public string Notes { get; }
         public string LanguageCode { get; }
         public TranslationViewModel()
         {
@@ -67,7 +68,7 @@ namespace chldr_blazor.ViewModels
         {
             Content = translation.Content;
             LanguageCode = translation.Language.Code;
-            Content = translation.Content;
+            Notes = translation.Notes;
 
             Search = new RelayCommand(DoSearch);
             _dataAccess = App.ServiceProvider.GetService<IDataAccessService>();

@@ -319,20 +319,78 @@ namespace Data.Services
             RealmDatabase.Write(() =>
             {
                 var thing = "Ψ".ToLower();
-                var translations = RealmDatabase.All<TranslationEntity>().Where(t => t.RawContents.Contains("Ψ") || t.Notes.Contains("Ψ")).ToList();
-                var entries = RealmDatabase.All<EntryEntity>().Where(e => e.RawContents.Contains("Ψ")).ToList();
                 var phrases = RealmDatabase.All<PhraseEntity>().Where(p => p.Content.Contains("Ψ") || p.Notes.Contains("Ψ")).ToList();
                 var words = RealmDatabase.All<WordEntity>().Where(w => w.Notes.Contains("Ψ")).ToList();
-                
-                foreach (var entry in entries)
-                {
 
+                foreach (var phrase in phrases)
+                {
+                    if (phrase.Notes.Length < 6)
+                    {
+                        phrase.Notes = null;
+                        continue;
+                    }
+
+                    var translationNotes = phrase.Notes.Split("Ψ");
+                    foreach (var translationNote in translationNotes)
+                    {
+                        if (string.IsNullOrWhiteSpace(translationNote))
+                        {
+                            phrase.Notes = null;
+                            continue;
+                        }
+                        var parts = translationNote.Split(":");
+                        var languageCode = parts[0];
+                        var note = parts[1];
+
+                        var translation = phrase.Entry.Translations.FirstOrDefault(t => t.Language.Code == languageCode);
+                        if (translation == null)
+                        {
+                            phrase.Notes = note;
+                        }
+                        else
+                        {
+                            translation.Notes = note;
+                            phrase.Notes = null;
+                        }
+                    }
+                }
+
+                foreach (var word in words)
+                {
+                    if (word.Notes.Length < 6)
+                    {
+                        word.Notes = null;
+                        continue;
+                    }
+                    var translationNotes = word.Notes.Split("Ψ");
+                    foreach (var translationNote in translationNotes)
+                    {
+                        if (string.IsNullOrWhiteSpace(translationNote))
+                        {
+                            word.Notes = null;
+                            continue;
+                        }
+                        var parts = translationNote.Split(":");
+                        var languageCode = parts[0];
+                        var note = parts[1];
+
+                        var translation = word.Entry.Translations.FirstOrDefault(t => t.Language.Code == languageCode);
+                        if (translation == null)
+                        {
+                            word.Notes = note;
+                        }
+                        else
+                        {
+                            translation.Notes = note;
+                            word.Notes = null;
+                        }
+                    }
                 }
             });
         }
         public void DoDangerousTheStuff()
         {
-            RemoveWeirdos();
+            //RemoveWeirdos();
             //SetSourceNotes();
             //ImportPhrases();
             //UpdateEntryRawContentField();

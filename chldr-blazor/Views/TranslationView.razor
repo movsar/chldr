@@ -8,6 +8,13 @@
     <span class="chldr_translation_content">
         @ViewModel.Content
     </span>
+
+    @if (!String.IsNullOrWhiteSpace(@ViewModel.Notes)){
+        <div class="chldr_translation_notes">
+            (@ViewModel.Notes)
+        </div>
+    }
+
 </div>
 
 @code {

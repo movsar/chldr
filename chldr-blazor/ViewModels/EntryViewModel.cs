@@ -23,6 +23,7 @@ namespace chldr_blazor.ViewModels
         public string Source { get; }
         public string Header { get; set; }
         public string Subheader { get; set; }
+        public string Notes { get; set; }
         public int Type { get; set; }
         public List<TranslationViewModel> Translations { get; } = new();
         public EntryViewModel() { }
@@ -31,6 +32,7 @@ namespace chldr_blazor.ViewModels
             Type = entry.Type;
             Source = ParseSource(entry.Source.Name);
             Translations.AddRange(entry.Translations.Select(t => new TranslationViewModel(t)));
+            Notes = entry.Notes;
             switch (entry.Type)
             {
                 case EntryType.Word:
