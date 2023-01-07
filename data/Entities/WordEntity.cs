@@ -27,13 +27,9 @@ namespace Data.Entities
         public string Content { get; set; } = string.Empty;
         [Indexed]
         public string Notes { get; set; } = string.Empty;
-        
-        [MapTo("GrammaticalClass")]
         public int GrammaticalClass { get; set; }
         public int PartOfSpeech { get; set; }
         // To help search work better
-
-        [MapTo("Forms")]
         public string Forms { get; set; } = string.Empty;
         public string VerbTenses { get; set; } = string.Empty;
         // something; thing; whatever; - order matters!

@@ -16,7 +16,7 @@ namespace Data.Services
 
         public const int ResultsLimit = 100;
         public const int RandomEntriesLimit = 30;
-        
+
         Realm RealmDatabase = null;
         // By using previous results we increase search speed when a user is typing
 
@@ -106,7 +106,7 @@ namespace Data.Services
                 }
             });
         }
-       
+
         private void AddSources()
         {
             RealmDatabase.Write(() =>
@@ -317,14 +317,12 @@ namespace Data.Services
 
         public void DoDangerousTheStuff()
         {
-         
-
-        //SetSourceNotes();
-        //ImportPhrases();
-        //UpdateEntryRawContentField();
-        //RemoveDuplicates();
-        //SetTranslationEntryAndUserLinks();
-        //RemoveExistingDuplicatingInLegacyPhrases();
+            //SetSourceNotes();
+            //ImportPhrases();
+            //UpdateEntryRawContentField();
+            //RemoveDuplicates();
+            //SetTranslationEntryAndUserLinks();
+            //RemoveExistingDuplicatingInLegacyPhrases();
         }
         private static RealmConfiguration GetRealmConfiguration()
         {
@@ -344,7 +342,7 @@ namespace Data.Services
         {
             var fs = new FileService();
             fs.PrepareDatabase();
-         
+
             RealmDatabase = Realm.GetInstance(GetRealmConfiguration());
         }
 
