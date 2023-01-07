@@ -11,6 +11,8 @@ namespace Data.Entities
     public class TranslationEntity : RealmObject
     {
         [PrimaryKey] public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
+        public ObjectId _id { get; set; }
+
         public EntryEntity Entry { get; set; }
         public UserEntity User { get; set; }
         [Indexed]

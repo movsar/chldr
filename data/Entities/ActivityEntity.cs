@@ -12,6 +12,7 @@ namespace Data.Entities
     {
         [PrimaryKey]
         public ObjectId Id { get; set; } = MongoDB.Bson.ObjectId.GenerateNewId();
+        public ObjectId _id { get; set; }
         public UserEntity User { get; set; }
         public ObjectId ObjectId { get; set; }
         public string ObjectClass { get; set; }

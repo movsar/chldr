@@ -12,6 +12,8 @@ namespace Data.Entities
     {
         [Key]
         [PrimaryKey] public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
+        public ObjectId _id { get; set; }
+
         public EntryEntity Entry { get; set; }
         [Indexed]
         public string Content { get; set; }

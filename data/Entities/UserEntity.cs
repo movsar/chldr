@@ -14,6 +14,8 @@ namespace Data.Entities
         [PrimaryKey]
 
         public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
+        public ObjectId _id { get; set; }
+
         public string ThirdParty { get; set; } = string.Empty; 
         public string ThirdPartyId { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;

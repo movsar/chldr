@@ -8,6 +8,7 @@ using Data.Search;
 using Data.Enums;
 using Data.Interfaces;
 using Data.Services.PartialMethods;
+using Realms.Sync;
 
 namespace Data.Services
 {
@@ -253,19 +254,19 @@ namespace Data.Services
             //translations.AsEnumerable().Select(translation => new { Translation = translation.Content, LanguageCode = translation.Language.Code });
             var entries = RealmDatabase.All<EntryEntity>();
 
-            var distinctEntryIds = entries.AsEnumerable().DistinctBy(e => e.RawContents).Select(e => e.Id).ToArray();
+            var distinctEntryIds = entries.AsEnumerable().DistinctBy(e => e.RawContents).Select(e => e._Id).ToArray();
 
             var duplicatingEntryIds = new List<ObjectId>();
             foreach (var entry in entries)
             {
-                if (!distinctEntryIds.Contains(entry.Id))
+                if (!distinctEntryIds.Contains(entry._Id))
                 {
-                    duplicatingEntryIds.Add(entry.Id);
+                    duplicatingEntryIds.Add(entry._Id);
                 }
             }
 
             var entriesToRemove = new HashSet<EntryEntity>();
-            foreach (var entry in entries.AsEnumerable().Where(e => duplicatingEntryIds.Contains(e.Id)))
+            foreach (var entry in entries.AsEnumerable().Where(e => duplicatingEntryIds.Contains(e._Id)))
             {
                 foreach (var translation in entry.Translations)
                 {
@@ -388,8 +389,78 @@ namespace Data.Services
                 }
             });
         }
+
+        private void CopyObjectIds()
+        {
+            RealmDatabase.Write(() =>
+            {
+                var entries = RealmDatabase.All<EntryEntity>();
+                foreach (var entity in entries)
+                {
+                    entity._id= entity.Id;
+                }
+
+                var translations = RealmDatabase.All<TranslationEntity>();
+                foreach (var entity in translations)
+                {
+                    entity._id= entity.Id;
+                }
+
+                var languages = RealmDatabase.All<LanguageEntity>();
+                foreach (var entity in languages)
+                {
+                    entity._id= entity.Id;
+                }
+
+                var phrases = RealmDatabase.All<PhraseEntity>();
+                foreach (var entity in phrases)
+                {
+                    entity._id= entity.Id;
+                }
+
+                var users = RealmDatabase.All<UserEntity>();
+                foreach (var entity in users)
+                {
+                    entity._id= entity.Id;
+                }
+
+                var words = RealmDatabase.All<WordEntity>();
+                foreach (var entity in words)
+                {
+                    entity._id= entity.Id;
+                }
+
+                var sources = RealmDatabase.All<SourceEntity>();
+                foreach (var entity in sources)
+                {
+                    entity._id= entity.Id;
+                }
+            });
+        }
+        private async Task ConnectToSyncedDatabase()
+        {
+
+            var myRealmAppId = "dosham-ahtcj";
+            var app = App.Create(myRealmAppId);
+            var user = await app.LogInAsync(Credentials.Anonymous());
+
+            var config = new FlexibleSyncConfiguration(app.CurrentUser)
+            {
+                PopulateInitialSubscriptions = (realm) =>
+                {
+                    // var myItems = realm.All<EntryEntity>();
+                    // realm.Subscriptions.Add(myItems);
+                }
+            };
+            // The process will complete when all the user's items have been downloaded.
+            var realm = await Realm.GetInstanceAsync(config);
+
+        }
         public void DoDangerousTheStuff()
         {
+            //Task.Run(ConnectToSyncedDatabase).Wait();
+
+            CopyObjectIds();
             //RemoveWeirdos();
             //SetSourceNotes();
             //ImportPhrases();
@@ -397,6 +468,8 @@ namespace Data.Services
             //RemoveDuplicates();
             //SetTranslationEntryAndUserLinks();
             //RemoveExistingDuplicatingInLegacyPhrases();
+
+            Application.Current.Quit();
         }
         private static RealmConfiguration GetRealmConfiguration()
         {
@@ -404,7 +477,7 @@ namespace Data.Services
 
             return new RealmConfiguration(dbPath)
             {
-                SchemaVersion = 11,
+                SchemaVersion = 10  ,
                 ShouldCompactOnLaunch = (totalBytes, usedBytes) =>
                 {
                     ulong oneHundredMB = 30 * 1024 * 1024;

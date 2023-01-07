@@ -13,6 +13,8 @@ namespace Data.Entities
         [Key]
         [PrimaryKey]
         public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
+        public ObjectId _id { get; set; }
+
         public string Name { get; set; } = string.Empty;
         public string Notes { get; set; } = string.Empty;
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
