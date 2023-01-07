@@ -25,7 +25,7 @@ namespace Data.Models
         public string RawForms { get; }
         public string RawVerbTenses { get; }
         public string RawNounDeclensions { get; }
-        public string GrammaticalClass { get; internal set; }
+        public int GrammaticalClass { get; internal set; }
 
         public WordModel(WordEntity word)
         {

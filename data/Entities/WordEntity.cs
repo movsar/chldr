@@ -27,14 +27,13 @@ namespace Data.Entities
         public string Content { get; set; } = string.Empty;
         [Indexed]
         public string Notes { get; set; } = string.Empty;
-        [MapTo("Classes")]
-        // TODO: Rename to GrammaticalClass, make type byte, only Pronouns have two classes, and which are understood 
-        public string GrammaticalClass { get; set; }
+        
+        [MapTo("GrammaticalClass")]
+        public int GrammaticalClass { get; set; }
         public int PartOfSpeech { get; set; }
         // To help search work better
 
-        [MapTo("FormsPlural")]
-        // TODO: Rename to just Forms
+        [MapTo("Forms")]
         public string Forms { get; set; } = string.Empty;
         public string VerbTenses { get; set; } = string.Empty;
         // something; thing; whatever; - order matters!
@@ -86,19 +85,19 @@ namespace Data.Entities
 
             return allWordForms.ToArray();
         }
-        public static string ParseGrammaticalClass(string grammaticalClass)
+        public static string ParseGrammaticalClass(int grammaticalClass)
         {
-            var ClassesMap = new Dictionary<string, string>()
+            var ClassesMap = new Dictionary<int, string>()
             {
-                { "1" ,"в, б/д"},
-                { "2" ,"й, б/д"},
-                { "3" ,"й, й"},
-                { "4" ,"д, д"},
-                { "5" ,"б, б/й"},
-                { "6" ,"б, д"},
+                { 1 ,"в, б/д"},
+                { 2 ,"й, б/д"},
+                { 3 ,"й, й"},
+                { 4 ,"д, д"},
+                { 5 ,"б, б/й"},
+                { 6 ,"б, д"},
             };
 
-            if (String.IsNullOrWhiteSpace(grammaticalClass?.Trim()))
+            if (grammaticalClass == 0)
             {
                 return null;
             }

@@ -80,7 +80,7 @@ namespace chldr_blazor.ViewModels
             }
             return sourceTitle;
         }
-        private static string BuildWordInfoSubheader(string content, string rawWordGrammaticalClass, string rawForms, string rawWordDeclensions, string rawWordTenses)
+        private static string BuildWordInfoSubheader(string content, int grammaticalClass, string rawForms, string rawWordDeclensions, string rawWordTenses)
         {
             if (rawWordDeclensions == WordEntity.EmptyRawWordDeclensionsValue && rawWordTenses == WordEntity.EmptyRawWordTensesValue)
             {
@@ -93,7 +93,7 @@ namespace chldr_blazor.ViewModels
                 return null;
             }
 
-            string part2 = $" {WordEntity.ParseGrammaticalClass(rawWordGrammaticalClass)} ";
+            string part2 = $" {WordEntity.ParseGrammaticalClass(grammaticalClass)} ";
 
             return $"[{part1}{part2}]";
         }

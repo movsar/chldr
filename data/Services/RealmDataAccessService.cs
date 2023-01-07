@@ -317,12 +317,14 @@ namespace Data.Services
 
         public void DoDangerousTheStuff()
         {
-            //SetSourceNotes();
-            //ImportPhrases();
-            //UpdateEntryRawContentField();
-            //RemoveDuplicates();
-            //SetTranslationEntryAndUserLinks();
-            //RemoveExistingDuplicatingInLegacyPhrases();
+         
+
+        //SetSourceNotes();
+        //ImportPhrases();
+        //UpdateEntryRawContentField();
+        //RemoveDuplicates();
+        //SetTranslationEntryAndUserLinks();
+        //RemoveExistingDuplicatingInLegacyPhrases();
         }
         private static RealmConfiguration GetRealmConfiguration()
         {
@@ -330,7 +332,7 @@ namespace Data.Services
 
             return new RealmConfiguration(dbPath)
             {
-                SchemaVersion = 9,
+                SchemaVersion = 11,
                 ShouldCompactOnLaunch = (totalBytes, usedBytes) =>
                 {
                     ulong oneHundredMB = 30 * 1024 * 1024;
