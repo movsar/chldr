@@ -314,9 +314,25 @@ namespace Data.Services
                 source.Notes = "";
             });
         }
+        private void RemoveWeirdos()
+        {
+            RealmDatabase.Write(() =>
+            {
+                var thing = "Ψ".ToLower();
+                var translations = RealmDatabase.All<TranslationEntity>().Where(t => t.RawContents.Contains("Ψ") || t.Notes.Contains("Ψ")).ToList();
+                var entries = RealmDatabase.All<EntryEntity>().Where(e => e.RawContents.Contains("Ψ")).ToList();
+                var phrases = RealmDatabase.All<PhraseEntity>().Where(p => p.Content.Contains("Ψ") || p.Notes.Contains("Ψ")).ToList();
+                var words = RealmDatabase.All<WordEntity>().Where(w => w.Notes.Contains("Ψ")).ToList();
+                
+                foreach (var entry in entries)
+                {
 
+                }
+            });
+        }
         public void DoDangerousTheStuff()
         {
+            RemoveWeirdos();
             //SetSourceNotes();
             //ImportPhrases();
             //UpdateEntryRawContentField();

@@ -12,12 +12,13 @@ namespace chldr_blazor
             ServiceProvider = serviceProvider;
 
             // TODO: 1. Clean up the database
-            // 1. column renamings
-            // 2. change grammar class to int
-            // 3. change byte to int
-            // 4. check other stuff
-            // 5. setup device sync for realm
-            // 6. setup user management
+            // 1. column renamings - done
+            // 2. change grammar class to int - done
+            // 3. change byte to int - done
+            // 4. check other stuff - done
+            // 5. remove weitd things Ψ
+            // 6. setup device sync for realm
+            // 7. setup user management
         }
     }
 }
