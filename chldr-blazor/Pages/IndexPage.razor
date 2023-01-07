@@ -11,10 +11,10 @@
     </div>
 
     <input class="form-control shadow-none"
-               placeholder="@Localizer["StartTyping"]"   
-               @ref="searchInputReference"
-               @bind-value="@ViewModel.InputText" 
-               @oninput="(e)=> ViewModel.Search(e)" />
+           placeholder="@Localizer["StartTyping"]"
+    @ref="searchInputReference"
+    @bind-value="@ViewModel.InputText"
+    @oninput="(e)=> ViewModel.Search(e)" />
 
     <div class="ms-2">
         <button type="button" class="btn btn-secondary" @onclick="ViewModel.ShowRandomEntries">
@@ -27,7 +27,7 @@
 
 @if (ViewModel.Entries.Count != 0)
 {
-    <div class="chldr_entries">
+    <div class="chldr_entries" @ref="entriesListViewReference">
 
         @foreach (var entry in ViewModel.Entries)
         {
@@ -38,15 +38,16 @@
 }
 
 @code {
+    private ElementReference entriesListViewReference;
     private ElementReference searchInputReference;
 
-       protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             await searchInputReference.FocusAsync();
         }
-   }
+    }
 
     protected override async Task OnInitializedAsync()
     {

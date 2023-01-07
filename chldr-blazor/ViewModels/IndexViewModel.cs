@@ -16,10 +16,11 @@ using Microsoft.AspNetCore.Components;
 
 namespace chldr_blazor.ViewModels
 {
-    public partial class IndexViewModel : ViewModelBase
+    [ObservableObject]
+    public partial class IndexViewModel
     {
         [ObservableProperty]
-        private ObservableCollection<EntryViewModel> _entries = new();
+        private List<EntryViewModel> _entries = new();
         private string _lastInputText;
 
         private RealmDataAccessService _dataAccess;
@@ -89,13 +90,7 @@ namespace chldr_blazor.ViewModels
 
             _lastInputText = inputText;
 
-            foreach (var entry in results.Entries)
-            {
-                Entries.Add(new EntryViewModel(entry));
-            }
-
-            NotifyOfChanges();
+            Entries = Entries.Union(results.Entries.Select(em => new EntryViewModel(em))).ToList();
         }
-
     }
 }
