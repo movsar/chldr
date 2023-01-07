@@ -15,6 +15,6 @@ namespace Data.Entities
         [PrimaryKey]
         public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
         public string Code { get; set; } = string.Empty;
-        public DateTimeOffset CreatedAt { get; } = DateTimeOffset.Now;
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
     }
 }

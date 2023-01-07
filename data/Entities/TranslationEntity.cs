@@ -19,7 +19,7 @@ namespace Data.Entities
         public string Notes { get; set; } = string.Empty;
         public LanguageEntity Language { get; set; }
         public int Rate { get; set; }
-        public DateTimeOffset CreatedAt { get; } = DateTimeOffset.Now;
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
 
     }

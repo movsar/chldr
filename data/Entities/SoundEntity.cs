@@ -16,7 +16,7 @@ namespace Data.Entities
         public int UserId { get; set; }
         public int WordId { get; set; }
         public string Path { get; set; }
-        public DateTimeOffset CreatedAt { get; } = DateTimeOffset.Now;
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
     }
 }

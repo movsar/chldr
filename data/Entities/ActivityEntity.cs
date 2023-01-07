@@ -13,13 +13,13 @@ namespace Data.Entities
         [PrimaryKey]
         public ObjectId Id { get; set; } = MongoDB.Bson.ObjectId.GenerateNewId();
         public UserEntity User { get; set; }
-        public string ObjectId { get; set; }
-        public string ObjectType { get; set; }
-        public ObjectId ObjectField { get; set; }
+        public ObjectId ObjectId { get; set; }
+        public string ObjectClass { get; set; }
+        public string ObjectProperty { get; set; }
         public string OldValue { get; set; }
         public string NewValue { get; set; }
         public string Notes { get; set; }
-        public DateTimeOffset CreatedAt { get; } = DateTimeOffset.Now;
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
     }
 }

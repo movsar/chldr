@@ -330,7 +330,7 @@ namespace Data.Services
 
             return new RealmConfiguration(dbPath)
             {
-                SchemaVersion = 5,
+                SchemaVersion = 9,
                 ShouldCompactOnLaunch = (totalBytes, usedBytes) =>
                 {
                     ulong oneHundredMB = 30 * 1024 * 1024;

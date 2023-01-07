@@ -17,7 +17,7 @@ namespace Data.Models
         public List<TranslationModel> Translations { get; } = new List<TranslationModel>();
         public SourceModel Source { get; }
         public string Notes { get; }
-        public byte Type { get; }
+        public int Type { get; }
 
         public int Rate { get; }
         public EntryModel(EntryEntity entry)

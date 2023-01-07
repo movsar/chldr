@@ -18,7 +18,7 @@ namespace Data.Entities
         public string Content { get; set; }
         [Indexed]
         public string Notes { get; set; }
-        public DateTimeOffset CreatedAt { get; } = DateTimeOffset.Now;
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
         private string GetCombinedPhraseContents(PhraseEntity phrase)
         {

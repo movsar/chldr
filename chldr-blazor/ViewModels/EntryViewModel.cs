@@ -23,7 +23,7 @@ namespace chldr_blazor.ViewModels
         public string Source { get; }
         public string Header { get; set; }
         public string Subheader { get; set; }
-        public byte Type { get; set; }
+        public int Type { get; set; }
         public List<TranslationViewModel> Translations { get; } = new();
         public EntryViewModel() { }
         public EntryViewModel(EntryModel entry)

@@ -40,7 +40,7 @@ namespace Data.Entities
         // something; thing; whatever; - order matters!
         public string NounDeclensions { get; set; } = string.Empty;
         // something; thing; whatever; - order matters!
-        public DateTimeOffset CreatedAt { get; } = DateTimeOffset.Now;
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
         public static string[] GetAllUniqueWordForms(string content, string rawForms, string rawWordDeclensions, string rawWordTenses, bool excludeTitle = false)
         {

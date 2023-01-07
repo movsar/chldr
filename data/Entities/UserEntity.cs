@@ -27,7 +27,7 @@ namespace Data.Entities
         public string LastName { get; set; } = string.Empty;
         public string Patronymic { get; set; } = string.Empty;
         public string ImagePath { get; set; } = string.Empty;
-        public DateTimeOffset CreatedAt { get; } = DateTimeOffset.Now;
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
     }
 }

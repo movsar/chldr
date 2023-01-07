@@ -20,11 +20,11 @@ namespace Data.Entities
         public TextEntity Text { get; set; }
         public SourceEntity Source { get; set; }
         public int Rate { get; set; }
-        public byte Type { get; set; }
+        public int Type { get; set; }
         // Used to increase search speed
         public string RawContents { get; set; }
         public IList<TranslationEntity> Translations { get; }
-        public DateTimeOffset CreatedAt { get; } = DateTimeOffset.Now;
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
     }
 }
