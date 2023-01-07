@@ -21,7 +21,9 @@ namespace chldr_blazor
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
+            builder.Services.AddLocalization();
             builder.Services.AddMauiBlazorWebView();
+
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();

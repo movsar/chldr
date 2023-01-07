@@ -1,7 +1,6 @@
 ﻿@page "/"
-@using chldr_blazor.ViewModels;
-@using chldr_blazor.Views;
 @inject IndexViewModel ViewModel;
+@inject IStringLocalizer<AppLocalizations> Localizer;
 
 <div class="input-group mb-3 mt-3">
 
@@ -11,7 +10,7 @@
         </span>
     </div>
 
-    <InputText class="form-control shadow-none" placeholder="Начните писать" @bind-Value="@ViewModel.InputText" @oninput="(e)=> ViewModel.Search(e)" />
+    <InputText class="form-control shadow-none" placeholder="@Localizer["StartTyping"]" @bind-Value="@ViewModel.InputText" @oninput="(e)=> ViewModel.Search(e)" />
 
     <div class="ms-2">
         <button type="button" class="btn btn-secondary" @onclick="ViewModel.ShowRandomEntries">

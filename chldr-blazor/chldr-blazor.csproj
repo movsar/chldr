@@ -78,4 +78,19 @@
       <None Include="wwwroot\images\logo.png" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="Resources\Localizations\AppLocalizations.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>AppLocalizations.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\Localizations\AppLocalizations.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>AppLocalizations.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
 </Project>
