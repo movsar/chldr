@@ -10,12 +10,8 @@ namespace Data.Entities
     [MapTo("User")]
     public class UserEntity: RealmObject
     {
-        [Key]
         [PrimaryKey]
-
-        public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
-        public ObjectId _id { get; set; }
-
+        public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
         public string ThirdParty { get; set; } = string.Empty; 
         public string ThirdPartyId { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;

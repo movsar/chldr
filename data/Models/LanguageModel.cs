@@ -14,7 +14,7 @@ namespace Data.Models
         public string Code { get; } = string.Empty;
         public LanguageModel(LanguageEntity languageEntity)
         {
-            EntityId = languageEntity.Id;
+            EntityId = languageEntity._id;
             Code = languageEntity.Code;
         }
     }

@@ -10,10 +10,8 @@ namespace Data.Entities
     [MapTo("Image")]
     public class ImageEntity : RealmObject
     {
-        [Key]
-        public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
-        public ObjectId _id { get; set; }
-
+        [PrimaryKey]
+        public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
         public UserEntity User { get; set; }
         public WordEntity Word { get; set; }
         public string Path { get; set; }

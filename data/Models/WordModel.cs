@@ -29,7 +29,7 @@ namespace Data.Models
 
         public WordModel(WordEntity word)
         {
-            EntityId = word.Id;
+            EntityId = word._id;
             Content = word.Content;
             Notes = word.Notes;
             RawForms = word.Forms;

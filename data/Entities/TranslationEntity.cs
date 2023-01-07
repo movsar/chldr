@@ -10,9 +10,8 @@ namespace Data.Entities
     [MapTo("Translation")]
     public class TranslationEntity : RealmObject
     {
-        [PrimaryKey] public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
-        public ObjectId _id { get; set; }
-
+        [PrimaryKey] 
+        public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
         public EntryEntity Entry { get; set; }
         public UserEntity User { get; set; }
         [Indexed]

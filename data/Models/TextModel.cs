@@ -17,7 +17,7 @@ namespace Data.Models
 
         public TextModel(TextEntity text)
         {
-            this.TextId = text.Id;
+            this.TextId = text._id;
             this.Content = text.Content;
             foreach (var translationEntity in text.Entry.Translations)
             {

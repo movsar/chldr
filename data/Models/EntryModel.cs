@@ -22,7 +22,7 @@ namespace Data.Models
         public int Rate { get; }
         public EntryModel(EntryEntity entry)
         {
-            EntryId = entry.Id;
+            EntryId = entry._id;
             Type = entry.Type;
             Source = new SourceModel(entry.Source);
             Target = TargetModelFactory.CreateTarget(entry);

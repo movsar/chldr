@@ -16,7 +16,7 @@ namespace Data.Models
         public SourceModel(SourceEntity source)
         {
             Name = source.Name;
-            Id = source.Id;
+            Id = source._id;
             Notes = source.Notes;
         }
     }

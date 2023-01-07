@@ -11,8 +11,7 @@ namespace Data.Entities
     public class ActivityEntity : RealmObject
     {
         [PrimaryKey]
-        public ObjectId Id { get; set; } = MongoDB.Bson.ObjectId.GenerateNewId();
-        public ObjectId _id { get; set; }
+        public ObjectId _id { get; set; } = MongoDB.Bson.ObjectId.GenerateNewId();
         public UserEntity User { get; set; }
         public ObjectId ObjectId { get; set; }
         public string ObjectClass { get; set; }

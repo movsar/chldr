@@ -11,10 +11,8 @@ namespace Data.Entities
     [MapTo("Entry")]
     public class EntryEntity : RealmObject
     {
-        [Key]
         [PrimaryKey]
-        public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
-        public ObjectId _id { get; set; }
+        public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
         public UserEntity User { get; set; }
         public WordEntity Word { get; set; }
         public PhraseEntity Phrase { get; set; }

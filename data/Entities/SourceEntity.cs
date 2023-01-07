@@ -10,11 +10,8 @@ namespace Data.Entities
     [MapTo("Source")]
     public class SourceEntity : RealmObject
     {
-        [Key]
         [PrimaryKey]
-        public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
-        public ObjectId _id { get; set; }
-
+        public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
         public string Name { get; set; } = string.Empty;
         public string Notes { get; set; } = string.Empty;
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;

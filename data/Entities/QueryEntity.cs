@@ -10,11 +10,8 @@ namespace Data.Entities
     [MapTo("Query")]
     public class QueryEntity : RealmObject
     {
-        [Key]
         [PrimaryKey]
-        public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
-        public ObjectId _id { get; set; }
-
+        public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
         public int UserId { get; set; }
         public string Content { get; set; }
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;

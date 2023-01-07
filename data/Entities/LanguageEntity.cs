@@ -13,9 +13,7 @@ namespace Data.Entities
     public class LanguageEntity : RealmObject
     {
         [PrimaryKey]
-        public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
-        public ObjectId _id { get; set; }
-
+        public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
         public string Code { get; set; } = string.Empty;
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
     }
