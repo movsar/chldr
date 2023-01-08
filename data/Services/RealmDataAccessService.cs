@@ -444,25 +444,24 @@ namespace Data.Services
             var app = App.Create(myRealmAppId);
             var user = await app.LogInAsync(Credentials.Anonymous());
 
-            var config = new FlexibleSyncConfiguration(app.CurrentUser)
-            {
-             
-            };
+            var config = new FlexibleSyncConfiguration(app.CurrentUser);
             // The process will complete when all the user's items have been downloaded.
-            var realm = await Realm.GetInstanceAsync(config);
+            var syncedRealm = await Realm.GetInstanceAsync(config);
+            var oldRealm = await Realm.GetInstanceAsync(GetRealmConfiguration());
 
-            var languages = realm.All<LanguageEntity>();
-            var sources = realm.All<SourceEntity>();
-            var entries = realm.All<EntryEntity>();
-            var words = realm.All<WordEntity>();
-            var phrases = realm.All<PhraseEntity>();
-            var users = realm.All<UserEntity>();
-            var translations = realm.All<TranslationEntity>();
+            var languages = oldRealm.All<LanguageEntity>();
+            var sources = oldRealm.All<SourceEntity>();
+            var entries =oldRealm.All<EntryEntity>();
+            var words = oldRealm.All<WordEntity>();
+            var phrases = oldRealm.All<PhraseEntity>();
+            var users = oldRealm.All<UserEntity>();
+            var translations = oldRealm.All<TranslationEntity>();
+
 
         }
         public void DoDangerousTheStuff()
         {
-            Task.Run(ConnectToSyncedDatabase).Wait();
+            //Task.Run(ConnectToSyncedDatabase).Wait();
 
             //CopyObjectIds();
             //RemoveWeirdos();
