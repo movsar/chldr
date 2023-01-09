@@ -107,7 +107,6 @@ namespace Data.Services
                 }
             });
         }
-
         private void AddSources()
         {
             RealmDatabase.Write(() =>
@@ -389,7 +388,6 @@ namespace Data.Services
                 }
             });
         }
-
         private void CopyObjectIds()
         {
             RealmDatabase.Write(() =>
@@ -443,52 +441,152 @@ namespace Data.Services
             var subscriptions = _syncedRealm.Subscriptions;
             subscriptions.Update(() =>
             {
-                var defaultSubscription = _syncedRealm.All<LanguageEntity>();
-                subscriptions.Add(defaultSubscription);
+                subscriptions.Add(_syncedRealm.All<EntryEntity>());
+                subscriptions.Add(_syncedRealm.All<WordEntity>());
+                subscriptions.Add(_syncedRealm.All<TextEntity>());
+                subscriptions.Add(_syncedRealm.All<PhraseEntity>());
+                subscriptions.Add(_syncedRealm.All<SourceEntity>());
+                subscriptions.Add(_syncedRealm.All<LanguageEntity>());
+                subscriptions.Add(_syncedRealm.All<UserEntity>());
             });
+        }
+        private async Task<Realm> GetSyncedRealmInstance()
+        {
+            var config = new FlexibleSyncConfiguration(_user);
+            return await Realm.GetInstanceAsync(config);
         }
         private async Task ConnectToSyncedDatabase()
         {
-
             var myRealmAppId = "dosham-ahtcj";
-            var app = App.Create(myRealmAppId);
-            _user = await app.LogInAsync(Credentials.Anonymous());
+            _app = App.Create(myRealmAppId);
+            _user = await _app.LogInAsync(Credentials.Anonymous());
 
             var config = new FlexibleSyncConfiguration(_user);
-            // The process will complete when all the user's items have been downloaded.
             _syncedRealm = await Realm.GetInstanceAsync(config);
 
             AddSubscriptionsToRealm();
+        }
 
-            RealmDatabase = Realm.GetInstance(GetRealmConfiguration());
-
-            var languagessynced = _syncedRealm.All<LanguageEntity>().ToList();
-            var languages = RealmDatabase.All<LanguageEntity>();
-
+        private void CopyFromLocalToSyncedRealm()
+        {
+            RealmDatabase = GetRealmInstance();
             _syncedRealm.Write(() =>
             {
+                var languages = RealmDatabase.All<LanguageEntity>();
                 foreach (var language in languages)
                 {
                     _syncedRealm.Add(new LanguageEntity() { Code = language.Code, _id = language._id });
                 }
+
+                var sources = RealmDatabase.All<SourceEntity>();
+                foreach (var item in sources)
+                {
+                    _syncedRealm.Add(new SourceEntity()
+                    {
+                        _id = item._id,
+                        UpdatedAt = item.UpdatedAt,
+                        Name = item.Name,
+                        Notes = item.Notes,
+                    });
+                }
+
+                var users = RealmDatabase.All<UserEntity>();
+                foreach (var item in users)
+                {
+                    _syncedRealm.Add(new UserEntity()
+                    {
+                        _id = item._id,
+                        Email = item.Email,
+                        FirstName = item.FirstName,
+                        Password = item.Password,
+                        Username = item.Username,
+                        UpdatedAt = item.UpdatedAt,
+                    });
+                }
+
+                var entries = RealmDatabase.All<EntryEntity>();
+                foreach (var entry in entries)
+                {
+                    var newEntry = new EntryEntity()
+                    {
+                        _id = entry._id,
+                        UpdatedAt = entry.UpdatedAt,
+                        Rate = entry.Rate,
+                        RawContents = entry.RawContents,
+                        Source = _syncedRealm.All<SourceEntity>().FirstOrDefault(s => s.Name == entry.Source.Name),
+                        Type = entry.Type,
+                        User = _syncedRealm.All<UserEntity>().FirstOrDefault(u => u.Username == entry.User.Username),
+                    };
+
+                    foreach (var translation in entry.Translations)
+                    {
+                        var newTranslation = new TranslationEntity()
+                        {
+                            _id = translation._id,
+                            UpdatedAt = translation.UpdatedAt,
+                            Content = translation.Content,
+                            Notes = translation.Notes,
+                            Rate = translation.Rate,
+                            RawContents = translation.RawContents,
+                            Entry = newEntry,
+                            Language = _syncedRealm.All<LanguageEntity>().FirstOrDefault(l => l.Code == translation.Language.Code),
+                            User = _syncedRealm.All<UserEntity>().FirstOrDefault(u => u.Username == translation.User.Username),
+                        };
+
+                        newEntry.Translations.Add(newTranslation);
+                    }
+
+                    switch (entry.Type)
+                    {
+                        case EntryType.Word:
+                            var word = new WordEntity()
+                            {
+                                _id = entry.Word._id,
+                                UpdatedAt = entry.Word.UpdatedAt,
+                                Entry = newEntry,
+                                Content = entry.Word.Content,
+                                Forms = entry.Word.Forms,
+                                GrammaticalClass = entry.Word.GrammaticalClass,
+                                Notes = entry.Word.Notes,
+                                NounDeclensions = entry.Word.NounDeclensions,
+                                VerbTenses = entry.Word.VerbTenses,
+                                PartOfSpeech = entry.Word.PartOfSpeech,
+                            };
+
+                            newEntry.Word = word;
+                            break;
+
+                        case EntryType.Phrase:
+                            var phrase = new PhraseEntity()
+                            {
+                                _id = entry.Phrase._id,
+                                UpdatedAt = entry.Phrase.UpdatedAt,
+                                Entry = newEntry,
+                                Content = entry.Phrase.Content,
+                                Notes = entry.Phrase.Content
+                            };
+
+                            newEntry.Phrase = phrase;
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    _syncedRealm.Add(newEntry);
+                }
+
             });
-
-            var sources = RealmDatabase.All<SourceEntity>();
-            var entries = RealmDatabase.All<EntryEntity>();
-            var words = RealmDatabase.All<WordEntity>();
-            var phrases = RealmDatabase.All<PhraseEntity>();
-            var users = RealmDatabase.All<UserEntity>();
-            var translations = RealmDatabase.All<TranslationEntity>();
         }
-        public void DoDangerousTheStuff()
+
+        public async void DoDangerousTheStuff()
         {
-            //RealmDatabase.Write(() => {
-            //    RealmDatabase.RemoveAll();
-            //});
-            Task.Run(ConnectToSyncedDatabase).Wait();
+            await ConnectToSyncedDatabase();
 
-            Application.Current.Quit();
-
+            var languagessynced = _syncedRealm.All<LanguageEntity>().ToList();
+            var entries = _syncedRealm.All<EntryEntity>().ToList();
+            await _syncedRealm.Subscriptions.WaitForSynchronizationAsync();
+            
             //CopyObjectIds();
             //RemoveWeirdos();
             //SetSourceNotes();
@@ -520,10 +618,12 @@ namespace Data.Services
             fs.PrepareDatabase();
 
             RealmDatabase = Realm.GetInstance(GetRealmConfiguration());
-            DoDangerousTheStuff();
+
+            Task.Run(DoDangerousTheStuff).Wait();
         }
 
         public Action<string, SearchResultsModel> NewSearchResults;
+        private App _app;
         private User _user;
 
         public IEnumerable<EntryModel> GetRandomEntries()
