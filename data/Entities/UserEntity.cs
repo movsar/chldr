@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using RequiredAttribute = Realms.RequiredAttribute;
+
 namespace Data.Entities
 {
     [MapTo("User")]
@@ -19,6 +21,7 @@ namespace Data.Entities
         public string Email { get; set; } = string.Empty;
         public bool Confirmed { get; set; }
         public string Password { get; set; } = string.Empty;
+        [Required]
         public IList<string> Tokens { get; } = new List<string>();
         public string PointsPerLang { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;

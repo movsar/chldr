@@ -76,7 +76,6 @@ namespace chldr_blazor.ViewModels
         {
             _dataAccess = (RealmDataAccessService)dataAccess;
             _dataAccess.NewSearchResults += OnNewSearchResults;
-            _dataAccess.DoDangerousTheStuff();
 
             ShowRandomEntries();
         }

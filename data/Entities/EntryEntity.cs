@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System;
 using Realms.Schema;
 using MongoDB.Bson;
+using RequiredAttribute = Realms.RequiredAttribute;
 
 namespace Data.Entities
 {
