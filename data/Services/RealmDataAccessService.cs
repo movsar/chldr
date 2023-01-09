@@ -582,10 +582,9 @@ namespace Data.Services
         public async void DoDangerousTheStuff()
         {
             await ConnectToSyncedDatabase();
-
-            var languagessynced = _syncedRealm.All<LanguageEntity>().ToList();
-            var entries = _syncedRealm.All<EntryEntity>().ToList();
+            var s = _syncedRealm.Subscriptions.State;
             await _syncedRealm.Subscriptions.WaitForSynchronizationAsync();
+            var g = 22;
             
             //CopyObjectIds();
             //RemoveWeirdos();
