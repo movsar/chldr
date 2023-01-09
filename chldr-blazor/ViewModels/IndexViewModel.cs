@@ -61,11 +61,11 @@ namespace chldr_blazor.ViewModels
 
         internal void ShowRandomEntries()
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 Entries.Clear();
 
-                var randomEntries = _dataAccess.GetRandomEntries();
+                var randomEntries = await _dataAccess.GetRandomEntries();
                 var searchResults = new SearchResultsModel(SearchResultsModel.Mode.Random);
                 searchResults.Entries.AddRange(randomEntries);
                 ShowResults(searchResults, "");

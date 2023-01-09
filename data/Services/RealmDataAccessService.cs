@@ -438,16 +438,16 @@ namespace Data.Services
 
         private void AddSubscriptionsToRealm()
         {
-            var subscriptions = _syncedRealm.Subscriptions;
+            var subscriptions = RealmDatabase.Subscriptions;
             subscriptions.Update(() =>
             {
-                subscriptions.Add(_syncedRealm.All<EntryEntity>());
-                subscriptions.Add(_syncedRealm.All<WordEntity>());
-                subscriptions.Add(_syncedRealm.All<TextEntity>());
-                subscriptions.Add(_syncedRealm.All<PhraseEntity>());
-                subscriptions.Add(_syncedRealm.All<SourceEntity>());
-                subscriptions.Add(_syncedRealm.All<LanguageEntity>());
-                subscriptions.Add(_syncedRealm.All<UserEntity>());
+                subscriptions.Add(RealmDatabase.All<EntryEntity>());
+                subscriptions.Add(RealmDatabase.All<WordEntity>());
+                subscriptions.Add(RealmDatabase.All<TextEntity>());
+                subscriptions.Add(RealmDatabase.All<PhraseEntity>());
+                subscriptions.Add(RealmDatabase.All<SourceEntity>());
+                subscriptions.Add(RealmDatabase.All<LanguageEntity>());
+                subscriptions.Add(RealmDatabase.All<UserEntity>());
             });
         }
         private async Task<Realm> GetSyncedRealmInstance()
@@ -462,14 +462,14 @@ namespace Data.Services
             _user = await _app.LogInAsync(Credentials.Anonymous());
 
             var config = new FlexibleSyncConfiguration(_user);
-            _syncedRealm = await Realm.GetInstanceAsync(config);
+            RealmDatabase = await Realm.GetInstanceAsync(config);
 
             AddSubscriptionsToRealm();
         }
 
-        private void CopyFromLocalToSyncedRealm()
+        private async void CopyFromLocalToSyncedRealm()
         {
-            RealmDatabase = GetRealmInstance();
+            RealmDatabase = await GetRealmInstanceAsync();
             _syncedRealm.Write(() =>
             {
                 var languages = RealmDatabase.All<LanguageEntity>();
@@ -579,13 +579,13 @@ namespace Data.Services
             });
         }
 
-        public async void DoDangerousTheStuff()
+        public  void DoDangerousTheStuff()
         {
-            await ConnectToSyncedDatabase();
-            var s = _syncedRealm.Subscriptions.State;
-            await _syncedRealm.Subscriptions.WaitForSynchronizationAsync();
+            var entries = RealmDatabase.All<EntryEntity>().ToList();
+            var s = RealmDatabase.Subscriptions.State;
+            //await RealmDatabase.Subscriptions.WaitForSynchronizationAsync();
             var g = 22;
-            
+
             //CopyObjectIds();
             //RemoveWeirdos();
             //SetSourceNotes();
@@ -596,7 +596,7 @@ namespace Data.Services
             //RemoveExistingDuplicatingInLegacyPhrases();
 
         }
-        private static RealmConfiguration GetRealmConfiguration()
+        private static RealmConfiguration GetLocalRealmConfiguration()
         {
             var dbPath = Path.Combine(FileService.AppDataDirectory, FileService.DatabaseName);
 
@@ -616,19 +616,21 @@ namespace Data.Services
             var fs = new FileService();
             fs.PrepareDatabase();
 
-            RealmDatabase = Realm.GetInstance(GetRealmConfiguration());
-
-            Task.Run(DoDangerousTheStuff).Wait();
+            Task.Run(async () =>
+            {
+                await ConnectToSyncedDatabase();
+                DoDangerousTheStuff();
+            }).Wait();
         }
 
         public Action<string, SearchResultsModel> NewSearchResults;
         private App _app;
         private User _user;
 
-        public IEnumerable<EntryModel> GetRandomEntries()
+        public async Task<IEnumerable<EntryModel>> GetRandomEntries()
         {
             var randomizer = new Random();
-            var entries = GetRealmInstance().All<EntryEntity>().AsEnumerable();
+            var entries = (await GetRealmInstanceAsync()).All<EntryEntity>().AsEnumerable();
 
             // Takes random entries and shuffles them to break the natural order
             return entries
@@ -645,9 +647,10 @@ namespace Data.Services
             await searchEngine.FindAsync(inputText);
         }
 
-        internal Realm GetRealmInstance()
+        internal async Task<Realm> GetRealmInstanceAsync()
         {
-            return Realm.GetInstance(GetRealmConfiguration());
+            return await GetSyncedRealmInstance();
+            //Realm.GetInstance(GetRealmConfiguration());
         }
     }
 }

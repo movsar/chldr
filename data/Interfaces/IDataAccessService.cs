@@ -9,7 +9,7 @@ namespace Data.Interfaces
 {
     public interface IDataAccessService
     {
-        IEnumerable<EntryModel> GetRandomEntries();
+        Task<IEnumerable<EntryModel>> GetRandomEntries();
         Task FindAsync(string inputText);
     }
 }
