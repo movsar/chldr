@@ -17,9 +17,9 @@ namespace Data.Search
 
         protected async Task DirectSearch(string inputText, Expression<Func<EntryEntity, bool>> filter, int limit)
         {
-            var resultingEntries = await Task.Run(async () =>
+            var resultingEntries = await Task.Run(() =>
             {
-                var realmInstance = await _dataAccess.GetRealmInstanceAsync();
+                var realmInstance = _dataAccess.GetRealmInstance();
                 var results = new SearchResultsModel(SearchResultsModel.Mode.Direct);
 
                 var entries = realmInstance.All<EntryEntity>().Where(filter)
@@ -40,9 +40,9 @@ namespace Data.Search
 
         protected async Task ReverseSearch(string inputText, Expression<Func<TranslationEntity, bool>> filter, int limit)
         {
-            var resultingEntries = await Task.Run(async () =>
+            var resultingEntries = await Task.Run(() =>
             {
-                var realmInstance = await _dataAccess.GetRealmInstanceAsync();
+                var realmInstance = _dataAccess.GetRealmInstance();
                 var results = new SearchResultsModel(SearchResultsModel.Mode.Direct);
 
                 var translations = realmInstance.All<TranslationEntity>()
