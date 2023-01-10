@@ -65,7 +65,7 @@ namespace chldr_blazor.ViewModels
             {
                 Entries.Clear();
 
-                var randomEntries = await _dataAccess.GetRandomEntries();
+                var randomEntries = _dataAccess.GetRandomEntries();
                 var searchResults = new SearchResultsModel(SearchResultsModel.Mode.Random);
                 searchResults.Entries.AddRange(randomEntries);
                 ShowResults(searchResults, "");
