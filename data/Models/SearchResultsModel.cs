@@ -14,11 +14,16 @@ namespace Data.Models
             Reverse,
             Random
         }
-        public List<EntryModel> Entries { get; } = new List<EntryModel>();
+
+        public string InputText { get; }
+        public List<EntryModel> Entries { get; }
         public Mode SearchMode { get; }
-        public SearchResultsModel(Mode searchMode)
+
+        public SearchResultsModel(string inputText, List<EntryModel> resultingEntries, Mode mode)
         {
-            SearchMode = searchMode;
+            InputText = inputText;
+            Entries = resultingEntries;
+            SearchMode = mode;
         }
     }
 }

@@ -8,19 +8,21 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Data.Interfaces;
 
 namespace Data.Search
 {
     internal abstract class SearchEngine
     {
-        protected readonly RealmDataAccessService _dataAccess;
+        protected readonly DataAccess _dataAccess;
 
         protected async Task DirectSearch(string inputText, Expression<Func<EntryEntity, bool>> filter, int limit)
         {
-            var resultingEntries = await Task.Run(() =>
+            var resultingEntries = new List<EntryModel>();
+
+            await Task.Run(() =>
             {
                 var realmInstance = _dataAccess.GetRealmInstance();
-                var results = new SearchResultsModel(SearchResultsModel.Mode.Direct);
 
                 var entries = realmInstance.All<EntryEntity>().Where(filter)
                                                         .AsEnumerable()
@@ -29,21 +31,21 @@ namespace Data.Search
                                                         .Take(limit);
                 foreach (var entry in entries)
                 {
-                    results.Entries.Add(new EntryModel(entry));
+                    resultingEntries.Add(new EntryModel(entry));
                 }
-
-                return results;
             });
 
-            _dataAccess.NewSearchResults?.Invoke(inputText, resultingEntries);
+            var args = new SearchResultsModel(inputText, resultingEntries, SearchResultsModel.Mode.Direct);
+            _dataAccess.GotNewSearchResults?.Invoke(args);
         }
 
         protected async Task ReverseSearch(string inputText, Expression<Func<TranslationEntity, bool>> filter, int limit)
         {
-            var resultingEntries = await Task.Run(() =>
+            var resultingEntries = new List<EntryModel>();
+
+            await Task.Run(() =>
             {
                 var realmInstance = _dataAccess.GetRealmInstance();
-                var results = new SearchResultsModel(SearchResultsModel.Mode.Direct);
 
                 var translations = realmInstance.All<TranslationEntity>()
                                                                    .Where(filter)
@@ -52,15 +54,14 @@ namespace Data.Search
                                                                    .Take(limit);
                 foreach (var translation in translations)
                 {
-                    results.Entries.Add(new EntryModel(translation.Entry));
+                    resultingEntries.Add(new EntryModel(translation.Entry));
                 }
-
-                return results;
             });
 
-            _dataAccess.NewSearchResults?.Invoke(inputText, resultingEntries);
+            var args = new SearchResultsModel(inputText, resultingEntries, SearchResultsModel.Mode.Reverse);
+            _dataAccess.GotNewSearchResults?.Invoke(args);
         }
-        public SearchEngine(RealmDataAccessService dataAccess)
+        public SearchEngine(DataAccess dataAccess)
         {
             _dataAccess = dataAccess;
         }

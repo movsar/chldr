@@ -10,19 +10,19 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Data.Interfaces;
 
 namespace Data.Search
 {
     internal class MainSearchEngine : SearchEngine
     {
-        static bool pr = false;
         Expression<Func<EntryEntity, bool>> StartsWithFilter(string inputText) => translation => translation.RawContents.Contains(inputText);
         Expression<Func<EntryEntity, bool>> EntryFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
         Expression<Func<TranslationEntity, bool>> TranslationFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
 
         static string PreviousInputText;
         static Dictionary<int, IQueryable<Entry>> PreviousResults = new Dictionary<int, IQueryable<Entry>>();
-        public MainSearchEngine(RealmDataAccessService dataAccess) : base(dataAccess) { }
+        public MainSearchEngine(DataAccess dataAccess) : base(dataAccess) { }
 
         public async Task FindAsync(string inputText)
         {

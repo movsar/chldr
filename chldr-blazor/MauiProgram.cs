@@ -7,6 +7,7 @@ namespace chldr_blazor
 {
     public static class MauiProgram
     {
+        public const bool UseOnlineDataAccess = false;
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
@@ -35,7 +36,8 @@ namespace chldr_blazor
 
         public static MauiAppBuilder RegisterAppServices(this MauiAppBuilder mauiAppBuilder)
         {
-            mauiAppBuilder.Services.AddSingleton<IDataAccessService, RealmDataAccessService>();
+            mauiAppBuilder.Services.AddSingleton<OfflineDataAccess>();
+            mauiAppBuilder.Services.AddSingleton<OnlineDataAccess>();
             mauiAppBuilder.Services.AddLocalization();
             return mauiAppBuilder;
         }

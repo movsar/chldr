@@ -23,7 +23,7 @@ namespace chldr_blazor.ViewModels
         private List<EntryViewModel> _entries = new();
         private string _lastInputText;
 
-        private RealmDataAccessService _dataAccess;
+        private DataAccess _dataAccess;
         private Stopwatch _stopWatch = new Stopwatch();
 
         // Fired whenever user types something into the search field
@@ -48,48 +48,46 @@ namespace chldr_blazor.ViewModels
         [ObservableProperty]
         private string statusText;
 
-        private void OnNewSearchResults(string inputText, SearchResultsModel searchResults)
+
+        internal void ShowRandomEntries()
+        {
+            var randomEntries = _dataAccess.GetRandomEntries();
+            ShowResults(randomEntries);
+        }
+
+        public IndexViewModel(OfflineDataAccess dataAccess)
+        {
+            _dataAccess = dataAccess;
+            _dataAccess.GotNewSearchResults += DataAccess_GotNewSearchResults;
+            ShowRandomEntries();
+        }
+
+        private void DataAccess_GotNewSearchResults(SearchResultsModel results)
         {
             var resultsRetrieved = _stopWatch.ElapsedMilliseconds;
 
-            ShowResults(searchResults, inputText);
+            ShowResults(results);
 
             var resultsShown = _stopWatch.ElapsedMilliseconds;
             Debug.WriteLine($"Found {Entries.Count}");
             _stopWatch.Stop();
         }
 
-        internal void ShowRandomEntries()
+        internal void ShowResults(IEnumerable<EntryModel> entries)
         {
-            Task.Run(async () =>
-            {
-                Entries.Clear();
-
-                var randomEntries = _dataAccess.GetRandomEntries();
-                var searchResults = new SearchResultsModel(SearchResultsModel.Mode.Random);
-                searchResults.Entries.AddRange(randomEntries);
-                ShowResults(searchResults, "");
-            });
+            Entries = entries.Select(e => new EntryViewModel(e)).ToList();
         }
 
-        public IndexViewModel(IDataAccessService dataAccess)
+        internal void ShowResults(SearchResultsModel searchResults)
         {
-            _dataAccess = (RealmDataAccessService)dataAccess;
-            _dataAccess.NewSearchResults += OnNewSearchResults;
-
-            ShowRandomEntries();
-        }
-
-        internal void ShowResults(SearchResultsModel results, string inputText)
-        {
-            if (_lastInputText != inputText)
+            if (_lastInputText != searchResults.InputText)
             {
                 Entries.Clear();
             }
 
-            _lastInputText = inputText;
+            _lastInputText = searchResults.InputText;
 
-            Entries = Entries.Union(results.Entries.Select(em => new EntryViewModel(em))).ToList();
+            Entries = Entries.Union(searchResults.Entries.Select(em => new EntryViewModel(em))).ToList();
         }
     }
 }

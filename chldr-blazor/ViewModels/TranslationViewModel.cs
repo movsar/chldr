@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Data.Interfaces;
 using Data.Models;
+using Data.Services;
 using MongoDB.Bson;
 using Realms.Exceptions;
 using System;
@@ -28,12 +29,12 @@ namespace chldr_blazor.ViewModels
 
         public ICommand Search { get; set; }
 
-        private IDataAccessService _dataAccess;
+        private DataAccess _dataAccess;
 
         public async void DoSearch()
         {
             var translationText = Content.ToLower();
-            
+
             string[] prefixesToSearch = {
                 "см",
                 "понуд.? от",
@@ -71,7 +72,8 @@ namespace chldr_blazor.ViewModels
             Notes = translation.Notes;
 
             Search = new RelayCommand(DoSearch);
-            _dataAccess = App.ServiceProvider.GetService<IDataAccessService>();
+
+            _dataAccess = App.GetCurrentDataAccess();
         }
     }
 }

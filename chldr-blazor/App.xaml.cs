@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Data.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace chldr_blazor
 {
@@ -19,6 +20,11 @@ namespace chldr_blazor
             // 5. remove weitd things Ψ - done
             // 6. setup device sync for realm
             // 7. setup user management
+        }
+
+        internal static DataAccess GetCurrentDataAccess()
+        {
+            return App.ServiceProvider.GetService<OfflineDataAccess>();
         }
     }
 }
