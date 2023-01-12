@@ -88,6 +88,15 @@ namespace chldr_blazor.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Registration has been successful, please check your email and follow the included link to activate your profile..
+        /// </summary>
+        internal static string EmailSentMessage {
+            get {
+                return ResourceManager.GetString("EmailSentMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to First Name.
         /// </summary>
         internal static string First_Name {

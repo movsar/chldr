@@ -77,5 +77,15 @@ namespace Data.Services
 
             return _realm;
         }
+
+        public async Task RegisterNewUser(string email, string password, string username, string firstName, string lastName)
+        {
+            await _app.EmailPasswordAuth.RegisterUserAsync(email, password);
+        }
+
+        public async Task ConfirmUser(string token, string tokenId)
+        {
+            await _app.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
+        }
     }
 }

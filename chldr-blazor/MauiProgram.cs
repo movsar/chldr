@@ -2,6 +2,7 @@
 using chldr_blazor.ViewModels;
 using Data.Interfaces;
 using Data.Services;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 
 namespace chldr_blazor
@@ -45,6 +46,8 @@ namespace chldr_blazor
         public static MauiAppBuilder RegisterViewModels(this MauiAppBuilder mauiAppBuilder)
         {
             mauiAppBuilder.Services.AddSingleton<IndexPageViewModel>();
+            mauiAppBuilder.Services.AddSingleton<LoginPageViewModel>();
+            mauiAppBuilder.Services.AddSingleton<RegistrationPageViewModel>();
             return mauiAppBuilder;
         }
         public static MauiAppBuilder RegisterViews(this MauiAppBuilder mauiAppBuilder)

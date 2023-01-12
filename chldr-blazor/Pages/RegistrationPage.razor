@@ -1,25 +1,29 @@
 ﻿@page "/registration";
-@inject IStringLocalizer<AppLocalizations> Localizer;
 
+
+@inject IStringLocalizer<AppLocalizations> Localizer;
+@inject RegistrationPageViewModel ViewModel;
+@inject LoginPageViewModel LogInViewModel;
 <h3>
     @Localizer["Registration"]
 </h3>
-<hr/>
+
+<hr />
 
 <div class="col-12 d-flex justify-content-center mt-lg-5">
 
     <form class="col-6">
         <!-- Email and Username -->
         <div class="form-outline mb-4">
-            <input type="email" class="form-control" placeholder="@Localizer["Email"]" required />
+            <input type="email" class="form-control" placeholder="@Localizer["Email"]" required @bind="ViewModel.Email" />
         </div>
         <div class="form-outline mb-4">
-            <input type="text" class="form-control" placeholder="@Localizer["Username"]" required />
+            <input type="text" class="form-control" placeholder="@Localizer["Username"]" required @bind="ViewModel.Username" />
         </div>
 
         <!-- Password -->
         <div class="form-outline mb-4">
-            <input type="password" class="form-control" placeholder="@Localizer["Password"]" required />
+            <input type="password" class="form-control" placeholder="@Localizer["Password"]" required @bind="ViewModel.Password" />
         </div>
 
         <div class="form-outline mb-4">
@@ -28,35 +32,35 @@
 
         <!-- Personal Details -->
         <div class="form-outline mb-4">
-            <input type="text" class="form-control" placeholder="@Localizer["First Name"]" />
+            <input type="text" class="form-control" placeholder="@Localizer["First Name"]" @bind="ViewModel.FirstName" />
         </div>
 
         <div class="form-outline mb-4">
-            <input type="text" class="form-control" placeholder="@Localizer["Last Name"]" />
+            <input type="text" class="form-control" placeholder="@Localizer["Last Name"]" @bind="ViewModel.LastName" />
         </div>
 
         <!-- Register buttons -->
         <div class="row d-flex align-content-end">
             <div class="col">
-                <button type="button" class="btn btn-success btn-block mb-4">@Localizer["Register"]</button>
+                <button type="button" class="btn btn-success btn-block mb-4" @onclick="ViewModel.SendRegistrationRequest">@Localizer["Register"]</button>
             </div>
         </div>
 
         <div class="text-center">
             <p>@Localizer["or sign up with:"]</p>
-            <button type="button" class="btn btn-link btn-floating mx-1">
+            <button type="button" class="btn btn-link btn-floating mx-1" @onclick="LogInViewModel.SignInWithFacebook">
                 <i class="fab fa-facebook-f"></i>
             </button>
 
-            <button type="button" class="btn btn-link btn-floating mx-1">
+            <button type="button" class="btn btn-link btn-floating mx-1" @onclick="LogInViewModel.SignInWithGoogle">
                 <i class="fab fa-google"></i>
             </button>
 
-            <button type="button" class="btn btn-link btn-floating mx-1">
+            <button type="button" class="btn btn-link btn-floating mx-1" @onclick="LogInViewModel.SignInWithTwitter">
                 <i class="fab fa-twitter"></i>
             </button>
 
-            <button type="button" class="btn btn-link btn-floating mx-1">
+            <button type="button" class="btn btn-link btn-floating mx-1" @onclick="LogInViewModel.SignInWithGitHub">
                 <i class="fab fa-github"></i>
             </button>
         </div>

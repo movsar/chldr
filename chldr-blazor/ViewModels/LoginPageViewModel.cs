@@ -8,6 +8,9 @@ namespace chldr_blazor.ViewModels
 {
     internal class LoginPageViewModel
     {
-        
+        public void SignInWithGoogle() { }
+        public void SignInWithTwitter() { }
+        public void SignInWithGitHub() { }
+        public void SignInWithFacebook() { }
     }
 }

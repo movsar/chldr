@@ -126,6 +126,9 @@
   <data name="Email" xml:space="preserve">
     <value>Email</value>
   </data>
+  <data name="EmailSentMessage" xml:space="preserve">
+    <value>Registration has been successful, please check your email and follow the included link to activate your profile.</value>
+  </data>
   <data name="First Name" xml:space="preserve">
     <value>First Name</value>
   </data>
