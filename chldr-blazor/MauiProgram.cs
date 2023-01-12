@@ -1,4 +1,5 @@
-﻿using chldr_blazor.ViewModels;
+﻿using chldr_blazor.Pages;
+using chldr_blazor.ViewModels;
 using Data.Interfaces;
 using Data.Services;
 using Microsoft.Extensions.Logging;
@@ -43,11 +44,13 @@ namespace chldr_blazor
         }
         public static MauiAppBuilder RegisterViewModels(this MauiAppBuilder mauiAppBuilder)
         {
-            mauiAppBuilder.Services.AddSingleton<IndexViewModel>();
+            mauiAppBuilder.Services.AddSingleton<IndexPageViewModel>();
             return mauiAppBuilder;
         }
         public static MauiAppBuilder RegisterViews(this MauiAppBuilder mauiAppBuilder)
         {
+            mauiAppBuilder.Services.AddSingleton<LoginPage>();
+
             return mauiAppBuilder;
         }
     }

@@ -1,0 +1,64 @@
+﻿@page "/registration";
+@inject IStringLocalizer<AppLocalizations> Localizer;
+
+<h3>
+    @Localizer["Registration"]
+</h3>
+<hr/>
+
+<div class="col-12 d-flex justify-content-center mt-lg-5">
+
+    <form class="col-6">
+        <!-- Email and Username -->
+        <div class="form-outline mb-4">
+            <input type="email" class="form-control" placeholder="@Localizer["Email"]" required />
+        </div>
+        <div class="form-outline mb-4">
+            <input type="text" class="form-control" placeholder="@Localizer["Username"]" required />
+        </div>
+
+        <!-- Password -->
+        <div class="form-outline mb-4">
+            <input type="password" class="form-control" placeholder="@Localizer["Password"]" required />
+        </div>
+
+        <div class="form-outline mb-4">
+            <input type="password" class="form-control" placeholder="@Localizer["Confirm password"]" required />
+        </div>
+
+        <!-- Personal Details -->
+        <div class="form-outline mb-4">
+            <input type="text" class="form-control" placeholder="@Localizer["First Name"]" />
+        </div>
+
+        <div class="form-outline mb-4">
+            <input type="text" class="form-control" placeholder="@Localizer["Last Name"]" />
+        </div>
+
+        <!-- Register buttons -->
+        <div class="row d-flex align-content-end">
+            <div class="col">
+                <button type="button" class="btn btn-success btn-block mb-4">@Localizer["Register"]</button>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <p>@Localizer["or sign up with:"]</p>
+            <button type="button" class="btn btn-link btn-floating mx-1">
+                <i class="fab fa-facebook-f"></i>
+            </button>
+
+            <button type="button" class="btn btn-link btn-floating mx-1">
+                <i class="fab fa-google"></i>
+            </button>
+
+            <button type="button" class="btn btn-link btn-floating mx-1">
+                <i class="fab fa-twitter"></i>
+            </button>
+
+            <button type="button" class="btn btn-link btn-floating mx-1">
+                <i class="fab fa-github"></i>
+            </button>
+        </div>
+    </form>
+</div>

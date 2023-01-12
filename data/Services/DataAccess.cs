@@ -35,10 +35,5 @@ namespace Data.Services
                 .OrderBy(entry => entry.GetHashCode())
                 .Select(entry => new EntryModel(entry));
         }
-
-        public async void DoDangerousTheStuff()
-        {
-
-        }
     }
 }

@@ -120,17 +120,44 @@
   <data name="App title" xml:space="preserve">
     <value>Chechen Language Dictionary</value>
   </data>
+  <data name="Confirm password" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="First Name" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="Forgot password?" xml:space="preserve">
+    <value>Forgot password?</value>
+  </data>
   <data name="Guest" xml:space="preserve">
     <value>Guest</value>
   </data>
   <data name="Home" xml:space="preserve">
     <value>Home</value>
   </data>
+  <data name="Last Name" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
   <data name="Log In" xml:space="preserve">
     <value>Log In</value>
   </data>
+  <data name="or sign up with:" xml:space="preserve">
+    <value>or sign up with:</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Registration" xml:space="preserve">
+    <value>Registration</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Search</value>
@@ -140,5 +167,8 @@
   </data>
   <data name="Start typing" xml:space="preserve">
     <value>Start typing ...</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Username</value>
   </data>
 </root>

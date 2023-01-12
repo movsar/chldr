@@ -1,0 +1,48 @@
+﻿@page "/login";
+@inject IStringLocalizer<AppLocalizations> Localizer;
+
+<div class="col-12 d-flex justify-content-center mt-lg-5">
+
+    <form class="col-6">
+        <!-- Email input -->
+        <div class="form-outline mb-4">
+            <input type="email" class="form-control" placeholder="@Localizer["Email"]" />
+        </div>
+
+        <!-- Password input -->
+        <div class="form-outline mb-4">
+            <input type="password" class="form-control" placeholder="@Localizer["Password"]" />
+        </div>
+
+        <div class="row d-flex">
+            <div class="col">
+                <button type="button" class="btn btn-primary btn-block mb-4">@Localizer["Log in"]</button>
+                <a href="/registration">
+                    <button type="button" class="btn btn-primary btn-block mb-4">@Localizer["Register"]</button>
+                </a>
+            </div>
+        </div>
+
+        <a href="#!">@Localizer["Forgot password?"]</a>
+        <!-- Submit button -->
+        <!-- Register buttons -->
+        <div class="text-center">
+            <p>@Localizer["or sign up with:"]</p>
+            <button type="button" class="btn btn-link btn-floating mx-1">
+                <i class="fab fa-facebook-f"></i>
+            </button>
+
+            <button type="button" class="btn btn-link btn-floating mx-1">
+                <i class="fab fa-google"></i>
+            </button>
+
+            <button type="button" class="btn btn-link btn-floating mx-1">
+                <i class="fab fa-twitter"></i>
+            </button>
+
+            <button type="button" class="btn btn-link btn-floating mx-1">
+                <i class="fab fa-github"></i>
+            </button>
+        </div>
+    </form>
+</div>

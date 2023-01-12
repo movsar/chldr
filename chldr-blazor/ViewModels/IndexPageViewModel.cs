@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Components;
 namespace chldr_blazor.ViewModels
 {
     [ObservableObject]
-    public partial class IndexViewModel
+    public partial class IndexPageViewModel
     {
         [ObservableProperty]
         private List<EntryViewModel> _entries = new();
@@ -55,7 +55,7 @@ namespace chldr_blazor.ViewModels
             ShowResults(randomEntries);
         }
 
-        public IndexViewModel(OfflineDataAccess dataAccess)
+        public IndexPageViewModel(OfflineDataAccess dataAccess)
         {
             _dataAccess = dataAccess;
             _dataAccess.GotNewSearchResults += DataAccess_GotNewSearchResults;
