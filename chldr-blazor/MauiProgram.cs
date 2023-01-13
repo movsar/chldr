@@ -40,6 +40,7 @@ namespace chldr_blazor
         {
             mauiAppBuilder.Services.AddSingleton<OfflineDataAccess>();
             mauiAppBuilder.Services.AddSingleton<OnlineDataAccess>();
+            mauiAppBuilder.Services.AddSingleton<DatabaseOperations>();
             mauiAppBuilder.Services.AddLocalization();
             return mauiAppBuilder;
         }

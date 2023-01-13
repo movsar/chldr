@@ -16,12 +16,12 @@ namespace Data.Search
 {
     internal class MainSearchEngine : SearchEngine
     {
-        Expression<Func<EntryEntity, bool>> StartsWithFilter(string inputText) => translation => translation.RawContents.Contains(inputText);
-        Expression<Func<EntryEntity, bool>> EntryFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
-        Expression<Func<TranslationEntity, bool>> TranslationFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
+        Expression<Func<Entities.Entry, bool>> StartsWithFilter(string inputText) => translation => translation.RawContents.Contains(inputText);
+        Expression<Func<Entities.Entry, bool>> EntryFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
+        Expression<Func<Translation, bool>> TranslationFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
 
         static string PreviousInputText;
-        static Dictionary<int, IQueryable<Entry>> PreviousResults = new Dictionary<int, IQueryable<Entry>>();
+        static Dictionary<int, IQueryable<Microsoft.Maui.Controls.Entry>> PreviousResults = new Dictionary<int, IQueryable<Microsoft.Maui.Controls.Entry>>();
         public MainSearchEngine(DataAccess dataAccess) : base(dataAccess) { }
 
         public async Task FindAsync(string inputText)

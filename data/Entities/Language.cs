@@ -9,11 +9,10 @@ using System.Threading.Tasks;
 
 namespace Data.Entities
 {
-    [MapTo("Language")]
-    public class LanguageEntity : RealmObject
+    public class Language : RealmObject
     {
         [PrimaryKey]
-        public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
+        public ObjectId _id { get; set; }
         public string Code { get; set; } = string.Empty;
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
     }

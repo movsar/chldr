@@ -20,7 +20,7 @@ namespace Data.Models
         public int Type { get; }
 
         public int Rate { get; }
-        public EntryModel(EntryEntity entry)
+        public EntryModel(Entities.Entry entry)
         {
             EntryId = entry._id;
             Type = entry.Type;

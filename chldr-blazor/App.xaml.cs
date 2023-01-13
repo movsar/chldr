@@ -24,7 +24,7 @@ namespace chldr_blazor
 
         internal static DataAccess GetCurrentDataAccess()
         {
-            return App.ServiceProvider.GetService<OfflineDataAccess>();
+            return App.ServiceProvider.GetService<OnlineDataAccess>();
         }
     }
 }

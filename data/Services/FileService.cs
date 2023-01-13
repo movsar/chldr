@@ -10,7 +10,7 @@ namespace Data.Services.PartialMethods
 {
     public partial class FileService
     {
-        public static string AppDataDirectory = AppContext.BaseDirectory;
+        public static string AppDataDirectory = Path.Combine(AppContext.BaseDirectory, "Data");
         public const string DatabaseName = "database.realm";
         partial void PrepareDatabaseFile();
 

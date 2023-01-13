@@ -2,39 +2,46 @@
 using Data.Enums;
 using MongoDB.Bson;
 using Realms;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Entry = Data.Entities.Entry;
 
 namespace Data.Services
 {
-    internal class DatabaseOperations
+    public class DatabaseOperations
     {
-        Realm _localRealm, _syncedRealm;
+        static Realm _localRealm, _syncedRealm;
+        private OfflineDataAccess _offlineDataAccess;
+        private OnlineDataAccess _onlineDataAccess;
 
-        private async Task CopyEntriesByChunks(IEnumerable<EntryEntity> entries)
+        public DatabaseOperations(OfflineDataAccess offlineDataAccess, OnlineDataAccess onlineDataAccess)
         {
-            await _syncedRealm.WriteAsync(() =>
+            _offlineDataAccess = offlineDataAccess;
+            _onlineDataAccess = onlineDataAccess;
+        }
+        public void RunMaintenance()
+        {
+            
+        }
+        private void CopyEntriesByChunks(IEnumerable<Entities.Entry> entries)
+        {
+            _syncedRealm.Write(() =>
             {
                 foreach (var entry in entries)
                 {
-                    var newEntry = new EntryEntity()
+                    var newEntry = new Entities.Entry()
                     {
                         _id = entry._id,
                         UpdatedAt = entry.UpdatedAt,
                         Rate = entry.Rate,
                         RawContents = entry.RawContents,
-                        Source = _syncedRealm.All<SourceEntity>().FirstOrDefault(s => s.Name == entry.Source.Name),
+                        Source = _syncedRealm.All<Source>().FirstOrDefault(s => s.Name == entry.Source.Name),
                         Type = entry.Type,
-                        User = _syncedRealm.All<UserEntity>().FirstOrDefault(u => u.Username == entry.User.Username),
+                        User = _syncedRealm.All<User>().FirstOrDefault(u => u.Username == entry.User.Username),
                     };
 
                     foreach (var translation in entry.Translations)
                     {
-                        var newTranslation = new TranslationEntity()
+                        var newTranslation = new Translation()
                         {
                             _id = translation._id,
                             UpdatedAt = translation.UpdatedAt,
@@ -43,8 +50,8 @@ namespace Data.Services
                             Rate = translation.Rate,
                             RawContents = translation.RawContents,
                             Entry = newEntry,
-                            Language = _syncedRealm.All<LanguageEntity>().FirstOrDefault(l => l.Code == translation.Language.Code),
-                            User = _syncedRealm.All<UserEntity>().FirstOrDefault(u => u.Username == translation.User.Username),
+                            Language = _syncedRealm.All<Language>().FirstOrDefault(l => l.Code == translation.Language.Code),
+                            User = _syncedRealm.All<User>().FirstOrDefault(u => u.Username == translation.User.Username),
                         };
 
                         newEntry.Translations.Add(newTranslation);
@@ -53,7 +60,7 @@ namespace Data.Services
                     switch (entry.Type)
                     {
                         case EntryType.Word:
-                            var word = new WordEntity()
+                            var word = new Word()
                             {
                                 _id = entry.Word._id,
                                 UpdatedAt = entry.Word.UpdatedAt,
@@ -71,7 +78,7 @@ namespace Data.Services
                             break;
 
                         case EntryType.Phrase:
-                            var phrase = new PhraseEntity()
+                            var phrase = new Phrase()
                             {
                                 _id = entry.Phrase._id,
                                 UpdatedAt = entry.Phrase.UpdatedAt,
@@ -87,27 +94,38 @@ namespace Data.Services
                             break;
                     }
 
-                    _syncedRealm.Add(newEntry);
+                    try
+                    {
+                        _syncedRealm.Add(newEntry);
+                    }
+                    catch (Exception)
+                    {
+                        continue;
+                    }
                 }
 
             });
         }
 
-        private async Task CopyFromLocalToSyncedRealm()
+        public async Task CopyFromLocalToSyncedRealm()
         {
-            //RealmDatabase = GetRealmInstance();
+            _localRealm = _offlineDataAccess.GetRealmInstance();
+            _syncedRealm = _onlineDataAccess.GetRealmInstance();
+
+            await _syncedRealm.Subscriptions.WaitForSynchronizationAsync();
+
             _syncedRealm.Write(() =>
             {
-                var languages = _localRealm.All<LanguageEntity>();
+                var languages = _localRealm.All<Language>();
                 foreach (var language in languages)
                 {
-                    _syncedRealm.Add(new LanguageEntity() { Code = language.Code, _id = language._id });
+                    _syncedRealm.Add(new Language() { Code = language.Code, _id = language._id });
                 }
 
-                var sources = _localRealm.All<SourceEntity>();
+                var sources = _localRealm.All<Source>();
                 foreach (var item in sources)
                 {
-                    _syncedRealm.Add(new SourceEntity()
+                    _syncedRealm.Add(new Source()
                     {
                         _id = item._id,
                         UpdatedAt = item.UpdatedAt,
@@ -116,10 +134,10 @@ namespace Data.Services
                     });
                 }
 
-                var users = _localRealm.All<UserEntity>();
+                var users = _localRealm.All<User>();
                 foreach (var item in users)
                 {
-                    _syncedRealm.Add(new UserEntity()
+                    _syncedRealm.Add(new User()
                     {
                         _id = item._id,
                         Email = item.Email,
@@ -134,13 +152,14 @@ namespace Data.Services
             await _syncedRealm.Subscriptions.WaitForSynchronizationAsync();
 
             Debug.WriteLine($"Starting inserting entries");
-            var entries = _localRealm.All<EntryEntity>().AsEnumerable().OrderBy(e => e._id);
+            var entries = _localRealm.All<Entry>().AsEnumerable().OrderBy(e => e._id);
             int totalCount = entries.Count();
-            for (int i = 0; i < totalCount; i = i + 200)
+            for (int i = 70000; i <= totalCount; i = i + 200)
             {
                 var entriesToUpload = entries.Skip(i);
                 entriesToUpload = entriesToUpload.Count() > 200 ? entriesToUpload.Take(200) : entriesToUpload;
-                await CopyEntriesByChunks(entriesToUpload);
+
+                CopyEntriesByChunks(entriesToUpload);
 
                 //_syncedRealm = await GetSyncedRealmInstance();
                 await _syncedRealm.Subscriptions.WaitForSynchronizationAsync();
@@ -152,7 +171,7 @@ namespace Data.Services
         private async Task UpdatePhrasesByChunks()
         {
             Debug.WriteLine($"Starting inserting entries");
-            var localPhrases = _localRealm.All<PhraseEntity>().AsEnumerable();
+            var localPhrases = _localRealm.All<Phrase>().AsEnumerable();
             int totalCount = localPhrases.Count();
 
             for (int i = 0; i < totalCount; i = i + 200)
@@ -164,7 +183,7 @@ namespace Data.Services
                 {
                     foreach (var localPhrase in itemsToUpdate)
                     {
-                        _localRealm.All<PhraseEntity>().First(p => p._id == localPhrase._id).Notes = localPhrase.Notes;
+                        _localRealm.All<Phrase>().First(p => p._id == localPhrase._id).Notes = localPhrase.Notes;
                     }
                 });
 
@@ -181,7 +200,7 @@ namespace Data.Services
             {
                 Debug.WriteLine("Doing stuff");
 
-                foreach (var entry in _localRealm.All<EntryEntity>().AsEnumerable().Where(entry =>
+                foreach (var entry in _localRealm.All<Entry>().AsEnumerable().Where(entry =>
                     entry.Source.Name == "Maciev"
                     || entry.Source.Name == "Anatslovar"
                     || entry.Source.Name == "Malaev"
@@ -203,12 +222,12 @@ namespace Data.Services
             {
                 Debug.WriteLine("Doing stuff");
 
-                foreach (var entry in _localRealm.All<EntryEntity>())
+                foreach (var entry in _localRealm.All<Entities.Entry>())
                 {
                     switch (entry.Type)
                     {
                         case EntryType.Word:
-                            var allForms = WordEntity.GetAllUniqueWordForms(entry.Word.Content, entry.Word.Forms, entry.Word.NounDeclensions, entry.Word.VerbTenses);
+                            var allForms = Word.GetAllUniqueWordForms(entry.Word.Content, entry.Word.Forms, entry.Word.NounDeclensions, entry.Word.VerbTenses);
                             entry.RawContents = string.Join("; ", allForms.Select(w => w)).ToLower();
 
                             break;
@@ -219,7 +238,7 @@ namespace Data.Services
                     }
                 }
 
-                foreach (var translation in _localRealm.All<TranslationEntity>())
+                foreach (var translation in _localRealm.All<Translation>())
                 {
                     translation.RawContents = translation.Content.ToLower();
                 }
@@ -231,7 +250,7 @@ namespace Data.Services
             _localRealm.Write(() =>
             {
                 Debug.WriteLine("Doing stuff");
-                foreach (var entry in _localRealm.All<EntryEntity>())
+                foreach (var entry in _localRealm.All<Entities.Entry>())
                 {
                     if (entry.Type != EntryType.Word)
                     {
@@ -249,7 +268,7 @@ namespace Data.Services
             _localRealm.Write(() =>
             {
                 Debug.WriteLine("Doing stuff");
-                foreach (var entry in _localRealm.All<EntryEntity>())
+                foreach (var entry in _localRealm.All<Entities.Entry>())
                 {
                     if (entry.Type != EntryType.Word)
                     {
@@ -265,10 +284,10 @@ namespace Data.Services
         {
             _localRealm.Write(() =>
             {
-                List<SourceEntity> sources = new List<SourceEntity>
+                List<Source> sources = new List<Source>
                 {
-                    new SourceEntity(){ Name = "GEO"},
-                    new SourceEntity(){ Name = "Yurslovar"},
+                    new Source(){ Name = "GEO"},
+                    new Source(){ Name = "Yurslovar"},
                 };
 
                 foreach (var s in sources)
@@ -384,11 +403,11 @@ namespace Data.Services
         }
         private void SetTranslationEntryAndUserLinks()
         {
-            var adminUser = _localRealm.All<UserEntity>().First();
+            var adminUser = _localRealm.All<User>().First();
 
             _localRealm.Write(() =>
             {
-                foreach (var entry in _localRealm.All<EntryEntity>())
+                foreach (var entry in _localRealm.All<Entities.Entry>())
                 {
                     entry.User = adminUser;
 
@@ -403,9 +422,9 @@ namespace Data.Services
         private void RemoveDuplicates()
         {
             int counter = 0;
-            var translations = _localRealm.All<TranslationEntity>();
+            var translations = _localRealm.All<Translation>();
             //translations.AsEnumerable().Select(translation => new { Translation = translation.Content, LanguageCode = translation.Language.Code });
-            var entries = _localRealm.All<EntryEntity>();
+            var entries = _localRealm.All<Entities.Entry>();
 
             var distinctEntryIds = entries.AsEnumerable().DistinctBy(e => e.RawContents).Select(e => e._id).ToArray();
 
@@ -418,7 +437,7 @@ namespace Data.Services
                 }
             }
 
-            var entriesToRemove = new HashSet<EntryEntity>();
+            var entriesToRemove = new HashSet<Entities.Entry>();
             foreach (var entry in entries.AsEnumerable().Where(e => duplicatingEntryIds.Contains(e._id)))
             {
                 foreach (var translation in entry.Translations)
@@ -463,7 +482,7 @@ namespace Data.Services
         {
             _localRealm.Write(() =>
             {
-                var source = _localRealm.All<SourceEntity>().First(s => s.Name == "1");
+                var source = _localRealm.All<Source>().First(s => s.Name == "1");
                 source.Name = "ikhasakhanov";
                 source.Notes = "";
             });
@@ -473,8 +492,8 @@ namespace Data.Services
             _localRealm.Write(() =>
             {
                 var thing = "Ψ".ToLower();
-                var phrases = _localRealm.All<PhraseEntity>().Where(p => p.Content.Contains("Ψ") || p.Notes.Contains("Ψ")).ToList();
-                var words = _localRealm.All<WordEntity>().Where(w => w.Notes.Contains("Ψ")).ToList();
+                var phrases = _localRealm.All<Phrase>().Where(p => p.Content.Contains("Ψ") || p.Notes.Contains("Ψ")).ToList();
+                var words = _localRealm.All<Word>().Where(w => w.Notes.Contains("Ψ")).ToList();
 
                 foreach (var phrase in phrases)
                 {
@@ -546,43 +565,43 @@ namespace Data.Services
         {
             _localRealm.Write(() =>
             {
-                var entries = _localRealm.All<EntryEntity>();
+                var entries = _localRealm.All<Entities.Entry>();
                 foreach (var entity in entries)
                 {
                     entity._id = entity._id;
                 }
 
-                var translations = _localRealm.All<TranslationEntity>();
+                var translations = _localRealm.All<Translation>();
                 foreach (var entity in translations)
                 {
                     entity._id = entity._id;
                 }
 
-                var languages = _localRealm.All<LanguageEntity>();
+                var languages = _localRealm.All<Language>();
                 foreach (var entity in languages)
                 {
                     entity._id = entity._id;
                 }
 
-                var phrases = _localRealm.All<PhraseEntity>();
+                var phrases = _localRealm.All<Phrase>();
                 foreach (var entity in phrases)
                 {
                     entity._id = entity._id;
                 }
 
-                var users = _localRealm.All<UserEntity>();
+                var users = _localRealm.All<User>();
                 foreach (var entity in users)
                 {
                     entity._id = entity._id;
                 }
 
-                var words = _localRealm.All<WordEntity>();
+                var words = _localRealm.All<Word>();
                 foreach (var entity in words)
                 {
                     entity._id = entity._id;
                 }
 
-                var sources = _localRealm.All<SourceEntity>();
+                var sources = _localRealm.All<Source>();
                 foreach (var entity in sources)
                 {
                     entity._id = entity._id;

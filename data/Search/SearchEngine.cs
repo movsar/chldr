@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Data.Interfaces;
+using Entry = Data.Entities.Entry;
 
 namespace Data.Search
 {
@@ -16,7 +17,7 @@ namespace Data.Search
     {
         protected readonly DataAccess _dataAccess;
 
-        protected async Task DirectSearch(string inputText, Expression<Func<EntryEntity, bool>> filter, int limit)
+        protected async Task DirectSearch(string inputText, Expression<Func<Entities.Entry, bool>> filter, int limit)
         {
             var resultingEntries = new List<EntryModel>();
 
@@ -24,7 +25,7 @@ namespace Data.Search
             {
                 var realmInstance = _dataAccess.GetRealmInstance();
 
-                var entries = realmInstance.All<EntryEntity>().Where(filter)
+                var entries = realmInstance.All<Entry>().Where(filter)
                                                         .AsEnumerable()
                                                         .OrderByDescending(entry => entry.Rate)
                                                         .ThenBy(entry => entry.RawContents.IndexOf(inputText))
@@ -39,7 +40,7 @@ namespace Data.Search
             _dataAccess.GotNewSearchResults?.Invoke(args);
         }
 
-        protected async Task ReverseSearch(string inputText, Expression<Func<TranslationEntity, bool>> filter, int limit)
+        protected async Task ReverseSearch(string inputText, Expression<Func<Translation, bool>> filter, int limit)
         {
             var resultingEntries = new List<EntryModel>();
 
@@ -47,7 +48,7 @@ namespace Data.Search
             {
                 var realmInstance = _dataAccess.GetRealmInstance();
 
-                var translations = realmInstance.All<TranslationEntity>()
+                var translations = realmInstance.All<Translation>()
                                                                    .Where(filter)
                                                                    .AsEnumerable()
                                                                    .OrderBy(translation => translation.Content.IndexOf(inputText))

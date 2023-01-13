@@ -13,7 +13,7 @@ namespace Data.Models
         public ObjectId Id { get; }
         public string Name { get; }
         public string Notes { get; }
-        public SourceModel(SourceEntity source)
+        public SourceModel(Source source)
         {
             Name = source.Name;
             Id = source._id;

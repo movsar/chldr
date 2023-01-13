@@ -7,14 +7,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 namespace Data.Entities
 {
-    [MapTo("Sound")]
-    public class SoundEntity : RealmObject
+    public class Text  : RealmObject
     {
-        [PrimaryKey]
+        [PrimaryKey] 
         public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
-        public int UserId { get; set; }
-        public int WordId { get; set; }
-        public string Path { get; set; }
+        public Entry Entry { get; set; }
+        [Indexed]
+        public string Content { get; set; }
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
     }

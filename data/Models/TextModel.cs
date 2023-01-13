@@ -15,7 +15,7 @@ namespace Data.Models
         public string Content { get; }
         public List<TranslationModel> Translations = new List<TranslationModel>();
 
-        public TextModel(TextEntity text)
+        public TextModel(Text text)
         {
             this.TextId = text._id;
             this.Content = text.Content;

@@ -7,12 +7,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 namespace Data.Entities
 {
-    [MapTo("Activity")]
-    public class ActivityEntity : RealmObject
+    public class Activity : RealmObject
     {
         [PrimaryKey]
         public ObjectId _id { get; set; } = MongoDB.Bson.ObjectId.GenerateNewId();
-        public UserEntity User { get; set; }
+        public User User { get; set; }
         public ObjectId ObjectId { get; set; }
         public string ObjectClass { get; set; }
         public string ObjectProperty { get; set; }

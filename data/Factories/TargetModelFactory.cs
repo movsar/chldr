@@ -12,7 +12,7 @@ namespace Data.Factories
 {
     internal static class TargetModelFactory
     {
-        public static TargetModel CreateTarget(EntryEntity entryEntity)
+        public static TargetModel CreateTarget(Entities.Entry entryEntity)
         {
             switch (entryEntity.Type)
             {

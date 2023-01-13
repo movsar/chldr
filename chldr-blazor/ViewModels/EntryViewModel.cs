@@ -84,18 +84,18 @@ namespace chldr_blazor.ViewModels
         }
         private static string BuildWordInfoSubheader(string content, int grammaticalClass, string rawForms, string rawWordDeclensions, string rawWordTenses)
         {
-            if (rawWordDeclensions == WordEntity.EmptyRawWordDeclensionsValue && rawWordTenses == WordEntity.EmptyRawWordTensesValue)
+            if (rawWordDeclensions == Word.EmptyRawWordDeclensionsValue && rawWordTenses == Word.EmptyRawWordTensesValue)
             {
                 return null;
             }
-            var allForms = WordEntity.GetAllUniqueWordForms(content, rawForms, rawWordDeclensions, rawWordTenses, true);
+            var allForms = Word.GetAllUniqueWordForms(content, rawForms, rawWordDeclensions, rawWordTenses, true);
             string part1 = String.Join(", ", allForms);
             if (part1.Length == 0)
             {
                 return null;
             }
 
-            string part2 = $" {WordEntity.ParseGrammaticalClass(grammaticalClass)} ";
+            string part2 = $" {Word.ParseGrammaticalClass(grammaticalClass)} ";
 
             return $"[{part1}{part2}]";
         }

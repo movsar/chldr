@@ -9,8 +9,7 @@ using RequiredAttribute = Realms.RequiredAttribute;
 
 namespace Data.Entities
 {
-    [MapTo("User")]
-    public class UserEntity: RealmObject
+    public class User: RealmObject
     {
         [PrimaryKey]
         public ObjectId _id { get; set; } = ObjectId.GenerateNewId();

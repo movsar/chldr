@@ -23,7 +23,7 @@ namespace chldr_blazor.ViewModels
         private List<EntryViewModel> _entries = new();
         private string _lastInputText;
 
-        private DataAccess _dataAccess;
+        private DataAccess _dataAccess = App.GetCurrentDataAccess();
         private Stopwatch _stopWatch = new Stopwatch();
 
         // Fired whenever user types something into the search field
@@ -55,9 +55,11 @@ namespace chldr_blazor.ViewModels
             ShowResults(randomEntries);
         }
 
-        public IndexPageViewModel(OfflineDataAccess dataAccess)
+        public IndexPageViewModel()
         {
-            _dataAccess = dataAccess;
+            // var dataOps = App.ServiceProvider.GetService<DatabaseOperations>();
+            // dataOps.RunMaintenance();
+
             _dataAccess.GotNewSearchResults += DataAccess_GotNewSearchResults;
             ShowRandomEntries();
         }

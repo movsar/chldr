@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using Entry = Data.Entities.Entry;
+
 namespace Data.Entities
 {
-    [MapTo("Word")]
-    public class WordEntity: RealmObject
+    public class Word: RealmObject
     {
         public const string EmptyRawWordDeclensionsValue = ";;;;;;;;;;;;;;;";
         public const string EmptyRawWordTensesValue = ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
@@ -22,7 +23,7 @@ namespace Data.Entities
 
         [PrimaryKey] 
         public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
-        public EntryEntity Entry { get; set; }
+        public Entry Entry { get; set; }
         [Indexed]
         public string Content { get; set; } = string.Empty;
         [Indexed]

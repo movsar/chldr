@@ -17,7 +17,7 @@ namespace Data.Models
         public string Notes { get; }
         public LanguageModel Language { get; }
         public int Rate { get; set; }
-        public TranslationModel(TranslationEntity translation)
+        public TranslationModel(Translation translation)
         {
             TranslationId = translation._id;
             Content = translation.Content;

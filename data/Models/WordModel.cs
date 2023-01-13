@@ -27,7 +27,7 @@ namespace Data.Models
         public string RawNounDeclensions { get; }
         public int GrammaticalClass { get; internal set; }
 
-        public WordModel(WordEntity word)
+        public WordModel(Word word)
         {
             EntityId = word._id;
             Content = word.Content;

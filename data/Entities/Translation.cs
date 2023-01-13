@@ -7,18 +7,17 @@ using MongoDB.Bson;
 
 namespace Data.Entities
 {
-    [MapTo("Translation")]
-    public class TranslationEntity : RealmObject
+    public class Translation : RealmObject
     {
         [PrimaryKey] 
         public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
-        public EntryEntity Entry { get; set; }
-        public UserEntity User { get; set; }
+        public Entry Entry { get; set; }
+        public User User { get; set; }
         [Indexed]
         public string Content { get; set; } = string.Empty;
         public string RawContents { get; set; }
         public string Notes { get; set; } = string.Empty;
-        public LanguageEntity Language { get; set; }
+        public Language Language { get; set; }
         public int Rate { get; set; }
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;

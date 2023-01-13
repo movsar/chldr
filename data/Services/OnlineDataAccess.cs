@@ -12,29 +12,18 @@ using Realms.Sync;
 using Realms.Sync.ErrorHandling;
 using Realms.Sync.Exceptions;
 using Realms.Logging;
+using Entry = Data.Entities.Entry;
+using User = Data.Entities.User;
 
 namespace Data.Services
 {
     public class OnlineDataAccess : DataAccess
     {
-        private App _app;
-        private User _user;
-        private FlexibleSyncConfiguration _config;
-        private Realm _realm;
+        private static App _app;
+        private static Realms.Sync.User _user;
+        private static FlexibleSyncConfiguration _config;
+        private static Realm _realm;
 
-        private void AddSubscriptions()
-        {
-            _realm.Subscriptions.Update(() =>
-            {
-                _realm.Subscriptions.Add(_realm.All<EntryEntity>());
-                _realm.Subscriptions.Add(_realm.All<LanguageEntity>());
-                _realm.Subscriptions.Add(_realm.All<PhraseEntity>());
-                _realm.Subscriptions.Add(_realm.All<SourceEntity>());
-                _realm.Subscriptions.Add(_realm.All<TranslationEntity>());
-                _realm.Subscriptions.Add(_realm.All<UserEntity>());
-                _realm.Subscriptions.Add(_realm.All<WordEntity>());
-            });
-        }
         private async Task ConnectToSyncedDatabase()
         {
             Logger.LogLevel = LogLevel.Debug;
@@ -43,39 +32,49 @@ namespace Data.Services
                 Debug.WriteLine($"APP: Realm : {message}");
             });
 
-            var myRealmAppId = "chldr-maui-data-jicpt";
+            var myRealmAppId = "dosham-lxwuu";
 
-            _app = App.Create(myRealmAppId);
+            if (!Directory.Exists(FileService.AppDataDirectory))
+            {
+                Directory.CreateDirectory(FileService.AppDataDirectory);
+            }
+
+            _app = App.Create(new AppConfiguration(myRealmAppId)
+            {
+                BaseFilePath = FileService.AppDataDirectory,
+            });
+
             _user = await _app.LogInAsync(Credentials.Anonymous());
-            _config = new FlexibleSyncConfiguration(_user, Path.Combine(FileService.AppDataDirectory, FileService.DatabaseName));
-            _realm = GetRealmInstance();
-            AddSubscriptions();
+
+            _config = new FlexibleSyncConfiguration(_user, Path.Combine(FileService.AppDataDirectory, FileService.DatabaseName))
+            {
+                PopulateInitialSubscriptions = (realm) =>
+                {
+                    Debug.WriteLine($"APP: Realm : PopulateInitialSubscriptions");
+
+                    realm.Subscriptions.Add(realm.All<Entry>());
+                    realm.Subscriptions.Add(realm.All<Language>());
+                    realm.Subscriptions.Add(realm.All<Phrase>());
+                    realm.Subscriptions.Add(realm.All<Source>());
+                    realm.Subscriptions.Add(realm.All<Translation>());
+                    realm.Subscriptions.Add(realm.All<User>());
+                    realm.Subscriptions.Add(realm.All<Word>());
+                }
+            };
+            _realm = Realm.GetInstance(_config);
+            await _realm.Subscriptions.WaitForSynchronizationAsync();
+            //_realm.WriteCopy(new RealmConfiguration(Path.Combine(FileService.AppDataDirectory, "compact.realm")));
         }
         public OnlineDataAccess()
         {
             var fs = new FileService();
             fs.PrepareDatabase();
+            ConnectToSyncedDatabase().Wait();
         }
 
         internal override Realm GetRealmInstance()
         {
-            if (_realm == null)
-            {
-                _realm = Realm.GetInstance(_config);
-                return _realm;
-            }
-
-            try
-            {
-                // Check if reference is valid
-                _realm.All<LanguageEntity>().ToList();
-            }
-            catch
-            {
-                _realm = Realm.GetInstance(_config);
-            }
-
-            return _realm;
+            return Realm.GetInstance(_config);
         }
 
         public async Task RegisterNewUser(string email, string password, string username, string firstName, string lastName)

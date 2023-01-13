@@ -7,14 +7,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 namespace Data.Entities
 {
-    [MapTo("Text")]
-    public class TextEntity  : RealmObject
+    public class Image : RealmObject
     {
-        [PrimaryKey] 
+        [PrimaryKey]
         public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
-        public EntryEntity Entry { get; set; }
-        [Indexed]
-        public string Content { get; set; }
+        public User User { get; set; }
+        public Word Word { get; set; }
+        public string Path { get; set; }
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
     }

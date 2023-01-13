@@ -7,19 +7,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 namespace Data.Entities
 {
-    [MapTo("Phrase")]
-    public class PhraseEntity: RealmObject
+    public class Phrase: RealmObject
     {
         [PrimaryKey]
         public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
-        public EntryEntity Entry { get; set; }
+        public Entry Entry { get; set; }
         [Indexed]
         public string Content { get; set; }
         [Indexed]
         public string Notes { get; set; }
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
-        private string GetCombinedPhraseContents(PhraseEntity phrase)
+        private string GetCombinedPhraseContents(Phrase phrase)
         {
             var data = new List<string>();
             if (!String.IsNullOrWhiteSpace(phrase.Content))

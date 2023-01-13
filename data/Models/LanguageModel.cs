@@ -12,7 +12,7 @@ namespace Data.Models
     {
         public ObjectId EntityId { get; }
         public string Code { get; } = string.Empty;
-        public LanguageModel(LanguageEntity languageEntity)
+        public LanguageModel(Language languageEntity)
         {
             EntityId = languageEntity._id;
             Code = languageEntity.Code;

@@ -6,7 +6,7 @@ namespace Data.Services.PartialMethods
     {
         public FileService()
         {
-            AppDataDirectory = FileSystem.Current.AppDataDirectory;
+            AppDataDirectory = Path.Combine(FileSystem.Current.AppDataDirectory, "Data");
         }
         partial void PrepareDatabaseFile()
         {

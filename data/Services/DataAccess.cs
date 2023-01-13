@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Entry = Data.Entities.Entry;
+
 
 namespace Data.Services
 {
@@ -25,7 +27,7 @@ namespace Data.Services
         public IEnumerable<EntryModel> GetRandomEntries()
         {
             var randomizer = new Random();
-            var entries = GetRealmInstance().All<EntryEntity>().AsEnumerable();
+            var entries = GetRealmInstance().All<Entry>().AsEnumerable();
 
             // Takes random entries and shuffles them to break the natural order
             return entries
@@ -35,5 +37,6 @@ namespace Data.Services
                 .OrderBy(entry => entry.GetHashCode())
                 .Select(entry => new EntryModel(entry));
         }
+
     }
 }
