@@ -1,10 +1,33 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+.chldr_entry * :hover ~ .chldr_translation_actions {
+    display: inline;
+}
 
-.chldr_translation_source{
+.chldr_entry * :hover ~ .chldr_entry_actions {
+    display: inline;
+}
+
+.chldr_entry_actions {
+    width: 100%;
+    text-align: right;
+    cursor: pointer;
+    /*display: none;*/
+}
+
+.chldr_entry {
+    background-color: aquamarine;
+}
+
+.chldr_entry_source {
     color: brown;
     font-size: 10px;
     font-family: Arial;
+}
+
+.chldr_translation_actions {
+    cursor: pointer;
+    /*display: none;*/
 }
 
 .chldr_translation_language-code {

@@ -18,6 +18,9 @@ namespace chldr_blazor.ViewModels
     [ObservableObject]
     public partial class TranslationViewModel
     {
+        public void Upvote() { }
+        public void Downvote() { }
+        public void Edit() { }
         public void CurrentTranslationSelected()
         {
             var g = 2;

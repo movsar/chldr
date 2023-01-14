@@ -9,7 +9,14 @@
         @ViewModel.Content
     </span>
 
-    @if (!String.IsNullOrWhiteSpace(@ViewModel.Notes)){
+    <span class="chldr_translation_actions ms-lg-1">
+        <i class="oi oi-pencil" @onclick="ViewModel.Edit"></i>
+        <i class="fa fa-thumbs-up" @onclick="ViewModel.Upvote"></i>
+        <i class="fa fa-thumbs-down" @onclick="ViewModel.Downvote"></i>
+    </span>
+
+    @if (!String.IsNullOrWhiteSpace(@ViewModel.Notes))
+    {
         <div class="chldr_translation_notes">
             (@ViewModel.Notes)
         </div>

@@ -14,6 +14,13 @@ namespace chldr_blazor.ViewModels
     [ObservableObject]
     public partial class EntryViewModel
     {
+        public void ListenToPronunciation() { }
+        public void NewTranslation() { }
+        public void AddToFavorites() { }
+        public void Share() { }
+        public void Edit() { }
+       
+        public void Flag() { }
         public ICommand TranslationSelectedCommand { get; set; } = new Command((e) =>
         {
             var translationViewModel = ((dynamic)e).SelectedItem;

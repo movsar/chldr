@@ -1,77 +1,55 @@
 ﻿@using chldr_blazor.ViewModels;
 @inject IStringLocalizer<AppLocalizations> Localizer;
-
-<div class="chldr_entry card card-body card-title">
-    <div class="chldr_entry_header">
-        @ViewModel.Header
-    </div>
-
-    @if (!String.IsNullOrWhiteSpace(@ViewModel.Subheader))
-    {
-        <div class="chldr_entry_sub-header">
-            @ViewModel.Subheader
+<div class="chldr_entry">
+    <div class="card card-body card-title">
+        <div class="chldr_entry_header">
+            @ViewModel.Header
+            <span class="oi oi-volume-high" @onclick="ViewModel.ListenToPronunciation"></span>
         </div>
-    }
 
-    @if (!String.IsNullOrWhiteSpace(@ViewModel.Notes))
-    {
-        <div class="chldr_translation_notes">
-            (@ViewModel.Notes)
-        </div>
-    }
-    
-    <div class="chldr_entry_translations mt-2">
-        @foreach (var translation in ViewModel.Translations)
+        @if (!String.IsNullOrWhiteSpace(@ViewModel.Subheader))
         {
-            <TranslationView ViewModel="@translation"></TranslationView>
+            <div class="chldr_entry_sub-header">
+                @ViewModel.Subheader
+            </div>
         }
-    </div>
 
-    @if (!String.IsNullOrWhiteSpace(@ViewModel.Source))
-    {
-        <div class="chldr_translation_source">
-            @Localizer["Source"]: @ViewModel.Source
+        @if (!String.IsNullOrWhiteSpace(@ViewModel.Notes))
+        {
+            <div class="chldr_translation_notes">
+                (@ViewModel.Notes)
+            </div>
+        }
+
+        <div class="chldr_entry_translations mt-2">
+            @foreach (var translation in ViewModel.Translations)
+            {
+                <TranslationView ViewModel="@translation"></TranslationView>
+            }
         </div>
-    }
+
+        @if (!String.IsNullOrWhiteSpace(@ViewModel.Source))
+        {
+            <div class="chldr_entry_source">
+                @Localizer["Source"]: @ViewModel.Source
+            </div>
+        }
+
+        <div class="chldr_entry_actions">
+            <i class="fa fa-language" @onclick="ViewModel.NewTranslation"></i>
+            <i class="fa fa-share" @onclick="ViewModel.Share"></i>
+            
+            <i class="fa fa-flag" @onclick="ViewModel.Flag"></i>
+            <i class="fa fa-star" @onclick="ViewModel.AddToFavorites"></i>
+
+            <i class="oi oi-pencil" @onclick="ViewModel.Edit"></i>
+        </div>
+
+    </div>
 
 </div>
 
 
-@*
- <Label
-                Grid.Row="0"
-                TextColor="DarkGreen"
-                Text="{Binding Header}"
-                FontAttributes="Bold">
-            </Label>
-
-            <StackLayout
-                IsVisible="False">
-                <Label
-                    Grid.Row="1"
-                    TextColor="DarkCyan"
-                    VerticalOptions="StartAndExpand"
-                    Text="{Binding Source}"
-                    IsVisible="False">
-                </Label>
-
-            </StackLayout>
-
-            <Label
-                Grid.Row="2"
-                TextColor="DarkCyan"
-                FontSize="Caption"
-                VerticalOptions="StartAndExpand"
-                Text="{Binding Subheader}">
-            </Label>
-
-            <ListView Grid.Row="3"
-                      ItemsSource="{Binding TranslationViewModels}"
-                      ItemTemplate="{StaticResource TranslationTemplate}"
-                      SelectionMode="None">
-
-            </ListView>
-*@
 @code {
     [Parameter]
     public EntryViewModel ViewModel { get; set; }
