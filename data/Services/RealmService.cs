@@ -54,9 +54,9 @@ namespace Data.Services
                 }
             };
             _realm = Realm.GetInstance(_config);
-            DatabaseInitialized?.Invoke();
 
             await _realm.Subscriptions.WaitForSynchronizationAsync();
+            DatabaseInitialized?.Invoke();
             //DatabaseSynced?.Invoke();
         }
 

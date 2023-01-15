@@ -32,9 +32,7 @@ namespace chldr_blazor.ViewModels
 
         public ICommand Search { get; set; }
 
-        private DataAccess _dataAccess;
-
-        public async void DoSearch()
+        public void DoSearch()
         {
             var translationText = Content.ToLower();
 
@@ -53,12 +51,12 @@ namespace chldr_blazor.ViewModels
 
                 if (match.Success)
                 {
-                    await _dataAccess.FindAsync(match.ToString());
+                    App.ContentStore.Search(match.ToString());
                     break;
                 }
             }
 
-            await _dataAccess.FindAsync(translationText);
+            App.ContentStore.Search(translationText);
         }
 
         public string Content { get; }
@@ -75,8 +73,6 @@ namespace chldr_blazor.ViewModels
             Notes = translation.Notes;
 
             Search = new RelayCommand(DoSearch);
-
-            _dataAccess = App.ServiceProvider.GetService<DataAccess>();
         }
     }
 }

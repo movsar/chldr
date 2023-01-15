@@ -33,29 +33,19 @@ namespace chldr_blazor.ViewModels
 
         #region Fields
         private Stopwatch _stopWatch = new Stopwatch();
-        private ContentStore _contentStore;
         #endregion
-        public void Search(ChangeEventArgs evgentArgs)
+     
+        #region Constructors
+        public MainPageViewModel()
         {
-            string inputText = evgentArgs.Value.ToString().Replace("1", "Ӏ");
-
-            if (String.IsNullOrWhiteSpace(inputText))
-            {
-                Entries.Clear();
-                return;
-            }
-
-            _stopWatch.Restart();
-            _contentStore.Search(inputText);
+            App.ContentStore.CurrentEntriesUpdated += ContentStore_CurrentEntriesUpdated;
+            App.ContentStore.LoadRandomEntries();
         }
+        #endregion
 
-        public MainPageViewModel(ContentStore contentStore)
-        {
-            _contentStore = contentStore;
-            _contentStore.CurrentEntriesUpdated += DataAccess_GotNewSearchResults;
-        }
-
-        private void DataAccess_GotNewSearchResults()
+        #region EventHandlers
+        // Called whenever there is a change to Entries collection
+        private void ContentStore_CurrentEntriesUpdated()
         {
             var resultsRetrieved = _stopWatch.ElapsedMilliseconds;
 
@@ -65,11 +55,27 @@ namespace chldr_blazor.ViewModels
             Debug.WriteLine($"Found {Entries.Count}");
             _stopWatch.Stop();
         }
+        // Called when something is typed into search input
+        public void Search(ChangeEventArgs evgentArgs)
+        {
+            string inputText = evgentArgs.Value.ToString();
+            if (String.IsNullOrWhiteSpace(inputText))
+            {
+                Entries.Clear();
+                return;
+            }
 
+            _stopWatch.Restart();
+            App.ContentStore.Search(inputText);
+        }
+        #endregion
+
+        #region Methods
         internal void ShowResults()
         {
-            Entries = _contentStore.CurrentEntries.Select(e => new EntryViewModel(e)).ToList();
+            var newEntries = App.ContentStore.CurrentEntries.Select(e => new EntryViewModel(e)).ToList();
+            Entries = newEntries;
         }
-
+        #endregion
     }
 }

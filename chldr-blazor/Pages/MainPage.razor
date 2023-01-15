@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject MainPageViewModel ViewModel;
+@inject ContentStore ContentStore;
 @inject IStringLocalizer<AppLocalizations> Localizer;
 
 <div class="input-group mb-3 mt-3">
@@ -17,7 +18,7 @@
     @oninput="(e)=> ViewModel.Search(e)" />
 
     <div class="ms-2">
-        <button type="button" class="btn btn-secondary" @onclick="ViewModel.ShowRandomEntries">
+        <button type="button" class="btn btn-secondary" @onclick="ContentStore.LoadRandomEntries">
             <span class="bi-arrow-repeat"></span>
         </button>
     </div>

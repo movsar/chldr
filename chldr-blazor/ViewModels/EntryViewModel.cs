@@ -85,7 +85,7 @@ namespace chldr_blazor.ViewModels
         }
         private static string ParseSource(string sourceName)
         {
-            string? sourceTitle = null;
+            string sourceTitle = null;
             switch (sourceName)
             {
                 case "Maciev":

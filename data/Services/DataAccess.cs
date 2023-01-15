@@ -8,6 +8,8 @@ namespace Data.Services
 {
     public class DataAccess
     {
+        public event Action DatabaseInitialized;
+
         public Action<SearchResultsModel> GotResults;
 
         public const int ResultsLimit = 100;
@@ -34,17 +36,11 @@ namespace Data.Services
 
         public DataAccess()
         {
-            var fs = new FileService();
-            fs.PrepareDatabase();
-            RealmService.DatabaseInitialized += RealmService_DatabaseInitialized;
-            Task.Run(() => RealmService.Initialize());
-        }
+            var fileService = new FileService();
+            fileService.PrepareDatabase();
 
-        private void RealmService_DatabaseInitialized()
-        {
-            // Load random entries
-            var searchResults = new SearchResultsModel("", GetRandomEntries(), SearchResultsModel.Mode.Random);
-            GotResults?.Invoke(searchResults);
+            RealmService.DatabaseInitialized += (() => { DatabaseInitialized?.Invoke(); });
+            Task.Run(() => RealmService.Initialize());
         }
 
         public async Task RegisterNewUser(string email, string password, string username, string firstName, string lastName)

@@ -12,8 +12,9 @@ namespace chldr_blazor.Stores
 {
     public class ContentStore
     {
+
         #region Events
-        public Action CurrentEntriesUpdated;
+        public event Action CurrentEntriesUpdated;
         #endregion
 
         #region Fields
@@ -25,7 +26,9 @@ namespace chldr_blazor.Stores
         {
             _dataAccess = dataAccess;
             _dataAccess.GotResults += DataAccess_GotNewResults;
+            // _dataAccess.DatabaseInitialized += (() => { });
         }
+
         #endregion
 
         #region Properties
@@ -40,12 +43,14 @@ namespace chldr_blazor.Stores
         }
         #endregion
 
+        #region Methods
         internal void Search(string inputText)
         {
             CurrentEntries.Clear();
             Task.Run(() => _dataAccess.FindAsync(inputText));
         }
-        internal void LoadRandomEntries()
+
+        public void LoadRandomEntries()
         {
             var entries = _dataAccess.GetRandomEntries();
 
@@ -58,5 +63,7 @@ namespace chldr_blazor.Stores
         {
             return CurrentEntries.FirstOrDefault(e => e.EntryId == entryId);
         }
+        #endregion
+
     }
 }

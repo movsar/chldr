@@ -10,7 +10,6 @@ namespace chldr_blazor
 {
     public static class MauiProgram
     {
-        public const bool UseOnlineDataAccess = false;
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
@@ -19,7 +18,6 @@ namespace chldr_blazor
                 .RegisterAppServices()
                 .RegisterViewModels()
                 .RegisterViews()
-
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -54,7 +52,6 @@ namespace chldr_blazor
         public static MauiAppBuilder RegisterViews(this MauiAppBuilder mauiAppBuilder)
         {
             mauiAppBuilder.Services.AddSingleton<LoginPage>();
-
             return mauiAppBuilder;
         }
     }

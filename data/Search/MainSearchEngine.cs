@@ -26,7 +26,8 @@ namespace Data.Search
 
         public async Task FindAsync(string inputText)
         {
-            inputText = inputText.ToLower();
+            inputText = inputText.Replace("1", "Ӏ")
+                                 .ToLower();
 
             if (inputText.Length < 3)
             {
