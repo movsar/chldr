@@ -12,7 +12,7 @@ namespace Data.Services
 
         public const int ResultsLimit = 100;
         public const int RandomEntriesLimit = 30;
-      
+
         public async Task FindAsync(string inputText)
         {
             var searchEngine = new MainSearchEngine(this);
@@ -31,12 +31,20 @@ namespace Data.Services
                 .OrderBy(entry => entry.GetHashCode())
                 .Select(entry => new EntryModel(entry));
         }
-      
+
         public DataAccess()
         {
             var fs = new FileService();
             fs.PrepareDatabase();
-            RealmService.Initialize().Wait();
+            RealmService.DatabaseInitialized += RealmService_DatabaseInitialized;
+            Task.Run(() => RealmService.Initialize());
+        }
+
+        private void RealmService_DatabaseInitialized()
+        {
+            // Load random entries
+            var searchResults = new SearchResultsModel("", GetRandomEntries(), SearchResultsModel.Mode.Random);
+            GotNewSearchResults?.Invoke(searchResults);
         }
 
         public async Task RegisterNewUser(string email, string password, string username, string firstName, string lastName)

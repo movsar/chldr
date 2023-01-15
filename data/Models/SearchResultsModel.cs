@@ -16,10 +16,10 @@ namespace Data.Models
         }
 
         public string InputText { get; }
-        public List<EntryModel> Entries { get; }
+        public IEnumerable<EntryModel> Entries { get; }
         public Mode SearchMode { get; }
 
-        public SearchResultsModel(string inputText, List<EntryModel> resultingEntries, Mode mode)
+        public SearchResultsModel(string inputText, IEnumerable<EntryModel> resultingEntries, Mode mode)
         {
             InputText = inputText;
             Entries = resultingEntries;

@@ -18,7 +18,7 @@ namespace chldr_blazor
             // 3. change byte to int - done
             // 4. check other stuff - done
             // 5. remove weitd things Ψ - done
-            // 6. setup device sync for realm
+            // 6. setup device sync for realm - done
             // 7. setup user management
         }
     }

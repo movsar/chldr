@@ -61,7 +61,6 @@ namespace chldr_blazor.ViewModels
             // dataOps.RunMaintenance();
 
             _dataAccess.GotNewSearchResults += DataAccess_GotNewSearchResults;
-            ShowRandomEntries();
         }
 
         private void DataAccess_GotNewSearchResults(SearchResultsModel results)

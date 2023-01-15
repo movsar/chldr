@@ -2,6 +2,7 @@
 using Realms;
 using Realms.Logging;
 using Realms.Sync;
+using System;
 using System.Diagnostics;
 
 namespace Data.Services
@@ -13,6 +14,9 @@ namespace Data.Services
         private static Realm _realm;
         private static FlexibleSyncConfiguration _config;
         private const string myRealmAppId = "dosham-lxwuu";
+
+        internal static event Action DatabaseInitialized;
+        internal static event Action DatabaseSynced;
 
         internal static Realm GetRealm()
         {
@@ -50,7 +54,10 @@ namespace Data.Services
                 }
             };
             _realm = Realm.GetInstance(_config);
+            DatabaseInitialized?.Invoke();
+
             await _realm.Subscriptions.WaitForSynchronizationAsync();
+            //DatabaseSynced?.Invoke();
         }
 
         internal static App GetApp()
