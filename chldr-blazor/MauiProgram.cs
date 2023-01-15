@@ -1,4 +1,5 @@
 ﻿using chldr_blazor.Pages;
+using chldr_blazor.Stores;
 using chldr_blazor.ViewModels;
 using Data.Interfaces;
 using Data.Services;
@@ -39,7 +40,7 @@ namespace chldr_blazor
         public static MauiAppBuilder RegisterAppServices(this MauiAppBuilder mauiAppBuilder)
         {
             mauiAppBuilder.Services.AddSingleton<DataAccess>();
-            mauiAppBuilder.Services.AddSingleton<DatabaseOperations>();
+            mauiAppBuilder.Services.AddSingleton<ContentStore>();
             mauiAppBuilder.Services.AddLocalization();
             return mauiAppBuilder;
         }

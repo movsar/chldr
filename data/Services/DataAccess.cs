@@ -8,7 +8,7 @@ namespace Data.Services
 {
     public class DataAccess
     {
-        public Action<SearchResultsModel> GotNewSearchResults;
+        public Action<SearchResultsModel> GotResults;
 
         public const int ResultsLimit = 100;
         public const int RandomEntriesLimit = 30;
@@ -44,7 +44,7 @@ namespace Data.Services
         {
             // Load random entries
             var searchResults = new SearchResultsModel("", GetRandomEntries(), SearchResultsModel.Mode.Random);
-            GotNewSearchResults?.Invoke(searchResults);
+            GotResults?.Invoke(searchResults);
         }
 
         public async Task RegisterNewUser(string email, string password, string username, string firstName, string lastName)

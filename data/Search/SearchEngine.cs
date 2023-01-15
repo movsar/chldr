@@ -37,7 +37,7 @@ namespace Data.Search
             });
 
             var args = new SearchResultsModel(inputText, resultingEntries, SearchResultsModel.Mode.Direct);
-            _dataAccess.GotNewSearchResults?.Invoke(args);
+            _dataAccess.GotResults?.Invoke(args);
         }
 
         protected async Task ReverseSearch(string inputText, Expression<Func<Translation, bool>> filter, int limit)
@@ -60,7 +60,7 @@ namespace Data.Search
             });
 
             var args = new SearchResultsModel(inputText, resultingEntries, SearchResultsModel.Mode.Reverse);
-            _dataAccess.GotNewSearchResults?.Invoke(args);
+            _dataAccess.GotResults?.Invoke(args);
         }
         public SearchEngine(DataAccess dataAccess)
         {
