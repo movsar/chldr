@@ -23,7 +23,7 @@ namespace Data.Search
 
             await Task.Run(() =>
             {
-                var realmInstance = _dataAccess.GetRealmInstance();
+                var realmInstance = RealmService.GetRealm();
 
                 var entries = realmInstance.All<Entry>().Where(filter)
                                                         .AsEnumerable()
@@ -46,7 +46,7 @@ namespace Data.Search
 
             await Task.Run(() =>
             {
-                var realmInstance = _dataAccess.GetRealmInstance();
+                var realmInstance = RealmService.GetRealm();
 
                 var translations = realmInstance.All<Translation>()
                                                                    .Where(filter)

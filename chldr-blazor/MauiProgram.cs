@@ -38,8 +38,7 @@ namespace chldr_blazor
 
         public static MauiAppBuilder RegisterAppServices(this MauiAppBuilder mauiAppBuilder)
         {
-            mauiAppBuilder.Services.AddSingleton<OfflineDataAccess>();
-            mauiAppBuilder.Services.AddSingleton<OnlineDataAccess>();
+            mauiAppBuilder.Services.AddSingleton<DataAccess>();
             mauiAppBuilder.Services.AddSingleton<DatabaseOperations>();
             mauiAppBuilder.Services.AddLocalization();
             return mauiAppBuilder;

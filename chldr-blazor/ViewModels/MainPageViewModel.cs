@@ -23,7 +23,7 @@ namespace chldr_blazor.ViewModels
         private List<EntryViewModel> _entries = new();
         private string _lastInputText;
 
-        private DataAccess _dataAccess = App.GetCurrentDataAccess();
+        private DataAccess _dataAccess = App.ServiceProvider.GetService<DataAccess>(); 
         private Stopwatch _stopWatch = new Stopwatch();
 
         // Fired whenever user types something into the search field

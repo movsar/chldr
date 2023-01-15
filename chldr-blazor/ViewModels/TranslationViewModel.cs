@@ -76,7 +76,7 @@ namespace chldr_blazor.ViewModels
 
             Search = new RelayCommand(DoSearch);
 
-            _dataAccess = App.GetCurrentDataAccess();
+            _dataAccess = App.ServiceProvider.GetService<DataAccess>();
         }
     }
 }

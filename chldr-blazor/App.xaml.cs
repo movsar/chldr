@@ -21,10 +21,5 @@ namespace chldr_blazor
             // 6. setup device sync for realm
             // 7. setup user management
         }
-
-        internal static DataAccess GetCurrentDataAccess()
-        {
-            return App.ServiceProvider.GetService<OnlineDataAccess>();
-        }
     }
 }

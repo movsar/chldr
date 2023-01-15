@@ -64,7 +64,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <MauiAsset Update="Resources\Raw\database.realm">
+      <MauiAsset Update="Resources\Raw\Data\database.realm">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <LogicalName>%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
       </MauiAsset>

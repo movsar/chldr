@@ -10,14 +10,7 @@ namespace Data.Services
     public class DatabaseOperations
     {
         static Realm _localRealm, _syncedRealm;
-        private OfflineDataAccess _offlineDataAccess;
-        private OnlineDataAccess _onlineDataAccess;
 
-        public DatabaseOperations(OfflineDataAccess offlineDataAccess, OnlineDataAccess onlineDataAccess)
-        {
-            _offlineDataAccess = offlineDataAccess;
-            _onlineDataAccess = onlineDataAccess;
-        }
         public void RunMaintenance()
         {
             
@@ -109,9 +102,6 @@ namespace Data.Services
 
         public async Task CopyFromLocalToSyncedRealm()
         {
-            _localRealm = _offlineDataAccess.GetRealmInstance();
-            _syncedRealm = _onlineDataAccess.GetRealmInstance();
-
             await _syncedRealm.Subscriptions.WaitForSynchronizationAsync();
 
             _syncedRealm.Write(() =>

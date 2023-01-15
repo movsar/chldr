@@ -19,13 +19,12 @@ namespace chldr_blazor.ViewModels
         public string LastName { get; set; }
         public async void SendRegistrationRequest()
         {
-            var dataAccess = App.GetCurrentDataAccess();
-            if (dataAccess is OnlineDataAccess)
-            {
-                var onlineDataAccess = dataAccess as OnlineDataAccess;
-                await onlineDataAccess.RegisterNewUser(Email, Password, Username, FirstName, LastName);
-                NavigationManager.NavigateTo("/emailsent");
-            }
+            var dataAccess = App.ServiceProvider.GetService<DataAccess>();
+
+
+            await dataAccess.RegisterNewUser(Email, Password, Username, FirstName, LastName);
+            NavigationManager.NavigateTo("/emailsent");
         }
+
     }
 }
