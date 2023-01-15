@@ -1,63 +1,7 @@
-﻿@page "/"
-@inject IndexPageViewModel ViewModel;
-@inject IStringLocalizer<AppLocalizations> Localizer;
+﻿@page "/index";
 
-<div class="input-group mb-3 mt-3">
-
-    <div class="input-group-prepend">
-        <span class="input-group-text">
-            <span class="bi bi-search"></span>
-        </span>
-    </div>
-
-    <input class="form-control shadow-none"
-           placeholder="@Localizer["StartTyping"]"
-    @ref="searchInputReference"
-    @bind-value="@ViewModel.InputText"
-    @oninput="(e)=> ViewModel.Search(e)" />
-
-    <div class="ms-2">
-        <button type="button" class="btn btn-secondary" @onclick="ViewModel.ShowRandomEntries">
-            <span class="bi-arrow-repeat"></span>
-        </button>
-    </div>
-
-</div>
-
-
-@if (ViewModel.Entries.Count != 0)
-{
-    <div class="chldr_entries" @ref="entriesListViewReference">
-
-        @foreach (var entry in ViewModel.Entries)
-        {
-            <EntryView ViewModel="@entry"></EntryView>
-        }
-
-    </div>
-}
+<h3>IndexPage</h3>
 
 @code {
-    private ElementReference entriesListViewReference;
-    private ElementReference searchInputReference;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await searchInputReference.FocusAsync();
-        }
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        ViewModel.PropertyChanged += async (sender, e) =>
-        {
-            await InvokeAsync(() =>
-            {
-                StateHasChanged();
-            });
-        };
-        await base.OnInitializedAsync();
-    }
 }

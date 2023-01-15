@@ -1,0 +1,29 @@
+﻿@page "/edit-entry/{EntryId}";
+@inject OnlineDataAccess DataAccess;
+
+<h3>EntryEditPage</h3>
+
+@switch (ViewModel?.Type)
+{
+    case EntryType.Word:
+        <WordEditView Id="ViewModel.TargetObjectId" />
+        break;
+    case EntryType.Phrase:
+        break;
+    case EntryType.Text:
+        break;
+}
+
+@code {
+    [Parameter]
+    public string EntryId { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+    }
+    public EntryViewModel ViewModel { get; set; }
+}
+
+<button>Save</button>
+<button>Save and add another</button>

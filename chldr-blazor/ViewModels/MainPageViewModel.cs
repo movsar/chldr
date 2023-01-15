@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Components;
 namespace chldr_blazor.ViewModels
 {
     [ObservableObject]
-    public partial class IndexPageViewModel
+    public partial class MainPageViewModel
     {
         [ObservableProperty]
         private List<EntryViewModel> _entries = new();
@@ -55,7 +55,7 @@ namespace chldr_blazor.ViewModels
             ShowResults(randomEntries);
         }
 
-        public IndexPageViewModel()
+        public MainPageViewModel()
         {
             // var dataOps = App.ServiceProvider.GetService<DatabaseOperations>();
             // dataOps.RunMaintenance();

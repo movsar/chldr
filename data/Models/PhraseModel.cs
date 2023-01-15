@@ -16,7 +16,8 @@ namespace Data.Models
         public string Notes { get; }
         public PhraseModel(Phrase phrase)
         {
-            EntityId = phrase._id;
+            TargetId = phrase._id;
+            EntityId = phrase.Entry._id;
             Content = phrase.Content;
             Notes = phrase.Notes;
         }

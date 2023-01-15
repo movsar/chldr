@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Data.Models
 {
-    public abstract class TargetModel 
+    public abstract class TargetModel
     {
+        public ObjectId TargetId { get; set; }
     }
 }

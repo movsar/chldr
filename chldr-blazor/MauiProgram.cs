@@ -46,7 +46,7 @@ namespace chldr_blazor
         }
         public static MauiAppBuilder RegisterViewModels(this MauiAppBuilder mauiAppBuilder)
         {
-            mauiAppBuilder.Services.AddSingleton<IndexPageViewModel>();
+            mauiAppBuilder.Services.AddSingleton<MainPageViewModel>();
             mauiAppBuilder.Services.AddSingleton<LoginPageViewModel>();
             mauiAppBuilder.Services.AddSingleton<RegistrationPageViewModel>();
             return mauiAppBuilder;

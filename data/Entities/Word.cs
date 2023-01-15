@@ -9,19 +9,12 @@ using Entry = Data.Entities.Entry;
 
 namespace Data.Entities
 {
-    public class Word: RealmObject
+    public class Word : RealmObject
     {
         public const string EmptyRawWordDeclensionsValue = ";;;;;;;;;;;;;;;";
         public const string EmptyRawWordTensesValue = ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
 
-        [Ignored]
-        public class WordType
-        {
-            public const byte Verb = 1;
-            public const byte Noun = 2;
-        };
-
-        [PrimaryKey] 
+        [PrimaryKey]
         public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
         public Entry Entry { get; set; }
         [Indexed]

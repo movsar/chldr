@@ -1,5 +1,6 @@
 ﻿@using chldr_blazor.ViewModels;
 @inject IStringLocalizer<AppLocalizations> Localizer;
+
 <div class="chldr_entry">
     <div class="card card-body card-title">
         <div class="chldr_entry_header">
@@ -38,11 +39,11 @@
         <div class="chldr_entry_actions">
             <i class="fa fa-language" @onclick="ViewModel.NewTranslation"></i>
             <i class="fa fa-share" @onclick="ViewModel.Share"></i>
-            
+
             <i class="fa fa-flag" @onclick="ViewModel.Flag"></i>
             <i class="fa fa-star" @onclick="ViewModel.AddToFavorites"></i>
 
-            <i class="oi oi-pencil" @onclick="ViewModel.Edit"></i>
+            <a href="/edit-entry/@ViewModel.EntryId"><i class="oi oi-pencil"></i></a>
         </div>
 
     </div>

@@ -61,11 +61,38 @@ namespace chldr_blazor.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adjective.
+        /// </summary>
+        internal static string Adjective {
+            get {
+                return ResourceManager.GetString("Adjective", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adverb.
+        /// </summary>
+        internal static string Adverb {
+            get {
+                return ResourceManager.GetString("Adverb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chechen Language Dictionary.
         /// </summary>
         internal static string App_title {
             get {
                 return ResourceManager.GetString("App title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Basic form.
+        /// </summary>
+        internal static string Basic_form {
+            get {
+                return ResourceManager.GetString("Basic form", resourceCulture);
             }
         }
         
@@ -129,6 +156,15 @@ namespace chldr_blazor.Resources.Localizations {
         internal static string Home {
             get {
                 return ResourceManager.GetString("Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index.
+        /// </summary>
+        internal static string Index {
+            get {
+                return ResourceManager.GetString("Index", resourceCulture);
             }
         }
         
@@ -228,6 +264,15 @@ namespace chldr_blazor.Resources.Localizations {
         internal static string Username {
             get {
                 return ResourceManager.GetString("Username", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verb.
+        /// </summary>
+        internal static string Verb {
+            get {
+                return ResourceManager.GetString("Verb", resourceCulture);
             }
         }
     }
