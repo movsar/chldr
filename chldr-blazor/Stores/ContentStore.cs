@@ -29,6 +29,8 @@ namespace chldr_blazor.Stores
         {
             _dataAccess = dataAccess;
             _dataAccess.GotResults += DataAccess_GotNewResults;
+            var dataOps = new DatabaseOperations();
+            dataOps.RunMaintenance();
             // _dataAccess.DatabaseInitialized += (() => { });
         }
 

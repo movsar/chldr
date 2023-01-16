@@ -1,5 +1,6 @@
 ﻿using Data.Entities;
 using Data.Enums;
+using Data.Services.PartialMethods;
 using MongoDB.Bson;
 using Realms;
 using System.Diagnostics;
@@ -14,6 +15,20 @@ namespace Data.Services
         public void RunMaintenance()
         {
             
+        }
+        private static Realm GetLocalRealm()
+        {
+            var dbPath = Path.Combine(FileService.AppDataDirectory, "local.realm");
+
+            return Realm.GetInstance(new RealmConfiguration(dbPath)
+            {
+                SchemaVersion = 14,
+                ShouldCompactOnLaunch = (totalBytes, usedBytes) =>
+                {
+                    ulong oneHundredMB = 30 * 1024 * 1024;
+                    return totalBytes > oneHundredMB && usedBytes / totalBytes < 0.5;
+                }
+            });
         }
         private void CopyEntriesByChunks(IEnumerable<Entities.Entry> entries)
         {
@@ -158,29 +173,33 @@ namespace Data.Services
             }
         }
 
-        private async Task UpdatePhrasesByChunks()
+        private void UpdatePhrasesByChunks()
         {
-            Debug.WriteLine($"Starting inserting entries");
+            _localRealm = GetLocalRealm();
+            _syncedRealm = RealmService.GetRealm();
+
+            Debug.WriteLine($"Starting updating entries");
             var localPhrases = _localRealm.All<Phrase>().AsEnumerable();
             int totalCount = localPhrases.Count();
 
-            for (int i = 0; i < totalCount; i = i + 200)
+            _syncedRealm.Write(() =>
             {
-                var itemsToUpdate = localPhrases.Skip(i);
-                itemsToUpdate = itemsToUpdate.Count() > 200 ? itemsToUpdate.Take(200) : itemsToUpdate;
-
-                await _localRealm.WriteAsync(() =>
+                for (int i = 0; i < totalCount; i = i + 200)
                 {
+                    var itemsToUpdate = localPhrases.Skip(i);
+                    itemsToUpdate = itemsToUpdate.Count() > 200 ? itemsToUpdate.Take(200) : itemsToUpdate;
+
+
                     foreach (var localPhrase in itemsToUpdate)
                     {
-                        _localRealm.All<Phrase>().First(p => p._id == localPhrase._id).Notes = localPhrase.Notes;
+                        _syncedRealm.All<Phrase>().First(p => p._id == localPhrase._id).Notes = localPhrase.Notes;
                     }
-                });
 
-                await _localRealm.Subscriptions.WaitForSynchronizationAsync();
+                    Debug.WriteLine($"Phrase updated");
+                }
+            });
 
-                Debug.WriteLine($"Phrases updated: {i}");
-            }
+            Debug.WriteLine($"All phrases updated");
 
         }
 

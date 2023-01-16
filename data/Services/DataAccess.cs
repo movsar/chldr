@@ -5,19 +5,31 @@ using Data.Models;
 using Data.Search;
 using Data.Services.PartialMethods;
 using MongoDB.Bson;
+using Realms.Sync;
 using Entry = Data.Entities.Entry;
 
 namespace Data.Services
 {
     public class DataAccess
     {
+        #region Properties
+        public Realms.Sync.App App => RealmService.GetApp();
+        #endregion
+
+        #region Events
         public event Action DatabaseInitialized;
+        #endregion
 
+        #region Fields
         public Action<SearchResultsModel> GotResults;
-
         public const int ResultsLimit = 100;
         public const int RandomEntriesLimit = 30;
+        #endregion
 
+        public async Task InitializeDatabase()
+        {
+            await RealmService.Initialize();
+        }
         public async Task FindAsync(string inputText)
         {
             var searchEngine = new MainSearchEngine(this);
@@ -48,12 +60,7 @@ namespace Data.Services
 
         public async Task RegisterNewUser(string email, string password, string username, string firstName, string lastName)
         {
-            await RealmService.GetApp().EmailPasswordAuth.RegisterUserAsync(email, password);
-        }
-
-        public async Task ConfirmUser(string token, string tokenId)
-        {
-            await RealmService.GetApp().EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
+            await App.EmailPasswordAuth.RegisterUserAsync(email, password);
         }
 
         public WordModel GetWordById(ObjectId entityId)

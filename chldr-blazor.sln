@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr-blazor", "chldr-blazor\chldr-blazor.csproj", "{C96293B0-2B47-4163-9B10-D39CB7235D48}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chldr-api", "user-management\chldr-api.csproj", "{70FBAE14-D338-41A7-B470-9086F55B003D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{C96293B0-2B47-4163-9B10-D39CB7235D48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C96293B0-2B47-4163-9B10-D39CB7235D48}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C96293B0-2B47-4163-9B10-D39CB7235D48}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{70FBAE14-D338-41A7-B470-9086F55B003D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70FBAE14-D338-41A7-B470-9086F55B003D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70FBAE14-D338-41A7-B470-9086F55B003D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70FBAE14-D338-41A7-B470-9086F55B003D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
