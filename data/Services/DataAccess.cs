@@ -26,6 +26,10 @@ namespace Data.Services
         public const int RandomEntriesLimit = 30;
         #endregion
 
+        public async Task Login(string email, string password)
+        {
+            await App.LogInAsync(Credentials.EmailPassword(email, password));
+        }
         public async Task InitializeDatabase()
         {
             await RealmService.Initialize();
