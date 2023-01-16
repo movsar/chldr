@@ -20,6 +20,16 @@
                 }
             </div>
 
+            <div class="chldr_entry_actions">
+                <i class="fa fa-language" @onclick="ViewModel.NewTranslation"></i>
+                <i class="fa fa-share" @onclick="ViewModel.Share"></i>
+
+                <i class="fa fa-flag" @onclick="ViewModel.Flag"></i>
+                <i class="fa fa-star" @onclick="ViewModel.AddToFavorites"></i>
+
+                <a href="/word/edit/@ViewModel.EntityId"><i class="oi oi-pencil"></i></a>
+            </div>
+
         </div>
     </div>
 }

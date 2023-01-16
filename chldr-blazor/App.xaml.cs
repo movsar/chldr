@@ -24,8 +24,9 @@ namespace chldr_blazor
             // 4. check other stuff - done
             // 5. remove weitd things Ψ - done
             // 6. setup device sync for realm - done
-            // 7. setup user management
-            // 8. remove notes from Entry to Text/Phrase/Word
+            // 7. fix phrase notes
+            // 8. word / phrase editing
+            // 9. setup user management
         }
     }
 }

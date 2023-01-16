@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace chldr_blazor.ViewModels
 {
-    public abstract partial class EntryViewModelBase
+    public abstract partial class EntryViewModelBase : ComponentBase
     {
 
         #region Properties
@@ -56,6 +56,14 @@ namespace chldr_blazor.ViewModels
         #endregion
 
         #region Methods
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            if (!string.IsNullOrEmpty(EntityId))
+            {
+                InitializeViewModel(EntityId);
+            }
+        }
         protected abstract void InitializeViewModel(string entryId);
 
         protected virtual void InitializeViewModel(EntryModel entry)
