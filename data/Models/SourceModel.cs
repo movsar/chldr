@@ -1,4 +1,5 @@
 ﻿using Data.Entities;
+using Data.Interfaces;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
@@ -10,13 +11,13 @@ namespace Data.Models
 {
     public class SourceModel
     {
-        public ObjectId Id { get; }
+        public ObjectId EntityId { get; }
         public string Name { get; }
         public string Notes { get; }
         public SourceModel(Source source)
         {
             Name = source.Name;
-            Id = source._id;
+            EntityId = source._id;
             Notes = source.Notes;
         }
     }

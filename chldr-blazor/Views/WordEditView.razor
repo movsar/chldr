@@ -1,12 +1,13 @@
 ﻿@inject IStringLocalizer<AppLocalizations> Localizer;
+@inherits WordViewModel;
 
 <form class="col-6">
     <div class="form-outline mb-4">
-        <input type="text" class="form-control" placeholder="@Localizer["Basic Form"]" @bind="ViewModel.Content" />
+        <input type="text" class="form-control" placeholder="@Localizer["Basic Form"]" @bind="Content" />
     </div>
 
     <div class="form-outline mb-4">
-        <select @bind="ViewModel.PartOfSpeech">
+        <select @bind="PartOfSpeech">
             <option value="1">@Localizer["Verb"]</option>
             <option value="2">@Localizer["Noun"]</option>
             <option value="3">@Localizer["Adverb"]</option>
@@ -14,14 +15,3 @@
         </select>
     </div>
 </form>
-
-@code {
-    [Parameter]
-    public WordModel Word { get; set; }
-    public WordViewModel ViewModel;
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        ViewModel = Word == null ? new WordViewModel() : ViewModel = new WordViewModel(Word);
-    }
-}

@@ -1,4 +1,5 @@
 ﻿using Data.Entities;
+using Data.Interfaces;
 using MongoDB.Bson;
 using Realms;
 using System;
@@ -9,21 +10,15 @@ using System.Threading.Tasks;
 
 namespace Data.Models
 {
-    public class TextModel : TargetModel
+    public class TextModel : EntryModel
     {
-        public ObjectId EntryId { get; }
+        public new ObjectId EntityId { get; }
         public string Content { get; }
-        public List<TranslationModel> Translations = new List<TranslationModel>();
 
-        public TextModel(Text text)
+        public TextModel(Entities.Entry entry) : base(entry)
         {
-            this.TargetId = text._id;
-            this.EntryId = text.Entry._id;
-            this.Content = text.Content;
-            foreach (var translationEntity in text.Entry.Translations)
-            {
-                this.Translations.Add(new TranslationModel(translationEntity));
-            }
+            EntityId = entry.Text._id;
+            Content = entry.Text.Content;
         }
     }
 }

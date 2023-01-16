@@ -1,4 +1,5 @@
-﻿using Data.Models;
+﻿using Data.Interfaces;
+using Data.Models;
 using Data.Services;
 using MongoDB.Bson;
 using System;
@@ -61,7 +62,7 @@ namespace chldr_blazor.Stores
 
         internal EntryModel GetEntryById(ObjectId entryId)
         {
-            return CurrentEntries.FirstOrDefault(e => e.EntryId == entryId);
+            return CurrentEntries.FirstOrDefault(e => e.EntityId == entryId);
         }
         #endregion
 

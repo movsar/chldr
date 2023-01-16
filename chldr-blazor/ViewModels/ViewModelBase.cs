@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,8 @@ namespace chldr_blazor.ViewModels
         {
             PropertyChanged?.Invoke(null, null);
         }
+
+        // Used for viewmodels that need parameters from razor pages
+        public virtual void OnInitialized(ObjectId modelId) { }
     }
 }

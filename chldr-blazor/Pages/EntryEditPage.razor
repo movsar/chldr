@@ -1,28 +1,19 @@
-﻿@page "/edit-entry/{EntryId}";
-@inject DataAccess DataAccess;
+﻿@page "/entry-edit/{EntryId}";
+@inherits EntryViewModel;
 
 <h3>EntryEditPage</h3>
 
-@switch (ViewModel?.Type)
-{
-    case EntryType.Word:
-        <WordEditView Id="ViewModel.TargetObjectId" />
-        break;
-    case EntryType.Phrase:
-        break;
-    case EntryType.Text:
-        break;
-}
-
-@code {
-    [Parameter]
-    public string EntryId { get; set; }
-
-    protected override void OnParametersSet()
+@if (EntryId != null){
+    @switch (Type)
     {
-        base.OnParametersSet();
+        case Data.Enums.EntryType.Word:
+            <WordEditView EntryId="EntryId" />
+            break;
+        case Data.Enums.EntryType.Phrase:
+            break;
+        case Data.Enums.EntryType.Text:
+            break;
     }
-    public EntryViewModel ViewModel { get; set; }
 }
 
 <button>Save</button>

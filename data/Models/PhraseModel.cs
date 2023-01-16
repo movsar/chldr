@@ -1,4 +1,5 @@
 ﻿using Data.Entities;
+using Data.Interfaces;
 using MongoDB.Bson;
 using Realms;
 using System;
@@ -9,17 +10,16 @@ using System.Threading.Tasks;
 
 namespace Data.Models
 {
-    public class PhraseModel : TargetModel
+    public class PhraseModel : EntryModel
     {
-        public ObjectId EntityId { get; }
+        public new ObjectId EntityId { get; }
         public string Content { get; }
-        public string Notes { get; }
-        public PhraseModel(Phrase phrase)
+        public new string Notes { get; }
+        public PhraseModel(Entities.Entry entry) : base(entry)
         {
-            TargetId = phrase._id;
-            EntityId = phrase.Entry._id;
-            Content = phrase.Content;
-            Notes = phrase.Notes;
+            EntityId = entry.Phrase._id;
+            Content = entry.Phrase.Content;
+            Notes = entry.Phrase.Notes;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Data.Entities;
+using Data.Interfaces;
 using MongoDB.Bson;
 using Realms;
 using System;
@@ -11,7 +12,7 @@ namespace Data.Models
 {
     public class TranslationModel
     {
-        public ObjectId TranslationId { get; }
+        public ObjectId EntityId { get; }
         public ObjectId EntryId { get; }
         public string Content { get; }
         public string Notes { get; }
@@ -19,7 +20,7 @@ namespace Data.Models
         public int Rate { get; set; }
         public TranslationModel(Translation translation)
         {
-            TranslationId = translation._id;
+            EntityId = translation._id;
             Content = translation.Content;
             Notes = translation.Notes;
             Rate = translation.Rate;

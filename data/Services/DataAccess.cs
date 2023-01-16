@@ -1,4 +1,6 @@
 ﻿using Data.Entities;
+using Data.Factories;
+using Data.Interfaces;
 using Data.Models;
 using Data.Search;
 using Data.Services.PartialMethods;
@@ -31,7 +33,7 @@ namespace Data.Services
                 .OrderBy(x => randomizer.Next(0, 70000))
                 .Take(RandomEntriesLimit)
                 .OrderBy(entry => entry.GetHashCode())
-                .Select(entry => new EntryModel(entry));
+                .Select(entry => EntryModelFactory.CreateEntryModel(entry));
         }
 
         public DataAccess()

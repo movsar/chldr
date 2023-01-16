@@ -14,11 +14,10 @@ using System.Windows.Input;
 namespace chldr_blazor.ViewModels
 {
     [ObservableObject]
-    public partial class EntryViewModel
+    public partial class EntryViewModel : ComponentBase
     {
-        [Inject] private NavigationManager NavigationManager { get; set; }
-
-        public ObjectId EntryId { get; }
+        [Parameter]
+        public string EntryId { get; set; }
         public string Source { get; set; }
         public string Header { get; set; }
         public string Subheader { get; set; }
@@ -43,45 +42,61 @@ namespace chldr_blazor.ViewModels
         public void Flag() { }
         #endregion
 
-        public WordModel Word { get; }
-        public PhraseModel Phrase { get; }
-        public TextModel Text { get; }
-
-        public ObjectId TargetObjectId { get; set; }
         public EntryViewModel() { }
 
-        public EntryViewModel(EntryModel entry)
+        protected override void OnInitialized()
         {
-            _navigationManager = NavigationManager;
-            EntryId = entry.EntryId;
-            Type = entry.Type;
+            base.OnInitialized();
+
+            if (string.IsNullOrEmpty(EntryId))
+            {
+                return;
+            }
+
+            InitializeViewModel(EntryId);
+        }
+
+        private void InitializeViewModel(string entryId)
+        {
+            InitializeViewModel(App.ContentStore.GetEntryById(ObjectId.Parse(entryId)));
+        }
+        private void InitializeViewModel(EntryModel entry)
+        {
+            EntryId = entry.EntityId.ToString();
             Source = ParseSource(entry.Source.Name);
             Translations.AddRange(entry.Translations.Select(t => new TranslationViewModel(t)));
             Notes = entry.Notes;
-            TargetObjectId = entry.Target.TargetId;
 
-            switch (entry.Type)
+            switch (entry)
             {
-                case EntryType.Word:
-                    Word = entry.Target as WordModel;
+                case WordModel:
+                    var word = entry as WordModel;
 
-                    var subheader = BuildWordInfoSubheader(Word.Content, Word.GrammaticalClass, Word.RawForms, Word.RawNounDeclensions, Word.RawVerbTenses);
-                    Header = Word.Content;
+                    var subheader = BuildWordInfoSubheader(word.Content, word.GrammaticalClass, word.RawForms, word.RawNounDeclensions, word.RawVerbTenses);
+                    Header = word.Content;
                     Subheader = subheader;
+                    Type = EntryType.Word;
 
                     break;
-                case EntryType.Phrase:
-                    Phrase = entry.Target as PhraseModel;
-                    Header = Phrase.Content;
-                    Subheader = Phrase.Notes;
+                case PhraseModel:
+                    var phrase = entry as PhraseModel;
+                    Header = phrase.Content;
+                    Subheader = phrase.Notes;
+                    Type = EntryType.Phrase;
 
                     break;
-                case EntryType.Text:
-                    Text = entry.Target as TextModel;
-                    Header = Text.Content;
+                case TextModel:
+                    var text = entry as TextModel;
+                    Header = text.Content;
+                    Type = EntryType.Text;
 
                     break;
             }
+        }
+
+        public EntryViewModel(EntryModel entry)
+        {
+            InitializeViewModel(entry);
         }
         private static string ParseSource(string sourceName)
         {

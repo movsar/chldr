@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Data.Interfaces;
 using Entry = Data.Entities.Entry;
+using Data.Factories;
 
 namespace Data.Search
 {
@@ -32,7 +33,7 @@ namespace Data.Search
                                                         .Take(limit);
                 foreach (var entry in entries)
                 {
-                    resultingEntries.Add(new EntryModel(entry));
+                    resultingEntries.Add(EntryModelFactory.CreateEntryModel(entry));
                 }
             });
 
@@ -55,7 +56,7 @@ namespace Data.Search
                                                                    .Take(limit);
                 foreach (var translation in translations)
                 {
-                    resultingEntries.Add(new EntryModel(translation.Entry));
+                    resultingEntries.Add(EntryModelFactory.CreateEntryModel(translation.Entry));
                 }
             });
 

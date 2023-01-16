@@ -1,27 +1,26 @@
-﻿using Data.Entities;
-using Data.Enums;
+﻿using Data.Enums;
+using Data.Interfaces;
 using Data.Models;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Data.Factories
 {
-    internal static class TargetModelFactory
+    internal class EntryModelFactory
     {
-        public static TargetModel CreateTarget(Entities.Entry entryEntity)
+        public static EntryModel CreateEntryModel(Entities.Entry entryEntity)
         {
             switch (entryEntity.Type)
             {
                 case EntryType.Word:
-                    return new WordModel(entryEntity.Word);
+                    return new WordModel(entryEntity);
                 case EntryType.Phrase:
-                    return new PhraseModel(entryEntity.Phrase);
+                    return new PhraseModel(entryEntity);
                 case EntryType.Text:
-                    return new TextModel(entryEntity.Text);
+                    return new TextModel(entryEntity);
                 default:
                     return null;
             }

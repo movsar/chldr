@@ -1,4 +1,5 @@
 ﻿using Data.Entities;
+using Data.Interfaces;
 using MongoDB.Bson;
 using Realms;
 using System;
@@ -11,29 +12,29 @@ using System.Threading.Tasks;
 
 namespace Data.Models
 {
-    public class WordModel : TargetModel
+    public class WordModel : EntryModel
     {
-        public ObjectId EntityId { get; }
+        public WordModel(Entities.Entry entry) : base(entry)
+        {
+            EntityId = entry.Word._id;
+            Content = entry.Word.Content;
+            Notes = entry.Word.Notes;
+            RawForms = entry.Word.Forms;
+            GrammaticalClass = entry.Word.GrammaticalClass;
+            RawVerbTenses = entry.Word.VerbTenses;
+            RawNounDeclensions = entry.Word.NounDeclensions;
+            PartOfSpeech = entry.Word.PartOfSpeech;
+        }
+
+        public new ObjectId EntityId { get; }
         public string Content { get; }
-        public string Notes { get; }
+        public new string Notes { get; }
         public string RawForms { get; }
         public string RawVerbTenses { get; }
         public string RawNounDeclensions { get; }
         public int PartOfSpeech { get; }
         public int GrammaticalClass { get; internal set; }
 
-        public WordModel(Word word)
-        {
-            TargetId = word._id;
-            EntityId = word.Entry._id;
-            Content = word.Content;
-            Notes = word.Notes;
-            RawForms = word.Forms;
-            GrammaticalClass = word.GrammaticalClass;
-            RawVerbTenses = word.VerbTenses;
-            RawNounDeclensions = word.NounDeclensions;
-            PartOfSpeech = word.PartOfSpeech;
-        }
 
     }
 }
