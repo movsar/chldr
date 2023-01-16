@@ -19,7 +19,7 @@ using chldr_blazor.Factories;
 namespace chldr_blazor.ViewModels
 {
     [ObservableObject]
-    public partial class MainPageViewModel
+    public partial class MainPageViewModel : ComponentBase
     {
         #region Properties
         [ObservableProperty]
@@ -34,13 +34,15 @@ namespace chldr_blazor.ViewModels
 
         #region Fields
         private Stopwatch _stopWatch = new Stopwatch();
+        public ElementReference entriesListViewReference;
+        public ElementReference searchInputReference;
         #endregion
 
         #region Constructors
         public MainPageViewModel()
         {
             App.ContentStore.CurrentEntriesUpdated += ContentStore_CurrentEntriesUpdated;
-            App.ContentStore.LoadRandomEntries();
+            ShowRandoms();
         }
         #endregion
 
@@ -60,6 +62,10 @@ namespace chldr_blazor.ViewModels
         public void Search(ChangeEventArgs evgentArgs)
         {
             string inputText = evgentArgs.Value.ToString();
+            if (string.IsNullOrWhiteSpace(inputText))
+            {
+                return;
+            }
 
             EntryViewModels.Clear();
 
@@ -74,7 +80,33 @@ namespace chldr_blazor.ViewModels
             var newEntryViewModels = App.ContentStore.CurrentEntries.Select(e => EntryViewModelFactory.CreateViewModel(e)).ToList();
             EntryViewModels = newEntryViewModels;
         }
+        internal void ShowRandoms()
+        {
+            EntryViewModels.Clear();
+            App.ContentStore.LoadRandomEntries();
+        }
         #endregion
-      
+
+        #region Overrides
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await searchInputReference.FocusAsync();
+            }
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            PropertyChanged += async (sender, e) =>
+            {
+                await InvokeAsync(() =>
+                {
+                    StateHasChanged();
+                });
+            };
+            await base.OnInitializedAsync();
+        }
+        #endregion
     }
 }

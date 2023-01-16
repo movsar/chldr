@@ -1,7 +1,7 @@
 ﻿@page "/"
 @inject ContentStore ContentStore;
 @inject IStringLocalizer<AppLocalizations> Localizer;
-@inject MainPageViewModel ViewModel;
+@inherits MainPageViewModel;
 
 <div class="input-group mb-3 mt-3">
 
@@ -14,11 +14,11 @@
     <input class="form-control shadow-none"
            placeholder="@Localizer["StartTyping"]"
            @ref="searchInputReference"
-           @bind-value="@ViewModel.InputText"
-           @oninput="(e)=> ViewModel.Search(e)" />
+           @bind-value="@InputText"
+           @oninput="(e)=> Search(e)" />
 
     <div class="ms-2">
-        <button type="button" class="btn btn-secondary" @onclick="App.ContentStore.LoadRandomEntries">
+        <button type="button" class="btn btn-secondary" @onclick="ShowRandoms">
             <span class="bi-arrow-repeat"></span>
         </button>
     </div>
@@ -26,40 +26,14 @@
 </div>
 
 
-@if (ViewModel.EntryViewModels.Count != 0)
+@if (EntryViewModels.Count != 0)
 {
     <div class="chldr_entries" @ref="entriesListViewReference">
 
-        @foreach (var entryViewModel in ViewModel.EntryViewModels)
+        @foreach (var entryViewModel in EntryViewModels)
         {
             <EntryView ViewModel="entryViewModel"></EntryView>
         }
 
     </div>
-}
-
-@code {
-    public ElementReference entriesListViewReference;
-    public ElementReference searchInputReference;
-
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await searchInputReference.FocusAsync();
-        }
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        ViewModel.PropertyChanged += async (sender, e) =>
-        {
-            await InvokeAsync(() =>
-            {
-                StateHasChanged();
-            });
-        };
-        await base.OnInitializedAsync();
-    }
 }
