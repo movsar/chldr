@@ -1,4 +1,6 @@
-﻿using Data.Interfaces;
+﻿using chldr_blazor.Factories;
+using chldr_blazor.ViewModels;
+using Data.Interfaces;
 using Data.Models;
 using Data.Services;
 using MongoDB.Bson;
@@ -60,10 +62,15 @@ namespace chldr_blazor.Stores
             CurrentEntriesUpdated?.Invoke();
         }
 
-        internal EntryModel GetEntryById(ObjectId entryId)
+        internal WordModel GetWordById(ObjectId entryId)
         {
-            return CurrentEntries.FirstOrDefault(e => e.EntityId == entryId);
+            return _dataAccess.GetWordById(entryId);
         }
+        internal PhraseModel GetPhraseById(ObjectId entryId)
+        {
+            return _dataAccess.GetPhraseById(entryId);
+        }
+
         #endregion
 
     }

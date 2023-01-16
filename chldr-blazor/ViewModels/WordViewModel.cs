@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 
 namespace chldr_blazor.ViewModels
 {
-    public class WordViewModel : ComponentBase
+    public class WordViewModel : EntryViewModelBase
     {
-        [Parameter]
-        public string EntityId { get; set; }
+        #region Properties
         public int PartOfSpeech { get; set; }
         public int GrammaticalClass { get; set; }
         public string Content { get; set; }
@@ -20,35 +19,57 @@ namespace chldr_blazor.ViewModels
         public string RawForms { get; }
         public string RawVerbTenses { get; }
         public string RawNounDeclensions { get; }
-
-        protected override void OnInitialized()
+        #endregion
+        private static string BuildWordInfoSubheader(string content, int grammaticalClass, string rawForms, string rawWordDeclensions, string rawWordTenses)
         {
-            base.OnInitialized();
-            if (string.IsNullOrEmpty(EntityId))
+            if (rawWordDeclensions == Data.Entities.Word.EmptyRawWordDeclensionsValue && rawWordTenses == Data.Entities.Word.EmptyRawWordTensesValue)
             {
-                return;
+                return null;
+            }
+            var allForms = Data.Entities.Word.GetAllUniqueWordForms(content, rawForms, rawWordDeclensions, rawWordTenses, true);
+            string part1 = String.Join(", ", allForms);
+            if (part1.Length == 0)
+            {
+                return null;
             }
 
-            InitializeViewModel(EntityId);
+            string part2 = $" {Data.Entities.Word.ParseGrammaticalClass(grammaticalClass)} ";
+
+            return $"[{part1}{part2}]";
         }
 
-        private void InitializeViewModel(string entityId)
+        public WordViewModel(WordModel word)
         {
-            InitializeViewModel(App.ContentStore.GetEntryById(ObjectId.Parse(entityId)));
+            InitializeViewModel(word);
         }
-
-        private void InitializeViewModel(EntryModel entry)
+        public WordViewModel() { }
+        protected override void InitializeViewModel(EntryModel entry)
         {
+            base.InitializeViewModel(entry);
+
             var word = entry as WordModel;
+
             EntityId = word.EntityId.ToString();
             GrammaticalClass = word.GrammaticalClass;
             Content = word.Content;
             Notes = word.Notes;
             PartOfSpeech = word.PartOfSpeech;
+
+            var subheader = BuildWordInfoSubheader(word.Content, word.GrammaticalClass, word.RawForms, word.RawNounDeclensions, word.RawVerbTenses);
+            Header = word.Content;
+            Subheader = subheader;
+
+            //case TextModel:
+            //    var text = entry as TextModel;
+            //    Header = text.Content;
+            //    Type = EntryType.Text;
+
+            //    break;
         }
 
-        public WordViewModel()
+        protected override void InitializeViewModel(string entryId)
         {
+            InitializeViewModel(App.ContentStore.GetWordById(ObjectId.Parse(entryId)));
         }
     }
 }

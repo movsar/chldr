@@ -1,7 +1,7 @@
 ﻿@page "/"
-@inject MainPageViewModel ViewModel;
 @inject ContentStore ContentStore;
 @inject IStringLocalizer<AppLocalizations> Localizer;
+@inject MainPageViewModel ViewModel;
 
 <div class="input-group mb-3 mt-3">
 
@@ -13,12 +13,12 @@
 
     <input class="form-control shadow-none"
            placeholder="@Localizer["StartTyping"]"
-    @ref="searchInputReference"
-    @bind-value="@ViewModel.InputText"
-    @oninput="(e)=> ViewModel.Search(e)" />
+           @ref="searchInputReference"
+           @bind-value="@ViewModel.InputText"
+           @oninput="(e)=> ViewModel.Search(e)" />
 
     <div class="ms-2">
-        <button type="button" class="btn btn-secondary" @onclick="ContentStore.LoadRandomEntries">
+        <button type="button" class="btn btn-secondary" @onclick="App.ContentStore.LoadRandomEntries">
             <span class="bi-arrow-repeat"></span>
         </button>
     </div>
@@ -26,21 +26,22 @@
 </div>
 
 
-@if (ViewModel.Entries.Count != 0)
+@if (ViewModel.EntryViewModels.Count != 0)
 {
     <div class="chldr_entries" @ref="entriesListViewReference">
 
-        @foreach (var entry in ViewModel.Entries)
+        @foreach (var entryViewModel in ViewModel.EntryViewModels)
         {
-            <EntryView ViewModel="@entry"></EntryView>
+            <EntryView ViewModel="entryViewModel"></EntryView>
         }
 
     </div>
 }
 
 @code {
-    private ElementReference entriesListViewReference;
-    private ElementReference searchInputReference;
+    public ElementReference entriesListViewReference;
+    public ElementReference searchInputReference;
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

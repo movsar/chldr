@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
@@ -9,14 +10,11 @@ using System.Threading.Tasks;
 namespace chldr_blazor.ViewModels
 {
     [ObservableObject]
-    public partial class ViewModelBase
+    public partial class ViewModelBase : ComponentBase
     {
         protected void NotifyOfChanges()
         {
             PropertyChanged?.Invoke(null, null);
         }
-
-        // Used for viewmodels that need parameters from razor pages
-        public virtual void OnInitialized(ObjectId modelId) { }
     }
 }

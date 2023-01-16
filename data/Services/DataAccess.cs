@@ -4,6 +4,7 @@ using Data.Interfaces;
 using Data.Models;
 using Data.Search;
 using Data.Services.PartialMethods;
+using MongoDB.Bson;
 using Entry = Data.Entities.Entry;
 
 namespace Data.Services
@@ -53,6 +54,16 @@ namespace Data.Services
         public async Task ConfirmUser(string token, string tokenId)
         {
             await RealmService.GetApp().EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
+        }
+
+        public WordModel GetWordById(ObjectId entityId)
+        {
+            return new WordModel(RealmService.GetRealm().All<Word>().FirstOrDefault(w => w._id == entityId));
+        }
+
+        public PhraseModel GetPhraseById(ObjectId entityId)
+        {
+            return new PhraseModel(RealmService.GetRealm().All<Phrase>().FirstOrDefault(p => p._id == entityId));
         }
     }
 }

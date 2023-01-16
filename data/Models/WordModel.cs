@@ -14,21 +14,23 @@ namespace Data.Models
 {
     public class WordModel : EntryModel
     {
-        public WordModel(Entities.Entry entry) : base(entry)
+        public WordModel(Entities.Word word) : base(word.Entry)
         {
-            EntityId = entry.Word._id;
-            Content = entry.Word.Content;
-            Notes = entry.Word.Notes;
-            RawForms = entry.Word.Forms;
-            GrammaticalClass = entry.Word.GrammaticalClass;
-            RawVerbTenses = entry.Word.VerbTenses;
-            RawNounDeclensions = entry.Word.NounDeclensions;
-            PartOfSpeech = entry.Word.PartOfSpeech;
+            EntityId = word._id;
+            Content = word.Content;
+            Notes = word.Notes;
+            RawForms = word.Forms;
+            GrammaticalClass = word.GrammaticalClass;
+            RawVerbTenses = word.VerbTenses;
+            RawNounDeclensions = word.NounDeclensions;
+            PartOfSpeech = word.PartOfSpeech;
         }
+
+        public WordModel(Entities.Entry entry) : this(entry.Word) { }
 
         public new ObjectId EntityId { get; }
         public string Content { get; }
-        public new string Notes { get; }
+        public string Notes { get; }
         public string RawForms { get; }
         public string RawVerbTenses { get; }
         public string RawNounDeclensions { get; }

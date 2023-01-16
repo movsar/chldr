@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.AspNetCore.Components;
 using chldr_blazor.Stores;
+using chldr_blazor.Factories;
 
 namespace chldr_blazor.ViewModels
 {
@@ -22,7 +23,7 @@ namespace chldr_blazor.ViewModels
     {
         #region Properties
         [ObservableProperty]
-        private List<EntryViewModel> _entries = new();
+        private List<EntryViewModelBase> _entryViewModels = new();
 
         [ObservableProperty]
         private string _inputText;
@@ -34,7 +35,7 @@ namespace chldr_blazor.ViewModels
         #region Fields
         private Stopwatch _stopWatch = new Stopwatch();
         #endregion
-     
+
         #region Constructors
         public MainPageViewModel()
         {
@@ -52,18 +53,15 @@ namespace chldr_blazor.ViewModels
             ShowResults();
 
             var resultsShown = _stopWatch.ElapsedMilliseconds;
-            Debug.WriteLine($"Found {Entries.Count}");
+            Debug.WriteLine($"Found {EntryViewModels.Count}");
             _stopWatch.Stop();
         }
         // Called when something is typed into search input
         public void Search(ChangeEventArgs evgentArgs)
         {
             string inputText = evgentArgs.Value.ToString();
-            if (String.IsNullOrWhiteSpace(inputText))
-            {
-                Entries.Clear();
-                return;
-            }
+
+            EntryViewModels.Clear();
 
             _stopWatch.Restart();
             App.ContentStore.Search(inputText);
@@ -73,9 +71,10 @@ namespace chldr_blazor.ViewModels
         #region Methods
         internal void ShowResults()
         {
-            var newEntries = App.ContentStore.CurrentEntries.Select(e => new EntryViewModel(e)).ToList();
-            Entries = newEntries;
+            var newEntryViewModels = App.ContentStore.CurrentEntries.Select(e => EntryViewModelFactory.CreateViewModel(e)).ToList();
+            EntryViewModels = newEntryViewModels;
         }
         #endregion
+      
     }
 }

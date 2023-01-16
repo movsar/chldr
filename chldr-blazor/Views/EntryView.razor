@@ -1,56 +1,30 @@
-﻿@inject IStringLocalizer<AppLocalizations> Localizer;
+﻿@if (ViewModel != null)
+{
+    <div class="chldr_entry">
+        <div class="card card-body">
 
-<div class="chldr_entry">
-    <div class="card card-body card-title">
-        <div class="chldr_entry_header">
-            @ViewModel.Header
-            <span class="oi oi-volume-high" @onclick="ViewModel.ListenToPronunciation"></span>
-        </div>
-
-        @if (!String.IsNullOrWhiteSpace(@ViewModel.Subheader))
-        {
-            <div class="chldr_entry_sub-header">
-                @ViewModel.Subheader
-            </div>
-        }
-
-        @if (!String.IsNullOrWhiteSpace(@ViewModel.Notes))
-        {
-            <div class="chldr_translation_notes">
-                (@ViewModel.Notes)
-            </div>
-        }
-
-        <div class="chldr_entry_translations mt-2">
-            @foreach (var translation in ViewModel.Translations)
+            @switch (ViewModel)
             {
-                <TranslationView ViewModel="@translation"></TranslationView>
+                case WordViewModel:
+                    <WordView ViewModel="ViewModel as WordViewModel" />
+                    break;
+                case PhraseViewModel:
+                    <PhraseView ViewModel="ViewModel as PhraseViewModel" />
+                    break;
             }
-        </div>
 
-        @if (!String.IsNullOrWhiteSpace(@ViewModel.Source))
-        {
-            <div class="chldr_entry_source">
-                @Localizer["Source"]: @ViewModel.Source
+            <div class="chldr_entry_translations mt-2">
+                @foreach (var translation in ViewModel.TranslationViewModels)
+                {
+                    <TranslationView ViewModel="@translation"></TranslationView>
+                }
             </div>
-        }
 
-        <div class="chldr_entry_actions">
-            <i class="fa fa-language" @onclick="ViewModel.NewTranslation"></i>
-            <i class="fa fa-share" @onclick="ViewModel.Share"></i>
-
-            <i class="fa fa-flag" @onclick="ViewModel.Flag"></i>
-            <i class="fa fa-star" @onclick="ViewModel.AddToFavorites"></i>
-
-            <a href="/entry-edit/@ViewModel.EntryId"><i class="oi oi-pencil"></i></a>
         </div>
-
     </div>
-
-</div>
-
+}
 
 @code {
     [Parameter]
-    public EntryViewModel ViewModel { get; set; }
+    public EntryViewModelBase ViewModel { get; set; }
 }

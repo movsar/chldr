@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Data.Interfaces;
 using Data.Models;
 using Data.Services;
+using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 using Realms.Exceptions;
 using System;
@@ -16,21 +17,34 @@ using System.Windows.Input;
 namespace chldr_blazor.ViewModels
 {
     [ObservableObject]
-    public partial class TranslationViewModel
+    public partial class TranslationViewModel : ComponentBase
     {
+        #region Properties
+        [Parameter]
+        public string EntityId { get; set; }
+        [Parameter]
+        public TranslationModel Model { get; set; }
+        public ICommand Search { get; set; }
+        public string Content { get; set; }
+        public string Notes { get; set; }
+        public string LanguageCode { get; set; }
+
+        #endregion
+
+        #region Actions
         public void Upvote() { }
+        public ICommand TranslationTextClick { get; } = new Command(() =>
+        {
+            var g = 2;
+        });
         public void Downvote() { }
         public void Edit() { }
         public void CurrentTranslationSelected()
         {
             var g = 2;
         }
-        public ICommand TranslationTextClick { get; } = new Command(() =>
-        {
-            var g = 2;
-        });
 
-        public ICommand Search { get; set; }
+        #endregion
 
         public void DoSearch()
         {
@@ -59,14 +73,38 @@ namespace chldr_blazor.ViewModels
             App.ContentStore.Search(translationText);
         }
 
-        public string Content { get; }
-        public string Notes { get; }
-        public string LanguageCode { get; }
+        #region Constructors
         public TranslationViewModel()
         {
             Search = new RelayCommand(DoSearch);
         }
         public TranslationViewModel(TranslationModel translation)
+        {
+            InitializeViewModel(translation);
+        }
+        #endregion
+
+        #region EventHandlers
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            if (!string.IsNullOrEmpty(EntityId))
+            {
+                InitializeViewModel(EntityId);
+            }
+            if (Model != null)
+            {
+                InitializeViewModel(Model);
+            }
+        }
+        #endregion
+        protected void InitializeViewModel(string entryId)
+        {
+
+        }
+
+        protected void InitializeViewModel(TranslationModel translation)
         {
             Content = translation.Content;
             LanguageCode = translation.Language.Code;

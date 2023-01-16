@@ -14,7 +14,6 @@ namespace Data.Models
         public ObjectId EntityId { get; }
         public List<TranslationModel> Translations { get; } = new List<TranslationModel>();
         public SourceModel Source { get; }
-        public string Notes { get; }
         public int Rate { get; }
         public EntryModel(Entities.Entry entry)
         {

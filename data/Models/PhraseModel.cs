@@ -15,11 +15,12 @@ namespace Data.Models
         public new ObjectId EntityId { get; }
         public string Content { get; }
         public new string Notes { get; }
-        public PhraseModel(Entities.Entry entry) : base(entry)
+        public PhraseModel(Entities.Phrase phrase) : base(phrase.Entry)
         {
-            EntityId = entry.Phrase._id;
-            Content = entry.Phrase.Content;
-            Notes = entry.Phrase.Notes;
+            EntityId = phrase._id;
+            Content = phrase.Content;
+            Notes = phrase.Notes;
         }
+        public PhraseModel(Entities.Entry entry) : this(entry.Phrase) { }
     }
 }
