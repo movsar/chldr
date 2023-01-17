@@ -15,6 +15,7 @@
 <div class="col-12 d-flex justify-content-center mt-lg-5">
 
     <form class="col-6">
+
         <!-- Email and Username -->
         <div class="form-outline mb-4">
             <input type="email" class="form-control" placeholder="@Localizer["Email"]" required @bind="Email" />
@@ -49,3 +50,16 @@
         </div>
     </form>
 </div>
+
+@if (ErrorMessages.Count() > 0)
+{
+    <div class="blazor-error-boundary">
+
+        <div class="chldr_registration_errors">
+            @foreach (var errorMessage in ErrorMessages)
+            {
+                <div>&bull; @errorMessage</div>
+            }
+        </div>
+    </div>
+}

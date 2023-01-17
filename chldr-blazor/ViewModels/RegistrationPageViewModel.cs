@@ -11,39 +11,36 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ValidationException = FluentValidation.ValidationException;
 
 namespace chldr_blazor.ViewModels
 {
     public class RegistrationPageViewModel : ComponentBase
     {
-        //public RegistrationPageViewModel(RegistrationValidator Validator)
-        //{
-
-        //}
         [Inject] RegistrationValidator Validator { get; set; }
+        [Inject] DataAccess DataAccess { get; set; }
+        [Inject] NavigationManager NavigationManager { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public string PasswordConfirmation { get; set; }
         public string Username { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public List<string> ErrorMessages { get; } = new();
         public async void SendRegistrationRequest()
         {
             try
             {
                 Validator.ValidateAndThrow(this);
             }
-            catch (Exception ex)
+            catch (ValidationException ex)
             {
-                AlertDialog ad = new AlertDialog() { Content = ex.Message };
-                ad.ShowAsync();
+                ErrorMessages.AddRange(ex.Errors.Select(err => err.ErrorMessage));
+                return;
             }
 
-            var dataAccess = App.ServiceProvider.GetService<DataAccess>();
-
-
-            await dataAccess.RegisterNewUser(Email, Password, Username, FirstName, LastName);
-            // NavigationManager.NavigateTo("/emailsent");
+            //await DataAccess.RegisterNewUser(Email, Password, Username, FirstName, LastName);
+            NavigationManager.NavigateTo("/emailsent");
         }
 
     }
