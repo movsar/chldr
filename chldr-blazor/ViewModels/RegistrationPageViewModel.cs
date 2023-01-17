@@ -15,8 +15,13 @@ namespace chldr_blazor.ViewModels
     {
         [Inject] private NavigationManager NavigationManager { get; set; }
 
+        private IStringLocalizer<AppLocalizations> _stringLocalizer;
+        public RegistrationPageViewModel(IStringLocalizer<AppLocalizations> stringLocalizer)
+        {
+            _stringLocalizer = stringLocalizer;
+        }
+
         public string Email { get; set; }
-        [Required]
         public string Password { get; set; }
         public string Username { get; set; }
         public string FirstName { get; set; }

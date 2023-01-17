@@ -12,21 +12,14 @@ namespace Data.Entities
     public class User: RealmObject
     {
         [PrimaryKey]
-        public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
-        public string ThirdParty { get; set; } = string.Empty; 
-        public string ThirdPartyId { get; set; } = string.Empty;
-        public string Username { get; set; } = string.Empty;
-        public string Provider { get; set; } = string.Empty;
+        public ObjectId _id { get; set; }
         public string Email { get; set; } = string.Empty;
-        public bool Confirmed { get; set; }
-        public string Password { get; set; } = string.Empty;
-        [Required]
-        public IList<string> Tokens { get; } = new List<string>();
-        public string PointsPerLang { get; set; } = string.Empty;
+        public string Username { get; set; } = string.Empty;
+        public int RateWeight { get; set; } = 1;
+        public int Rate { get; set; } = 1;
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Patronymic { get; set; } = string.Empty;
-        public string ImagePath { get; set; } = string.Empty;
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
     }

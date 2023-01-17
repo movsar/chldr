@@ -47,6 +47,7 @@ namespace Data.Services
 
             _config = new FlexibleSyncConfiguration(_user, Path.Combine(FileService.AppDataDirectory, FileService.DatabaseName))
             {
+                SchemaVersion = 3,
                 PopulateInitialSubscriptions = (realm) =>
                 {
                     Debug.WriteLine($"APP: Realm : PopulateInitialSubscriptions");
@@ -60,7 +61,8 @@ namespace Data.Services
                     realm.Subscriptions.Add(realm.All<Entities.Word>());
                 }
             };
-
+            // TODO: Compact if size > 100Mb
+            // Realm.Compact(_config);
             await GetRealm().Subscriptions.WaitForSynchronizationAsync();
             DatabaseInitialized?.Invoke();
             //DatabaseSynced?.Invoke();

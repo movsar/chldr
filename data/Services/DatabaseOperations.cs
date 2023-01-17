@@ -147,7 +147,6 @@ namespace Data.Services
                         _id = item._id,
                         Email = item.Email,
                         FirstName = item.FirstName,
-                        Password = item.Password,
                         Username = item.Username,
                         UpdatedAt = item.UpdatedAt,
                     });
