@@ -35,9 +35,9 @@ namespace Data.Services
                 BaseFilePath = FileService.AppDataDirectory,
             });
 
-            //_user = await _app.LogInAsync(Credentials.Anonymous());
             try
             {
+                // _user = await _app.LogInAsync(Credentials.Anonymous());
                 _user = await _app.LogInAsync(Credentials.EmailPassword("movsar.dev@gmail.com", "135790!s-"));
             }
             catch (Exception ex)

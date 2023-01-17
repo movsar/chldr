@@ -138,6 +138,9 @@
   <data name="EmailSentMessage" xml:space="preserve">
     <value>Registration has been successful, please check your email and follow the included link to activate your profile.</value>
   </data>
+  <data name="Error_PasswordTooLong" xml:space="preserve">
+    <value>Password is too long</value>
+  </data>
   <data name="First Name" xml:space="preserve">
     <value>First Name</value>
   </data>

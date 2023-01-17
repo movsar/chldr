@@ -34,7 +34,7 @@ namespace chldr_blazor.ViewModels
         {
             try
             {
-                await _dataAccess.Login(Email, Password);
+
             }
             catch (Exception ex)
             {

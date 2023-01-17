@@ -124,6 +124,24 @@ namespace chldr_blazor.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email is not valid.
+        /// </summary>
+        internal static string Error_EmailNotValid {
+            get {
+                return ResourceManager.GetString("Error_EmailNotValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password is too long.
+        /// </summary>
+        internal static string Error_PasswordTooLong {
+            get {
+                return ResourceManager.GetString("Error_PasswordTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to First Name.
         /// </summary>
         internal static string First_Name {
