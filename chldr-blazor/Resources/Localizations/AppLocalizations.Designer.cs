@@ -22,14 +22,14 @@ namespace chldr_blazor.Resources.Localizations {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class AppLocalizations {
+    public class AppLocalizations {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal AppLocalizations() {
+        public AppLocalizations() {
         }
         
         /// <summary>
@@ -129,6 +129,24 @@ namespace chldr_blazor.Resources.Localizations {
         internal static string Error_EmailNotValid {
             get {
                 return ResourceManager.GetString("Error_EmailNotValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username can only have latin letters and digits.
+        /// </summary>
+        internal static string Error_InvalidUsername {
+            get {
+                return ResourceManager.GetString("Error_InvalidUsername", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passwords don&apos;t match.
+        /// </summary>
+        internal static string Error_PasswordsDontMatch {
+            get {
+                return ResourceManager.GetString("Error_PasswordsDontMatch", resourceCulture);
             }
         }
         

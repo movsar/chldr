@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Data.Models
 {
-    internal class UserModel
+    public class UserModel
     {
         public ObjectId EntityId { get; }
         public string Email { get; }

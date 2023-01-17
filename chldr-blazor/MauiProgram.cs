@@ -1,9 +1,12 @@
 ﻿using chldr_blazor.Pages;
 using chldr_blazor.Stores;
+using chldr_blazor.Validators;
 using chldr_blazor.ViewModels;
 using Data.Interfaces;
 using Data.Services;
+using FluentValidation;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
 namespace chldr_blazor
@@ -15,6 +18,7 @@ namespace chldr_blazor
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .RegisterValidators()
                 .RegisterAppServices()
                 .RegisterViewModels()
                 .RegisterViews()
@@ -33,6 +37,15 @@ namespace chldr_blazor
 #endif
 
             return builder.Build();
+        }
+
+
+        public static MauiAppBuilder RegisterValidators(this MauiAppBuilder mauiAppBuilder)
+        {
+            mauiAppBuilder.Services.AddScoped<RegistrationValidator>();
+            mauiAppBuilder.Services.AddScoped<IValidator<RegistrationPageViewModel>, RegistrationValidator>();
+
+            return mauiAppBuilder;
         }
 
         public static MauiAppBuilder RegisterAppServices(this MauiAppBuilder mauiAppBuilder)
