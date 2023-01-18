@@ -12,15 +12,15 @@ namespace user_management
 
             builder.Services.AddControllers();
             builder.Services.AddSingleton<DataAccess>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
 
             app.MapControllers();
+            app.MapGet("/", () => { return "You shouldn't be here"; });
 
             app.Run();
         }
