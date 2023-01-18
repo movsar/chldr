@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_blazor.ViewModels
+namespace chldr_native.ViewModels
 {
     internal class LoginPageViewModel : ComponentBase
     {

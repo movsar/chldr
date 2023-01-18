@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace chldr_blazor
+namespace chldr_native
 {
     public class Program
     {

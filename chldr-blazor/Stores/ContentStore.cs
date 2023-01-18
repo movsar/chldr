@@ -1,5 +1,5 @@
-﻿using chldr_blazor.Factories;
-using chldr_blazor.ViewModels;
+﻿using chldr_native.Factories;
+using chldr_native.ViewModels;
 using Data.Interfaces;
 using Data.Models;
 using Data.Services;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_blazor.Stores
+namespace chldr_native.Stores
 {
     public class ContentStore
     {

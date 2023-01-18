@@ -1,8 +1,8 @@
-﻿using chldr_blazor.Stores;
+﻿using chldr_native.Stores;
 using Data.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace chldr_blazor
+namespace chldr_native
 {
     public partial class App : Application
     {

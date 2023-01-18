@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace chldr_blazor
+namespace chldr_native
 {
     [Application]
     public class MainApplication : MauiApplication

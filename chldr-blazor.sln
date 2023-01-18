@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", "{A78B94DD-4A48-458D-886B-22BD68D0B5EF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr-blazor", "chldr-blazor\chldr-blazor.csproj", "{C96293B0-2B47-4163-9B10-D39CB7235D48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_native", "chldr-blazor\chldr_native.csproj", "{C96293B0-2B47-4163-9B10-D39CB7235D48}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr-api", "chldr-api\chldr-api.csproj", "{FB608F40-D1D6-4365-B266-8EEA026D6A2C}"
 EndProject

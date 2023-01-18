@@ -2,7 +2,7 @@ using Microsoft.Maui;
 using Microsoft.Maui.Hosting;
 using System;
 
-namespace chldr_blazor
+namespace chldr_native
 {
     internal class Program : MauiApplication
     {

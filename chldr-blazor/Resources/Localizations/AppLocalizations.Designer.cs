@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace chldr_blazor.Resources.Localizations {
+namespace chldr_native.Resources.Localizations {
     using System;
     
     
@@ -36,10 +36,10 @@ namespace chldr_blazor.Resources.Localizations {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("chldr_blazor.Resources.Localizations.AppLocalizations", typeof(AppLocalizations).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("chldr_native.Resources.Localizations.AppLocalizations", typeof(AppLocalizations).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace chldr_blazor.Resources.Localizations {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Adjective.
         /// </summary>
-        internal static string Adjective {
+        public static string Adjective {
             get {
                 return ResourceManager.GetString("Adjective", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Adverb.
         /// </summary>
-        internal static string Adverb {
+        public static string Adverb {
             get {
                 return ResourceManager.GetString("Adverb", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Chechen Language Dictionary.
         /// </summary>
-        internal static string App_title {
+        public static string App_title {
             get {
                 return ResourceManager.GetString("App title", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Basic form.
         /// </summary>
-        internal static string Basic_form {
+        public static string Basic_form {
             get {
                 return ResourceManager.GetString("Basic form", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Confirm password.
         /// </summary>
-        internal static string Confirm_password {
+        public static string Confirm_password {
             get {
                 return ResourceManager.GetString("Confirm password", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Email.
         /// </summary>
-        internal static string Email {
+        public static string Email {
             get {
                 return ResourceManager.GetString("Email", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Registration has been successful, please check your email and follow the included link to activate your profile..
         /// </summary>
-        internal static string EmailSentMessage {
+        public static string EmailSentMessage {
             get {
                 return ResourceManager.GetString("EmailSentMessage", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Email is not valid.
         /// </summary>
-        internal static string Error_EmailNotValid {
+        public static string Error_EmailNotValid {
             get {
                 return ResourceManager.GetString("Error_EmailNotValid", resourceCulture);
             }
@@ -135,7 +135,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Username can only have latin letters and digits.
         /// </summary>
-        internal static string Error_InvalidUsername {
+        public static string Error_InvalidUsername {
             get {
                 return ResourceManager.GetString("Error_InvalidUsername", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Passwords don&apos;t match.
         /// </summary>
-        internal static string Error_PasswordsDontMatch {
+        public static string Error_PasswordsDontMatch {
             get {
                 return ResourceManager.GetString("Error_PasswordsDontMatch", resourceCulture);
             }
@@ -153,7 +153,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Password is too long.
         /// </summary>
-        internal static string Error_PasswordTooLong {
+        public static string Error_PasswordTooLong {
             get {
                 return ResourceManager.GetString("Error_PasswordTooLong", resourceCulture);
             }
@@ -162,7 +162,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to First Name.
         /// </summary>
-        internal static string First_Name {
+        public static string First_Name {
             get {
                 return ResourceManager.GetString("First Name", resourceCulture);
             }
@@ -171,7 +171,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Forgot password?.
         /// </summary>
-        internal static string Forgot_password_ {
+        public static string Forgot_password_ {
             get {
                 return ResourceManager.GetString("Forgot password?", resourceCulture);
             }
@@ -180,7 +180,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Guest.
         /// </summary>
-        internal static string Guest {
+        public static string Guest {
             get {
                 return ResourceManager.GetString("Guest", resourceCulture);
             }
@@ -189,7 +189,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Home.
         /// </summary>
-        internal static string Home {
+        public static string Home {
             get {
                 return ResourceManager.GetString("Home", resourceCulture);
             }
@@ -198,7 +198,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Index.
         /// </summary>
-        internal static string Index {
+        public static string Index {
             get {
                 return ResourceManager.GetString("Index", resourceCulture);
             }
@@ -207,7 +207,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Last Name.
         /// </summary>
-        internal static string Last_Name {
+        public static string Last_Name {
             get {
                 return ResourceManager.GetString("Last Name", resourceCulture);
             }
@@ -216,7 +216,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Log In.
         /// </summary>
-        internal static string Log_In {
+        public static string Log_In {
             get {
                 return ResourceManager.GetString("Log In", resourceCulture);
             }
@@ -225,7 +225,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to or sign up with:.
         /// </summary>
-        internal static string or_sign_up_with_ {
+        public static string or_sign_up_with_ {
             get {
                 return ResourceManager.GetString("or sign up with:", resourceCulture);
             }
@@ -234,7 +234,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
-        internal static string Password {
+        public static string Password {
             get {
                 return ResourceManager.GetString("Password", resourceCulture);
             }
@@ -243,7 +243,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Profile.
         /// </summary>
-        internal static string Profile {
+        public static string Profile {
             get {
                 return ResourceManager.GetString("Profile", resourceCulture);
             }
@@ -252,7 +252,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Register.
         /// </summary>
-        internal static string Register {
+        public static string Register {
             get {
                 return ResourceManager.GetString("Register", resourceCulture);
             }
@@ -261,7 +261,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Registration.
         /// </summary>
-        internal static string Registration {
+        public static string Registration {
             get {
                 return ResourceManager.GetString("Registration", resourceCulture);
             }
@@ -270,7 +270,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Search.
         /// </summary>
-        internal static string Search {
+        public static string Search {
             get {
                 return ResourceManager.GetString("Search", resourceCulture);
             }
@@ -279,7 +279,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Source.
         /// </summary>
-        internal static string Source {
+        public static string Source {
             get {
                 return ResourceManager.GetString("Source", resourceCulture);
             }
@@ -288,7 +288,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Start typing ....
         /// </summary>
-        internal static string Start_typing {
+        public static string Start_typing {
             get {
                 return ResourceManager.GetString("Start typing", resourceCulture);
             }
@@ -297,7 +297,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Username.
         /// </summary>
-        internal static string Username {
+        public static string Username {
             get {
                 return ResourceManager.GetString("Username", resourceCulture);
             }
@@ -306,7 +306,7 @@ namespace chldr_blazor.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Verb.
         /// </summary>
-        internal static string Verb {
+        public static string Verb {
             get {
                 return ResourceManager.GetString("Verb", resourceCulture);
             }

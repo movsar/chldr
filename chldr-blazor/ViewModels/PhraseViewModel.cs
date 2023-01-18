@@ -8,7 +8,7 @@ using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_blazor.ViewModels
+namespace chldr_native.ViewModels
 {
     public class PhraseViewModel : EntryViewModelBase
     {

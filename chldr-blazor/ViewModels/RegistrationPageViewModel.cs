@@ -1,5 +1,5 @@
-﻿using chldr_blazor.Resources.Localizations;
-using chldr_blazor.Validators;
+﻿using chldr_native.Resources.Localizations;
+using chldr_native.Validators;
 using Data.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ValidationException = FluentValidation.ValidationException;
 
-namespace chldr_blazor.ViewModels
+namespace chldr_native.ViewModels
 {
     public class RegistrationPageViewModel : ComponentBase
     {

@@ -13,10 +13,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.AspNetCore.Components;
-using chldr_blazor.Stores;
-using chldr_blazor.Factories;
+using chldr_native.Stores;
+using chldr_native.Factories;
 
-namespace chldr_blazor.ViewModels
+namespace chldr_native.ViewModels
 {
     [ObservableObject]
     public partial class MainPageViewModel : ComponentBase

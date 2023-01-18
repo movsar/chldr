@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace chldr_blazor
+namespace chldr_native
 {
     [Register("AppDelegate")]
     public class AppDelegate : MauiUIApplicationDelegate

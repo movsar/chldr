@@ -1,8 +1,8 @@
 ﻿<maui:MauiWinUIApplication
-    x:Class="chldr_blazor.WinUI.App"
+    x:Class="chldr_native.WinUI.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:maui="using:Microsoft.Maui"
-    xmlns:local="using:chldr_blazor.WinUI">
+    xmlns:local="using:chldr_native.WinUI">
 
 </maui:MauiWinUIApplication>

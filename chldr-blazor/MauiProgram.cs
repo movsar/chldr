@@ -1,7 +1,7 @@
-﻿using chldr_blazor.Pages;
-using chldr_blazor.Stores;
-using chldr_blazor.Validators;
-using chldr_blazor.ViewModels;
+﻿using chldr_native.Pages;
+using chldr_native.Stores;
+using chldr_native.Validators;
+using chldr_native.ViewModels;
 using Data.Interfaces;
 using Data.Services;
 using FluentValidation;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
-namespace chldr_blazor
+namespace chldr_native
 {
     public static class MauiProgram
     {

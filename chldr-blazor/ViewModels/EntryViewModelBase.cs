@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace chldr_blazor.ViewModels
+namespace chldr_native.ViewModels
 {
     public abstract partial class EntryViewModelBase : ComponentBase
     {

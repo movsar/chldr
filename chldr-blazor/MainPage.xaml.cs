@@ -1,4 +1,4 @@
-﻿namespace chldr_blazor
+﻿namespace chldr_native
 {
     public partial class MainPage : ContentPage
     {
