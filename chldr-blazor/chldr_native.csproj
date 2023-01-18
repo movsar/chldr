@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
-        <TargetFrameworks>net7.0-maccatalyst;net6.0-ios;net6.0-android</TargetFrameworks>
+        <TargetFrameworks>net6.0-maccatalyst;net6.0-ios;net6.0-android</TargetFrameworks>
         <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net6.0-windows10.0.19041.0</TargetFrameworks>
         <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
         <!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
@@ -56,11 +56,12 @@
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
         <PackageReference Include="FluentValidation" Version="11.4.0" />
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.2" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\chldr_shared\chldr_shared.csproj" />
       <ProjectReference Include="..\Data\chldr_data.csproj" />
     </ItemGroup>
 
@@ -92,6 +93,10 @@
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>AppLocalizations.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Shared\" />
     </ItemGroup>
 
 </Project>
