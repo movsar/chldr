@@ -1,7 +1,7 @@
-﻿using Data.Entities;
-using Data.Enums;
-using Data.Services;
-using Data.Models;
+﻿using chldr_data.Entities;
+using chldr_data.Enums;
+using chldr_data.Services;
+using chldr_data.Models;
 using Realms;
 using Realms.Exceptions;
 using System;
@@ -10,9 +10,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using Data.Interfaces;
+using chldr_data.Interfaces;
 
-namespace Data.Search
+namespace chldr_data.Search
 {
     internal class MainSearchEngine : SearchEngine
     {

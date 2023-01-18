@@ -1,6 +1,6 @@
-﻿using Data.Interfaces;
+﻿using chldr_data.Interfaces;
 
-namespace Data.Services.PartialMethods
+namespace chldr_data.Services.PartialMethods
 {
     public partial class FileService
     {

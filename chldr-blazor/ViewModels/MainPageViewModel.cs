@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Data;
-using Data.Interfaces;
-using Data.Services;
-using Data.Models;
+using chldr_data.Interfaces;
+using chldr_data.Services;
+using chldr_data.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

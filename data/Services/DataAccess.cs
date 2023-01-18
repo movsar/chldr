@@ -1,14 +1,14 @@
-﻿using Data.Entities;
-using Data.Factories;
-using Data.Interfaces;
-using Data.Models;
-using Data.Search;
-using Data.Services.PartialMethods;
+﻿using chldr_data.Entities;
+using chldr_data.Factories;
+using chldr_data.Interfaces;
+using chldr_data.Models;
+using chldr_data.Search;
+using chldr_data.Services.PartialMethods;
 using MongoDB.Bson;
 using Realms.Sync;
-using Entry = Data.Entities.Entry;
+using Entry = chldr_data.Entities.Entry;
 
-namespace Data.Services
+namespace chldr_data.Services
 {
     public class DataAccess
     {

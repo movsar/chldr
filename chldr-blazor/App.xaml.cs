@@ -1,5 +1,5 @@
 ﻿using chldr_native.Stores;
-using Data.Services;
+using chldr_data.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace chldr_native

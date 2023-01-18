@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Data.Interfaces;
-using Data.Models;
-using Data.Services;
+using chldr_data.Interfaces;
+using chldr_data.Models;
+using chldr_data.Services;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 using Realms.Exceptions;

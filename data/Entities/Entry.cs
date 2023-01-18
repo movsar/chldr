@@ -7,7 +7,7 @@ using Realms.Schema;
 using MongoDB.Bson;
 using RequiredAttribute = Realms.RequiredAttribute;
 
-namespace Data.Entities
+namespace chldr_data.Entities
 {
     public class Entry : RealmObject
     {

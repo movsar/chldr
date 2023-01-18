@@ -1,4 +1,4 @@
-﻿using Data.Interfaces;
+﻿using chldr_data.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data.Services.PartialMethods
+namespace chldr_data.Services.PartialMethods
 {
     public partial class FileService
     {

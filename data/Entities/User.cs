@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using RequiredAttribute = Realms.RequiredAttribute;
 
-namespace Data.Entities
+namespace chldr_data.Entities
 {
     public class User: RealmObject
     {

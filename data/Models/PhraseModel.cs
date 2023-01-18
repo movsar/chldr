@@ -1,5 +1,5 @@
-﻿using Data.Entities;
-using Data.Interfaces;
+﻿using chldr_data.Entities;
+using chldr_data.Interfaces;
 using MongoDB.Bson;
 using Realms;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data.Models
+namespace chldr_data.Models
 {
     public class PhraseModel : EntryModel
     {

@@ -1,13 +1,13 @@
-﻿using Data.Enums;
-using Data.Interfaces;
-using Data.Models;
+﻿using chldr_data.Enums;
+using chldr_data.Interfaces;
+using chldr_data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data.Factories
+namespace chldr_data.Factories
 {
     internal class EntryModelFactory
     {

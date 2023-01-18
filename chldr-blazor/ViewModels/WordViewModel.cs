@@ -1,4 +1,4 @@
-﻿using Data.Models;
+﻿using chldr_data.Models;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 using System;
@@ -22,18 +22,18 @@ namespace chldr_native.ViewModels
         #endregion
         private static string BuildWordInfoSubheader(string content, int grammaticalClass, string rawForms, string rawWordDeclensions, string rawWordTenses)
         {
-            if (rawWordDeclensions == Data.Entities.Word.EmptyRawWordDeclensionsValue && rawWordTenses == Data.Entities.Word.EmptyRawWordTensesValue)
+            if (rawWordDeclensions == chldr_data.Entities.Word.EmptyRawWordDeclensionsValue && rawWordTenses == chldr_data.Entities.Word.EmptyRawWordTensesValue)
             {
                 return null;
             }
-            var allForms = Data.Entities.Word.GetAllUniqueWordForms(content, rawForms, rawWordDeclensions, rawWordTenses, true);
+            var allForms = chldr_data.Entities.Word.GetAllUniqueWordForms(content, rawForms, rawWordDeclensions, rawWordTenses, true);
             string part1 = String.Join(", ", allForms);
             if (part1.Length == 0)
             {
                 return null;
             }
 
-            string part2 = $" {Data.Entities.Word.ParseGrammaticalClass(grammaticalClass)} ";
+            string part2 = $" {chldr_data.Entities.Word.ParseGrammaticalClass(grammaticalClass)} ";
 
             return $"[{part1}{part2}]";
         }

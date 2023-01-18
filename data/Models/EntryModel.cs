@@ -1,5 +1,5 @@
-﻿using Data.Entities;
-using Data.Enums;
+﻿using chldr_data.Entities;
+using chldr_data.Enums;
 using Microsoft.Maui.Controls.Compatibility;
 using MongoDB.Bson;
 using System;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace Data.Models
+namespace chldr_data.Models
 {
     public abstract class EntryModel
     {
