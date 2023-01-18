@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_native", "chldr-blazo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_api", "chldr-api\chldr_api.csproj", "{FB608F40-D1D6-4365-B266-8EEA026D6A2C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chldr_shared", "chldr_shared\chldr_shared.csproj", "{E810EF68-2D65-4FD5-B1A7-A637B96F67E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chldr_web", "chldr_web\chldr_web.csproj", "{C150998A-9BEF-4DF1-9D06-DD13391D20F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +33,14 @@ Global
 		{FB608F40-D1D6-4365-B266-8EEA026D6A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB608F40-D1D6-4365-B266-8EEA026D6A2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB608F40-D1D6-4365-B266-8EEA026D6A2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E810EF68-2D65-4FD5-B1A7-A637B96F67E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E810EF68-2D65-4FD5-B1A7-A637B96F67E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E810EF68-2D65-4FD5-B1A7-A637B96F67E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E810EF68-2D65-4FD5-B1A7-A637B96F67E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C150998A-9BEF-4DF1-9D06-DD13391D20F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C150998A-9BEF-4DF1-9D06-DD13391D20F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C150998A-9BEF-4DF1-9D06-DD13391D20F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C150998A-9BEF-4DF1-9D06-DD13391D20F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
