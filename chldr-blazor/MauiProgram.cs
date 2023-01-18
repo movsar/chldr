@@ -1,4 +1,5 @@
 ﻿using chldr_data.Services;
+using chldr_native.Extensions;
 using chldr_native.Pages;
 using chldr_native.Stores;
 using chldr_native.Validators;
@@ -38,34 +39,5 @@ namespace chldr_native
             return builder.Build();
         }
 
-
-        public static MauiAppBuilder RegisterValidators(this MauiAppBuilder mauiAppBuilder)
-        {
-            mauiAppBuilder.Services.AddScoped<RegistrationValidator>();
-            mauiAppBuilder.Services.AddScoped<IValidator<RegistrationPageViewModel>, RegistrationValidator>();
-
-            return mauiAppBuilder;
-        }
-
-        public static MauiAppBuilder RegisterAppServices(this MauiAppBuilder mauiAppBuilder)
-        {
-            mauiAppBuilder.Services.AddSingleton<DataAccess>();
-            mauiAppBuilder.Services.AddSingleton<ContentStore>();
-            mauiAppBuilder.Services.AddLocalization();
-            return mauiAppBuilder;
-        }
-        public static MauiAppBuilder RegisterViewModels(this MauiAppBuilder mauiAppBuilder)
-        {
-            mauiAppBuilder.Services.AddSingleton<MainPageViewModel>();
-            mauiAppBuilder.Services.AddSingleton<LoginPageViewModel>();
-            mauiAppBuilder.Services.AddSingleton<RegistrationPageViewModel>();
-            return mauiAppBuilder;
-        }
-        public static MauiAppBuilder RegisterViews(this MauiAppBuilder mauiAppBuilder)
-        {
-            mauiAppBuilder.Services.AddSingleton<LoginPage>();
-            return mauiAppBuilder;
-        }
     }
-
 }
