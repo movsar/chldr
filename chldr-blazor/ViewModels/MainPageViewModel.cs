@@ -39,12 +39,20 @@ namespace chldr_native.ViewModels
         #endregion
 
         #region Constructors
+        [Inject]
+        private ContentStore ContentStore2 { get; set; }
         public MainPageViewModel()
         {
-            App.ContentStore.CurrentEntriesUpdated += ContentStore_CurrentEntriesUpdated;
-            ShowRandoms();
+
         }
         #endregion
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            ContentStore2.DatabaseInitialized += () => ShowRandoms();
+            ContentStore2.CurrentEntriesUpdated += ContentStore_CurrentEntriesUpdated;
+        }
 
         #region EventHandlers
         // Called whenever there is a change to Entries collection
@@ -70,20 +78,20 @@ namespace chldr_native.ViewModels
             EntryViewModels.Clear();
 
             _stopWatch.Restart();
-            App.ContentStore.Search(inputText);
+            ContentStore2.Search(inputText);
         }
         #endregion
 
         #region Methods
         internal void ShowResults()
         {
-            var newEntryViewModels = App.ContentStore.CurrentEntries.Select(e => EntryViewModelFactory.CreateViewModel(e)).ToList();
+            var newEntryViewModels = ContentStore2.CurrentEntries.Select(e => EntryViewModelFactory.CreateViewModel(e)).ToList();
             EntryViewModels = newEntryViewModels;
         }
         internal void ShowRandoms()
         {
             EntryViewModels.Clear();
-            App.ContentStore.LoadRandomEntries();
+            ContentStore2.LoadRandomEntries();
         }
         #endregion
 

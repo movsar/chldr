@@ -1,4 +1,5 @@
 ﻿using chldr_data.Models;
+using chldr_native.Stores;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 using System;
@@ -11,6 +12,8 @@ namespace chldr_native.ViewModels
 {
     public class WordViewModel : EntryViewModelBase
     {
+        [Inject] ContentStore ContentStore { get; set; }
+
         #region Properties
         public int PartOfSpeech { get; set; }
         public int GrammaticalClass { get; set; }
@@ -69,7 +72,7 @@ namespace chldr_native.ViewModels
 
         protected override void InitializeViewModel(string entryId)
         {
-            InitializeViewModel(App.ContentStore.GetWordById(ObjectId.Parse(entryId)));
+            InitializeViewModel(ContentStore.GetWordById(ObjectId.Parse(entryId)));
         }
     }
 }

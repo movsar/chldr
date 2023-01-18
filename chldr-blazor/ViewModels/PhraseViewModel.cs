@@ -1,5 +1,7 @@
 ﻿using chldr_data.Enums;
 using chldr_data.Models;
+using chldr_native.Stores;
+using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,8 @@ namespace chldr_native.ViewModels
 {
     public class PhraseViewModel : EntryViewModelBase
     {
+        [Inject] ContentStore ContentStore { get; set; }
+
         public string Content { get; set; }
         public string Notes { get; set; }
         public PhraseViewModel(PhraseModel phrase)
@@ -36,7 +40,7 @@ namespace chldr_native.ViewModels
 
         protected override void InitializeViewModel(string entryId)
         {
-            InitializeViewModel(App.ContentStore.GetPhraseById(ObjectId.Parse(entryId)));
+            InitializeViewModel(ContentStore.GetPhraseById(ObjectId.Parse(entryId)));
         }
     }
 }

@@ -19,6 +19,10 @@ namespace chldr_data.Services
 
         internal static Realm GetRealm()
         {
+            if (_config == null)
+            {
+                throw new Exception("Config shouldn't be null");
+            }
             return Realm.GetInstance(_config);
         }
 
@@ -63,7 +67,6 @@ namespace chldr_data.Services
             };
             // TODO: Compact if size > 100Mb
             // Realm.Compact(_config);
-            await GetRealm().Subscriptions.WaitForSynchronizationAsync();
             DatabaseInitialized?.Invoke();
             //DatabaseSynced?.Invoke();
         }

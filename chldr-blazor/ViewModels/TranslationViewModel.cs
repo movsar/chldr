@@ -13,12 +13,15 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using chldr_native.Stores;
 
 namespace chldr_native.ViewModels
 {
     [ObservableObject]
     public partial class TranslationViewModel : ComponentBase
     {
+
+        [Inject] ContentStore ContentStore { get; set; }
         #region Properties
         [Parameter]
         public string EntityId { get; set; }
@@ -65,12 +68,12 @@ namespace chldr_native.ViewModels
 
                 if (match.Success)
                 {
-                    App.ContentStore.Search(match.ToString());
+                    ContentStore.Search(match.ToString());
                     break;
                 }
             }
 
-            App.ContentStore.Search(translationText);
+            ContentStore.Search(translationText);
         }
 
         #region Constructors
