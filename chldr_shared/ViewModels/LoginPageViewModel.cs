@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace chldr_shared.ViewModels
 {
-    internal class LoginPageViewModel : ComponentBase
+    public class LoginPageViewModel : ComponentBase
     {
         #region Fields
         private DataAccess _dataAccess;

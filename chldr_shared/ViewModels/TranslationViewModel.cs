@@ -36,10 +36,6 @@ namespace chldr_shared.ViewModels
 
         #region Actions
         public void Upvote() { }
-        public ICommand TranslationTextClick { get; } = new Command(() =>
-        {
-            var g = 2;
-        });
         public void Downvote() { }
         public void Edit() { }
         public void CurrentTranslationSelected()

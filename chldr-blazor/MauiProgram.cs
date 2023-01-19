@@ -1,9 +1,9 @@
 ﻿using chldr_data.Services;
 using chldr_native.Extensions;
-using chldr_native.Pages;
-using chldr_native.Stores;
-using chldr_native.Validators;
-using chldr_native.ViewModels;
+using chldr_shared.Pages;
+using chldr_shared.Stores;
+using chldr_shared.Validators;
+using chldr_shared.ViewModels;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;

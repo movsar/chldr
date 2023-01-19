@@ -27,12 +27,6 @@ namespace chldr_shared.ViewModels
         public string Subheader { get; set; }
         public int Type { get; set; }
         public List<TranslationViewModel> TranslationViewModels { get; } = new();
-        public ICommand TranslationSelectedCommand { get; set; } = new Command((e) =>
-            {
-                var translationViewModel = ((dynamic)e).SelectedItem;
-                translationViewModel.CurrentTranslationSelected();
-            });
-
         #endregion
 
         #region Actions
