@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_native.ViewModels
+namespace chldr_shared.ViewModels
 {
     [ObservableObject]
     public partial class ViewModelBase : ComponentBase

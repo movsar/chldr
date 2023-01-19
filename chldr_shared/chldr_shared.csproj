@@ -12,8 +12,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
+    <PackageReference Include="FluentValidation" Version="11.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.13" />
     <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Data\chldr_data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

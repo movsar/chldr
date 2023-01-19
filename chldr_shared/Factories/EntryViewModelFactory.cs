@@ -1,4 +1,4 @@
-﻿using chldr_native.ViewModels;
+﻿using chldr_shared.ViewModels;
 using chldr_data.Models;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_native.Factories
+namespace chldr_shared.Factories
 {
     internal class EntryViewModelFactory
     {

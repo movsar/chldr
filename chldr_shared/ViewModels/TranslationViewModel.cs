@@ -13,9 +13,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using chldr_native.Stores;
+using chldr_shared.Stores;
 
-namespace chldr_native.ViewModels
+namespace chldr_shared.ViewModels
 {
     [ObservableObject]
     public partial class TranslationViewModel : ComponentBase

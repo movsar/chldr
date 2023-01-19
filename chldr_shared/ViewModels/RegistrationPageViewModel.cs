@@ -1,10 +1,9 @@
-﻿using chldr_native.Resources.Localizations;
-using chldr_native.Validators;
+﻿using chldr_shared.Resources.Localizations;
+using chldr_shared.Validators;
 using chldr_data.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
-using Microsoft.Maui.Controls.Platform;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ValidationException = FluentValidation.ValidationException;
 
-namespace chldr_native.ViewModels
+namespace chldr_shared.ViewModels
 {
     public class RegistrationPageViewModel : ComponentBase
     {

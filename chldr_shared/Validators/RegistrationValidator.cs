@@ -1,9 +1,9 @@
-﻿using chldr_native.Resources.Localizations;
-using chldr_native.ViewModels;
+﻿using chldr_shared.ViewModels;
+using chldr_shared.Resources.Localizations;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 
-namespace chldr_native.Validators
+namespace chldr_shared.Validators
 {
     public class RegistrationValidator : AbstractValidator<RegistrationPageViewModel>
     {

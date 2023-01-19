@@ -1,5 +1,5 @@
-﻿using chldr_native.Factories;
-using chldr_native.ViewModels;
+﻿using chldr_shared.Factories;
+using chldr_shared.ViewModels;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Services;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_native.Stores
+namespace chldr_shared.Stores
 {
     public class ContentStore
     {

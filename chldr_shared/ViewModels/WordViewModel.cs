@@ -1,5 +1,5 @@
 ﻿using chldr_data.Models;
-using chldr_native.Stores;
+using chldr_shared.Stores;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_native.ViewModels
+namespace chldr_shared.ViewModels
 {
     public class WordViewModel : EntryViewModelBase
     {

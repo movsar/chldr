@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_native.Stores
+namespace chldr_shared.Stores
 {
     internal class UserStore
     {
