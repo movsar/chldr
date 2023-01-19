@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_native", "chldr-blazor\chldr_native.csproj", "{C96293B0-2B47-4163-9B10-D39CB7235D48}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_api", "chldr-api\chldr_api.csproj", "{FB608F40-D1D6-4365-B266-8EEA026D6A2C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_shared", "chldr_shared\chldr_shared.csproj", "{E810EF68-2D65-4FD5-B1A7-A637B96F67E3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_data", "chldr_data\chldr_data.csproj", "{B990AC59-F73F-4850-B264-C786C19CAA54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chldr_server", "chldr_server\chldr_server.csproj", "{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_server", "chldr_server\chldr_server.csproj", "{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_api", "chldr_api\chldr_api.csproj", "{CE49E6CC-4515-4A1B-A010-77B1672F602E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_native", "chldr_native\chldr_native.csproj", "{CDEA7896-CD62-4780-9CB3-633EAE312BA0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,16 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C96293B0-2B47-4163-9B10-D39CB7235D48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C96293B0-2B47-4163-9B10-D39CB7235D48}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C96293B0-2B47-4163-9B10-D39CB7235D48}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{C96293B0-2B47-4163-9B10-D39CB7235D48}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C96293B0-2B47-4163-9B10-D39CB7235D48}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C96293B0-2B47-4163-9B10-D39CB7235D48}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{FB608F40-D1D6-4365-B266-8EEA026D6A2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB608F40-D1D6-4365-B266-8EEA026D6A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB608F40-D1D6-4365-B266-8EEA026D6A2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB608F40-D1D6-4365-B266-8EEA026D6A2C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E810EF68-2D65-4FD5-B1A7-A637B96F67E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E810EF68-2D65-4FD5-B1A7-A637B96F67E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E810EF68-2D65-4FD5-B1A7-A637B96F67E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,6 +31,16 @@ Global
 		{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE49E6CC-4515-4A1B-A010-77B1672F602E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE49E6CC-4515-4A1B-A010-77B1672F602E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE49E6CC-4515-4A1B-A010-77B1672F602E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE49E6CC-4515-4A1B-A010-77B1672F602E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDEA7896-CD62-4780-9CB3-633EAE312BA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDEA7896-CD62-4780-9CB3-633EAE312BA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDEA7896-CD62-4780-9CB3-633EAE312BA0}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{CDEA7896-CD62-4780-9CB3-633EAE312BA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDEA7896-CD62-4780-9CB3-633EAE312BA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDEA7896-CD62-4780-9CB3-633EAE312BA0}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
