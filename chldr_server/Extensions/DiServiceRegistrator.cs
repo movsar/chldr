@@ -1,4 +1,5 @@
-﻿using chldr_data.Services;
+﻿using chldr_data.Interfaces;
+using chldr_data.Services;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
 using chldr_shared.ViewModels;
@@ -17,7 +18,7 @@ namespace chldr_server.Extensions
         }
         public static WebApplicationBuilder RegisterAppServices(this WebApplicationBuilder appBuilder)
         {
-            appBuilder.Services.AddSingleton<DataAccess>();
+            appBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
             appBuilder.Services.AddSingleton<ContentStore>();
             appBuilder.Services.AddLocalization();
             return appBuilder;

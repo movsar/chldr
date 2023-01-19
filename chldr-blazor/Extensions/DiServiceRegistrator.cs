@@ -1,4 +1,5 @@
-﻿using chldr_data.Services;
+﻿using chldr_data.Interfaces;
+using chldr_data.Services;
 using chldr_shared.Pages;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
@@ -18,7 +19,7 @@ namespace chldr_native.Extensions
         }
         public static MauiAppBuilder RegisterAppServices(this MauiAppBuilder mauiAppBuilder)
         {
-            mauiAppBuilder.Services.AddSingleton<DataAccess>();
+            mauiAppBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
             mauiAppBuilder.Services.AddSingleton<ContentStore>();
             mauiAppBuilder.Services.AddLocalization();
             return mauiAppBuilder;

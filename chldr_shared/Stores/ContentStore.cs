@@ -22,11 +22,11 @@ namespace chldr_shared.Stores
         #endregion
 
         #region Fields
-        private readonly DataAccess _dataAccess;
+        private readonly IDataAccess _dataAccess;
         #endregion
 
         #region Constructors
-        public ContentStore(DataAccess dataAccess)
+        public ContentStore(IDataAccess dataAccess)
         {
             _dataAccess = dataAccess;
             _dataAccess.GotResults += DataAccess_GotNewResults;

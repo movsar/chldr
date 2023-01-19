@@ -17,7 +17,6 @@ namespace chldr_shared.ViewModels
     public class RegistrationPageViewModel : ComponentBase
     {
         [Inject] RegistrationValidator Validator { get; set; }
-        [Inject] DataAccess DataAccess { get; set; }
         [Inject] NavigationManager NavigationManager { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
@@ -38,7 +37,7 @@ namespace chldr_shared.ViewModels
                 return;
             }
 
-            //await DataAccess.RegisterNewUser(Email, Password, Username, FirstName, LastName);
+            //await ContentStore.RegisterNewUser(Email, Password, Username, FirstName, LastName);
             NavigationManager.NavigateTo("/emailsent");
         }
 

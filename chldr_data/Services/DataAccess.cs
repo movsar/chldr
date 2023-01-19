@@ -10,7 +10,7 @@ using Entry = chldr_data.Entities.Entry;
 
 namespace chldr_data.Services
 {
-    public class DataAccess
+    public class DataAccess : IDataAccess
     {
         #region Properties
         public Realms.Sync.App App => RealmService.GetApp();
@@ -18,10 +18,10 @@ namespace chldr_data.Services
 
         #region Events
         public event Action DatabaseInitialized;
+        public event Action<SearchResultsModel> GotResults;
         #endregion
 
         #region Fields
-        public Action<SearchResultsModel> GotResults;
         public const int ResultsLimit = 100;
         public const int RandomEntriesLimit = 30;
         #endregion
@@ -58,8 +58,13 @@ namespace chldr_data.Services
             var fileService = new FileService();
             fileService.PrepareDatabase();
 
-            RealmService.DatabaseInitialized += (() => { DatabaseInitialized?.Invoke(); });
+            RealmService.DatabaseInitialized += () => { DatabaseInitialized?.Invoke(); };
             Task.Run(() => RealmService.Initialize());
+        }
+
+        public void OnNewResults(SearchResultsModel results)
+        {
+            GotResults?.Invoke(results);
         }
 
         public async Task RegisterNewUser(string email, string password, string username, string firstName, string lastName)

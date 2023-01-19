@@ -1,4 +1,5 @@
-﻿using chldr_data.Services;
+﻿using chldr_data.Interfaces;
+using chldr_data.Services;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,6 @@ namespace chldr_shared.ViewModels
     public class LoginPageViewModel : ComponentBase
     {
         #region Fields
-        private DataAccess _dataAccess;
         #endregion
 
         #region Properties
@@ -20,9 +20,8 @@ namespace chldr_shared.ViewModels
         #endregion
 
         #region Constructors
-        public LoginPageViewModel(DataAccess dataAccess)
+        public LoginPageViewModel()
         {
-            _dataAccess = dataAccess;
         }
         #endregion
 

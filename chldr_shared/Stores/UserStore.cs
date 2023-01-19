@@ -1,4 +1,5 @@
-﻿using chldr_data.Services;
+﻿using chldr_data.Interfaces;
+using chldr_data.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,9 @@ namespace chldr_shared.Stores
 {
     internal class UserStore
     {
-        private DataAccess _dataAccess;
+        private IDataAccess _dataAccess;
 
-        internal UserStore(DataAccess dataAccess)
+        internal UserStore(IDataAccess dataAccess)
         {
             _dataAccess = dataAccess;
         }
