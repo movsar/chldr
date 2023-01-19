@@ -13,7 +13,7 @@ namespace chldr_native
                 .RegisterValidators()
                 .RegisterAppServices()
                 .RegisterViewModels()
-                .RegisterViews()
+
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

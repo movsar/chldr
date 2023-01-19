@@ -1,8 +1,10 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url('bootstrap/bootstrap.min.css');
+
 .chldr_registration_errors {
-    
     font-size: 10px;
 }
+
 .chldr_entry * :hover ~ .chldr_translation_actions {
     display: inline;
 }

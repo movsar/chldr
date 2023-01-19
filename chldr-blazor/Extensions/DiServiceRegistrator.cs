@@ -16,7 +16,6 @@ namespace chldr_native.Extensions
 
             return mauiAppBuilder;
         }
-
         public static MauiAppBuilder RegisterAppServices(this MauiAppBuilder mauiAppBuilder)
         {
             mauiAppBuilder.Services.AddSingleton<DataAccess>();
@@ -29,11 +28,6 @@ namespace chldr_native.Extensions
             mauiAppBuilder.Services.AddSingleton<MainPageViewModel>();
             mauiAppBuilder.Services.AddSingleton<LoginPageViewModel>();
             mauiAppBuilder.Services.AddSingleton<RegistrationPageViewModel>();
-            return mauiAppBuilder;
-        }
-        public static MauiAppBuilder RegisterViews(this MauiAppBuilder mauiAppBuilder)
-        {
-            mauiAppBuilder.Services.AddSingleton<LoginPage>();
             return mauiAppBuilder;
         }
     }

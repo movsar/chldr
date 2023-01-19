@@ -65,8 +65,4 @@
       <ProjectReference Include="..\Data\chldr_data.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Shared\" />
-    </ItemGroup>
-
 </Project>
