@@ -66,14 +66,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <MauiImage Include="wwwroot\images\logo.png" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Include="wwwroot\images\logo.png" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Folder Include="Shared\" />
     </ItemGroup>
 

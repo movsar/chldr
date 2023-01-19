@@ -1,12 +1,4 @@
-﻿using chldr_data.Services;
-using chldr_native.Extensions;
-using chldr_shared.Pages;
-using chldr_shared.Stores;
-using chldr_shared.Validators;
-using chldr_shared.ViewModels;
-using FluentValidation;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Localization;
+﻿using chldr_native.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace chldr_native
@@ -29,7 +21,6 @@ namespace chldr_native
 
             builder.Services.AddLocalization();
             builder.Services.AddMauiBlazorWebView();
-
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();

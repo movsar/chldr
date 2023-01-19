@@ -31,6 +31,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="wwwroot\images\logo.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="Resources\Localizations\AppLocalizations.resx">
       <LastGenOutput>AppLocalizations.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
