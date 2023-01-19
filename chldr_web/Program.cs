@@ -1,6 +1,7 @@
 using chldr_web.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using chldr_web.Extensions;
 
 namespace chldr_web
 {
@@ -15,6 +16,10 @@ namespace chldr_web
             builder.Services.AddServerSideBlazor();
             builder.Services.AddSingleton<WeatherForecastService>();
 
+            builder.RegisterValidators();
+            builder.RegisterAppServices();
+            builder.RegisterViewModels();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -24,7 +29,8 @@ namespace chldr_web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            
+           
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
