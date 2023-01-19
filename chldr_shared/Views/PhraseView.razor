@@ -2,7 +2,7 @@
 
 <div class="chldr_entry_header card-title">
     @ViewModel.Header
-    <span class="oi oi-volume-high" @onclick="ViewModel.ListenToPronunciation"></span>
+    @*<span class="oi oi-volume-high" @onclick="ViewModel.ListenToPronunciation"></span>*@
 </div>
 
 @if (!String.IsNullOrWhiteSpace(@ViewModel.Subheader))
@@ -26,7 +26,7 @@
     </div>
 }
 
-<div class="chldr_entry_actions">
+@*<div class="chldr_entry_actions">
     <i class="fa fa-language" @onclick="ViewModel.NewTranslation"></i>
     <i class="fa fa-share" @onclick="ViewModel.Share"></i>
 
@@ -34,7 +34,7 @@
     <i class="fa fa-star" @onclick="ViewModel.AddToFavorites"></i>
 
     <a href="/word/edit/@ViewModel.EntityId"><i class="oi oi-pencil"></i></a>
-</div>
+</div>*@
 
 @code {
     [Parameter]
