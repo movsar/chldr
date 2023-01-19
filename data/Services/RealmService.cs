@@ -49,7 +49,7 @@ namespace chldr_data.Services
                 throw;
             }
 
-            _config = new FlexibleSyncConfiguration(_user, Path.Combine(FileService.AppDataDirectory, FileService.DatabaseName))
+            _config = new FlexibleSyncConfiguration(_user, FileService.DatabasePath)
             {
                 SchemaVersion = 3,
                 PopulateInitialSubscriptions = (realm) =>

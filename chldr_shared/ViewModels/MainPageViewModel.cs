@@ -30,6 +30,7 @@ namespace chldr_shared.ViewModels
 
         [ObservableProperty]
         private string _statusText;
+        [Inject] private ContentStore ContentStore { get; set; }
         #endregion
 
         #region Fields
@@ -39,8 +40,6 @@ namespace chldr_shared.ViewModels
         #endregion
 
         #region Constructors
-        [Inject]
-        private ContentStore ContentStore2 { get; set; }
         public MainPageViewModel()
         {
 
@@ -50,8 +49,8 @@ namespace chldr_shared.ViewModels
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            ContentStore2.DatabaseInitialized += () => ShowRandoms();
-            ContentStore2.CurrentEntriesUpdated += ContentStore_CurrentEntriesUpdated;
+            ContentStore.DatabaseInitialized += () => ShowRandoms();
+            ContentStore.CurrentEntriesUpdated += ContentStore_CurrentEntriesUpdated;
         }
 
         #region EventHandlers
@@ -78,20 +77,20 @@ namespace chldr_shared.ViewModels
             EntryViewModels.Clear();
 
             _stopWatch.Restart();
-            ContentStore2.Search(inputText);
+            ContentStore.Search(inputText);
         }
         #endregion
 
         #region Methods
         internal void ShowResults()
         {
-            var newEntryViewModels = ContentStore2.CurrentEntries.Select(e => EntryViewModelFactory.CreateViewModel(e)).ToList();
+            var newEntryViewModels = ContentStore.CurrentEntries.Select(e => EntryViewModelFactory.CreateViewModel(e)).ToList();
             EntryViewModels = newEntryViewModels;
         }
         internal void ShowRandoms()
         {
             EntryViewModels.Clear();
-            ContentStore2.LoadRandomEntries();
+            ContentStore.LoadRandomEntries();
         }
         #endregion
 

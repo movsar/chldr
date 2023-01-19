@@ -66,13 +66,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <MauiAsset Update="Resources\Raw\Data\database.realm">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <LogicalName>%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
-      </MauiAsset>
-    </ItemGroup>
-
-    <ItemGroup>
       <MauiImage Include="wwwroot\images\logo.png" />
     </ItemGroup>
 

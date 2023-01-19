@@ -17,7 +17,12 @@
 	<ItemGroup>
 	  <Folder Include="Platforms\MacCatalyst\" />
 	  <Folder Include="Platforms\Tizen\" />
-	  <Folder Include="Platforms\Windows\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <MauiAsset Include="Assets\database.realm">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	    <LogicalName>%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+	  </MauiAsset>
 	</ItemGroup>
 	<ItemGroup>
 	  <PackageReference Include="Realm" Version="10.19.0" />

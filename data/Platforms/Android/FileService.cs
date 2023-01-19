@@ -2,18 +2,24 @@
 
 namespace chldr_data.Services.PartialMethods
 {
+    // ! ANDROID
     public partial class FileService
     {
         public FileService()
         {
-            AppDataDirectory = Path.Combine(FileSystem.Current.AppDataDirectory, "Data");
+            AppDirectory = FileSystem.Current.AppDataDirectory;
+            AppDataDirectory = Path.Combine(AppDirectory, DataDirName);
+            DatabasePath = Path.Combine(AppDataDirectory, DatabaseName);
+
+            if (!Directory.Exists(AppDataDirectory))
+            {
+                Directory.CreateDirectory(AppDataDirectory);
+            }
         }
         partial void PrepareDatabaseFile()
         {
             // Checks if the file already exists.
-            var dbPath = Path.Combine(AppDataDirectory, DatabaseName);
-
-            if (File.Exists(dbPath))
+            if (File.Exists(DatabasePath))
             {
                 return;
             }
@@ -23,7 +29,7 @@ namespace chldr_data.Services.PartialMethods
 
         async Task CopyDatabaseFile()
         {
-            using (FileStream writeStream = new FileStream(Path.Combine(AppDataDirectory, DatabaseName), FileMode.Create, FileAccess.Write))
+            using (FileStream writeStream = new FileStream(DatabasePath, FileMode.Create, FileAccess.Write))
             {
                 // Gets the realm database file from assets 
                 using var dbFileStream = await FileSystem.OpenAppPackageFileAsync(DatabaseName);
