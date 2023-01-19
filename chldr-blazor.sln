@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_data", "Data\chldr_data.csproj", "{A78B94DD-4A48-458D-886B-22BD68D0B5EF}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_native", "chldr-blazor\chldr_native.csproj", "{C96293B0-2B47-4163-9B10-D39CB7235D48}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_api", "chldr-api\chldr_api.csproj", "{FB608F40-D1D6-4365-B266-8EEA026D6A2C}"
@@ -13,16 +11,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_shared", "chldr_share
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_web", "chldr_web\chldr_web.csproj", "{C150998A-9BEF-4DF1-9D06-DD13391D20F2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_data", "chldr_data\chldr_data.csproj", "{B990AC59-F73F-4850-B264-C786C19CAA54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chldr_server", "chldr_server\chldr_server.csproj", "{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A78B94DD-4A48-458D-886B-22BD68D0B5EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A78B94DD-4A48-458D-886B-22BD68D0B5EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A78B94DD-4A48-458D-886B-22BD68D0B5EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A78B94DD-4A48-458D-886B-22BD68D0B5EF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C96293B0-2B47-4163-9B10-D39CB7235D48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C96293B0-2B47-4163-9B10-D39CB7235D48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C96293B0-2B47-4163-9B10-D39CB7235D48}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
@@ -41,6 +39,14 @@ Global
 		{C150998A-9BEF-4DF1-9D06-DD13391D20F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C150998A-9BEF-4DF1-9D06-DD13391D20F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C150998A-9BEF-4DF1-9D06-DD13391D20F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B990AC59-F73F-4850-B264-C786C19CAA54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B990AC59-F73F-4850-B264-C786C19CAA54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B990AC59-F73F-4850-B264-C786C19CAA54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B990AC59-F73F-4850-B264-C786C19CAA54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

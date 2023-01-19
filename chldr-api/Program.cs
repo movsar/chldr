@@ -1,5 +1,3 @@
-using chldr_data.Services;
-
 namespace user_management
 {
     public class Program
@@ -11,7 +9,6 @@ namespace user_management
             // Add services to the container.
 
             builder.Services.AddControllers();
-            builder.Services.AddSingleton<DataAccess>();
 
             var app = builder.Build();
             // Configure the HTTP request pipeline.

@@ -12,9 +12,9 @@
 
     <input class="form-control shadow-none"
            placeholder="@Localizer["StartTyping"]"
-           @ref="searchInputReference"
-           @bind-value="@InputText"
-           @oninput="(e)=> Search(e)" />
+    @ref="searchInputReference"
+    @bind-value="@InputText"
+    @oninput="(e)=> Search(e)" />
 
     <div class="ms-2">
         <button type="button" class="btn btn-secondary" @onclick="ShowRandoms">

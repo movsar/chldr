@@ -42,7 +42,6 @@ namespace chldr_shared.ViewModels
         #region Constructors
         public MainPageViewModel()
         {
-
         }
         #endregion
 
@@ -82,12 +81,12 @@ namespace chldr_shared.ViewModels
         #endregion
 
         #region Methods
-        internal void ShowResults()
+        public void ShowResults()
         {
             var newEntryViewModels = ContentStore.CurrentEntries.Select(e => EntryViewModelFactory.CreateViewModel(e)).ToList();
             EntryViewModels = newEntryViewModels;
         }
-        internal void ShowRandoms()
+        public void ShowRandoms()
         {
             EntryViewModels.Clear();
             ContentStore.LoadRandomEntries();
