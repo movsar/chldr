@@ -1,5 +1,5 @@
-﻿using chldr_data.Entities;
-using chldr_data.Interfaces;
+﻿using chldr_dataaccess.Entities;
+using chldr_dataaccess.Interfaces;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_data.Models
+namespace chldr_dataaccess.Models
 {
     public class SourceModel
     {

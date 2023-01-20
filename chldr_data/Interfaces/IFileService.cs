@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_data.Interfaces
+namespace chldr_dataaccess.Interfaces
 {
     public interface IFileService
     {

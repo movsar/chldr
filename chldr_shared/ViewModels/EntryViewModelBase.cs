@@ -1,9 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using chldr_data.Entities;
-using chldr_data.Enums;
-using chldr_data.Models;
+using chldr_dataaccess.Entities;
+using chldr_dataaccess.Enums;
+using chldr_dataaccess.Models;
 using Microsoft.AspNetCore.Components;
-using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,7 +61,6 @@ namespace chldr_shared.ViewModels
 
         protected virtual void InitializeViewModel(EntryModel entry)
         {
-            EntityId = entry.EntityId.ToString();
             Source = ParseSource(entry.Source.Name);
             TranslationViewModels.AddRange(entry.Translations.Select(t => new TranslationViewModel(t)));
         }

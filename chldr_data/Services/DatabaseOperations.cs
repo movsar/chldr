@@ -1,12 +1,12 @@
-﻿using chldr_data.Entities;
-using chldr_data.Enums;
-using chldr_data.Services.PartialMethods;
+﻿using chldr_dataaccess.Entities;
+using chldr_dataaccess.Enums;
+using chldr_dataaccess.Services.PartialMethods;
 using MongoDB.Bson;
 using Realms;
 using System.Diagnostics;
-using Entry = chldr_data.Entities.Entry;
+using Entry = chldr_dataaccess.Entities.Entry;
 
-namespace chldr_data.Services
+namespace chldr_dataaccess.Services
 {
     public class DatabaseOperations
     {

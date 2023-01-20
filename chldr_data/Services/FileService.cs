@@ -1,4 +1,4 @@
-﻿using chldr_data.Interfaces;
+﻿using chldr_dataaccess.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,21 +7,32 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_data.Services.PartialMethods
+namespace chldr_dataaccess.Services.PartialMethods
 {
     // ! MAIN
-    public partial class FileService
+    public class FileService
     {
 
         #region Fields
         public const string DatabaseName = "database.realm";
         public const string DataDirName = "data";
-        public static string AppDirectory;
-        public static string AppDataDirectory;
-        public static string DatabasePath;
+        public static string? AppDirectory;
+        public static string? AppDataDirectory;
+        public static string? DatabasePath;
         #endregion
 
-        partial void PrepareDatabaseFile();
+        public FileService()
+        {
+            AppDirectory = AppContext.BaseDirectory;
+            AppDataDirectory = Path.Combine(AppDirectory, DataDirName);
+            DatabasePath = Path.Combine(AppDirectory, "Assets", DatabaseName);
+
+            if (!Directory.Exists(AppDataDirectory))
+            {
+                Directory.CreateDirectory(AppDataDirectory);
+            }
+        }
+
         public void PrepareDatabase()
         {
             var isWeb = Environment.StackTrace.Contains("chldr_server.Pages.Pages__Host.ExecuteAsync()");
@@ -29,22 +40,24 @@ namespace chldr_data.Services.PartialMethods
             {
                 PrepareDatabaseFile_Web();
             }
-            else
-            {
-                PrepareDatabaseFile();
-            }
         }
 
         public void PrepareDatabaseFile_Web()
         {
-            AppDirectory = AppContext.BaseDirectory;
-            AppDataDirectory = Path.Combine(AppDirectory, DataDirName);
-            DatabasePath = Path.Combine(AppDataDirectory, DatabaseName);
 
-            if (!Directory.Exists(AppDataDirectory))
-            {
-                Directory.CreateDirectory(AppDataDirectory);
-            }
         }
+
+        async Task PrepareDatabaseFile_Android()
+        {
+            //AppDirectory = FileSystem.Current.AppDataDirectory;
+            //using (FileStream writeStream = new FileStream(DatabasePath, FileMode.Create, FileAccess.Write))
+            //{
+            //    // Gets the realm database file from assets 
+            //    using var dbFileStream = await FileSystem.OpenAppPackageFileAsync(DatabaseName);
+            //    // Copies to the device
+            //    dbFileStream.CopyTo(writeStream);
+            //}
+        }
+
     }
 }

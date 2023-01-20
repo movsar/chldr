@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_data.Enums
+namespace chldr_dataaccess.Enums
 {
     public enum PartsOfSpeech
     {

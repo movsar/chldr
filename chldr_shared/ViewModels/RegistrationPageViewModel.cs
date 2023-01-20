@@ -1,6 +1,6 @@
 ﻿using chldr_shared.Resources.Localizations;
 using chldr_shared.Validators;
-using chldr_data.Services;
+using chldr_dataaccess.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
