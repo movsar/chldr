@@ -31,12 +31,11 @@
             const loadingTag = document.querySelector("#loading");
             frame.style.display = 'block'
             loadingTag.style.display = 'none'
-            
         }
 
         setTimeout(() => {
             loadApp();
-        }, 3000);
+        }, 1000);
     </script>
 </head>
 
@@ -45,6 +44,7 @@
         <img id="loading" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" />
         <iframe id="frame" style="display: none;" width="100%" height="100%" frameborder="0"
             src="https://dosham.azurewebsites.net"></iframe>
+
     </div>
 </body>
 

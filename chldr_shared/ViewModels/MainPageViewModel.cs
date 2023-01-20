@@ -41,8 +41,18 @@ namespace chldr_shared.ViewModels
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            ContentStore.DatabaseInitialized += () => ShowRandoms();
+
+            ContentStore.DatabaseInitialized += ContentStore_DatabaseInitialized;
             ContentStore.CurrentEntriesUpdated += ContentStore_CurrentEntriesUpdated;
+        }
+
+        private void ContentStore_DatabaseInitialized()
+        {
+            var isWeb = Environment.StackTrace.Contains("chldr_server.Pages.Pages__Host.ExecuteAsync()");
+            if (!isWeb)
+            {
+                ShowRandoms();
+            }
         }
 
         #region EventHandlers
