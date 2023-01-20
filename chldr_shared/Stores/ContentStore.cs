@@ -33,7 +33,7 @@ namespace chldr_shared.Stores
             var dataOps = new DatabaseOperations();
             dataOps.RunMaintenance();
             _dataAccess.DatabaseInitialized += (() => { DatabaseInitialized?.Invoke(); });
-        }   
+        }
 
         #endregion
 
@@ -72,6 +72,11 @@ namespace chldr_shared.Stores
         internal PhraseModel GetPhraseById(ObjectId entryId)
         {
             return _dataAccess.GetPhraseById(entryId);
+        }
+
+        internal async Task RegisterNewUser(string email, string password, string username, string firstName, string lastName)
+        {
+            await _dataAccess.RegisterNewUser(email, password, username, firstName, lastName);
         }
 
         #endregion

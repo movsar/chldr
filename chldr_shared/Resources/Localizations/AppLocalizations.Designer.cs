@@ -61,6 +61,15 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to a.
+        /// </summary>
+        public static string a {
+            get {
+                return ResourceManager.GetString("a", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Adjective.
         /// </summary>
         public static string Adjective {
@@ -115,7 +124,7 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to email_address.
+        ///   Looks up a localized string similar to email address.
         /// </summary>
         public static string Email_address {
             get {

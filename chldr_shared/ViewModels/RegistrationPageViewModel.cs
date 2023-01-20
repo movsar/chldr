@@ -20,20 +20,16 @@ namespace chldr_shared.ViewModels
         [Inject] UserInfoValidator Validator { get; set; }
         [Inject] NavigationManager NavigationManager { get; set; }
         public UserInfoDto UserInfo { get; set; }
-        public List<string> ErrorMessages { get; } = new();
         public async void SendRegistrationRequest()
         {
-            try
+            var result = Validator.Validate(this.UserInfo);
+            if (!result.IsValid)
             {
-                Validator.ValidateAndThrow(this.UserInfo);
-            }
-            catch (ValidationException ex)
-            {
-                ErrorMessages.AddRange(ex.Errors.Select(err => err.ErrorMessage));
+                ErrorMessages.AddRange(result.Errors.Select(err => err.ErrorMessage));
                 return;
             }
 
-            //await ContentStore.RegisterNewUser(Email, Password, Username, FirstName, LastName);
+            await ContentStore.RegisterNewUser(UserInfo.Email, UserInfo.Password, UserInfo.Username, UserInfo.FirstName, UserInfo.LastName);
             NavigationManager.NavigateTo("/email-sent");
         }
 

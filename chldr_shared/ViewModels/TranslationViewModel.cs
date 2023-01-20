@@ -64,12 +64,12 @@ namespace chldr_shared.ViewModels
 
                 if (match.Success)
                 {
-                    MyContentStore.Search(match.ToString());
+                    ContentStore.Search(match.ToString());
                     break;
                 }
             }
 
-            MyContentStore.Search(translationText);
+            ContentStore.Search(translationText);
         }
 
         #region Constructors

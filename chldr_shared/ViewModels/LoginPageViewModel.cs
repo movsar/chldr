@@ -27,7 +27,7 @@ namespace chldr_shared.ViewModels
         {
             try
             {
-                await MyUserStore.LogInEmailPassword(Email, Password);
+                await UserStore.LogInEmailPassword(Email, Password);
             }
             catch (Exception ex)
             {

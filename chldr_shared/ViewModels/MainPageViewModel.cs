@@ -45,8 +45,8 @@ namespace chldr_shared.ViewModels
         {
             base.OnInitialized();
 
-            MyContentStore.DatabaseInitialized += MyContentStore_DatabaseInitialized;
-            MyContentStore.CurrentEntriesUpdated += MyContentStore_CurrentEntriesUpdated;
+            ContentStore.DatabaseInitialized += MyContentStore_DatabaseInitialized;
+            ContentStore.CurrentEntriesUpdated += MyContentStore_CurrentEntriesUpdated;
         }
 
         protected override async void OnAfterRender(bool firstRender)
@@ -89,14 +89,14 @@ namespace chldr_shared.ViewModels
             EntryViewModels.Clear();
 
             _stopWatch.Restart();
-            MyContentStore.Search(inputText);
+            ContentStore.Search(inputText);
         }
         #endregion
 
         #region Methods
         public void ShowResults()
         {
-            var newEntryViewModels = MyContentStore.CurrentEntries.Select(e => EntryViewModelFactory.CreateViewModel(e)).ToList();
+            var newEntryViewModels = ContentStore.CurrentEntries.Select(e => EntryViewModelFactory.CreateViewModel(e)).ToList();
             EntryViewModels = newEntryViewModels;
         }
         public void ShowRandoms()
@@ -104,7 +104,7 @@ namespace chldr_shared.ViewModels
             try
             {
                 EntryViewModels.Clear();
-                MyContentStore.LoadRandomEntries();
+                ContentStore.LoadRandomEntries();
             }
             catch (Exception ex)
             {

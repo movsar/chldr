@@ -70,7 +70,7 @@ namespace chldr_shared.ViewModels
 
         protected override void InitializeViewModel(string entryId)
         {
-            InitializeViewModel(MyContentStore.GetWordById(ObjectId.Parse(entryId)));
+            InitializeViewModel(ContentStore.GetWordById(ObjectId.Parse(entryId)));
         }
     }
 }
