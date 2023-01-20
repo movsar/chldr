@@ -9,7 +9,27 @@ on:
     branches:
       - main
 
+env:
+  NETCORE_VERSION: '6.0'
+
 jobs:
+  build_job:    
+    runs-on: ubuntu-latest
+    name: Build Job
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup .NET SDK ${{env.NETCORE_VERSION}}
+        uses: actions/setup-dotnet@v1
+        with:
+            dotnet-version: ${{env.NETCORE_VERSION}}
+            
+      - name: Restoring workloads
+        run: dotnet workload restore
+
+      - name: Build
+        run: dotnet build chldr_server/chldr_server.csproj -c -o ./build Release
+
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
@@ -29,7 +49,7 @@ jobs:
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "/chldr_server" # App source code path
           api_location: "" # Api source code path - optional
-          output_location: "" # Built app content directory - optional
+          output_location: "./build" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
