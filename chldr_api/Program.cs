@@ -1,4 +1,4 @@
-namespace user_management
+namespace chldr_api
 {
     public class Program
     {

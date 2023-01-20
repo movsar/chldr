@@ -5,7 +5,7 @@ using MongoDB.Bson;
 using Realms.Sync;
 using Serilog;
 
-namespace user_management.Controllers
+namespace chldr_api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
