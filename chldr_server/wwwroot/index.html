@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test Layout</title>
+    <style type="text/css">
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #content {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0px;
+        }
+
+        #loading {
+            margin-left: 45%;
+            margin-top: 25%;
+        }
+    </style>
+    <script>
+        function showContent() {
+            const loadingTag = document.querySelector("#loading");
+            const frame = document.querySelector("#frame");
+            frame.style.display = 'block'
+            loadingTag.style.display = 'none'
+        }
+
+        setTimeout(() => {
+            showContent();
+        }, 2000);
+    </script>
+</head>
+
+<body>
+    <div id="content">
+        <img id="loading" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" />
+        <iframe id="frame" style="display: none;" width="100%" height="100%" frameborder="0"
+            src="https://dosham.azurewebsites.net"></iframe>
+    </div>
+</body>
+
+</html>
