@@ -28,7 +28,10 @@ jobs:
       #  run: dotnet workload restore
 
       - name: Build
-        run: dotnet build chldr_server/chldr_server.csproj -c -o ./build Release
+        run: dotnet build chldr_server/chldr_server.csproj -c Release
+
+      - name: Publish
+        run: dotnet build chldr_server/chldr_server.csproj -c Release -o ./published
 
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
@@ -49,7 +52,7 @@ jobs:
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "/chldr_server" # App source code path
           api_location: "" # Api source code path - optional
-          output_location: "./build" # Built app content directory - optional
+          output_location: "./published" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
