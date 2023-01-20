@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_shared", "chldr_share
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_server", "chldr_server\chldr_server.csproj", "{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_api", "chldr_api\chldr_api.csproj", "{CE49E6CC-4515-4A1B-A010-77B1672F602E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_native", "chldr_native\chldr_native.csproj", "{CDEA7896-CD62-4780-9CB3-633EAE312BA0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_data", "chldr_data\chldr_data.csproj", "{1515642D-BB1C-4CAC-A10C-99C43045BD90}"
@@ -27,10 +25,6 @@ Global
 		{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CE49E6CC-4515-4A1B-A010-77B1672F602E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CE49E6CC-4515-4A1B-A010-77B1672F602E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CE49E6CC-4515-4A1B-A010-77B1672F602E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CE49E6CC-4515-4A1B-A010-77B1672F602E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CDEA7896-CD62-4780-9CB3-633EAE312BA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CDEA7896-CD62-4780-9CB3-633EAE312BA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDEA7896-CD62-4780-9CB3-633EAE312BA0}.Debug|Any CPU.Deploy.0 = Debug|Any CPU

@@ -12,6 +12,7 @@ namespace chldr_server
 
             // Add services to the container.
             builder.Services.AddRazorPages();
+            builder.Services.AddControllers();
             builder.Services.AddServerSideBlazor();
             builder.Services.AddServerSideBlazor().AddCircuitOptions(option => { option.DetailedErrors = true; });
             
@@ -37,6 +38,8 @@ namespace chldr_server
             app.UseRouting();
 
             app.MapBlazorHub();
+            app.MapControllers();
+
             app.MapFallbackToPage("/_Host");
 
             app.Run();
