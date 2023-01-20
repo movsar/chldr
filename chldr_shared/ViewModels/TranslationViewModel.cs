@@ -17,6 +17,7 @@ using chldr_shared.Stores;
 
 namespace chldr_shared.ViewModels
 {
+
     [ObservableObject]
     public partial class TranslationViewModel : ViewModelBase
     {

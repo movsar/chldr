@@ -83,7 +83,7 @@ namespace chldr_shared.Resources.Localizations {
         /// </summary>
         public static string App_title {
             get {
-                return ResourceManager.GetString("App title", resourceCulture);
+                return ResourceManager.GetString("App_title", resourceCulture);
             }
         }
         
@@ -92,7 +92,7 @@ namespace chldr_shared.Resources.Localizations {
         /// </summary>
         public static string Basic_form {
             get {
-                return ResourceManager.GetString("Basic form", resourceCulture);
+                return ResourceManager.GetString("Basic_form", resourceCulture);
             }
         }
         
@@ -101,7 +101,7 @@ namespace chldr_shared.Resources.Localizations {
         /// </summary>
         public static string Confirm_password {
             get {
-                return ResourceManager.GetString("Confirm password", resourceCulture);
+                return ResourceManager.GetString("Confirm_password", resourceCulture);
             }
         }
         
@@ -126,54 +126,63 @@ namespace chldr_shared.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Registration has been successful, please check your email and follow the included link to activate your profile..
         /// </summary>
-        public static string EmailSentMessage {
+        public static string Email_sent_message {
             get {
-                return ResourceManager.GetString("EmailSentMessage", resourceCulture);
+                return ResourceManager.GetString("Email_sent_message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Email is not valid.
         /// </summary>
-        public static string Error_EmailNotValid {
+        public static string Error_Email_not_valid {
             get {
-                return ResourceManager.GetString("Error_EmailNotValid", resourceCulture);
+                return ResourceManager.GetString("Error:Email_not_valid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid name.
+        /// </summary>
+        public static string Error_Invalid_name {
+            get {
+                return ResourceManager.GetString("Error:Invalid_name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Username can only have latin letters and digits.
         /// </summary>
-        public static string Error_InvalidUsername {
+        public static string Error_Invalid_username {
             get {
-                return ResourceManager.GetString("Error_InvalidUsername", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Passwords don&apos;t match.
-        /// </summary>
-        public static string Error_PasswordsDontMatch {
-            get {
-                return ResourceManager.GetString("Error_PasswordsDontMatch", resourceCulture);
+                return ResourceManager.GetString("Error:Invalid_username", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Password is too long.
         /// </summary>
-        public static string Error_PasswordTooLong {
+        public static string Error_Password_too_long {
             get {
-                return ResourceManager.GetString("Error_PasswordTooLong", resourceCulture);
+                return ResourceManager.GetString("Error:Password_too_long", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passwords don&apos;t match.
+        /// </summary>
+        public static string Error_Passwords_dont_match {
+            get {
+                return ResourceManager.GetString("Error:Passwords_dont_match", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to First Name.
         /// </summary>
-        public static string First_Name {
+        public static string First_name {
             get {
-                return ResourceManager.GetString("First Name", resourceCulture);
+                return ResourceManager.GetString("First_name", resourceCulture);
             }
         }
         
@@ -191,7 +200,7 @@ namespace chldr_shared.Resources.Localizations {
         /// </summary>
         public static string Forgot_password_ {
             get {
-                return ResourceManager.GetString("Forgot password?", resourceCulture);
+                return ResourceManager.GetString("Forgot_password?", resourceCulture);
             }
         }
         
@@ -225,27 +234,27 @@ namespace chldr_shared.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Last Name.
         /// </summary>
-        public static string Last_Name {
+        public static string Last_name {
             get {
-                return ResourceManager.GetString("Last Name", resourceCulture);
+                return ResourceManager.GetString("Last_name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Log In.
         /// </summary>
-        public static string Log_In {
+        public static string Log_in {
             get {
-                return ResourceManager.GetString("Log In", resourceCulture);
+                return ResourceManager.GetString("Log_in", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to or sign up with:.
         /// </summary>
-        public static string or_sign_up_with_ {
+        public static string Or_sign_up_with_ {
             get {
-                return ResourceManager.GetString("or sign up with:", resourceCulture);
+                return ResourceManager.GetString("Or_sign_up_with:", resourceCulture);
             }
         }
         
@@ -326,7 +335,7 @@ namespace chldr_shared.Resources.Localizations {
         /// </summary>
         public static string Start_typing {
             get {
-                return ResourceManager.GetString("Start typing", resourceCulture);
+                return ResourceManager.GetString("Start_typing", resourceCulture);
             }
         }
         

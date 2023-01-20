@@ -10,7 +10,7 @@ namespace chldr_shared.ViewModels
 {
     public class ResetPasswordPageViewModel : ViewModelBase
     {
-        public string? Email { get; set; }
+        public string? Email { get; set; }  
         public async void SendPasswordResetRequest()
         {
             await MyUserStore.SendPasswordResetRequestAsync(Email);

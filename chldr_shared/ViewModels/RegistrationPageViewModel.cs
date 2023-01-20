@@ -11,25 +11,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ValidationException = FluentValidation.ValidationException;
+using chldr_shared.Dto;
 
 namespace chldr_shared.ViewModels
 {
     public class RegistrationPageViewModel : ViewModelBase
     {
-        [Inject] RegistrationValidator Validator { get; set; }
+        [Inject] UserInfoValidator Validator { get; set; }
         [Inject] NavigationManager NavigationManager { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string PasswordConfirmation { get; set; }
-        public string Username { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public UserInfoDto UserInfo { get; set; }
         public List<string> ErrorMessages { get; } = new();
         public async void SendRegistrationRequest()
         {
             try
             {
-                Validator.ValidateAndThrow(this);
+                Validator.ValidateAndThrow(this.UserInfo);
             }
             catch (ValidationException ex)
             {
@@ -38,7 +34,7 @@ namespace chldr_shared.ViewModels
             }
 
             //await ContentStore.RegisterNewUser(Email, Password, Username, FirstName, LastName);
-            NavigationManager.NavigateTo("/emailsent");
+            NavigationManager.NavigateTo("/email-sent");
         }
 
     }

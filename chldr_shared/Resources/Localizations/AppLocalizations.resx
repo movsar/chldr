@@ -123,44 +123,47 @@
   <data name="Adverb" xml:space="preserve">
     <value>Adverb</value>
   </data>
-  <data name="App title" xml:space="preserve">
+  <data name="App_title" xml:space="preserve">
     <value>Chechen Language Dictionary</value>
   </data>
-  <data name="Basic form" xml:space="preserve">
+  <data name="Basic_form" xml:space="preserve">
     <value>Basic form</value>
   </data>
-  <data name="Confirm password" xml:space="preserve">
+  <data name="Confirm_password" xml:space="preserve">
     <value>Confirm password</value>
   </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
   </data>
-  <data name="EmailSentMessage" xml:space="preserve">
-    <value>Registration has been successful, please check your email and follow the included link to activate your profile.</value>
-  </data>
   <data name="Email_address" xml:space="preserve">
     <value>email_address</value>
   </data>
-  <data name="Error_EmailNotValid" xml:space="preserve">
+  <data name="Email_sent_message" xml:space="preserve">
+    <value>Registration has been successful, please check your email and follow the included link to activate your profile.</value>
+  </data>
+  <data name="Error:Email_not_valid" xml:space="preserve">
     <value>Email is not valid</value>
   </data>
-  <data name="Error_InvalidUsername" xml:space="preserve">
+  <data name="Error:Invalid_name" xml:space="preserve">
+    <value>Invalid name</value>
+  </data>
+  <data name="Error:Invalid_username" xml:space="preserve">
     <value>Username can only have latin letters and digits</value>
   </data>
-  <data name="Error_PasswordsDontMatch" xml:space="preserve">
+  <data name="Error:Passwords_dont_match" xml:space="preserve">
     <value>Passwords don't match</value>
   </data>
-  <data name="Error_PasswordTooLong" xml:space="preserve">
+  <data name="Error:Password_too_long" xml:space="preserve">
     <value>Password is too long</value>
   </data>
-  <data name="First Name" xml:space="preserve">
+  <data name="First_name" xml:space="preserve">
     <value>First Name</value>
-  </data>
-  <data name="Forgot password?" xml:space="preserve">
-    <value>Forgot password?</value>
   </data>
   <data name="Forgot_password" xml:space="preserve">
     <value>Forgot Password</value>
+  </data>
+  <data name="Forgot_password?" xml:space="preserve">
+    <value>Forgot password?</value>
   </data>
   <data name="Guest" xml:space="preserve">
     <value>Guest</value>
@@ -171,13 +174,13 @@
   <data name="Index" xml:space="preserve">
     <value>Index</value>
   </data>
-  <data name="Last Name" xml:space="preserve">
+  <data name="Last_name" xml:space="preserve">
     <value>Last Name</value>
   </data>
-  <data name="Log In" xml:space="preserve">
+  <data name="Log_in" xml:space="preserve">
     <value>Log In</value>
   </data>
-  <data name="or sign up with:" xml:space="preserve">
+  <data name="Or_sign_up_with:" xml:space="preserve">
     <value>or sign up with:</value>
   </data>
   <data name="Password" xml:space="preserve">
@@ -204,7 +207,7 @@
   <data name="Source" xml:space="preserve">
     <value>Source</value>
   </data>
-  <data name="Start typing" xml:space="preserve">
+  <data name="Start_typing" xml:space="preserve">
     <value>Start typing ...</value>
   </data>
   <data name="Username" xml:space="preserve">

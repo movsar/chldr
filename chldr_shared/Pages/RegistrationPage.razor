@@ -17,28 +17,28 @@
 
         <!-- Email and Username -->
         <div class="form-outline mb-4">
-            <input type="email" class="form-control" placeholder="@Localizer["Email"]" required @bind="Email" />
+            <input type="email" class="form-control" placeholder="@Localizer["Email"]" required @bind="UserInfo.Email" />
         </div>
         <div class="form-outline mb-4">
-            <input type="text" class="form-control" placeholder="@Localizer["Username"]" required @bind="Username" />
+            <input type="text" class="form-control" placeholder="@Localizer["Username"]" required @bind="UserInfo.Username" />
         </div>
 
         <!-- Password -->
         <div class="form-outline mb-4">
-            <input type="password" class="form-control" placeholder="@Localizer["Password"]" required @bind="Password" />
+            <input type="password" class="form-control" placeholder="@Localizer["Password"]" required @bind="UserInfo.Password" />
         </div>
 
         <div class="form-outline mb-4">
-            <input type="password" class="form-control" placeholder="@Localizer["Confirm password"]" required @bind="PasswordConfirmation" />
+            <input type="password" class="form-control" placeholder="@Localizer["Confirm_password"]" required @bind="UserInfo.PasswordConfirmation" />
         </div>
 
         <!-- Personal Details -->
         <div class="form-outline mb-4">
-            <input type="text" class="form-control" placeholder="@Localizer["First Name"]" @bind="FirstName" />
+            <input type="text" class="form-control" placeholder="@Localizer["First_name"]" @bind="UserInfo.FirstName" />
         </div>
 
         <div class="form-outline mb-4">
-            <input type="text" class="form-control" placeholder="@Localizer["Last Name"]" @bind="LastName" />
+            <input type="text" class="form-control" placeholder="@Localizer["Last_name"]" @bind="UserInfo.LastName" />
         </div>
 
         <!-- Register buttons -->

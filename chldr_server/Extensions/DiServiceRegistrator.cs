@@ -12,8 +12,8 @@ namespace chldr_server.Extensions
     {
         public static WebApplicationBuilder RegisterValidators(this WebApplicationBuilder appBuilder)
         {
-            appBuilder.Services.AddScoped<RegistrationValidator>();
-            appBuilder.Services.AddScoped<IValidator<RegistrationPageViewModel>, RegistrationValidator>();
+            appBuilder.Services.AddScoped<UserInfoValidator>();
+            appBuilder.Services.AddScoped<IValidator<RegistrationPageViewModel>, UserInfoValidator>();
 
             return appBuilder;
         }

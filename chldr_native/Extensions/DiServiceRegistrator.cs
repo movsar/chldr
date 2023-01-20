@@ -1,6 +1,7 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Services;
 using chldr_shared;
+using chldr_shared.Dto;
 using chldr_shared.Pages;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
@@ -14,8 +15,8 @@ namespace chldr_native.Extensions
     {
         public static MauiAppBuilder RegisterValidators(this MauiAppBuilder mauiAppBuilder)
         {
-            mauiAppBuilder.Services.AddScoped<RegistrationValidator>();
-            mauiAppBuilder.Services.AddScoped<IValidator<RegistrationPageViewModel>, RegistrationValidator>();
+            mauiAppBuilder.Services.AddScoped<UserInfoValidator>();
+            mauiAppBuilder.Services.AddScoped<IValidator<UserInfoDto>, UserInfoValidator>();
 
             return mauiAppBuilder;
         }
