@@ -1,6 +1,7 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Services;
 using chldr_shared;
+using chldr_shared.Dto;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
 using chldr_shared.ViewModels;
@@ -13,7 +14,7 @@ namespace chldr_server.Extensions
         public static WebApplicationBuilder RegisterValidators(this WebApplicationBuilder appBuilder)
         {
             appBuilder.Services.AddScoped<UserInfoValidator>();
-            appBuilder.Services.AddScoped<IValidator<RegistrationPageViewModel>, UserInfoValidator>();
+            appBuilder.Services.AddScoped<IValidator<UserInfoDto>, UserInfoValidator>();
 
             return appBuilder;
         }
@@ -21,6 +22,7 @@ namespace chldr_server.Extensions
         {
             appBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
             appBuilder.Services.AddSingleton<ContentStore>();
+            appBuilder.Services.AddSingleton<UserStore>();
             appBuilder.Services.AddScoped<JsInterop>();
             appBuilder.Services.AddLocalization();
             return appBuilder;

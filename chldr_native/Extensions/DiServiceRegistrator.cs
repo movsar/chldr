@@ -24,6 +24,7 @@ namespace chldr_native.Extensions
         {
             mauiAppBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
             mauiAppBuilder.Services.AddSingleton<ContentStore>();
+            mauiAppBuilder.Services.AddSingleton<UserStore>();
             mauiAppBuilder.Services.AddScoped<JsInterop>();
 
             mauiAppBuilder.Services.AddLocalization();
