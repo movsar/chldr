@@ -27,11 +27,8 @@ jobs:
       - name: Restoring workloads
         run: dotnet workload restore
 
-      - name: Restore
-        run: dotnet restore
-        
       - name: Build
-        run: dotnet build chldr_server/chldr_server.csproj --no-restore -c Release
+        run: dotnet build chldr_server/chldr_server.csproj -c Release
 
       - name: Publish
         run: dotnet publish chldr_server/chldr_server.csproj --no-build -c Release -o ./published
