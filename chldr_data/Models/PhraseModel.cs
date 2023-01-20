@@ -14,7 +14,7 @@ namespace chldr_data.Models
     {
         public new ObjectId EntityId { get; }
         public string Content { get; }
-        public new string Notes { get; }
+        public string Notes { get; }
         public PhraseModel(Entities.Phrase phrase) : base(phrase.Entry)
         {
             EntityId = phrase._id;

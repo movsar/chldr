@@ -1,0 +1,34 @@
+name: Chldr Server Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
+      
+env:
+  NETCORE_VERSION: '6.0'
+  
+jobs:
+  build_job:    
+    runs-on: ubuntu-latest
+    name: Build and Deploy Job
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup .NET SDK ${{env.NETCORE_VERSION}}
+        uses: actions/setup-dotnet@v1
+        with:
+            dotnet-version: ${{env.NETCORE_VERSION}}
+        
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build chldr_server/chldr_server.csproj --no-restore -c Release
+
+      - name: Publish
+        run: dotnet publish chldr_server/chldr_server.csproj --no-build -c Release -o ./published

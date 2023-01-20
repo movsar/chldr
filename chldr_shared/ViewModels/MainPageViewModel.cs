@@ -39,12 +39,6 @@ namespace chldr_shared.ViewModels
         public ElementReference searchInputReference;
         #endregion
 
-        #region Constructors
-        public MainPageViewModel()
-        {
-        }
-        #endregion
-
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -67,7 +61,7 @@ namespace chldr_shared.ViewModels
         // Called when something is typed into search input
         public void Search(ChangeEventArgs evgentArgs)
         {
-            string inputText = evgentArgs.Value.ToString();
+            string? inputText = evgentArgs.Value?.ToString();
             if (string.IsNullOrWhiteSpace(inputText))
             {
                 return;

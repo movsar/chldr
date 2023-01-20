@@ -20,7 +20,6 @@ namespace chldr_data.Search
         Expression<Func<Entities.Entry, bool>> EntryFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
         Expression<Func<Translation, bool>> TranslationFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
 
-        static string PreviousInputText;
         static Dictionary<int, IQueryable<Microsoft.Maui.Controls.Entry>> PreviousResults = new Dictionary<int, IQueryable<Microsoft.Maui.Controls.Entry>>();
         public MainSearchEngine(DataAccess dataAccess) : base(dataAccess) { }
 
