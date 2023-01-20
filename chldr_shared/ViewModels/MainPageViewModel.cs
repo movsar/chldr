@@ -19,7 +19,7 @@ using System.Reflection;
 namespace chldr_shared.ViewModels
 {
     [ObservableObject]
-    public partial class MainPageViewModel : ComponentBase
+    public partial class MainPageViewModel : ViewModelBase
     {
         #region Properties
         [ObservableProperty]
@@ -30,7 +30,6 @@ namespace chldr_shared.ViewModels
 
         [ObservableProperty]
         private string _statusText;
-        [Inject] private ContentStore ContentStore { get; set; }
         #endregion
 
         #region Fields
@@ -46,8 +45,8 @@ namespace chldr_shared.ViewModels
         {
             base.OnInitialized();
 
-            ContentStore.DatabaseInitialized += ContentStore_DatabaseInitialized;
-            ContentStore.CurrentEntriesUpdated += ContentStore_CurrentEntriesUpdated;
+            MyContentStore.DatabaseInitialized += MyContentStore_DatabaseInitialized;
+            MyContentStore.CurrentEntriesUpdated += MyContentStore_CurrentEntriesUpdated;
         }
 
         protected override async void OnAfterRender(bool firstRender)
@@ -61,14 +60,14 @@ namespace chldr_shared.ViewModels
             }
         }
 
-        private void ContentStore_DatabaseInitialized()
+        private void MyContentStore_DatabaseInitialized()
         {
             _databaseInitialized = true;
         }
 
         #region EventHandlers
         // Called whenever there is a change to Entries collection
-        private void ContentStore_CurrentEntriesUpdated()
+        private void MyContentStore_CurrentEntriesUpdated()
         {
             var resultsRetrieved = _stopWatch.ElapsedMilliseconds;
 
@@ -90,14 +89,14 @@ namespace chldr_shared.ViewModels
             EntryViewModels.Clear();
 
             _stopWatch.Restart();
-            ContentStore.Search(inputText);
+            MyContentStore.Search(inputText);
         }
         #endregion
 
         #region Methods
         public void ShowResults()
         {
-            var newEntryViewModels = ContentStore.CurrentEntries.Select(e => EntryViewModelFactory.CreateViewModel(e)).ToList();
+            var newEntryViewModels = MyContentStore.CurrentEntries.Select(e => EntryViewModelFactory.CreateViewModel(e)).ToList();
             EntryViewModels = newEntryViewModels;
         }
         public void ShowRandoms()
@@ -105,7 +104,7 @@ namespace chldr_shared.ViewModels
             try
             {
                 EntryViewModels.Clear();
-                ContentStore.LoadRandomEntries();
+                MyContentStore.LoadRandomEntries();
             }
             catch (Exception ex)
             {

@@ -14,7 +14,7 @@ using ValidationException = FluentValidation.ValidationException;
 
 namespace chldr_shared.ViewModels
 {
-    public class RegistrationPageViewModel : ComponentBase
+    public class RegistrationPageViewModel : ViewModelBase
     {
         [Inject] RegistrationValidator Validator { get; set; }
         [Inject] NavigationManager NavigationManager { get; set; }

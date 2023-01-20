@@ -18,5 +18,6 @@ namespace chldr_data.Interfaces
         Task InitializeDatabase();
         Task Login(string email, string password);
         Task RegisterNewUser(string email, string password, string username, string firstName, string lastName);
+        Task SendPasswordResetRequestAsync(string email);
     }
 }

@@ -81,5 +81,10 @@ namespace chldr_data.Services
         {
             return new PhraseModel(RealmService.GetRealm().All<Phrase>().FirstOrDefault(p => p._id == entityId));
         }
+
+        public async Task SendPasswordResetRequestAsync(string email)
+        {
+            await App.EmailPasswordAuth.SendResetPasswordEmailAsync(email);
+        }
     }
 }

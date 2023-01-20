@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace chldr_shared.ViewModels
 {
-    public abstract partial class EntryViewModelBase : ComponentBase
+    public abstract partial class EntryViewModelBase : ViewModelBase
     {
 
         #region Properties

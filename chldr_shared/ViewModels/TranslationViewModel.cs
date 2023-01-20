@@ -18,10 +18,9 @@ using chldr_shared.Stores;
 namespace chldr_shared.ViewModels
 {
     [ObservableObject]
-    public partial class TranslationViewModel : ComponentBase
+    public partial class TranslationViewModel : ViewModelBase
     {
 
-        [Inject] ContentStore ContentStore { get; set; }
         #region Properties
         [Parameter]
         public string EntityId { get; set; }
@@ -64,12 +63,12 @@ namespace chldr_shared.ViewModels
 
                 if (match.Success)
                 {
-                    ContentStore.Search(match.ToString());
+                    MyContentStore.Search(match.ToString());
                     break;
                 }
             }
 
-            ContentStore.Search(translationText);
+            MyContentStore.Search(translationText);
         }
 
         #region Constructors

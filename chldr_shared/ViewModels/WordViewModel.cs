@@ -12,8 +12,6 @@ namespace chldr_shared.ViewModels
 {
     public class WordViewModel : EntryViewModelBase
     {
-        [Inject] ContentStore ContentStore { get; set; }
-
         #region Properties
         public int PartOfSpeech { get; set; }
         public int GrammaticalClass { get; set; }
@@ -72,7 +70,7 @@ namespace chldr_shared.ViewModels
 
         protected override void InitializeViewModel(string entryId)
         {
-            InitializeViewModel(ContentStore.GetWordById(ObjectId.Parse(entryId)));
+            InitializeViewModel(MyContentStore.GetWordById(ObjectId.Parse(entryId)));
         }
     }
 }

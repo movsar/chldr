@@ -1,5 +1,6 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Services;
+using Realms.Sync;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,17 +9,22 @@ using System.Threading.Tasks;
 
 namespace chldr_shared.Stores
 {
-    internal class UserStore
+    public class UserStore
     {
         private IDataAccess _dataAccess;
 
-        internal UserStore(IDataAccess dataAccess)
+        public UserStore(IDataAccess dataAccess)
         {
             _dataAccess = dataAccess;
         }
-        internal async Task LogInEmailPassword(string email, string password)
+        public async Task LogInEmailPassword(string email, string password)
         {
             await _dataAccess.Login(email, password);
+        }
+
+        internal async Task SendPasswordResetRequestAsync(string email)
+        {
+            await _dataAccess.SendPasswordResetRequestAsync(email);
         }
     }
 }

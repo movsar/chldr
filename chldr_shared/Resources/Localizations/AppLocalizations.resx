@@ -138,6 +138,9 @@
   <data name="EmailSentMessage" xml:space="preserve">
     <value>Registration has been successful, please check your email and follow the included link to activate your profile.</value>
   </data>
+  <data name="Email_address" xml:space="preserve">
+    <value>email_address</value>
+  </data>
   <data name="Error_EmailNotValid" xml:space="preserve">
     <value>Email is not valid</value>
   </data>
@@ -155,6 +158,9 @@
   </data>
   <data name="Forgot password?" xml:space="preserve">
     <value>Forgot password?</value>
+  </data>
+  <data name="Forgot_password" xml:space="preserve">
+    <value>Forgot Password</value>
   </data>
   <data name="Guest" xml:space="preserve">
     <value>Guest</value>
@@ -177,6 +183,9 @@
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="Password_reset" xml:space="preserve">
+    <value>Password Reset</value>
+  </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
@@ -185,6 +194,9 @@
   </data>
   <data name="Registration" xml:space="preserve">
     <value>Registration</value>
+  </data>
+  <data name="Reset_password" xml:space="preserve">
+    <value>Reset password</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Search</value>
@@ -200,5 +212,8 @@
   </data>
   <data name="Verb" xml:space="preserve">
     <value>Verb</value>
+  </data>
+  <data name="You_can_reset_your_password_here" xml:space="preserve">
+    <value>You can reset your password here</value>
   </data>
 </root>

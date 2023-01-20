@@ -115,6 +115,15 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to email_address.
+        /// </summary>
+        public static string Email_address {
+            get {
+                return ResourceManager.GetString("Email_address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Registration has been successful, please check your email and follow the included link to activate your profile..
         /// </summary>
         public static string EmailSentMessage {
@@ -165,6 +174,15 @@ namespace chldr_shared.Resources.Localizations {
         public static string First_Name {
             get {
                 return ResourceManager.GetString("First Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Forgot Password.
+        /// </summary>
+        public static string Forgot_password {
+            get {
+                return ResourceManager.GetString("Forgot_password", resourceCulture);
             }
         }
         
@@ -241,6 +259,15 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Password Reset.
+        /// </summary>
+        public static string Password_reset {
+            get {
+                return ResourceManager.GetString("Password_reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Profile.
         /// </summary>
         public static string Profile {
@@ -264,6 +291,15 @@ namespace chldr_shared.Resources.Localizations {
         public static string Registration {
             get {
                 return ResourceManager.GetString("Registration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset password.
+        /// </summary>
+        public static string Reset_password {
+            get {
+                return ResourceManager.GetString("Reset_password", resourceCulture);
             }
         }
         
@@ -309,6 +345,15 @@ namespace chldr_shared.Resources.Localizations {
         public static string Verb {
             get {
                 return ResourceManager.GetString("Verb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can reset your password here.
+        /// </summary>
+        public static string You_can_reset_your_password_here {
+            get {
+                return ResourceManager.GetString("You_can_reset_your_password_here", resourceCulture);
             }
         }
     }

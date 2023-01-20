@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace chldr_shared.ViewModels
 {
-    public class LoginPageViewModel : ComponentBase
+    public class LoginPageViewModel : ViewModelBase
     {
         #region Fields
         #endregion
@@ -17,12 +17,6 @@ namespace chldr_shared.ViewModels
         #region Properties
         public string Email { get; set; }
         public string Password { get; set; }
-        #endregion
-
-        #region Constructors
-        public LoginPageViewModel()
-        {
-        }
         #endregion
 
         public void SignInWithGoogle() { }
@@ -33,7 +27,7 @@ namespace chldr_shared.ViewModels
         {
             try
             {
-
+                await MyUserStore.LogInEmailPassword(Email, Password);
             }
             catch (Exception ex)
             {
