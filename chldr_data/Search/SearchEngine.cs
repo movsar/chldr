@@ -1,6 +1,6 @@
-﻿using chldr_dataaccess.Entities;
-using chldr_dataaccess.Services;
-using chldr_dataaccess.Models;
+﻿using chldr_data.Entities;
+using chldr_data.Services;
+using chldr_data.Models;
 using Realms;
 using System;
 using System.Collections.Generic;
@@ -8,11 +8,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using chldr_dataaccess.Interfaces;
-using Entry = chldr_dataaccess.Entities.Entry;
-using chldr_dataaccess.Factories;
+using chldr_data.Interfaces;
+using Entry = chldr_data.Entities.Entry;
+using chldr_data.Factories;
 
-namespace chldr_dataaccess.Search
+namespace chldr_data.Search
 {
     internal abstract class SearchEngine
     {

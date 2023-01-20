@@ -1,4 +1,4 @@
-﻿using chldr_dataaccess.Services.PartialMethods;
+﻿using chldr_data.Services.PartialMethods;
 
 namespace chldr_server.Extensions
 {

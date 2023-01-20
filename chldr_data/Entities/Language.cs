@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_dataaccess.Entities
+namespace chldr_data.Entities
 {
     public class Language : RealmObject
     {

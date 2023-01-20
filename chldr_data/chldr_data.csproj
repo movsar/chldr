@@ -11,8 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Assets\database.realm">
+    <None Update="data\database.realm">
       <LogicalName>%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

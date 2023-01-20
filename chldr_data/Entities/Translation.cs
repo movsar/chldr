@@ -5,7 +5,7 @@ using System.Text;
 using Realms;
 using MongoDB.Bson;
 
-namespace chldr_dataaccess.Entities
+namespace chldr_data.Entities
 {
     public class Translation : RealmObject
     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-namespace chldr_dataaccess.Entities
+namespace chldr_data.Entities
 {
     public class Activity : RealmObject
     {

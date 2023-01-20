@@ -1,11 +1,11 @@
-﻿using chldr_dataaccess.Services.PartialMethods;
+﻿using chldr_data.Services.PartialMethods;
 using Realms;
 using Realms.Logging;
 using Realms.Sync;
 using System;
 using System.Diagnostics;
 
-namespace chldr_dataaccess.Services
+namespace chldr_data.Services
 {
     internal static class RealmService
     {

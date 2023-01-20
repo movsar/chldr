@@ -1,8 +1,8 @@
-﻿using chldr_dataaccess.Models;
+﻿using chldr_data.Models;
 using MongoDB.Bson;
 using Realms.Sync;
 
-namespace chldr_dataaccess.Interfaces
+namespace chldr_data.Interfaces
 {
     public interface IDataAccess
     {

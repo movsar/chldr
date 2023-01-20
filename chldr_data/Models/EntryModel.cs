@@ -1,12 +1,12 @@
-﻿using chldr_dataaccess.Entities;
-using chldr_dataaccess.Enums;
+﻿using chldr_data.Entities;
+using chldr_data.Enums;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace chldr_dataaccess.Models
+namespace chldr_data.Models
 {
     public abstract class EntryModel
     {

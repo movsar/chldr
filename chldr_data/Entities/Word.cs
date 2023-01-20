@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using Entry = chldr_dataaccess.Entities.Entry;
+using Entry = chldr_data.Entities.Entry;
 
-namespace chldr_dataaccess.Entities
+namespace chldr_data.Entities
 {
     public class Word : RealmObject
     {

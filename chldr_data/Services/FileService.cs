@@ -1,4 +1,4 @@
-﻿using chldr_dataaccess.Interfaces;
+﻿using chldr_data.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_dataaccess.Services.PartialMethods
+namespace chldr_data.Services.PartialMethods
 {
     // ! MAIN
     public class FileService
@@ -25,7 +25,7 @@ namespace chldr_dataaccess.Services.PartialMethods
         {
             AppDirectory = AppContext.BaseDirectory;
             AppDataDirectory = Path.Combine(AppDirectory, DataDirName);
-            DatabasePath = Path.Combine(AppDirectory, "Assets", DatabaseName);
+            DatabasePath = Path.Combine(AppDataDirectory, DatabaseName);
 
             if (!Directory.Exists(AppDataDirectory))
             {

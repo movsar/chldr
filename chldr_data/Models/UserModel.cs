@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_dataaccess.Models
+namespace chldr_data.Models
 {
     public class UserModel
     {

@@ -24,8 +24,8 @@ jobs:
         with:
             dotnet-version: ${{env.NETCORE_VERSION}}
             
-      - name: Restoring workloads
-        run: dotnet workload restore
+      #- name: Restoring workloads
+      #  run: dotnet workload restore
 
       - name: Build
         run: dotnet build chldr_server/chldr_server.csproj -c -o ./build Release

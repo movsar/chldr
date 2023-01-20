@@ -1,7 +1,7 @@
-﻿using chldr_dataaccess.Entities;
-using chldr_dataaccess.Enums;
-using chldr_dataaccess.Services;
-using chldr_dataaccess.Models;
+﻿using chldr_data.Entities;
+using chldr_data.Enums;
+using chldr_data.Services;
+using chldr_data.Models;
 using Realms;
 using Realms.Exceptions;
 using System;
@@ -10,9 +10,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using chldr_dataaccess.Interfaces;
+using chldr_data.Interfaces;
 
-namespace chldr_dataaccess.Search
+namespace chldr_data.Search
 {
     internal class MainSearchEngine : SearchEngine
     {
