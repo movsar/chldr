@@ -14,7 +14,7 @@ namespace chldr_shared.ViewModels
     public class ResetPasswordPageViewModel : ViewModelBase
     {
         [Inject] UserInfoValidator Validator { get; set; }
-        public UserInfoDto UserInfo { get; set; }
+        public UserInfoDto UserInfo { get; set; } = new();
         public async void SendPasswordResetRequest()
         {
             var result = Validator.Validate(this.UserInfo);

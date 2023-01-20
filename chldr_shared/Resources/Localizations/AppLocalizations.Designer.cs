@@ -61,15 +61,6 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to a.
-        /// </summary>
-        public static string a {
-            get {
-                return ResourceManager.GetString("a", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Adjective.
         /// </summary>
         public static string Adjective {
@@ -201,15 +192,6 @@ namespace chldr_shared.Resources.Localizations {
         public static string Forgot_password {
             get {
                 return ResourceManager.GetString("Forgot_password", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Forgot password?.
-        /// </summary>
-        public static string Forgot_password_ {
-            get {
-                return ResourceManager.GetString("Forgot_password?", resourceCulture);
             }
         }
         

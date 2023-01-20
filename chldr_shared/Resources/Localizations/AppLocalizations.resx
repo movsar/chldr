@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="a" xml:space="preserve">
-    <value>a</value>
-  </data>
   <data name="Adjective" xml:space="preserve">
     <value>Adjective</value>
   </data>
@@ -164,9 +161,6 @@
   </data>
   <data name="Forgot_password" xml:space="preserve">
     <value>Forgot Password</value>
-  </data>
-  <data name="Forgot_password?" xml:space="preserve">
-    <value>Forgot password?</value>
   </data>
   <data name="Guest" xml:space="preserve">
     <value>Guest</value>
