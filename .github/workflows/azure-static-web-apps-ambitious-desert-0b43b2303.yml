@@ -3,11 +3,11 @@ name: Azure Static Web Apps CI/CD
 on:
   push:
     branches:
-      - main
+      - main0
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - main
+      - main0
 
 env:
   NETCORE_VERSION: '6.0'
