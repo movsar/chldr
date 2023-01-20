@@ -13,7 +13,8 @@ namespace chldr_server
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
-
+            builder.Services.AddServerSideBlazor().AddCircuitOptions(option => { option.DetailedErrors = true; });
+            
             builder.Services.AddLocalization();
             builder.RegisterValidators();
             builder.RegisterAppServices();
