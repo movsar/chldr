@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Test Layout</title>
+    <title>Chechen Language Dictionary</title>
     <style type="text/css">
         body,
         html {
@@ -26,15 +26,16 @@
         }
     </style>
     <script>
-        function showContent() {
-            const loadingTag = document.querySelector("#loading");
+        function loadApp() {
             const frame = document.querySelector("#frame");
+            const loadingTag = document.querySelector("#loading");
             frame.style.display = 'block'
             loadingTag.style.display = 'none'
+            
         }
 
         setTimeout(() => {
-            showContent();
+            loadApp();
         }, 2000);
     </script>
 </head>

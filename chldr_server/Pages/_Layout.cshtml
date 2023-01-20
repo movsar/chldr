@@ -32,8 +32,11 @@
 
     <script src="_framework/blazor.server.js"></script>
     <script>
-        Blazor.defaultReconnectionHandler._reconnectCallback = function (d) {
-            document.location.reload();
+        try{
+            const btnShowRandoms = document.querySelector(".chldr_btn_show-randoms");
+            setTimeout(() => {btnShowRandoms.click(), 2000);
+        }catch(ex){
+            console.log("couldn't click it :(");
         }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"></script>
