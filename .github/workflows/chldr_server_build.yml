@@ -23,13 +23,12 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
             dotnet-version: ${{env.NETCORE_VERSION}}
-      
-      - name: Restore
-        run: dotnet restore
             
       - name: Restoring workloads
         run: dotnet workload restore
 
+      - name: Restore
+        run: dotnet restore
         
       - name: Build
         run: dotnet build chldr_server/chldr_server.csproj --no-restore -c Release
