@@ -81,8 +81,15 @@ namespace chldr_shared.ViewModels
         }
         public void ShowRandoms()
         {
-            EntryViewModels.Clear();
-            ContentStore.LoadRandomEntries();
+            try
+            {
+                EntryViewModels.Clear();
+                ContentStore.LoadRandomEntries();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error while showing randoms");
+            }
         }
         #endregion
 
