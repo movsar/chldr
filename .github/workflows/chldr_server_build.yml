@@ -3,11 +3,11 @@ name: Chldr Server Build
 on:
   push:
     branches:
-      - main
+      - main00
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - main
+      - main00
       
 env:
   NETCORE_VERSION: '6.0'
