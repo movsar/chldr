@@ -1,5 +1,6 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Services;
+using chldr_shared;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
 using chldr_shared.ViewModels;
@@ -20,6 +21,7 @@ namespace chldr_server.Extensions
         {
             appBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
             appBuilder.Services.AddSingleton<ContentStore>();
+            appBuilder.Services.AddScoped<JsInterop>();
             appBuilder.Services.AddLocalization();
             return appBuilder;
         }

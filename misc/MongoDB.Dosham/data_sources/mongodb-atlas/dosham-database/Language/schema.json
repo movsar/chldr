@@ -1,0 +1,19 @@
+{
+    "bsonType": "object",
+    "properties": {
+        "Code": {
+            "bsonType": "string"
+        },
+        "CreatedAt": {
+            "bsonType": "date"
+        },
+        "_id": {
+            "bsonType": "objectId"
+        }
+    },
+    "required": [
+        "_id",
+        "CreatedAt"
+    ],
+    "title": "Language"
+}

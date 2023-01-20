@@ -1,0 +1,46 @@
+{
+    "bsonType": "object",
+    "properties": {
+        "Content": {
+            "bsonType": "string"
+        },
+        "CreatedAt": {
+            "bsonType": "date"
+        },
+        "Entry": {
+            "bsonType": "objectId"
+        },
+        "Forms": {
+            "bsonType": "string"
+        },
+        "GrammaticalClass": {
+            "bsonType": "long"
+        },
+        "Notes": {
+            "bsonType": "string"
+        },
+        "NounDeclensions": {
+            "bsonType": "string"
+        },
+        "PartOfSpeech": {
+            "bsonType": "long"
+        },
+        "UpdatedAt": {
+            "bsonType": "date"
+        },
+        "VerbTenses": {
+            "bsonType": "string"
+        },
+        "_id": {
+            "bsonType": "objectId"
+        }
+    },
+    "required": [
+        "_id",
+        "GrammaticalClass",
+        "PartOfSpeech",
+        "CreatedAt",
+        "UpdatedAt"
+    ],
+    "title": "Word"
+}

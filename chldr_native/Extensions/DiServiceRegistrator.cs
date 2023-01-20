@@ -1,10 +1,12 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Services;
+using chldr_shared;
 using chldr_shared.Pages;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
 using chldr_shared.ViewModels;
 using FluentValidation;
+using System.Reflection.PortableExecutable;
 
 namespace chldr_native.Extensions
 {
@@ -21,6 +23,8 @@ namespace chldr_native.Extensions
         {
             mauiAppBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
             mauiAppBuilder.Services.AddSingleton<ContentStore>();
+            mauiAppBuilder.Services.AddScoped<JsInterop>();
+
             mauiAppBuilder.Services.AddLocalization();
             return mauiAppBuilder;
         }

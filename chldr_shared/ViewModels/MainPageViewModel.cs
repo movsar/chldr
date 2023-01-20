@@ -14,6 +14,7 @@ using System.Windows.Input;
 using Microsoft.AspNetCore.Components;
 using chldr_shared.Stores;
 using chldr_shared.Factories;
+using System.Reflection;
 
 namespace chldr_shared.ViewModels
 {
@@ -36,7 +37,10 @@ namespace chldr_shared.ViewModels
         private Stopwatch _stopWatch = new Stopwatch();
         public ElementReference entriesListViewReference;
         public ElementReference searchInputReference;
+        private volatile bool _databaseInitialized;
+        private bool firstTimeRendered = true;
         #endregion
+        [Inject] JsInterop ExampleJsInterop { get; set; }
 
         protected override void OnInitialized()
         {
@@ -46,13 +50,20 @@ namespace chldr_shared.ViewModels
             ContentStore.CurrentEntriesUpdated += ContentStore_CurrentEntriesUpdated;
         }
 
+        protected override async void OnAfterRender(bool firstRender)
+        {
+            base.OnAfterRender(firstRender);
+            if (firstTimeRendered)
+            {
+                firstTimeRendered = false;
+                await Task.Delay(500);
+                await ExampleJsInterop.ClickShowRandoms();
+            }
+        }
+
         private void ContentStore_DatabaseInitialized()
         {
-            var isWeb = Environment.StackTrace.Contains("chldr_server.Pages.Pages__Host.ExecuteAsync()");
-            if (!isWeb)
-            {
-                ShowRandoms();
-            }
+            _databaseInitialized = true;
         }
 
         #region EventHandlers

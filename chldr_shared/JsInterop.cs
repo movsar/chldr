@@ -1,4 +1,5 @@
 using Microsoft.JSInterop;
+using System.Diagnostics;
 
 namespace chldr_shared
 {
@@ -9,20 +10,33 @@ namespace chldr_shared
     // This class can be registered as scoped DI service and then injected into Blazor
     // components for use.
 
-    public class ExampleJsInterop : IAsyncDisposable
+    public class JsInterop : IAsyncDisposable
     {
         private readonly Lazy<Task<IJSObjectReference>> moduleTask;
 
-        public ExampleJsInterop(IJSRuntime jsRuntime)
+        public JsInterop(IJSRuntime jsRuntime)
         {
             moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
-                "import", "./_content/chldr_shared/exampleJsInterop.js").AsTask());
+                "import", "./_content/chldr_shared/jsInterop.js").AsTask());
         }
 
         public async ValueTask<string> Prompt(string message)
         {
             var module = await moduleTask.Value;
             return await module.InvokeAsync<string>("showPrompt", message);
+        }
+
+        public async ValueTask ClickShowRandoms()
+        {
+            try
+            {
+                var module = await moduleTask.Value;
+                await module.InvokeAsync<string>("clickShowRandoms");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error while clicking");
+            }
         }
 
         public async ValueTask DisposeAsync()

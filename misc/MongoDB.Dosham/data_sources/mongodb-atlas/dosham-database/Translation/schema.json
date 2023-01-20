@@ -1,0 +1,42 @@
+{
+    "bsonType": "object",
+    "properties": {
+        "Content": {
+            "bsonType": "string"
+        },
+        "CreatedAt": {
+            "bsonType": "date"
+        },
+        "Entry": {
+            "bsonType": "objectId"
+        },
+        "Language": {
+            "bsonType": "objectId"
+        },
+        "Notes": {
+            "bsonType": "string"
+        },
+        "Rate": {
+            "bsonType": "long"
+        },
+        "RawContents": {
+            "bsonType": "string"
+        },
+        "UpdatedAt": {
+            "bsonType": "date"
+        },
+        "User": {
+            "bsonType": "objectId"
+        },
+        "_id": {
+            "bsonType": "objectId"
+        }
+    },
+    "required": [
+        "_id",
+        "Rate",
+        "CreatedAt",
+        "UpdatedAt"
+    ],
+    "title": "Translation"
+}

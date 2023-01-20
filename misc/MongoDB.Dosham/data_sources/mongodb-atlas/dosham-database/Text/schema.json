@@ -1,0 +1,26 @@
+{
+    "bsonType": "object",
+    "properties": {
+        "Content": {
+            "bsonType": "string"
+        },
+        "CreatedAt": {
+            "bsonType": "date"
+        },
+        "Entry": {
+            "bsonType": "objectId"
+        },
+        "UpdatedAt": {
+            "bsonType": "date"
+        },
+        "_id": {
+            "bsonType": "objectId"
+        }
+    },
+    "required": [
+        "_id",
+        "CreatedAt",
+        "UpdatedAt"
+    ],
+    "title": "Text"
+}
