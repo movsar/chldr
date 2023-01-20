@@ -23,10 +23,16 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
             dotnet-version: ${{env.NETCORE_VERSION}}
-        
+            
+      - name: Install MAUI
+        run: | 
+            dotnet nuget locals all --clear
+            dotnet workload install maui --source https://aka.ms/dotnet6/nuget/index.json --source https://api.nuget.org/v3/index.json
+            dotnet workload install android ios maccatalyst macos maui --source https://aka.ms/dotnet6/nuget/index.json --source https://api.nuget.org/v3/index.json
+      
       - name: Restore
         run: dotnet restore
-
+        
       - name: Build
         run: dotnet build chldr_server/chldr_server.csproj --no-restore -c Release
 
