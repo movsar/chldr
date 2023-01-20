@@ -33,7 +33,7 @@ namespace chldr_shared.Stores
             var dataOps = new DatabaseOperations();
             dataOps.RunMaintenance();
             _dataAccess.DatabaseInitialized += (() => { DatabaseInitialized?.Invoke(); });
-        }
+        }   
 
         #endregion
 
