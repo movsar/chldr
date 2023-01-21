@@ -23,13 +23,21 @@ namespace chldr_shared.Validators
 
             RuleFor(x => x.Username)
                 .Length(3, 16)
-                .Matches("[A-zА-я0-9Ӏӏ]+")
-                .WithMessage(stringLocalizer["Error:Invalid_username"]);
+                .Matches("^[A-zА-я0-9Ӏӏ]+$")
+                .WithMessage(stringLocalizer["Error:Invalid_username"])
+                .Unless(x => string.IsNullOrWhiteSpace(x.Username));
 
             RuleFor(x => x.FirstName)
                 .Length(3, 16)
-                .Matches("[A-zА-я- Ӏӏ]+")
-                .WithMessage(stringLocalizer["Error:Invalid_name"]);
+                .Matches("^[A-zА-я0-9Ӏӏ]+$")
+                .WithMessage(stringLocalizer["Error:Invalid_name"])
+                .Unless(x => string.IsNullOrWhiteSpace(x.FirstName));
+
+            RuleFor(x => x.LastName)
+               .Length(3, 16)
+               .Matches("^[A-zА-я0-9Ӏӏ]+$")
+               .WithMessage(stringLocalizer["Error:Invalid_name"])
+               .Unless(x => string.IsNullOrWhiteSpace(x.LastName));
         }
     }
 }
