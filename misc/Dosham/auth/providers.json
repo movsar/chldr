@@ -1,0 +1,40 @@
+{
+    "anon-user": {
+        "name": "anon-user",
+        "type": "anon-user",
+        "disabled": false
+    },
+    "api-key": {
+        "name": "api-key",
+        "type": "api-key",
+        "disabled": true
+    },
+    "local-userpass": {
+        "name": "local-userpass",
+        "type": "local-userpass",
+        "config": {
+            "autoConfirm": false,
+            "confirmEmailSubject": "Confirm your email address",
+            "confirmationFunctionName": "SendEmailConfirmationLink",
+            "emailConfirmationUrl": "https://dosham.azurewebsites.net/api/user/confirmEmail/",
+            "resetFunctionName": "ResetPassword",
+            "resetPasswordSubject": "Password Reset Link",
+            "resetPasswordUrl": "https://dosham.azurewebsites.net/api/user/passwordReset/",
+            "runConfirmationFunction": true,
+            "runResetFunction": true
+        },
+        "disabled": false
+    },
+    "oauth2-google": {
+        "name": "oauth2-google",
+        "type": "oauth2-google",
+        "config": {
+            "clientId": "777",
+            "openId": true
+        },
+        "secret_config": {
+            "clientSecret": "my_secret"
+        },
+        "disabled": false
+    }
+}

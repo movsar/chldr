@@ -1,0 +1,29 @@
+{
+    "bsonType": "object",
+    "properties": {
+        "CreatedAt": {
+            "bsonType": "date"
+        },
+        "Path": {
+            "bsonType": "string"
+        },
+        "UpdatedAt": {
+            "bsonType": "date"
+        },
+        "User": {
+            "bsonType": "objectId"
+        },
+        "Word": {
+            "bsonType": "objectId"
+        },
+        "_id": {
+            "bsonType": "objectId"
+        }
+    },
+    "required": [
+        "_id",
+        "CreatedAt",
+        "UpdatedAt"
+    ],
+    "title": "Image"
+}

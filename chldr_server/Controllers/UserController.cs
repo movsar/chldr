@@ -15,13 +15,58 @@ namespace chldr_server.Controllers
         private readonly IDataAccess _dataAccess;
         private readonly Serilog.Core.Logger _logger;
 
-        public UserController(IDataAccess dataAccess)
+
+        // Fired when user submits password reset form
+        [HttpGet("sendResetPasswordEmail")]
+        public ActionResult<string> SendResetPasswordEmail(string token, string tokenId, string email)
         {
-            _dataAccess = dataAccess;
-            _logger = new LoggerConfiguration()
-                          .WriteTo.File(Path.Combine(AppContext.BaseDirectory, "logs", "log.txt"), rollingInterval: RollingInterval.Year)
-                          .CreateLogger();
+            return $"token:{token}, tokenId:{tokenId}, email:{email}";
         }
+
+        // Fired when user follows with the password reset link from the email,
+        [HttpGet("resetPassword")]
+        public async Task<ActionResult<bool>> ResetPassword([FromQuery] string newPassword, [FromQuery] string email, [FromQuery] string token, [FromQuery] string tokenId)
+        {
+            try
+            {
+                await _dataAccess.App.EmailPasswordAuth.ResetPasswordAsync(newPassword, token, tokenId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                _logger.Write(Serilog.Events.LogEventLevel.Debug, ex.StackTrace);
+
+                return false;
+            }
+        }
+
+        // Fired when user submits registration form
+        [HttpGet("sendConfirmationEmail")]
+        public ActionResult<string> SendConfirmationEmail(string email, string token, string tokenId)
+        {
+            return $"token:{token}, tokenId:{tokenId}, email:{email}";
+        }
+
+        // Fired when user follows with the confirm email link from the email,
+        [HttpGet("confirmEmail")]
+        public async Task<ActionResult<bool>> Confirm([FromQuery] string token, [FromQuery] string tokenId)
+        {
+            try
+            {
+                await _dataAccess.App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                _logger.Write(Serilog.Events.LogEventLevel.Debug, ex.StackTrace);
+
+                return false;
+            }
+        }
+
+      
 
         [HttpGet]
         public ActionResult<string> Get()
@@ -29,39 +74,12 @@ namespace chldr_server.Controllers
             return "Where's the will, there's the way";
         }
 
-        [HttpGet]
-        [Route("ConfirmEmail")]
-        public async Task<ActionResult<string>> ConfirmEmail([FromQuery] string token, [FromQuery] string tokenId)
+        public UserController(IDataAccess dataAccess)
         {
-            try
-            {
-                await _dataAccess.App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
-                return Redirect("https://nohchiyn-mott.com/login/?emailConfirmed=true");
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.Message);
-                _logger.Write(Serilog.Events.LogEventLevel.Debug, ex.StackTrace);
-
-                return new { error = "Something went wrong :( " }.ToJson();
-            }
-        }
-
-        [HttpGet("PasswordReset")]
-        public async Task<ActionResult<string>> PasswordReset([FromQuery] string newPassword, [FromQuery] string token, [FromQuery] string tokenId)
-        {
-            try
-            {
-                await _dataAccess.App.EmailPasswordAuth.ResetPasswordAsync(newPassword, token, tokenId);
-                return Redirect("https://nohchiyn-mott.com/login/?passwordChanged=true");
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.Message);
-                _logger.Write(Serilog.Events.LogEventLevel.Debug, ex.StackTrace);
-
-                return new { error = "Something went wrong :( " }.ToJson();
-            }
+            _dataAccess = dataAccess;
+            _logger = new LoggerConfiguration()
+                          .WriteTo.File(Path.Combine(AppContext.BaseDirectory, "logs", "log.txt"), rollingInterval: RollingInterval.Year)
+                          .CreateLogger();
         }
 
     }

@@ -1,0 +1,10 @@
+[
+    {
+        "name": "SendPasswordResetLink",
+        "private": false
+    },
+    {
+        "name": "SendEmailConfirmationLink",
+        "private": false
+    }
+]
