@@ -33,12 +33,13 @@ namespace chldr_server
 
             app.UseHttpsRedirection();
 
+            app.MapControllers();
+
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.MapBlazorHub();
-            app.MapControllers();
 
             app.MapFallbackToPage("/_Host");
 

@@ -6,7 +6,7 @@ using MongoDB.Bson;
 using Realms.Sync;
 using Serilog;
 
-namespace chldr_api.Controllers
+namespace chldr_server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -21,6 +21,12 @@ namespace chldr_api.Controllers
             _logger = new LoggerConfiguration()
                           .WriteTo.File(Path.Combine(AppContext.BaseDirectory, "logs", "log.txt"), rollingInterval: RollingInterval.Year)
                           .CreateLogger();
+        }
+
+        [HttpGet]
+        public ActionResult<string> Get()
+        {
+            return "Where's the will, there's the way";
         }
 
         [HttpGet]
