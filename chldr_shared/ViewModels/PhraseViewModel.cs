@@ -14,10 +14,8 @@ namespace chldr_shared.ViewModels
 {
     public class PhraseViewModel : EntryViewModelBase
     {
-        [Inject] ContentStore ContentStore { get; set; }
-
-        public string Content { get; set; }
-        public string Notes { get; set; }
+        public string? Content { get; set; }
+        public string? Notes { get; set; }
         public PhraseViewModel(PhraseModel phrase)
         {
             InitializeViewModel(phrase);

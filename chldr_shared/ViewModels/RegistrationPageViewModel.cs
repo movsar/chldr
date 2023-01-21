@@ -18,19 +18,20 @@ namespace chldr_shared.ViewModels
     public class RegistrationPageViewModel : ViewModelBase
     {
         [Inject] UserInfoValidator Validator { get; set; }
-        [Inject] NavigationManager NavigationManager { get; set; }
-        public UserInfoDto UserInfo { get; set; }
+        public UserInfoDto UserInfo { get; set; } = new();
+        public bool FormSubmitted { get; private set; }
+
         public async void SendRegistrationRequest()
         {
             var result = Validator.Validate(this.UserInfo);
             if (!result.IsValid)
             {
-                ErrorMessages.AddRange(result.Errors.Select(err => err.ErrorMessage));
+                ErrorMessages = result.Errors.Select(err => err.ErrorMessage).ToList();
                 return;
             }
 
-            await ContentStore.RegisterNewUser(UserInfo.Email, UserInfo.Password, UserInfo.Username, UserInfo.FirstName, UserInfo.LastName);
-            NavigationManager.NavigateTo("/email-sent");
+            //await ContentStore.RegisterNewUser(UserInfo.Email, UserInfo.Password, UserInfo.Username, UserInfo.FirstName, UserInfo.LastName);
+            FormSubmitted = true;
         }
 
     }

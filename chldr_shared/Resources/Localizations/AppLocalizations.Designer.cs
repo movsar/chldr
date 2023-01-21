@@ -97,6 +97,15 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please check your email and follow the instructions.
+        /// </summary>
+        public static string Check_your_email_and_follow_instructions {
+            get {
+                return ResourceManager.GetString("Check_your_email_and_follow_instructions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm password.
         /// </summary>
         public static string Confirm_password {
@@ -124,11 +133,11 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Registration has been successful, please check your email and follow the included link to activate your profile..
+        ///   Looks up a localized string similar to Email sent.
         /// </summary>
-        public static string Email_sent_message {
+        public static string Email_sent {
             get {
-                return ResourceManager.GetString("Email_sent_message", resourceCulture);
+                return ResourceManager.GetString("Email_sent", resourceCulture);
             }
         }
         
@@ -192,6 +201,15 @@ namespace chldr_shared.Resources.Localizations {
         public static string Forgot_password {
             get {
                 return ResourceManager.GetString("Forgot_password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go back.
+        /// </summary>
+        public static string Go_back {
+            get {
+                return ResourceManager.GetString("Go_back", resourceCulture);
             }
         }
         
@@ -291,6 +309,15 @@ namespace chldr_shared.Resources.Localizations {
         public static string Registration {
             get {
                 return ResourceManager.GetString("Registration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registration has been successful, please check your email and follow the included link to activate your profile..
+        /// </summary>
+        public static string Registration_email_sent_message {
+            get {
+                return ResourceManager.GetString("Registration_email_sent_message", resourceCulture);
             }
         }
         

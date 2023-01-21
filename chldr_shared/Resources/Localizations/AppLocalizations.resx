@@ -129,6 +129,9 @@
   <data name="Basic_form" xml:space="preserve">
     <value>Basic form</value>
   </data>
+  <data name="Check_your_email_and_follow_instructions" xml:space="preserve">
+    <value>Please check your email and follow the instructions</value>
+  </data>
   <data name="Confirm_password" xml:space="preserve">
     <value>Confirm password</value>
   </data>
@@ -138,8 +141,8 @@
   <data name="Email_address" xml:space="preserve">
     <value>email address</value>
   </data>
-  <data name="Email_sent_message" xml:space="preserve">
-    <value>Registration has been successful, please check your email and follow the included link to activate your profile.</value>
+  <data name="Email_sent" xml:space="preserve">
+    <value>Email sent</value>
   </data>
   <data name="Error:Email_not_valid" xml:space="preserve">
     <value>Email is not valid</value>
@@ -161,6 +164,9 @@
   </data>
   <data name="Forgot_password" xml:space="preserve">
     <value>Forgot Password</value>
+  </data>
+  <data name="Go_back" xml:space="preserve">
+    <value>Go back</value>
   </data>
   <data name="Guest" xml:space="preserve">
     <value>Guest</value>
@@ -194,6 +200,9 @@
   </data>
   <data name="Registration" xml:space="preserve">
     <value>Registration</value>
+  </data>
+  <data name="Registration_email_sent_message" xml:space="preserve">
+    <value>Registration has been successful, please check your email and follow the included link to activate your profile.</value>
   </data>
   <data name="Reset_password" xml:space="preserve">
     <value>Reset password</value>

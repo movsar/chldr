@@ -15,15 +15,19 @@ namespace chldr_shared.ViewModels
     {
         [Inject] UserInfoValidator Validator { get; set; }
         public UserInfoDto UserInfo { get; set; } = new();
+        public bool FormSubmitted { get; set; } = false;
         public async void SendPasswordResetRequest()
         {
+            
             var result = Validator.Validate(this.UserInfo);
             if (!result.IsValid)
             {
                 ErrorMessages.AddRange(result.Errors.Select(err => err.ErrorMessage));
                 return;
             }
-            await UserStore.SendPasswordResetRequestAsync(UserInfo.Email);
+            
+            //await UserStore.SendPasswordResetRequestAsync(UserInfo.Email);
+            FormSubmitted = true;
         }
     }
 }

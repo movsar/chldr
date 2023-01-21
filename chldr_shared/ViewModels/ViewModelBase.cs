@@ -14,6 +14,6 @@ namespace chldr_shared.ViewModels
     {
         [Inject] protected ContentStore ContentStore { get; set; }
         [Inject] protected UserStore UserStore { get; set; }
-        public List<string> ErrorMessages { get; } = new();
+        public List<string> ErrorMessages { get; set; } = new();
     }
 }

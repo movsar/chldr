@@ -2,7 +2,7 @@
 @import url('bootstrap/bootstrap.min.css');
 
 .chldr_registration_errors {
-    font-size: 10px;
+    font-size: 16px;
 }
 
 .chldr_entry * :hover ~ .chldr_translation_actions {

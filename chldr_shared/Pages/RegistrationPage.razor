@@ -1,8 +1,6 @@
 ﻿@page "/registration";
-@using FluentValidation;
 
 @inject IStringLocalizer<AppLocalizations> Localizer;
-
 @inherits RegistrationPageViewModel;
 
 <h3>
@@ -11,54 +9,51 @@
 
 <hr />
 
-<div class="col-12 d-flex justify-content-center mt-lg-5">
 
-    <form class="col-6">
-
-        <!-- Email and Username -->
-        <div class="form-outline mb-4">
-            <input type="email" class="form-control" placeholder="@Localizer["Email"]" required @bind="UserInfo.Email" />
-        </div>
-        <div class="form-outline mb-4">
-            <input type="text" class="form-control" placeholder="@Localizer["Username"]" required @bind="UserInfo.Username" />
-        </div>
-
-        <!-- Password -->
-        <div class="form-outline mb-4">
-            <input type="password" class="form-control" placeholder="@Localizer["Password"]" required @bind="UserInfo.Password" />
-        </div>
-
-        <div class="form-outline mb-4">
-            <input type="password" class="form-control" placeholder="@Localizer["Confirm_password"]" required @bind="UserInfo.PasswordConfirmation" />
-        </div>
-
-        <!-- Personal Details -->
-        <div class="form-outline mb-4">
-            <input type="text" class="form-control" placeholder="@Localizer["First_name"]" @bind="UserInfo.FirstName" />
-        </div>
-
-        <div class="form-outline mb-4">
-            <input type="text" class="form-control" placeholder="@Localizer["Last_name"]" @bind="UserInfo.LastName" />
-        </div>
-
-        <!-- Register buttons -->
-        <div class="row d-flex align-content-end">
-            <div class="col">
-                <button type="button" class="btn btn-success btn-block mb-4" @onclick="SendRegistrationRequest">@Localizer["Register"]</button>
-            </div>
-        </div>
-    </form>
-</div>
-
-@if (ErrorMessages.Count() > 0)
+@if (FormSubmitted)
 {
-    <div class="blazor-error-boundary">
+    <EmailSentView></EmailSentView>
+}
+else
+{
+    <div class="col-12 d-flex justify-content-center mt-lg-5">
+        <form class="col-6">
 
-        <div class="chldr_registration_errors">
-            @foreach (var errorMessage in ErrorMessages)
-            {
-                <div>&bull; @errorMessage</div>
-            }
-        </div>
+            <!-- Email and Username -->
+            <div class="form-outline mb-4">
+                <input type="email" class="form-control" placeholder="@Localizer["Email"]" required @bind="UserInfo.Email" />
+            </div>
+            <div class="form-outline mb-4">
+                <input type="text" class="form-control" placeholder="@Localizer["Username"]" required @bind="UserInfo.Username" />
+            </div>
+
+            <!-- Password -->
+            <div class="form-outline mb-4">
+                <input type="password" class="form-control" placeholder="@Localizer["Password"]" required @bind="UserInfo.Password" />
+            </div>
+
+            <div class="form-outline mb-4">
+                <input type="password" class="form-control" placeholder="@Localizer["Confirm_password"]" required @bind="UserInfo.PasswordConfirmation" />
+            </div>
+
+            <!-- Personal Details -->
+            <div class="form-outline mb-4">
+                <input type="text" class="form-control" placeholder="@Localizer["First_name"]" @bind="UserInfo.FirstName" />
+            </div>
+
+            <div class="form-outline mb-4">
+                <input type="text" class="form-control" placeholder="@Localizer["Last_name"]" @bind="UserInfo.LastName" />
+            </div>
+
+            <!-- Register buttons -->
+            <div class="row d-flex align-content-end">
+                <div class="col">
+                    <button type="button" class="btn btn-success btn-block mb-4" @onclick="SendRegistrationRequest">@Localizer["Register"]</button>
+                </div>
+            </div>
+
+            <FormErrorsView ErrorMessages="@ErrorMessages" />
+
+        </form>
     </div>
 }

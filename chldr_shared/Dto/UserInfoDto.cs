@@ -9,14 +9,14 @@ namespace chldr_shared.Dto
 {
     public class UserInfoDto
     {
-        public string Email { get; set; } = string.Empty;
-        public string Username { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-        public string PasswordConfirmation { get; set; } = string.Empty;
-        public int RateWeight { get; set; } = 0;
-        public int Rate { get; set; } = 0;
-        public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-        public string Patronymic { get; set; } = string.Empty;
+        public string Email { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string PasswordConfirmation { get; set; }
+        public int RateWeight { get; set; }
+        public int Rate { get; set; }
+        public string Patronymic { get; set; } 
+        public string FirstName { get; set; } 
+        public string LastName { get; set; } 
     }
 }
