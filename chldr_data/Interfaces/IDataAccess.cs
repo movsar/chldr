@@ -17,8 +17,8 @@ namespace chldr_data.Interfaces
         WordModel GetWordById(ObjectId entityId);
         Task InitializeDatabase();
         Task Login(string email, string password);
-        Task<bool> RegisterNewUserAsync(string email, string password, string username, string firstName, string lastName);
-        Task<bool> SendPasswordResetRequestAsync(string email);
-        Task<bool> UpdatePasswordAsync(string token, string tokenId, string newPassword);
+        Task RegisterNewUserAsync(string email, string password, string username, string firstName, string lastName);
+        Task SendPasswordResetRequestAsync(string email);
+        Task UpdatePasswordAsync(string token, string tokenId, string newPassword);
     }
 }

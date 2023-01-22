@@ -13,37 +13,15 @@ namespace chldr_shared.ViewModels
 {
     public class ResetPasswordPageViewModel : EditFormViewModel<UserInfoDto, UserInfoValidator>
     {
-        [Inject] UserInfoValidator Validator { get; set; }
         public UserInfoDto UserInfo { get; set; } = new();
-        public bool FormSubmitted { get; set; } = false;
-        public bool FormDisabled { get; set; } = false;
-        public async void SendPasswordResetRequest()
+        private async Task SendPasswordResetRequest()
         {
-            // Form validation
-            var result = Validator.Validate(this.UserInfo);
-            if (!result.IsValid)
-            {
-                ErrorMessages.AddRange(result.Errors.Select(err => err.ErrorMessage));
-                return;
-            }
+            await UserStore.SendPasswordResetRequestAsync(UserInfo.Email);
+        }
 
-            // Block controls while processing
-            FormDisabled = true;
-
-            // Act
-            try
-            {
-                await UserStore.SendPasswordResetRequestAsync(UserInfo.Email);
-            }
-            catch (Exception ex)
-            {
-                FormDisabled = false;
-                ErrorMessages.Add(ex.Message);
-            }
-
-            // Notify of success
-            FormSubmitted = true;
-            StateHasChanged();
+        public override async Task ValidateAndSubmit()
+        {
+            await ValidateAndSubmit(UserInfo, new string[] { "Email" }, SendPasswordResetRequest);
         }
     }
 }

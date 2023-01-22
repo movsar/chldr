@@ -13,5 +13,6 @@ namespace chldr_shared.Interfaces
         bool FormDisabled { get; set; }
         bool FormSubmitted { get; set; }
         Task ValidateAndSubmit(TFormDto formDto, string[] validationRuleSets, Func<Task> func);
+        Task ValidateAndSubmit();
     }
 }

@@ -67,19 +67,6 @@ namespace chldr_data.Services
             GotResults?.Invoke(results);
         }
 
-        public async Task<bool> RegisterNewUserAsync(string email, string password, string username, string firstName, string lastName)
-        {
-            try
-            {
-                await App.EmailPasswordAuth.RegisterUserAsync(email, password);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
         public WordModel GetWordById(ObjectId entityId)
         {
             return new WordModel(RealmService.GetRealm().All<Word>().FirstOrDefault(w => w._id == entityId));
@@ -89,31 +76,19 @@ namespace chldr_data.Services
         {
             return new PhraseModel(RealmService.GetRealm().All<Phrase>().FirstOrDefault(p => p._id == entityId));
         }
-
-        public async Task<bool> SendPasswordResetRequestAsync(string email)
+        public async Task RegisterNewUserAsync(string email, string password, string username, string firstName, string lastName)
         {
-            try
-            {
-                await App.EmailPasswordAuth.CallResetPasswordFunctionAsync(email, "");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
+            await App.EmailPasswordAuth.RegisterUserAsync(email, password);
         }
 
-        public async Task<bool> UpdatePasswordAsync(string newPassword, string token, string tokenId)
+        public async Task SendPasswordResetRequestAsync(string email)
         {
-            try
-            {
-                await App.EmailPasswordAuth.ResetPasswordAsync(newPassword, token, tokenId);
-                return true;
-            }
-            catch (Exception)
-            {
-                throw new Exception("whatever");
-            }
+            await App.EmailPasswordAuth.CallResetPasswordFunctionAsync(email, "");
+        }
+
+        public async Task UpdatePasswordAsync(string newPassword, string token, string tokenId)
+        {
+            await App.EmailPasswordAuth.ResetPasswordAsync(newPassword, token, tokenId);
         }
     }
 }

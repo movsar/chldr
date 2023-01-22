@@ -22,7 +22,12 @@ namespace chldr_shared.ViewModels
         public UserInfoDto UserInfo { get; } = new();
         #endregion
 
-        public async void UpdatePassword()
+        private async Task UpdatePassword()
+        {
+            await UserStore.UpdatePasswordAsync(Token, TokenId, UserInfo.Password);
+        }
+
+        public override async Task ValidateAndSubmit()
         {
             var queryParams = HttpUtility.ParseQueryString(new Uri(NavigationManager!.Uri).Query);
             Token = queryParams.Get("token");
@@ -34,12 +39,8 @@ namespace chldr_shared.ViewModels
                 return;
             }
 
-            await ValidateAndSubmit(UserInfo, new string[] { "Password" }, Submit);
+            await ValidateAndSubmit(UserInfo, new string[] { "Password" }, UpdatePassword);
         }
 
-        private async Task Submit()
-        {
-            await UserStore.UpdatePasswordAsync(Token, TokenId, UserInfo.Password);
-        }
     }
 }

@@ -17,6 +17,7 @@ namespace chldr_shared.ViewModels
         public List<string> ErrorMessages { get; set; } = new();
         public bool FormDisabled { get; set; }
         public bool FormSubmitted { get; set; }
+        public abstract Task ValidateAndSubmit();
         public async Task ValidateAndSubmit(TFormDto formDto, string[] validationRuleSets, Func<Task> func)
         {
             // Form validation
@@ -48,10 +49,6 @@ namespace chldr_shared.ViewModels
             StateHasChanged();
 
             return;
-        }
-        private void HandleError(Task failedTask)
-        {
-            var g = 2;
         }
     }
 }
