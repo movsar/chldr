@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace chldr_shared.ViewModels
 {
-    public class ResetPasswordPageViewModel : ViewModelBase
+    public class ResetPasswordPageViewModel : EditFormViewModel<UserInfoDto, UserInfoValidator>
     {
         [Inject] UserInfoValidator Validator { get; set; }
         public UserInfoDto UserInfo { get; set; } = new();

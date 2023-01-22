@@ -48,7 +48,6 @@ namespace chldr_server.Controllers
             var resetPasswordLink = new Uri(QueryHelpers.AddQueryString($"{Constants.Host}/set-new-password", new Dictionary<string, string?>(){
                 { "token", token},
                 { "tokenId", tokenId},
-                { "email", email},
             })).ToString();
 
             var message = new EmailMessage(new string[] { "movsar.dev@gmail.com" },

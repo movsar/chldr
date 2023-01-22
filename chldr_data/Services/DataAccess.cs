@@ -67,9 +67,17 @@ namespace chldr_data.Services
             GotResults?.Invoke(results);
         }
 
-        public async Task RegisterNewUser(string email, string password, string username, string firstName, string lastName)
+        public async Task<bool> RegisterNewUserAsync(string email, string password, string username, string firstName, string lastName)
         {
-            await App.EmailPasswordAuth.RegisterUserAsync(email, password);
+            try
+            {
+                await App.EmailPasswordAuth.RegisterUserAsync(email, password);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public WordModel GetWordById(ObjectId entityId)
@@ -82,9 +90,30 @@ namespace chldr_data.Services
             return new PhraseModel(RealmService.GetRealm().All<Phrase>().FirstOrDefault(p => p._id == entityId));
         }
 
-        public async Task SendPasswordResetRequestAsync(string email)
+        public async Task<bool> SendPasswordResetRequestAsync(string email)
         {
-            await App.EmailPasswordAuth.CallResetPasswordFunctionAsync(email, "");
+            try
+            {
+                await App.EmailPasswordAuth.CallResetPasswordFunctionAsync(email, "");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdatePasswordAsync(string newPassword, string token, string tokenId)
+        {
+            try
+            {
+                await App.EmailPasswordAuth.ResetPasswordAsync(newPassword, token, tokenId);
+                return true;
+            }
+            catch (Exception)
+            {
+                throw new Exception("whatever");
+            }
         }
     }
 }

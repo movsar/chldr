@@ -15,7 +15,7 @@ using chldr_shared.Dto;
 
 namespace chldr_shared.ViewModels
 {
-    public class RegistrationPageViewModel : ViewModelBase
+    public class RegistrationPageViewModel : EditFormViewModel<UserInfoDto, UserInfoValidator>
     {
         [Inject] UserInfoValidator Validator { get; set; }
         public UserInfoDto UserInfo { get; set; } = new();
@@ -30,7 +30,7 @@ namespace chldr_shared.ViewModels
                 return;
             }
 
-            //await ContentStore.RegisterNewUser(UserInfo.Email, UserInfo.Password, UserInfo.Username, UserInfo.FirstName, UserInfo.LastName);
+            await ContentStore.RegisterNewUser(UserInfo.Email, UserInfo.Password, UserInfo.Username, UserInfo.FirstName, UserInfo.LastName);
             FormSubmitted = true;
         }
 

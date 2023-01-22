@@ -22,9 +22,14 @@ namespace chldr_shared.Stores
             await _dataAccess.Login(email, password);
         }
 
-        internal async Task SendPasswordResetRequestAsync(string email)
+        internal async Task<bool> SendPasswordResetRequestAsync(string email)
         {
-            await _dataAccess.SendPasswordResetRequestAsync(email);
+            return await _dataAccess.SendPasswordResetRequestAsync(email);
+        }
+
+        internal async Task<bool> UpdatePasswordAsync(string token, string tokenId, string password)
+        {
+            return await _dataAccess.UpdatePasswordAsync(token, tokenId, password);
         }
     }
 }

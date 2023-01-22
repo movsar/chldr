@@ -384,6 +384,15 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set new password.
+        /// </summary>
+        public static string Set_new_password {
+            get {
+                return ResourceManager.GetString("Set_new_password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Source.
         /// </summary>
         public static string Source {
@@ -398,6 +407,15 @@ namespace chldr_shared.Resources.Localizations {
         public static string Start_typing {
             get {
                 return ResourceManager.GetString("Start_typing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update password.
+        /// </summary>
+        public static string Update_password {
+            get {
+                return ResourceManager.GetString("Update_password", resourceCulture);
             }
         }
         
@@ -425,6 +443,15 @@ namespace chldr_shared.Resources.Localizations {
         public static string You_can_reset_your_password_here {
             get {
                 return ResourceManager.GetString("You_can_reset_your_password_here", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your password has been successfully updated.
+        /// </summary>
+        public static string Your_password_has_been_updated {
+            get {
+                return ResourceManager.GetString("Your_password_has_been_updated", resourceCulture);
             }
         }
     }

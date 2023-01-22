@@ -230,17 +230,26 @@
   <data name="Search" xml:space="preserve">
     <value>Search</value>
   </data>
+  <data name="Set_new_password" xml:space="preserve">
+    <value>Set new password</value>
+  </data>
   <data name="Source" xml:space="preserve">
     <value>Source</value>
   </data>
   <data name="Start_typing" xml:space="preserve">
     <value>Start typing ...</value>
   </data>
+  <data name="Update_password" xml:space="preserve">
+    <value>Update password</value>
+  </data>
   <data name="Username" xml:space="preserve">
     <value>Username</value>
   </data>
   <data name="Verb" xml:space="preserve">
     <value>Verb</value>
+  </data>
+  <data name="Your_password_has_been_updated" xml:space="preserve">
+    <value>Your password has been successfully updated</value>
   </data>
   <data name="You_can_reset_your_password_here" xml:space="preserve">
     <value>You can reset your password here</value>
