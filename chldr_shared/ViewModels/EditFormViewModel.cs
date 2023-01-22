@@ -17,7 +17,7 @@ namespace chldr_shared.ViewModels
         public List<string> ErrorMessages { get; set; } = new();
         public bool FormDisabled { get; set; }
         public bool FormSubmitted { get; set; }
-        public async Task ValidateAndSubmit(TFormDto formDto, string[] validationRuleSets, Func<Task<bool>> func)
+        public async Task ValidateAndSubmit(TFormDto formDto, string[] validationRuleSets, Func<Task> func)
         {
             // Form validation
             var result = DtoValidator?.Validate(formDto, options => { options.IncludeRuleSets(validationRuleSets); });
@@ -32,7 +32,7 @@ namespace chldr_shared.ViewModels
 
             try
             {
-                var r = await func();
+                await func();
             }
             catch (Exception ex)
             {

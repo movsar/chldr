@@ -37,9 +37,9 @@ namespace chldr_shared.ViewModels
             await ValidateAndSubmit(UserInfo, new string[] { "Password" }, Submit);
         }
 
-        private async Task<bool> Submit()
+        private async Task Submit()
         {
-            return await UserStore.UpdatePasswordAsync(Token, TokenId, UserInfo.Password);
+            await UserStore.UpdatePasswordAsync(Token, TokenId, UserInfo.Password);
         }
     }
 }
