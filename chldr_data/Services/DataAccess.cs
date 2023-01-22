@@ -84,7 +84,7 @@ namespace chldr_data.Services
 
         public async Task SendPasswordResetRequestAsync(string email)
         {
-            await App.EmailPasswordAuth.SendResetPasswordEmailAsync(email);
+            await App.EmailPasswordAuth.CallResetPasswordFunctionAsync(email, "");
         }
     }
 }

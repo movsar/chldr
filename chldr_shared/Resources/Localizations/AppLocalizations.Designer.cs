@@ -133,6 +133,50 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;h2&gt;&lt;span style=&apos;font-family:Lucida Sans Unicode,Lucida Grande,sans-serif&apos;&gt;Hello and Welcome!&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;&lt;span style=&apos;font-size:14px&apos;&gt;We&amp;#39;re delighted to have you on board with us! Let&amp;#39;s make Chechen great again!&lt;br /&gt;\r\nTo activate your account, please follow &lt;a href=&apos;{0}&apos;&gt;this link&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&apos;font-size:12px&apos;&gt;This email is auto-generated, do not reply to it, you can always reach us via team@nohchiyn-mott.com&lt;/span&gt;&lt;/p&gt;.
+        /// </summary>
+        public static string Email_Confirm_email_html {
+            get {
+                return ResourceManager.GetString("Email:Confirm_email_html", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please confirm your email.
+        /// </summary>
+        public static string Email_Confirm_email_subject {
+            get {
+                return ResourceManager.GetString("Email:Confirm_email_subject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;h2&gt;&lt;span style=&apos;font-family:Lucida Sans Unicode,Lucida Grande,sans-serif&apos;&gt;Password reset request&lt;/span&gt;&lt;/h2&gt;
+        ///
+        ///&lt;p&gt;&lt;span style=&apos;font-family:Lucida Sans Unicode,Lucida Grande,sans-serif&apos;&gt;We&amp;#39;have received a request to reset your password, please proceed with the link to set a new password, or ignore the message if you didn&amp;#39;t start this process.&lt;/span&gt;&lt;/p&gt;
+        ///
+        ///&lt;p&gt;&lt;span style=&apos;font-family:Lucida Sans Unicode,Lucida Grande,sans-serif&apos;&gt;&lt;a href=&apos;{0}&apos;&gt;Set a new password&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+        ///
+        ///&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+        ///
+        ///&lt;p [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string Email_Reset_password_html {
+            get {
+                return ResourceManager.GetString("Email:Reset_password_html", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password reset.
+        /// </summary>
+        public static string Email_Reset_password_subject {
+            get {
+                return ResourceManager.GetString("Email:Reset_password_subject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email sent.
         /// </summary>
         public static string Email_sent {

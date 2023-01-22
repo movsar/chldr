@@ -2,6 +2,7 @@
 using chldr_data.Services;
 using chldr_shared;
 using chldr_shared.Dto;
+using chldr_shared.Services;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
 using chldr_shared.ViewModels;
@@ -24,6 +25,7 @@ namespace chldr_server.Extensions
             appBuilder.Services.AddSingleton<ContentStore>();
             appBuilder.Services.AddSingleton<UserStore>();
             appBuilder.Services.AddScoped<JsInterop>();
+            appBuilder.Services.AddScoped<EmailService>();
             appBuilder.Services.AddLocalization();
             return appBuilder;
         }

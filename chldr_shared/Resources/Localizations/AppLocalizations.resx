@@ -138,6 +138,26 @@
   <data name="Email" xml:space="preserve">
     <value>Email</value>
   </data>
+  <data name="Email:Confirm_email_html" xml:space="preserve">
+    <value>&lt;h2&gt;&lt;span style='font-family:Lucida Sans Unicode,Lucida Grande,sans-serif'&gt;Hello and Welcome!&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;&lt;span style='font-size:14px'&gt;We&amp;#39;re delighted to have you on board with us! Let&amp;#39;s make Chechen great again!&lt;br /&gt;\r\nTo activate your account, please follow &lt;a href='{0}'&gt;this link&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style='font-size:12px'&gt;This email is auto-generated, do not reply to it, you can always reach us via team@nohchiyn-mott.com&lt;/span&gt;&lt;/p&gt;</value>
+  </data>
+  <data name="Email:Confirm_email_subject" xml:space="preserve">
+    <value>Please confirm your email</value>
+  </data>
+  <data name="Email:Reset_password_html" xml:space="preserve">
+    <value>&lt;h2&gt;&lt;span style='font-family:Lucida Sans Unicode,Lucida Grande,sans-serif'&gt;Password reset request&lt;/span&gt;&lt;/h2&gt;
+
+&lt;p&gt;&lt;span style='font-family:Lucida Sans Unicode,Lucida Grande,sans-serif'&gt;We&amp;#39;have received a request to reset your password, please proceed with the link to set a new password, or ignore the message if you didn&amp;#39;t start this process.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;span style='font-family:Lucida Sans Unicode,Lucida Grande,sans-serif'&gt;&lt;a href='{0}'&gt;Set a new password&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+
+&lt;p&gt;&lt;span style='font-size:12px'&gt;&lt;span style='font-family:Lucida Sans Unicode,Lucida Grande,sans-serif'&gt;This email is auto-generated, do not reply to it, you can always reach us via team@nohchiyn-mott.com&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</value>
+  </data>
+  <data name="Email:Reset_password_subject" xml:space="preserve">
+    <value>Password reset</value>
+  </data>
   <data name="Email_address" xml:space="preserve">
     <value>email address</value>
   </data>

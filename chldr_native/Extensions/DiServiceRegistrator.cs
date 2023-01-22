@@ -3,6 +3,7 @@ using chldr_data.Services;
 using chldr_shared;
 using chldr_shared.Dto;
 using chldr_shared.Pages;
+using chldr_shared.Services;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
 using chldr_shared.ViewModels;
@@ -26,6 +27,7 @@ namespace chldr_native.Extensions
             mauiAppBuilder.Services.AddSingleton<ContentStore>();
             mauiAppBuilder.Services.AddSingleton<UserStore>();
             mauiAppBuilder.Services.AddScoped<JsInterop>();
+            mauiAppBuilder.Services.AddScoped<EmailService>();
 
             mauiAppBuilder.Services.AddLocalization();
             return mauiAppBuilder;
