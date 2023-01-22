@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Components;
 using chldr_shared.Stores;
 using chldr_shared.Factories;
 using System.Reflection;
+using chldr_shared.Services;
+using Microsoft.Extensions.Localization;
 
 namespace chldr_shared.ViewModels
 {

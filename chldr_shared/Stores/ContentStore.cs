@@ -76,7 +76,7 @@ namespace chldr_shared.Stores
 
         internal async Task RegisterNewUser(string email, string password, string username, string firstName, string lastName)
         {
-            await _dataAccess.RegisterNewUser(email, password, username, firstName, lastName);
+            await _dataAccess.RegisterNewUserAsync(email, password, username, firstName, lastName);
         }
 
         #endregion

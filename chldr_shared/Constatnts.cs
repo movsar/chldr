@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data
+namespace chldr_shared
 {
     public static class Constants
     {
-        public const string myRealmAppId = "dosham-lxwuu";
+        public const string Host = "https://dosham.azurewebsites.net";
     }
 }

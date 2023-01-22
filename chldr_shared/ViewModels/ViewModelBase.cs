@@ -1,6 +1,9 @@
-﻿using chldr_shared.Stores;
+﻿using chldr_shared.Resources.Localizations;
+using chldr_shared.Services;
+using chldr_shared.Stores;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,6 +17,6 @@ namespace chldr_shared.ViewModels
     {
         [Inject] protected ContentStore ContentStore { get; set; }
         [Inject] protected UserStore UserStore { get; set; }
-        public List<string> ErrorMessages { get; set; } = new();
+        [Inject] protected IStringLocalizer<AppLocalizations> Localizer { get; set; }
     }
 }
