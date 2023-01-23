@@ -42,7 +42,7 @@ namespace chldr_native.Extensions
 #elif MACCATALYST
             platform = Platforms.MacCatalyst;
 #endif
-            mauiAppBuilder.Services.AddSingleton(new EnvironmentService(platform));
+            mauiAppBuilder.Services.AddScoped<EnvironmentService>(x => new EnvironmentService(platform));
             return mauiAppBuilder;
         }
         public static MauiAppBuilder RegisterViewModels(this MauiAppBuilder mauiAppBuilder)

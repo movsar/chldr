@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\chldr_data\chldr_data.csproj" />
-    <ProjectReference Include="..\chldr_data\chldr_data.csproj" />
     <ProjectReference Include="..\chldr_shared\chldr_shared.csproj" />
   </ItemGroup>
 

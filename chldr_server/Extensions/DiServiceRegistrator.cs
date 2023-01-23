@@ -30,7 +30,7 @@ namespace chldr_server.Extensions
             appBuilder.Services.AddSingleton<UserStore>();
             appBuilder.Services.AddScoped<JsInterop>();
             appBuilder.Services.AddScoped<EmailService>();
-            appBuilder.Services.AddSingleton(new EnvironmentService(Platforms.Web));
+            appBuilder.Services.AddScoped<EnvironmentService>(x => new EnvironmentService(Platforms.Web));
 
             return appBuilder;
         }
