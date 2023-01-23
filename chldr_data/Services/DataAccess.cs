@@ -63,19 +63,7 @@ namespace chldr_data.Services
             var fileService = new FileService();
             fileService.PrepareDatabase();
 
-            RealmService.DatabaseInitialized += async () =>
-            {
-                // Dangerous stuff
-                await Database.Subscriptions.WaitForSynchronizationAsync();
-
-                Database.Write(() =>
-                {
-                    //var cd = App.CurrentUser.GetCustomData();
-                    //cd.Add("FirstName", "Movsar");
-                });
-
-                DatabaseInitialized?.Invoke();
-            };
+            RealmService.DatabaseInitialized += () => DatabaseInitialized?.Invoke();
             Task.Run(() => RealmService.Initialize());
         }
 
