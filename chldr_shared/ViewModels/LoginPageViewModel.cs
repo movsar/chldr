@@ -1,5 +1,7 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Services;
+using chldr_shared.Dto;
+using chldr_shared.Validators;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
@@ -9,14 +11,13 @@ using System.Threading.Tasks;
 
 namespace chldr_shared.ViewModels
 {
-    public class LoginPageViewModel : ViewModelBase
+    public class LoginPageViewModel : EditFormViewModel<UserInfoDto, UserInfoValidator>
     {
         #region Fields
         #endregion
 
         #region Properties
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public UserInfoDto UserInfo { get; set; }
         #endregion
 
         public void SignInWithGoogle() { }
@@ -25,14 +26,13 @@ namespace chldr_shared.ViewModels
         public void SignInWithFacebook() { }
         public async Task SignInWithEmailPassword()
         {
-            try
-            {
-                await UserStore.LogInEmailPassword(Email, Password);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            await UserStore.LogInEmailPasswordAsync(UserInfo.Email, UserInfo.Email);
+        }
+        public override async Task ValidateAndSubmit()
+        {
+            await ValidateAndSubmit(UserInfo, new string[] {
+                nameof(UserInfo.Email), nameof(UserInfo.Password)
+            }, SignInWithEmailPassword);
         }
     }
 }

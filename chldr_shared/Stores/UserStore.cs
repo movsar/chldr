@@ -17,9 +17,9 @@ namespace chldr_shared.Stores
         {
             _dataAccess = dataAccess;
         }
-        public async Task LogInEmailPassword(string email, string password)
+        public async Task LogInEmailPasswordAsync(string email, string password)
         {
-            await _dataAccess.Login(email, password);
+            await _dataAccess.LogInEmailPasswordAsync(email, password);
         }
 
         internal async Task SendPasswordResetRequestAsync(string email)

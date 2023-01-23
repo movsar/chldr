@@ -1,4 +1,5 @@
 ﻿using chldr_data.Entities;
+using chldr_data.Enums;
 using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
@@ -6,6 +7,7 @@ using chldr_data.Search;
 using chldr_data.Services.PartialMethods;
 using MongoDB.Bson;
 using Realms.Sync;
+using System.Linq;
 using Entry = chldr_data.Entities.Entry;
 
 namespace chldr_data.Services
@@ -26,8 +28,9 @@ namespace chldr_data.Services
         public const int RandomEntriesLimit = 30;
         #endregion
 
-        public async Task Login(string email, string password)
+        public async Task LogInEmailPasswordAsync(string email, string password)
         {
+            //await RealmService.GetApp().CurrentUser.LogOutAsync();
             await App.LogInAsync(Credentials.EmailPassword(email, password));
         }
         public async Task InitializeDatabase()
@@ -58,7 +61,15 @@ namespace chldr_data.Services
             var fileService = new FileService();
             fileService.PrepareDatabase();
 
-            RealmService.DatabaseInitialized += () => { DatabaseInitialized?.Invoke(); };
+            RealmService.DatabaseInitialized += async () =>
+            {
+                // Dangerous stuff
+                var realm = RealmService.GetRealm();
+                await realm.Subscriptions.WaitForSynchronizationAsync();
+
+
+                DatabaseInitialized?.Invoke();
+            };
             Task.Run(() => RealmService.Initialize());
         }
 
@@ -86,7 +97,7 @@ namespace chldr_data.Services
             await App.EmailPasswordAuth.CallResetPasswordFunctionAsync(email, "somerandomsuperhardpassword");
         }
 
-        public async Task UpdatePasswordAsync(string newPassword, string token, string tokenId)
+        public async Task UpdatePasswordAsync(string token, string tokenId, string newPassword)
         {
             await App.EmailPasswordAuth.ResetPasswordAsync(newPassword, token, tokenId);
         }

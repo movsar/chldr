@@ -1,0 +1,21 @@
+{
+    "collection": "Entry",
+    "database": "dosham-database",
+    "roles": [
+        {
+            "name": "anonymousAccessRole",
+            "apply_when": {
+                "identities": [
+                    {
+                        "providerType": "anonymous"
+                    }
+                ]
+            },
+            "read": true,
+            "write": false,
+            "insert": false,
+            "delete": false,
+            "search": true
+        }
+    ]
+}
