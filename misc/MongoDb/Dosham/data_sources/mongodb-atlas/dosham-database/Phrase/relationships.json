@@ -1,0 +1,8 @@
+{
+    "Entry": {
+        "ref": "#/relationship/mongodb-atlas/dosham-database/Entry",
+        "source_key": "Entry",
+        "foreign_key": "_id",
+        "is_list": false
+    }
+}

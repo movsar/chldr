@@ -1,0 +1,31 @@
+{
+    "bsonType": "object",
+    "properties": {
+        "CreatedAt": {
+            "bsonType": "date"
+        },
+        "Path": {
+            "bsonType": "string"
+        },
+        "UpdatedAt": {
+            "bsonType": "date"
+        },
+        "UserId": {
+            "bsonType": "long"
+        },
+        "WordId": {
+            "bsonType": "long"
+        },
+        "_id": {
+            "bsonType": "objectId"
+        }
+    },
+    "required": [
+        "_id",
+        "UserId",
+        "WordId",
+        "CreatedAt",
+        "UpdatedAt"
+    ],
+    "title": "Sound"
+}

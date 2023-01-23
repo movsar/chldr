@@ -1,0 +1,8 @@
+{
+    "app_id": "dosham-lxwuu",
+    "config_version": 20210101,
+    "name": "Dosham",
+    "location": "DE-FF",
+    "provider_region": "azure-westeurope",
+    "deployment_model": "LOCAL"
+}

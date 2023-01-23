@@ -22,9 +22,9 @@ namespace chldr_shared.ViewModels
         public UserInfoDto UserInfo { get; } = new();
         #endregion
 
-        private async Task UpdatePassword()
+        private async Task UpdatePasswordAsync()
         {
-            await UserStore.UpdatePasswordAsync(Token, TokenId, UserInfo.Password);
+            await UserStore.UpdatePasswordAsync(Token!, TokenId!, UserInfo.Password);
         }
 
         public override async Task ValidateAndSubmit()
@@ -39,7 +39,7 @@ namespace chldr_shared.ViewModels
                 return;
             }
 
-            await ValidateAndSubmit(UserInfo, new string[] { "Password" }, UpdatePassword);
+            await ValidateAndSubmit(UserInfo, new string[] { "Password" }, UpdatePasswordAsync);
         }
 
     }
