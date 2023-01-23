@@ -25,25 +25,9 @@ namespace chldr_server.Controllers
         private readonly Serilog.Core.Logger _logger;
 
         #region Reset password
-        // Fired when user follows with the password reset link from the email,
-        [HttpGet("resetPassword")]
-        public async Task<ActionResult<bool>> ResetPassword(string token, string tokenId, string newPassword)
-        {
-            try
-            {
-                await _dataAccess.App.EmailPasswordAuth.ResetPasswordAsync(newPassword, token, tokenId);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                LogError(ex);
-                return false;
-            }
-        }
-
         // Fired when user submits password reset form
         [HttpGet("sendResetPasswordEmail")]
-        public ActionResult<bool> SendResetPasswordEmail(string token, string tokenId, string email)
+        public ActionResult SendResetPasswordEmail(string token, string tokenId, string email)
         {
             var resetPasswordLink = new Uri(QueryHelpers.AddQueryString($"{Constants.Host}/set-new-password", new Dictionary<string, string?>(){
                 { "token", token},
@@ -57,12 +41,12 @@ namespace chldr_server.Controllers
             try
             {
                 _emailService.Send(message);
-                return true;
+                return Ok();
             }
             catch (Exception ex)
             {
                 LogError(ex);
-                return false;
+                return new BadRequestResult();
             }
         }
         #endregion
@@ -70,23 +54,23 @@ namespace chldr_server.Controllers
         #region Confirm email
         // Fired when user follows with the confirm email link from the email,
         [HttpGet("confirmEmail")]
-        public async Task<ActionResult<bool>> Confirm(string token, string tokenId, string email)
+        public async Task<ActionResult> Confirm(string token, string tokenId, string email)
         {
             try
             {
                 await _dataAccess.App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
-                return true;
+                return Ok();
             }
             catch (Exception ex)
             {
-                LogError(ex);
-                return false;
+                LogError(ex); 
+                return new BadRequestResult();
             }
         }
 
         // Fired when user submits registration form
         [HttpGet("sendConfirmationEmail")]
-        public ActionResult<bool> SendConfirmationEmail(string token, string tokenId, string email)
+        public ActionResult SendConfirmationEmail(string token, string tokenId, string email)
         {
             var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.Host}/api/user/confirmEmail", new Dictionary<string, string?>(){
                 { "token", token},
@@ -101,12 +85,12 @@ namespace chldr_server.Controllers
             try
             {
                 _emailService.Send(message);
-                return true;
+                return Ok();
             }
             catch (Exception ex)
             {
                 LogError(ex);
-                return false;
+                return new BadRequestResult();
             }
         }
         #endregion
@@ -130,7 +114,7 @@ namespace chldr_server.Controllers
             _emailService = emailService;
             _dataAccess = dataAccess;
             _logger = new LoggerConfiguration()
-                          .WriteTo.File(Path.Combine(AppContext.BaseDirectory, "logs", "log.txt"), rollingInterval: RollingInterval.Year)
+                          .WriteTo.File(Path.Combine(FileService.AppDataDirectory!, "logs", "log.txt"), rollingInterval: RollingInterval.Year)
                           .CreateLogger();
         }
         #endregion

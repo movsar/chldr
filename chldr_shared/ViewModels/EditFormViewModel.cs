@@ -21,7 +21,7 @@ namespace chldr_shared.ViewModels
         public async Task ValidateAndSubmit(TFormDto formDto, string[] validationRuleSets, Func<Task> func)
         {
             // Form validation
-            var result = DtoValidator?.Validate(formDto, options => { options.IncludeRuleSets(validationRuleSets); });
+            var result = DtoValidator?.Validate(formDto, options => options.IncludeRuleSets(validationRuleSets));
             if (result!.IsValid == false)
             {
                 ErrorMessages.AddRange(result.Errors.Select(err => err.ErrorMessage));
