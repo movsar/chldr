@@ -52,7 +52,6 @@ namespace chldr_data.Services
 
             _config = new FlexibleSyncConfiguration(_user, FileService.DatabasePath)
             {
-                SchemaVersion = 3,
                 PopulateInitialSubscriptions = (realm) =>
                 {
                     Debug.WriteLine($"APP: Realm : PopulateInitialSubscriptions");

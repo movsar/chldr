@@ -16,7 +16,7 @@ namespace chldr_data.Entities
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Patronymic { get; set; } = string.Empty;
-        public int Status { get; set; } = (int)UserStatus.Active;
+        public int Status { get; set; }
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
     }

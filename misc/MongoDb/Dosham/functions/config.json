@@ -6,5 +6,9 @@
     {
         "name": "SendEmailConfirmationLink",
         "private": false
+    },
+    {
+        "name": "IsAnonymous",
+        "private": false
     }
 ]

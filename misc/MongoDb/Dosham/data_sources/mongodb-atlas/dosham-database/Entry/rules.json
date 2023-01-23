@@ -16,6 +16,21 @@
             "insert": false,
             "delete": false,
             "search": true
+        },
+        {
+            "name": "readAll",
+            "apply_when": {
+                "%%false": {
+                    "%function": {
+                        "name": "IsAnonymous"
+                    }
+                }
+            },
+            "read": true,
+            "write": false,
+            "insert": false,
+            "delete": false,
+            "search": true
         }
     ]
 }

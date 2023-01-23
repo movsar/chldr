@@ -47,7 +47,7 @@
   The uncommented function below is just a placeholder and will result in failure.
 */
 
-exports = async ({ token, tokenId, username }) => {
+exports = async ({ token, tokenId, username, userId }) => {
   const apiHost = 'dosham.azurewebsites.net';
   const apiActionPath = '/api/user/sendConfirmationEmail';
 
@@ -58,7 +58,8 @@ exports = async ({ token, tokenId, username }) => {
     query: {
       token: [token],
       tokenId: [tokenId],
-      email: [username]
+      email: [username],
+      userId: [userId]
     }
   });
 
