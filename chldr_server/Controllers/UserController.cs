@@ -34,7 +34,7 @@ namespace chldr_server.Controllers
                 { "tokenId", tokenId},
             })).ToString();
 
-            var message = new EmailMessage(new string[] { "movsar.dev@gmail.com" },
+            var message = new EmailMessage(new string[] { email },
               _localizer["Email:Reset_password_subject"],
               _localizer["Email:Reset_password_html", resetPasswordLink]);
 
@@ -52,33 +52,17 @@ namespace chldr_server.Controllers
         #endregion
 
         #region Confirm email
-        // Fired when user follows with the confirm email link from the email,
-        [HttpGet("confirmEmail")]
-        public async Task<ActionResult> Confirm(string token, string tokenId, string email)
-        {
-            try
-            {
-                await _dataAccess.App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                LogError(ex); 
-                return new BadRequestResult();
-            }
-        }
-
         // Fired when user submits registration form
         [HttpGet("sendConfirmationEmail")]
         public ActionResult SendConfirmationEmail(string token, string tokenId, string email)
         {
-            var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.Host}/api/user/confirmEmail", new Dictionary<string, string?>(){
+            var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.Host}/login", new Dictionary<string, string?>(){
                 { "token", token},
                 { "tokenId", tokenId},
                 { "email", email},
             })).ToString();
 
-            var message = new EmailMessage(new string[] { "movsar.dev@gmail.com" },
+            var message = new EmailMessage(new string[] { email },
                 _localizer["Email:Confirm_email_subject"],
                 _localizer["Email:Confirm_email_html", confirmEmailLink]);
 

@@ -1,6 +1,4 @@
 ﻿@page "/registration";
-
-@inject IStringLocalizer<AppLocalizations> Localizer;
 @inherits RegistrationPageViewModel;
 
 <h3>
@@ -22,9 +20,6 @@ else
             <!-- Email and Username -->
             <div class="form-outline mb-4">
                 <input type="email" class="form-control" placeholder="@Localizer["Email"]" required @bind="UserInfo.Email" />
-            </div>
-            <div class="form-outline mb-4">
-                <input type="text" class="form-control" placeholder="@Localizer["Username"]" required @bind="UserInfo.Username" />
             </div>
 
             <!-- Password -->

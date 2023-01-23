@@ -6,6 +6,7 @@ using chldr_data.Models;
 using chldr_data.Search;
 using chldr_data.Services.PartialMethods;
 using MongoDB.Bson;
+using Realms;
 using Realms.Sync;
 using System.Linq;
 using Entry = chldr_data.Entities.Entry;
@@ -16,6 +17,7 @@ namespace chldr_data.Services
     {
         #region Properties
         public Realms.Sync.App App => RealmService.GetApp();
+        public Realm Database => RealmService.GetRealm();
         #endregion
 
         #region Events
@@ -31,7 +33,7 @@ namespace chldr_data.Services
         public async Task LogInEmailPasswordAsync(string email, string password)
         {
             //await RealmService.GetApp().CurrentUser.LogOutAsync();
-            await App.LogInAsync(Credentials.EmailPassword(email, password));
+            var user = await App.LogInAsync(Credentials.EmailPassword(email, password));
         }
         public async Task InitializeDatabase()
         {
@@ -64,9 +66,13 @@ namespace chldr_data.Services
             RealmService.DatabaseInitialized += async () =>
             {
                 // Dangerous stuff
-                var realm = RealmService.GetRealm();
-                await realm.Subscriptions.WaitForSynchronizationAsync();
+                await Database.Subscriptions.WaitForSynchronizationAsync();
 
+                Database.Write(() =>
+                {
+                    //var cd = App.CurrentUser.GetCustomData();
+                    //cd.Add("FirstName", "Movsar");
+                });
 
                 DatabaseInitialized?.Invoke();
             };
@@ -87,7 +93,7 @@ namespace chldr_data.Services
         {
             return new PhraseModel(RealmService.GetRealm().All<Phrase>().FirstOrDefault(p => p._id == entityId));
         }
-        public async Task RegisterNewUserAsync(string email, string password, string username, string firstName, string lastName)
+        public async Task RegisterNewUserAsync(string email, string password)
         {
             await App.EmailPasswordAuth.RegisterUserAsync(email, password);
         }
@@ -100,6 +106,11 @@ namespace chldr_data.Services
         public async Task UpdatePasswordAsync(string token, string tokenId, string newPassword)
         {
             await App.EmailPasswordAuth.ResetPasswordAsync(newPassword, token, tokenId);
+        }
+
+        public async Task ConfirmUserAsync(string token, string tokenId)
+        {
+            await App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
         }
     }
 }

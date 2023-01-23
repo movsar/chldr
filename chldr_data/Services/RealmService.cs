@@ -1,4 +1,5 @@
-﻿using chldr_data.Services.PartialMethods;
+﻿using chldr_data.Entities;
+using chldr_data.Services.PartialMethods;
 using Realms;
 using Realms.Logging;
 using Realms.Sync;
@@ -10,7 +11,7 @@ namespace chldr_data.Services
     internal static class RealmService
     {
         private static App _app;
-        private static User _user;
+        private static Realms.Sync.User _user;
         private static FlexibleSyncConfiguration _config;
         private const string myRealmAppId = "dosham-lxwuu";
 
@@ -42,7 +43,7 @@ namespace chldr_data.Services
             try
             {
                 _user = await _app.LogInAsync(Credentials.Anonymous());
-                
+
             }
             catch (Exception ex)
             {

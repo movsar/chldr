@@ -5,10 +5,10 @@ namespace chldr_shared.ViewModels
 {
     public class RegistrationPageViewModel : EditFormViewModel<UserInfoDto, UserInfoValidator>
     {
-        public UserInfoDto UserInfo { get; set; } = new();
+        public UserInfoDto UserInfo { get; } = new();
         private async Task SendRegistrationRequest()
         {
-            await ContentStore.RegisterNewUser(UserInfo.Email, UserInfo.Password, UserInfo.Username, UserInfo.FirstName, UserInfo.LastName);
+            await ContentStore.RegisterNewUser(UserInfo.Email, UserInfo.Password);
         }
 
         public override async Task ValidateAndSubmit()

@@ -1,5 +1,6 @@
 ﻿using chldr_data.Models;
 using MongoDB.Bson;
+using Realms;
 using Realms.Sync;
 
 namespace chldr_data.Interfaces
@@ -11,14 +12,15 @@ namespace chldr_data.Interfaces
         event Action DatabaseInitialized;
         event Action<SearchResultsModel> GotResults;
 
-        Task FindAsync(string inputText);
+        WordModel GetWordById(ObjectId entityId);
         PhraseModel GetPhraseById(ObjectId entityId);
         IEnumerable<EntryModel> GetRandomEntries();
-        WordModel GetWordById(ObjectId entityId);
+        Task FindAsync(string inputText);
         Task InitializeDatabase();
         Task LogInEmailPasswordAsync(string email, string password);
-        Task RegisterNewUserAsync(string email, string password, string username, string firstName, string lastName);
+        Task RegisterNewUserAsync(string email, string password);
         Task SendPasswordResetRequestAsync(string email);
         Task UpdatePasswordAsync(string token, string tokenId, string newPassword);
+        Task ConfirmUserAsync(string token, string tokenId);
     }
 }

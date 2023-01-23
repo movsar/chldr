@@ -74,9 +74,9 @@ namespace chldr_shared.Stores
             return _dataAccess.GetPhraseById(entryId);
         }
 
-        internal async Task RegisterNewUser(string email, string password, string username, string firstName, string lastName)
+        internal async Task RegisterNewUser(string email, string password)
         {
-            await _dataAccess.RegisterNewUserAsync(email, password, username, firstName, lastName);
+            await _dataAccess.RegisterNewUserAsync(email, password);
         }
 
         #endregion

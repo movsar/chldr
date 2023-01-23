@@ -22,6 +22,11 @@ namespace chldr_shared.Stores
             await _dataAccess.LogInEmailPasswordAsync(email, password);
         }
 
+        internal async Task ConfirmUserAsync(string token, string tokenId)
+        {
+            await _dataAccess.ConfirmUserAsync(token, tokenId);
+        }
+
         internal async Task SendPasswordResetRequestAsync(string email)
         {
             await _dataAccess.SendPasswordResetRequestAsync(email);
