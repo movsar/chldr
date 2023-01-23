@@ -11,7 +11,6 @@ namespace chldr_data.Models
     {
         public ObjectId EntityId { get; }
         public string Email { get; }
-        public string Username { get; }
         public int RateWeight { get; }
         public int Rate { get; }
         public string FirstName { get; }
@@ -19,5 +18,18 @@ namespace chldr_data.Models
         public string Patronymic { get; }
         public DateTimeOffset CreatedAt { get; }
         public DateTimeOffset UpdatedAt { get; }
+
+        public UserModel(Entities.User user)
+        {
+            EntityId = user._id;
+            Email = user.Email;
+            RateWeight = user.RateWeight;
+            Rate = user.Rate;
+            FirstName = user.FirstName;
+            LastName = user.LastName;
+            Patronymic = user.Patronymic;
+            CreatedAt = user.CreatedAt;
+            UpdatedAt = user.UpdatedAt;
+        }
     }
 }

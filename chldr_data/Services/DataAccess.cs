@@ -30,10 +30,13 @@ namespace chldr_data.Services
         public const int RandomEntriesLimit = 30;
         #endregion
 
-        public async Task LogInEmailPasswordAsync(string email, string password)
+        public async Task<UserModel> LogInEmailPasswordAsync(string email, string password)
         {
-            //await RealmService.GetApp().CurrentUser.LogOutAsync();
-            var user = await App.LogInAsync(Credentials.EmailPassword(email, password));
+            var appUser = await App.LogInAsync(Credentials.EmailPassword(email, password));
+            var appUserId = new ObjectId(appUser.Id);
+
+            var user = Database.All<Entities.User>().First(u => u._id == appUserId);
+            return new UserModel(user);
         }
         public async Task InitializeDatabase()
         {
@@ -96,9 +99,20 @@ namespace chldr_data.Services
             await App.EmailPasswordAuth.ResetPasswordAsync(newPassword, token, tokenId);
         }
 
-        public async Task ConfirmUserAsync(string token, string tokenId)
+        public async Task ConfirmUserAsync(string token, string tokenId, string userId, string email)
         {
             await App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
+
+            var customUserData = new Entities.User()
+            {
+                _id = new ObjectId(userId),
+                Email = email,
+            };
+
+            Database.Write(() =>
+            {
+                Database.Add(customUserData);
+            });
         }
     }
 }

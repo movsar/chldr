@@ -44,7 +44,7 @@ namespace chldr_data.Services
                         RawContents = entry.RawContents,
                         Source = _syncedRealm.All<Source>().FirstOrDefault(s => s.Name == entry.Source.Name),
                         Type = entry.Type,
-                        User = _syncedRealm.All<User>().FirstOrDefault(u => u.Username == entry.User.Username),
+                        User = _syncedRealm.All<User>().FirstOrDefault(u => u.Email == entry.User.Email),
                     };
 
                     foreach (var translation in entry.Translations)
@@ -59,7 +59,7 @@ namespace chldr_data.Services
                             RawContents = translation.RawContents,
                             Entry = newEntry,
                             Language = _syncedRealm.All<Language>().FirstOrDefault(l => l.Code == translation.Language.Code),
-                            User = _syncedRealm.All<User>().FirstOrDefault(u => u.Username == translation.User.Username),
+                            User = _syncedRealm.All<User>().FirstOrDefault(u => u.Email == translation.User.Email),
                         };
 
                         newEntry.Translations.Add(newTranslation);
@@ -147,7 +147,6 @@ namespace chldr_data.Services
                         _id = item._id,
                         Email = item.Email,
                         FirstName = item.FirstName,
-                        Username = item.Username,
                         UpdatedAt = item.UpdatedAt,
                     });
                 }

@@ -17,10 +17,10 @@ namespace chldr_data.Interfaces
         IEnumerable<EntryModel> GetRandomEntries();
         Task FindAsync(string inputText);
         Task InitializeDatabase();
-        Task LogInEmailPasswordAsync(string email, string password);
+        Task<UserModel> LogInEmailPasswordAsync(string email, string password);
         Task RegisterNewUserAsync(string email, string password);
         Task SendPasswordResetRequestAsync(string email);
         Task UpdatePasswordAsync(string token, string tokenId, string newPassword);
-        Task ConfirmUserAsync(string token, string tokenId);
+        Task ConfirmUserAsync(string token, string tokenId, string userId, string email);
     }
 }

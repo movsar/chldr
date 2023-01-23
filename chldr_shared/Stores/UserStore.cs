@@ -1,4 +1,5 @@
 ﻿using chldr_data.Interfaces;
+using chldr_data.Models;
 using chldr_data.Services;
 using Realms.Sync;
 using System;
@@ -11,6 +12,7 @@ namespace chldr_shared.Stores
 {
     public class UserStore
     {
+        public UserModel? CurrentUser { get; set; }
         private IDataAccess _dataAccess;
 
         public UserStore(IDataAccess dataAccess)
@@ -19,12 +21,12 @@ namespace chldr_shared.Stores
         }
         public async Task LogInEmailPasswordAsync(string email, string password)
         {
-            await _dataAccess.LogInEmailPasswordAsync(email, password);
+            CurrentUser = await _dataAccess.LogInEmailPasswordAsync(email, password);
         }
 
-        internal async Task ConfirmUserAsync(string token, string tokenId)
+        internal async Task ConfirmUserAsync(string token, string tokenId, string userId, string email)
         {
-            await _dataAccess.ConfirmUserAsync(token, tokenId);
+            await _dataAccess.ConfirmUserAsync(token, tokenId, userId, email);
         }
 
         internal async Task SendPasswordResetRequestAsync(string email)

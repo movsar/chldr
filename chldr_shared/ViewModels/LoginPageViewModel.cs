@@ -18,8 +18,10 @@ namespace chldr_shared.ViewModels
         [Inject] NavigationManager? NavigationManager { get; set; }
         public string? Token { get; set; }
         public string? TokenId { get; set; }
+        public string? UserId { get; set; }
+        public string? Email { get; set; }
         public UserInfoDto UserInfo { get; } = new();
-        public bool UserActivationCompleted { get; private set; }
+        public bool UserActivationCompleted { get; private set; } = false;
         #endregion
 
         public void SignInWithGoogle() { }
@@ -37,14 +39,18 @@ namespace chldr_shared.ViewModels
             var queryParams = HttpUtility.ParseQueryString(new Uri(NavigationManager!.Uri).Query);
             Token = queryParams.Get("token");
             TokenId = queryParams.Get("tokenId");
+            UserId = queryParams.Get("userId");
+            Email = queryParams.Get("email");
 
-            if (string.IsNullOrWhiteSpace(Token) || string.IsNullOrWhiteSpace(TokenId))
+            if (string.IsNullOrWhiteSpace(Token) || string.IsNullOrWhiteSpace(TokenId) || string.IsNullOrWhiteSpace(UserId) || string.IsNullOrWhiteSpace(Email))
             {
                 return;
             }
 
-            await UserStore.ConfirmUserAsync(Token!, TokenId!);
+            await UserStore.ConfirmUserAsync(Token, TokenId, UserId, Email);
             UserActivationCompleted = true;
+
+            StateHasChanged();
         }
 
         protected override async Task OnInitializedAsync()

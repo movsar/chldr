@@ -1,4 +1,5 @@
-﻿using chldr_data.Interfaces;
+﻿using chldr_data.Entities;
+using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Services;
 using chldr_data.Services.PartialMethods;
@@ -54,11 +55,12 @@ namespace chldr_server.Controllers
         #region Confirm email
         // Fired when user submits registration form
         [HttpGet("sendConfirmationEmail")]
-        public ActionResult SendConfirmationEmail(string token, string tokenId, string email)
+        public ActionResult SendConfirmationEmail(string token, string tokenId, string email, string userId)
         {
             var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.Host}/login", new Dictionary<string, string?>(){
                 { "token", token},
                 { "tokenId", tokenId},
+                { "userId", userId},
                 { "email", email},
             })).ToString();
 
