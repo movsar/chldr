@@ -231,6 +231,15 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Password must be at least 6 characters long.
+        /// </summary>
+        public static string Error_Passwords_is_not_valid {
+            get {
+                return ResourceManager.GetString("Error:Passwords_is_not_valid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to First Name.
         /// </summary>
         public static string First_name {

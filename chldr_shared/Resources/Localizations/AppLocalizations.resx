@@ -176,6 +176,9 @@
   <data name="Error:Passwords_dont_match" xml:space="preserve">
     <value>Passwords don't match</value>
   </data>
+  <data name="Error:Passwords_is_not_valid" xml:space="preserve">
+    <value>Password must be at least 6 characters long</value>
+  </data>
   <data name="Error:Password_too_long" xml:space="preserve">
     <value>Password is too long</value>
   </data>

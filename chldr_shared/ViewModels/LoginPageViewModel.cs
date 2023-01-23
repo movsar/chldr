@@ -13,11 +13,8 @@ namespace chldr_shared.ViewModels
 {
     public class LoginPageViewModel : EditFormViewModel<UserInfoDto, UserInfoValidator>
     {
-        #region Fields
-        #endregion
-
         #region Properties
-        public UserInfoDto UserInfo { get; set; }
+        public UserInfoDto UserInfo { get; } = new();
         #endregion
 
         public void SignInWithGoogle() { }
@@ -26,7 +23,7 @@ namespace chldr_shared.ViewModels
         public void SignInWithFacebook() { }
         public async Task SignInWithEmailPassword()
         {
-            await UserStore.LogInEmailPasswordAsync(UserInfo.Email, UserInfo.Email);
+            await UserStore.LogInEmailPasswordAsync(UserInfo.Email, UserInfo.Password);
         }
         public override async Task ValidateAndSubmit()
         {

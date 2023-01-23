@@ -2,6 +2,7 @@
 using chldr_data.Services;
 using chldr_shared;
 using chldr_shared.Dto;
+using chldr_shared.Enums;
 using chldr_shared.Services;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
@@ -21,12 +22,16 @@ namespace chldr_server.Extensions
         }
         public static WebApplicationBuilder RegisterAppServices(this WebApplicationBuilder appBuilder)
         {
+            // Data
             appBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
+
+            // Shared
             appBuilder.Services.AddSingleton<ContentStore>();
             appBuilder.Services.AddSingleton<UserStore>();
             appBuilder.Services.AddScoped<JsInterop>();
             appBuilder.Services.AddScoped<EmailService>();
-            appBuilder.Services.AddLocalization();
+            appBuilder.Services.AddSingleton(new EnvironmentService(Platforms.Web));
+
             return appBuilder;
         }
         public static WebApplicationBuilder RegisterViewModels(this WebApplicationBuilder appBuilder)

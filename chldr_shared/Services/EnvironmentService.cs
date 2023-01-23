@@ -7,22 +7,12 @@ using System.Threading.Tasks;
 
 namespace chldr_shared.Services
 {
-    public static class EnvironmentService
+    public class EnvironmentService
     {
-        public static Platforms CurrentPlatform
+        public Platforms CurrentPlatform { get; }
+        public EnvironmentService(Platforms platform)
         {
-            get
-            {
-#if ANDROID
-                return Platforms.Android;
-#elif IOS
-                return Platforms.IOS;
-#elif WINDOWS
-                return Platforms.Windows;
-#else
-                return Platforms.Web;
-#endif
-            }
+            CurrentPlatform = platform;
         }
     }
 }

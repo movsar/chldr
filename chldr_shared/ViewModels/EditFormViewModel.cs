@@ -20,7 +20,13 @@ namespace chldr_shared.ViewModels
         public abstract Task ValidateAndSubmit();
         public async Task ValidateAndSubmit(TFormDto formDto, string[] validationRuleSets, Func<Task> func)
         {
+            if (formDto == null)
+            {
+                throw new NullReferenceException("formDto is null!");
+            }
+
             // Form validation
+            ErrorMessages.Clear();
             var result = DtoValidator?.Validate(formDto, options => options.IncludeRuleSets(validationRuleSets));
             if (result!.IsValid == false)
             {
@@ -40,7 +46,6 @@ namespace chldr_shared.ViewModels
                 FormDisabled = false;
                 ErrorMessages.Add(ex.Message);
                 StateHasChanged();
-
                 return;
             }
 

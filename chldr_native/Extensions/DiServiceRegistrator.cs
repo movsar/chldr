@@ -2,6 +2,7 @@
 using chldr_data.Services;
 using chldr_shared;
 using chldr_shared.Dto;
+using chldr_shared.Enums;
 using chldr_shared.Pages;
 using chldr_shared.Services;
 using chldr_shared.Stores;
@@ -23,13 +24,25 @@ namespace chldr_native.Extensions
         }
         public static MauiAppBuilder RegisterAppServices(this MauiAppBuilder mauiAppBuilder)
         {
+            // Data
             mauiAppBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
+
+            // Shared
             mauiAppBuilder.Services.AddSingleton<ContentStore>();
             mauiAppBuilder.Services.AddSingleton<UserStore>();
             mauiAppBuilder.Services.AddScoped<JsInterop>();
             mauiAppBuilder.Services.AddScoped<EmailService>();
-
-            mauiAppBuilder.Services.AddLocalization();
+            var platform = Platforms.Web;
+#if ANDROID
+            platform = Platforms.Android;
+#elif IOS
+            platform = Platforms.IOS;
+#elif WINDOWS
+            platform = Platforms.Windows;
+#elif MACCATALYST
+            platform = Platforms.MacCatalyst;
+#endif
+            mauiAppBuilder.Services.AddSingleton(new EnvironmentService(platform));
             return mauiAppBuilder;
         }
         public static MauiAppBuilder RegisterViewModels(this MauiAppBuilder mauiAppBuilder)

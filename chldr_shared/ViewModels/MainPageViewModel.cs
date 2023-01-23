@@ -41,7 +41,8 @@ namespace chldr_shared.ViewModels
         private volatile bool _databaseInitialized;
         private bool firstTimeRendered = true;
         #endregion
-        [Inject] JsInterop ExampleJsInterop { get; set; }
+        [Inject] JsInterop? JsInteropFunctions { get; set; }
+        [Inject] EnvironmentService? EnvironmentService { get; set; }
 
         protected override void OnInitialized()
         {
@@ -54,17 +55,22 @@ namespace chldr_shared.ViewModels
         protected override async void OnAfterRender(bool firstRender)
         {
             base.OnAfterRender(firstRender);
-            if (firstTimeRendered)
+            if (EnvironmentService!.CurrentPlatform == Enums.Platforms.Web && firstTimeRendered)
             {
                 firstTimeRendered = false;
                 await Task.Delay(500);
-                await ExampleJsInterop.ClickShowRandoms();
+                await JsInteropFunctions!.ClickShowRandoms();
             }
         }
 
         private void MyContentStore_DatabaseInitialized()
         {
             _databaseInitialized = true;
+            if (EnvironmentService!.CurrentPlatform != Enums.Platforms.Web)
+            {
+                firstTimeRendered = false;
+                ShowRandoms();
+            }
         }
 
         #region EventHandlers

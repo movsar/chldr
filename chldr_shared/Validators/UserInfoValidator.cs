@@ -13,8 +13,9 @@ namespace chldr_shared.Validators
             RuleSet("Password", () =>
             {
                 RuleFor(x => x.Password)
-                .Length(6, 30)
-                .WithMessage(stringLocalizer["Error:Passwords_dont_match"]);
+                .NotEmpty()
+                .Length(6, 100)
+                .WithMessage(stringLocalizer["Error:Passwords_is_not_valid"]);
 
                 RuleFor(x => x.Password)
                 .Equal(x => x.PasswordConfirmation)
@@ -40,7 +41,7 @@ namespace chldr_shared.Validators
             RuleSet("Email", () =>
             {
                 RuleFor(x => x.Email)
-                .NotNull()
+                .NotEmpty()
                 .Length(5, 100)
                 .EmailAddress()
                 .WithMessage(stringLocalizer["Error:Email_not_valid"]);

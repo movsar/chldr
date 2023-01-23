@@ -12,5 +12,6 @@ namespace chldr_shared.Enums
         Windows = 1,
         Android = 2,
         IOS = 3,
+        MacCatalyst = 4,
     }
 }

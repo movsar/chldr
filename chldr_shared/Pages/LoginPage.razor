@@ -1,48 +1,53 @@
 ﻿@page "/login";
-@inject IStringLocalizer<AppLocalizations> Localizer;
+@inherits LoginPageViewModel;
 
 <div class="col-12 d-flex justify-content-center mt-lg-5">
 
     <form class="col-6">
         <!-- Email input -->
         <div class="form-outline mb-4">
-            <input type="email" class="form-control" placeholder="@Localizer["Email"]" />
+            <input type="email" class="form-control"
+                   placeholder="@Localizer["Email"]" @bind="UserInfo.Email" />
         </div>
 
         <!-- Password input -->
         <div class="form-outline mb-4">
-            <input type="password" class="form-control" placeholder="@Localizer["Password"]" />
+            <input type="password" class="form-control"
+                   placeholder="@Localizer["Password"]" @bind="UserInfo.Password" />
         </div>
 
         <div class="row d-flex">
             <div class="col">
-                <button type="button" class="btn btn-primary btn-block mb-4">@Localizer["Log_in"]</button>
+                <button type="button" class="btn btn-primary btn-block mb-4" @onclick="ValidateAndSubmit">@Localizer["Log_in"]</button>
                 <a href="/registration">
                     <button type="button" class="btn btn-primary btn-block mb-4">@Localizer["Register"]</button>
                 </a>
             </div>
         </div>
 
-        <a href="#!">@Localizer["Forgot_password"]?</a>
+        <a href="/password-reset">@Localizer["Forgot_password"]?</a>
         <!-- Submit button -->
         <!-- Register buttons -->
-        <div class="text-center">
-            <p>@Localizer["Or_sign_up_with:"]</p>
-            <button type="button" class="btn btn-link btn-floating mx-1">
-                <i class="fab fa-facebook-f"></i>
-            </button>
+        @*  <div class="text-center">
+        <p>@Localizer["Or_sign_up_with:"]</p>
+        <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fab fa-facebook-f"></i>
+        </button>
 
-            <button type="button" class="btn btn-link btn-floating mx-1">
-                <i class="fab fa-google"></i>
-            </button>
+        <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fab fa-google"></i>
+        </button>
 
-            <button type="button" class="btn btn-link btn-floating mx-1">
-                <i class="fab fa-twitter"></i>
-            </button>
+        <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fab fa-twitter"></i>
+        </button>
 
-            <button type="button" class="btn btn-link btn-floating mx-1">
-                <i class="fab fa-github"></i>
-            </button>
-        </div>
+        <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fab fa-github"></i>
+        </button>
+        </div>*@
+
+        <FormErrorsView ErrorMessages="@ErrorMessages" />
+
     </form>
 </div>
