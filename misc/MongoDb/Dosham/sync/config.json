@@ -1,13 +1,20 @@
 {
     "type": "flexible",
     "state": "enabled",
-    "development_mode_enabled": true,
+    "development_mode_enabled": false,
     "service_name": "mongodb-atlas",
     "database_name": "dosham-database",
     "client_max_offline_days": 30,
     "is_recovery_mode_disabled": false,
     "permissions": {
         "rules": {},
-        "defaultRoles": []
+        "defaultRoles": [
+            {
+                "name": "read-write",
+                "applyWhen": {},
+                "read": true,
+                "write": true
+            }
+        ]
     }
 }

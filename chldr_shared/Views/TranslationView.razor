@@ -1,28 +1,34 @@
-﻿<div class="chldr_translation card-subtitle">
-    <span class="chldr_translation_language-code">
-        @ViewModel.LanguageCode
-    </span>
+﻿@if (@ViewModel != null)
+{
+    <div class="chldr_translation card-subtitle">
+        <span class="chldr_translation_language-code">
+            @ViewModel?.LanguageCode
+        </span>
 
-    <span class="chldr_translation_content">
-        @ViewModel.Content
-    </span>
+        <span class="chldr_translation_content">
+            @ViewModel?.Content
+        </span>
 
-@*    <span class="chldr_translation_actions ms-lg-1">
-        <i class="oi oi-pencil" @onclick="ViewModel.Edit"></i>
-        <i class="fa fa-thumbs-up" @onclick="ViewModel.Upvote"></i>
-        <i class="fa fa-thumbs-down" @onclick="ViewModel.Downvote"></i>
-    </span>*@
+        @if (ViewModel?.UserStore?.CurrentUser != null)
+        {
+            <span class="chldr_translation_actions ms-lg-1">
+                <i class="oi oi-pencil" @onclick="ViewModel.Edit"></i>
+                <i class="fa fa-thumbs-up" @onclick="ViewModel.Upvote"></i>
+                <i class="fa fa-thumbs-down" @onclick="ViewModel.Downvote"></i>
+            </span>
+        }
 
-    @if (!String.IsNullOrWhiteSpace(@ViewModel.Notes))
-    {
-        <div class="chldr_translation_notes">
-            (@ViewModel.Notes)
-        </div>
-    }
+        @if (!String.IsNullOrWhiteSpace(@ViewModel?.Notes))
+        {
+            <div class="chldr_translation_notes">
+                (@ViewModel.Notes)
+            </div>
+        }
 
-</div>
+    </div>
+}
 
 @code {
     [Parameter]
-    public TranslationViewModel ViewModel { get; set; }
+    public TranslationViewModel? ViewModel { get; set; }
 }

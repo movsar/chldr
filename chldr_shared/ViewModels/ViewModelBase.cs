@@ -16,7 +16,7 @@ namespace chldr_shared.ViewModels
     public class ViewModelBase : ComponentBase
     {
         [Inject] protected ContentStore ContentStore { get; set; }
-        [Inject] protected UserStore UserStore { get; set; }
+        [Inject] public UserStore UserStore { get; set; }
         [Inject] protected IStringLocalizer<AppLocalizations> Localizer { get; set; }
     }
 }

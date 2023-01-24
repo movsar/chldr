@@ -4,8 +4,9 @@
         "private": false
     },
     {
-        "name": "SendEmailConfirmationLink",
-        "private": false
+        "name": "SendConfirmationLinkEmail",
+        "private": false,
+        "disable_arg_logs": true
     },
     {
         "name": "IsAnonymous",

@@ -13,12 +13,11 @@ namespace chldr_data.Entities
         public string? Email { get; set; }
         public int RateWeight { get; set; } = 1;
         public int Rate { get; set; } = 1;
-        // Should be removed, username => Email
-        private string? Username { get; set; }
         public string? ImagePath { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Patronymic { get; set; }
+        private bool? IsModerator { get; set; }
         public int Status { get; set; }
 
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;

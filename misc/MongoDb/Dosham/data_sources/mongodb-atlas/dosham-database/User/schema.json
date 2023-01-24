@@ -13,6 +13,9 @@
         "ImagePath": {
             "bsonType": "string"
         },
+        "IsModerator": {
+            "bsonType": "bool"
+        },
         "LastName": {
             "bsonType": "string"
         },
@@ -25,11 +28,11 @@
         "RateWeight": {
             "bsonType": "long"
         },
+        "Status": {
+            "bsonType": "long"
+        },
         "UpdatedAt": {
             "bsonType": "date"
-        },
-        "Username": {
-            "bsonType": "string"
         },
         "_id": {
             "bsonType": "objectId"
@@ -37,11 +40,11 @@
     },
     "required": [
         "_id",
-        "Confirmed",
-        "CreatedAt",
-        "UpdatedAt",
         "RateWeight",
-        "Rate"
+        "Rate",
+        "Status",
+        "CreatedAt",
+        "UpdatedAt"
     ],
     "title": "User"
 }

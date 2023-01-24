@@ -1,3 +1,20 @@
+exports = async ({ token, tokenId, username }) => {
+  const apiHost = 'dosham.azurewebsites.net';
+  const apiActionPath = '/api/user/sendConfirmationEmail';
+
+  const response = await context.http.get({
+    scheme: "https",
+    host: apiHost,
+    path: apiActionPath,
+    query: {
+      token: [token],
+      tokenId: [tokenId],
+      email: [username]
+    }
+  });
+
+  return { status: 'pending' };
+};
 
 /*
 
@@ -46,22 +63,3 @@
 
   The uncommented function below is just a placeholder and will result in failure.
 */
-
-exports = async ({ token, tokenId, username, userId }) => {
-  const apiHost = 'dosham.azurewebsites.net';
-  const apiActionPath = '/api/user/sendConfirmationEmail';
-
-  const response = await context.http.get({
-    scheme: "https",
-    host: apiHost,
-    path: apiActionPath,
-    query: {
-      token: [token],
-      tokenId: [tokenId],
-      email: [username],
-      userId: [userId]
-    }
-  });
-
-  return { status: 'pending' };
-};

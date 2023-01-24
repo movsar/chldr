@@ -19,7 +19,7 @@ else
 
             <!-- Email and Username -->
             <div class="form-outline mb-4">
-                <input type="email" class="form-control" placeholder="@Localizer["Email"]" required @bind="UserInfo.Email" />
+                <input type="email" name="email" class="form-control" placeholder="@Localizer["Email"]" required @bind="UserInfo.Email" />
             </div>
 
             <!-- Password -->
@@ -33,11 +33,11 @@ else
 
             <!-- Personal Details -->
             <div class="form-outline mb-4">
-                <input type="text" class="form-control" placeholder="@Localizer["First_name"]" @bind="UserInfo.FirstName" />
+                <input name="firstName" type="text" class="form-control" placeholder="@Localizer["First_name"]" @bind="UserInfo.FirstName" />
             </div>
 
             <div class="form-outline mb-4">
-                <input type="text" class="form-control" placeholder="@Localizer["Last_name"]" @bind="UserInfo.LastName" />
+                <input name="lastName" type="text" class="form-control" placeholder="@Localizer["Last_name"]" @bind="UserInfo.LastName" />
             </div>
 
             <!-- Register buttons -->
