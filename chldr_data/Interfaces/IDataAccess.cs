@@ -17,7 +17,8 @@ namespace chldr_data.Interfaces
         IEnumerable<EntryModel> GetRandomEntries();
         Task FindAsync(string inputText);
         Task InitializeDatabase();
-        Task<UserModel> LogInEmailPasswordAsync(string email, string password);
+        Task LogInEmailPasswordAsync(string email, string password);
+        Task<UserModel> GetCurrentUserInfoAsync();
         Task RegisterNewUserAsync(string email, string password);
         Task SendPasswordResetRequestAsync(string email);
         Task UpdatePasswordAsync(string token, string tokenId, string newPassword);

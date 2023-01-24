@@ -30,25 +30,18 @@ namespace chldr_data.Services
         public const int RandomEntriesLimit = 30;
         #endregion
 
-        public async Task<UserModel> LogInEmailPasswordAsync(string email, string password)
+        public async Task<UserModel> GetCurrentUserInfoAsync()
         {
-            // App user
-            var appUser = await App.LogInAsync(Credentials.EmailPassword(email, password));
-            // Database user
-            var user = Database.All<Entities.User>().First(u => u.Email == appUser.Profile.Email);
+            await Database.Subscriptions.WaitForSynchronizationAsync();
+            var userId = new ObjectId(App.CurrentUser.Id);
+            var user = Database.All<Entities.User>().First(u => u._id == userId);
 
-            if (user._id == new ObjectId())
-            {
-                var appUserId = new ObjectId(appUser.Id);
+            return new UserModel(user);
+        }
 
-                // Add Id to the user data record
-                Database.Write(() =>
-                {
-                    user._id = appUserId;
-                });
-            }
-
-            return new UserModel(user);// new UserModel();
+        public async Task LogInEmailPasswordAsync(string email, string password)
+        {
+            await App.LogInAsync(Credentials.EmailPassword(email, password));
         }
         public async Task InitializeDatabase()
         {
