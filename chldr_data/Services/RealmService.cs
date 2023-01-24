@@ -52,6 +52,7 @@ namespace chldr_data.Services
 
             _config = new FlexibleSyncConfiguration(_user, FileService.DatabasePath)
             {
+                SchemaVersion = 1,
                 PopulateInitialSubscriptions = (realm) =>
                 {
                     Debug.WriteLine($"APP: Realm : PopulateInitialSubscriptions");
@@ -65,6 +66,7 @@ namespace chldr_data.Services
                     realm.Subscriptions.Add(realm.All<Entities.Word>());
                 }
             };
+
             // TODO: Compact if size > 100Mb
             // Realm.Compact(_config);
             DatabaseInitialized?.Invoke();
