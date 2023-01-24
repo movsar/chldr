@@ -20,22 +20,15 @@ namespace chldr_shared.ViewModels
         public abstract Task ValidateAndSubmit();
         protected async Task ExecuteSafelyAsync(Func<Task> func)
         {
-            FormDisabled = true;
             try
             {
                 await func();
-                FormSubmitted = true;
             }
             catch (Exception ex)
             {
                 ErrorMessages.Clear();
                 ErrorMessages.Add(ex.Message);
                 return;
-            }
-            finally
-            {
-                FormDisabled = false;
-                StateHasChanged();
             }
         }
         public async Task ValidateAndSubmit(TFormDto formDto, string[] validationRuleSets, Func<Task> func)
@@ -55,7 +48,12 @@ namespace chldr_shared.ViewModels
             }
 
             // Block controls while processing
+            FormDisabled = true;
+
             await ExecuteSafelyAsync(func);
+            FormSubmitted = true;
+            FormDisabled = false;
+            StateHasChanged();
         }
     }
 }

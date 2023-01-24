@@ -1,16 +1,16 @@
 ﻿@page "/login";
 @inherits LoginPageViewModel;
 
+@if (EmailConfirmationCompleted)
+{
+    <div class="alert alert-success" role="alert">
+        @Localizer["Your_account_is_activated_you_can_now_log_in"]
+    </div>
+}
+
 <div class="col-12 d-flex justify-content-center mt-lg-5">
     @if (!FormSubmitted)
     {
-        @if (EmailConfirmationCompleted)
-        {
-            <div class="alert alert-success" role="alert">
-                @Localizer["Your_account_is_activated_you_can_now_log_in"]
-            </div>
-        }
-
         <form class="col-6">
             <!-- Email input -->
             <div class="form-outline mb-4">
