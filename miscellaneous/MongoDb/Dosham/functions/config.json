@@ -11,5 +11,9 @@
     {
         "name": "IsAnonymous",
         "private": false
+    },
+    {
+        "name": "AddUserDataFunc",
+        "private": true
     }
 ]
