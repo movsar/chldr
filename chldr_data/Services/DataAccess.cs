@@ -35,8 +35,8 @@ namespace chldr_data.Services
             var appUser = await App.LogInAsync(Credentials.EmailPassword(email, password));
             var appUserId = new ObjectId(appUser.Id);
 
-            var user = Database.All<Entities.User>().First(u => u._id == appUserId);
-            return new UserModel(user);
+            //   var user = Database.All<Entities.User>().First(u => u._id == appUserId);
+            return null;// new UserModel();
         }
         public async Task InitializeDatabase()
         {
@@ -99,19 +99,14 @@ namespace chldr_data.Services
             await App.EmailPasswordAuth.ResetPasswordAsync(newPassword, token, tokenId);
         }
 
-        public async Task ConfirmUserAsync(string token, string tokenId, string userId, string email)
+        public async Task ConfirmUserAsync(string token, string tokenId, string userEmail)
         {
             await App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
 
-            var customUserData = new Entities.User()
-            {
-                _id = new ObjectId(userId),
-                Email = email,
-            };
-
+            // Add custom user data record
             Database.Write(() =>
             {
-                Database.Add(customUserData);
+                Database.Add(new Entities.User() { Email = userEmail });
             });
         }
     }

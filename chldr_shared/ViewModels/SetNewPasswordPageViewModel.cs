@@ -17,29 +17,28 @@ namespace chldr_shared.ViewModels
     {
         #region Properties
         [Inject] NavigationManager? NavigationManager { get; set; }
-        public string? Token { get; set; }
-        public string? TokenId { get; set; }
         public UserInfoDto UserInfo { get; } = new();
         #endregion
 
-        private async Task UpdatePasswordAsync()
+        private async Task UpdatePasswordAsync(string token, string tokenId, string newPassword)
         {
-            await UserStore.UpdatePasswordAsync(Token!, TokenId!, UserInfo.Password);
+            await UserStore.UpdatePasswordAsync(token, tokenId, newPassword);
+            NavigationManager?.NavigateTo("/login");
         }
 
         public override async Task ValidateAndSubmit()
         {
             var queryParams = HttpUtility.ParseQueryString(new Uri(NavigationManager!.Uri).Query);
-            Token = queryParams.Get("token");
-            TokenId = queryParams.Get("tokenId");
+            var token = queryParams.Get("token");
+            var tokenId = queryParams.Get("tokenId");
 
-            if (string.IsNullOrWhiteSpace(Token) || string.IsNullOrWhiteSpace(TokenId))
+            if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(tokenId))
             {
                 NavigationManager?.NavigateTo("/");
                 return;
             }
 
-            await ValidateAndSubmit(UserInfo, new string[] { "Password" }, UpdatePasswordAsync);
+            await ValidateAndSubmit(UserInfo, new string[] { "Password" }, () => UpdatePasswordAsync(token, tokenId, UserInfo.Password));
         }
 
     }

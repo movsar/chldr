@@ -15,8 +15,8 @@ namespace chldr_shared.ViewModels
     {
         [Inject] TFormValidator? DtoValidator { get; set; }
         public List<string> ErrorMessages { get; set; } = new();
-        public bool FormDisabled { get; set; }
-        public bool FormSubmitted { get; set; }
+        public bool FormDisabled { get; set; } = false;
+        public bool FormSubmitted { get; set; } = false;
         public abstract Task ValidateAndSubmit();
         protected async Task ExecuteSafelyAsync(Func<Task> func)
         {
@@ -24,6 +24,7 @@ namespace chldr_shared.ViewModels
             try
             {
                 await func();
+                FormSubmitted = true;
             }
             catch (Exception ex)
             {

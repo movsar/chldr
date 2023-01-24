@@ -13,7 +13,8 @@ namespace chldr_data.Entities
         public string? Email { get; set; }
         public int RateWeight { get; set; } = 1;
         public int Rate { get; set; } = 1;
-        public string? Username { get; set; }
+        // Should be removed, username => Email
+        private string? Username { get; set; }
         public string? ImagePath { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

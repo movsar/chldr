@@ -55,12 +55,11 @@ namespace chldr_server.Controllers
         #region Confirm email
         // Fired when user submits registration form
         [HttpGet("sendConfirmationEmail")]
-        public ActionResult SendConfirmationEmail(string token, string tokenId, string email, string userId)
+        public ActionResult SendConfirmationEmail(string token, string tokenId, string email)
         {
             var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.Host}/login", new Dictionary<string, string?>(){
                 { "token", token},
                 { "tokenId", tokenId},
-                { "userId", userId},
                 { "email", email},
             })).ToString();
 

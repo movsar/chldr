@@ -12,3 +12,7 @@ A project to build an interactive Chechen language dictionary. Started form scra
  - Always starts with uppercase letter followed by lowercase letters separated by underscore (_)
 
 Example: **Error:Something_went_wrong**.
+
+# TO DO
+
+- Pass email if it's not empty when switching from LoginPage to Registration or Password reset pages

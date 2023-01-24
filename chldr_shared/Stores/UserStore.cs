@@ -24,9 +24,9 @@ namespace chldr_shared.Stores
             CurrentUser = await _dataAccess.LogInEmailPasswordAsync(email, password);
         }
 
-        internal async Task ConfirmUserAsync(string token, string tokenId, string userId, string email)
+        internal async Task ConfirmUserAsync(string token, string tokenId, string userEmail)
         {
-            await _dataAccess.ConfirmUserAsync(token, tokenId, userId, email);
+            await _dataAccess.ConfirmUserAsync(token, tokenId, userEmail);
         }
 
         internal async Task SendPasswordResetRequestAsync(string email)

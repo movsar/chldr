@@ -16,10 +16,6 @@ namespace chldr_shared.ViewModels
     {
         #region Properties
         [Inject] NavigationManager? NavigationManager { get; set; }
-        public string? Token { get; set; }
-        public string? TokenId { get; set; }
-        public string? UserId { get; set; }
-        public string? Email { get; set; }
         public UserInfoDto UserInfo { get; } = new();
         public bool UserActivationCompleted { get; private set; } = false;
         #endregion
@@ -33,31 +29,34 @@ namespace chldr_shared.ViewModels
             await UserStore.LogInEmailPasswordAsync(UserInfo.Email, UserInfo.Password);
             NavigationManager!.NavigateTo("/");
         }
+        private async Task ConfirmEmail(string token, string tokenId, string email)
+        {
+            await UserStore.ConfirmUserAsync(token!, tokenId!, email!);
+            UserActivationCompleted = true;
+            StateHasChanged();
+        }
+
         private async Task HandleEmailConfirmation()
         {
             // Handle confirmation link click
             var queryParams = HttpUtility.ParseQueryString(new Uri(NavigationManager!.Uri).Query);
-            Token = queryParams.Get("token");
-            TokenId = queryParams.Get("tokenId");
-            UserId = queryParams.Get("userId");
-            Email = queryParams.Get("email");
+            var token = queryParams.Get("token");
+            var tokenId = queryParams.Get("tokenId");
+            var email = queryParams.Get("email");
 
-            if (string.IsNullOrWhiteSpace(Token) || string.IsNullOrWhiteSpace(TokenId) || string.IsNullOrWhiteSpace(UserId) || string.IsNullOrWhiteSpace(Email))
+            if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(tokenId) || string.IsNullOrWhiteSpace(email))
             {
                 return;
             }
 
-            await UserStore.ConfirmUserAsync(Token, TokenId, UserId, Email);
-            UserActivationCompleted = true;
-
-            StateHasChanged();
+            await ExecuteSafelyAsync(() => ConfirmEmail(token!, tokenId!, email!));
         }
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
 
-            await ExecuteSafelyAsync(HandleEmailConfirmation);
+            await HandleEmailConfirmation();
         }
         public override async Task ValidateAndSubmit()
         {
