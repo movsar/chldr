@@ -17,7 +17,8 @@ namespace chldr_shared.ViewModels
         #region Properties
         [Inject] NavigationManager? NavigationManager { get; set; }
         public UserInfoDto UserInfo { get; } = new();
-        public bool UserActivationCompleted { get; private set; } = false;
+        internal static bool PageInitialized { get; private set; } = false;
+        internal static bool EmailConfirmationCompleted { get; private set; } = false;
         #endregion
 
         public void SignInWithGoogle() { }
@@ -32,13 +33,29 @@ namespace chldr_shared.ViewModels
         private async Task ConfirmEmail(string token, string tokenId, string email)
         {
             await UserStore.ConfirmUserAsync(token!, tokenId!, email!);
-            UserActivationCompleted = true;
+            EmailConfirmationCompleted = true;
             StateHasChanged();
         }
 
-        private async Task HandleEmailConfirmation()
+        protected override async Task OnInitializedAsync()
         {
-            // Handle confirmation link click
+            await base.OnInitializedAsync();
+
+            // Skip the first run (OnInitialized runs twice)
+            if (PageInitialized == false)
+            {
+                PageInitialized = true;
+                return;
+            }
+            // Reset for the page reload
+            PageInitialized = false;
+
+            if (EmailConfirmationCompleted == true)
+            {
+                return;
+            }
+
+            // Check whether this page has been opened from the email confirmation link
             var queryParams = HttpUtility.ParseQueryString(new Uri(NavigationManager!.Uri).Query);
             var token = queryParams.Get("token");
             var tokenId = queryParams.Get("tokenId");
@@ -52,12 +69,6 @@ namespace chldr_shared.ViewModels
             await ExecuteSafelyAsync(() => ConfirmEmail(token!, tokenId!, email!));
         }
 
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-
-            await HandleEmailConfirmation();
-        }
         public override async Task ValidateAndSubmit()
         {
             await ValidateAndSubmit(UserInfo, new string[] {

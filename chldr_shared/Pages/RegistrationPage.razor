@@ -19,31 +19,39 @@ else
 
             <!-- Email and Username -->
             <div class="form-outline mb-4">
-                <input type="email" name="email" class="form-control" placeholder="@Localizer["Email"]" required @bind="UserInfo.Email" />
+                <input type="email" name="email" class="form-control" placeholder="@Localizer["Email"]"
+                       required @bind="UserInfo.Email" disabled="@FormDisabled" />
             </div>
 
             <!-- Password -->
             <div class="form-outline mb-4">
-                <input type="password" class="form-control" placeholder="@Localizer["Password"]" required @bind="UserInfo.Password" />
+                <input type="password" class="form-control" placeholder="@Localizer["Password"]"
+                       required @bind="UserInfo.Password" disabled="@FormDisabled" />
             </div>
 
             <div class="form-outline mb-4">
-                <input type="password" class="form-control" placeholder="@Localizer["Confirm_password"]" required @bind="UserInfo.PasswordConfirmation" />
+                <input type="password" class="form-control" placeholder="@Localizer["Confirm_password"]"
+                       required @bind="UserInfo.PasswordConfirmation" disabled="@FormDisabled" />
             </div>
 
             <!-- Personal Details -->
             <div class="form-outline mb-4">
-                <input name="firstName" type="text" class="form-control" placeholder="@Localizer["First_name"]" @bind="UserInfo.FirstName" />
+                <input name="firstName" type="text" class="form-control" placeholder="@Localizer["First_name"]"
+                       disabled="@FormDisabled" @bind="UserInfo.FirstName" />
             </div>
 
             <div class="form-outline mb-4">
-                <input name="lastName" type="text" class="form-control" placeholder="@Localizer["Last_name"]" @bind="UserInfo.LastName" />
+                <input name="lastName" type="text" class="form-control" placeholder="@Localizer["Last_name"]"
+                       disabled="@FormDisabled" @bind="UserInfo.LastName" />
             </div>
 
             <!-- Register buttons -->
             <div class="row d-flex align-content-end">
                 <div class="col">
-                    <button type="button" class="btn btn-success btn-block mb-4" @onclick="ValidateAndSubmit">@Localizer["Register"]</button>
+                    <button type="button" class="btn btn-success btn-block mb-4"
+                            disabled="@FormDisabled" @onclick="ValidateAndSubmit">
+                        @Localizer["Register"]
+                    </button>
                 </div>
             </div>
 

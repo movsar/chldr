@@ -15,5 +15,8 @@ Example: **Error:Something_went_wrong**.
 
 # TO DO
 
+- Create a login trigger that inserts custom data record
 - Pass email if it's not empty when switching from LoginPage to Registration or Password reset pages
 - What if the user deletes confirmation email and wants to request a new one?
+- Send activation notification email after email confirmation
+- Compress DB after reaching 60Mb

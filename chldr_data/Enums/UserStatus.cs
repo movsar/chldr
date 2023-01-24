@@ -11,6 +11,7 @@ namespace chldr_data.Enums
         Active = 0,
         Banned = 1,
         Inactive = 2,
-        Deleted = 3
+        Deleted = 3,
+        Unconfirmed = 4,
     }
 }

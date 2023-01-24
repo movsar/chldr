@@ -32,11 +32,23 @@ namespace chldr_data.Services
 
         public async Task<UserModel> LogInEmailPasswordAsync(string email, string password)
         {
+            // App user
             var appUser = await App.LogInAsync(Credentials.EmailPassword(email, password));
-            var appUserId = new ObjectId(appUser.Id);
+            // Database user
+            var user = Database.All<Entities.User>().First(u => u.Email == appUser.Profile.Email);
 
-            //   var user = Database.All<Entities.User>().First(u => u._id == appUserId);
-            return null;// new UserModel();
+            if (user._id == new ObjectId())
+            {
+                var appUserId = new ObjectId(appUser.Id);
+
+                // Add Id to the user data record
+                Database.Write(() =>
+                {
+                    user._id = appUserId;
+                });
+            }
+
+            return new UserModel(user);// new UserModel();
         }
         public async Task InitializeDatabase()
         {
@@ -102,12 +114,6 @@ namespace chldr_data.Services
         public async Task ConfirmUserAsync(string token, string tokenId, string userEmail)
         {
             await App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
-
-            // Add custom user data record
-            Database.Write(() =>
-            {
-                Database.Add(new Entities.User() { Email = userEmail });
-            });
         }
     }
 }
