@@ -50,6 +50,13 @@ namespace chldr_data.Services
             var searchEngine = new MainSearchEngine(this);
             await searchEngine.FindAsync(inputText);
         }
+
+        /*
+        TEST
+
+        1. That it executes without errors
+        2. That it returns {RandomEntriesLimit} amount of Entries
+         */
         public IEnumerable<EntryModel> GetRandomEntries()
         {
             var randomizer = new Random();
@@ -62,6 +69,11 @@ namespace chldr_data.Services
                 .Take(RandomEntriesLimit)
                 .OrderBy(entry => entry.GetHashCode())
                 .Select(entry => EntryModelFactory.CreateEntryModel(entry));
+        }
+
+        public async Task InitializeDatabase()
+        {
+            await _realmService.Initialize();
         }
 
         public DataAccess(FileService fileService, RealmService realmService)

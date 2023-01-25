@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_native", "chldr_nativ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_data", "chldr_data\chldr_data.csproj", "{1515642D-BB1C-4CAC-A10C-99C43045BD90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chldr_data.tests", "chldr_data.tests\chldr_data.tests.csproj", "{D11A2287-2698-4AF2-B1A0-D0D448229609}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{1515642D-BB1C-4CAC-A10C-99C43045BD90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1515642D-BB1C-4CAC-A10C-99C43045BD90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1515642D-BB1C-4CAC-A10C-99C43045BD90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D11A2287-2698-4AF2-B1A0-D0D448229609}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D11A2287-2698-4AF2-B1A0-D0D448229609}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D11A2287-2698-4AF2-B1A0-D0D448229609}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D11A2287-2698-4AF2-B1A0-D0D448229609}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

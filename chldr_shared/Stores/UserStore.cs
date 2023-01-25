@@ -30,11 +30,7 @@ namespace chldr_shared.Stores
             _dataAccess = dataAccess;
             _environmentService = environmentService;
 
-            // Don't run anything on load if it's web, otherwise it produces Websocket error
-            //if (environmentService.CurrentPlatform != Enums.Platforms.Web)
-            //{
             _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized; ;
-            //}
         }
 
         private void DataAccess_DatabaseInitialized()
@@ -43,6 +39,7 @@ namespace chldr_shared.Stores
             {
                 if (CurrentUser == null)
                 {
+                    // All the other ways of starting this async job result in an WebSocket's error when deployed
                     SetCurrentUserInfoAsync().Start();
                 }
             }
