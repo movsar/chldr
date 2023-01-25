@@ -21,7 +21,7 @@ namespace chldr_shared.Stores
         {
             _dataAccess = dataAccess;
         }
-        
+
         public async Task GetCurrentUserInfoAsync()
         {
             try

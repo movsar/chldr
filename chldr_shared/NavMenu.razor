@@ -55,4 +55,15 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+    protected override Task OnParametersSetAsync()
+    {
+        UserStore.UserDataIsReady += () =>
+          {
+              InvokeAsync(() =>
+              {
+                  StateHasChanged();
+              });
+          };
+        return base.OnParametersSetAsync();
+    }
 }

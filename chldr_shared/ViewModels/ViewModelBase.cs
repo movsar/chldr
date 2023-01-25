@@ -18,5 +18,6 @@ namespace chldr_shared.ViewModels
         [Inject] internal ContentStore ContentStore { get; set; }
         [Inject] internal UserStore UserStore { get; set; }
         [Inject] internal IStringLocalizer<AppLocalizations> Localizer { get; set; }
+      
     }
 }
