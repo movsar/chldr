@@ -63,16 +63,11 @@ namespace chldr_data.Services
                 .Select(entry => EntryModelFactory.CreateEntryModel(entry));
         }
 
-        private void OnDatabaseInitialized()
-        {
-            DatabaseInitialized?.Invoke();
-        }
-
         public DataAccess(FileService fileService)
         {
             fileService.PrepareDatabase();
 
-            RealmService.DatabaseInitialized += OnDatabaseInitialized;
+            RealmService.DatabaseInitialized += () => DatabaseInitialized?.Invoke();
             Task.Run(async () => await RealmService.Initialize());
         }
 

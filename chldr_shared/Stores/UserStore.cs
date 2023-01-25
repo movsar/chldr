@@ -2,6 +2,7 @@
 using chldr_data.Models;
 using chldr_data.Services;
 using chldr_shared.Services;
+using MailKit;
 using Realms.Sync;
 using System;
 using System.Collections.Generic;
@@ -17,22 +18,35 @@ namespace chldr_shared.Stores
         public event Action LoggedInUserChanged;
         public UserModel? CurrentUser { get; set; }
         private IDataAccess _dataAccess;
+        private readonly EnvironmentService _environmentService;
 
         public UserStore(IDataAccess dataAccess, EnvironmentService environmentService)
         {
+
             _dataAccess = dataAccess;
+            _environmentService = environmentService;
+            _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
 
             // Don't run anything on load if it's web, otherwise it produces Websocket error
-            if (environmentService.CurrentPlatform != Enums.Platforms.Web)
-            {
-                _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
-            }
+            //if (environmentService.CurrentPlatform != Enums.Platforms.Web)
+            //{
+            //    _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
+            //}
         }
 
-        private async void DataAccess_DatabaseInitialized()
+        private void DataAccess_DatabaseInitialized()
         {
+            var t = new Task(async () =>
+            {
+                if (_environmentService.CurrentPlatform == Enums.Platforms.Web)
+                {
+                    await Task.Delay(10000);
+                }
 
-            await SetCurrentUserInfoAsync();
+                await SetCurrentUserInfoAsync();
+            });
+
+            t.Start();
         }
 
         public async Task SetCurrentUserInfoAsync()
