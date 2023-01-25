@@ -23,7 +23,6 @@ namespace chldr_shared.ViewModels
         private async Task UpdatePasswordAsync(string token, string tokenId, string newPassword)
         {
             await UserStore.UpdatePasswordAsync(token, tokenId, newPassword);
-            NavigationManager?.NavigateTo("/login");
         }
 
         public override async Task ValidateAndSubmit()
