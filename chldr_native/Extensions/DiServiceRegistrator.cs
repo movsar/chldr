@@ -26,6 +26,7 @@ namespace chldr_native.Extensions
         {
             // Data
             mauiAppBuilder.Services.AddScoped<IDataAccess, DataAccess>();
+            mauiAppBuilder.Services.AddScoped<RealmService>();
 
             // Shared
             mauiAppBuilder.Services.AddScoped<ContentStore>();

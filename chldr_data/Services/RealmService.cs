@@ -7,16 +7,17 @@ using System.Diagnostics;
 
 namespace chldr_data.Services
 {
-    internal static class RealmService
+    public class RealmService
     {
-        private static App _app;
-        private static RealmConfigurationBase _config;
         private const string myRealmAppId = "dosham-lxwuu";
 
-        internal static event Action DatabaseInitialized;
-        internal static event Action DatabaseSynced;
+        private App _app;
+        private RealmConfigurationBase _config;
 
-        internal static Realm GetRealm()
+        internal event Action DatabaseInitialized;
+        internal event Action DatabaseSynced;
+
+        internal Realm GetRealm()
         {
             if (_config == null)
             {
@@ -25,7 +26,7 @@ namespace chldr_data.Services
             return Realm.GetInstance(_config);
         }
 
-        internal static async Task Initialize()
+        internal async Task Initialize()
         {
             Logger.LogLevel = LogLevel.Debug;
             Logger.Default = Logger.Function(message =>
@@ -70,11 +71,16 @@ namespace chldr_data.Services
 
             // TODO: Compact if size > 100Mb
             // Realm.Compact(_config);
+         
             DatabaseInitialized?.Invoke();
-            //DatabaseSynced?.Invoke();
+            //Task.Run(async () =>
+            //{
+            //    await GetRealm().Subscriptions.WaitForSynchronizationAsync();
+            //    DatabaseSynced?.Invoke();
+            //});
         }
 
-        internal static App GetApp()
+        internal App GetApp()
         {
             return _app;
         }

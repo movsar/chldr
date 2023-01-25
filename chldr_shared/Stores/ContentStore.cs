@@ -30,9 +30,11 @@ namespace chldr_shared.Stores
         {
             _dataAccess = dataAccess;
             _dataAccess.GotResults += DataAccess_GotNewResults;
-            var dataOps = new DatabaseOperations();
-            dataOps.RunMaintenance();
-            _dataAccess.DatabaseInitialized += (() => { DatabaseInitialized?.Invoke(); });
+        
+            _dataAccess.DatabaseInitialized += (() =>
+            {
+                DatabaseInitialized?.Invoke(); 
+            });
         }
 
         #endregion

@@ -15,8 +15,8 @@ namespace chldr_data.Services
     public class DataAccess : IDataAccess
     {
         #region Properties
-        public Realms.Sync.App App => RealmService.GetApp();
-        public Realm Database => RealmService.GetRealm();
+        public Realms.Sync.App App => _realmService.GetApp();
+        public Realm Database => _realmService.GetRealm();
         #endregion
 
         #region Events
@@ -27,6 +27,7 @@ namespace chldr_data.Services
         #region Fields
         public const int ResultsLimit = 100;
         public const int RandomEntriesLimit = 30;
+        private RealmService _realmService;
         #endregion
 
         public async Task<UserModel?> GetCurrentUserInfoAsync()
@@ -63,12 +64,23 @@ namespace chldr_data.Services
                 .Select(entry => EntryModelFactory.CreateEntryModel(entry));
         }
 
-        public DataAccess(FileService fileService)
+        public DataAccess(FileService fileService, RealmService realmService)
         {
+            _realmService = realmService;
+
+            if (App != null)
+            {
+                return;
+            }
+
             fileService.PrepareDatabase();
 
-            RealmService.DatabaseInitialized += () => DatabaseInitialized?.Invoke();
-            Task.Run(async () => await RealmService.Initialize());
+            _realmService.DatabaseInitialized += () =>
+            {
+                DatabaseInitialized?.Invoke();
+            };
+
+            Task.Run(async () => await _realmService.Initialize());
         }
 
         public void OnNewResults(SearchResultsModel results)
@@ -78,12 +90,12 @@ namespace chldr_data.Services
 
         public WordModel GetWordById(ObjectId entityId)
         {
-            return new WordModel(RealmService.GetRealm().All<Word>().FirstOrDefault(w => w._id == entityId));
+            return new WordModel(_realmService.GetRealm().All<Word>().FirstOrDefault(w => w._id == entityId));
         }
 
         public PhraseModel GetPhraseById(ObjectId entityId)
         {
-            return new PhraseModel(RealmService.GetRealm().All<Phrase>().FirstOrDefault(p => p._id == entityId));
+            return new PhraseModel(_realmService.GetRealm().All<Phrase>().FirstOrDefault(p => p._id == entityId));
         }
         public async Task RegisterNewUserAsync(string email, string password)
         {

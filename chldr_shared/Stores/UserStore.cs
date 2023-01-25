@@ -25,18 +25,18 @@ namespace chldr_shared.Stores
 
             _dataAccess = dataAccess;
             _environmentService = environmentService;
-            _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
 
             // Don't run anything on load if it's web, otherwise it produces Websocket error
             //if (environmentService.CurrentPlatform != Enums.Platforms.Web)
             //{
-            //    _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
+            _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized; ;
             //}
         }
 
         private void DataAccess_DatabaseInitialized()
         {
-            SetCurrentUserInfoAsync().Start();
+            Task t = new Task(async () => await SetCurrentUserInfoAsync());
+            t.Start();
         }
 
         public async Task SetCurrentUserInfoAsync()

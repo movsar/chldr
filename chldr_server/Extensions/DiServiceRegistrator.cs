@@ -23,6 +23,7 @@ namespace chldr_server.Extensions
         public static WebApplicationBuilder RegisterAppServices(this WebApplicationBuilder appBuilder)
         {
             // Data
+            appBuilder.Services.AddScoped<RealmService>();
             appBuilder.Services.AddScoped<IDataAccess, DataAccess>();
 
             // Shared

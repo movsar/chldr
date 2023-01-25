@@ -173,7 +173,6 @@ namespace chldr_data.Services
         private void UpdatePhrasesByChunks()
         {
             _localRealm = GetLocalRealm();
-            _syncedRealm = RealmService.GetRealm();
 
             Debug.WriteLine($"Starting updating entries");
             var localPhrases = _localRealm.All<Phrase>().AsEnumerable();

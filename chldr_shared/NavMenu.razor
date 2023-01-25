@@ -1,5 +1,6 @@
 ﻿@inject IStringLocalizer<AppLocalizations> Localizer;
 @inject UserStore UserStore;
+@inject ContentStore ContentStore;
 
 <div class="top-row ps-3 navbar navbar-dark">
     <a class="navbar-brand" href="">
@@ -60,12 +61,13 @@
     protected override Task OnParametersSetAsync()
     {
         UserStore.LoggedInUserChanged += () =>
+        {
+            InvokeAsync(() =>
           {
-              InvokeAsync(() =>
-              {
-                  StateHasChanged();
-              });
-          };
+              StateHasChanged();
+          });
+        };
+
         return base.OnParametersSetAsync();
     }
 }

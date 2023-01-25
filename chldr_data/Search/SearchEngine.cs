@@ -24,7 +24,7 @@ namespace chldr_data.Search
 
             await Task.Run(() =>
             {
-                var realmInstance = RealmService.GetRealm();
+                var realmInstance = _dataAccess.Database;
 
                 var entries = realmInstance.All<Entry>().Where(filter)
                                                         .AsEnumerable()
@@ -47,7 +47,7 @@ namespace chldr_data.Search
 
             await Task.Run(() =>
             {
-                var realmInstance = RealmService.GetRealm();
+                var realmInstance = _dataAccess.Database;
 
                 var translations = realmInstance.All<Translation>()
                                                                    .Where(filter)
