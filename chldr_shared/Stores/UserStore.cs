@@ -20,9 +20,15 @@ namespace chldr_shared.Stores
         public UserStore(IDataAccess dataAccess)
         {
             _dataAccess = dataAccess;
+            _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
         }
 
-        public async Task GetCurrentUserInfoAsync()
+        private async void DataAccess_DatabaseInitialized()
+        {
+            await SetCurrentUserInfoAsync();
+        }
+
+        public async Task SetCurrentUserInfoAsync()
         {
             try
             {
@@ -41,7 +47,7 @@ namespace chldr_shared.Stores
             {
                 await _dataAccess.LogInEmailPasswordAsync(email, password);
                 LoggedIn = true;
-                var GetCurrentUserInfoTask = new Task(async () => await GetCurrentUserInfoAsync());
+                var GetCurrentUserInfoTask = new Task(async () => await SetCurrentUserInfoAsync());
                 GetCurrentUserInfoTask.Start();
             }
             catch (Exception ex)

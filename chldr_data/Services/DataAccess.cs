@@ -30,22 +30,25 @@ namespace chldr_data.Services
         public const int RandomEntriesLimit = 30;
         #endregion
 
-        public async Task<UserModel> GetCurrentUserInfoAsync()
+        public async Task<UserModel?> GetCurrentUserInfoAsync()
         {
-            await Database.Subscriptions.WaitForSynchronizationAsync();
-            var userId = new ObjectId(App.CurrentUser.Id);
-            var user = Database.All<Entities.User>().First(u => u._id == userId);
+            // await App.CurrentUser.LogOutAsync();
+            if (App.CurrentUser.Provider == Credentials.AuthProvider.Anonymous)
+            {
+                return null;
+            }
 
+            var appUserId = new ObjectId(App.CurrentUser.Id);
+            await Database.Subscriptions.WaitForSynchronizationAsync();
+
+            var user = Database.All<Entities.User>().First(u => u._id == appUserId);
             return new UserModel(user);
         }
 
         public async Task LogInEmailPasswordAsync(string email, string password)
         {
+
             await App.LogInAsync(Credentials.EmailPassword(email, password));
-        }
-        public async Task InitializeDatabase()
-        {
-            await RealmService.Initialize();
         }
         public async Task FindAsync(string inputText)
         {
@@ -66,13 +69,18 @@ namespace chldr_data.Services
                 .Select(entry => EntryModelFactory.CreateEntryModel(entry));
         }
 
+        private void OnDatabaseInitialized()
+        {
+            DatabaseInitialized?.Invoke();
+        }
+
         public DataAccess()
         {
             var fileService = new FileService();
             fileService.PrepareDatabase();
 
-            RealmService.DatabaseInitialized += () => DatabaseInitialized?.Invoke();
-            Task.Run(() => RealmService.Initialize());
+            RealmService.DatabaseInitialized += OnDatabaseInitialized;
+            Task.Run(async () => await RealmService.Initialize());
         }
 
         public void OnNewResults(SearchResultsModel results)

@@ -11,8 +11,7 @@ namespace chldr_data.Services
     internal static class RealmService
     {
         private static App _app;
-        private static Realms.Sync.User _user;
-        private static FlexibleSyncConfiguration _config;
+        private static RealmConfigurationBase _config;
         private const string myRealmAppId = "dosham-lxwuu";
 
         internal static event Action DatabaseInitialized;
@@ -42,31 +41,39 @@ namespace chldr_data.Services
 
             try
             {
-                _user = await _app.LogInAsync(Credentials.Anonymous());
+                if (_app.CurrentUser?.State == UserState.LoggedIn)
+                {
+                    _app.Sync.Reconnect();
+                }
+                else
+                {
+                    await _app.LogInAsync(Credentials.Anonymous());
+                }
 
+                _config = new FlexibleSyncConfiguration(_app.CurrentUser, FileService.DatabasePath)
+                {
+                    SchemaVersion = 1,
+
+                    PopulateInitialSubscriptions = (realm) =>
+                    {
+                        Debug.WriteLine($"APP: Realm : PopulateInitialSubscriptions");
+
+                        realm.Subscriptions.Add(realm.All<Entities.Entry>());
+                        realm.Subscriptions.Add(realm.All<Entities.Language>());
+                        realm.Subscriptions.Add(realm.All<Entities.Phrase>());
+                        realm.Subscriptions.Add(realm.All<Entities.Source>());
+                        realm.Subscriptions.Add(realm.All<Entities.Translation>());
+                        realm.Subscriptions.Add(realm.All<Entities.User>());
+                        realm.Subscriptions.Add(realm.All<Entities.Word>());
+                    }
+                };
             }
             catch (Exception ex)
             {
                 throw;
             }
 
-            _config = new FlexibleSyncConfiguration(_user, FileService.DatabasePath)
-            {
-                SchemaVersion = 1,
 
-                PopulateInitialSubscriptions = (realm) =>
-                {
-                    Debug.WriteLine($"APP: Realm : PopulateInitialSubscriptions");
-
-                    realm.Subscriptions.Add(realm.All<Entities.Entry>());
-                    realm.Subscriptions.Add(realm.All<Entities.Language>());
-                    realm.Subscriptions.Add(realm.All<Entities.Phrase>());
-                    realm.Subscriptions.Add(realm.All<Entities.Source>());
-                    realm.Subscriptions.Add(realm.All<Entities.Translation>());
-                    realm.Subscriptions.Add(realm.All<Entities.User>());
-                    realm.Subscriptions.Add(realm.All<Entities.Word>());
-                }
-            };
 
             // TODO: Compact if size > 100Mb
             // Realm.Compact(_config);
