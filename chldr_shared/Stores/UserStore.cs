@@ -3,6 +3,8 @@ using chldr_data.Models;
 using chldr_data.Services;
 using chldr_shared.Services;
 using MailKit;
+using Microsoft.Extensions.Logging;
+using Realms.Logging;
 using Realms.Sync;
 using System;
 using System.Collections.Generic;
@@ -17,12 +19,14 @@ namespace chldr_shared.Stores
         public bool LoggedIn { get; set; } = false;
         public event Action LoggedInUserChanged;
         public UserModel? CurrentUser { get; set; }
+
+        private readonly ILogger<UserStore> _logger;
         private IDataAccess _dataAccess;
         private readonly EnvironmentService _environmentService;
 
-        public UserStore(IDataAccess dataAccess, EnvironmentService environmentService)
+        public UserStore(IDataAccess dataAccess, EnvironmentService environmentService, ILogger<UserStore> logger)
         {
-
+            _logger = logger;
             _dataAccess = dataAccess;
             _environmentService = environmentService;
 
@@ -35,10 +39,18 @@ namespace chldr_shared.Stores
 
         private void DataAccess_DatabaseInitialized()
         {
-            Task t = new Task(async () => await SetCurrentUserInfoAsync());
-            t.Start();
+            try
+            {
+                if (CurrentUser == null)
+                {
+                    SetCurrentUserInfoAsync().Start();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+            }
         }
-
         public async Task SetCurrentUserInfoAsync()
         {
             try
