@@ -1,6 +1,7 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Services;
+using chldr_shared.Services;
 using Realms.Sync;
 using System;
 using System.Collections.Generic;
@@ -17,14 +18,20 @@ namespace chldr_shared.Stores
         public UserModel? CurrentUser { get; set; }
         private IDataAccess _dataAccess;
 
-        public UserStore(IDataAccess dataAccess)
+        public UserStore(IDataAccess dataAccess, EnvironmentService environmentService)
         {
             _dataAccess = dataAccess;
-            _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
+
+            // Don't run anything on load if it's web, otherwise it produces Websocket error
+            if (environmentService.CurrentPlatform != Enums.Platforms.Web)
+            {
+                _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
+            }
         }
 
         private async void DataAccess_DatabaseInitialized()
         {
+
             await SetCurrentUserInfoAsync();
         }
 
