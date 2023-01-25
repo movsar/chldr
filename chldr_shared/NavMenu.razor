@@ -33,7 +33,9 @@
                     <span class="oi oi-person" aria-hidden="true"></span> @Localizer["Profile"]
                 </NavLink>
             </div>
+            <span class="alert-success">@UserStore.CurrentUser.Email</span>
         }
+
 
         @if (UserStore.CurrentUser == null)
         {
@@ -57,7 +59,7 @@
     }
     protected override Task OnParametersSetAsync()
     {
-        UserStore.UserDataIsReady += () =>
+        UserStore.LoggedInUserChanged += () =>
           {
               InvokeAsync(() =>
               {

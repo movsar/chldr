@@ -45,11 +45,6 @@ namespace chldr_data.Services
             return new UserModel(user);
         }
 
-        public async Task LogInEmailPasswordAsync(string email, string password)
-        {
-
-            await App.LogInAsync(Credentials.EmailPassword(email, password));
-        }
         public async Task FindAsync(string inputText)
         {
             var searchEngine = new MainSearchEngine(this);
@@ -58,7 +53,7 @@ namespace chldr_data.Services
         public IEnumerable<EntryModel> GetRandomEntries()
         {
             var randomizer = new Random();
-            var entries = RealmService.GetRealm().All<Entry>().AsEnumerable();
+            var entries = Database.All<Entry>().AsEnumerable();
 
             // Takes random entries and shuffles them to break the natural order
             return entries
@@ -116,5 +111,16 @@ namespace chldr_data.Services
         {
             await App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
         }
+
+        public async Task LogInEmailPasswordAsync(string email, string password)
+        {
+            await App.LogInAsync(Credentials.EmailPassword(email, password));
+        }
+
+        public async Task LogOutAsync()
+        {
+            await App.CurrentUser.LogOutAsync();
+        }
     }
+
 }

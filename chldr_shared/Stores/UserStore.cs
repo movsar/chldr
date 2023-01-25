@@ -13,7 +13,7 @@ namespace chldr_shared.Stores
     public class UserStore
     {
         public bool LoggedIn { get; set; } = false;
-        public event Action UserDataIsReady;
+        public event Action LoggedInUserChanged;
         public UserModel? CurrentUser { get; set; }
         private IDataAccess _dataAccess;
 
@@ -33,7 +33,7 @@ namespace chldr_shared.Stores
             try
             {
                 CurrentUser = await _dataAccess.GetCurrentUserInfoAsync();
-                UserDataIsReady?.Invoke();
+                LoggedInUserChanged?.Invoke();
             }
             catch (Exception ex)
             {
@@ -70,6 +70,13 @@ namespace chldr_shared.Stores
         internal async Task UpdatePasswordAsync(string token, string tokenId, string newPassword)
         {
             await _dataAccess.UpdatePasswordAsync(token, tokenId, newPassword);
+        }
+
+        internal async Task LogOutAsync()
+        {
+            await _dataAccess.LogOutAsync();
+            CurrentUser = null;
+            LoggedInUserChanged?.Invoke();
         }
     }
 }

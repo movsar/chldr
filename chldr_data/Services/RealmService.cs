@@ -41,11 +41,7 @@ namespace chldr_data.Services
 
             try
             {
-                if (_app.CurrentUser?.State == UserState.LoggedIn)
-                {
-                    _app.Sync.Reconnect();
-                }
-                else
+                if (_app.CurrentUser?.State != UserState.LoggedIn)
                 {
                     await _app.LogInAsync(Credentials.Anonymous());
                 }
@@ -72,8 +68,6 @@ namespace chldr_data.Services
             {
                 throw;
             }
-
-
 
             // TODO: Compact if size > 100Mb
             // Realm.Compact(_config);

@@ -22,5 +22,6 @@ namespace chldr_data.Interfaces
         Task SendPasswordResetRequestAsync(string email);
         Task UpdatePasswordAsync(string token, string tokenId, string newPassword);
         Task ConfirmUserAsync(string token, string tokenId, string email);
+        Task LogOutAsync();
     }
 }
