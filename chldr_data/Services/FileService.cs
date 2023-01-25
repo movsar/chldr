@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_data.Services.PartialMethods
+namespace chldr_data.Services
 {
     // ! MAIN
     public class FileService
@@ -21,9 +21,9 @@ namespace chldr_data.Services.PartialMethods
         public static string? DatabasePath;
         #endregion
 
-        public FileService()
+        public FileService(string basePath)
         {
-            AppDirectory = AppContext.BaseDirectory;
+            AppDirectory = basePath;
             AppDataDirectory = Path.Combine(AppDirectory, DataDirName);
             DatabasePath = Path.Combine(AppDataDirectory, DatabaseName);
 

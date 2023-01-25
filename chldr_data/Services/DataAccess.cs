@@ -4,7 +4,6 @@ using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Search;
-using chldr_data.Services.PartialMethods;
 using MongoDB.Bson;
 using Realms;
 using Realms.Sync;
@@ -69,9 +68,8 @@ namespace chldr_data.Services
             DatabaseInitialized?.Invoke();
         }
 
-        public DataAccess()
+        public DataAccess(FileService fileService)
         {
-            var fileService = new FileService();
             fileService.PrepareDatabase();
 
             RealmService.DatabaseInitialized += OnDatabaseInitialized;

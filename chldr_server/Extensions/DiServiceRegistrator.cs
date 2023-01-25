@@ -23,22 +23,23 @@ namespace chldr_server.Extensions
         public static WebApplicationBuilder RegisterAppServices(this WebApplicationBuilder appBuilder)
         {
             // Data
-            appBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
+            appBuilder.Services.AddScoped<IDataAccess, DataAccess>();
 
             // Shared
-            appBuilder.Services.AddSingleton<ContentStore>();
-            appBuilder.Services.AddSingleton<UserStore>();
+            appBuilder.Services.AddScoped<ContentStore>();
+            appBuilder.Services.AddScoped<UserStore>();
             appBuilder.Services.AddScoped<JsInterop>();
             appBuilder.Services.AddScoped<EmailService>();
-            appBuilder.Services.AddScoped<EnvironmentService>(x => new EnvironmentService(Platforms.Web));
+            appBuilder.Services.AddScoped(x => new EnvironmentService(Platforms.Web));
+            appBuilder.Services.AddScoped(x => new FileService(AppContext.BaseDirectory));
 
             return appBuilder;
         }
         public static WebApplicationBuilder RegisterViewModels(this WebApplicationBuilder appBuilder)
         {
-            appBuilder.Services.AddSingleton<MainPageViewModel>();
-            appBuilder.Services.AddSingleton<LoginPageViewModel>();
-            appBuilder.Services.AddSingleton<RegistrationPageViewModel>();
+            appBuilder.Services.AddScoped<MainPageViewModel>();
+            appBuilder.Services.AddScoped<LoginPageViewModel>();
+            appBuilder.Services.AddScoped<RegistrationPageViewModel>();
             return appBuilder;
         }
     }

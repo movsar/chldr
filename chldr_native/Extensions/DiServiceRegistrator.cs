@@ -25,11 +25,11 @@ namespace chldr_native.Extensions
         public static MauiAppBuilder RegisterAppServices(this MauiAppBuilder mauiAppBuilder)
         {
             // Data
-            mauiAppBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
+            mauiAppBuilder.Services.AddScoped<IDataAccess, DataAccess>();
 
             // Shared
-            mauiAppBuilder.Services.AddSingleton<ContentStore>();
-            mauiAppBuilder.Services.AddSingleton<UserStore>();
+            mauiAppBuilder.Services.AddScoped<ContentStore>();
+            mauiAppBuilder.Services.AddScoped<UserStore>();
             mauiAppBuilder.Services.AddScoped<JsInterop>();
             mauiAppBuilder.Services.AddScoped<EmailService>();
             var platform = Platforms.Web;
@@ -42,14 +42,15 @@ namespace chldr_native.Extensions
 #elif MACCATALYST
             platform = Platforms.MacCatalyst;
 #endif
-            mauiAppBuilder.Services.AddScoped<EnvironmentService>(x => new EnvironmentService(platform));
+            mauiAppBuilder.Services.AddScoped(x => new EnvironmentService(platform));
+            mauiAppBuilder.Services.AddScoped(x => new FileService(AppContext.BaseDirectory));
             return mauiAppBuilder;
         }
         public static MauiAppBuilder RegisterViewModels(this MauiAppBuilder mauiAppBuilder)
         {
-            mauiAppBuilder.Services.AddSingleton<MainPageViewModel>();
-            mauiAppBuilder.Services.AddSingleton<LoginPageViewModel>();
-            mauiAppBuilder.Services.AddSingleton<RegistrationPageViewModel>();
+            mauiAppBuilder.Services.AddScoped<MainPageViewModel>();
+            mauiAppBuilder.Services.AddScoped<LoginPageViewModel>();
+            mauiAppBuilder.Services.AddScoped<RegistrationPageViewModel>();
             return mauiAppBuilder;
         }
     }
