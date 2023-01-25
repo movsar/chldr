@@ -36,17 +36,7 @@ namespace chldr_shared.Stores
 
         private void DataAccess_DatabaseInitialized()
         {
-            var t = new Task(async () =>
-            {
-                if (_environmentService.CurrentPlatform == Enums.Platforms.Web)
-                {
-                    await Task.Delay(10000);
-                }
-
-                await SetCurrentUserInfoAsync();
-            });
-
-            t.Start();
+            SetCurrentUserInfoAsync().Start();
         }
 
         public async Task SetCurrentUserInfoAsync()
