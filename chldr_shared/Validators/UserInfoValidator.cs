@@ -1,10 +1,9 @@
-﻿using chldr_ui.ViewModels;
-using chldr_ui.Resources.Localizations;
+﻿using chldr_shared.Resources.Localizations;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
-using chldr_ui.Dto;
+using chldr_shared.Dto;
 
-namespace chldr_ui.Validators
+namespace chldr_shared.Validators
 {
     public class UserInfoValidator : AbstractValidator<UserInfoDto>
     {

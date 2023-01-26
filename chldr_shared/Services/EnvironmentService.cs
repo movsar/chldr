@@ -1,11 +1,6 @@
-﻿using chldr_ui.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using chldr_shared.Enums;
 
-namespace chldr_ui.Services
+namespace chldr_shared.Services
 {
     public class EnvironmentService
     {

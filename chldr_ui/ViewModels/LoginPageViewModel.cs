@@ -1,7 +1,7 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Services;
-using chldr_ui.Dto;
-using chldr_ui.Validators;
+using chldr_shared.Dto;
+using chldr_shared.Validators;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;

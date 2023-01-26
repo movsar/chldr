@@ -1,5 +1,5 @@
 ﻿using chldr_data.Models;
-using chldr_ui.Stores;
+using chldr_shared.Stores;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 using System;

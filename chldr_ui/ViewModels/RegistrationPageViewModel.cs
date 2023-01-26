@@ -1,5 +1,5 @@
-﻿using chldr_ui.Validators;
-using chldr_ui.Dto;
+﻿using chldr_shared.Validators;
+using chldr_shared.Dto;
 
 namespace chldr_ui.ViewModels
 {

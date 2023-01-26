@@ -1,18 +1,9 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Models;
-using chldr_data.Services;
-using chldr_ui.Services;
-using MailKit;
+using chldr_shared.Services;
 using Microsoft.Extensions.Logging;
-using Realms.Logging;
-using Realms.Sync;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace chldr_ui.Stores
+namespace chldr_shared.Stores
 {
     public class UserStore
     {
@@ -77,22 +68,22 @@ namespace chldr_ui.Stores
             }
         }
 
-        internal async Task ConfirmUserAsync(string token, string tokenId, string email)
+        public async Task ConfirmUserAsync(string token, string tokenId, string email)
         {
             await _dataAccess.ConfirmUserAsync(token, tokenId, email);
         }
 
-        internal async Task SendPasswordResetRequestAsync(string email)
+        public async Task SendPasswordResetRequestAsync(string email)
         {
             await _dataAccess.SendPasswordResetRequestAsync(email);
         }
 
-        internal async Task UpdatePasswordAsync(string token, string tokenId, string newPassword)
+        public async Task UpdatePasswordAsync(string token, string tokenId, string newPassword)
         {
             await _dataAccess.UpdatePasswordAsync(token, tokenId, newPassword);
         }
 
-        internal async Task LogOutAsync()
+        public async Task LogOutAsync()
         {
             await _dataAccess.LogOutAsync();
             CurrentUser = null;

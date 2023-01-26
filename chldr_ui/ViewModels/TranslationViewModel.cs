@@ -13,7 +13,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using chldr_ui.Stores;
+using chldr_shared.Stores;
 
 namespace chldr_ui.ViewModels
 {

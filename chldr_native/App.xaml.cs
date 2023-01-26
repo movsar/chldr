@@ -1,4 +1,4 @@
-﻿using chldr_ui.Stores;
+﻿using chldr_shared.Stores;
 using chldr_data.Services;
 using Microsoft.Extensions.DependencyInjection;
 

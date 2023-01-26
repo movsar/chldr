@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_ui
+namespace chldr_shared.Enums
 {
-    public static class Constants
+    internal enum MessageType
     {
-        public const string Host = "https://dosham.azurewebsites.net";
+        Failure = 0,
+        Neutral = 1,
+        Success = 2,
     }
 }

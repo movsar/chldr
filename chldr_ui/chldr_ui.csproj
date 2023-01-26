@@ -22,27 +22,13 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\chldr_data\chldr_data.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Update="Resources\Localizations\AppLocalizations.Designer.cs">
-			<DependentUpon>AppLocalizations.resx</DependentUpon>
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-		</Compile>
+		<ProjectReference Include="..\chldr_shared\chldr_shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Content Update="wwwroot\images\logo.png">
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
-		<EmbeddedResource Update="Resources\Localizations\AppLocalizations.resx">
-			<LastGenOutput>AppLocalizations.Designer.cs</LastGenOutput>
-			<Generator>PublicResXFileCodeGenerator</Generator>
-		</EmbeddedResource>
 	</ItemGroup>
 
 </Project>

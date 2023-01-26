@@ -1,5 +1,5 @@
 ﻿using chldr_ui.Interfaces;
-using chldr_ui.Validators;
+using chldr_shared.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using System;
