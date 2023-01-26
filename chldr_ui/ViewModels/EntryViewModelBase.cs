@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace chldr_shared.ViewModels
+namespace chldr_ui.ViewModels
 {
     public abstract partial class EntryViewModelBase : ViewModelBase
     {

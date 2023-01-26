@@ -1,7 +1,7 @@
 ﻿using chldr_shared.Validators;
 using chldr_shared.Dto;
 
-namespace chldr_shared.ViewModels
+namespace chldr_ui.ViewModels
 {
     public class RegistrationPageViewModel : EditFormViewModel<UserInfoDto, UserInfoValidator>
     {

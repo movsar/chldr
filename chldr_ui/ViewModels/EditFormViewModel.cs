@@ -1,4 +1,4 @@
-﻿using chldr_shared.Interfaces;
+﻿using chldr_ui.Interfaces;
 using chldr_shared.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_shared.ViewModels
+namespace chldr_ui.ViewModels
 {
     public abstract class EditFormViewModel<TFormDto, TFormValidator> : ViewModelBase, IEditFormViewModel<TFormDto, TFormValidator>
         where TFormValidator : AbstractValidator<TFormDto>

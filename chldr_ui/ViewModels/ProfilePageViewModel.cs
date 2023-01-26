@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_shared.ViewModels
+namespace chldr_ui.ViewModels
 {
     public class ProfilePageViewModel : EditFormViewModel<UserInfoDto, UserInfoValidator>
     {

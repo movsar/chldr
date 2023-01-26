@@ -3,7 +3,7 @@
 @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css');
 @import url('chldr_server.styles.css');
-@import url('_content/chldr_shared/css/app.css');
+@import url('_content/chldr_ui/css/app.css');
 
 .chldr_registration_errors {
     font-size: 16px;

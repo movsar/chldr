@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace chldr_shared.ViewModels
+namespace chldr_ui.ViewModels
 {
     public class LoginPageViewModel : EditFormViewModel<UserInfoDto, UserInfoValidator>
     {

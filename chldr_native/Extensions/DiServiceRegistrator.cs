@@ -1,15 +1,13 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Services;
-using chldr_shared;
-using chldr_shared.Dto;
+using chldr_ui;
 using chldr_shared.Enums;
-using chldr_shared.Pages;
-using chldr_shared.Services;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
-using chldr_shared.ViewModels;
+using chldr_ui.ViewModels;
 using FluentValidation;
-using System.Reflection.PortableExecutable;
+using chldr_shared.Dto;
+using chldr_shared.Services;
 
 namespace chldr_native.Extensions
 {

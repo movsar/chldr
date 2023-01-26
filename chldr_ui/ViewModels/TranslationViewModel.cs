@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using chldr_shared.Stores;
 
-namespace chldr_shared.ViewModels
+namespace chldr_ui.ViewModels
 {
 
     [ObservableObject]

@@ -1,7 +1,7 @@
 using Microsoft.JSInterop;
 using System.Diagnostics;
 
-namespace chldr_shared
+namespace chldr_ui
 {
     // This class provides an example of how JavaScript functionality can be wrapped
     // in a .NET class for easy consumption. The associated JavaScript module is
@@ -17,7 +17,7 @@ namespace chldr_shared
         public JsInterop(IJSRuntime jsRuntime)
         {
             moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
-                "import", "./_content/chldr_shared/jsInterop.js").AsTask());
+                "import", "./_content/chldr_ui/jsInterop.js").AsTask());
         }
 
         public async ValueTask<string> Prompt(string message)

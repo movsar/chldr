@@ -1,5 +1,4 @@
-﻿using chldr_shared.ViewModels;
-using chldr_shared.Resources.Localizations;
+﻿using chldr_shared.Resources.Localizations;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 using chldr_shared.Dto;

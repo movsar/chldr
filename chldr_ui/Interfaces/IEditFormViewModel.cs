@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_shared.Interfaces
+namespace chldr_ui.Interfaces
 {
     public interface IEditFormViewModel<TFormDto, TFormValidator>
     {

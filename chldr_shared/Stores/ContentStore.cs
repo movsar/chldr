@@ -1,6 +1,4 @@
-﻿using chldr_shared.Factories;
-using chldr_shared.ViewModels;
-using chldr_data.Interfaces;
+﻿using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Services;
 using MongoDB.Bson;
@@ -15,7 +13,7 @@ namespace chldr_shared.Stores
 {
     public class ContentStore
     {
-        internal event Action DatabaseInitialized;
+        public event Action DatabaseInitialized;
 
         #region Events
         public event Action CurrentEntriesUpdated;
@@ -52,7 +50,7 @@ namespace chldr_shared.Stores
         #endregion
 
         #region Methods
-        internal void Search(string inputText)
+        public void Search(string inputText)
         {
             CurrentEntries.Clear();
             Task.Run(() => _dataAccess.FindAsync(inputText));
@@ -66,17 +64,16 @@ namespace chldr_shared.Stores
             CurrentEntries.AddRange(entries);
             CurrentEntriesUpdated?.Invoke();
         }
-
-        internal WordModel GetWordById(ObjectId entryId)
+        public WordModel GetWordById(ObjectId entryId)
         {
             return _dataAccess.GetWordById(entryId);
         }
-        internal PhraseModel GetPhraseById(ObjectId entryId)
+        public PhraseModel GetPhraseById(ObjectId entryId)
         {
             return _dataAccess.GetPhraseById(entryId);
         }
 
-        internal async Task RegisterNewUser(string email, string password)
+        public async Task RegisterNewUser(string email, string password)
         {
             await _dataAccess.RegisterNewUserAsync(email, password);
         }

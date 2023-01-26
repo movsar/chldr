@@ -1,5 +1,4 @@
 ﻿using chldr_shared.Resources.Localizations;
-using chldr_shared.Services;
 using chldr_shared.Stores;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
@@ -11,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_shared.ViewModels
+namespace chldr_ui.ViewModels
 {
     public class ViewModelBase : ComponentBase
     {

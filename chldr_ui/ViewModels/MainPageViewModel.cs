@@ -1,24 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using chldr_data.Interfaces;
-using chldr_data.Services;
-using chldr_data.Models;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using Microsoft.AspNetCore.Components;
 using chldr_shared.Stores;
-using chldr_shared.Factories;
-using System.Reflection;
+using chldr_ui.Factories;
 using chldr_shared.Services;
-using Microsoft.Extensions.Localization;
+using chldr_shared.Enums;
 
-namespace chldr_shared.ViewModels
+namespace chldr_ui.ViewModels
 {
     [ObservableObject]
     public partial class MainPageViewModel : ViewModelBase
@@ -55,7 +43,7 @@ namespace chldr_shared.ViewModels
         protected override async void OnAfterRender(bool firstRender)
         {
             base.OnAfterRender(firstRender);
-            if (EnvironmentService!.CurrentPlatform == Enums.Platforms.Web && firstTimeRendered)
+            if (EnvironmentService!.CurrentPlatform == Platforms.Web && firstTimeRendered)
             {
                 firstTimeRendered = false;
                 await Task.Delay(500);
@@ -66,7 +54,7 @@ namespace chldr_shared.ViewModels
         private void MyContentStore_DatabaseInitialized()
         {
             _databaseInitialized = true;
-            if (EnvironmentService!.CurrentPlatform != Enums.Platforms.Web)
+            if (EnvironmentService!.CurrentPlatform != Platforms.Web)
             {
                 firstTimeRendered = false;
                 ShowRandoms();
