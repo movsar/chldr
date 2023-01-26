@@ -1,14 +1,7 @@
 ﻿using chldr_data.Enums;
 using chldr_data.Models;
 using chldr_shared.Stores;
-using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chldr_ui.ViewModels
 {

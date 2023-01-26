@@ -2,7 +2,7 @@
 using MailKit.Net.Smtp;
 using MimeKit;
 
-namespace chldr_ui.Services
+namespace chldr_shared.Services
 {
     public class EmailService
     {
