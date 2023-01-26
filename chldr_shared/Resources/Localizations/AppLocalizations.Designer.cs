@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace chldr_shared.Resources.Localizations {
+namespace chldr_ui.Resources.Localizations {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace chldr_shared.Resources.Localizations {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("chldr_shared.Resources.Localizations.AppLocalizations", typeof(AppLocalizations).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("chldr_ui.Resources.Localizations.AppLocalizations", typeof(AppLocalizations).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

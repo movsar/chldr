@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_shared", "chldr_shared\chldr_shared.csproj", "{E810EF68-2D65-4FD5-B1A7-A637B96F67E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_ui", "chldr_shared\chldr_ui.csproj", "{E810EF68-2D65-4FD5-B1A7-A637B96F67E3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_server", "chldr_server\chldr_server.csproj", "{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}"
 EndProject
@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_native", "chldr_nativ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_data", "chldr_data\chldr_data.csproj", "{1515642D-BB1C-4CAC-A10C-99C43045BD90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chldr_data.tests", "chldr_data.tests\chldr_data.tests.csproj", "{D11A2287-2698-4AF2-B1A0-D0D448229609}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_data.tests", "chldr_data.tests\chldr_data.tests.csproj", "{D11A2287-2698-4AF2-B1A0-D0D448229609}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
