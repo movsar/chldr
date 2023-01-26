@@ -24,7 +24,7 @@ namespace chldr_data.Search
 
             await Task.Run(() =>
             {
-                var realmInstance = _dataAccess.Database;
+                using var realmInstance = _dataAccess.Database;
 
                 var entries = realmInstance.All<Entry>().Where(filter)
                                                         .AsEnumerable()
@@ -37,7 +37,7 @@ namespace chldr_data.Search
                 }
             });
 
-            var args = new SearchResultsModel(inputText, resultingEntries, SearchResultsModel.Mode.Direct);
+            var args = new SearchResultModel(inputText, resultingEntries.ToList(), SearchResultModel.Mode.Direct);
             _dataAccess.OnNewResults(args);
         }
 
@@ -47,7 +47,7 @@ namespace chldr_data.Search
 
             await Task.Run(() =>
             {
-                var realmInstance = _dataAccess.Database;
+                using var realmInstance = _dataAccess.Database;
 
                 var translations = realmInstance.All<Translation>()
                                                                    .Where(filter)
@@ -60,7 +60,7 @@ namespace chldr_data.Search
                 }
             });
 
-            var args = new SearchResultsModel(inputText, resultingEntries, SearchResultsModel.Mode.Reverse);
+            var args = new SearchResultModel(inputText, resultingEntries.ToList(), SearchResultModel.Mode.Reverse);
             _dataAccess.OnNewResults(args);
         }
         public SearchEngine(DataAccess dataAccess)

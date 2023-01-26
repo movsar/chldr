@@ -5,6 +5,7 @@
 @inherits WordViewModel;
 
 <h3>EntryEditPage</h3>
+@*
 @if (!string.IsNullOrEmpty(Content))
 {
 
@@ -22,7 +23,7 @@
             </select>
         </div>
     </form>
-}
+}*@
 
 <button class="btn btn-light" @onclick="@(()=>NavManager.NavigateTo("/"))">Cancel</button>
 <button class="btn btn-primary">Save</button>

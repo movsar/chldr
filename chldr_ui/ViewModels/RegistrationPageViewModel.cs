@@ -8,7 +8,7 @@ namespace chldr_ui.ViewModels
         public UserInfoDto UserInfo { get; } = new();
         private async Task SendRegistrationRequest()
         {
-            await ContentStore.RegisterNewUser(UserInfo.Email, UserInfo.Password);
+            await UserStore.RegisterNewUser(UserInfo.Email, UserInfo.Password);
         }
 
         public override async Task ValidateAndSubmit()

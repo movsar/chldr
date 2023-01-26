@@ -1,42 +1,51 @@
-﻿@inject IStringLocalizer<AppLocalizations> Localizer;
+﻿@inherits PhraseViewModel;
 
-<div class="chldr_entry_header card-title">
-    @ViewModel.Header
-    @*<span class="oi oi-volume-high" @onclick="ViewModel.ListenToPronunciation"></span>*@
+<div class="chldr_entry">
+    <div class="card card-body">
+
+        <div class="chldr_entry_header card-title">
+            @Header
+            @*<span class="oi oi-volume-high" @onclick="ListenToPronunciation"></span>*@
+        </div>
+
+        @if (!String.IsNullOrWhiteSpace(@Subheader))
+        {
+            <div class="chldr_entry_sub-header">
+                @Subheader
+            </div>
+        }
+
+        @if (!String.IsNullOrWhiteSpace(@Phrase?.Notes))
+        {
+            <div class="chldr_translation_notes">
+                Notes: (@Phrase?.Notes)
+            </div>
+        }
+
+        @if (!String.IsNullOrWhiteSpace(@Source))
+        {
+            <div class="chldr_entry_source">
+                @Localizer["Source"]: @Source
+            </div>
+        }
+
+        <div class="chldr_entry_translations mt-2">
+            @foreach (var translation in @Translations)
+            {
+                <TranslationView Translation="@translation"></TranslationView>
+            }
+        </div>
+
+        @if (UserStore?.CurrentUser != null)
+        {
+            <div class="chldr_entry_actions">
+                <i class="fa fa-language" @onclick="NewTranslation"></i>
+                <i class="fa fa-share" @onclick="Share"></i>
+                <i class="fa fa-flag" @onclick="Flag"></i>
+                <i class="fa fa-star" @onclick="AddToFavorites"></i>
+
+                @*<a href="/word/edit/@EntityId"><i class="oi oi-pencil"></i></a>*@
+            </div>
+        }
+    </div>
 </div>
-
-@if (!String.IsNullOrWhiteSpace(@ViewModel.Subheader))
-{
-    <div class="chldr_entry_sub-header">
-        @ViewModel.Subheader
-    </div>
-}
-
-@if (!String.IsNullOrWhiteSpace(@ViewModel.Notes))
-{
-    <div class="chldr_translation_notes">
-        Notes: (@ViewModel.Notes)
-    </div>
-}
-
-@if (!String.IsNullOrWhiteSpace(@ViewModel.Source))
-{
-    <div class="chldr_entry_source">
-        @Localizer["Source"]: @ViewModel.Source
-    </div>
-}
-
-@*<div class="chldr_entry_actions">
-    <i class="fa fa-language" @onclick="ViewModel.NewTranslation"></i>
-    <i class="fa fa-share" @onclick="ViewModel.Share"></i>
-
-    <i class="fa fa-flag" @onclick="ViewModel.Flag"></i>
-    <i class="fa fa-star" @onclick="ViewModel.AddToFavorites"></i>
-
-    <a href="/word/edit/@ViewModel.EntityId"><i class="oi oi-pencil"></i></a>
-</div>*@
-
-@code {
-    [Parameter]
-    public PhraseViewModel ViewModel { get; set; }
-}

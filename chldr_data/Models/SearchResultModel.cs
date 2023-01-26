@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace chldr_data.Models
 {
-    public class SearchResultsModel
+    public class SearchResultModel
     {
         public enum Mode
         {
@@ -19,7 +19,11 @@ namespace chldr_data.Models
         public IEnumerable<EntryModel> Entries { get; }
         public Mode SearchMode { get; }
 
-        public SearchResultsModel(string inputText, IEnumerable<EntryModel> resultingEntries, Mode mode)
+        public SearchResultModel(IEnumerable<EntryModel> resultingEntries)
+        {
+            Entries = resultingEntries;
+        }
+        public SearchResultModel(string inputText, IEnumerable<EntryModel> resultingEntries, Mode mode)
         {
             InputText = inputText;
             Entries = resultingEntries;

@@ -1,4 +1,6 @@
-﻿using chldr_data.Models;
+﻿using chldr_data.Entities;
+using chldr_data.Enums;
+using chldr_data.Models;
 using chldr_shared.Stores;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
@@ -12,65 +14,30 @@ namespace chldr_ui.ViewModels
 {
     public class WordViewModel : EntryViewModelBase
     {
-        #region Properties
-        public int PartOfSpeech { get; set; }
-        public int GrammaticalClass { get; set; }
-        public string Content { get; set; }
-        public string Notes { get; set; }
-        public string RawForms { get; }
-        public string RawVerbTenses { get; }
-        public string RawNounDeclensions { get; }
-        #endregion
-        private static string BuildWordInfoSubheader(string content, int grammaticalClass, string rawForms, string rawWordDeclensions, string rawWordTenses)
+        protected override void OnParametersSet()
         {
-            if (rawWordDeclensions == chldr_data.Entities.Word.EmptyRawWordDeclensionsValue && rawWordTenses == chldr_data.Entities.Word.EmptyRawWordTensesValue)
+            base.OnParametersSet();
+            Word = Entry as WordModel;
+        }
+        public WordModel? Word { get; set; }
+        public string? Header => Word?.Content;
+        public string? Subheader => CreateSubheader();
+        private string CreateSubheader()
+        {
+            if (Word.RawNounDeclensions == chldr_data.Entities.Word.EmptyRawWordDeclensionsValue && Word.RawVerbTenses == chldr_data.Entities.Word.EmptyRawWordTensesValue)
             {
                 return null;
             }
-            var allForms = chldr_data.Entities.Word.GetAllUniqueWordForms(content, rawForms, rawWordDeclensions, rawWordTenses, true);
+            var allForms = chldr_data.Entities.Word.GetAllUniqueWordForms(Word.Content, Word.RawForms, Word.RawNounDeclensions, Word.RawVerbTenses, true);
             string part1 = String.Join(", ", allForms);
             if (part1.Length == 0)
             {
                 return null;
             }
 
-            string part2 = $" {chldr_data.Entities.Word.ParseGrammaticalClass(grammaticalClass)} ";
+            string part2 = $" {chldr_data.Entities.Word.ParseGrammaticalClass(Word.GrammaticalClass)} ";
 
             return $"[{part1}{part2}]";
-        }
-
-        public WordViewModel(WordModel word)
-        {
-            InitializeViewModel(word);
-        }
-        public WordViewModel() { }
-        protected override void InitializeViewModel(EntryModel entry)
-        {
-            base.InitializeViewModel(entry);
-
-            var word = entry as WordModel;
-
-            EntityId = word.EntityId.ToString();
-            GrammaticalClass = word.GrammaticalClass;
-            Content = word.Content;
-            Notes = word.Notes;
-            PartOfSpeech = word.PartOfSpeech;
-
-            var subheader = BuildWordInfoSubheader(word.Content, word.GrammaticalClass, word.RawForms, word.RawNounDeclensions, word.RawVerbTenses);
-            Header = word.Content;
-            Subheader = subheader;
-
-            //case TextModel:
-            //    var text = entry as TextModel;
-            //    Header = text.Content;
-            //    Type = EntryType.Text;
-
-            //    break;
-        }
-
-        protected override void InitializeViewModel(string entryId)
-        {
-            InitializeViewModel(ContentStore.GetWordById(ObjectId.Parse(entryId)));
         }
     }
 }

@@ -1,37 +1,21 @@
-﻿using chldr_data.Enums;
+﻿using chldr_data.Entities;
+using chldr_data.Enums;
 using chldr_data.Models;
 using chldr_shared.Stores;
+using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 
 namespace chldr_ui.ViewModels
 {
     public class PhraseViewModel : EntryViewModelBase
     {
-        public string? Content { get; set; }
-        public string? Notes { get; set; }
-        public PhraseViewModel(PhraseModel phrase)
+        protected override void OnParametersSet()
         {
-            InitializeViewModel(phrase);
+            base.OnParametersSet();
+            Phrase = Entry as PhraseModel;
         }
-        public PhraseViewModel() { }
-        protected override void InitializeViewModel(EntryModel entry)
-        {
-            base.InitializeViewModel(entry);
-
-            var phrase = entry as PhraseModel;
-
-            EntityId = phrase.EntityId.ToString();
-            Content = phrase.Content;
-            Notes = phrase.Notes;
-
-            Header = phrase.Content;
-            Subheader = phrase.Notes;
-            Type = EntryType.Phrase;
-        }
-
-        protected override void InitializeViewModel(string entryId)
-        {
-            InitializeViewModel(ContentStore.GetPhraseById(ObjectId.Parse(entryId)));
-        }
+        public PhraseModel? Phrase { get; set; }
+        public string? Header => Phrase?.Content;
+        public string? Subheader => Phrase?.Notes;
     }
 }

@@ -7,23 +7,34 @@ namespace chldr_shared.Stores
 {
     public class UserStore
     {
+
+        #region Properties
         public bool LoggedIn { get; set; } = false;
-        public event Action LoggedInUserChanged;
         public UserModel? CurrentUser { get; set; }
+        #endregion
 
+        #region Events
+        public event Action LoggedInUserChanged;
+        #endregion
+
+        #region Fields
         private readonly ILogger<UserStore> _logger;
-        private IDataAccess _dataAccess;
+        private readonly IDataAccess _dataAccess;
         private readonly EnvironmentService _environmentService;
+        #endregion
 
+        #region Constructors
         public UserStore(IDataAccess dataAccess, EnvironmentService environmentService, ILogger<UserStore> logger)
         {
             _logger = logger;
             _dataAccess = dataAccess;
             _environmentService = environmentService;
 
-            _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized; ;
+            _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
         }
+        #endregion
 
+        #region Event Handlers
         private void DataAccess_DatabaseInitialized()
         {
             try
@@ -39,6 +50,13 @@ namespace chldr_shared.Stores
                 _logger.LogError(ex, ex.Message);
             }
         }
+        #endregion
+
+        public async Task RegisterNewUser(string email, string password)
+        {
+            await _dataAccess.RegisterNewUserAsync(email, password);
+        }
+
         public async Task SetCurrentUserInfoAsync()
         {
             try

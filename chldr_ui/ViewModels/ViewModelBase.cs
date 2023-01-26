@@ -1,4 +1,5 @@
 ﻿using chldr_shared.Resources.Localizations;
+using chldr_shared.Services;
 using chldr_shared.Stores;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
@@ -17,6 +18,7 @@ namespace chldr_ui.ViewModels
         [Inject] internal ContentStore ContentStore { get; set; }
         [Inject] internal UserStore UserStore { get; set; }
         [Inject] internal IStringLocalizer<AppLocalizations> Localizer { get; set; }
-      
+        [Inject] internal EnvironmentService? EnvironmentService { get; set; }
+
     }
 }

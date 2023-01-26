@@ -9,23 +9,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Realms.Sync;
+using MongoDB.Bson;
 
 namespace chldr_ui.ViewModels
 {
     public abstract partial class EntryViewModelBase : ViewModelBase
     {
+        [Parameter]
+        public EntryModel? Entry { get; set; }
 
         #region Properties
-        [Parameter]
-        public EntryModel Model { get; set; }
-
-        [Parameter]
-        public string EntityId { get; set; }
-        public string Source { get; set; }
-        public string Header { get; set; }
-        public string Subheader { get; set; }
-        public int Type { get; set; }
-        public List<TranslationViewModel> TranslationViewModels { get; } = new();
+        public string? Source { get; set; }
+        public List<TranslationModel> Translations { get; } = new();
         #endregion
 
         #region Actions
@@ -36,33 +32,17 @@ namespace chldr_ui.ViewModels
         public void Flag() { }
         #endregion
 
-        #region Contructors
-        public EntryViewModelBase() { }
-        public EntryViewModelBase(EntryModel entry)
+        protected override void OnParametersSet()
         {
-            InitializeViewModel(entry);
-        }
-        #endregion
+            base.OnParametersSet();
 
-        #region EventHandlers
-
-        #endregion
-
-        #region Methods
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-            if (!string.IsNullOrEmpty(EntityId))
+            if (Entry == null)
             {
-                InitializeViewModel(EntityId);
+                return;
             }
-        }
-        protected abstract void InitializeViewModel(string entryId);
 
-        protected virtual void InitializeViewModel(EntryModel entry)
-        {
-            Source = ParseSource(entry.Source.Name);
-            TranslationViewModels.AddRange(entry.Translations.Select(t => new TranslationViewModel(t)));
+            Translations.AddRange(Entry.Translations);
+            Source = ParseSource(Entry.Source.Name);
         }
 
         private static string ParseSource(string sourceName)
@@ -91,7 +71,5 @@ namespace chldr_ui.ViewModels
             }
             return sourceTitle;
         }
-        #endregion
-
     }
 }

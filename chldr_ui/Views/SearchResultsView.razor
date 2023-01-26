@@ -1,0 +1,20 @@
+﻿@inherits SearchResultsViewModel;
+
+@if (SearchResults.Count != 0)
+{
+    <div class="chldr_entries">
+
+        @foreach (var entry in SearchResults.SelectMany(sr => sr.Entries))
+        {
+            @switch (entry.Type)
+            {
+                case EntryType.Word:
+                    <WordView Entry="entry" />
+                    break;
+                case EntryType.Phrase:
+                    <PhraseView Entry="entry" />
+                    break;
+            }
+        }
+    </div>
+}

@@ -10,18 +10,18 @@ namespace chldr_data.Interfaces
         App App { get; }
 
         event Action DatabaseInitialized;
-        event Action<SearchResultsModel> GotResults;
+        event Action<SearchResultModel> GotNewSearchResult;
 
         WordModel GetWordById(ObjectId entityId);
         PhraseModel GetPhraseById(ObjectId entityId);
-        IEnumerable<EntryModel> GetRandomEntries();
+        void LoadRandomEntries();
         Task FindAsync(string inputText);
         Task LogInEmailPasswordAsync(string email, string password);
-        Task<UserModel?> GetCurrentUserInfoAsync();
         Task RegisterNewUserAsync(string email, string password);
         Task SendPasswordResetRequestAsync(string email);
         Task UpdatePasswordAsync(string token, string tokenId, string newPassword);
         Task ConfirmUserAsync(string token, string tokenId, string email);
         Task LogOutAsync();
+        Task<UserModel?> GetCurrentUserInfoAsync();
     }
 }

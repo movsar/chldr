@@ -1,34 +1,28 @@
-﻿@if (@ViewModel != null)
-{
-    <div class="chldr_translation card-subtitle">
-        <span class="chldr_translation_language-code">
-            @ViewModel?.LanguageCode
+﻿@inherits TranslationViewModel;
+
+<div class="chldr_translation card-subtitle">
+    <span class="chldr_translation_language-code">
+        @Translation?.Language.Code
+    </span>
+
+    <span class="chldr_translation_content" @onclick="DoSearch">
+        @Translation?.Content
+    </span>
+
+    @if (UserStore?.CurrentUser != null)
+    {
+        <span class="chldr_translation_actions ms-lg-1">
+            <i class="oi oi-pencil" @onclick="Edit"></i>
+            <i class="fa fa-thumbs-up" @onclick="Upvote"></i>
+            <i class="fa fa-thumbs-down" @onclick="Downvote"></i>
         </span>
+    }
 
-        <span class="chldr_translation_content">
-            @ViewModel?.Content
-        </span>
+    @if (!String.IsNullOrWhiteSpace(@Translation?.Notes))
+    {
+        <div class="chldr_translation_notes">
+            (@Translation?.Notes)
+        </div>
+    }
 
-        @if (ViewModel?.UserStore?.CurrentUser != null)
-        {
-            <span class="chldr_translation_actions ms-lg-1">
-                <i class="oi oi-pencil" @onclick="ViewModel.Edit"></i>
-                <i class="fa fa-thumbs-up" @onclick="ViewModel.Upvote"></i>
-                <i class="fa fa-thumbs-down" @onclick="ViewModel.Downvote"></i>
-            </span>
-        }
-
-        @if (!String.IsNullOrWhiteSpace(@ViewModel?.Notes))
-        {
-            <div class="chldr_translation_notes">
-                (@ViewModel.Notes)
-            </div>
-        }
-
-    </div>
-}
-
-@code {
-    [Parameter]
-    public TranslationViewModel? ViewModel { get; set; }
-}
+</div>

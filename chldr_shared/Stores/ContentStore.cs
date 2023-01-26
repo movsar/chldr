@@ -13,10 +13,10 @@ namespace chldr_shared.Stores
 {
     public class ContentStore
     {
-        public event Action DatabaseInitialized;
-
+        
         #region Events
-        public event Action CurrentEntriesUpdated;
+        public event Action DatabaseInitialized;
+        public event Action<SearchResultModel> GotNewSearchResult;
         #endregion
 
         #region Fields
@@ -27,42 +27,40 @@ namespace chldr_shared.Stores
         public ContentStore(IDataAccess dataAccess)
         {
             _dataAccess = dataAccess;
-            _dataAccess.GotResults += DataAccess_GotNewResults;
-        
+            _dataAccess.GotNewSearchResult += DataAccess_GotNewSearchResults;
             _dataAccess.DatabaseInitialized += (() =>
             {
-                DatabaseInitialized?.Invoke(); 
+                DatabaseInitialized?.Invoke();
             });
         }
 
         #endregion
 
         #region Properties
-        public List<EntryModel> CurrentEntries { get; } = new();
+        // This shouldn't be normally used, but only to request models that have already been loaded 
+        // but couldn't be passed between components for some reason
+        // each SearchResult will normally be for different inputText value
+        public List<SearchResultModel> CachedSearchResults { get; } = new();
         #endregion
 
         #region EventHandlers
-        private void DataAccess_GotNewResults(SearchResultsModel results)
+        private void DataAccess_GotNewSearchResults(SearchResultModel searchResult)
         {
-            CurrentEntries.AddRange(results.Entries);
-            CurrentEntriesUpdated?.Invoke();
+            CachedSearchResults.Add(searchResult);
+            GotNewSearchResult?.Invoke(searchResult);
         }
         #endregion
 
         #region Methods
         public void Search(string inputText)
         {
-            CurrentEntries.Clear();
+            CachedSearchResults.Clear();
             Task.Run(() => _dataAccess.FindAsync(inputText));
         }
-
         public void LoadRandomEntries()
         {
-            var entries = _dataAccess.GetRandomEntries();
-
-            CurrentEntries.Clear();
-            CurrentEntries.AddRange(entries);
-            CurrentEntriesUpdated?.Invoke();
+            CachedSearchResults.Clear();
+            Task.Run(() => _dataAccess.LoadRandomEntries());
         }
         public WordModel GetWordById(ObjectId entryId)
         {
@@ -72,12 +70,6 @@ namespace chldr_shared.Stores
         {
             return _dataAccess.GetPhraseById(entryId);
         }
-
-        public async Task RegisterNewUser(string email, string password)
-        {
-            await _dataAccess.RegisterNewUserAsync(email, password);
-        }
-
         #endregion
 
     }

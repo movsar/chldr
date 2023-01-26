@@ -21,7 +21,7 @@ namespace chldr_data.Services
 
         #region Events
         public event Action DatabaseInitialized;
-        public event Action<SearchResultsModel> GotResults;
+        public event Action<SearchResultModel> GotNewSearchResult;
         #endregion
 
         #region Fields
@@ -57,18 +57,23 @@ namespace chldr_data.Services
         1. That it executes without errors
         2. That it returns {RandomEntriesLimit} amount of Entries
          */
-        public IEnumerable<EntryModel> GetRandomEntries()
+        public void LoadRandomEntries()
         {
             var randomizer = new Random();
-            var entries = Database.All<Entry>().AsEnumerable();
+
+            using var realm = Database;
 
             // Takes random entries and shuffles them to break the natural order
-            return entries
+            var entries = realm.All<Entry>().AsEnumerable()
                 .Where(entry => entry.Rate > 0)
                 .OrderBy(x => randomizer.Next(0, 70000))
                 .Take(RandomEntriesLimit)
                 .OrderBy(entry => entry.GetHashCode())
-                .Select(entry => EntryModelFactory.CreateEntryModel(entry));
+                .Select(entry => EntryModelFactory.CreateEntryModel(entry))
+                .ToList();
+
+            var args = new SearchResultModel(entries);
+            OnNewResults(args);
         }
 
         public async Task InitializeDatabase()
@@ -95,9 +100,9 @@ namespace chldr_data.Services
             Task.Run(async () => await _realmService.Initialize());
         }
 
-        public void OnNewResults(SearchResultsModel results)
+        public void OnNewResults(SearchResultModel results)
         {
-            GotResults?.Invoke(results);
+            GotNewSearchResult?.Invoke(results);
         }
 
         public WordModel GetWordById(ObjectId entityId)
