@@ -14,8 +14,9 @@
            @ref="SearchInputReference"
            @bind-value="@SearchQuery"
            @oninput="(e)=> Search(e)" />
+
     <div class="ms-2">
-        <button type="button" class="chldr_btn_show-randoms btn btn-secondary" @onclick="ShowRandoms">
+        <button type="button" class="chldr_btn_show-randoms btn btn-secondary" @onclick="LoadRandomEntries">
             <span class="bi-arrow-repeat"></span>
         </button>
     </div>

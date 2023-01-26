@@ -11,11 +11,11 @@ namespace chldr_ui.ViewModels
     public partial class MainPageViewModel : ViewModelBase
     {
         [Inject] JsInterop? JsInteropFunctions { get; set; }
+
         #region Properties
         internal List<SearchResultModel> SearchResults { get; } = new();
         internal ElementReference SearchInputReference { get; set; }
         internal string SearchQuery { get; set; }
-
         #endregion
 
         #region Fields
@@ -30,17 +30,26 @@ namespace chldr_ui.ViewModels
         }
 
         #region EventHandlers
-        private void ContentStore_DatabaseInitialized()
+        private async void ContentStore_DatabaseInitialized()
         {
             if (EnvironmentService?.CurrentPlatform != Platforms.Web)
             {
                 ContentStore.LoadRandomEntries();
+            }
+            else
+            {
+                await Task.Delay(500);
+                await JsInteropFunctions!.ClickShowRandoms();
             }
         }
 
         private void ContentStore_GotNewSearchResult(SearchResultModel searchResult)
         {
             SearchResults.Add(searchResult);
+            InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
         }
 
         // Called when something is typed into search input
@@ -58,9 +67,10 @@ namespace chldr_ui.ViewModels
         #endregion
 
         #region Methods
-
-        public void ShowRandoms()
+        public void LoadRandomEntries()
         {
+            SearchResults.Clear();
+
             try
             {
                 ContentStore.LoadRandomEntries();
@@ -71,17 +81,6 @@ namespace chldr_ui.ViewModels
             }
         }
         #endregion
-
-        protected override async Task OnParametersSetAsync()
-        {
-            if (EnvironmentService!.CurrentPlatform == Platforms.Web)
-            {
-                await Task.Delay(500);
-                await JsInteropFunctions!.ClickShowRandoms();
-            }
-            await base.OnParametersSetAsync();
-        }
-
 
         #region Overrides
         protected override async Task OnAfterRenderAsync(bool firstRender)

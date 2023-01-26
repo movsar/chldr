@@ -4,6 +4,7 @@ using Realms.Logging;
 using Realms.Sync;
 using System;
 using System.Diagnostics;
+using System.Security.Cryptography;
 
 namespace chldr_data.Services
 {
@@ -71,7 +72,7 @@ namespace chldr_data.Services
 
             // TODO: Compact if size > 100Mb
             // Realm.Compact(_config);
-         
+
             DatabaseInitialized?.Invoke();
             //Task.Run(async () =>
             //{
@@ -83,6 +84,24 @@ namespace chldr_data.Services
         internal App GetApp()
         {
             return _app;
+        }
+
+        private static void EncryptDatbase()
+        {
+            //using var realm = GetRealm();
+
+            //var encryptionKey = new byte[64];
+            //using var rng = new RNGCryptoServiceProvider();
+            //rng.GetBytes(encryptionKey);
+
+            //var encryptedConfig = new RealmConfiguration(Path.Combine(FileService.AppDataDirectory, "encrypted.realm"))
+            //{
+            //    EncryptionKey = encryptionKey
+            //};
+
+            //realm.WriteCopy(encryptedConfig);
+            //File.WriteAllBytes(Path.Combine(FileService.AppDataDirectory, "encryption.key"), encryptionKey);
+
         }
     }
 }

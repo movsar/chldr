@@ -10,6 +10,7 @@ namespace chldr_ui.ViewModels
 {
     public partial class TranslationViewModel : ViewModelBase
     {
+        [Inject] NavigationManager NavigationManager { get; set; }
         [Parameter]
         public TranslationModel? Translation { get; set; }
 
@@ -22,7 +23,10 @@ namespace chldr_ui.ViewModels
         #region Actions
         public void Upvote() { }
         public void Downvote() { }
-        public void Edit() { }
+        public void Edit()
+        {
+            
+        }
         public void CurrentTranslationSelected()
         {
             var g = 2;
