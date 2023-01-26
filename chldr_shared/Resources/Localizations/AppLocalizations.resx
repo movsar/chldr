@@ -182,6 +182,12 @@
   <data name="Error:Password_too_long" xml:space="preserve">
     <value>Password is too long</value>
   </data>
+  <data name="Error:Translation_language_must_be_set" xml:space="preserve">
+    <value>Translation language must be set</value>
+  </data>
+  <data name="Error:Translation_text_must_be_set" xml:space="preserve">
+    <value>Translation text must be set</value>
+  </data>
   <data name="First_name" xml:space="preserve">
     <value>First Name</value>
   </data>

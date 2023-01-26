@@ -240,6 +240,24 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Translation language must be set.
+        /// </summary>
+        public static string Error_Translation_language_must_be_set {
+            get {
+                return ResourceManager.GetString("Error:Translation_language_must_be_set", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Translation text must be set.
+        /// </summary>
+        public static string Error_Translation_text_must_be_set {
+            get {
+                return ResourceManager.GetString("Error:Translation_text_must_be_set", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to First Name.
         /// </summary>
         public static string First_name {
