@@ -30,6 +30,11 @@
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 		</Compile>
+		<Compile Update="Resources\Localizations\AppLocalizations.ru.Designer.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>AppLocalizations.ru.resx</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -42,6 +47,10 @@
 		<EmbeddedResource Update="Resources\Localizations\AppLocalizations.resx">
 			<LastGenOutput>AppLocalizations.Designer.cs</LastGenOutput>
 			<Generator>PublicResXFileCodeGenerator</Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Resources\Localizations\AppLocalizations.ru.resx">
+		  <Generator>ResXFileCodeGenerator</Generator>
+		  <LastGenOutput>AppLocalizations.ru.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 	</ItemGroup>
 
