@@ -10,6 +10,15 @@ namespace chldr_data.Models
 {
     public class UserModel
     {
+        //private static NumericRange MemberRateRange = new Range(1, 10);
+        //private static NumericRange EnthusiastRateRange = new Range(10, 50);
+        //private static NumericRange ContributorRateRange = new Range(50, 500);
+        //private static NumericRange EditorRateRange = new Range(500, 10000);
+        //private static NumericRange MaintainerRateRange = new Range(10000, 500000000);
+        //private static bool IsWithin(Range range, int value)
+        //{
+        //    return value >= range.Start && value <= maximum;
+        //}
         public ObjectId EntityId { get; }
         public string Email { get; }
         public int Rate { get; }
@@ -17,7 +26,7 @@ namespace chldr_data.Models
         {
             get
             {
-                if (Rate < 9)
+                if (Rate < 10)
                 {
                     // 1 - 9
                     return Rank.Member;
