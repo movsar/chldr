@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace chldr_ui.Enums
+{
+    public enum Platforms
+    {
+        Web = 0,
+        Windows = 1,
+        Android = 2,
+        IOS = 3,
+        MacCatalyst = 4,
+    }
+}

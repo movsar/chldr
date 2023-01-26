@@ -1,12 +1,12 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Services;
-using chldr_shared;
-using chldr_shared.Dto;
-using chldr_shared.Enums;
-using chldr_shared.Services;
-using chldr_shared.Stores;
-using chldr_shared.Validators;
-using chldr_shared.ViewModels;
+using chldr_ui;
+using chldr_ui.Dto;
+using chldr_ui.Enums;
+using chldr_ui.Services;
+using chldr_ui.Stores;
+using chldr_ui.Validators;
+using chldr_ui.ViewModels;
 using FluentValidation;
 
 namespace chldr_server.Extensions

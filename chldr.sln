@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_ui", "chldr_shared\chldr_ui.csproj", "{E810EF68-2D65-4FD5-B1A7-A637B96F67E3}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_server", "chldr_server\chldr_server.csproj", "{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_native", "chldr_native\chldr_native.csproj", "{CDEA7896-CD62-4780-9CB3-633EAE312BA0}"
@@ -13,16 +11,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_data", "chldr_data\ch
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_data.tests", "chldr_data.tests\chldr_data.tests.csproj", "{D11A2287-2698-4AF2-B1A0-D0D448229609}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_ui", "chldr_ui\chldr_ui.csproj", "{8045C017-436A-4E11-8919-922813872CCD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E810EF68-2D65-4FD5-B1A7-A637B96F67E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E810EF68-2D65-4FD5-B1A7-A637B96F67E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E810EF68-2D65-4FD5-B1A7-A637B96F67E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E810EF68-2D65-4FD5-B1A7-A637B96F67E3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{474D95BD-8F8D-4F13-A1F0-ABBF46D92942}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,6 +37,10 @@ Global
 		{D11A2287-2698-4AF2-B1A0-D0D448229609}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D11A2287-2698-4AF2-B1A0-D0D448229609}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D11A2287-2698-4AF2-B1A0-D0D448229609}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8045C017-436A-4E11-8919-922813872CCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8045C017-436A-4E11-8919-922813872CCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8045C017-436A-4E11-8919-922813872CCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8045C017-436A-4E11-8919-922813872CCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
