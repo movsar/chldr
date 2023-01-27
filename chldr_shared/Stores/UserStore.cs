@@ -42,7 +42,7 @@ namespace chldr_shared.Stores
                 if (CurrentUser == null)
                 {
                     // All the other ways of starting this async job result in an WebSocket's error when deployed
-                    SetCurrentUserInfoAsync().Start();
+                    new Task(async () => await SetCurrentUserInfoAsync()).Start();
                 }
             }
             catch (Exception ex)
@@ -76,8 +76,8 @@ namespace chldr_shared.Stores
             {
                 await _dataAccess.LogInEmailPasswordAsync(email, password);
                 LoggedIn = true;
-                var GetCurrentUserInfoTask = new Task(async () => await SetCurrentUserInfoAsync());
-                GetCurrentUserInfoTask.Start();
+                
+                new Task(async () => await SetCurrentUserInfoAsync()).Start();
             }
             catch (Exception ex)
             {

@@ -12,14 +12,14 @@ namespace chldr_data.Models
 {
     public abstract class EntryModel
     {
-        public ObjectId EntityId { get; }
+        public ObjectId EntryId { get; }
         public List<TranslationModel> Translations { get; } = new List<TranslationModel>();
         public SourceModel Source { get; }
         public int Rate { get; }
         public int Type { get; }
         public EntryModel(Entities.Entry entry)
         {
-            EntityId = entry._id;
+            EntryId = entry._id;
             Source = new SourceModel(entry.Source);
             Rate = entry.Rate;
             Type = entry.Type;

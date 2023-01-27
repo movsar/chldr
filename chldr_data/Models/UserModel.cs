@@ -19,7 +19,7 @@ namespace chldr_data.Models
         //{
         //    return value >= range.Start && value <= maximum;
         //}
-        public ObjectId EntityId { get; }
+        public ObjectId UserId { get; }
         public string Email { get; }
         public int Rate { get; }
         public Rank Rank
@@ -62,7 +62,7 @@ namespace chldr_data.Models
 
         public UserModel(Entities.User user)
         {
-            EntityId = user._id;
+            UserId = user._id;
             Email = user.Email;
             Rate = user.Rate;
             FirstName = user.FirstName;

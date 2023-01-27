@@ -8,6 +8,7 @@ using chldr_ui.ViewModels;
 using FluentValidation;
 using chldr_shared.Dto;
 using chldr_shared.Services;
+using chldr_data.Search;
 
 namespace chldr_server.Extensions
 {

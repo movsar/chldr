@@ -8,6 +8,7 @@ namespace chldr_data.Interfaces
     public interface IDataAccess
     {
         App App { get; }
+        Realm Database { get; }
 
         event Action DatabaseInitialized;
         event Action<SearchResultModel> GotNewSearchResult;
@@ -23,7 +24,9 @@ namespace chldr_data.Interfaces
         Task ConfirmUserAsync(string token, string tokenId, string email);
         Task LogOutAsync();
         Task<UserModel?> GetCurrentUserInfoAsync();
-        PhraseModel GetPhraseByEntryId(ObjectId entryId);
-        WordModel GetWordByEntryId(ObjectId entryId);
+        PhraseModel? GetPhraseByEntryId(ObjectId entryId);
+        WordModel? GetWordByEntryId(ObjectId entryId);
+        EntryModel? GetEntryById(ObjectId entryId);
+        void OnNewResults(SearchResultModel args);
     }
 }

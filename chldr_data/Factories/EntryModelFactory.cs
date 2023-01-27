@@ -13,7 +13,7 @@ namespace chldr_data.Factories
     {
         public static EntryModel CreateEntryModel(Entities.Entry entryEntity)
         {
-            switch (entryEntity.Type)
+            switch (entryEntity?.Type)
             {
                 case EntryType.Word:
                     return new WordModel(entryEntity);

@@ -1,10 +1,10 @@
 ﻿@inherits SearchResultsViewModel;
 
-@if (SearchResults.Count != 0)
+@if (Entries.Count != 0)
 {
     <div class="chldr_entries">
 
-        @foreach (var entry in SearchResults.SelectMany(sr => sr.Entries))
+        @foreach (var entry in Entries)
         {
             @switch (entry.Type)
             {

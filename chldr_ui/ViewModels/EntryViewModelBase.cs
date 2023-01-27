@@ -14,14 +14,14 @@ using MongoDB.Bson;
 
 namespace chldr_ui.ViewModels
 {
-    public abstract partial class EntryViewModelBase : ViewModelBase
+    public abstract class EntryViewModelBase : ViewModelBase
     {
         [Parameter]
         public EntryModel? Entry { get; set; }
 
         #region Properties
         public string? Source { get; set; }
-        public List<TranslationModel> Translations { get; } = new();
+        public List<TranslationModel> Translations { get; set; }
         #endregion
 
         #region Actions
@@ -32,20 +32,7 @@ namespace chldr_ui.ViewModels
         public void Flag() { }
         #endregion
 
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-
-            if (Entry == null)
-            {
-                return;
-            }
-
-            Translations.AddRange(Entry.Translations);
-            Source = ParseSource(Entry.Source.Name);
-        }
-
-        private static string ParseSource(string sourceName)
+        protected static string ParseSource(string sourceName)
         {
             string sourceTitle = null;
             switch (sourceName)

@@ -11,13 +11,13 @@ namespace chldr_data.Models
 {
     public class SourceModel
     {
-        public ObjectId EntityId { get; }
+        public ObjectId SourceId { get; }
         public string Name { get; }
         public string Notes { get; }
         public SourceModel(Source source)
         {
             Name = source.Name;
-            EntityId = source._id;
+            SourceId = source._id;
             Notes = source.Notes;
         }
     }

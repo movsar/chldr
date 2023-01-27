@@ -15,14 +15,21 @@ namespace chldr_ui.ViewModels
     public class WordViewModel : EntryViewModelBase
     {
         [Inject] NavigationManager NavigationManager { get; set; }
+        public WordModel? Word { get; set; }
+     
+        public string? Header => Word?.Content;
+        public string? Subheader => CreateSubheader();
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-            Word = Entry as WordModel;
+            if (Word == null && Entry != null)
+            {
+                Word = Entry as WordModel;
+
+                Translations = Entry.Translations;
+                Source = ParseSource(Entry.Source.Name);
+            }
         }
-        public WordModel? Word { get; set; }
-        public string? Header => Word?.Content;
-        public string? Subheader => CreateSubheader();
         private string CreateSubheader()
         {
             if (Word.RawNounDeclensions == chldr_data.Entities.Word.EmptyRawWordDeclensionsValue && Word.RawVerbTenses == chldr_data.Entities.Word.EmptyRawWordTensesValue)

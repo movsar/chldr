@@ -11,19 +11,28 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using chldr_data.Interfaces;
+using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace chldr_data.Search
 {
-    internal class MainSearchEngine : SearchEngine
+    public class MainSearchEngine : SearchEngine
     {
+        private readonly ILogger<IDataAccess> _logger;
+
         Expression<Func<Entities.Entry, bool>> StartsWithFilter(string inputText) => translation => translation.RawContents.Contains(inputText);
         Expression<Func<Entities.Entry, bool>> EntryFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
         Expression<Func<Translation, bool>> TranslationFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
 
-        public MainSearchEngine(DataAccess dataAccess) : base(dataAccess) { }
+        public MainSearchEngine(IDataAccess dataAccess, ILogger<IDataAccess> logger) : base(dataAccess)
+        {
+            _logger = logger;
+        }
 
         public async Task FindAsync(string inputText)
         {
+            var sw = Stopwatch.StartNew();
+
             inputText = inputText.Replace("1", "Ӏ")
                                  .ToLower();
 
@@ -37,6 +46,9 @@ namespace chldr_data.Search
 
                 await ReverseSearch(inputText, TranslationFilter(inputText), 100);
             }
+
+            sw.Stop();
+            _logger.LogInformation($"SW: FindAsync: {sw.ElapsedMilliseconds}");
         }
     }
 }

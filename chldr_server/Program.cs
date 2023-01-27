@@ -17,7 +17,7 @@ namespace chldr_server
             builder.Services.AddControllers();
             builder.Services.AddServerSideBlazor();
             builder.Services.AddServerSideBlazor().AddCircuitOptions(option => { option.DetailedErrors = true; });
-            
+
             builder.Services.AddLocalization();
             builder.RegisterValidators();
             builder.RegisterAppServices();
@@ -38,7 +38,6 @@ namespace chldr_server
             app.MapControllers();
 
             app.UseStaticFiles();
-
             app.UseRouting();
 
             app.MapBlazorHub();

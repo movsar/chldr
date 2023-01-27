@@ -4,6 +4,7 @@ using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Search;
+using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using Realms;
 using Realms.Sync;
@@ -27,6 +28,7 @@ namespace chldr_data.Services
         #region Fields
         public const int ResultsLimit = 100;
         public const int RandomEntriesLimit = 30;
+        private readonly MainSearchEngine _searchEngine;
         private RealmService _realmService;
         #endregion
 
@@ -47,8 +49,7 @@ namespace chldr_data.Services
 
         public async Task FindAsync(string inputText)
         {
-            var searchEngine = new MainSearchEngine(this);
-            await searchEngine.FindAsync(inputText);
+            await _searchEngine.FindAsync(inputText);
         }
 
         /*
@@ -81,8 +82,9 @@ namespace chldr_data.Services
             await _realmService.Initialize();
         }
 
-        public DataAccess(FileService fileService, RealmService realmService)
+        public DataAccess(FileService fileService, RealmService realmService, ILogger<IDataAccess> logger)
         {
+            _searchEngine = new MainSearchEngine(this, logger);
             _realmService = realmService;
 
             if (App != null)
@@ -144,14 +146,23 @@ namespace chldr_data.Services
             await App.CurrentUser.LogOutAsync();
         }
 
-        public PhraseModel GetPhraseByEntryId(ObjectId entryId)
+        public EntryModel GetEntryById(ObjectId entryId)
         {
-            return new PhraseModel(_realmService.GetRealm().All<Phrase>().FirstOrDefault(p => p._id == entryId));
+            var entry = Database.All<Entry>().FirstOrDefault(e => e._id == entryId);
+            if (entry == null)
+            {
+                throw new Exception("Error:Requested_entry_couldn't_be_found");
+            }
+            return EntryModelFactory.CreateEntryModel(entry);
         }
 
+        public PhraseModel GetPhraseByEntryId(ObjectId entryId)
+        {
+            return GetEntryById(entryId) as PhraseModel;
+        }
         public WordModel GetWordByEntryId(ObjectId entryId)
         {
-            return new WordModel(_realmService.GetRealm().All<Word>().FirstOrDefault(w => w.Entry._id == entryId));
+            return GetEntryById(entryId) as WordModel;
         }
     }
 

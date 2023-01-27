@@ -11,11 +11,11 @@ namespace chldr_data.Models
 {
     public class LanguageModel
     {
-        public ObjectId EntityId { get; }
+        public ObjectId LanguageId { get; }
         public string Code { get; } = string.Empty;
         public LanguageModel(Language languageEntity)
         {
-            EntityId = languageEntity._id;
+            LanguageId = languageEntity._id;
             Code = languageEntity.Code;
         }
     }

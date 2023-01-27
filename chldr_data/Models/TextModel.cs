@@ -12,12 +12,12 @@ namespace chldr_data.Models
 {
     public class TextModel : EntryModel
     {
-        public new ObjectId EntityId { get; }
+        public new ObjectId TextId { get; }
         public string Content { get; }
 
         public TextModel(Entities.Entry entry) : base(entry)
         {
-            EntityId = entry.Text._id;
+            TextId = entry.Text._id;
             Content = entry.Text.Content;
         }
     }

@@ -13,7 +13,6 @@ namespace chldr_ui.ViewModels
         [Inject] JsInterop? JsInteropFunctions { get; set; }
 
         #region Properties
-        internal List<SearchResultModel> SearchResults { get; } = new();
         internal ElementReference SearchInputReference { get; set; }
         internal string SearchQuery { get; set; }
         #endregion
@@ -26,7 +25,6 @@ namespace chldr_ui.ViewModels
             base.OnInitialized();
 
             ContentStore.DatabaseInitialized += ContentStore_DatabaseInitialized;
-            ContentStore.GotNewSearchResult += ContentStore_GotNewSearchResult;
         }
 
         #region EventHandlers
@@ -43,15 +41,6 @@ namespace chldr_ui.ViewModels
             }
         }
 
-        private void ContentStore_GotNewSearchResult(SearchResultModel searchResult)
-        {
-            SearchResults.Add(searchResult);
-            InvokeAsync(() =>
-            {
-                StateHasChanged();
-            });
-        }
-
         // Called when something is typed into search input
         public void Search(ChangeEventArgs evgentArgs)
         {
@@ -61,7 +50,6 @@ namespace chldr_ui.ViewModels
                 return;
             }
 
-            SearchResults.Clear();
             ContentStore.Search(inputText);
         }
         #endregion
@@ -69,8 +57,6 @@ namespace chldr_ui.ViewModels
         #region Methods
         public void LoadRandomEntries()
         {
-            SearchResults.Clear();
-
             try
             {
                 ContentStore.LoadRandomEntries();

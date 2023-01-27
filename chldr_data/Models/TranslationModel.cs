@@ -12,7 +12,7 @@ namespace chldr_data.Models
 {
     public class TranslationModel
     {
-        public ObjectId EntityId { get; }
+        public ObjectId TranslationId { get; }
         public ObjectId EntryId { get; }
         public string Content { get; }
         public string Notes { get; }
@@ -20,7 +20,7 @@ namespace chldr_data.Models
         public int Rate { get; set; }
         public TranslationModel(Translation translation)
         {
-            EntityId = translation._id;
+            TranslationId = translation._id;
             Content = translation.Content;
             Notes = translation.Notes;
             Rate = translation.Rate;

@@ -71,7 +71,7 @@ namespace chldr_shared.Stores
             return _dataAccess.GetPhraseById(entryId);
         }
 
-        public EntryModel? GetEntryById(ObjectId entryId)
+        public EntryModel GetEntryById(ObjectId entryId)
         {
             var word = _dataAccess.GetWordByEntryId(entryId);
             if (word != null)

@@ -15,7 +15,7 @@ namespace chldr_data.Models
             Random
         }
 
-        public string InputText { get; }
+        public string SearchQuery { get; }
         public IEnumerable<EntryModel> Entries { get; }
         public Mode SearchMode { get; }
 
@@ -25,7 +25,7 @@ namespace chldr_data.Models
         }
         public SearchResultModel(string inputText, IEnumerable<EntryModel> resultingEntries, Mode mode)
         {
-            InputText = inputText;
+            SearchQuery = inputText;
             Entries = resultingEntries;
             SearchMode = mode;
         }

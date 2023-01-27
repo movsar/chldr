@@ -14,9 +14,9 @@ using chldr_data.Factories;
 
 namespace chldr_data.Search
 {
-    internal abstract class SearchEngine
+    public abstract class SearchEngine
     {
-        protected readonly DataAccess _dataAccess;
+        protected readonly IDataAccess _dataAccess;
 
         protected async Task DirectSearch(string inputText, Expression<Func<Entities.Entry, bool>> filter, int limit)
         {
@@ -63,7 +63,7 @@ namespace chldr_data.Search
             var args = new SearchResultModel(inputText, resultingEntries.ToList(), SearchResultModel.Mode.Reverse);
             _dataAccess.OnNewResults(args);
         }
-        public SearchEngine(DataAccess dataAccess)
+        public SearchEngine(IDataAccess dataAccess)
         {
             _dataAccess = dataAccess;
         }

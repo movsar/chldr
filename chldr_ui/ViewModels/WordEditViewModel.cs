@@ -15,7 +15,7 @@ namespace chldr_ui.ViewModels
     {
         #region Properties
         [Parameter]
-        public ObjectId Id { get; set; }
+        public string? WordId { get; set; }
         public int PartOfSpeech { get; set; }
         public int GrammaticalClass { get; set; }
         public string Content { get; set; }
@@ -25,14 +25,29 @@ namespace chldr_ui.ViewModels
         public string RawNounDeclensions { get; }
         #endregion
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            if (string.IsNullOrEmpty(WordId))
+            {
+                return;
+            }
+
+            InitializeViewModel(ContentStore.GetWordById(new ObjectId(WordId)));
+        }
+
         protected override void InitializeViewModel(EntryModel entry)
         {
+            base.InitializeViewModel(entry);
+
             var word = entry as WordModel;
             if (word == null)
             {
                 throw new Exception("Error:Word_shouldn't_be_null");
             }
 
+            EntryId = word.EntryId;
             PartOfSpeech = word.PartOfSpeech;
             GrammaticalClass = word.GrammaticalClass;
             Content = word.Content;
