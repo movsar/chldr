@@ -126,8 +126,14 @@ namespace chldr_data.Services
 
         public async Task LogOutAsync()
         {
-            await App.CurrentUser.LogOutAsync();
-            _realmService.UpdateRealmConfig(App.CurrentUser);
+            var anonymousUser = App.AllUsers.FirstOrDefault(u => u.Provider ==  Credentials.AuthProvider.Anonymous);
+            if (anonymousUser == null)
+            {
+                throw new Exception("not good");
+            }
+
+            App.SwitchUser(anonymousUser);
+            _realmService.UpdateRealmConfig(anonymousUser);
         }
 
         public void OnNewResults(SearchResultModel results)

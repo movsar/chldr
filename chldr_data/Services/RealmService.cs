@@ -5,6 +5,7 @@ using Realms.Logging;
 using Realms.Sync;
 using System;
 using System.Diagnostics;
+using System.IO.Compression;
 using System.Security.Cryptography;
 
 namespace chldr_data.Services
@@ -59,13 +60,17 @@ namespace chldr_data.Services
                 throw new Exception("User must not be null");
             }
 
-            string dbPath = FileService.GetDatabasePath(appUser.Id);
-            if (!File.Exists(dbPath))
+            var uncompressedFileName = FileService.CompressedDatabaseFileName + "x";
+            var userDatabaseName = FileService.GetUserDatabaseName(appUser.Id);
+            var userDatabasePath = Path.Combine(FileService.AppDataDirectory, userDatabaseName);
+
+            if (!File.Exists(userDatabasePath) && !File.Exists(uncompressedFileName))
             {
-                //     File.Copy(FileService.OriginalDatabasePath, dbPath);
+                ZipFile.ExtractToDirectory(FileService.CompressedDatabaseFilePath, FileService.AppDataDirectory);
+                File.Move(Path.Combine(FileService.AppDataDirectory, uncompressedFileName), Path.Combine(FileService.AppDataDirectory, userDatabaseName));
             }
 
-            _config = new FlexibleSyncConfiguration(appUser, dbPath)
+            _config = new FlexibleSyncConfiguration(appUser, userDatabasePath)
             {
                 SchemaVersion = 1,
                 PopulateInitialSubscriptions = (realm) =>
@@ -83,11 +88,13 @@ namespace chldr_data.Services
             };
 
             // Get database size in megabytes
-            var fileSize = new FileInfo(dbPath).Length / 1000_000;
+            var fileSize = new FileInfo(userDatabasePath).Length / 1000_000;
             if (fileSize > 50)
             {
                 Realm.Compact(_config);
             }
+
+            DatabaseInitialized?.Invoke();
         }
 
         internal App GetApp()

@@ -14,20 +14,20 @@ namespace chldr_data.Services
     {
 
         #region Fields
-        public const string OriginalDatabaseFileName = "database.realm";
-        public const string DatabaseSuffix = "real.dbf";
+        public const string CompressedDatabaseFileName = "synced.base.dat";
+        public const string DatabaseFileName = "synced.base.dbx";
 
         private const string DataDirName = "data";
         public static string? AppBaseDirectory;
         public static string? AppDataDirectory;
-        public static string OriginalDatabasePath;
+        public static string CompressedDatabaseFilePath;
         #endregion
 
         public FileService(string basePath)
         {
             AppBaseDirectory = basePath;
             AppDataDirectory = Path.Combine(AppBaseDirectory, DataDirName);
-            OriginalDatabasePath = Path.Combine(AppDataDirectory, OriginalDatabaseFileName);
+            CompressedDatabaseFilePath = Path.Combine(AppDataDirectory, CompressedDatabaseFileName);
 
             if (!Directory.Exists(AppDataDirectory))
             {
@@ -35,9 +35,9 @@ namespace chldr_data.Services
             }
         }
 
-        internal static string GetDatabasePath(string id)
+        internal static string GetUserDatabaseName(string id)
         {
-            return Path.Combine(AppDataDirectory, $"{id.Substring(4, 4)}.{DatabaseSuffix}");
+            return $"{id.Substring(4, 4)}.dbx";
         }
 
         public void PrepareDatabase()
