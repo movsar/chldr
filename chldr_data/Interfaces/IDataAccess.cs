@@ -23,5 +23,7 @@ namespace chldr_data.Interfaces
         Task ConfirmUserAsync(string token, string tokenId, string email);
         Task LogOutAsync();
         Task<UserModel?> GetCurrentUserInfoAsync();
+        PhraseModel GetPhraseByEntryId(ObjectId entryId);
+        WordModel GetWordByEntryId(ObjectId entryId);
     }
 }

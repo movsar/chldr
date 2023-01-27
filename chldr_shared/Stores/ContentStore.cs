@@ -13,7 +13,7 @@ namespace chldr_shared.Stores
 {
     public class ContentStore
     {
-        
+
         #region Events
         public event Action DatabaseInitialized;
         public event Action<SearchResultModel> GotNewSearchResult;
@@ -69,6 +69,23 @@ namespace chldr_shared.Stores
         public PhraseModel GetPhraseById(ObjectId entryId)
         {
             return _dataAccess.GetPhraseById(entryId);
+        }
+
+        public EntryModel? GetEntryById(ObjectId entryId)
+        {
+            var word = _dataAccess.GetWordByEntryId(entryId);
+            if (word != null)
+            {
+                return word;
+            }
+
+            var phrase = _dataAccess.GetPhraseByEntryId(entryId);
+            if (phrase != null)
+            {
+                return phrase;
+            }
+
+            return null;
         }
         #endregion
 

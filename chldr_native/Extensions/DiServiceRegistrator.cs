@@ -8,6 +8,7 @@ using chldr_ui.ViewModels;
 using FluentValidation;
 using chldr_shared.Dto;
 using chldr_shared.Services;
+using System.Reflection.PortableExecutable;
 
 namespace chldr_native.Extensions
 {
@@ -15,6 +16,8 @@ namespace chldr_native.Extensions
     {
         public static MauiAppBuilder RegisterValidators(this MauiAppBuilder mauiAppBuilder)
         {
+            mauiAppBuilder.Services.AddScoped<WordValidator>();
+            mauiAppBuilder.Services.AddScoped<TranslationValidator>();
             mauiAppBuilder.Services.AddScoped<UserInfoValidator>();
             mauiAppBuilder.Services.AddScoped<IValidator<UserInfoDto>, UserInfoValidator>();
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace chldr_ui.ViewModels
 {
-    public class TranslationEditViewModel : EditFormViewModel<TranslationModel, TranslationValidator>
+    public class TranslationEditViewModel : EditFormViewModelBase<TranslationModel, TranslationValidator>
     {
         public override Task ValidateAndSubmit()
         {

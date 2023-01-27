@@ -12,7 +12,7 @@ using System.Web;
 
 namespace chldr_ui.ViewModels
 {
-    public class LoginPageViewModel : EditFormViewModel<UserInfoDto, UserInfoValidator>
+    public class LoginPageViewModel : EditFormViewModelBase<UserInfoDto, UserInfoValidator>
     {
         #region Properties
         [Inject] NavigationManager? NavigationManager { get; set; }

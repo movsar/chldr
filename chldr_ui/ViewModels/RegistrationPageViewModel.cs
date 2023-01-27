@@ -3,7 +3,7 @@ using chldr_shared.Dto;
 
 namespace chldr_ui.ViewModels
 {
-    public class RegistrationPageViewModel : EditFormViewModel<UserInfoDto, UserInfoValidator>
+    public class RegistrationPageViewModel : EditFormViewModelBase<UserInfoDto, UserInfoValidator>
     {
         public UserInfoDto UserInfo { get; } = new();
         private async Task SendRegistrationRequest()

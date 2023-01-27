@@ -13,7 +13,7 @@ namespace chldr_ui.ViewModels
         [Inject] NavigationManager NavigationManager { get; set; }
         [Parameter]
         public TranslationModel? Translation { get; set; }
-
+        public bool IsEditMode { get; set; }
         protected override void OnParametersSet()
         {
             // Do whatever is needed to initialize
@@ -25,7 +25,8 @@ namespace chldr_ui.ViewModels
         public void Downvote() { }
         public void Edit()
         {
-            
+            IsEditMode = true;
+            StateHasChanged();
         }
         public void CurrentTranslationSelected()
         {

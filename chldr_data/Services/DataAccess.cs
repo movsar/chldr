@@ -143,6 +143,16 @@ namespace chldr_data.Services
         {
             await App.CurrentUser.LogOutAsync();
         }
+
+        public PhraseModel GetPhraseByEntryId(ObjectId entryId)
+        {
+            return new PhraseModel(_realmService.GetRealm().All<Phrase>().FirstOrDefault(p => p._id == entryId));
+        }
+
+        public WordModel GetWordByEntryId(ObjectId entryId)
+        {
+            return new WordModel(_realmService.GetRealm().All<Word>().FirstOrDefault(w => w.Entry._id == entryId));
+        }
     }
 
 }

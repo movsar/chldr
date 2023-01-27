@@ -14,6 +14,7 @@ namespace chldr_ui.ViewModels
 {
     public class WordViewModel : EntryViewModelBase
     {
+        [Inject] NavigationManager NavigationManager { get; set; }
         protected override void OnParametersSet()
         {
             base.OnParametersSet();

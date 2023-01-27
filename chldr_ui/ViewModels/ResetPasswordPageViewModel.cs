@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace chldr_ui.ViewModels
 {
-    public class ResetPasswordPageViewModel : EditFormViewModel<UserInfoDto, UserInfoValidator>
+    public class ResetPasswordPageViewModel : EditFormViewModelBase<UserInfoDto, UserInfoValidator>
     {
         public UserInfoDto UserInfo { get; set; } = new();
         private async Task SendPasswordResetRequest()

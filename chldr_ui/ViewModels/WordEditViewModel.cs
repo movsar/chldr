@@ -1,5 +1,6 @@
 ﻿using chldr_data.Models;
 using chldr_shared.Stores;
+using chldr_shared.Validators;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 using System;
@@ -10,9 +11,11 @@ using System.Threading.Tasks;
 
 namespace chldr_ui.ViewModels
 {
-    public class WordEditViewModel : EntryViewModelBase
+    public class WordEditViewModel : EntryEditViewModelBase<WordModel, WordValidator>
     {
         #region Properties
+        [Parameter]
+        public ObjectId Id { get; set; }
         public int PartOfSpeech { get; set; }
         public int GrammaticalClass { get; set; }
         public string Content { get; set; }
@@ -22,28 +25,18 @@ namespace chldr_ui.ViewModels
         public string RawNounDeclensions { get; }
         #endregion
 
-        //protected override void InitializeViewModel(EntryModel entry)
-        //{
-        //    base.InitializeViewModel(entry);
+        protected override void InitializeViewModel(EntryModel entry)
+        {
+            var word = entry as WordModel;
+            if (word == null)
+            {
+                throw new Exception("Error:Word_shouldn't_be_null");
+            }
 
-        //    var word = entry as WordModel;
-
-        //    EntityId = word.EntityId.ToString();
-        //    GrammaticalClass = word.GrammaticalClass;
-        //    Content = word.Content;
-        //    Notes = word.Notes;
-        //    PartOfSpeech = word.PartOfSpeech;
-
-        //    var subheader = BuildWordInfoSubheader(word.Content, word.GrammaticalClass, word.RawForms, word.RawNounDeclensions, word.RawVerbTenses);
-        //    Header = word.Content;
-        //    Subheader = subheader;
-
-        //    //case TextModel:
-        //    //    var text = entry as TextModel;
-        //    //    Header = text.Content;
-        //    //    Type = EntryType.Text;
-
-        //    //    break;
-        //}
+            PartOfSpeech = word.PartOfSpeech;
+            GrammaticalClass = word.GrammaticalClass;
+            Content = word.Content;
+            Notes = word.Notes;
+        }
     }
 }

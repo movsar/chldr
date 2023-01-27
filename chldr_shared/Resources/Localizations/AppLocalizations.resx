@@ -188,6 +188,9 @@
   <data name="Error:Translation_text_must_be_set" xml:space="preserve">
     <value>Translation text must be set</value>
   </data>
+  <data name="Error:Word_content_must_be_set" xml:space="preserve">
+    <value>Word content must be set</value>
+  </data>
   <data name="First_name" xml:space="preserve">
     <value>First Name</value>
   </data>

@@ -12,7 +12,6 @@
     @if (UserStore?.CurrentUser != null)
     {
         <span class="chldr_translation_actions ms-lg-1">
-            <i class="oi oi-pencil" @onclick="Edit"></i>
             <i class="fa fa-thumbs-up" @onclick="Upvote"></i>
             <i class="fa fa-thumbs-down" @onclick="Downvote"></i>
         </span>
@@ -24,5 +23,6 @@
             (@Translation?.Notes)
         </div>
     }
+
 
 </div>

@@ -16,7 +16,7 @@ namespace chldr_data.Models
     {
         public WordModel(Entities.Word word) : base(word.Entry)
         {
-            EntityId = word._id;
+            Id = word._id;
             Content = word.Content;
             Notes = word.Notes;
             RawForms = word.Forms;
@@ -28,7 +28,7 @@ namespace chldr_data.Models
 
         public WordModel(Entities.Entry entry) : this(entry.Word) { }
 
-        public new ObjectId EntityId { get; }
+        public new ObjectId Id { get; }
         public string Content { get; }
         public string Notes { get; }
         public string RawForms { get; }

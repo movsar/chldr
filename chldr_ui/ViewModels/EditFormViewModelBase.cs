@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace chldr_ui.ViewModels
 {
-    public abstract class EditFormViewModel<TFormDto, TFormValidator> : ViewModelBase, IEditFormViewModel<TFormDto, TFormValidator>
+    public abstract class EditFormViewModelBase<TFormDto, TFormValidator> : ViewModelBase, IEditFormViewModel<TFormDto, TFormValidator>
         where TFormValidator : AbstractValidator<TFormDto>
     {
         [Inject] TFormValidator? DtoValidator { get; set; }

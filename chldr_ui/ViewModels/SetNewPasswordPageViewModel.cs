@@ -6,7 +6,7 @@ using System.Web;
 
 namespace chldr_ui.ViewModels
 {
-    public class SetNewPasswordPageViewModel : EditFormViewModel<UserInfoDto, UserInfoValidator>
+    public class SetNewPasswordPageViewModel : EditFormViewModelBase<UserInfoDto, UserInfoValidator>
     {
         #region Properties
         [Inject] NavigationManager? NavigationManager { get; set; }

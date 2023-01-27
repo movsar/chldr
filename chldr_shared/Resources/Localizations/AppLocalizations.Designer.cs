@@ -258,6 +258,15 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Word content must be set.
+        /// </summary>
+        public static string Error_Word_content_must_be_set {
+            get {
+                return ResourceManager.GetString("Error:Word_content_must_be_set", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to First Name.
         /// </summary>
         public static string First_name {
