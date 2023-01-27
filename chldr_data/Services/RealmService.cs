@@ -71,8 +71,7 @@ namespace chldr_data.Services
                 throw;
             }
 
-            // TODO: Compact if size > 100Mb
-            // Realm.Compact(_config);
+           
 
             //Task.Run(async () =>
             //{
@@ -84,6 +83,10 @@ namespace chldr_data.Services
         internal void InitializeDatabase()
         {
             RefreshRealmConfig(_app.CurrentUser);
+
+            // TODO: Compact if size > 100Mb
+            //Realm.Compact(_config);
+
             DatabaseInitialized?.Invoke();
         }
         internal void RefreshRealmConfig(Realms.Sync.User appUser)
