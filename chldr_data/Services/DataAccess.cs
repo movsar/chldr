@@ -21,8 +21,14 @@ namespace chldr_data.Services
         {
             get
             {
-                var reaalm = _realmService.GetRealm();
-                return reaalm;
+                var realm = _realmService.GetRealm();
+                if (App.CurrentUser.Provider == Credentials.AuthProvider.Anonymous)
+                {
+                    // Don't try to sync anything if a legitimate user hasn't logged in
+                    realm.SyncSession.Stop();
+                }
+
+                return realm;
             }
         }
 
