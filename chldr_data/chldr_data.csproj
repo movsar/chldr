@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\chldr_utils\chldr_utils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Data\database.realm">
       <LogicalName>%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

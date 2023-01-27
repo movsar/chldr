@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_ui", "chldr_ui\chldr_
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_shared", "chldr_shared\chldr_shared.csproj", "{39246191-32CC-4930-A327-6EB79FFC7DF3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chldr_utils", "chldr_utils\chldr_utils.csproj", "{3D211563-743F-41D0-BDB5-49BAD670BB6B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{39246191-32CC-4930-A327-6EB79FFC7DF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39246191-32CC-4930-A327-6EB79FFC7DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39246191-32CC-4930-A327-6EB79FFC7DF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D211563-743F-41D0-BDB5-49BAD670BB6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D211563-743F-41D0-BDB5-49BAD670BB6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D211563-743F-41D0-BDB5-49BAD670BB6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D211563-743F-41D0-BDB5-49BAD670BB6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

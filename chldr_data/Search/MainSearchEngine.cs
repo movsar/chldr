@@ -13,25 +13,21 @@ using System.Threading.Tasks;
 using chldr_data.Interfaces;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using chldr_utils;
 
 namespace chldr_data.Search
 {
     public class MainSearchEngine : SearchEngine
     {
-        private readonly ILogger<IDataAccess> _logger;
-
         Expression<Func<Entities.Entry, bool>> StartsWithFilter(string inputText) => translation => translation.RawContents.Contains(inputText);
         Expression<Func<Entities.Entry, bool>> EntryFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
         Expression<Func<Translation, bool>> TranslationFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
 
-        public MainSearchEngine(IDataAccess dataAccess, ILogger<IDataAccess> logger) : base(dataAccess)
-        {
-            _logger = logger;
-        }
+        public MainSearchEngine(IDataAccess dataAccess) : base(dataAccess){}
 
         public async Task FindAsync(string inputText)
         {
-            var logger = new chldr_shared.Services.LoggerService("GotNewSearchResults", true);
+            var logger = new LoggerService("GotNewSearchResults", false);
             logger.StartSpeedTest();
 
             inputText = inputText.Replace("1", "Ӏ").ToLower();
@@ -46,9 +42,7 @@ namespace chldr_data.Search
 
                 await ReverseSearch(inputText, TranslationFilter(inputText), 100);
             }
-
-            sw.Stop();
-            _logger.LogInformation($"SW: FindAsync: {sw.ElapsedMilliseconds}");
+            logger.StopSpeedTest($"FindAsync finished");
         }
     }
 }

@@ -84,7 +84,7 @@ namespace chldr_data.Services
 
         public DataAccess(FileService fileService, RealmService realmService, ILogger<IDataAccess> logger)
         {
-            _searchEngine = new MainSearchEngine(this, logger);
+            _searchEngine = new MainSearchEngine(this);
             _realmService = realmService;
 
             if (App != null)

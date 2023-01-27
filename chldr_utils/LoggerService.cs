@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_shared.Services
+namespace chldr_utils
 {
     public class LoggerService
     {
