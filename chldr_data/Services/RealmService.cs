@@ -71,8 +71,6 @@ namespace chldr_data.Services
                 throw;
             }
 
-           
-
             //Task.Run(async () =>
             //{
             //    await GetRealm().Subscriptions.WaitForSynchronizationAsync();
@@ -83,7 +81,12 @@ namespace chldr_data.Services
         internal void InitializeDatabase()
         {
             RefreshRealmConfig(_app.CurrentUser);
-
+            var realm = GetRealm();
+            if (_app.CurrentUser.Provider == Credentials.AuthProvider.Anonymous)
+            {
+                // Don't try to sync anything if a legitimate user hasn't logged in
+                realm.SyncSession.Stop();
+            }
             // TODO: Compact if size > 100Mb
             //Realm.Compact(_config);
 
