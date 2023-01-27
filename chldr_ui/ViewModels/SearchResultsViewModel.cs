@@ -1,16 +1,5 @@
 ﻿using chldr_data.Models;
-using chldr_shared.Enums;
-using chldr_shared.Services;
 using chldr_utils;
-using MailKit.Search;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chldr_ui.ViewModels
 {
@@ -22,6 +11,11 @@ namespace chldr_ui.ViewModels
         protected override void OnInitialized()
         {
             ContentStore.GotNewSearchResult += ContentStore_GotNewSearchResult;
+            // If no new entries have been requested, show entries from the cache
+            if (ContentStore.CachedSearchResults.Count > 0 && Entries.Count == 0)
+            {
+                Entries.AddRange(ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries));
+            }
             base.OnInitialized();
         }
 

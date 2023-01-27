@@ -95,6 +95,7 @@ namespace chldr_data.Services
         {
             await _realmService.InitializeApp();
             _realmService.UpdateRealmConfig(App.CurrentUser);
+            DatabaseInitialized?.Invoke();
         }
 
         public DataAccess(FileService fileService, RealmService realmService)
@@ -126,7 +127,7 @@ namespace chldr_data.Services
 
         public async Task LogOutAsync()
         {
-            var anonymousUser = App.AllUsers.FirstOrDefault(u => u.Provider ==  Credentials.AuthProvider.Anonymous);
+            var anonymousUser = App.AllUsers.FirstOrDefault(u => u.Provider == Credentials.AuthProvider.Anonymous);
             if (anonymousUser == null)
             {
                 throw new Exception("not good");
@@ -170,7 +171,7 @@ namespace chldr_data.Services
             await App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
         }
 
-      
+
 
         public EntryModel GetEntryById(ObjectId entryId)
         {

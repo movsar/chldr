@@ -5,6 +5,7 @@ using chldr_shared.Stores;
 using chldr_shared.Services;
 using chldr_shared.Enums;
 using chldr_data.Models;
+using MailKit.Search;
 
 namespace chldr_ui.ViewModels
 {
@@ -23,6 +24,11 @@ namespace chldr_ui.ViewModels
         protected override void OnInitialized()
         {
             base.OnInitialized();
+
+            if (ContentStore.CachedSearchResults.Count > 0)
+            {
+                SearchQuery = ContentStore.CachedSearchResults.TakeLast(1).First().SearchQuery;
+            }
 
             ContentStore.DatabaseInitialized += ContentStore_DatabaseInitialized;
         }

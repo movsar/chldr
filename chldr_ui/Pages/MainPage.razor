@@ -13,7 +13,7 @@
         <input class="form-control shadow-none"
                placeholder="@Localizer["Start_typing"]"
                @ref="SearchInputReference"
-               @bind-value="@SearchQuery"
+               @bind="@SearchQuery"
                @oninput="(e)=> Search(e)" />
 
         <div class="ms-2">

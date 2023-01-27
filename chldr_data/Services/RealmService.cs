@@ -96,8 +96,6 @@ namespace chldr_data.Services
             {
                 Realm.Compact(_config);
             }
-
-            DatabaseInitialized?.Invoke();
         }
 
         internal App GetApp()

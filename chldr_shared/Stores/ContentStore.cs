@@ -39,7 +39,6 @@ namespace chldr_shared.Stores
         #region Properties
         // This shouldn't be normally used, but only to request models that have already been loaded 
         // but couldn't be passed between components for some reason
-        // each SearchResult will normally be for different inputText value
         public List<SearchResultModel> CachedSearchResults { get; } = new();
         #endregion
 
