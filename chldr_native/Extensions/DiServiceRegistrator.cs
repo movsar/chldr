@@ -53,6 +53,8 @@ namespace chldr_native.Extensions
             mauiAppBuilder.Services.AddScoped<MainPageViewModel>();
             mauiAppBuilder.Services.AddScoped<LoginPageViewModel>();
             mauiAppBuilder.Services.AddScoped<RegistrationPageViewModel>();
+            mauiAppBuilder.Services.AddScoped<SearchResultsViewModel>();
+
             return mauiAppBuilder;
         }
     }

@@ -44,6 +44,9 @@ namespace chldr_server.Extensions
             appBuilder.Services.AddScoped<MainPageViewModel>();
             appBuilder.Services.AddScoped<LoginPageViewModel>();
             appBuilder.Services.AddScoped<RegistrationPageViewModel>();
+        
+            
+
             return appBuilder;
         }
     }

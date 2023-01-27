@@ -31,10 +31,10 @@ namespace chldr_data.Search
 
         public async Task FindAsync(string inputText)
         {
-            var sw = Stopwatch.StartNew();
+            var logger = new chldr_shared.Services.LoggerService("GotNewSearchResults", true);
+            logger.StartSpeedTest();
 
-            inputText = inputText.Replace("1", "Ӏ")
-                                 .ToLower();
+            inputText = inputText.Replace("1", "Ӏ").ToLower();
 
             if (inputText.Length < 3)
             {
