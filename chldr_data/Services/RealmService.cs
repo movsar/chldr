@@ -87,6 +87,9 @@ namespace chldr_data.Services
                 }
             };
 
+            // To wait for syncrhonization, use realm.SyncSession.WaitForDownload(),
+            // not Subscriptions.WaitForSynchronization()
+
             // Get database size in megabytes
             var fileSize = new FileInfo(userDatabasePath).Length / 1000_000;
             if (fileSize > 50)
