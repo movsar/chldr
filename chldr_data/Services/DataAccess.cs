@@ -25,7 +25,7 @@ namespace chldr_data.Services
                 if (App.CurrentUser.Provider == Credentials.AuthProvider.Anonymous)
                 {
                     // Don't try to sync anything if a legitimate user hasn't logged in
-                    realm.SyncSession.Stop();
+                    //realm.SyncSession.Stop();
                 }
 
                 return realm;
@@ -91,10 +91,10 @@ namespace chldr_data.Services
             OnNewResults(args);
         }
 
-        public async Task InitializeDatabase()
+        public async Task Initialize()
         {
             await _realmService.InitializeApp();
-            _realmService.InitializeDatabase();
+            _realmService.UpdateRealmConfig(App.CurrentUser);
         }
 
         public DataAccess(FileService fileService, RealmService realmService)
@@ -114,7 +114,20 @@ namespace chldr_data.Services
                 DatabaseInitialized?.Invoke();
             };
 
-            Task.Run(async () => await InitializeDatabase());
+            Task.Run(async () => await Initialize());
+        }
+
+        public async Task LogInEmailPasswordAsync(string email, string password)
+        {
+            // Don't touch this unless it's absolutely necessary! It was very hard to configure!
+            var appUser = await App.LogInAsync(Credentials.EmailPassword(email, password));
+            _realmService.UpdateRealmConfig(appUser);
+        }
+
+        public async Task LogOutAsync()
+        {
+            await App.CurrentUser.LogOutAsync();
+            _realmService.UpdateRealmConfig(App.CurrentUser);
         }
 
         public void OnNewResults(SearchResultModel results)
@@ -151,32 +164,7 @@ namespace chldr_data.Services
             await App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
         }
 
-        public async Task LogInEmailPasswordAsync(string email, string password)
-        {
-            // Don't touch this unless it's absolutely necessary! It was very hard to configure!
-            var appUser = await App.LogInAsync(Credentials.EmailPassword(email, password));
-            _realmService.RefreshRealmConfig(appUser);
-        }
-
-        public async Task LogOutAsync()
-        {
-            // Don't touch this unless it's absolutely necessary! It was very hard to configure!
-            Database.SyncSession.Stop();
-            Database.Dispose();
-
-            await App.CurrentUser.LogOutAsync();
-
-            // Swith back to anonymous user
-            if (App.AllUsers.Count() > 0 && string.IsNullOrWhiteSpace(App.AllUsers[0].Profile.Email))
-            {
-                App.SwitchUser(App.AllUsers[0]);
-            }
-            else
-            {
-                var appUser = await App.LogInAsync(Credentials.Anonymous(true));
-                _realmService.RefreshRealmConfig(appUser);
-            }
-        }
+      
 
         public EntryModel GetEntryById(ObjectId entryId)
         {

@@ -23,7 +23,7 @@ namespace chldr_data.tests
             var fileService = new FileService(AppContext.BaseDirectory);
             var realmService = new RealmService();
             var dataAccess = new DataAccess(fileService, realmService);
-            await dataAccess.InitializeDatabase();
+            await dataAccess.Initialize();
 
             // Берем любое слово - в данном случае это первое слово из базы данных
             var wordToTest = dataAccess.Database.All<Word>().First();

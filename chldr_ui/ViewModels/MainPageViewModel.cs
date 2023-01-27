@@ -10,9 +10,9 @@ namespace chldr_ui.ViewModels
 {
     public partial class MainPageViewModel : ViewModelBase
     {
-        [Inject] JsInterop? JsInteropFunctions { get; set; }
 
-        #region Properties
+        #region Properties & Co.
+        [Inject] JsInterop? JsInteropFunctions { get; set; }
         internal ElementReference SearchInputReference { get; set; }
         internal string SearchQuery { get; set; }
         #endregion
@@ -27,7 +27,7 @@ namespace chldr_ui.ViewModels
             ContentStore.DatabaseInitialized += ContentStore_DatabaseInitialized;
         }
 
-        #region EventHandlers
+        #region Event Handlers
         private async void ContentStore_DatabaseInitialized()
         {
             if (EnvironmentService?.CurrentPlatform != Platforms.Web)
@@ -77,18 +77,6 @@ namespace chldr_ui.ViewModels
             }
 
             await base.OnAfterRenderAsync(firstRender);
-        }
-
-        protected override async Task OnInitializedAsync()
-        {
-            //PropertyChanged += async (sender, e) =>
-            //{
-            //    await InvokeAsync(() =>
-            //    {
-            //        StateHasChanged();
-            //    });
-            //};
-            await base.OnInitializedAsync();
         }
         #endregion
     }

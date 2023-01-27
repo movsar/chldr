@@ -19,8 +19,6 @@ namespace chldr_data.Services
         internal event Action DatabaseInitialized;
         internal event Action DatabaseSynced;
 
-        private static Realm _realmInstance;
-
         // Don't touch this unless it's absolutely necessary! It was very hard to configure!
         internal Realm GetRealm()
         {
@@ -29,18 +27,7 @@ namespace chldr_data.Services
                 throw new Exception("Config shouldn't be null");
             }
 
-            if (_realmInstance == null)
-            {
-                return _realmInstance = Realm.GetInstance(_config);
-            }
-
-            if (_realmInstance.IsClosed || (_realmInstance.SyncSession?.User != null && _realmInstance.SyncSession?.User != _app.CurrentUser))
-            {
-                _realmInstance.Dispose();
-                return _realmInstance = Realm.GetInstance(_config);
-            }
-
-            return _realmInstance = Realm.GetInstance(_config);
+            return Realm.GetInstance(_config);
         }
 
         internal async Task InitializeApp()
@@ -56,50 +43,29 @@ namespace chldr_data.Services
                 BaseFilePath = FileService.AppDataDirectory,
             });
 
-            try
+            var appUser = _app.CurrentUser;
+
+            // Log in as anonymous user to be able to read data
+            if (appUser?.State != UserState.LoggedIn)
             {
-                var appUser = _app.CurrentUser;
-
-                // Log in as anonymous user to be able to read data
-                if (appUser?.State != UserState.LoggedIn)
-                {
-                    appUser = await _app.LogInAsync(Credentials.Anonymous(true));
-                }
+                appUser = await _app.LogInAsync(Credentials.Anonymous(true));
             }
-            catch (Exception ex)
-            {
-                throw;
-            }
-
-            //Task.Run(async () =>
-            //{
-            //    await GetRealm().Subscriptions.WaitForSynchronizationAsync();
-            //    DatabaseSynced?.Invoke();
-            //});
         }
 
-        internal void InitializeDatabase()
-        {
-            RefreshRealmConfig(_app.CurrentUser);
-            
-            // TODO: Compact if size > 100Mb
-            //Realm.Compact(_config);
-
-            DatabaseInitialized?.Invoke();
-        }
-        internal void RefreshRealmConfig(Realms.Sync.User appUser)
-        {
-            _config = GetRealmConfigForSpecifiedUser(appUser);
-        }
-
-        private RealmConfigurationBase GetRealmConfigForSpecifiedUser(Realms.Sync.User appUser)
+        internal void UpdateRealmConfig(Realms.Sync.User appUser)
         {
             if (appUser == null)
             {
                 throw new Exception("User must not be null");
             }
 
-            return new FlexibleSyncConfiguration(appUser, FileService.DatabasePath)
+            string dbPath = FileService.GetDatabasePath(appUser.Id);
+            if (!File.Exists(dbPath))
+            {
+                //     File.Copy(FileService.OriginalDatabasePath, dbPath);
+            }
+
+            _config = new FlexibleSyncConfiguration(appUser, dbPath)
             {
                 SchemaVersion = 1,
                 PopulateInitialSubscriptions = (realm) =>
@@ -115,6 +81,13 @@ namespace chldr_data.Services
                     realm.Subscriptions.Add(realm.All<Entities.Word>());
                 }
             };
+
+            // Get database size in megabytes
+            var fileSize = new FileInfo(dbPath).Length / 1000_000;
+            if (fileSize > 50)
+            {
+                Realm.Compact(_config);
+            }
         }
 
         internal App GetApp()
