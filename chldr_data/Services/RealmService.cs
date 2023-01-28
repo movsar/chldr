@@ -1,5 +1,6 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Interfaces;
+using chldr_utils.Services;
 using Realms;
 using Realms.Logging;
 using Realms.Sync;
@@ -13,12 +14,18 @@ namespace chldr_data.Services
     public class RealmService
     {
         private const string myRealmAppId = "dosham-lxwuu";
+        private readonly FileService _fileService;
 
         private App _app { get; set; }
         private RealmConfigurationBase _config;
 
         internal event Action DatabaseInitialized;
         internal event Action DatabaseSynced;
+
+        public RealmService(FileService fileService)
+        {
+            _fileService = fileService;
+        }
 
         // Don't touch this unless it's absolutely necessary! It was very hard to configure!
         internal Realm GetRealm()
@@ -41,7 +48,7 @@ namespace chldr_data.Services
 
             _app = App.Create(new AppConfiguration(myRealmAppId)
             {
-                BaseFilePath = FileService.AppDataDirectory,
+                BaseFilePath = _fileService.AppDataDirectory,
             });
 
             var appUser = _app.CurrentUser;
@@ -60,14 +67,14 @@ namespace chldr_data.Services
                 throw new Exception("User must not be null");
             }
 
-            var uncompressedFileName = FileService.CompressedDatabaseFileName + "x";
-            var userDatabaseName = FileService.GetUserDatabaseName(appUser.Id);
-            var userDatabasePath = Path.Combine(FileService.AppDataDirectory, userDatabaseName);
+            var uncompressedFileName = _fileService.CompressedDatabaseFileName + "x";
+            var userDatabaseName = _fileService.GetUserDatabaseName(appUser.Id);
+            var userDatabasePath = Path.Combine(_fileService.AppDataDirectory, userDatabaseName);
 
             if (!File.Exists(userDatabasePath) && !File.Exists(uncompressedFileName))
             {
-                ZipFile.ExtractToDirectory(FileService.CompressedDatabaseFilePath, FileService.AppDataDirectory);
-                File.Move(Path.Combine(FileService.AppDataDirectory, uncompressedFileName), Path.Combine(FileService.AppDataDirectory, userDatabaseName));
+                ZipFile.ExtractToDirectory(_fileService.CompressedDatabaseFilePath, _fileService.AppDataDirectory);
+                File.Move(Path.Combine(_fileService.AppDataDirectory, uncompressedFileName), Path.Combine(_fileService.AppDataDirectory, userDatabaseName));
             }
 
             _config = new FlexibleSyncConfiguration(appUser, userDatabasePath)
@@ -111,13 +118,13 @@ namespace chldr_data.Services
             //using var rng = new RNGCryptoServiceProvider();
             //rng.GetBytes(encryptionKey);
 
-            //var encryptedConfig = new RealmConfiguration(Path.Combine(FileService.AppDataDirectory, "encrypted.realm"))
+            //var encryptedConfig = new RealmConfiguration(Path.Combine(_fileService.AppDataDirectory, "encrypted.realm"))
             //{
             //    EncryptionKey = encryptionKey
             //};
 
             //realm.WriteCopy(encryptedConfig);
-            //File.WriteAllBytes(Path.Combine(FileService.AppDataDirectory, "encryption.key"), encryptionKey);
+            //File.WriteAllBytes(Path.Combine(_fileService.AppDataDirectory, "encryption.key"), encryptionKey);
 
         }
     }

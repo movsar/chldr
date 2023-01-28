@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_utils
+namespace chldr_utils.Services
 {
-    public class LoggerService
+    public class ConsoleService
     {
         private string _tag = string.Empty;
         private bool _isIgnored = false;
         private Stopwatch _stopWatch = new Stopwatch();
-        public LoggerService(string tag, bool isIgnored = false)
+        public ConsoleService(string tag, bool isIgnored = false)
         {
             _tag = tag;
             _isIgnored = isIgnored;

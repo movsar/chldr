@@ -1,5 +1,4 @@
-﻿using chldr_data.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -7,20 +6,20 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_data.Services
+namespace chldr_utils.Services
 {
     // ! MAIN
     public class FileService
     {
 
         #region Fields
-        public const string CompressedDatabaseFileName = "synced.base.dat";
-        public const string DatabaseFileName = "synced.base.dbx";
+        private readonly string DataDirName = "data";
+        public readonly string CompressedDatabaseFileName = "synced.base.dat";
+        public readonly string DatabaseFileName = "synced.base.dbx";
 
-        private const string DataDirName = "data";
-        public static string? AppBaseDirectory;
-        public static string? AppDataDirectory;
-        public static string CompressedDatabaseFilePath;
+        public string AppBaseDirectory;
+        public string AppDataDirectory;
+        public string CompressedDatabaseFilePath;
         #endregion
 
         public FileService(string basePath)
@@ -35,7 +34,7 @@ namespace chldr_data.Services
             }
         }
 
-        internal static string GetUserDatabaseName(string id)
+        public string GetUserDatabaseName(string id)
         {
             return $"{id.Substring(4, 4)}.dbx";
         }

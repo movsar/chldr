@@ -1,5 +1,6 @@
 ﻿using chldr_data.Models;
 using chldr_utils;
+using chldr_utils.Services;
 
 namespace chldr_ui.ViewModels
 {
@@ -21,7 +22,7 @@ namespace chldr_ui.ViewModels
 
         private async void ContentStore_GotNewSearchResult(SearchResultModel searchResult)
         {
-            var logger = new LoggerService("GotNewSearchResults", true);
+            var logger = new ConsoleService("GotNewSearchResults", true);
             logger.StartSpeedTest();
 
             if (_searchQuery == null || !_searchQuery.Equals(searchResult.SearchQuery))

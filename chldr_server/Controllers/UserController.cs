@@ -1,7 +1,6 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Interfaces;
 using chldr_data.Models;
-using chldr_data.Services;
 using chldr_ui;
 using chldr_shared.Resources.Localizations;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +12,7 @@ using Serilog;
 using EmailService = chldr_shared.Services.EmailService;
 using chldr_shared;
 using chldr_shared.Models;
+using chldr_utils.Services;
 
 namespace chldr_server.Controllers
 {
@@ -92,12 +92,12 @@ namespace chldr_server.Controllers
         }
 
         #region Constructors
-        public UserController(IDataAccess dataAccess, EmailService emailService, IStringLocalizer<AppLocalizations> localizer)
+        public UserController(IDataAccess dataAccess, EmailService emailService, FileService fileService, IStringLocalizer<AppLocalizations> localizer)
         {
             _localizer = localizer;
             _emailService = emailService;
             _logger = new LoggerConfiguration()
-                          .WriteTo.File(Path.Combine(FileService.AppDataDirectory!, "logs", "log.txt"), rollingInterval: RollingInterval.Year)
+                          .WriteTo.File(Path.Combine(fileService.AppDataDirectory!, "logs", "log.txt"), rollingInterval: RollingInterval.Year)
                           .CreateLogger();
         }
         #endregion

@@ -1,5 +1,6 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
+using chldr_utils.Services;
 using MongoDB.Bson;
 using Realms;
 using System.Diagnostics;
@@ -17,7 +18,7 @@ namespace chldr_data.Services
         }
         private static Realm GetLocalRealm()
         {
-            var dbPath = Path.Combine(FileService.AppDataDirectory, "local.realm");
+            var dbPath = "local.realm";
 
             return Realm.GetInstance(new RealmConfiguration(dbPath)
             {

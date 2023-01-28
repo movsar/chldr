@@ -14,6 +14,7 @@ using chldr_data.Interfaces;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using chldr_utils;
+using chldr_utils.Services;
 
 namespace chldr_data.Search
 {
@@ -27,7 +28,7 @@ namespace chldr_data.Search
 
         public async Task FindAsync(string inputText)
         {
-            var logger = new LoggerService("GotNewSearchResults", false);
+            var logger = new ConsoleService("GotNewSearchResults", false);
             logger.StartSpeedTest();
 
             inputText = inputText.Replace("1", "Ӏ").ToLower();
