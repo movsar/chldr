@@ -22,7 +22,6 @@ namespace chldr_server.Controllers
     {
         private readonly IStringLocalizer<AppLocalizations> _localizer;
         private readonly EmailService _emailService;
-        private readonly IDataAccess _dataAccess;
         private readonly Serilog.Core.Logger _logger;
 
         #region Reset password
@@ -97,7 +96,6 @@ namespace chldr_server.Controllers
         {
             _localizer = localizer;
             _emailService = emailService;
-            _dataAccess = dataAccess;
             _logger = new LoggerConfiguration()
                           .WriteTo.File(Path.Combine(FileService.AppDataDirectory!, "logs", "log.txt"), rollingInterval: RollingInterval.Year)
                           .CreateLogger();

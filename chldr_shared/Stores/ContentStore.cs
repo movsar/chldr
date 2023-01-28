@@ -1,6 +1,7 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Services;
+using chldr_utils;
 using MongoDB.Bson;
 using System;
 using System.Collections;
@@ -17,6 +18,8 @@ namespace chldr_shared.Stores
         #region Events
         public event Action DatabaseInitialized;
         public event Action<SearchResultModel> GotNewSearchResult;
+
+        private readonly ExceptionHandler _exceptionHandler;
         #endregion
 
         #region Fields and Properties
@@ -37,8 +40,9 @@ namespace chldr_shared.Stores
         #endregion
 
         #region Constructors
-        public ContentStore(IDataAccess dataAccess)
+        public ContentStore(IDataAccess dataAccess, ExceptionHandler exceptionHandler)
         {
+            _exceptionHandler = exceptionHandler;
             _dataAccess = dataAccess;
             _dataAccess.GotNewSearchResult += DataAccess_GotNewSearchResults;
             _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
@@ -95,11 +99,12 @@ namespace chldr_shared.Stores
                 AllNamedSources.AddRange(namedSources);
 
                 DatabaseInitialized?.Invoke();
-            }catch(Exception ex)
-            {
-                throw ;
             }
-            
+            catch (Exception ex)
+            {
+                _exceptionHandler.ProcessError(ex);
+            }
+
         }
     }
-}   
+}

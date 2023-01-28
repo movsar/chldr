@@ -1,5 +1,6 @@
-﻿@inherits LayoutComponentBase
-
+﻿@using chldr_utils;
+@inject ExceptionHandler ExceptionHandler;
+@inherits LayoutComponentBase
 <div class="page">
     <div class="sidebar">
         <ErrorBoundary>
@@ -10,13 +11,39 @@
     <main>
         <article class="content px-4">
             <ErrorBoundary>
-                <ChildContent>
+                @if (!Error)
+                {
                     @Body
-                </ChildContent>
-                <ErrorContent>
-                    <p class="errorUI">Nothing to see here right now. Sorry!</p>
-                </ErrorContent>
+                }
+                else
+                {
+                    <FormErrorsView ErrorMessages="@ErrorMessages"></FormErrorsView>
+                }
             </ErrorBoundary>
         </article>
     </main>
 </div>
+
+@code {
+
+    public bool Error { get; set; } = false;
+    public List<string>? ErrorMessages { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ExceptionHandler.IncomingException += ExceptionHandler_IncomingException;
+    }
+
+    private void ExceptionHandler_IncomingException(Exception ex)
+    {
+        Error = true;
+        ErrorMessages = new List<string> { ex.Message };
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+
+            Error = false;
+            ErrorMessages = null;
+        });
+    }
+}

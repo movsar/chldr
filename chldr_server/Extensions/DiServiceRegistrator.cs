@@ -9,6 +9,7 @@ using FluentValidation;
 using chldr_shared.Dto;
 using chldr_shared.Services;
 using chldr_data.Search;
+using chldr_utils;
 
 namespace chldr_server.Extensions
 {
@@ -30,12 +31,16 @@ namespace chldr_server.Extensions
             appBuilder.Services.AddScoped<IDataAccess, DataAccess>();
 
             // Shared
+
             appBuilder.Services.AddScoped<ContentStore>();
             appBuilder.Services.AddScoped<UserStore>();
             appBuilder.Services.AddScoped<JsInterop>();
             appBuilder.Services.AddScoped<EmailService>();
             appBuilder.Services.AddScoped(x => new EnvironmentService(Platforms.Web));
             appBuilder.Services.AddScoped(x => new FileService(AppContext.BaseDirectory));
+
+            // Utils
+            appBuilder.Services.AddScoped<ExceptionHandler>();
 
             return appBuilder;
         }

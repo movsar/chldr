@@ -4,6 +4,7 @@ using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Search;
+using chldr_utils;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using Realms;
@@ -42,6 +43,8 @@ namespace chldr_data.Services
         #region Fields
         public const int ResultsLimit = 100;
         public const int RandomEntriesLimit = 30;
+        private ExceptionHandler _exceptionHandler;
+        private readonly FileService _fileService;
         private readonly MainSearchEngine _searchEngine;
         private RealmService _realmService;
         #endregion
@@ -93,29 +96,42 @@ namespace chldr_data.Services
 
         public async Task Initialize()
         {
+            _fileService.PrepareDatabase();
+
             await _realmService.InitializeApp();
+
             _realmService.UpdateRealmConfig(App.CurrentUser);
+
             DatabaseInitialized?.Invoke();
         }
 
-        public DataAccess(FileService fileService, RealmService realmService)
+        public DataAccess(FileService fileService, RealmService realmService, ExceptionHandler exceptionHandler)
         {
+            _exceptionHandler = exceptionHandler;
+            _fileService = fileService;
             _searchEngine = new MainSearchEngine(this);
             _realmService = realmService;
-
-            if (App != null)
-            {
-                return;
-            }
-
-            fileService.PrepareDatabase();
 
             _realmService.DatabaseInitialized += () =>
             {
                 DatabaseInitialized?.Invoke();
             };
 
-            Task.Run(async () => await Initialize());
+            if (App != null)
+            {
+                return;
+            }
+
+            try
+            {
+                // Runs asynchronously, then continues
+                Task.Run(async () => await Initialize());
+            }
+            catch (Exception ex)
+            {
+                _exceptionHandler.ProcessError(ex);
+            }
+
         }
 
         public async Task LogInEmailPasswordAsync(string email, string password)

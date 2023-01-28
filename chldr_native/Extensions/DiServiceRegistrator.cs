@@ -9,6 +9,7 @@ using FluentValidation;
 using chldr_shared.Dto;
 using chldr_shared.Services;
 using System.Reflection.PortableExecutable;
+using chldr_utils;
 
 namespace chldr_native.Extensions
 {
@@ -23,17 +24,17 @@ namespace chldr_native.Extensions
 
             return mauiAppBuilder;
         }
-        public static MauiAppBuilder RegisterAppServices(this MauiAppBuilder mauiAppBuilder)
+        public static MauiAppBuilder RegisterAppServices(this MauiAppBuilder appBuilder)
         {
             // Data
-            mauiAppBuilder.Services.AddScoped<IDataAccess, DataAccess>();
-            mauiAppBuilder.Services.AddScoped<RealmService>();
+            appBuilder.Services.AddScoped<IDataAccess, DataAccess>();
+            appBuilder.Services.AddScoped<RealmService>();
 
             // Shared
-            mauiAppBuilder.Services.AddScoped<ContentStore>();
-            mauiAppBuilder.Services.AddScoped<UserStore>();
-            mauiAppBuilder.Services.AddScoped<JsInterop>();
-            mauiAppBuilder.Services.AddScoped<EmailService>();
+            appBuilder.Services.AddScoped<ContentStore>();
+            appBuilder.Services.AddScoped<UserStore>();
+            appBuilder.Services.AddScoped<JsInterop>();
+            appBuilder.Services.AddScoped<EmailService>();
             var platform = Platforms.Web;
 #if ANDROID
             platform = Platforms.Android;
@@ -44,9 +45,13 @@ namespace chldr_native.Extensions
 #elif MACCATALYST
             platform = Platforms.MacCatalyst;
 #endif
-            mauiAppBuilder.Services.AddScoped(x => new EnvironmentService(platform));
-            mauiAppBuilder.Services.AddScoped(x => new FileService(AppContext.BaseDirectory));
-            return mauiAppBuilder;
+            appBuilder.Services.AddScoped(x => new EnvironmentService(platform));
+            appBuilder.Services.AddScoped(x => new FileService(AppContext.BaseDirectory));
+
+            // Utils
+            appBuilder.Services.AddScoped<ExceptionHandler>();
+
+            return appBuilder;
         }
         public static MauiAppBuilder RegisterViewModels(this MauiAppBuilder mauiAppBuilder)
         {
