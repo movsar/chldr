@@ -1,4 +1,5 @@
 using chldr_data.Entities;
+using chldr_data.Interfaces;
 using chldr_data.Services;
 
 namespace chldr_data.tests
@@ -36,21 +37,62 @@ namespace chldr_data.tests
             Assert.Equal(wordToTest.Content, wordById.Content);
         }
 
-        public static async Task GetWordById_BadId_ReturnsError()
+        [Fact]
+        public static async Task GetWordByIdBadIdReturnsError()
         {
+            var fileService = new FileService(AppContext.BaseDirectory);
+            var realmService = new RealmService();
+            var dataAccess = new DataAccess(fileService, realmService);
+            await dataAccess.InitializeDatabase();
+
+            var wordToTest = dataAccess.Database.All<Word>().First();
+
+            var wordById = dataAccess.GetWordById(wordToTest._id);
+
+            Assert.Equal(wordById.Content, wordToTest.Content);
+
+
             // Надо передать неправильный ID и удостовериться что это вызовет ошибку
         }
 
-        public static async Task GetWordById_NullId_ReturnsError()
+        [Fact]
+        public static async Task GetPhraseById_NullId_ReturnsError()
         {
+            Object p = null;
             // Надо передать null вместо ID и удостовериться что это вызовет ошибку
+            var fileService = new FileService(AppContext.BaseDirectory);
+            var realmService = new RealmService();
+            var dataAccess = new DataAccess(fileService, realmService);
+            await dataAccess.InitializeDatabase();
+
+            var wordToTest = dataAccess.Database.All<Phrase>().First().Content;
+
+            var wordById = dataAccess.GetPhraseById;
+
+            Assert.Null(wordById);
         }
 
+        [Fact]
         public static async Task GetPhraseById_ExpectedInput_ReturnsPhrase()
         {
+            var fileService = new FileService(AppContext.BaseDirectory);
+            var realmService = new RealmService();
+            var dataAccess = new DataAccess(fileService, realmService);
+            await dataAccess.InitializeDatabase();
+
+            var wordToTest = dataAccess.Database.All <Phrase>().First().Content;
+
+            var wordById = dataAccess.GetPhraseById;
+
+            Assert.True(wordById.Equals(wordToTest));
 
         }
 
-        
-    }
+
+
+
+
+
+
+}
 }
