@@ -210,7 +210,7 @@ namespace chldr_data.Services
         {
             try
             {
-                var languages = Database.All<Language>().Select(l => new LanguageModel(l));
+                var languages = Database.All<Language>().AsEnumerable().Select(l => new LanguageModel(l));
                 return languages.ToList();
 
             }
@@ -222,7 +222,7 @@ namespace chldr_data.Services
 
         public List<SourceModel> GetAllNamedSources()
         {
-            return Database.All<Source>().Select(s => new SourceModel(s)).ToList();
+            return Database.All<Source>().AsEnumerable().Select(s => new SourceModel(s)).ToList();
         }
 
     }

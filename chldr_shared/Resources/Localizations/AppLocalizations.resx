@@ -132,6 +132,9 @@
   <data name="Check_your_email_and_follow_instructions" xml:space="preserve">
     <value>Please check your email and follow the instructions</value>
   </data>
+  <data name="Choose_language" xml:space="preserve">
+    <value>Choose language</value>
+  </data>
   <data name="Class:1_vu_bd" xml:space="preserve">
     <value>1 - Vu, Bu / Du</value>
   </data>
@@ -141,7 +144,7 @@
   <data name="Class:3_yu_yu" xml:space="preserve">
     <value>3 - Yu, Yu</value>
   </data>
-  <data name="Class:4_b_d" xml:space="preserve">
+  <data name="Class:6_b_d" xml:space="preserve">
     <value>6 - Bu, Du</value>
   </data>
   <data name="Class:4_du_du" xml:space="preserve">
@@ -235,6 +238,9 @@
   </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>
+  </data>
+  <data name="Language_code" xml:space="preserve">
+    <value>Language code</value>
   </data>
   <data name="Last_name" xml:space="preserve">
     <value>Last Name</value>

@@ -1,7 +1,10 @@
 ﻿@inherits TranslationEditViewModel
 
-@Localizer["Language"]
-<select @bind="Language" class="form-select" title="@Localizer["Grammatical_class"]">
+<p>
+    @Localizer["Choose_language"]
+</p>
+
+<select @bind="@LanguageCode" class="form-select" title="@Localizer["Grammatical_class"]">
     @foreach (var language in ContentStore.AllLanguages)
     {
         <option value="@language.LanguageId" class="form-control">@language.Code</option>
@@ -13,6 +16,3 @@
 
 <input type="text" class="form-control" autocomplete="off" disabled="@FormDisabled"
        placeholder="@Localizer["Enter_translation_notes"]" @bind="Notes" />
-
-<button class="btn-primary">Save</button>
-<button class="btn-primary">Save and add another</button>

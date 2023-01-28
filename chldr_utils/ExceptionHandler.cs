@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace chldr_utils
@@ -20,17 +21,18 @@ namespace chldr_utils
         {
             _consoleLogger = consoleLogger;
             _fileLogger = new LoggerConfiguration()
-                         .WriteTo.File(Path.Combine(fileService.AppDataDirectory!, "logs", "log.txt"), rollingInterval: RollingInterval.Year)
+                         .WriteTo.File(Path.Combine(fileService.AppDataDirectory!, "logs", "log.txt"), rollingInterval: RollingInterval.Month)
                          .CreateLogger();
         }
         public void ProcessError(Exception ex)
         {
-            string message = $"{ex.Message} in {ex.TargetSite?.GetType()} {ex.StackTrace}";
+            string message = Regex.Replace($"{ex.Message} {ex.StackTrace}\r\n", @"\s\s+", "\r\n\t");
+
             _fileLogger.Error(message);
             _consoleLogger.LogError(message);
 
             IncomingException?.Invoke(ex);
         }
-
     }
+
 }

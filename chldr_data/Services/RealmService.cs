@@ -1,5 +1,6 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Interfaces;
+using chldr_utils;
 using chldr_utils.Services;
 using Realms;
 using Realms.Logging;
@@ -14,6 +15,7 @@ namespace chldr_data.Services
     public class RealmService
     {
         private const string myRealmAppId = "dosham-lxwuu";
+        private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
 
         private App _app { get; set; }
@@ -22,8 +24,9 @@ namespace chldr_data.Services
         internal event Action DatabaseInitialized;
         internal event Action DatabaseSynced;
 
-        public RealmService(FileService fileService)
+        public RealmService(FileService fileService, ExceptionHandler exceptionHandler)
         {
+            _exceptionHandler = exceptionHandler;
             _fileService = fileService;
         }
 
@@ -43,7 +46,7 @@ namespace chldr_data.Services
             Logger.LogLevel = LogLevel.Error;
             Logger.Default = Logger.Function(message =>
             {
-                Debug.WriteLine($"APP: Realm : {message}");
+                _exceptionHandler.ProcessError(new Exception($"Realm : {message}"));
             });
 
             _app = App.Create(new AppConfiguration(myRealmAppId)

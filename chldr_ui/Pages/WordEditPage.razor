@@ -42,7 +42,7 @@
                     <option value="3" class="form-control">@Localizer["Class:3_yu_yu"]</option>
                     <option value="4" class="form-control">@Localizer["Class:4_du_du"]</option>
                     <option value="4" class="form-control">@Localizer["Class:5_bu_by"]</option>
-                    <option value="4" class="form-control">@Localizer["Class:4_b_d"]</option>
+                    <option value="4" class="form-control">@Localizer["Class:6_b_d"]</option>
                 </select>
             </div>
         }
@@ -53,7 +53,7 @@
 
         @foreach (var translation in Translations)
         {
-            <TranslationEditView WordId="@WordId" TranslationId="translation.Id"></TranslationEditView>
+            <TranslationEditView WordId="@WordId" TranslationId="@translation.TranslationId.ToString()"></TranslationEditView>
         }
 
     </form>

@@ -106,6 +106,15 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Choose language.
+        /// </summary>
+        public static string Choose_language {
+            get {
+                return ResourceManager.GetString("Choose_language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 1 - Vu, Bu / Du.
         /// </summary>
         public static string Class_1_vu_bd {
@@ -133,15 +142,6 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 6 - Bu, Du.
-        /// </summary>
-        public static string Class_4_b_d {
-            get {
-                return ResourceManager.GetString("Class:4_b_d", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to 4 - Du, Du.
         /// </summary>
         public static string Class_4_du_du {
@@ -156,6 +156,15 @@ namespace chldr_shared.Resources.Localizations {
         public static string Class_5_bu_by {
             get {
                 return ResourceManager.GetString("Class:5_bu_by", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 6 - Bu, Du.
+        /// </summary>
+        public static string Class_6_b_d {
+            get {
+                return ResourceManager.GetString("Class:6_b_d", resourceCulture);
             }
         }
         
@@ -398,6 +407,15 @@ namespace chldr_shared.Resources.Localizations {
         public static string Language {
             get {
                 return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Language code.
+        /// </summary>
+        public static string Language_code {
+            get {
+                return ResourceManager.GetString("Language_code", resourceCulture);
             }
         }
         

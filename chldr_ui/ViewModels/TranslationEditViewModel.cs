@@ -22,8 +22,15 @@ namespace chldr_ui.ViewModels
         #region Fields and Properties
         public string Content { get; set; }
         public string Notes { get; set; }
-        public LanguageModel Language { get; set; }
+        public string? LanguageCode { get; set; }
         #endregion
+
+        public TranslationModel GetTranslation()
+        {
+            return new TranslationModel(Content, Notes,
+                ContentStore.AllLanguages.First(l => l.Code == LanguageCode));
+        }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -47,7 +54,7 @@ namespace chldr_ui.ViewModels
 
             Content = translation.Content;
             Notes = translation.Notes;
-            Language = translation.Language;
+            LanguageCode = translation.Language.Code;
         }
         public override Task ValidateAndSubmit()
         {

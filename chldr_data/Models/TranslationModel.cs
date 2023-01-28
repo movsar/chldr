@@ -26,5 +26,12 @@ namespace chldr_data.Models
             Rate = translation.Rate;
             Language = new LanguageModel(translation.Language);
         }
+
+        public TranslationModel(string content, string notes, LanguageModel language)
+        {
+            Content = content;
+            Notes = notes;
+            Language = language;
+        }
     }
 }
