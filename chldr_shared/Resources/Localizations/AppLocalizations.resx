@@ -132,6 +132,24 @@
   <data name="Check_your_email_and_follow_instructions" xml:space="preserve">
     <value>Please check your email and follow the instructions</value>
   </data>
+  <data name="Class:1_vu_bd" xml:space="preserve">
+    <value>1 - Vu, Bu / Du</value>
+  </data>
+  <data name="Class:2_yu_bd" xml:space="preserve">
+    <value>2 - Yu, Bu / Du</value>
+  </data>
+  <data name="Class:3_yu_yu" xml:space="preserve">
+    <value>3 - Yu, Yu</value>
+  </data>
+  <data name="Class:4_b_d" xml:space="preserve">
+    <value>6 - Bu, Du</value>
+  </data>
+  <data name="Class:4_du_du" xml:space="preserve">
+    <value>4 - Du, Du</value>
+  </data>
+  <data name="Class:5_bu_by" xml:space="preserve">
+    <value>5 - Bu, Bu / Yu</value>
+  </data>
   <data name="Confirm_password" xml:space="preserve">
     <value>Confirm password</value>
   </data>
@@ -191,6 +209,9 @@
   <data name="Error:Word_content_must_be_set" xml:space="preserve">
     <value>Word content must be set</value>
   </data>
+  <data name="Expression" xml:space="preserve">
+    <value>Expression</value>
+  </data>
   <data name="First_name" xml:space="preserve">
     <value>First Name</value>
   </data>
@@ -199,6 +220,9 @@
   </data>
   <data name="Go_back" xml:space="preserve">
     <value>Go back</value>
+  </data>
+  <data name="Grammatical_class" xml:space="preserve">
+    <value>Grammatical class</value>
   </data>
   <data name="Guest" xml:space="preserve">
     <value>Guest</value>
@@ -209,11 +233,20 @@
   <data name="Index" xml:space="preserve">
     <value>Index</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
   <data name="Last_name" xml:space="preserve">
     <value>Last Name</value>
   </data>
   <data name="Log_in" xml:space="preserve">
     <value>Log In</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Noun" xml:space="preserve">
+    <value>Noun</value>
   </data>
   <data name="Or_sign_up_with:" xml:space="preserve">
     <value>or sign up with:</value>
@@ -223,6 +256,9 @@
   </data>
   <data name="Password_reset" xml:space="preserve">
     <value>Password Reset</value>
+  </data>
+  <data name="Phrase" xml:space="preserve">
+    <value>Phrase</value>
   </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
@@ -259,6 +295,9 @@
   </data>
   <data name="Verb" xml:space="preserve">
     <value>Verb</value>
+  </data>
+  <data name="Word" xml:space="preserve">
+    <value>Word</value>
   </data>
   <data name="Your_password_has_been_updated" xml:space="preserve">
     <value>Your password has been successfully updated</value>

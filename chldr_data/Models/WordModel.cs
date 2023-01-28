@@ -1,4 +1,5 @@
 ﻿using chldr_data.Entities;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
 using MongoDB.Bson;
 using Realms;
@@ -23,7 +24,7 @@ namespace chldr_data.Models
             GrammaticalClass = word.GrammaticalClass;
             RawVerbTenses = word.VerbTenses;
             RawNounDeclensions = word.NounDeclensions;
-            PartOfSpeech = word.PartOfSpeech;
+            PartOfSpeech = (PartsOfSpeech)word.PartOfSpeech;
         }
 
         public WordModel(Entities.Entry entry) : this(entry.Word) { }
@@ -34,7 +35,7 @@ namespace chldr_data.Models
         public string RawForms { get; }
         public string RawVerbTenses { get; }
         public string RawNounDeclensions { get; }
-        public int PartOfSpeech { get; }
+        public PartsOfSpeech PartOfSpeech { get; }
         public int GrammaticalClass { get; internal set; }
 
 

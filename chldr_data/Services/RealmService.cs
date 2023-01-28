@@ -33,7 +33,7 @@ namespace chldr_data.Services
 
         internal async Task InitializeApp()
         {
-            Logger.LogLevel = LogLevel.Debug;
+            Logger.LogLevel = LogLevel.Error;
             Logger.Default = Logger.Function(message =>
             {
                 Debug.WriteLine($"APP: Realm : {message}");

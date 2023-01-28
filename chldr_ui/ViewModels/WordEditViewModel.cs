@@ -1,4 +1,5 @@
-﻿using chldr_data.Models;
+﻿using chldr_data.Enums;
+using chldr_data.Models;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
 using Microsoft.AspNetCore.Components;
@@ -16,7 +17,7 @@ namespace chldr_ui.ViewModels
         #region Properties
         [Parameter]
         public string? WordId { get; set; }
-        public int PartOfSpeech { get; set; }
+        public PartsOfSpeech PartOfSpeech { get; set; }
         public int GrammaticalClass { get; set; }
         public string Content { get; set; }
         public string Notes { get; set; }
@@ -34,7 +35,15 @@ namespace chldr_ui.ViewModels
                 return;
             }
 
-            InitializeViewModel(ContentStore.GetWordById(new ObjectId(WordId)));
+            var wordId = new ObjectId(WordId);
+
+            // Get current word from cached results
+            var word = ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries)
+                .Where(e => e.Type == EntryType.Word)
+                .Cast<WordModel>()
+                .First(w => w.WordId == wordId);
+
+            InitializeViewModel(word);
         }
 
         protected override void InitializeViewModel(EntryModel entry)

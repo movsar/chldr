@@ -171,8 +171,6 @@ namespace chldr_data.Services
             await App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
         }
 
-
-
         public EntryModel GetEntryById(ObjectId entryId)
         {
             var entry = Database.All<Entry>().FirstOrDefault(e => e._id == entryId);
@@ -191,6 +189,25 @@ namespace chldr_data.Services
         {
             return GetEntryById(entryId) as WordModel;
         }
+        public List<LanguageModel> GetAllLanguages()
+        {
+            try
+            {
+                var languages = Database.All<Language>().Select(l => new LanguageModel(l));
+                return languages.ToList();
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public List<SourceModel> GetAllNamedSources()
+        {
+            return Database.All<Source>().Select(s => new SourceModel(s)).ToList();
+        }
+
     }
 
 }

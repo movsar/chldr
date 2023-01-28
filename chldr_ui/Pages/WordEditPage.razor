@@ -9,7 +9,7 @@
 
     <form class="col-6">
         <div class="form-outline mb-4">
-            <input type="text" class="form-control" placeholder="@Localizer["Basic Form"]" @bind="Content" />
+            <input type="text" class="form-control" placeholder="@Localizer["Basic_Form"]" @bind="Content" />
         </div>
 
         <div class="form-outline mb-4">
@@ -20,6 +20,42 @@
                 <option value="4" class="form-control">@Localizer["Adjective"]</option>
             </select>
         </div>
+
+        @if (PartOfSpeech == PartsOfSpeech.Noun)
+        {
+            
+            <div class="form-outline mb-4">
+
+                @*
+                    { 1 ,"ву, бу/ду"},
+                    { 2 ,"йу, бу/ду"},
+                    { 3 ,"йу, йу"},
+                    { 4 ,"ду, ду"},
+                    { 5 ,"бу, бу/йу"},
+                    { 6 ,"бу, ду"}
+                *@
+
+                @Localizer["Grammatical_class"]
+                <select @bind="PartOfSpeech" class="form-select" title="@Localizer["Grammatical_class"]">
+                    <option value="1" class="form-control">@Localizer["Class:1_vu_bd"]</option>
+                    <option value="2" class="form-control">@Localizer["Class:2_yu_bd"]</option>
+                    <option value="3" class="form-control">@Localizer["Class:3_yu_yu"]</option>
+                    <option value="4" class="form-control">@Localizer["Class:4_du_du"]</option>
+                    <option value="4" class="form-control">@Localizer["Class:5_bu_by"]</option>
+                    <option value="4" class="form-control">@Localizer["Class:4_b_d"]</option>
+                </select>
+            </div>
+        }
+
+        <div class="form-outline mb-4">
+            <input type="text" class="form-control" placeholder="@Localizer["Notes"]" @bind="Notes" />
+        </div>
+
+        @foreach (var translation in Translations)
+        {
+            <TranslationEditView WordId="@WordId" TranslationId="translation.Id"></TranslationEditView>
+        }
+
     </form>
 }
 

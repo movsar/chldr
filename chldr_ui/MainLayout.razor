@@ -2,12 +2,21 @@
 
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        <ErrorBoundary>
+            <NavMenu />
+        </ErrorBoundary>
     </div>
 
     <main>
         <article class="content px-4">
-            @Body
+            <ErrorBoundary>
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent>
+                    <p class="errorUI">Nothing to see here right now. Sorry!</p>
+                </ErrorContent>
+            </ErrorBoundary>
         </article>
     </main>
 </div>

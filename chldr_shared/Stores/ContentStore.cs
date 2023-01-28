@@ -19,27 +19,13 @@ namespace chldr_shared.Stores
         public event Action<SearchResultModel> GotNewSearchResult;
         #endregion
 
-        #region Fields
+        #region Fields and Properties
         private readonly IDataAccess _dataAccess;
-        #endregion
-
-        #region Constructors
-        public ContentStore(IDataAccess dataAccess)
-        {
-            _dataAccess = dataAccess;
-            _dataAccess.GotNewSearchResult += DataAccess_GotNewSearchResults;
-            _dataAccess.DatabaseInitialized += (() =>
-            {
-                DatabaseInitialized?.Invoke();
-            });
-        }
-
-        #endregion
-
-        #region Properties
         // This shouldn't be normally used, but only to request models that have already been loaded 
-        // but couldn't be passed between components for some reason
         public List<SearchResultModel> CachedSearchResults { get; } = new();
+        public List<LanguageModel> AllLanguages { get; } = new();
+        // These are the sources excluding userIds
+        public List<SourceModel> AllNamedSources { get; } = new();
         #endregion
 
         #region EventHandlers
@@ -47,6 +33,15 @@ namespace chldr_shared.Stores
         {
             CachedSearchResults.Add(searchResult);
             GotNewSearchResult?.Invoke(searchResult);
+        }
+        #endregion
+
+        #region Constructors
+        public ContentStore(IDataAccess dataAccess)
+        {
+            _dataAccess = dataAccess;
+            _dataAccess.GotNewSearchResult += DataAccess_GotNewSearchResults;
+            _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
         }
         #endregion
 
@@ -88,5 +83,23 @@ namespace chldr_shared.Stores
         }
         #endregion
 
+
+        private void DataAccess_DatabaseInitialized()
+        {
+            try
+            {
+                var languages = _dataAccess.GetAllLanguages();
+                AllLanguages.AddRange(languages);
+
+                var namedSources = _dataAccess.GetAllNamedSources();
+                AllNamedSources.AddRange(namedSources);
+
+                DatabaseInitialized?.Invoke();
+            }catch(Exception ex)
+            {
+                throw ;
+            }
+            
+        }
     }
-}
+}   

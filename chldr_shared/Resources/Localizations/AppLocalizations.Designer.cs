@@ -106,6 +106,60 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1 - Vu, Bu / Du.
+        /// </summary>
+        public static string Class_1_vu_bd {
+            get {
+                return ResourceManager.GetString("Class:1_vu_bd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2 - Yu, Bu / Du.
+        /// </summary>
+        public static string Class_2_yu_bd {
+            get {
+                return ResourceManager.GetString("Class:2_yu_bd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3 - Yu, Yu.
+        /// </summary>
+        public static string Class_3_yu_yu {
+            get {
+                return ResourceManager.GetString("Class:3_yu_yu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 6 - Bu, Du.
+        /// </summary>
+        public static string Class_4_b_d {
+            get {
+                return ResourceManager.GetString("Class:4_b_d", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 4 - Du, Du.
+        /// </summary>
+        public static string Class_4_du_du {
+            get {
+                return ResourceManager.GetString("Class:4_du_du", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 5 - Bu, Bu / Yu.
+        /// </summary>
+        public static string Class_5_bu_by {
+            get {
+                return ResourceManager.GetString("Class:5_bu_by", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm password.
         /// </summary>
         public static string Confirm_password {
@@ -267,6 +321,15 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Expression.
+        /// </summary>
+        public static string Expression {
+            get {
+                return ResourceManager.GetString("Expression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to First Name.
         /// </summary>
         public static string First_name {
@@ -290,6 +353,15 @@ namespace chldr_shared.Resources.Localizations {
         public static string Go_back {
             get {
                 return ResourceManager.GetString("Go_back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grammatical class.
+        /// </summary>
+        public static string Grammatical_class {
+            get {
+                return ResourceManager.GetString("Grammatical_class", resourceCulture);
             }
         }
         
@@ -321,6 +393,15 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        public static string Language {
+            get {
+                return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last Name.
         /// </summary>
         public static string Last_name {
@@ -335,6 +416,24 @@ namespace chldr_shared.Resources.Localizations {
         public static string Log_in {
             get {
                 return ResourceManager.GetString("Log_in", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notes.
+        /// </summary>
+        public static string Notes {
+            get {
+                return ResourceManager.GetString("Notes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Noun.
+        /// </summary>
+        public static string Noun {
+            get {
+                return ResourceManager.GetString("Noun", resourceCulture);
             }
         }
         
@@ -362,6 +461,15 @@ namespace chldr_shared.Resources.Localizations {
         public static string Password_reset {
             get {
                 return ResourceManager.GetString("Password_reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phrase.
+        /// </summary>
+        public static string Phrase {
+            get {
+                return ResourceManager.GetString("Phrase", resourceCulture);
             }
         }
         
@@ -470,6 +578,15 @@ namespace chldr_shared.Resources.Localizations {
         public static string Verb {
             get {
                 return ResourceManager.GetString("Verb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Word.
+        /// </summary>
+        public static string Word {
+            get {
+                return ResourceManager.GetString("Word", resourceCulture);
             }
         }
         

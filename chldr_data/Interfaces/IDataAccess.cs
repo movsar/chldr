@@ -28,5 +28,7 @@ namespace chldr_data.Interfaces
         WordModel? GetWordByEntryId(ObjectId entryId);
         EntryModel? GetEntryById(ObjectId entryId);
         void OnNewResults(SearchResultModel args);
+        List<LanguageModel> GetAllLanguages();
+        List<SourceModel> GetAllNamedSources();
     }
 }
