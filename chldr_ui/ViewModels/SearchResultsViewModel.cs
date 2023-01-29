@@ -12,12 +12,22 @@ namespace chldr_ui.ViewModels
         protected override void OnInitialized()
         {
             ContentStore.GotNewSearchResult += ContentStore_GotNewSearchResult;
+            UserStore.LoggedInUserChanged += UserStore_LoggedInUserChanged;
+
             // If no new entries have been requested, show entries from the cache
             if (ContentStore.CachedSearchResults.Count > 0 && Entries.Count == 0)
             {
                 Entries.AddRange(ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries));
             }
             base.OnInitialized();
+        }
+
+        private void UserStore_LoggedInUserChanged(UserModel? obj)
+        {
+            InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
         }
 
         private async void ContentStore_GotNewSearchResult(SearchResultModel searchResult)

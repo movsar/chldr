@@ -55,7 +55,6 @@ namespace chldr_data.Services
         {
             try
             {
-
                 // await App.CurrentUser.LogOutAsync();
                 if (App.CurrentUser.Provider == Credentials.AuthProvider.Anonymous)
                 {
@@ -63,11 +62,9 @@ namespace chldr_data.Services
                 }
 
                 var appUserId = new ObjectId(App.CurrentUser.Id);
-                await Database.SyncSession.WaitForDownloadAsync();
 
                 var user = Database.All<Entities.User>().First(u => u._id == appUserId);
                 return new UserModel(user);
-
             }
             catch (Exception ex)
             {
@@ -136,6 +133,8 @@ namespace chldr_data.Services
                 {
                     await Initialize();
                     await Synchronize();
+
+                    await CustomStuff();
                 }
                 catch (Exception ex)
                 {
@@ -143,6 +142,47 @@ namespace chldr_data.Services
                 };
             });
         }
+
+        private async Task CustomStuff()
+        {
+            //    var languages = Database.All<Language>();
+
+            //    var kor = languages.First(l => l.Code == "KOR");
+            //    var tat = languages.First(l => l.Code == "TAT");
+            //    var ara = languages.First(l => l.Code == "ARA");
+            //    var deu = languages.First(l => l.Code == "DEU");
+            //    var por = languages.First(l => l.Code == "POR");
+            //    var lat = languages.First(l => l.Code == "LAT");
+            //    var esp = languages.First(l => l.Code == "ESP");
+            //    var nld = languages.First(l => l.Code == "NLD");
+            //    var che = languages.First(l => l.Code == "CHE");
+            //    var kat = languages.First(l => l.Code == "KAT");
+            //    var fra = languages.First(l => l.Code == "FRA");
+            //    var rus = languages.First(l => l.Code == "RUS");
+            //    var eng = languages.First(l => l.Code == "ENG");
+            //    var inh = languages.First(l => l.Code == "INH");
+
+            //    Database.Write(() =>
+            //    {
+            //        kor.Name = "한국어";
+            //        tat.Name = "Татарча";
+            //        ara.Name = "اَلْعَرَبِيَّةُ";
+            //        deu.Name = "Deutsch";
+            //        por.Name = "Português";
+            //        lat.Name = "Latin";
+            //        esp.Name = "Español";
+            //        nld.Name = "Nederlands";
+            //        che.Name = "Нохчийн";
+            //        kat.Name = "ქართული ენა";
+            //        fra.Name = "Français";
+            //        rus.Name = "Русский";
+            //        eng.Name = "English";
+            //        inh.Name = "ГӀалгӀайн";
+            //    });
+
+            await Database.SyncSession.WaitForUploadAsync();
+        }
+
 
         private async Task Synchronize()
         {

@@ -60,7 +60,7 @@
     }
     protected override Task OnParametersSetAsync()
     {
-        UserStore.LoggedInUserChanged += () =>
+        UserStore.LoggedInUserChanged += (user) =>
         {
             InvokeAsync(() =>
           {

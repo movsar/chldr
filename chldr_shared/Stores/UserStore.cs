@@ -14,7 +14,7 @@ namespace chldr_shared.Stores
         #endregion
 
         #region Events
-        public event Action LoggedInUserChanged;
+        public event Action<UserModel?> LoggedInUserChanged;
         #endregion
 
         #region Fields
@@ -68,7 +68,7 @@ namespace chldr_shared.Stores
             try
             {
                 CurrentUser = await _dataAccess.GetCurrentUserInfoAsync();
-                LoggedInUserChanged?.Invoke();
+                LoggedInUserChanged?.Invoke(CurrentUser);
             }
             catch (Exception ex)
             {
@@ -111,7 +111,7 @@ namespace chldr_shared.Stores
         {
             await _dataAccess.LogOutAsync();
             CurrentUser = null;
-            LoggedInUserChanged?.Invoke();
+            LoggedInUserChanged?.Invoke(null);
         }
     }
 }
