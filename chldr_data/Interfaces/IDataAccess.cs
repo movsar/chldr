@@ -11,6 +11,7 @@ namespace chldr_data.Interfaces
         Realm Database { get; }
 
         event Action DatabaseInitialized;
+        event Action DatabaseSynced;
         event Action<SearchResultModel> GotNewSearchResult;
 
         WordModel GetWordById(ObjectId entityId);

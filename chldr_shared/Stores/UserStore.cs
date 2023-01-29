@@ -31,11 +31,10 @@ namespace chldr_shared.Stores
             _environmentService = environmentService;
 
             _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
+            _dataAccess.DatabaseSynced += DataAccess_DatabaseSynced;
         }
-        #endregion
 
-        #region Event Handlers
-        private void DataAccess_DatabaseInitialized()
+        private void DataAccess_DatabaseSynced()
         {
             try
             {
@@ -49,6 +48,13 @@ namespace chldr_shared.Stores
             {
                 _logger.LogError(ex, ex.Message);
             }
+        }
+        #endregion
+
+        #region Event Handlers
+        private void DataAccess_DatabaseInitialized()
+        {
+
         }
         #endregion
 

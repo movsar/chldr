@@ -9,6 +9,7 @@ using System;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Security.Cryptography;
+using static Realms.Sync.MongoClient;
 
 namespace chldr_data.Services
 {
@@ -20,6 +21,7 @@ namespace chldr_data.Services
 
         private App _app { get; set; }
         private RealmConfigurationBase _config;
+        private string userDatabasePath;
 
         public RealmService(FileService fileService, ExceptionHandler exceptionHandler)
         {
@@ -44,7 +46,7 @@ namespace chldr_data.Services
             Logger.Default = Logger.Function(message =>
             {
                 Debug.WriteLine($"Realm : {message}");
-               // _exceptionHandler.ProcessError(new Exception($"Realm : {message}"));
+                // _exceptionHandler.ProcessError(new Exception($"Realm : {message}"));
             });
 
             _app = App.Create(new AppConfiguration(myRealmAppId)
@@ -70,7 +72,7 @@ namespace chldr_data.Services
 
             var uncompressedFileName = _fileService.CompressedDatabaseFileName + "x";
             var userDatabaseName = _fileService.GetUserDatabaseName(appUser.Id);
-            var userDatabasePath = Path.Combine(_fileService.AppDataDirectory, userDatabaseName);
+            userDatabasePath = Path.Combine(_fileService.AppDataDirectory, userDatabaseName);
 
             if (!File.Exists(userDatabasePath) && !File.Exists(uncompressedFileName))
             {
@@ -79,17 +81,12 @@ namespace chldr_data.Services
                     ZipFile.ExtractToDirectory(_fileService.CompressedDatabaseFilePath, _fileService.AppDataDirectory);
                     File.Move(Path.Combine(_fileService.AppDataDirectory, uncompressedFileName), Path.Combine(_fileService.AppDataDirectory, userDatabaseName));
 
-                    var fileSize = new FileInfo(userDatabasePath).Length / 1000_000;
-                    if (fileSize > 50)
-                    {
-                        Realm.Compact(_config);
-                    }
+
                 }
                 catch (Exception ex)
                 {
                     _exceptionHandler.ProcessDebug(ex);
                 }
-
             }
 
             _config = new FlexibleSyncConfiguration(appUser, userDatabasePath)
@@ -109,10 +106,14 @@ namespace chldr_data.Services
                 }
             };
 
-            // To wait for syncrhonization, use realm.SyncSession.WaitForDownload(),
-            // not Subscriptions.WaitForSynchronization()
-
-            // Get database size in megabytes
+            if (File.Exists(userDatabasePath))
+            {
+                var fileSize = new FileInfo(userDatabasePath).Length / 1000_000;
+                if (fileSize > 70)
+                {
+                    Realm.Compact(_config);
+                }
+            }
         }
 
         internal App GetApp()
@@ -136,6 +137,13 @@ namespace chldr_data.Services
             //realm.WriteCopy(encryptedConfig);
             //File.WriteAllBytes(Path.Combine(_fileService.AppDataDirectory, "encryption.key"), encryptionKey);
 
+        }
+
+        internal async Task Synchronize()
+        {
+            var realm = GetRealm();
+            await realm.Subscriptions.WaitForSynchronizationAsync();
+            await realm.SyncSession.WaitForDownloadAsync();
         }
     }
 }

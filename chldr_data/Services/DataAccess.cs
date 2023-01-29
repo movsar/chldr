@@ -135,7 +135,7 @@ namespace chldr_data.Services
                 try
                 {
                     await Initialize();
-                    await Sync();
+                    await Synchronize();
                 }
                 catch (Exception ex)
                 {
@@ -144,10 +144,9 @@ namespace chldr_data.Services
             });
         }
 
-        private async Task Sync()
+        private async Task Synchronize()
         {
-            await Database.Subscriptions.WaitForSynchronizationAsync();
-            await Database.SyncSession.WaitForDownloadAsync();
+            await _realmService.Synchronize();
             DatabaseSynced?.Invoke();
         }
 
