@@ -13,6 +13,7 @@ namespace chldr_data.Entities
     {
         [PrimaryKey]
         public ObjectId _id { get; set; }
+        public string? Name { get; set; }
         public string Code { get; set; } = string.Empty;
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
     }

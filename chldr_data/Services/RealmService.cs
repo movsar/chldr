@@ -21,9 +21,6 @@ namespace chldr_data.Services
         private App _app { get; set; }
         private RealmConfigurationBase _config;
 
-        internal event Action DatabaseInitialized;
-        internal event Action DatabaseSynced;
-
         public RealmService(FileService fileService, ExceptionHandler exceptionHandler)
         {
             _exceptionHandler = exceptionHandler;
@@ -43,10 +40,11 @@ namespace chldr_data.Services
 
         internal async Task InitializeApp()
         {
-            Logger.LogLevel = LogLevel.Error;
+            Logger.LogLevel = LogLevel.Debug;
             Logger.Default = Logger.Function(message =>
             {
-                _exceptionHandler.ProcessError(new Exception($"Realm : {message}"));
+                Debug.WriteLine($"Realm : {message}");
+               // _exceptionHandler.ProcessError(new Exception($"Realm : {message}"));
             });
 
             _app = App.Create(new AppConfiguration(myRealmAppId)
@@ -76,8 +74,22 @@ namespace chldr_data.Services
 
             if (!File.Exists(userDatabasePath) && !File.Exists(uncompressedFileName))
             {
-                ZipFile.ExtractToDirectory(_fileService.CompressedDatabaseFilePath, _fileService.AppDataDirectory);
-                File.Move(Path.Combine(_fileService.AppDataDirectory, uncompressedFileName), Path.Combine(_fileService.AppDataDirectory, userDatabaseName));
+                try
+                {
+                    ZipFile.ExtractToDirectory(_fileService.CompressedDatabaseFilePath, _fileService.AppDataDirectory);
+                    File.Move(Path.Combine(_fileService.AppDataDirectory, uncompressedFileName), Path.Combine(_fileService.AppDataDirectory, userDatabaseName));
+
+                    var fileSize = new FileInfo(userDatabasePath).Length / 1000_000;
+                    if (fileSize > 50)
+                    {
+                        Realm.Compact(_config);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _exceptionHandler.ProcessDebug(ex);
+                }
+
             }
 
             _config = new FlexibleSyncConfiguration(appUser, userDatabasePath)
@@ -101,11 +113,6 @@ namespace chldr_data.Services
             // not Subscriptions.WaitForSynchronization()
 
             // Get database size in megabytes
-            var fileSize = new FileInfo(userDatabasePath).Length / 1000_000;
-            if (fileSize > 50)
-            {
-                Realm.Compact(_config);
-            }
         }
 
         internal App GetApp()

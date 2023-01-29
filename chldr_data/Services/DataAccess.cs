@@ -37,6 +37,7 @@ namespace chldr_data.Services
         #endregion
 
         #region Events
+        public event Action DatabaseSynced;
         public event Action DatabaseInitialized;
         public event Action<SearchResultModel> GotNewSearchResult;
         #endregion
@@ -52,17 +53,27 @@ namespace chldr_data.Services
 
         public async Task<UserModel?> GetCurrentUserInfoAsync()
         {
-            // await App.CurrentUser.LogOutAsync();
-            if (App.CurrentUser.Provider == Credentials.AuthProvider.Anonymous)
+            try
             {
+
+                // await App.CurrentUser.LogOutAsync();
+                if (App.CurrentUser.Provider == Credentials.AuthProvider.Anonymous)
+                {
+                    return null;
+                }
+
+                var appUserId = new ObjectId(App.CurrentUser.Id);
+                await Database.SyncSession.WaitForDownloadAsync();
+
+                var user = Database.All<Entities.User>().First(u => u._id == appUserId);
+                return new UserModel(user);
+
+            }
+            catch (Exception ex)
+            {
+                //_exceptionHandler.ProcessError(ex);
                 return null;
             }
-
-            var appUserId = new ObjectId(App.CurrentUser.Id);
-            await Database.Subscriptions.WaitForSynchronizationAsync();
-
-            var user = Database.All<Entities.User>().First(u => u._id == appUserId);
-            return new UserModel(user);
         }
 
         public async Task FindAsync(string inputText)
@@ -113,26 +124,31 @@ namespace chldr_data.Services
             _searchEngine = new MainSearchEngine(this);
             _realmService = realmService;
 
-            _realmService.DatabaseInitialized += () =>
-            {
-                DatabaseInitialized?.Invoke();
-            };
-
             if (App != null)
             {
                 return;
             }
 
-            try
+            // Runs asynchronously, then continues
+            Task.Run(async () =>
             {
-                // Runs asynchronously, then continues
-                Task.Run(async () => await Initialize());
-            }
-            catch (Exception ex)
-            {
-                _exceptionHandler.ProcessError(ex);
-            }
+                try
+                {
+                    await Initialize();
+                    await Sync();
+                }
+                catch (Exception ex)
+                {
+                    _exceptionHandler.ProcessError(ex);
+                };
+            });
+        }
 
+        private async Task Sync()
+        {
+            await Database.Subscriptions.WaitForSynchronizationAsync();
+            await Database.SyncSession.WaitForDownloadAsync();
+            DatabaseSynced?.Invoke();
         }
 
         public async Task LogInEmailPasswordAsync(string email, string password)

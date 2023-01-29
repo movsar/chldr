@@ -76,7 +76,7 @@ namespace chldr_shared.Stores
             {
                 await _dataAccess.LogInEmailPasswordAsync(email, password);
                 LoggedIn = true;
-                
+
                 new Task(async () => await SetCurrentUserInfoAsync()).Start();
             }
             catch (Exception ex)

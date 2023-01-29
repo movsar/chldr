@@ -33,6 +33,14 @@ namespace chldr_utils
 
             IncomingException?.Invoke(ex);
         }
+
+        public void ProcessDebug(Exception ex)
+        {
+            string message = Regex.Replace($"{ex.Message} {ex.StackTrace}\r\n", @"\s\s+", "\r\n\t");
+
+            _fileLogger.Debug(message);
+            _consoleLogger.LogDebug(message);
+        }
     }
 
 }
