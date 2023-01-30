@@ -16,7 +16,6 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using Entry = chldr_data.Entities.Entry;
 using LogLevel = Realms.Logging.LogLevel;
-
 namespace chldr_data.Services
 {
     public class DataAccess : IDataAccess
@@ -79,6 +78,8 @@ namespace chldr_data.Services
 
         public async Task Initialize()
         {
+            // Database.SyncSession.ConnectionState == ConnectionState.Disconnected
+
             try
             {
                 await _realmService.InitializeApp();
@@ -105,31 +106,32 @@ namespace chldr_data.Services
         }
         #endregion
 
-
-        public async Task<UserModel?> GetCurrentUserInfoAsync()
+        public UserModel GetCurrentUserInfo()
         {
             if (!_networkService.IsNetworUp || Database.SyncSession.State == SessionState.Inactive)
             {
-                return null;
+                throw new Exception(AppConstants.DataErrorMessages.NetworkIsDown);
+            }
+
+            if (App?.CurrentUser?.Id == null)
+            {
+                throw new Exception(AppConstants.DataErrorMessages.AppNotInitialized);
             }
 
             if (App.CurrentUser.Provider == Credentials.AuthProvider.Anonymous)
             {
-                return null;
+                throw new Exception(AppConstants.DataErrorMessages.AnonymousUser);
             }
 
-            try
-            {
-                var appUserId = new ObjectId(App.CurrentUser.Id);
+            var appUserId = new ObjectId(App.CurrentUser.Id);
+            var user = Database.All<Entities.User>().FirstOrDefault(u => u._id == appUserId);
 
-                var user = Database.All<Entities.User>().First(u => u._id == appUserId);
-                return new UserModel(user);
-            }
-            catch (Exception ex)
+            if (user == null)
             {
-                //_exceptionHandler.ProcessError(ex);
-                return null;
+                throw new Exception(AppConstants.DataErrorMessages.NoUserInfo);
             }
+
+            return new UserModel(user);
         }
 
         public async Task FindAsync(string inputText)

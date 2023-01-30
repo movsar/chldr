@@ -26,7 +26,7 @@ namespace chldr_data.Interfaces
         Task UpdatePasswordAsync(string token, string tokenId, string newPassword);
         Task ConfirmUserAsync(string token, string tokenId, string email);
         Task LogOutAsync();
-        Task<UserModel?> GetCurrentUserInfoAsync();
+        UserModel GetCurrentUserInfo();
         PhraseModel? GetPhraseByEntryId(ObjectId entryId);
         WordModel? GetWordByEntryId(ObjectId entryId);
         EntryModel? GetEntryById(ObjectId entryId);

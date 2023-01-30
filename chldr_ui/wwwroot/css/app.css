@@ -3,6 +3,10 @@
 @import url('bootstrap-icons/bootstrap-icons.css');
 @import url('font-awesome/all.min.css');
 
+.bi {
+    color: darkblue;
+}
+
 .chldr_registration_errors {
     font-size: 16px;
 }

@@ -13,6 +13,7 @@ using EmailService = chldr_shared.Services.EmailService;
 using chldr_shared;
 using chldr_shared.Models;
 using chldr_utils.Services;
+using chldr_utils;
 
 namespace chldr_server.Controllers
 {
@@ -29,7 +30,7 @@ namespace chldr_server.Controllers
         [HttpGet("sendResetPasswordEmail")]
         public ActionResult SendResetPasswordEmail(string token, string tokenId, string email)
         {
-            var resetPasswordLink = new Uri(QueryHelpers.AddQueryString($"{Constants.Host}/set-new-password", new Dictionary<string, string?>(){
+            var resetPasswordLink = new Uri(QueryHelpers.AddQueryString($"{AppConstants.Host}/set-new-password", new Dictionary<string, string?>(){
                 { "token", token},
                 { "tokenId", tokenId},
             })).ToString();
@@ -56,7 +57,7 @@ namespace chldr_server.Controllers
         [HttpGet("sendConfirmationEmail")]
         public ActionResult SendConfirmationEmail(string token, string tokenId, string email)
         {
-            var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.Host}/login", new Dictionary<string, string?>(){
+            var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{AppConstants.Host}/login", new Dictionary<string, string?>(){
                 { "token", token},
                 { "tokenId", tokenId},
                 { "email", email},

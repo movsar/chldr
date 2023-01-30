@@ -39,14 +39,14 @@
         @if (UserStore?.CurrentUserInfo != null)
         {
             <div class="chldr_entry_actions">
-                <i class="fa fa-language" @onclick="NewTranslation"></i>
-                <i class="fa fa-share" @onclick="Share"></i>
-                <i class="fa fa-flag" @onclick="Flag"></i>
-                <i class="fa fa-star" @onclick="AddToFavorites"></i>
+                <i class="bi bi-translate" @onclick="NewTranslation"></i>
+                <i class="bi bi-share" @onclick="Share"></i>
+                <i class="bi bi-flag" @onclick="Flag"></i>
+                <i class="bi bi-star" @onclick="AddToFavorites"></i>
 
                 @if (UserStore?.CurrentUserInfo?.CanEditEntry(Entry!) == true)
                 {
-                    <a href="/word/edit/@Word?.WordId"><i class="oi oi-pencil"></i></a>
+                    <a href="/word/edit/@Word?.WordId"><i class="bi bi-pencil"></i></a>
                 }
             </div>
         }

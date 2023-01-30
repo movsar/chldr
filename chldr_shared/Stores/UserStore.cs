@@ -2,6 +2,7 @@
 using chldr_data.Models;
 using chldr_shared.Enums;
 using chldr_shared.Services;
+using chldr_utils;
 using Microsoft.Extensions.Logging;
 
 namespace chldr_shared.Stores
@@ -9,8 +10,13 @@ namespace chldr_shared.Stores
     public class UserStore
     {
 
-        #region Properties
+        #region Properties, Events and Fields
+        public event Action UserStateHasChanged;
+
+        private readonly IDataAccess _dataAccess;
+        private readonly EnvironmentService _environmentService;
         public UserModel? CurrentUserInfo { get; set; }
+        private SessionStatus _sessionStatus;
         public SessionStatus SessionStatus
         {
             get => _sessionStatus;
@@ -22,90 +28,77 @@ namespace chldr_shared.Stores
         }
         #endregion
 
-        #region Events
-        public event Action UserStateHasChanged;
-        #endregion
-
-        #region Fields
-        private readonly ILogger<UserStore> _logger;
-        private readonly IDataAccess _dataAccess;
-        private readonly EnvironmentService _environmentService;
-        private SessionStatus _sessionStatus;
-        #endregion
-
-        #region Constructors
-        public UserStore(IDataAccess dataAccess, EnvironmentService environmentService, ILogger<UserStore> logger)
+        public UserStore(IDataAccess dataAccess, EnvironmentService environmentService)
         {
-            _logger = logger;
             _dataAccess = dataAccess;
             _environmentService = environmentService;
 
             _dataAccess.DatabaseSynchronized += DataAccess_ChangesSynchronized;
             _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
-            _dataAccess.ConnectionInitialized += DataAccess_ConnectionInitialized;
-        }
-
-        private SessionStatus GetSessionStatus(Realms.Sync.User? user)
-        {
-            if (user == null || user.Id == null || CurrentUserInfo == null)
-            {
-                return SessionStatus.Disconnected;
-            }
-
-            if (_dataAccess.App.CurrentUser.Provider == Realms.Sync.Credentials.AuthProvider.Anonymous)
-            {
-                return SessionStatus.Unauthorized;
-            }
-
-            return SessionStatus.LoggedIn;
-        }
-        private void DataAccess_ConnectionInitialized()
-        {
-            UpdateSessionStatus();
         }
 
         private void DataAccess_ChangesSynchronized()
         {
-            UpdateSessionStatus();
+            // This is going to refresh logged in user info, when you register, the database is not ready, 
+            // the status is LoggingIn but need to wait for the custom user data
+            if (CurrentUserInfo == null)
+            {
+                new Task(() => SetCurrentUserInfo()).Start();
+            }
         }
 
         private void DataAccess_DatabaseInitialized()
         {
-            try
+            if (CurrentUserInfo != null)
             {
-                if (CurrentUserInfo == null)
-                {
-                    // All the other ways of starting this async job result in an WebSocket's error when deployed
-                    new Task(async () => await SetCurrentUserInfoAsync()).Start();
-                }
+                SessionStatus = SessionStatus.LoggedIn;
             }
-            catch (Exception ex)
+            else
             {
-                _logger.LogError(ex, ex.Message);
+                // Request the custom user data on database initialized
+                new Task(() => SetCurrentUserInfo()).Start();
             }
         }
-
-        #endregion
-
 
         public async Task RegisterNewUser(string email, string password)
         {
             await _dataAccess.RegisterNewUserAsync(email, password);
         }
 
-        public async Task SetCurrentUserInfoAsync()
+        public void SetCurrentUserInfo()
         {
             try
             {
-                CurrentUserInfo = await _dataAccess.GetCurrentUserInfoAsync();
-                UpdateSessionStatus();
+                CurrentUserInfo = _dataAccess.GetCurrentUserInfo();
+                SessionStatus = SessionStatus.LoggedIn;
+                UserStateHasChanged?.Invoke();
             }
             catch (Exception ex)
             {
-                // Localize exception
-                throw;
+                switch (ex.Message)
+                {
+                    case AppConstants.DataErrorMessages.NetworkIsDown:
+                        SessionStatus = SessionStatus.Disconnected;
+                        break;
+
+                    case AppConstants.DataErrorMessages.AnonymousUser:
+                        SessionStatus = SessionStatus.Unauthorized;
+                        break;
+
+                    case AppConstants.DataErrorMessages.AppNotInitialized:
+                        SessionStatus = SessionStatus.Disconnected;
+                        break;
+
+                    case AppConstants.DataErrorMessages.NoUserInfo:
+                        SessionStatus = SessionStatus.LoggingIn;
+                        break;
+
+                    default:
+                        break;
+                }
             }
         }
+
         public async Task LogInEmailPasswordAsync(string email, string password)
         {
             try
@@ -138,12 +131,9 @@ namespace chldr_shared.Stores
         public async Task LogOutAsync()
         {
             await _dataAccess.LogOutAsync();
-            UpdateSessionStatus();
-        }
-
-        private void UpdateSessionStatus()
-        {
-            SessionStatus = GetSessionStatus(_dataAccess.App.CurrentUser);
+            CurrentUserInfo = null;
+            SessionStatus = SessionStatus.Unauthorized;
+            UserStateHasChanged?.Invoke();
         }
     }
 }

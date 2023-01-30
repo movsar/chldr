@@ -25,6 +25,9 @@
       <LogicalName>%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Data\synced.base.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
