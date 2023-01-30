@@ -47,7 +47,7 @@ namespace chldr_shared.Stores
 
         private SessionStatus GetSessionStatus(Realms.Sync.User? user)
         {
-            if (user == null || user.Id == null)
+            if (user == null || user.Id == null || CurrentUserInfo == null)
             {
                 return SessionStatus.Disconnected;
             }

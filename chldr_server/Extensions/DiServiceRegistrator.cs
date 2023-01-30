@@ -42,6 +42,7 @@ namespace chldr_server.Extensions
 
             // Utils
             appBuilder.Services.AddScoped<ExceptionHandler>();
+            appBuilder.Services.AddScoped<NetworkService>();
 
             return appBuilder;
         }

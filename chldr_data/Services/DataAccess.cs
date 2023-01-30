@@ -13,6 +13,7 @@ using Realms;
 using Realms.Logging;
 using Realms.Sync;
 using System.Linq;
+using System.Net.NetworkInformation;
 using Entry = chldr_data.Entities.Entry;
 using LogLevel = Realms.Logging.LogLevel;
 
@@ -51,18 +52,25 @@ namespace chldr_data.Services
         public const int RandomEntriesLimit = 30;
         private ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
+        private readonly NetworkService _networkService;
         private readonly MainSearchEngine _searchEngine;
         private RealmService _realmService;
         #endregion
 
         #region Database Initialization and State Changes
-        private async Task WaitForDatabaseInitializationAsync()
+        private async Task InitializeDatabase()
         {
-            await Database.SyncSession.WaitForDownloadAsync();
+            var language = Database.All<Language>().FirstOrDefault();
+            if (language == null)
+            {
+                // TODO: What if there's no offline file and no network?
+                await Database.SyncSession.WaitForDownloadAsync();
+            }
+
             DatabaseInitialized?.Invoke();
         }
 
-        private async Task WaitForDatabaseSynchronization()
+        private async Task SynchronizeDatabase()
         {
             await Database.SyncSession.WaitForDownloadAsync();
             await Database.SyncSession.WaitForUploadAsync();
@@ -71,27 +79,47 @@ namespace chldr_data.Services
 
         public async Task Initialize()
         {
-            await _realmService.InitializeApp();
-            _realmService.InitialziedConfig(App.CurrentUser);
-            ConnectionInitialized?.Invoke();
+            try
+            {
+                await _realmService.InitializeApp();
+                _realmService.InitialzieConfig(App.CurrentUser);
+                ConnectionInitialized?.Invoke();
 
-            new Task(async () => await WaitForDatabaseInitializationAsync()).Start();
-            new Task(async () => await WaitForDatabaseSynchronization()).Start();
+                new Task(async () => await InitializeDatabase()).Start();
+                new Task(async () => await SynchronizeDatabase()).Start();
 
-            await DatabaseMaintenance();
+                await DatabaseMaintenance();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("998"))
+                {
+                    // Network error
+                    _exceptionHandler.ProcessError(new Exception("NETWORK_ERROR"));
+                }
+                else
+                {
+                    _exceptionHandler.ProcessError(ex);
+                }
+            }
         }
         #endregion
 
+
         public async Task<UserModel?> GetCurrentUserInfoAsync()
         {
+            if (!_networkService.IsNetworUp || Database.SyncSession.State == SessionState.Inactive)
+            {
+                return null;
+            }
+
+            if (App.CurrentUser.Provider == Credentials.AuthProvider.Anonymous)
+            {
+                return null;
+            }
+
             try
             {
-                // await App.CurrentUser.LogOutAsync();
-                if (App.CurrentUser.Provider == Credentials.AuthProvider.Anonymous)
-                {
-                    return null;
-                }
-
                 var appUserId = new ObjectId(App.CurrentUser.Id);
 
                 var user = Database.All<Entities.User>().First(u => u._id == appUserId);
@@ -136,12 +164,12 @@ namespace chldr_data.Services
 
 
 
-        public DataAccess(FileService fileService, RealmService realmService, ExceptionHandler exceptionHandler)
+        public DataAccess(FileService fileService, RealmService realmService, ExceptionHandler exceptionHandler, NetworkService networkService)
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
             _fileService.PrepareDatabase();
-
+            _networkService = networkService;
             _searchEngine = new MainSearchEngine(this);
             _realmService = realmService;
 
@@ -163,7 +191,7 @@ namespace chldr_data.Services
         {
             // Don't touch this unless it's absolutely necessary! It was very hard to configure!
             var appUser = await App.LogInAsync(Credentials.EmailPassword(email, password));
-            _realmService.InitialziedConfig(appUser);
+            _realmService.InitialzieConfig(appUser);
         }
 
         public async Task LogOutAsync()
@@ -175,7 +203,7 @@ namespace chldr_data.Services
             }
 
             App.SwitchUser(anonymousUser);
-            _realmService.InitialziedConfig(anonymousUser);
+            _realmService.InitialzieConfig(anonymousUser);
         }
 
         public void OnNewResults(SearchResultModel results)

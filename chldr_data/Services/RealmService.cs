@@ -17,9 +17,10 @@ namespace chldr_data.Services
     {
         private App? _app { get; set; }
         private const string myRealmAppId = "dosham-lxwuu";
-        
+
         private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
+        private readonly NetworkService _networkService;
         private RealmConfigurationBase? _config;
         internal Realm GetDatabase()
         {
@@ -34,15 +35,16 @@ namespace chldr_data.Services
         {
             return _app;
         }
-        public RealmService(FileService fileService, ExceptionHandler exceptionHandler)
+        public RealmService(FileService fileService, ExceptionHandler exceptionHandler, NetworkService networkService)
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
+            _networkService = networkService;
 
             Logger.LogLevel = LogLevel.Error;
             Logger.Default = Logger.Function(message =>
             {
-                _exceptionHandler.ProcessError(new Exception($"Realm : {message}"));
+                //_exceptionHandler.ProcessError(new Exception($"Realm : {message}"));
             });
         }
 
@@ -64,23 +66,34 @@ namespace chldr_data.Services
                 await _app.LogInAsync(Credentials.Anonymous(true));
             }
         }
-        internal void InitialziedConfig(Realms.Sync.User appUser)
+        internal string GetUserDatabaseFilePath()
+        {
+            if (_app?.CurrentUser == null)
+            {
+                throw new Exception("User cannot be null");
+            }
+
+            var userDatabaseName = _fileService.GetUserDatabaseName(_app.CurrentUser.Id);
+
+            return Path.Combine(_fileService.AppDataDirectory, userDatabaseName);
+        }
+        internal void InitialzieConfig(Realms.Sync.User appUser)
         {
             if (appUser == null)
             {
                 throw new Exception("User must not be null");
             }
 
-            var uncompressedFileName = _fileService.CompressedDatabaseFileName + "x";
-            var userDatabaseName = _fileService.GetUserDatabaseName(appUser.Id);
-            var userDatabasePath = Path.Combine(_fileService.AppDataDirectory, userDatabaseName);
+            var userDatabasePath = GetUserDatabaseFilePath();
+            var userDatabaseName = _fileService.GetUserDatabaseName(_app.CurrentUser.Id);
 
-            if (!File.Exists(userDatabasePath) && !File.Exists(uncompressedFileName))
+            var shippedDbFileName = _fileService.CompressedDatabaseFileName + "x";
+            if (!File.Exists(userDatabasePath) && !File.Exists(shippedDbFileName))
             {
                 try
                 {
                     ZipFile.ExtractToDirectory(_fileService.CompressedDatabaseFilePath, _fileService.AppDataDirectory);
-                    File.Move(Path.Combine(_fileService.AppDataDirectory, uncompressedFileName), Path.Combine(_fileService.AppDataDirectory, userDatabaseName));
+                    File.Move(Path.Combine(_fileService.AppDataDirectory, shippedDbFileName), Path.Combine(_fileService.AppDataDirectory, userDatabaseName));
                 }
                 catch (Exception ex)
                 {

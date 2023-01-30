@@ -10,6 +10,7 @@ using chldr_shared.Dto;
 using chldr_shared.Services;
 using System.Reflection.PortableExecutable;
 using chldr_utils;
+using chldr_utils.Services;
 
 namespace chldr_native.Extensions
 {
@@ -50,6 +51,7 @@ namespace chldr_native.Extensions
 
             // Utils
             appBuilder.Services.AddScoped<ExceptionHandler>();
+            appBuilder.Services.AddScoped<NetworkService>();
 
             return appBuilder;
         }
