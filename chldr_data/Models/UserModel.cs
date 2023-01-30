@@ -13,12 +13,12 @@ namespace chldr_data.Models
     public class UserModel
     {
         // Members can only add and vote, they'll get their rate increased when moders approve their entries
-        private static NumericRange MemberRateRange = new NumericRange(1, 10);
-        private static NumericRange EnthusiastRateRange = new NumericRange(10, 50);
+        public static NumericRange MemberRateRange = new NumericRange(1, 10);
+        public static NumericRange EnthusiastRateRange = new NumericRange(10, 50);
         // Initial Rate of official dictionary entries = 50, so that only contributors can edit them
-        private static NumericRange ContributorRateRange = new NumericRange(50, 500);
-        private static NumericRange EditorRateRange = new NumericRange(500, 10000);
-        private static NumericRange MaintainerRateRange = new NumericRange(10000, 500000000);
+        public static NumericRange ContributorRateRange = new NumericRange(50, 500);
+        public static NumericRange EditorRateRange = new NumericRange(500, 10000);
+        public static NumericRange MaintainerRateRange = new NumericRange(10000, 500000000);
         public ObjectId UserId { get; }
         public string? Email { get; }
         public int Rate { get; }

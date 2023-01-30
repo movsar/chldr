@@ -21,6 +21,7 @@ namespace chldr_ui.ViewModels
             {
                 Entries.AddRange(ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries));
             }
+
             base.OnInitialized();
         }
 

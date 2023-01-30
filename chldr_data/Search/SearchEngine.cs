@@ -28,8 +28,8 @@ namespace chldr_data.Search
 
                 var entries = realmInstance.All<Entry>().Where(filter)
                                                         .AsEnumerable()
-                                                        .OrderByDescending(entry => entry.Rate)
-                                                        .ThenBy(entry => entry.RawContents.IndexOf(inputText))
+                                                        //.OrderByDescending(entry => entry.Rate)
+                                                        //.ThenBy(entry => entry.RawContents.IndexOf(inputText))
                                                         .Take(limit);
                 foreach (var entry in entries)
                 {
@@ -52,7 +52,7 @@ namespace chldr_data.Search
                 var translations = realmInstance.All<Translation>()
                                                                    .Where(filter)
                                                                    .AsEnumerable()
-                                                                   .OrderBy(translation => translation.Content.IndexOf(inputText))
+                                                                   //.OrderBy(translation => translation.Content.IndexOf(inputText))
                                                                    .Take(limit);
                 foreach (var translation in translations)
                 {

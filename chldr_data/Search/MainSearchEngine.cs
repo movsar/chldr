@@ -15,6 +15,7 @@ using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using chldr_utils;
 using chldr_utils.Services;
+using chldr_utils.Models;
 
 namespace chldr_data.Search
 {
@@ -26,7 +27,7 @@ namespace chldr_data.Search
 
         public MainSearchEngine(IDataAccess dataAccess) : base(dataAccess){}
 
-        public async Task FindAsync(string inputText)
+        public async Task FindAsync(string inputText, FiltrationFlags filtrationFlags)
         {
             var logger = new ConsoleService("GotNewSearchResults", false);
             logger.StartSpeedTest();

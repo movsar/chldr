@@ -10,7 +10,9 @@ namespace chldr_utils
     {
         public const string Host = "https://dosham.azurewebsites.net";
 
-        public class DataErrorMessages
+      
+
+        public static class DataErrorMessages
         {
             public const string NetworkIsDown = "Network is down";
 

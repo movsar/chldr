@@ -6,6 +6,7 @@ using chldr_data.Models;
 using chldr_data.Search;
 using chldr_shared.Models;
 using chldr_utils;
+using chldr_utils.Models;
 using chldr_utils.Services;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
@@ -134,9 +135,9 @@ namespace chldr_data.Services
             return new UserModel(user);
         }
 
-        public async Task FindAsync(string inputText)
+        public async Task FindAsync(string inputText, FiltrationFlags filtrationFlags)
         {
-            await _searchEngine.FindAsync(inputText);
+            await _searchEngine.FindAsync(inputText, filtrationFlags);
         }
 
         /*

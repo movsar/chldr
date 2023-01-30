@@ -1,7 +1,9 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Services;
+using chldr_shared.Models;
 using chldr_utils;
+using chldr_utils.Models;
 using MongoDB.Bson;
 using System;
 using System.Collections;
@@ -50,10 +52,10 @@ namespace chldr_shared.Stores
         #endregion
 
         #region Methods
-        public void Search(string inputText)
+        public void Search(string inputText, FiltrationFlags filterationFlags)
         {
             CachedSearchResults.Clear();
-            Task.Run(() => _dataAccess.FindAsync(inputText));
+            Task.Run(() => _dataAccess.FindAsync(inputText, filterationFlags));
         }
         public void LoadRandomEntries()
         {
@@ -104,6 +106,11 @@ namespace chldr_shared.Stores
             {
                 _exceptionHandler.ProcessError(ex);
             }
+        }
+
+        public void Search(string query)
+        {
+            Search(query, new FiltrationFlags());
         }
     }
 }

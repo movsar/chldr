@@ -1,4 +1,5 @@
 ﻿using chldr_data.Models;
+using chldr_utils.Models;
 using MongoDB.Bson;
 using Realms;
 using Realms.Sync;
@@ -19,7 +20,7 @@ namespace chldr_data.Interfaces
         PhraseModel GetPhraseById(ObjectId entityId);
         void LoadRandomEntries();
         Task Initialize();
-        Task FindAsync(string inputText);
+        Task FindAsync(string inputText, FiltrationFlags filterationFlags);
         Task LogInEmailPasswordAsync(string email, string password);
         Task RegisterNewUserAsync(string email, string password);
         Task SendPasswordResetRequestAsync(string email);
