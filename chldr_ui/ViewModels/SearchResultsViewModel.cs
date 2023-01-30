@@ -11,8 +11,9 @@ namespace chldr_ui.ViewModels
 
         protected override void OnInitialized()
         {
+            Console.WriteLine("OnInitialized");
+
             ContentStore.GotNewSearchResult += ContentStore_GotNewSearchResult;
-            UserStore.LoggedInUserChanged += UserStore_LoggedInUserChanged;
 
             // If no new entries have been requested, show entries from the cache
             if (ContentStore.CachedSearchResults.Count > 0 && Entries.Count == 0)
@@ -22,16 +23,10 @@ namespace chldr_ui.ViewModels
             base.OnInitialized();
         }
 
-        private void UserStore_LoggedInUserChanged(UserModel? obj)
-        {
-            InvokeAsync(() =>
-            {
-                StateHasChanged();
-            });
-        }
-
         private async void ContentStore_GotNewSearchResult(SearchResultModel searchResult)
         {
+            Console.WriteLine("GotNewSearchResults");
+
             var logger = new ConsoleService("GotNewSearchResults", true);
             logger.StartSpeedTest();
 

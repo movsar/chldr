@@ -9,7 +9,7 @@
         @Translation?.Content
     </span>
 
-    @if (UserStore?.CurrentUser != null)
+    @if (UserStore?.CurrentUserInfo != null)
     {
         <span class="chldr_translation_actions ms-lg-1">
             <i class="fa fa-thumbs-up" @onclick="Upvote"></i>

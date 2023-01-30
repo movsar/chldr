@@ -34,8 +34,13 @@ namespace chldr_ui.ViewModels
         }
 
         #region Event Handlers
-        private async void ContentStore_DatabaseInitialized()
+        private async Task ShowRandoms()
         {
+            if (ContentStore.CachedSearchResults.Count > 0)
+            {
+                return;
+            }
+
             if (EnvironmentService?.CurrentPlatform != Platforms.Web)
             {
                 ContentStore.LoadRandomEntries();
@@ -45,6 +50,10 @@ namespace chldr_ui.ViewModels
                 await Task.Delay(500);
                 await JsInteropFunctions!.ClickShowRandoms();
             }
+        }
+        private async void ContentStore_DatabaseInitialized()
+        {
+            await ShowRandoms();
         }
 
         // Called when something is typed into search input

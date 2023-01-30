@@ -1,5 +1,7 @@
 ﻿using chldr_data.Enums;
+using chldr_shared.Models;
 using MongoDB.Bson;
+using Realms.Sync;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,53 +12,20 @@ namespace chldr_data.Models
 {
     public class UserModel
     {
-        //private static NumericRange MemberRateRange = new Range(1, 10);
-        //private static NumericRange EnthusiastRateRange = new Range(10, 50);
-        //private static NumericRange ContributorRateRange = new Range(50, 500);
-        //private static NumericRange EditorRateRange = new Range(500, 10000);
-        //private static NumericRange MaintainerRateRange = new Range(10000, 500000000);
-        //private static bool IsWithin(Range range, int value)
-        //{
-        //    return value >= range.Start && value <= maximum;
-        //}
+        // Members can only add and vote, they'll get their rate increased when moders approve their entries
+        private static NumericRange MemberRateRange = new NumericRange(1, 10);
+        private static NumericRange EnthusiastRateRange = new NumericRange(10, 50);
+        // Initial Rate of official dictionary entries = 50, so that only contributors can edit them
+        private static NumericRange ContributorRateRange = new NumericRange(50, 500);
+        private static NumericRange EditorRateRange = new NumericRange(500, 10000);
+        private static NumericRange MaintainerRateRange = new NumericRange(10000, 500000000);
         public ObjectId UserId { get; }
-        public string Email { get; }
+        public string? Email { get; }
         public int Rate { get; }
-        public Rank Rank
-        {
-            get
-            {
-                if (Rate < 10)
-                {
-                    // 1 - 9
-                    return Rank.Member;
-                }
-                else if (Rate < 49)
-                {
-                    // 10 - 49
-                    return Rank.Enthusiast;
-                }
-                else if (Rate < 499)
-                {
-                    // 50 - 499
-                    return Rank.Contributor;
-                }
-                else if (Rate < 9999)
-                {
-                    // 500 - 9999 
-                    return Rank.Editor;
-                }
-                else if (Rate >= 9999)
-                {
-                    // 9999 ->
-                    return Rank.Maintainer;
-                }
-                return Rank.Member;
-            }
-        }
-        public string FirstName { get; }
-        public string LastName { get; }
-        public string Patronymic { get; }
+        public Rank Rank { get; }
+        public string? FirstName { get; }
+        public string? LastName { get; }
+        public string? Patronymic { get; }
         public DateTimeOffset CreatedAt { get; }
         public DateTimeOffset UpdatedAt { get; }
 
@@ -70,6 +39,53 @@ namespace chldr_data.Models
             Patronymic = user.Patronymic;
             CreatedAt = user.CreatedAt;
             UpdatedAt = user.UpdatedAt;
+            Rank = GetRankByRate(user.Rate);
+        }
+
+        private Rank GetRankByRate(int rate)
+        {
+            if (MemberRateRange.Contains(rate))
+            {
+                return Rank.Member;
+            }
+            else if (EnthusiastRateRange.Contains(rate))
+            {
+                return Rank.Enthusiast;
+            }
+            else if (ContributorRateRange.Contains(rate))
+            {
+                return Rank.Contributor;
+            }
+            else if (EditorRateRange.Contains(rate))
+            {
+                return Rank.Editor;
+            }
+            else if (MaintainerRateRange.Contains(rate))
+            {
+                return Rank.Maintainer;
+            }
+            else
+            {
+                return Rank.Member;
+            }
+        }
+        public bool CanEditEntry(EntryModel entry)
+        {
+            if (Rank >= GetRankByRate(entry.Rate))
+            {
+                return true;
+            }
+
+            return false;
+        }
+        public bool CanEditTranslation(TranslationModel translation)
+        {
+            if (Rank >= GetRankByRate(translation.Rate))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

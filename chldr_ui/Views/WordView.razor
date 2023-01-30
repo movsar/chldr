@@ -36,7 +36,7 @@
             }
         </div>
 
-        @if (UserStore?.CurrentUser != null)
+        @if (UserStore?.CurrentUserInfo != null)
         {
             <div class="chldr_entry_actions">
                 <i class="fa fa-language" @onclick="NewTranslation"></i>
@@ -44,7 +44,10 @@
                 <i class="fa fa-flag" @onclick="Flag"></i>
                 <i class="fa fa-star" @onclick="AddToFavorites"></i>
 
-                <a href="/word/edit/@Word?.WordId"><i class="oi oi-pencil"></i></a>
+                @if (UserStore?.CurrentUserInfo?.CanEditEntry(Entry!) == true)
+                {
+                    <a href="/word/edit/@Word?.WordId"><i class="oi oi-pencil"></i></a>
+                }
             </div>
         }
     </div>

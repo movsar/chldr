@@ -63,7 +63,7 @@ namespace chldr_data.Services
             }
         }
 
-        internal void UpdateRealmConfig(Realms.Sync.User appUser)
+        internal async void UpdateRealmConfig(Realms.Sync.User appUser)
         {
             if (appUser == null)
             {
@@ -137,13 +137,6 @@ namespace chldr_data.Services
             //realm.WriteCopy(encryptedConfig);
             //File.WriteAllBytes(Path.Combine(_fileService.AppDataDirectory, "encryption.key"), encryptionKey);
 
-        }
-
-        internal async Task Synchronize()
-        {
-            var realm = GetRealm();
-            await realm.Subscriptions.WaitForSynchronizationAsync();
-            await realm.SyncSession.WaitForDownloadAsync();
         }
     }
 }

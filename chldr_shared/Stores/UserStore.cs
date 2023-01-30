@@ -1,5 +1,6 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Models;
+using chldr_shared.Enums;
 using chldr_shared.Services;
 using Microsoft.Extensions.Logging;
 
@@ -9,18 +10,27 @@ namespace chldr_shared.Stores
     {
 
         #region Properties
-        public bool LoggedIn { get; set; } = false;
-        public UserModel? CurrentUser { get; set; }
+        public UserModel? CurrentUserInfo { get; set; }
+        public SessionStatus SessionStatus
+        {
+            get => _sessionStatus;
+            set
+            {
+                _sessionStatus = value;
+                UserStateHasChanged?.Invoke();
+            }
+        }
         #endregion
 
         #region Events
-        public event Action<UserModel?> LoggedInUserChanged;
+        public event Action UserStateHasChanged;
         #endregion
 
         #region Fields
         private readonly ILogger<UserStore> _logger;
         private readonly IDataAccess _dataAccess;
         private readonly EnvironmentService _environmentService;
+        private SessionStatus _sessionStatus;
         #endregion
 
         #region Constructors
@@ -30,15 +40,41 @@ namespace chldr_shared.Stores
             _dataAccess = dataAccess;
             _environmentService = environmentService;
 
+            _dataAccess.ChangesSynchronized += DataAccess_ChangesSynchronized;
+            _dataAccess.ChangesDownloaded += DataAccess_ChangesDownloaded;
             _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
-            _dataAccess.DatabaseSynced += DataAccess_DatabaseSynced;
         }
 
-        private void DataAccess_DatabaseSynced()
+        private SessionStatus GetSessionStatus(Realms.Sync.User? user)
+        {
+            if (user == null || user.Id == null)
+            {
+                return SessionStatus.Disconnected;
+            }
+
+            if (_dataAccess.App.CurrentUser.Provider == Realms.Sync.Credentials.AuthProvider.Anonymous)
+            {
+                return SessionStatus.Unauthorized;
+            }
+
+            return SessionStatus.LoggedIn;
+        }
+        private void DataAccess_DatabaseInitialized()
+        {
+            UpdateSessionStatus();
+        }
+
+        private void DataAccess_ChangesSynchronized()
+        {
+            UpdateSessionStatus();
+        }
+
+        private void DataAccess_ChangesDownloaded()
         {
             try
             {
-                if (CurrentUser == null)
+                _dataAccess.Initialize();
+                if (CurrentUserInfo == null)
                 {
                     // All the other ways of starting this async job result in an WebSocket's error when deployed
                     new Task(async () => await SetCurrentUserInfoAsync()).Start();
@@ -49,14 +85,9 @@ namespace chldr_shared.Stores
                 _logger.LogError(ex, ex.Message);
             }
         }
+
         #endregion
 
-        #region Event Handlers
-        private void DataAccess_DatabaseInitialized()
-        {
-
-        }
-        #endregion
 
         public async Task RegisterNewUser(string email, string password)
         {
@@ -67,8 +98,8 @@ namespace chldr_shared.Stores
         {
             try
             {
-                CurrentUser = await _dataAccess.GetCurrentUserInfoAsync();
-                LoggedInUserChanged?.Invoke(CurrentUser);
+                CurrentUserInfo = await _dataAccess.GetCurrentUserInfoAsync();
+                UpdateSessionStatus();
             }
             catch (Exception ex)
             {
@@ -81,9 +112,7 @@ namespace chldr_shared.Stores
             try
             {
                 await _dataAccess.LogInEmailPasswordAsync(email, password);
-                LoggedIn = true;
-
-                new Task(async () => await SetCurrentUserInfoAsync()).Start();
+                await _dataAccess.Initialize();
             }
             catch (Exception ex)
             {
@@ -110,8 +139,12 @@ namespace chldr_shared.Stores
         public async Task LogOutAsync()
         {
             await _dataAccess.LogOutAsync();
-            CurrentUser = null;
-            LoggedInUserChanged?.Invoke(null);
+            UpdateSessionStatus();
+        }
+
+        private void UpdateSessionStatus()
+        {
+            SessionStatus = GetSessionStatus(_dataAccess.App.CurrentUser);
         }
     }
 }

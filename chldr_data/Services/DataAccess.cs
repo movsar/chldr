@@ -4,6 +4,7 @@ using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Search;
+using chldr_shared.Models;
 using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.Extensions.Logging;
@@ -37,8 +38,9 @@ namespace chldr_data.Services
         #endregion
 
         #region Events
-        public event Action DatabaseSynced;
         public event Action DatabaseInitialized;
+        public event Action ChangesDownloaded;
+        public event Action ChangesSynchronized;
         public event Action<SearchResultModel> GotNewSearchResult;
         #endregion
 
@@ -132,9 +134,14 @@ namespace chldr_data.Services
                 try
                 {
                     await Initialize();
-                    await Synchronize();
 
-                    await CustomStuff();
+                    await Database.SyncSession.WaitForDownloadAsync();
+                    ChangesDownloaded?.Invoke();
+
+                    await Database.SyncSession.WaitForUploadAsync();
+                    ChangesSynchronized?.Invoke();
+
+                    await DatabaseMaintenance();
                 }
                 catch (Exception ex)
                 {
@@ -143,51 +150,9 @@ namespace chldr_data.Services
             });
         }
 
-        private async Task CustomStuff()
+        private async Task DatabaseMaintenance()
         {
-            //    var languages = Database.All<Language>();
 
-            //    var kor = languages.First(l => l.Code == "KOR");
-            //    var tat = languages.First(l => l.Code == "TAT");
-            //    var ara = languages.First(l => l.Code == "ARA");
-            //    var deu = languages.First(l => l.Code == "DEU");
-            //    var por = languages.First(l => l.Code == "POR");
-            //    var lat = languages.First(l => l.Code == "LAT");
-            //    var esp = languages.First(l => l.Code == "ESP");
-            //    var nld = languages.First(l => l.Code == "NLD");
-            //    var che = languages.First(l => l.Code == "CHE");
-            //    var kat = languages.First(l => l.Code == "KAT");
-            //    var fra = languages.First(l => l.Code == "FRA");
-            //    var rus = languages.First(l => l.Code == "RUS");
-            //    var eng = languages.First(l => l.Code == "ENG");
-            //    var inh = languages.First(l => l.Code == "INH");
-
-            //    Database.Write(() =>
-            //    {
-            //        kor.Name = "한국어";
-            //        tat.Name = "Татарча";
-            //        ara.Name = "اَلْعَرَبِيَّةُ";
-            //        deu.Name = "Deutsch";
-            //        por.Name = "Português";
-            //        lat.Name = "Latin";
-            //        esp.Name = "Español";
-            //        nld.Name = "Nederlands";
-            //        che.Name = "Нохчийн";
-            //        kat.Name = "ქართული ენა";
-            //        fra.Name = "Français";
-            //        rus.Name = "Русский";
-            //        eng.Name = "English";
-            //        inh.Name = "ГӀалгӀайн";
-            //    });
-
-            await Database.SyncSession.WaitForUploadAsync();
-        }
-
-
-        private async Task Synchronize()
-        {
-            await _realmService.Synchronize();
-            DatabaseSynced?.Invoke();
         }
 
         public async Task LogInEmailPasswordAsync(string email, string password)
