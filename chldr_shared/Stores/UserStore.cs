@@ -40,9 +40,9 @@ namespace chldr_shared.Stores
             _dataAccess = dataAccess;
             _environmentService = environmentService;
 
-            _dataAccess.ChangesSynchronized += DataAccess_ChangesSynchronized;
-            _dataAccess.ChangesDownloaded += DataAccess_ChangesDownloaded;
+            _dataAccess.DatabaseSynchronized += DataAccess_ChangesSynchronized;
             _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
+            _dataAccess.ConnectionInitialized += DataAccess_ConnectionInitialized;
         }
 
         private SessionStatus GetSessionStatus(Realms.Sync.User? user)
@@ -59,7 +59,7 @@ namespace chldr_shared.Stores
 
             return SessionStatus.LoggedIn;
         }
-        private void DataAccess_DatabaseInitialized()
+        private void DataAccess_ConnectionInitialized()
         {
             UpdateSessionStatus();
         }
@@ -69,11 +69,10 @@ namespace chldr_shared.Stores
             UpdateSessionStatus();
         }
 
-        private void DataAccess_ChangesDownloaded()
+        private void DataAccess_DatabaseInitialized()
         {
             try
             {
-                _dataAccess.Initialize();
                 if (CurrentUserInfo == null)
                 {
                     // All the other ways of starting this async job result in an WebSocket's error when deployed

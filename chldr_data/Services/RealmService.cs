@@ -15,22 +15,13 @@ namespace chldr_data.Services
 {
     public class RealmService
     {
+        private App? _app { get; set; }
         private const string myRealmAppId = "dosham-lxwuu";
+        
         private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
-
-        private App _app { get; set; }
-        private RealmConfigurationBase _config;
-        private string userDatabasePath;
-
-        public RealmService(FileService fileService, ExceptionHandler exceptionHandler)
-        {
-            _exceptionHandler = exceptionHandler;
-            _fileService = fileService;
-        }
-
-        // Don't touch this unless it's absolutely necessary! It was very hard to configure!
-        internal Realm GetRealm()
+        private RealmConfigurationBase? _config;
+        internal Realm GetDatabase()
         {
             if (_config == null)
             {
@@ -39,31 +30,41 @@ namespace chldr_data.Services
 
             return Realm.GetInstance(_config);
         }
+        internal App GetApp()
+        {
+            return _app;
+        }
+        public RealmService(FileService fileService, ExceptionHandler exceptionHandler)
+        {
+            _exceptionHandler = exceptionHandler;
+            _fileService = fileService;
+
+            Logger.LogLevel = LogLevel.Error;
+            Logger.Default = Logger.Function(message =>
+            {
+                _exceptionHandler.ProcessError(new Exception($"Realm : {message}"));
+            });
+        }
+
+        // Don't touch this unless it's absolutely necessary! It was very hard to configure!
 
         internal async Task InitializeApp()
         {
-            Logger.LogLevel = LogLevel.Debug;
-            Logger.Default = Logger.Function(message =>
+            if (_app == null)
             {
-                Debug.WriteLine($"Realm : {message}");
-                // _exceptionHandler.ProcessError(new Exception($"Realm : {message}"));
-            });
-
-            _app = App.Create(new AppConfiguration(myRealmAppId)
-            {
-                BaseFilePath = _fileService.AppDataDirectory,
-            });
-
-            var appUser = _app.CurrentUser;
+                _app = App.Create(new AppConfiguration(myRealmAppId)
+                {
+                    BaseFilePath = _fileService.AppDataDirectory,
+                });
+            }
 
             // Log in as anonymous user to be able to read data
-            if (appUser?.State != UserState.LoggedIn)
+            if (_app.CurrentUser?.State != UserState.LoggedIn)
             {
-                appUser = await _app.LogInAsync(Credentials.Anonymous(true));
+                await _app.LogInAsync(Credentials.Anonymous(true));
             }
         }
-
-        internal async void UpdateRealmConfig(Realms.Sync.User appUser)
+        internal void InitialziedConfig(Realms.Sync.User appUser)
         {
             if (appUser == null)
             {
@@ -72,7 +73,7 @@ namespace chldr_data.Services
 
             var uncompressedFileName = _fileService.CompressedDatabaseFileName + "x";
             var userDatabaseName = _fileService.GetUserDatabaseName(appUser.Id);
-            userDatabasePath = Path.Combine(_fileService.AppDataDirectory, userDatabaseName);
+            var userDatabasePath = Path.Combine(_fileService.AppDataDirectory, userDatabaseName);
 
             if (!File.Exists(userDatabasePath) && !File.Exists(uncompressedFileName))
             {
@@ -80,11 +81,10 @@ namespace chldr_data.Services
                 {
                     ZipFile.ExtractToDirectory(_fileService.CompressedDatabaseFilePath, _fileService.AppDataDirectory);
                     File.Move(Path.Combine(_fileService.AppDataDirectory, uncompressedFileName), Path.Combine(_fileService.AppDataDirectory, userDatabaseName));
-
-
                 }
                 catch (Exception ex)
                 {
+                    // This exception is not critical, it will only request the database from the server
                     _exceptionHandler.ProcessDebug(ex);
                 }
             }
@@ -116,10 +116,6 @@ namespace chldr_data.Services
             }
         }
 
-        internal App GetApp()
-        {
-            return _app;
-        }
 
         private static void EncryptDatbase()
         {

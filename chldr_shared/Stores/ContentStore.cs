@@ -104,7 +104,6 @@ namespace chldr_shared.Stores
             {
                 _exceptionHandler.ProcessError(ex);
             }
-
         }
     }
 }

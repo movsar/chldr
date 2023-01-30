@@ -10,9 +10,9 @@ namespace chldr_data.Interfaces
         App App { get; }
         Realm Database { get; }
 
+        event Action ConnectionInitialized;
         event Action DatabaseInitialized;
-        event Action ChangesDownloaded;
-        event Action ChangesSynchronized;
+        event Action DatabaseSynchronized;
         event Action<SearchResultModel> GotNewSearchResult;
 
         WordModel GetWordById(ObjectId entityId);

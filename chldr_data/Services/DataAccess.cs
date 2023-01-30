@@ -10,9 +10,11 @@ using chldr_utils.Services;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using Realms;
+using Realms.Logging;
 using Realms.Sync;
 using System.Linq;
 using Entry = chldr_data.Entities.Entry;
+using LogLevel = Realms.Logging.LogLevel;
 
 namespace chldr_data.Services
 {
@@ -24,7 +26,7 @@ namespace chldr_data.Services
         {
             get
             {
-                var realm = _realmService.GetRealm();
+                var realm = _realmService.GetDatabase();
                 if (App.CurrentUser.Provider == Credentials.AuthProvider.Anonymous)
                 {
                     // Don't try to sync anything if a legitimate user hasn't logged in
@@ -38,9 +40,9 @@ namespace chldr_data.Services
         #endregion
 
         #region Events
+        public event Action ConnectionInitialized;
         public event Action DatabaseInitialized;
-        public event Action ChangesDownloaded;
-        public event Action ChangesSynchronized;
+        public event Action DatabaseSynchronized;
         public event Action<SearchResultModel> GotNewSearchResult;
         #endregion
 
@@ -51,6 +53,33 @@ namespace chldr_data.Services
         private readonly FileService _fileService;
         private readonly MainSearchEngine _searchEngine;
         private RealmService _realmService;
+        #endregion
+
+        #region Database Initialization and State Changes
+        private async Task WaitForDatabaseInitializationAsync()
+        {
+            await Database.SyncSession.WaitForDownloadAsync();
+            DatabaseInitialized?.Invoke();
+        }
+
+        private async Task WaitForDatabaseSynchronization()
+        {
+            await Database.SyncSession.WaitForDownloadAsync();
+            await Database.SyncSession.WaitForUploadAsync();
+            DatabaseSynchronized?.Invoke();
+        }
+
+        public async Task Initialize()
+        {
+            await _realmService.InitializeApp();
+            _realmService.InitialziedConfig(App.CurrentUser);
+            ConnectionInitialized?.Invoke();
+
+            new Task(async () => await WaitForDatabaseInitializationAsync()).Start();
+            new Task(async () => await WaitForDatabaseSynchronization()).Start();
+
+            await DatabaseMaintenance();
+        }
         #endregion
 
         public async Task<UserModel?> GetCurrentUserInfoAsync()
@@ -105,21 +134,14 @@ namespace chldr_data.Services
             OnNewResults(args);
         }
 
-        public async Task Initialize()
-        {
-            _fileService.PrepareDatabase();
 
-            await _realmService.InitializeApp();
-
-            _realmService.UpdateRealmConfig(App.CurrentUser);
-
-            DatabaseInitialized?.Invoke();
-        }
 
         public DataAccess(FileService fileService, RealmService realmService, ExceptionHandler exceptionHandler)
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
+            _fileService.PrepareDatabase();
+
             _searchEngine = new MainSearchEngine(this);
             _realmService = realmService;
 
@@ -129,37 +151,19 @@ namespace chldr_data.Services
             }
 
             // Runs asynchronously, then continues
-            Task.Run(async () =>
-            {
-                try
-                {
-                    await Initialize();
-
-                    await Database.SyncSession.WaitForDownloadAsync();
-                    ChangesDownloaded?.Invoke();
-
-                    await Database.SyncSession.WaitForUploadAsync();
-                    ChangesSynchronized?.Invoke();
-
-                    await DatabaseMaintenance();
-                }
-                catch (Exception ex)
-                {
-                    _exceptionHandler.ProcessError(ex);
-                };
-            });
+            new Task(async () => await Initialize()).Start();
         }
 
         private async Task DatabaseMaintenance()
         {
-
+            // Whatever is needed to be done with the database
         }
 
         public async Task LogInEmailPasswordAsync(string email, string password)
         {
             // Don't touch this unless it's absolutely necessary! It was very hard to configure!
             var appUser = await App.LogInAsync(Credentials.EmailPassword(email, password));
-            _realmService.UpdateRealmConfig(appUser);
+            _realmService.InitialziedConfig(appUser);
         }
 
         public async Task LogOutAsync()
@@ -171,7 +175,7 @@ namespace chldr_data.Services
             }
 
             App.SwitchUser(anonymousUser);
-            _realmService.UpdateRealmConfig(anonymousUser);
+            _realmService.InitialziedConfig(anonymousUser);
         }
 
         public void OnNewResults(SearchResultModel results)
@@ -181,12 +185,12 @@ namespace chldr_data.Services
 
         public WordModel GetWordById(ObjectId entityId)
         {
-            return new WordModel(_realmService.GetRealm().All<Word>().FirstOrDefault(w => w._id == entityId));
+            return new WordModel(_realmService.GetDatabase().All<Word>().FirstOrDefault(w => w._id == entityId));
         }
 
         public PhraseModel GetPhraseById(ObjectId entityId)
         {
-            return new PhraseModel(_realmService.GetRealm().All<Phrase>().FirstOrDefault(p => p._id == entityId));
+            return new PhraseModel(_realmService.GetDatabase().All<Phrase>().FirstOrDefault(p => p._id == entityId));
         }
         public async Task RegisterNewUserAsync(string email, string password)
         {
