@@ -15,11 +15,12 @@ namespace chldr_ui.ViewModels
     public abstract class EntryEditViewModelBase<TFormDto, TFormValidator> : EditFormViewModelBase<TFormDto, TFormValidator>
         where TFormValidator : AbstractValidator<TFormDto>
     {
-        #region Properties and Parameters
+        #region Properties, Fields etc
         [Parameter]
         public ObjectId? EntryId { get; set; }
         public string? Source { get; set; }
         public List<TranslationModel> Translations { get; } = new();
+        protected bool IsEditMode = false;
         #endregion
         protected virtual void InitializeViewModel(EntryModel entry)
         {

@@ -1,4 +1,6 @@
-﻿using chldr_data.Interfaces;
+﻿using chldr_data.Entities;
+using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Services;
 using chldr_shared.Models;
@@ -117,6 +119,35 @@ namespace chldr_shared.Stores
         {
             CachedSearchResults.Clear();
             Task.Run(() => _dataAccess.RequestEntriesOnModeration());
+        }
+
+        public PhraseModel AddNewPhrase(string content, string notes)
+        {
+            PhraseModel phrase = _dataAccess.AddNewPhrase(content, notes);
+            return phrase;
+        }
+
+        public PhraseModel GetCachedPhraseById(ObjectId phraseId)
+        {
+            // Get current Phrase from cached results
+            var phrase = CachedSearchResults.SelectMany(sr => sr.Entries)
+                .Where(e => e.Type == EntryType.Phrase)
+                .Cast<PhraseModel>()
+                .FirstOrDefault(w => w.PhraseId == phraseId);
+
+            if (phrase == null)
+            {
+                var npe = new Exception("Error:Phrase_shouldn't_be_null");
+                _exceptionHandler.ProcessError(npe);
+                throw npe;
+            }
+
+            return phrase;
+        }
+
+        public void UpdatePhrase(UserModel loggedInUser, string? phraseId, string? content, string? notes)
+        {
+            _dataAccess.UpdatePhrase(loggedInUser, phraseId, content, notes);
         }
     }
 }

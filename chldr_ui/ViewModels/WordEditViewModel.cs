@@ -1,4 +1,5 @@
-﻿using chldr_data.Enums;
+﻿using chldr_data.Entities;
+using chldr_data.Enums;
 using chldr_data.Models;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
@@ -41,16 +42,8 @@ namespace chldr_ui.ViewModels
             var word = ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries)
                 .Where(e => e.Type == EntryType.Word)
                 .Cast<WordModel>()
-                .First(w => w.WordId == wordId);
+                .FirstOrDefault(w => w.WordId == wordId);
 
-            InitializeViewModel(word);
-        }
-
-        protected override void InitializeViewModel(EntryModel entry)
-        {
-            base.InitializeViewModel(entry);
-
-            var word = entry as WordModel;
             if (word == null)
             {
                 throw new Exception("Error:Word_shouldn't_be_null");
@@ -61,6 +54,8 @@ namespace chldr_ui.ViewModels
             GrammaticalClass = word.GrammaticalClass;
             Content = word.Content;
             Notes = word.Notes;
+
+            InitializeViewModel(word);
         }
     }
 }

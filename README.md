@@ -21,3 +21,4 @@ Example: **Error:Something_went_wrong**.
 	(it's possible to call again confirmation func)
 - Send activation notification email after email confirmation
 - Compress DB after reaching 60Mb
+- Add SearchQueryBuilder

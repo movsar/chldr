@@ -303,6 +303,15 @@ namespace chldr_shared.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Phrase shouldn&apos;t be null.
+        /// </summary>
+        public static string Error_Phrase_shouldn_t_be_null {
+            get {
+                return ResourceManager.GetString("Error:Phrase_shouldn\'t_be_null", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Translation language must be set.
         /// </summary>
         public static string Error_Translation_language_must_be_set {

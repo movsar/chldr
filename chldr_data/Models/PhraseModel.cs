@@ -14,13 +14,15 @@ namespace chldr_data.Models
     {
         public ObjectId PhraseId { get; }
         public string Content { get; }
-        public string Notes { get; }
-        public PhraseModel(Entities.Phrase phrase) : base(phrase.Entry)
+        public string? Notes { get; }
+
+        public PhraseModel(Phrase phrase) : base(phrase.Entry)
         {
             PhraseId = phrase._id;
             Content = phrase.Content;
             Notes = phrase.Notes;
         }
-        public PhraseModel(Entities.Entry entry) : this(entry.Phrase) { }
+        public PhraseModel(Entry entry) : this(entry.Phrase)
+        { }
     }
 }

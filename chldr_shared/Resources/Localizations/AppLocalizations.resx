@@ -311,4 +311,7 @@
   <data name="You_can_reset_your_password_here" xml:space="preserve">
     <value>You can reset your password here</value>
   </data>
+  <data name="Error:Phrase_shouldn't_be_null" xml:space="preserve">
+    <value>Phrase shouldn't be null</value>
+  </data>
 </root>

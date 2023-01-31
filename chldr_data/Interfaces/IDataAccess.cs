@@ -35,5 +35,7 @@ namespace chldr_data.Interfaces
         void OnNewResults(SearchResultModel args);
         List<LanguageModel> GetAllLanguages();
         List<SourceModel> GetAllNamedSources();
+        PhraseModel AddNewPhrase(string content, string notes);
+        void UpdatePhrase(UserModel loggedInUser, string? phraseId, string? content, string? notes);
     }
 }

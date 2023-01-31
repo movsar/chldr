@@ -17,7 +17,7 @@ namespace chldr_data.Models
         public SourceModel Source { get; }
         public int Rate { get; }
         public int Type { get; }
-        public EntryModel(Entities.Entry entry)
+        public EntryModel(Entry entry)
         {
             EntryId = entry._id;
             Source = new SourceModel(entry.Source);

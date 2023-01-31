@@ -1,0 +1,29 @@
+﻿@page "/phrase/edit/{PhraseId}";
+
+@inject NavigationManager NavManager;
+@inherits PhraseEditViewModel;
+
+<h3>EntryEditPage</h3>
+@if (!string.IsNullOrEmpty(Content))
+{
+
+    <form class="col-6">
+        <div class="form-outline mb-4">
+            <input type="text" class="form-control" placeholder="@Localizer["Phrase_text"]" @bind="Content" />
+        </div>
+
+        <div class="form-outline mb-4">
+            <input type="text" class="form-control" placeholder="@Localizer["Notes"]" @bind="Notes" />
+        </div>
+
+        @foreach (var translation in Translations)
+        {
+            <TranslationEditView WordId="@WordId" TranslationId="@translation.TranslationId.ToString()"></TranslationEditView>
+        }
+
+    </form>
+}
+
+<button class="btn btn-light" @onclick="@(()=>NavManager.NavigateTo("/"))">Cancel</button>
+<button class="btn btn-primary" @onclick="@ValidateAndSubmit">Save</button>
+<button class="btn btn-primary">Save and add another</button>
