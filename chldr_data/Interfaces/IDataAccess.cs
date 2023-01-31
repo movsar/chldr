@@ -18,7 +18,8 @@ namespace chldr_data.Interfaces
 
         WordModel GetWordById(ObjectId entityId);
         PhraseModel GetPhraseById(ObjectId entityId);
-        void LoadRandomEntries();
+        void RequestRandomEntries();
+        void RequestEntriesOnModeration();
         Task Initialize();
         Task FindAsync(string inputText, FiltrationFlags filterationFlags);
         Task LogInEmailPasswordAsync(string email, string password);

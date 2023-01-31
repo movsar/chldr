@@ -37,7 +37,7 @@ namespace chldr_ui.ViewModels
 
         public void DoSearch()
         {
-            var translationText = Translation.Content.ToLower();
+            var translationText = Translation?.Content.ToLower();
 
             string[] prefixesToSearch = {
                 "см",

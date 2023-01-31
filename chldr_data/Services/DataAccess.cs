@@ -38,6 +38,7 @@ namespace chldr_data.Services
             }
         }
 
+
         #endregion
 
         #region Events
@@ -146,26 +147,39 @@ namespace chldr_data.Services
         1. That it executes without errors
         2. That it returns {RandomEntriesLimit} amount of Entries
          */
-        public void LoadRandomEntries()
+        public void RequestRandomEntries()
+        {
+            OnNewResults(new SearchResultModel(GetRandomEntries()));
+        }
+
+        public void RequestEntriesOnModeration()
+        {
+            OnNewResults(new SearchResultModel(GetEntriesOnModeration()));
+        }
+
+        private List<EntryModel> GetRandomEntries()
         {
             var randomizer = new Random();
+            var entries = Database.All<Entry>().AsEnumerable()
+              .Where(entry => entry.Rate > 0)
+              .OrderBy(x => randomizer.Next(0, 70000))
+              .Take(RandomEntriesLimit)
+              .OrderBy(entry => entry.GetHashCode())
+              .Select(entry => EntryModelFactory.CreateEntryModel(entry))
+              .ToList();
 
-            using var realm = Database;
+            return entries;
+        }
 
-            // Takes random entries and shuffles them to break the natural order
-            var entries = realm.All<Entry>().AsEnumerable()
-                .Where(entry => entry.Rate > 0)
-                .OrderBy(x => randomizer.Next(0, 70000))
-                .Take(RandomEntriesLimit)
-                .OrderBy(entry => entry.GetHashCode())
+        public List<EntryModel> GetEntriesOnModeration()
+        {
+            var entries = Database.All<Entry>().AsEnumerable()
+                .Where(entry => entry.Rate < UserModel.EnthusiastRateRange.Lower)
                 .Select(entry => EntryModelFactory.CreateEntryModel(entry))
                 .ToList();
 
-            var args = new SearchResultModel(entries);
-            OnNewResults(args);
+            return entries;
         }
-
-
 
         public DataAccess(FileService fileService, RealmService realmService, ExceptionHandler exceptionHandler, NetworkService networkService)
         {

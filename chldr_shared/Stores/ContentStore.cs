@@ -60,7 +60,7 @@ namespace chldr_shared.Stores
         public void LoadRandomEntries()
         {
             CachedSearchResults.Clear();
-            Task.Run(() => _dataAccess.LoadRandomEntries());
+            Task.Run(() => _dataAccess.RequestRandomEntries());
         }
         public WordModel GetWordById(ObjectId entryId)
         {
@@ -111,6 +111,12 @@ namespace chldr_shared.Stores
         public void Search(string query)
         {
             Search(query, new FiltrationFlags());
+        }
+
+        public void LoadEntriesOnModeration()
+        {
+            CachedSearchResults.Clear();
+            Task.Run(() => _dataAccess.RequestEntriesOnModeration());
         }
     }
 }

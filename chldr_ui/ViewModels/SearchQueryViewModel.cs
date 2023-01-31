@@ -19,7 +19,8 @@ namespace chldr_ui.ViewModels
 
         internal void ToggleOnModerationFlag()
         {
-            FiltrationFlags.OnModeration = !FiltrationFlags.OnModeration;
+            ContentStore.LoadEntriesOnModeration();
+            //FiltrationFlags.OnModeration = !FiltrationFlags.OnModeration;
         }
 
         protected override void OnInitialized()
