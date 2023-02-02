@@ -19,7 +19,7 @@ namespace chldr_shared.Dto
         public int Rate { get; set; }
         public TranslationDto(TranslationModel translation)
         {
-            TranslationId = translation.TranslationId;
+            TranslationId = translation.Id;
             Content = translation.Content;
             Notes = translation.Notes;
             Rate = translation.Rate;

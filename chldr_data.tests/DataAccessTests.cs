@@ -6,6 +6,7 @@ using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
+using System.Diagnostics;
 
 namespace chldr_data.tests
 {
@@ -26,11 +27,13 @@ namespace chldr_data.tests
             // 1. Подготовка
 
             // Инициализируем необходимые классы чтобы запустить нужный метод
-            var fileService = new FileService(AppContext.BaseDirectory);
+            var dataDirectory = new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, @"..\..\..\..\chldr_server\bin\Debug\net6.0\Data\"));
+
+            var fileService = new FileService(dataDirectory.FullName);
             var exceptionHandler = new ExceptionHandler(fileService);
             var networkService = new NetworkService();
-            var realmService = new RealmService(fileService, exceptionHandler);
-            var dataAccess = new DataAccess(fileService, realmService, exceptionHandler, networkService);
+            var realmService = new SyncedRealmService(fileService, exceptionHandler);
+            var dataAccess = new DataAccess(realmService, exceptionHandler, networkService);
             await dataAccess.Initialize();
 
             var contentStore = new ContentStore(dataAccess, exceptionHandler);
@@ -40,7 +43,7 @@ namespace chldr_data.tests
             var word = words.Where(entry => entry is WordModel).First() as WordModel;
 
             // 2. Тест
-            var wordById = contentStore.GetWordById(word.WordId);
+            var wordById = contentStore.GetWordById(word.Id);
 
             // 3. Проверка
             // Удостоверяемся что содержимое исходного слова равно содержимому слова полученному из метода по ID
@@ -56,8 +59,8 @@ namespace chldr_data.tests
             var fileService = new FileService(AppContext.BaseDirectory);
             var exceptionHandler = new ExceptionHandler(fileService);
             var networkService = new NetworkService();
-            var realmService = new RealmService(fileService, exceptionHandler);
-            var dataAccess = new DataAccess(fileService, realmService, exceptionHandler, networkService);
+            var realmService = new SyncedRealmService(fileService, exceptionHandler);
+            var dataAccess = new DataAccess(realmService, exceptionHandler, networkService);
             await dataAccess.Initialize();
 
             var badId = new ObjectId("1C1bB21b");

@@ -17,7 +17,7 @@ namespace chldr_shared.Dto
 
         public PhraseDto(PhraseModel phrase) : base(phrase)
         {
-            PhraseId = phrase.PhraseId;
+            PhraseId = phrase.Id;
             Content = phrase.Content;
             Notes = phrase.Notes;
         }

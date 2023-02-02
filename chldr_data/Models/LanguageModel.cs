@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace chldr_data.Models
 {
-    public class LanguageModel
+    public class LanguageModel : ModelBase
     {
-        public ObjectId LanguageId { get; }
+        public override ObjectId Id { get; }
         public string Code { get; } = string.Empty;
         public LanguageModel(Language languageEntity)
         {
-            LanguageId = languageEntity._id;
+            Id = languageEntity._id;
             Code = languageEntity.Code;
         }
     }

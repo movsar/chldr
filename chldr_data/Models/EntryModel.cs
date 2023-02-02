@@ -1,5 +1,6 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_data.Services;
 using MongoDB.Bson;
 using Realms.Sync;
@@ -10,16 +11,16 @@ using System.Text;
 using System.Threading.Tasks;
 namespace chldr_data.Models
 {
-    public abstract class EntryModel
+    public abstract class EntryModel : ModelBase
     {
-        public ObjectId EntryId { get; }
+        public override ObjectId Id { get; }
         public List<TranslationModel> Translations { get; } = new List<TranslationModel>();
         public SourceModel Source { get; }
         public int Rate { get; }
         public int Type { get; }
         public EntryModel(Entry entry)
         {
-            EntryId = entry._id;
+            Id = entry._id;
             Source = new SourceModel(entry.Source);
             Rate = entry.Rate;
             Type = entry.Type;

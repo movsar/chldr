@@ -13,7 +13,7 @@ namespace chldr_shared.Dto
     {
         public WordDto(WordModel word) : base(word)
         {
-            WordId = word.WordId;
+            WordId = word.Id;
             Content = word.Content;
             Notes = word.Notes;
             GrammaticalClass = word.GrammaticalClass;

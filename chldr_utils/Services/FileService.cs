@@ -39,20 +39,6 @@ namespace chldr_utils.Services
             return $"{id.Substring(4, 4)}.dbx";
         }
 
-        public void PrepareDatabase()
-        {
-            var isWeb = Environment.StackTrace.Contains("chldr_server.Pages.Pages__Host.ExecuteAsync()");
-            if (isWeb)
-            {
-                PrepareDatabaseFile_Web();
-            }
-        }
-
-        public void PrepareDatabaseFile_Web()
-        {
-
-        }
-
         async Task PrepareDatabaseFile_Android()
         {
             //AppDirectory = FileSystem.Current.AppDataDirectory;

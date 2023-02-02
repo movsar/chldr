@@ -49,16 +49,29 @@ namespace chldr_data.Services
         #endregion
 
         #region Fields
-        public const int ResultsLimit = 100;
-        public const int RandomEntriesLimit = 30;
         private ExceptionHandler _exceptionHandler;
-        private readonly FileService _fileService;
         private readonly NetworkService _networkService;
         private readonly MainSearchEngine _searchEngine;
-        private RealmService _realmService;
+        private SyncedRealmService _realmService;
         #endregion
 
-        #region Database Initialization and State Changes
+        public DataAccess(SyncedRealmService realmService, ExceptionHandler exceptionHandler, NetworkService networkService)
+        {
+            _exceptionHandler = exceptionHandler;
+            _networkService = networkService;
+            _searchEngine = new MainSearchEngine(this);
+            _realmService = realmService;
+
+            if (App != null)
+            {
+                return;
+            }
+
+            // Runs asynchronously, then continues
+            new Task(async () => await Initialize()).Start();
+        }
+
+        #region DB Initializaion Related
         private async Task InitializeDatabase()
         {
             var language = Database.All<Language>().FirstOrDefault();
@@ -106,6 +119,12 @@ namespace chldr_data.Services
                 }
             }
         }
+
+        private async Task DatabaseMaintenance()
+        {
+            // Whatever is needed to be done with the database
+        }
+
         #endregion
 
         public UserModel GetCurrentUserInfo()
@@ -163,7 +182,7 @@ namespace chldr_data.Services
             var entries = Database.All<Entry>().AsEnumerable()
               .Where(entry => entry.Rate > 0)
               .OrderBy(x => randomizer.Next(0, 70000))
-              .Take(RandomEntriesLimit)
+              .Take(50)
               .OrderBy(entry => entry.GetHashCode())
               .Select(entry => EntryModelFactory.CreateEntryModel(entry))
               .ToList();
@@ -181,28 +200,6 @@ namespace chldr_data.Services
             return entries;
         }
 
-        public DataAccess(FileService fileService, RealmService realmService, ExceptionHandler exceptionHandler, NetworkService networkService)
-        {
-            _exceptionHandler = exceptionHandler;
-            _fileService = fileService;
-            _fileService.PrepareDatabase();
-            _networkService = networkService;
-            _searchEngine = new MainSearchEngine(this);
-            _realmService = realmService;
-
-            if (App != null)
-            {
-                return;
-            }
-
-            // Runs asynchronously, then continues
-            new Task(async () => await Initialize()).Start();
-        }
-
-        private async Task DatabaseMaintenance()
-        {
-            // Whatever is needed to be done with the database
-        }
 
         public async Task LogInEmailPasswordAsync(string email, string password)
         {

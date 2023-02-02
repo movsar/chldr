@@ -10,17 +10,16 @@ using System.Threading.Tasks;
 
 namespace chldr_data.Models
 {
-    public class TranslationModel
+    public class TranslationModel : ModelBase
     {
-        public ObjectId TranslationId { get; }
-        public ObjectId EntryId { get; }
+        public override ObjectId Id { get; }
         public string Content { get; }
         public string Notes { get; }
         public LanguageModel Language { get; }
         public int Rate { get; set; }
         public TranslationModel(Translation translation)
         {
-            TranslationId = translation._id;
+            Id = translation._id;
             Content = translation.Content;
             Notes = translation.Notes;
             Rate = translation.Rate;

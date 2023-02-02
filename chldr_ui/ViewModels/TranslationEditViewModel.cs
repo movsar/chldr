@@ -47,10 +47,10 @@ namespace chldr_ui.ViewModels
             var word = ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries)
                 .Where(e => e.Type == EntryType.Word)
                 .Cast<WordModel>()
-                .First(w => w.WordId == wordId);
+                .First(w => w.Id == wordId);
 
             // Get the current translation
-            var translation = word.Translations.Where(t => t.TranslationId == translationId).First();
+            var translation = word.Translations.Where(t => t.Id == translationId).First();
 
             Content = translation.Content;
             Notes = translation.Notes;

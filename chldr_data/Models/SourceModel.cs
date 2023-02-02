@@ -9,15 +9,16 @@ using System.Threading.Tasks;
 
 namespace chldr_data.Models
 {
-    public class SourceModel
+    public class SourceModel : ModelBase
     {
-        public ObjectId SourceId { get; }
+        public override ObjectId Id { get; }
         public string Name { get; }
         public string Notes { get; }
+
         public SourceModel(Source source)
         {
             Name = source.Name;
-            SourceId = source._id;
+            Id = source._id;
             Notes = source.Notes;
         }
     }

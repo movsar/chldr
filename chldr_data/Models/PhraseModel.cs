@@ -12,17 +12,15 @@ namespace chldr_data.Models
 {
     public class PhraseModel : EntryModel
     {
-        public ObjectId PhraseId { get; }
+        public new ObjectId Id { get; }
         public string Content { get; }
         public string? Notes { get; }
-
+        public PhraseModel(Entry entry) : this(entry.Phrase) { }
         public PhraseModel(Phrase phrase) : base(phrase.Entry)
         {
-            PhraseId = phrase._id;
+            Id = phrase._id;
             Content = phrase.Content;
             Notes = phrase.Notes;
         }
-        public PhraseModel(Entry entry) : this(entry.Phrase)
-        { }
     }
 }

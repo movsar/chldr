@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace chldr_data.Models
 {
-    public class UserModel
+    public class UserModel : ModelBase
     {
         // Members can only add and vote, they'll get their rate increased when moders approve their entries
         public static NumericRange MemberRateRange = new NumericRange(1, 10);
@@ -19,7 +19,7 @@ namespace chldr_data.Models
         public static NumericRange ContributorRateRange = new NumericRange(50, 500);
         public static NumericRange EditorRateRange = new NumericRange(500, 10000);
         public static NumericRange MaintainerRateRange = new NumericRange(10000, 500000000);
-        public ObjectId UserId { get; }
+        public override ObjectId Id { get; }
         public string? Email { get; }
         public int Rate { get; }
         public Rank Rank { get; }
@@ -31,7 +31,7 @@ namespace chldr_data.Models
 
         public UserModel(Entities.User user)
         {
-            UserId = user._id;
+            Id = user._id;
             Email = user.Email;
             Rate = user.Rate;
             FirstName = user.FirstName;

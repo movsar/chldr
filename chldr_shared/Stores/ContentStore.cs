@@ -138,7 +138,7 @@ namespace chldr_shared.Stores
             var phrase = CachedSearchResults.SelectMany(sr => sr.Entries)
                 .Where(e => e.Type == EntryType.Phrase)
                 .Cast<PhraseModel>()
-                .FirstOrDefault(w => w.PhraseId == phraseId);
+                .FirstOrDefault(w => w.Id == phraseId);
 
             if (phrase == null)
             {

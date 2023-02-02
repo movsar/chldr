@@ -37,7 +37,7 @@ namespace chldr_ui.ViewModels
             var existingWord = ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries)
                 .Where(e => e.Type == EntryType.Word)
                 .Cast<WordModel>()
-                .FirstOrDefault(w => w.WordId == wordId);
+                .FirstOrDefault(w => w.Id == wordId);
 
             if (existingWord == null)
             {
