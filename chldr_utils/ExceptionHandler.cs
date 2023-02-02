@@ -14,7 +14,7 @@ namespace chldr_utils
     public class ExceptionHandler
     {
         private Logger _fileLogger;
-        private ILogger<ExceptionHandler> _consoleLogger;
+        private ILogger<ExceptionHandler>? _consoleLogger;
 
         public event Action<Exception>? IncomingException;
         public ExceptionHandler(ILogger<ExceptionHandler> consoleLogger, FileService fileService)
@@ -24,12 +24,19 @@ namespace chldr_utils
                          .WriteTo.File(Path.Combine(fileService.AppDataDirectory!, "logs", "log.txt"), rollingInterval: RollingInterval.Month)
                          .CreateLogger();
         }
+        public ExceptionHandler(FileService fileService)
+        {
+            _fileLogger = new LoggerConfiguration()
+                         .WriteTo.File(Path.Combine(fileService.AppDataDirectory!, "logs", "log.txt"), rollingInterval: RollingInterval.Month)
+                         .CreateLogger();
+        }
+
         public void ProcessError(Exception ex)
         {
             string message = Regex.Replace($"{ex.Message} {ex.StackTrace}\r\n", @"\s\s+", "\r\n\t");
 
             _fileLogger.Error(message);
-            _consoleLogger.LogError(message);
+            _consoleLogger?.LogError(message);
 
             IncomingException?.Invoke(ex);
         }
@@ -39,7 +46,7 @@ namespace chldr_utils
             string message = Regex.Replace($"{ex.Message} {ex.StackTrace}\r\n", @"\s\s+", "\r\n\t");
 
             _fileLogger.Debug(message);
-            _consoleLogger.LogDebug(message);
+            _consoleLogger?.LogDebug(message);
         }
     }
 
