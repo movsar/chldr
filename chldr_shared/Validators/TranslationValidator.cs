@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace chldr_shared.Validators
 {
-    public class TranslationValidator : AbstractValidator<TranslationModel>
+    public class TranslationValidator : AbstractValidator<TranslationDto>
     {
         public TranslationValidator(IStringLocalizer<AppLocalizations> stringLocalizer)
         {
 
-            RuleFor(x => x.Language)
+            RuleFor(x => x.LanguageCode)
             .NotNull()
             .WithMessage(stringLocalizer["Error:Translation_language_must_be_set"]);
 

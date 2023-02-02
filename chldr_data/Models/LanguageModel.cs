@@ -11,11 +11,9 @@ namespace chldr_data.Models
 {
     public class LanguageModel : ModelBase
     {
-        public override ObjectId Id { get; }
         public string Code { get; } = string.Empty;
-        public LanguageModel(Language languageEntity)
+        public LanguageModel(Language languageEntity) : base(languageEntity)
         {
-            Id = languageEntity._id;
             Code = languageEntity.Code;
         }
     }

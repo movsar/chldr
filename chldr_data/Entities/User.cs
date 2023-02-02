@@ -1,4 +1,5 @@
 ﻿using chldr_data.Enums;
+using chldr_data.Interfaces;
 using MongoDB.Bson;
 using Realms;
 using RequiredAttribute = Realms.RequiredAttribute;
@@ -6,7 +7,7 @@ using RequiredAttribute = Realms.RequiredAttribute;
 namespace chldr_data.Entities
 {
     // Used as additional source of user data coupled with App xUsers from MongoDB
-    public class User : RealmObject
+    public class User : RealmObject, IEntity
     {
         [PrimaryKey]
         public ObjectId _id { get; set; }

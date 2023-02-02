@@ -12,25 +12,16 @@ namespace chldr_data.Models
 {
     public class TranslationModel : ModelBase
     {
-        public override ObjectId Id { get; }
         public string Content { get; }
         public string Notes { get; }
         public LanguageModel Language { get; }
         public int Rate { get; set; }
-        public TranslationModel(Translation translation)
+        public TranslationModel(Translation translation) : base(translation)
         {
-            Id = translation._id;
             Content = translation.Content;
             Notes = translation.Notes;
             Rate = translation.Rate;
             Language = new LanguageModel(translation.Language);
-        }
-
-        public TranslationModel(string content, string notes, LanguageModel language)
-        {
-            Content = content;
-            Notes = notes;
-            Language = language;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using chldr_data.Interfaces;
+using MongoDB.Bson;
 using Realms;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using Entry = chldr_data.Entities.Entry;
 
 namespace chldr_data.Entities
 {
-    public class Word : RealmObject
+    public class Word : RealmObject, IEntity
     {
         public const string EmptyRawWordDeclensionsValue = ";;;;;;;;;;;;;;;";
         public const string EmptyRawWordTensesValue = ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";

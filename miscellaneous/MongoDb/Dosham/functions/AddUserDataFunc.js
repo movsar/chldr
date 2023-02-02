@@ -4,8 +4,6 @@ exports = async function(authEvent) {
     return;
   }
   
-  console.log(EJSON.stringify("trigger run"));
-  
   const user = authEvent.user;
   const time = authEvent.time;
   
@@ -17,13 +15,6 @@ exports = async function(authEvent) {
   const collection = db.collection("User");
   
   // 3. Read and write data with MongoDB queries
-  
-    "RateWeight",
-    "Rate",
-    "Status",
-    "CreatedAt",
-    "UpdatedAt"
-    
   await collection.insertOne({
     _id: new BSON.ObjectId(user.id),
     Email: user.data.email,

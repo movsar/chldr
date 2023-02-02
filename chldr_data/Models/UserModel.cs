@@ -19,26 +19,20 @@ namespace chldr_data.Models
         public static NumericRange ContributorRateRange = new NumericRange(50, 500);
         public static NumericRange EditorRateRange = new NumericRange(500, 10000);
         public static NumericRange MaintainerRateRange = new NumericRange(10000, 500000000);
-        public override ObjectId Id { get; }
         public string? Email { get; }
         public int Rate { get; }
         public Rank Rank { get; }
         public string? FirstName { get; }
         public string? LastName { get; }
         public string? Patronymic { get; }
-        public DateTimeOffset CreatedAt { get; }
-        public DateTimeOffset UpdatedAt { get; }
 
-        public UserModel(Entities.User user)
+        public UserModel(Entities.User user) :  base(user)
         {
-            Id = user._id;
             Email = user.Email;
             Rate = user.Rate;
             FirstName = user.FirstName;
             LastName = user.LastName;
             Patronymic = user.Patronymic;
-            CreatedAt = user.CreatedAt;
-            UpdatedAt = user.UpdatedAt;
             Rank = GetRankByRate(user.Rate);
         }
 

@@ -7,13 +7,20 @@
         "CreatedAt": {
             "bsonType": "date"
         },
+        "Name": {
+            "bsonType": "string"
+        },
+        "UpdatedAt": {
+            "bsonType": "date"
+        },
         "_id": {
             "bsonType": "objectId"
         }
     },
     "required": [
         "_id",
-        "CreatedAt"
+        "CreatedAt",
+        "UpdatedAt"
     ],
     "title": "Language"
 }

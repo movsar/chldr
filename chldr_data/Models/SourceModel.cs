@@ -11,14 +11,12 @@ namespace chldr_data.Models
 {
     public class SourceModel : ModelBase
     {
-        public override ObjectId Id { get; }
         public string Name { get; }
         public string Notes { get; }
 
-        public SourceModel(Source source)
+        public SourceModel(Source source) : base(source)
         {
             Name = source.Name;
-            Id = source._id;
             Notes = source.Notes;
         }
     }

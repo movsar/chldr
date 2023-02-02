@@ -3,6 +3,7 @@ using chldr_data.Enums;
 using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
+using chldr_data.Repositories;
 using chldr_data.Search;
 using chldr_shared.Models;
 using chldr_utils;
@@ -22,7 +23,10 @@ namespace chldr_data.Services
     public class DataAccess : IDataAccess
     {
         #region Properties
-        public Realms.Sync.App App => _realmService.GetApp();
+        public App App => _realmService.GetApp();
+        public WordsRepository WordsRepository { get; }
+        public PhrasesRepository PhrasesRepository { get; }
+
         public Realm Database
         {
             get
@@ -59,8 +63,11 @@ namespace chldr_data.Services
         {
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
-            _searchEngine = new MainSearchEngine(this);
             _realmService = realmService;
+
+            _searchEngine = new MainSearchEngine(this);
+            WordsRepository = new WordsRepository(_realmService);
+            PhrasesRepository = new PhrasesRepository(_realmService);
 
             if (App != null)
             {
@@ -127,6 +134,57 @@ namespace chldr_data.Services
 
         #endregion
 
+        public List<EntryModel> GetRandomEntries()
+        {
+            var randomizer = new Random();
+            var entries = Database.All<Entry>().AsEnumerable()
+              .Where(entry => entry.Rate > 0)
+              .OrderBy(x => randomizer.Next(0, 70000))
+              .Take(50)
+              .OrderBy(entry => entry.GetHashCode())
+              .Select(entry => EntryModelFactory.CreateEntryModel(entry))
+              .ToList();
+
+            return entries;
+        }
+
+        public List<EntryModel> GetEntriesOnModeration()
+        {
+            var entries = Database.All<Entry>().AsEnumerable()
+                .Where(entry => entry.Rate < UserModel.EnthusiastRateRange.Lower)
+                .Select(entry => EntryModelFactory.CreateEntryModel(entry))
+                .ToList();
+
+            return entries;
+        }
+
+        public async Task FindAsync(string inputText, FiltrationFlags filtrationFlags)
+        {
+            await _searchEngine.FindAsync(inputText, filtrationFlags);
+        }
+
+        /*
+        TEST
+
+        1. That it executes without errors
+        2. That it returns {RandomEntriesLimit} amount of Entries
+         */
+        public void RequestRandomEntries()
+        {
+            OnNewResults(new SearchResultModel(GetRandomEntries()));
+        }
+
+        public void RequestEntriesOnModeration()
+        {
+            OnNewResults(new SearchResultModel(GetEntriesOnModeration()));
+        }
+
+        public void OnNewResults(SearchResultModel results)
+        {
+            GotNewSearchResult?.Invoke(results);
+        }
+
+        #region User Service
         public UserModel GetCurrentUserInfo()
         {
             if (!_networkService.IsNetworUp || Database.SyncSession.State == SessionState.Inactive)
@@ -154,86 +212,6 @@ namespace chldr_data.Services
 
             return new UserModel(user);
         }
-
-        public async Task FindAsync(string inputText, FiltrationFlags filtrationFlags)
-        {
-            await _searchEngine.FindAsync(inputText, filtrationFlags);
-        }
-
-        /*
-        TEST
-
-        1. That it executes without errors
-        2. That it returns {RandomEntriesLimit} amount of Entries
-         */
-        public void RequestRandomEntries()
-        {
-            OnNewResults(new SearchResultModel(GetRandomEntries()));
-        }
-
-        public void RequestEntriesOnModeration()
-        {
-            OnNewResults(new SearchResultModel(GetEntriesOnModeration()));
-        }
-
-        public List<EntryModel> GetRandomEntries()
-        {
-            var randomizer = new Random();
-            var entries = Database.All<Entry>().AsEnumerable()
-              .Where(entry => entry.Rate > 0)
-              .OrderBy(x => randomizer.Next(0, 70000))
-              .Take(50)
-              .OrderBy(entry => entry.GetHashCode())
-              .Select(entry => EntryModelFactory.CreateEntryModel(entry))
-              .ToList();
-
-            return entries;
-        }
-
-        public List<EntryModel> GetEntriesOnModeration()
-        {
-            var entries = Database.All<Entry>().AsEnumerable()
-                .Where(entry => entry.Rate < UserModel.EnthusiastRateRange.Lower)
-                .Select(entry => EntryModelFactory.CreateEntryModel(entry))
-                .ToList();
-
-            return entries;
-        }
-
-
-        public async Task LogInEmailPasswordAsync(string email, string password)
-        {
-            // Don't touch this unless it's absolutely necessary! It was very hard to configure!
-            var appUser = await App.LogInAsync(Credentials.EmailPassword(email, password));
-            _realmService.InitializeDatabase();
-        }
-
-        public async Task LogOutAsync()
-        {
-            var anonymousUser = App.AllUsers.FirstOrDefault(u => u.Provider == Credentials.AuthProvider.Anonymous);
-            if (anonymousUser == null)
-            {
-                throw new Exception("not good");
-            }
-
-            App.SwitchUser(anonymousUser);
-            _realmService.InitializeDatabase();
-        }
-
-        public void OnNewResults(SearchResultModel results)
-        {
-            GotNewSearchResult?.Invoke(results);
-        }
-
-        public WordModel GetWordById(ObjectId entityId)
-        {
-            return new WordModel(_realmService.GetDatabase().All<Word>().FirstOrDefault(w => w._id == entityId));
-        }
-
-        public PhraseModel GetPhraseById(ObjectId entityId)
-        {
-            return new PhraseModel(_realmService.GetDatabase().All<Phrase>().FirstOrDefault(p => p._id == entityId));
-        }
         public async Task RegisterNewUserAsync(string email, string password)
         {
             await App.EmailPasswordAuth.RegisterUserAsync(email, password);
@@ -253,25 +231,28 @@ namespace chldr_data.Services
         {
             await App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
         }
-
-        public EntryModel GetEntryById(ObjectId entryId)
+        public async Task LogInEmailPasswordAsync(string email, string password)
         {
-            var entry = Database.All<Entry>().FirstOrDefault(e => e._id == entryId);
-            if (entry == null)
+            // Don't touch this unless it's absolutely necessary! It was very hard to configure!
+            var appUser = await App.LogInAsync(Credentials.EmailPassword(email, password));
+            _realmService.InitializeDatabase();
+        }
+
+        public async Task LogOutAsync()
+        {
+            var anonymousUser = App.AllUsers.FirstOrDefault(u => u.Provider == Credentials.AuthProvider.Anonymous);
+            if (anonymousUser == null)
             {
-                throw new Exception("Error:Requested_entry_couldn't_be_found");
+                throw new Exception("not good");
             }
-            return EntryModelFactory.CreateEntryModel(entry);
+
+            App.SwitchUser(anonymousUser);
+            _realmService.InitializeDatabase();
         }
 
-        public PhraseModel GetPhraseByEntryId(ObjectId entryId)
-        {
-            return GetEntryById(entryId) as PhraseModel;
-        }
-        public WordModel GetWordByEntryId(ObjectId entryId)
-        {
-            return GetEntryById(entryId) as WordModel;
-        }
+        #endregion
+
+
         public List<LanguageModel> GetAllLanguages()
         {
             try
@@ -291,15 +272,5 @@ namespace chldr_data.Services
             return Database.All<Source>().AsEnumerable().Select(s => new SourceModel(s)).ToList();
         }
 
-        public PhraseModel AddNewPhrase(string content, string notes)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdatePhrase(UserModel loggedInUser, string? phraseId, string? content, string? notes)
-        {
-            throw new NotImplementedException();
-        }
     }
-
 }

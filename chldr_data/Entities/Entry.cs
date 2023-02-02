@@ -6,10 +6,11 @@ using System;
 using Realms.Schema;
 using MongoDB.Bson;
 using RequiredAttribute = Realms.RequiredAttribute;
+using chldr_data.Interfaces;
 
 namespace chldr_data.Entities
 {
-    public class Entry : RealmObject
+    public class Entry : RealmObject, IEntity
     {
         [PrimaryKey]
         public ObjectId _id { get; set; } = ObjectId.GenerateNewId();

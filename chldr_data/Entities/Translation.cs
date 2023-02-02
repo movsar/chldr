@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Text;
 using Realms;
 using MongoDB.Bson;
+using chldr_data.Interfaces;
 
 namespace chldr_data.Entities
 {
-    public class Translation : RealmObject
+    public class Translation : RealmObject, IEntity
     {
         [PrimaryKey] 
-        public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
+        public ObjectId _id { get; set; }
         public Entry Entry { get; set; }
         public User User { get; set; }
         [Indexed]

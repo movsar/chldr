@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace chldr_data.Interfaces
 {
-    public abstract class IModelBase
+    public interface IModelBase
     {
         public ObjectId Id { get; }
     }

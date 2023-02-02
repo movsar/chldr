@@ -1,4 +1,5 @@
 ﻿using chldr_data.Models;
+using chldr_data.Repositories;
 using chldr_utils.Models;
 using MongoDB.Bson;
 using Realms;
@@ -11,13 +12,13 @@ namespace chldr_data.Interfaces
         App App { get; }
         Realm Database { get; }
 
+        PhrasesRepository PhrasesRepository { get; }
+        WordsRepository WordsRepository { get; }
         event Action ConnectionInitialized;
         event Action DatabaseInitialized;
         event Action DatabaseSynchronized;
         event Action<SearchResultModel> GotNewSearchResult;
 
-        WordModel GetWordById(ObjectId entityId);
-        PhraseModel GetPhraseById(ObjectId entityId);
         void RequestRandomEntries();
         List<EntryModel> GetRandomEntries();
         void RequestEntriesOnModeration();
@@ -30,13 +31,8 @@ namespace chldr_data.Interfaces
         Task ConfirmUserAsync(string token, string tokenId, string email);
         Task LogOutAsync();
         UserModel GetCurrentUserInfo();
-        PhraseModel? GetPhraseByEntryId(ObjectId entryId);
-        WordModel? GetWordByEntryId(ObjectId entryId);
-        EntryModel? GetEntryById(ObjectId entryId);
         void OnNewResults(SearchResultModel args);
         List<LanguageModel> GetAllLanguages();
         List<SourceModel> GetAllNamedSources();
-        PhraseModel AddNewPhrase(string content, string notes);
-        void UpdatePhrase(UserModel loggedInUser, string? phraseId, string? content, string? notes);
     }
 }

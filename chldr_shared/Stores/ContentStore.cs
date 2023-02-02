@@ -70,22 +70,22 @@ namespace chldr_shared.Stores
         }
         public WordModel GetWordById(ObjectId entryId)
         {
-            return _dataAccess.GetWordById(entryId);
+            return _dataAccess.WordsRepository.GetById(entryId);
         }
         public PhraseModel GetPhraseById(ObjectId entryId)
         {
-            return _dataAccess.GetPhraseById(entryId);
+            return _dataAccess.PhrasesRepository.GetById(entryId);
         }
 
         public EntryModel GetEntryById(ObjectId entryId)
         {
-            var word = _dataAccess.GetWordByEntryId(entryId);
+            var word = _dataAccess.WordsRepository.GetByEntryId(entryId);
             if (word != null)
             {
                 return word;
             }
 
-            var phrase = _dataAccess.GetPhraseByEntryId(entryId);
+            var phrase = _dataAccess.PhrasesRepository.GetByEntryId(entryId);
             if (phrase != null)
             {
                 return phrase;
@@ -127,7 +127,7 @@ namespace chldr_shared.Stores
 
         public PhraseModel AddNewPhrase(UserModel userModel, string content, string notes)
         {
-            PhraseModel phrase = _dataAccess.AddNewPhrase(content, notes);
+            PhraseModel phrase = _dataAccess.PhrasesRepository.Add(content, notes);
             return phrase;
         }
 

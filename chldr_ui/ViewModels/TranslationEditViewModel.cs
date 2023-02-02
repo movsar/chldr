@@ -1,6 +1,7 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
 using chldr_data.Models;
+using chldr_shared.Dto;
 using chldr_shared.Validators;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
@@ -12,24 +13,15 @@ using System.Threading.Tasks;
 
 namespace chldr_ui.ViewModels
 {
-    public class TranslationEditViewModel : EditFormViewModelBase<TranslationModel, TranslationValidator>
+    public class TranslationEditViewModel : EditFormViewModelBase<TranslationDto, TranslationValidator>
     {
+        #region Fields and Properties
         [Parameter]
-        public string? WordId { get; set; }
+        public string? EntryId { get; set; }
         [Parameter]
         public string? TranslationId { get; set; }
-
-        #region Fields and Properties
-        public string Content { get; set; }
-        public string Notes { get; set; }
-        public string? LanguageCode { get; set; }
+        public TranslationDto Translation { get; set; }
         #endregion
-
-        public TranslationModel GetTranslation()
-        {
-            return new TranslationModel(Content, Notes,
-                ContentStore.AllLanguages.First(l => l.Code == LanguageCode));
-        }
 
         protected override void OnInitialized()
         {
@@ -40,21 +32,21 @@ namespace chldr_ui.ViewModels
                 return;
             }
 
-            var wordId = new ObjectId(WordId);
-            var translationId = new ObjectId(TranslationId);
+            //var wordId = new ObjectId(WordId);
+            //var translationId = new ObjectId(TranslationId);
 
-            // Get current word from cached results
-            var word = ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries)
-                .Where(e => e.Type == EntryType.Word)
-                .Cast<WordModel>()
-                .First(w => w.Id == wordId);
+            //// Get current word from cached results
+            //var word = ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries)
+            //    .Where(e => e.Type == EntryType.Word)
+            //    .Cast<WordModel>()
+            //    .First(w => w.Id == wordId);
 
-            // Get the current translation
-            var translation = word.Translations.Where(t => t.Id == translationId).First();
+            //// Get the current translation
+            //var translation = word.Translations.Where(t => t.Id == translationId).First();
 
-            Content = translation.Content;
-            Notes = translation.Notes;
-            LanguageCode = translation.Language.Code;
+            //Content = translation.Content;
+            //Notes = translation.Notes;
+            //LanguageCode = translation.Language.Code;
         }
 
         internal void Submit()

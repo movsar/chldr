@@ -12,6 +12,7 @@ namespace chldr_data.Models
 {
     public class PhraseModel : EntryModel
     {
+        // This is Phrase Id, the Entry Id is in its parent
         public new ObjectId Id { get; }
         public string Content { get; }
         public string? Notes { get; }
