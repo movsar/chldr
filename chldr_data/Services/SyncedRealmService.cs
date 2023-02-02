@@ -21,14 +21,25 @@ namespace chldr_data.Services
         private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
         private RealmConfigurationBase? _config;
+        ~SyncedRealmService()
+        {
+            GetDatabase().Dispose();
+        }
         public Realm GetDatabase()
         {
-            if (_config == null)
+            if (_app == null || _config == null)
             {
                 throw new Exception("Config shouldn't be null");
             }
 
-            return Realm.GetInstance(_config);
+            var realm = Realm.GetInstance(_config);
+            if (_app.CurrentUser.Provider == Credentials.AuthProvider.Anonymous)
+            {
+                // Don't try to sync anything if a legitimate user hasn't logged in
+                //realm.SyncSession.Stop();
+            }
+
+            return realm;
         }
         internal App GetApp()
         {
@@ -85,7 +96,7 @@ namespace chldr_data.Services
                 }
             }
         }
-        public void InitializeDatabase()
+        public void InitializeConnection()
         {
             // As this is FlexibleSync mode, the user must always be present, even if it's offline
             if (_app.CurrentUser == null)
@@ -124,7 +135,6 @@ namespace chldr_data.Services
                 }
             }
         }
-
 
         private static void EncryptDatbase()
         {

@@ -33,7 +33,7 @@ namespace chldr_data.Services
             _fileService = fileService;
         }
 
-        public void InitializeDatabase()
+        public void InitializeConnection()
         {
             // Copy original file so that app will be able to access entries immediately
             var databasePath = Path.Combine(_fileService.AppDataDirectory, "offline.datx");

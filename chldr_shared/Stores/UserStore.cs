@@ -9,11 +9,10 @@ namespace chldr_shared.Stores
 {
     public class UserStore
     {
-
         #region Properties, Events and Fields
         public event Action UserStateHasChanged;
 
-        private readonly IDataAccess _dataAccess;
+        private readonly ISyncedDataAccess _dataAccess;
         private readonly EnvironmentService _environmentService;
         public UserModel? CurrentUserInfo { get; set; }
         private SessionStatus _sessionStatus;
@@ -30,7 +29,7 @@ namespace chldr_shared.Stores
 
         public UserStore(IDataAccess dataAccess, EnvironmentService environmentService)
         {
-            _dataAccess = dataAccess;
+            _dataAccess = dataAccess as ISyncedDataAccess;
             _environmentService = environmentService;
 
             _dataAccess.DatabaseSynchronized += DataAccess_ChangesSynchronized;
@@ -62,14 +61,14 @@ namespace chldr_shared.Stores
 
         public async Task RegisterNewUser(string email, string password)
         {
-            await _dataAccess.RegisterNewUserAsync(email, password);
+            await _dataAccess.UserService.RegisterNewUserAsync(email, password);
         }
 
         public void SetCurrentUserInfo()
         {
             try
             {
-                CurrentUserInfo = _dataAccess.GetCurrentUserInfo();
+                CurrentUserInfo = _dataAccess.UserService.GetCurrentUserInfo();
                 SessionStatus = SessionStatus.LoggedIn;
                 UserStateHasChanged?.Invoke();
             }
@@ -103,7 +102,7 @@ namespace chldr_shared.Stores
         {
             try
             {
-                await _dataAccess.LogInEmailPasswordAsync(email, password);
+                await _dataAccess.UserService.LogInEmailPasswordAsync(email, password);
                 await _dataAccess.Initialize();
             }
             catch (Exception ex)
@@ -115,22 +114,22 @@ namespace chldr_shared.Stores
 
         public async Task ConfirmUserAsync(string token, string tokenId, string email)
         {
-            await _dataAccess.ConfirmUserAsync(token, tokenId, email);
+            await _dataAccess.UserService.ConfirmUserAsync(token, tokenId, email);
         }
 
         public async Task SendPasswordResetRequestAsync(string email)
         {
-            await _dataAccess.SendPasswordResetRequestAsync(email);
+            await _dataAccess.UserService.SendPasswordResetRequestAsync(email);
         }
 
         public async Task UpdatePasswordAsync(string token, string tokenId, string newPassword)
         {
-            await _dataAccess.UpdatePasswordAsync(token, tokenId, newPassword);
+            await _dataAccess.UserService.UpdatePasswordAsync(token, tokenId, newPassword);
         }
 
         public async Task LogOutAsync()
         {
-            await _dataAccess.LogOutAsync();
+            await _dataAccess.UserService.LogOutAsync();
             CurrentUserInfo = null;
             SessionStatus = SessionStatus.Unauthorized;
             UserStateHasChanged?.Invoke();

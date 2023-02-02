@@ -28,8 +28,9 @@ namespace chldr_native.Extensions
         public static MauiAppBuilder RegisterAppServices(this MauiAppBuilder appBuilder)
         {
             // Data
-            appBuilder.Services.AddScoped<IDataAccess, DataAccess>();
+            appBuilder.Services.AddScoped<UserService>();
             appBuilder.Services.AddScoped<SyncedRealmService>();
+            appBuilder.Services.AddScoped<IDataAccess, SyncedDataAccess>();
 
             // Shared
             appBuilder.Services.AddScoped<ContentStore>();

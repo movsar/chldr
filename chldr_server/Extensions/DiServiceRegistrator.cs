@@ -28,8 +28,9 @@ namespace chldr_server.Extensions
         public static WebApplicationBuilder RegisterAppServices(this WebApplicationBuilder appBuilder)
         {
             // Data
+            appBuilder.Services.AddScoped<UserService>();
             appBuilder.Services.AddScoped<SyncedRealmService>();
-            appBuilder.Services.AddScoped<IDataAccess, DataAccess>();
+            appBuilder.Services.AddScoped<IDataAccess, SyncedDataAccess>();
 
             // Shared
 
@@ -51,8 +52,8 @@ namespace chldr_server.Extensions
             appBuilder.Services.AddScoped<MainPageViewModel>();
             appBuilder.Services.AddScoped<LoginPageViewModel>();
             appBuilder.Services.AddScoped<RegistrationPageViewModel>();
-        
-            
+
+
 
             return appBuilder;
         }

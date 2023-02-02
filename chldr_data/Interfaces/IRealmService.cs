@@ -10,7 +10,7 @@ namespace chldr_data.Interfaces
     public interface IRealmService
     {
         internal Realm GetDatabase();
-        internal void InitializeDatabase();
+        internal void InitializeConnection();
 
     }
 }

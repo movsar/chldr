@@ -33,7 +33,7 @@ namespace chldr_data.tests
             var exceptionHandler = new ExceptionHandler(fileService);
             var networkService = new NetworkService();
             var realmService = new SyncedRealmService(fileService, exceptionHandler);
-            var dataAccess = new DataAccess(realmService, exceptionHandler, networkService);
+            var dataAccess = new SyncedDataAccess(realmService, exceptionHandler, networkService);
             await dataAccess.Initialize();
 
             var contentStore = new ContentStore(dataAccess, exceptionHandler);
@@ -60,7 +60,7 @@ namespace chldr_data.tests
             var exceptionHandler = new ExceptionHandler(fileService);
             var networkService = new NetworkService();
             var realmService = new SyncedRealmService(fileService, exceptionHandler);
-            var dataAccess = new DataAccess(realmService, exceptionHandler, networkService);
+            var dataAccess = new SyncedDataAccess(realmService, exceptionHandler, networkService);
             await dataAccess.Initialize();
 
             var badId = new ObjectId("1C1bB21b");
