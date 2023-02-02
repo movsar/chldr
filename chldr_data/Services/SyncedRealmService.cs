@@ -13,16 +13,15 @@ using static Realms.Sync.MongoClient;
 
 namespace chldr_data.Services
 {
-    public class RealmService
+    public class SyncedRealmService : IRealmService
     {
-        private App? _app { get; set; }
         private const string myRealmAppId = "dosham-lxwuu";
 
+        private App? _app;
         private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
-        private readonly NetworkService _networkService;
         private RealmConfigurationBase? _config;
-        internal Realm GetDatabase()
+        public Realm GetDatabase()
         {
             if (_config == null)
             {
@@ -35,20 +34,17 @@ namespace chldr_data.Services
         {
             return _app;
         }
-        public RealmService(FileService fileService, ExceptionHandler exceptionHandler, NetworkService networkService)
+        public SyncedRealmService(FileService fileService, ExceptionHandler exceptionHandler)
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
-            _networkService = networkService;
 
             Logger.LogLevel = LogLevel.Error;
             Logger.Default = Logger.Function(message =>
             {
-                //_exceptionHandler.ProcessError(new Exception($"Realm : {message}"));
+                _exceptionHandler.ProcessDebug(new Exception($"Realm : {message}"));
             });
         }
-
-        // Don't touch this unless it's absolutely necessary! It was very hard to configure!
 
         internal async Task InitializeApp()
         {
@@ -66,34 +62,21 @@ namespace chldr_data.Services
                 await _app.LogInAsync(Credentials.Anonymous(true));
             }
         }
-        internal string GetUserDatabaseFilePath()
+
+        private void PrepareOriginalDatabaseFile(string targetDatabasePath)
         {
-            if (_app?.CurrentUser == null)
+            if (File.Exists(targetDatabasePath))
             {
-                throw new Exception("User cannot be null");
+                return;
             }
-
-            var userDatabaseName = _fileService.GetUserDatabaseName(_app.CurrentUser.Id);
-
-            return Path.Combine(_fileService.AppDataDirectory, userDatabaseName);
-        }
-        internal void InitialzieConfig(Realms.Sync.User appUser)
-        {
-            if (appUser == null)
-            {
-                throw new Exception("User must not be null");
-            }
-
-            var userDatabasePath = GetUserDatabaseFilePath();
-            var userDatabaseName = _fileService.GetUserDatabaseName(_app.CurrentUser.Id);
 
             var shippedDbFileName = _fileService.CompressedDatabaseFileName + "x";
-            if (!File.Exists(userDatabasePath) && !File.Exists(shippedDbFileName))
+            if (!File.Exists(targetDatabasePath) && !File.Exists(shippedDbFileName))
             {
                 try
                 {
                     ZipFile.ExtractToDirectory(_fileService.CompressedDatabaseFilePath, _fileService.AppDataDirectory);
-                    File.Move(Path.Combine(_fileService.AppDataDirectory, shippedDbFileName), Path.Combine(_fileService.AppDataDirectory, userDatabaseName));
+                    File.Move(Path.Combine(_fileService.AppDataDirectory, shippedDbFileName), targetDatabasePath);
                 }
                 catch (Exception ex)
                 {
@@ -101,8 +84,20 @@ namespace chldr_data.Services
                     _exceptionHandler.ProcessDebug(ex);
                 }
             }
+        }
+        public void InitializeDatabase()
+        {
+            // As this is FlexibleSync mode, the user must always be present, even if it's offline
+            if (_app.CurrentUser == null)
+            {
+                throw new Exception("User must not be null");
+            }
 
-            _config = new FlexibleSyncConfiguration(appUser, userDatabasePath)
+            // Copy original file so that app will be able to access entries immediately
+            var userDatabasePath = Path.Combine(_fileService.AppDataDirectory, _fileService.GetUserDatabaseName(_app.CurrentUser.Id));
+            PrepareOriginalDatabaseFile(userDatabasePath);
+
+            _config = new FlexibleSyncConfiguration(_app.CurrentUser, userDatabasePath)
             {
                 SchemaVersion = 1,
                 PopulateInitialSubscriptions = (realm) =>
@@ -119,6 +114,7 @@ namespace chldr_data.Services
                 }
             };
 
+            // Compress the database file if it exceeds 70Mb
             if (File.Exists(userDatabasePath))
             {
                 var fileSize = new FileInfo(userDatabasePath).Length / 1000_000;

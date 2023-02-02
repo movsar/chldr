@@ -19,6 +19,7 @@ namespace chldr_data.Interfaces
         WordModel GetWordById(ObjectId entityId);
         PhraseModel GetPhraseById(ObjectId entityId);
         void RequestRandomEntries();
+        List<EntryModel> GetRandomEntries();
         void RequestEntriesOnModeration();
         Task Initialize();
         Task FindAsync(string inputText, FiltrationFlags filterationFlags);

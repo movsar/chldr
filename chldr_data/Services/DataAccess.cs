@@ -85,7 +85,7 @@ namespace chldr_data.Services
             try
             {
                 await _realmService.InitializeApp();
-                _realmService.InitialzieConfig(App.CurrentUser);
+                _realmService.InitializeDatabase();
                 ConnectionInitialized?.Invoke();
 
                 new Task(async () => await InitializeDatabase()).Start();
@@ -157,7 +157,7 @@ namespace chldr_data.Services
             OnNewResults(new SearchResultModel(GetEntriesOnModeration()));
         }
 
-        private List<EntryModel> GetRandomEntries()
+        public List<EntryModel> GetRandomEntries()
         {
             var randomizer = new Random();
             var entries = Database.All<Entry>().AsEnumerable()
@@ -208,7 +208,7 @@ namespace chldr_data.Services
         {
             // Don't touch this unless it's absolutely necessary! It was very hard to configure!
             var appUser = await App.LogInAsync(Credentials.EmailPassword(email, password));
-            _realmService.InitialzieConfig(appUser);
+            _realmService.InitializeDatabase();
         }
 
         public async Task LogOutAsync()
@@ -220,7 +220,7 @@ namespace chldr_data.Services
             }
 
             App.SwitchUser(anonymousUser);
-            _realmService.InitialzieConfig(anonymousUser);
+            _realmService.InitializeDatabase();
         }
 
         public void OnNewResults(SearchResultModel results)

@@ -64,6 +64,10 @@ namespace chldr_shared.Stores
             CachedSearchResults.Clear();
             Task.Run(() => _dataAccess.RequestRandomEntries());
         }
+        public List<EntryModel> GetRandomEntries()
+        {
+            return _dataAccess.GetRandomEntries();
+        }
         public WordModel GetWordById(ObjectId entryId)
         {
             return _dataAccess.GetWordById(entryId);
@@ -126,6 +130,7 @@ namespace chldr_shared.Stores
             PhraseModel phrase = _dataAccess.AddNewPhrase(content, notes);
             return phrase;
         }
+
 
         public PhraseModel GetCachedPhraseById(ObjectId phraseId)
         {

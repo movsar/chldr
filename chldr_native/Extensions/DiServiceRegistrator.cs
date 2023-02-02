@@ -29,7 +29,7 @@ namespace chldr_native.Extensions
         {
             // Data
             appBuilder.Services.AddScoped<IDataAccess, DataAccess>();
-            appBuilder.Services.AddScoped<RealmService>();
+            appBuilder.Services.AddScoped<SyncedRealmService>();
 
             // Shared
             appBuilder.Services.AddScoped<ContentStore>();

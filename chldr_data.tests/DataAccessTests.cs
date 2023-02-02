@@ -1,8 +1,11 @@
 using chldr_data.Entities;
+using chldr_data.Models;
 using chldr_data.Services;
+using chldr_shared.Stores;
 using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 
 namespace chldr_data.tests
 {
@@ -26,24 +29,47 @@ namespace chldr_data.tests
             var fileService = new FileService(AppContext.BaseDirectory);
             var exceptionHandler = new ExceptionHandler(fileService);
             var networkService = new NetworkService();
-            var realmService = new RealmService(fileService, exceptionHandler, networkService);
+            var realmService = new RealmService(fileService, exceptionHandler);
             var dataAccess = new DataAccess(fileService, realmService, exceptionHandler, networkService);
             await dataAccess.Initialize();
 
+            var contentStore = new ContentStore(dataAccess, exceptionHandler);
+
             // Берем любое слово - в данном случае это первое слово из базы данных
-            var wordToTest = dataAccess.Database.All<Word>().First();
+            var words = contentStore.GetRandomEntries();
+            var word = words.Where(entry => entry is WordModel).First() as WordModel;
 
             // 2. Тест
-            var wordById = dataAccess.GetWordById(wordToTest._id);
-            
+            var wordById = contentStore.GetWordById(word.WordId);
+
             // 3. Проверка
             // Удостоверяемся что содержимое исходного слова равно содержимому слова полученному из метода по ID
-            Assert.Equal(wordToTest.Content, wordById.Content);
+            Assert.Equal(word.Content, wordById.Content);
         }
 
+        [Fact]
         public static async Task GetWordById_BadId_ReturnsError()
         {
-            // Надо передать неправильный ID и удостовериться что это вызовет ошибку
+            // 1. Подготовка
+
+            // Инициализируем необходимые классы чтобы запустить нужный метод
+            var fileService = new FileService(AppContext.BaseDirectory);
+            var exceptionHandler = new ExceptionHandler(fileService);
+            var networkService = new NetworkService();
+            var realmService = new RealmService(fileService, exceptionHandler);
+            var dataAccess = new DataAccess(fileService, realmService, exceptionHandler, networkService);
+            await dataAccess.Initialize();
+
+            var badId = new ObjectId("1C1bB21b");
+
+            // 2. Тест
+            Action callGetWordById = new Action(() =>
+            {
+                var wordById = dataAccess.GetWordById(badId);
+            });
+
+            // 3. Проверка
+            Assert.Throws<System.FormatException>(callGetWordById);
         }
 
         public static async Task GetWordById_NullId_ReturnsError()
