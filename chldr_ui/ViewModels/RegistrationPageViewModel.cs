@@ -11,9 +11,9 @@ namespace chldr_ui.ViewModels
             await UserStore.RegisterNewUser(UserInfo.Email, UserInfo.Password);
         }
 
-        public override async Task ValidateAndSubmit()
+        public async Task ValidateAndSubmitAsync()
         {
-            await ValidateAndSubmit(UserInfo, new string[] { "Email", "Name", "Password" }, SendRegistrationRequest);
+            await ValidateAndSubmitAsync(UserInfo, SendRegistrationRequest, new string[] { "Email", "Name", "Password" });
         }
     }
 }

@@ -18,9 +18,9 @@ namespace chldr_ui.ViewModels
         {
             await UserStore.SendPasswordResetRequestAsync(UserInfo.Email);
         }
-        public override async Task ValidateAndSubmit()
+        public async Task ValidateAndSubmitAsync()
         {
-            await ValidateAndSubmit(UserInfo, new string[] { "Email" }, SendPasswordResetRequest);
+            await ValidateAndSubmitAsync(UserInfo, SendPasswordResetRequest, new string[] { "Email" });
         }
     }
 }

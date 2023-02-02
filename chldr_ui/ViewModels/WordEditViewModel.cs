@@ -1,6 +1,7 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
 using chldr_data.Models;
+using chldr_shared.Dto;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
 using Microsoft.AspNetCore.Components;
@@ -18,13 +19,7 @@ namespace chldr_ui.ViewModels
         #region Properties
         [Parameter]
         public string? WordId { get; set; }
-        public PartsOfSpeech PartOfSpeech { get; set; }
-        public int GrammaticalClass { get; set; }
-        public string Content { get; set; }
-        public string Notes { get; set; }
-        public string RawForms { get; }
-        public string RawVerbTenses { get; }
-        public string RawNounDeclensions { get; }
+        public WordDto? Word { get; set; }
         #endregion
 
         protected override void OnInitialized()
@@ -39,23 +34,19 @@ namespace chldr_ui.ViewModels
             var wordId = new ObjectId(WordId);
 
             // Get current word from cached results
-            var word = ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries)
+            var existingWord = ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries)
                 .Where(e => e.Type == EntryType.Word)
                 .Cast<WordModel>()
                 .FirstOrDefault(w => w.WordId == wordId);
 
-            if (word == null)
+            if (existingWord == null)
             {
                 throw new Exception("Error:Word_shouldn't_be_null");
             }
 
-            EntryId = word.EntryId;
-            PartOfSpeech = word.PartOfSpeech;
-            GrammaticalClass = word.GrammaticalClass;
-            Content = word.Content;
-            Notes = word.Notes;
+            Word = new WordDto(existingWord);
 
-            InitializeViewModel(word);
+            InitializeViewModel(Word);
         }
     }
 }

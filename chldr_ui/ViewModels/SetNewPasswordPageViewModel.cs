@@ -18,7 +18,7 @@ namespace chldr_ui.ViewModels
             await UserStore.UpdatePasswordAsync(token, tokenId, newPassword);
         }
 
-        public override async Task ValidateAndSubmit()
+        public async Task ValidateAndSubmitAsync()
         {
             var queryParams = HttpUtility.ParseQueryString(new Uri(NavigationManager!.Uri).Query);
             var token = queryParams.Get("token");
@@ -30,7 +30,7 @@ namespace chldr_ui.ViewModels
                 return;
             }
 
-            await ValidateAndSubmit(UserInfo, new string[] { "Password" }, () => UpdatePasswordAsync(token, tokenId, UserInfo.Password));
+            await ValidateAndSubmitAsync(UserInfo, () => UpdatePasswordAsync(token, tokenId, UserInfo.Password), new string[] { "Password" });
         }
 
     }

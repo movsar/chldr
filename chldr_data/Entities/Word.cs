@@ -96,6 +96,11 @@ namespace chldr_data.Entities
         }
         public static Dictionary<string, string> ParseVerbTenses(string rawTenses)
         {
+            if (rawTenses.Length < 1)
+            {
+                return new Dictionary<string, string>();
+            }
+
             string[] verbTenses = new string[54];
             verbTenses[0] = "VerbTensePresentContinious";
             verbTenses[1] = "VerbTensePresentContinuousCausative";
@@ -108,57 +113,57 @@ namespace chldr_data.Entities
             verbTenses[7] = "VerbTensePresentSimpleCausative";
             verbTenses[8] = "VerbTensePresentSimpleInceptive";
             verbTenses[9] = "VerbTensePresentSimplePermissive";
-            verbTenses[10] = "legacyWord.VerbTensePresentSimplePermissiveCausative";
-            verbTenses[11] = "legacyWord.VerbTensePresentSimplePotential";
+            verbTenses[10] = "VerbTensePresentSimplePermissiveCausative";
+            verbTenses[11] = "VerbTensePresentSimplePotential";
 
-            verbTenses[12] = "legacyWord.VerbTenseFuturePossible";
-            verbTenses[13] = "legacyWord.VerbTenseFuturePossibleCausative";
-            verbTenses[14] = "legacyWord.VerbTenseFuturePossibleInceptive";
-            verbTenses[15] = "legacyWord.VerbTenseFuturePossiblePermissive";
-            verbTenses[16] = "legacyWord.VerbTenseFuturePossiblePermissiveCausative";
-            verbTenses[17] = "legacyWord.VerbTenseFuturePossiblePotential";
+            verbTenses[12] = "VerbTenseFuturePossible";
+            verbTenses[13] = "VerbTenseFuturePossibleCausative";
+            verbTenses[14] = "VerbTenseFuturePossibleInceptive";
+            verbTenses[15] = "VerbTenseFuturePossiblePermissive";
+            verbTenses[16] = "VerbTenseFuturePossiblePermissiveCausative";
+            verbTenses[17] = "VerbTenseFuturePossiblePotential";
 
-            verbTenses[18] = "legacyWord.VerbTenseFutureReal";
-            verbTenses[19] = "legacyWord.VerbTenseFutureRealCausative";
-            verbTenses[20] = "legacyWord.VerbTenseFutureRealInceptive";
-            verbTenses[21] = "legacyWord.VerbTenseFutureRealPermissive";
-            verbTenses[22] = "legacyWord.VerbTenseFutureRealPermissiveCausative";
-            verbTenses[23] = "legacyWord.VerbTenseFutureRealPotential";
+            verbTenses[18] = "VerbTenseFutureReal";
+            verbTenses[19] = "VerbTenseFutureRealCausative";
+            verbTenses[20] = "VerbTenseFutureRealInceptive";
+            verbTenses[21] = "VerbTenseFutureRealPermissive";
+            verbTenses[22] = "VerbTenseFutureRealPermissiveCausative";
+            verbTenses[23] = "VerbTenseFutureRealPotential";
 
-            verbTenses[24] = "legacyWord.VerbTensePastImperfect";
-            verbTenses[25] = "legacyWord.VerbTensePastImperfectCausative";
-            verbTenses[26] = "legacyWord.VerbTensePastImperfectInceptive";
-            verbTenses[27] = "legacyWord.VerbTensePastImperfectPermissive";
-            verbTenses[28] = "legacyWord.VerbTensePastImperfectPermissiveCausative";
-            verbTenses[29] = "legacyWord.VerbTensePastImperfectPotential";
+            verbTenses[24] = "VerbTensePastImperfect";
+            verbTenses[25] = "VerbTensePastImperfectCausative";
+            verbTenses[26] = "VerbTensePastImperfectInceptive";
+            verbTenses[27] = "VerbTensePastImperfectPermissive";
+            verbTenses[28] = "VerbTensePastImperfectPermissiveCausative";
+            verbTenses[29] = "VerbTensePastImperfectPotential";
 
-            verbTenses[30] = "legacyWord.VerbTensePastPerfect";
-            verbTenses[31] = "legacyWord.VerbTensePastPerfectCausative";
-            verbTenses[32] = "legacyWord.VerbTensePastPerfectInceptive";
-            verbTenses[33] = "legacyWord.VerbTensePastPerfectPermissive";
-            verbTenses[34] = "legacyWord.VerbTensePastPerfectPermissiveCausative";
-            verbTenses[35] = "legacyWord.VerbTensePastPerfectPotential";
+            verbTenses[30] = "VerbTensePastPerfect";
+            verbTenses[31] = "VerbTensePastPerfectCausative";
+            verbTenses[32] = "VerbTensePastPerfectInceptive";
+            verbTenses[33] = "VerbTensePastPerfectPermissive";
+            verbTenses[34] = "VerbTensePastPerfectPermissiveCausative";
+            verbTenses[35] = "VerbTensePastPerfectPotential";
 
-            verbTenses[36] = "legacyWord.VerbTensePastRecent";
-            verbTenses[37] = "legacyWord.VerbTensePastRecentCausative";
-            verbTenses[38] = "legacyWord.VerbTensePastRecentInceptive";
-            verbTenses[39] = "legacyWord.VerbTensePastRecentPermissive";
-            verbTenses[40] = "legacyWord.VerbTensePastRecentPermissiveCausative";
-            verbTenses[41] = "legacyWord.VerbTensePastRecentPotential";
+            verbTenses[36] = "VerbTensePastRecent";
+            verbTenses[37] = "VerbTensePastRecentCausative";
+            verbTenses[38] = "VerbTensePastRecentInceptive";
+            verbTenses[39] = "VerbTensePastRecentPermissive";
+            verbTenses[40] = "VerbTensePastRecentPermissiveCausative";
+            verbTenses[41] = "VerbTensePastRecentPotential";
 
-            verbTenses[42] = "legacyWord.VerbTensePastWitnessed";
-            verbTenses[43] = "legacyWord.VerbTensePastWitnessedCausative";
-            verbTenses[44] = "legacyWord.VerbTensePastWitnessedInceptive";
-            verbTenses[45] = "legacyWord.VerbTensePastWitnessedPermissive";
-            verbTenses[46] = "legacyWord.VerbTensePastWitnessedPermissiveCausative";
-            verbTenses[47] = "legacyWord.VerbTensePastWitnessedPotential";
+            verbTenses[42] = "VerbTensePastWitnessed";
+            verbTenses[43] = "VerbTensePastWitnessedCausative";
+            verbTenses[44] = "VerbTensePastWitnessedInceptive";
+            verbTenses[45] = "VerbTensePastWitnessedPermissive";
+            verbTenses[46] = "VerbTensePastWitnessedPermissiveCausative";
+            verbTenses[47] = "VerbTensePastWitnessedPotential";
 
-            verbTenses[48] = "legacyWord.VerbTensePastRemote";
-            verbTenses[49] = "legacyWord.VerbTensePastRemoteCausative";
-            verbTenses[50] = "legacyWord.VerbTensePastRemoteInceptive";
-            verbTenses[51] = "legacyWord.VerbTensePastRemotePermissive";
-            verbTenses[52] = "legacyWord.VerbTensePastRemotePermissiveCausative";
-            verbTenses[53] = "legacyWord.VerbTensePastRemotePotential";
+            verbTenses[48] = "VerbTensePastRemote";
+            verbTenses[49] = "VerbTensePastRemoteCausative";
+            verbTenses[50] = "VerbTensePastRemoteInceptive";
+            verbTenses[51] = "VerbTensePastRemotePermissive";
+            verbTenses[52] = "VerbTensePastRemotePermissiveCausative";
+            verbTenses[53] = "VerbTensePastRemotePotential";
 
             Dictionary<string, string> tensesMap = new Dictionary<string, string>();
 
@@ -172,6 +177,11 @@ namespace chldr_data.Entities
         }
         public static Dictionary<string, string> ParseNounDeclensions(string rawDeclensions)
         {
+            if (rawDeclensions.Length < 1)
+            {
+                return new Dictionary<string, string>();
+            }
+
             string[] declensionNames = new string[16];
             declensionNames[0] = "NounDeclensionSingularAbsolutive";
             declensionNames[1] = "NounDeclensionSingularAllative";

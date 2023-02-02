@@ -1,11 +1,12 @@
 ﻿using chldr_data.Models;
+using chldr_shared.Dto;
 using chldr_shared.Resources.Localizations;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 
 namespace chldr_shared.Validators
 {
-    public class PhraseValidator : AbstractValidator<PhraseModel>
+    public class PhraseValidator : AbstractValidator<PhraseDto>
     {
         public PhraseValidator(IStringLocalizer<AppLocalizations> stringLocalizer)
         {

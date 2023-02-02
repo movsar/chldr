@@ -121,7 +121,7 @@ namespace chldr_shared.Stores
             Task.Run(() => _dataAccess.RequestEntriesOnModeration());
         }
 
-        public PhraseModel AddNewPhrase(string content, string notes)
+        public PhraseModel AddNewPhrase(UserModel userModel, string content, string notes)
         {
             PhraseModel phrase = _dataAccess.AddNewPhrase(content, notes);
             return phrase;
@@ -147,7 +147,7 @@ namespace chldr_shared.Stores
 
         public void UpdatePhrase(UserModel loggedInUser, string? phraseId, string? content, string? notes)
         {
-            _dataAccess.UpdatePhrase(loggedInUser, phraseId, content, notes);
+            // _dataAccess.UpdatePhrase(loggedInUser, phraseId, content, notes);
         }
     }
 }

@@ -69,11 +69,11 @@ namespace chldr_ui.ViewModels
             await ExecuteSafelyAsync(() => ConfirmEmail(token!, tokenId!, email!));
         }
 
-        public override async Task ValidateAndSubmit()
+        public async Task ValidateAndSubmitAsync()
         {
-            await ValidateAndSubmit(UserInfo, new string[] {
+            await ValidateAndSubmitAsync(UserInfo, SignInWithEmailPassword, new string[] {
                 nameof(UserInfo.Email), nameof(UserInfo.Password)
-            }, SignInWithEmailPassword);
+            });
         }
     }
 }

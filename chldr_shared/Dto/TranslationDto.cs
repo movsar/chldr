@@ -15,7 +15,7 @@ namespace chldr_shared.Dto
         public ObjectId EntryId { get; }
         public string Content { get; set; }
         public string Notes { get; set; }
-        public LanguageModel Language { get; set; }
+        public string LanguageCode { get; set; }
         public int Rate { get; set; }
         public TranslationDto(TranslationModel translation)
         {
@@ -23,7 +23,7 @@ namespace chldr_shared.Dto
             Content = translation.Content;
             Notes = translation.Notes;
             Rate = translation.Rate;
-            Language = translation.Language;
+            LanguageCode = translation.Language.Code;
         }
     }
 }

@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentValidation.Results;
+using static Org.BouncyCastle.Bcpg.Attr.ImageAttrib;
 
 namespace chldr_ui.ViewModels
 {
@@ -15,9 +17,23 @@ namespace chldr_ui.ViewModels
     {
         [Inject] TFormValidator? DtoValidator { get; set; }
         public List<string> ErrorMessages { get; set; } = new();
-        public bool FormDisabled { get; set; } = false;
-        public bool FormSubmitted { get; set; } = false;
-        public abstract Task ValidateAndSubmit();
+        public bool FormDisabled { get; set; }
+        public bool FormSubmitted { get; set; }
+
+        protected bool ExecuteSafely(Action action)
+        {
+            try
+            {
+                action();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessages.Clear();
+                ErrorMessages.Add(ex.Message);
+                return false;
+            }
+        }
         protected async Task<bool> ExecuteSafelyAsync(Func<Task> func)
         {
             try
@@ -32,7 +48,7 @@ namespace chldr_ui.ViewModels
                 return false;
             }
         }
-        public async Task ValidateAndSubmit(TFormDto formDto, string[] validationRuleSets, Func<Task> func)
+        private bool Validate(TFormDto? formDto, string[]? validationRuleSets)
         {
             if (formDto == null)
             {
@@ -41,10 +57,48 @@ namespace chldr_ui.ViewModels
 
             // Form validation
             ErrorMessages.Clear();
-            var result = DtoValidator?.Validate(formDto, options => options.IncludeRuleSets(validationRuleSets));
+
+            ValidationResult? result;
+            if (validationRuleSets == null)
+            {
+                result = DtoValidator?.Validate(formDto);
+            }
+            else
+            {
+                result = DtoValidator?.Validate(formDto, options => options.IncludeRuleSets(validationRuleSets));
+            }
+
             if (result!.IsValid == false)
             {
                 ErrorMessages.AddRange(result.Errors.Select(err => err.ErrorMessage));
+                return false;
+            }
+
+            return true;
+        }
+
+        public void ValidateAndSubmit(TFormDto? formDto, Action action, string[]? validationRuleSets = null)
+        {
+            if (Validate(formDto, validationRuleSets) == false)
+            {
+                return;
+            }
+
+            // Block controls while processing
+            FormDisabled = true;
+
+            if (ExecuteSafely(action))
+            {
+                FormSubmitted = true;
+            }
+
+            FormDisabled = false;
+            StateHasChanged();
+        }
+        public async Task ValidateAndSubmitAsync(TFormDto? formDto, Func<Task> func, string[]? validationRuleSets = null)
+        {
+            if (Validate(formDto, validationRuleSets) == false)
+            {
                 return;
             }
 

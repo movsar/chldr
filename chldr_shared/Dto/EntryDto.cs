@@ -12,14 +12,15 @@ namespace chldr_shared.Dto
     public abstract class EntryDto
     {
         public ObjectId EntryId { get; set; }
+        public ObjectId SourceId { get; set; }
         public List<TranslationDto> Translations { get; } = new List<TranslationDto>();
-        public SourceModel Source { get; set; }
         public int Rate { get; set; }
         public int Type { get; set; }
+        public EntryDto() { }
         public EntryDto(EntryModel entry)
         {
             EntryId = entry.EntryId;
-            Source = entry.Source;
+            SourceId = entry.Source.SourceId;
             Rate = entry.Rate;
             Type = entry.Type;
             foreach (var translation in entry.Translations)

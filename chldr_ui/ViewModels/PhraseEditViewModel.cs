@@ -5,10 +5,11 @@ using chldr_shared.Dto;
 using chldr_shared.Validators;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
+using Org.BouncyCastle.Utilities;
 
 namespace chldr_ui.ViewModels
 {
-    internal class PhraseEditViewModel : EntryEditViewModelBase<PhraseModel, PhraseValidator>
+    public class PhraseEditViewModel : EntryEditViewModelBase<PhraseDto, PhraseValidator>
     {
         #region Properties, Fields and Events
         [Parameter]
@@ -33,20 +34,28 @@ namespace chldr_ui.ViewModels
             var existingPhrase = ContentStore.GetCachedPhraseById(new ObjectId(PhraseId));
             Phrase = new PhraseDto(existingPhrase);
 
-            InitializeViewModel(phrase);
+            InitializeViewModel(Phrase);
         }
-        public override async Task ValidateAndSubmit()
+
+        private void SavePhrase()
         {
-            await ValidateAndSubmit(Phrase, new string[] { "Email" }, SendPasswordResetRequest);
+            ContentStore.UpdatePhrase(UserStore.CurrentUserInfo!, PhraseId, Phrase?.Content, Phrase?.Notes);
+        }
 
+        private void AddPhrase()
+        {
+            ContentStore.AddNewPhrase(UserStore.CurrentUserInfo!, Phrase?.Content!, Phrase?.Notes!);
+        }
+
+        public void Submit()
+        {
             if (IsEditMode)
-
             {
-                ContentStore.UpdatePhrase(UserStore.CurrentUserInfo, PhraseId, Content, Notes);
+                ValidateAndSubmit(Phrase, SavePhrase);
             }
             else
             {
-                ContentStore.AddNewPhrase(Content, Notes);
+                ValidateAndSubmit(Phrase, AddPhrase);
             }
         }
     }

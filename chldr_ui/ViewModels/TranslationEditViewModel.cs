@@ -56,9 +56,9 @@ namespace chldr_ui.ViewModels
             Notes = translation.Notes;
             LanguageCode = translation.Language.Code;
         }
-        public override Task ValidateAndSubmit()
+
+        internal void Submit()
         {
-            throw new NotImplementedException();
         }
     }
 }

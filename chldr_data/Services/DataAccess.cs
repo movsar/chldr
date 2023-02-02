@@ -294,6 +294,15 @@ namespace chldr_data.Services
             return Database.All<Source>().AsEnumerable().Select(s => new SourceModel(s)).ToList();
         }
 
+        public PhraseModel AddNewPhrase(string content, string notes)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdatePhrase(UserModel loggedInUser, string? phraseId, string? content, string? notes)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

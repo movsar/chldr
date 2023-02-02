@@ -16,7 +16,7 @@ namespace chldr_ui.ViewModels
     {
         [Inject] NavigationManager NavigationManager { get; set; }
         public WordModel? Word { get; set; }
-     
+
         public string? Header => Word?.Content;
         public string? Subheader => CreateSubheader();
         protected override void OnParametersSet()
@@ -32,20 +32,34 @@ namespace chldr_ui.ViewModels
         }
         private string CreateSubheader()
         {
-            if (Word.RawNounDeclensions == chldr_data.Entities.Word.EmptyRawWordDeclensionsValue && Word.RawVerbTenses == chldr_data.Entities.Word.EmptyRawWordTensesValue)
+            if (Word?.NounDeclensions?.Count == 0 && Word?.VerbTenses?.Count == 0)
             {
                 return null;
             }
-            var allForms = chldr_data.Entities.Word.GetAllUniqueWordForms(Word.Content, Word.RawForms, Word.RawNounDeclensions, Word.RawVerbTenses, true);
+
+
+
+            List<string> allForms = new List<string>();
+            foreach (var item in Word!.VerbTenses.Values.Union(Word.NounDeclensions.Values))
+            {
+                if (item.Length > 0)
+                {
+                    allForms.Add(item);
+                }
+            }
+
+            allForms.Remove(Word!.Content);
+
+            if (allForms.Count == 0)
+            {
+                return null;
+            }
+
             string part1 = String.Join(", ", allForms);
-            if (part1.Length == 0)
-            {
-                return null;
-            }
 
             string part2 = $" {chldr_data.Entities.Word.ParseGrammaticalClass(Word.GrammaticalClass)} ";
 
-            return $"[{part1}{part2}]";
+            return $"[ {part1}{part2}]";
         }
     }
 }

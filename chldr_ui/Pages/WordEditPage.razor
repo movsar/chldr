@@ -4,16 +4,16 @@
 @inherits WordEditViewModel;
 
 <h3>EntryEditPage</h3>
-@if (!string.IsNullOrEmpty(Content))
+@if (!string.IsNullOrEmpty(Word?.Content))
 {
 
     <form class="col-6">
         <div class="form-outline mb-4">
-            <input type="text" class="form-control" placeholder="@Localizer["Basic_Form"]" @bind="Content" />
+            <input type="text" class="form-control" placeholder="@Localizer["Basic_Form"]" @bind="Word.Content" />
         </div>
 
         <div class="form-outline mb-4">
-            <select @bind="PartOfSpeech" class="form-select">
+            <select @bind="Word.PartOfSpeech" class="form-select">
                 <option value="1" class="form-control">@Localizer["Verb"]</option>
                 <option value="2" class="form-control">@Localizer["Noun"]</option>
                 <option value="3" class="form-control">@Localizer["Adverb"]</option>
@@ -21,7 +21,7 @@
             </select>
         </div>
 
-        @if (PartOfSpeech == PartsOfSpeech.Noun)
+        @if (Word.PartOfSpeech == PartsOfSpeech.Noun)
         {
             <div class="form-outline mb-4">
                 @*
@@ -34,7 +34,7 @@
                 *@
 
                 @Localizer["Grammatical_class"]
-                <select @bind="PartOfSpeech" class="form-select" title="@Localizer["Grammatical_class"]">
+                <select @bind="Word.PartOfSpeech" class="form-select" title="@Localizer["Grammatical_class"]">
                     <option value="1" class="form-control">@Localizer["Class:1_vu_bd"]</option>
                     <option value="2" class="form-control">@Localizer["Class:2_yu_bd"]</option>
                     <option value="3" class="form-control">@Localizer["Class:3_yu_yu"]</option>
@@ -46,7 +46,7 @@
         }
 
         <div class="form-outline mb-4">
-            <input type="text" class="form-control" placeholder="@Localizer["Notes"]" @bind="Notes" />
+            <input type="text" class="form-control" placeholder="@Localizer["Notes"]" @bind="Word.Notes" />
         </div>
 
         @foreach (var translation in Translations)

@@ -12,7 +12,7 @@ namespace chldr_ui.ViewModels
     public class ProfilePageViewModel : EditFormViewModelBase<UserInfoDto, UserInfoValidator>
     {
         [Inject] NavigationManager NavigationManager { get; set; }
-        public override Task ValidateAndSubmit()
+        public Task ValidateAndSubmitAsync()
         {
             throw new NotImplementedException();
         }

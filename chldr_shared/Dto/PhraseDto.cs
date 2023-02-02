@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace chldr_shared.Dto
 {
-    public class PhraseDto
+    public class PhraseDto : EntryDto
     {
         public ObjectId PhraseId { get; }
-        public string Content { get; set; }
-        public string? Notes { get; set; }
+        public string Content { get; set; } = string.Empty;
+        public string? Notes { get; set; } = string.Empty;
 
-        public PhraseDto(PhraseModel phrase)
+        public PhraseDto(PhraseModel phrase) : base(phrase)
         {
             PhraseId = phrase.PhraseId;
             Content = phrase.Content;
