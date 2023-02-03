@@ -29,7 +29,7 @@ namespace chldr_server.Extensions
         {
             // Data
             appBuilder.Services.AddScoped<UserService>();
-            appBuilder.Services.AddScoped<SyncedRealmService>();
+            appBuilder.Services.AddScoped<IRealmService, SyncedRealmService>();
             appBuilder.Services.AddScoped<IDataAccess, SyncedDataAccess>();
 
             // Shared

@@ -22,7 +22,7 @@ namespace chldr_data.Services
         protected readonly ExceptionHandler _exceptionHandler;
         protected readonly NetworkService _networkService;
         protected readonly MainSearchEngine _searchEngine;
-        protected readonly SyncedRealmService _realmService;
+        protected readonly IRealmService _realmService;
 
         public abstract Realm Database { get; }
         public WordsRepository WordsRepository { get; }
@@ -31,7 +31,7 @@ namespace chldr_data.Services
         public event Action? DatabaseInitialized;
         public event Action<SearchResultModel>? GotNewSearchResult;
 
-        public DataAccess(SyncedRealmService realmService, ExceptionHandler exceptionHandler, NetworkService networkService)
+        public DataAccess(IRealmService realmService, ExceptionHandler exceptionHandler, NetworkService networkService)
         {
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
@@ -42,6 +42,11 @@ namespace chldr_data.Services
             PhrasesRepository = new PhrasesRepository(_realmService);
         }
 
+
+        public async Task FindAsync(string inputText, FiltrationFlags filtrationFlags)
+        {
+            await _searchEngine.FindAsync(inputText, filtrationFlags);
+        }
 
         public List<EntryModel> GetRandomEntries()
         {
@@ -105,6 +110,5 @@ namespace chldr_data.Services
         }
 
         public abstract Task Initialize();
-        public abstract Task FindAsync(string inputText, FiltrationFlags filterationFlags);
     }
 }

@@ -97,7 +97,7 @@ namespace chldr_data.Services
                 }
             }
         }
-        public void InitializeConnection()
+        public void InitializeConfiguration()
         {
             // As this is FlexibleSync mode, the user must always be present, even if it's offline
             if (_app.CurrentUser == null)

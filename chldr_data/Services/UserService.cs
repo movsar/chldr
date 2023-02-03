@@ -4,6 +4,7 @@ using chldr_utils;
 using MongoDB.Bson;
 using Realms.Sync;
 using Realms;
+using chldr_data.Interfaces;
 
 namespace chldr_data.Services
 {
@@ -13,10 +14,10 @@ namespace chldr_data.Services
         private readonly SyncedRealmService _realmService;
         App App => _realmService.GetApp();
         Realm Database => _realmService.GetDatabase();
-        public UserService(NetworkService networkService, SyncedRealmService realmService)
+        public UserService(NetworkService networkService, IRealmService realmService)
         {
             _networkService = networkService;
-            _realmService = realmService;
+            _realmService = (realmService as SyncedRealmService)!;
         }
 
         public UserModel GetCurrentUserInfo()
@@ -69,7 +70,7 @@ namespace chldr_data.Services
         {
             // Don't touch this unless it's absolutely necessary! It was very hard to configure!
             var appUser = await App.LogInAsync(Credentials.EmailPassword(email, password));
-            _realmService.InitializeConnection();
+            _realmService.InitializeConfiguration();
         }
 
         public async Task LogOutAsync()
@@ -81,7 +82,7 @@ namespace chldr_data.Services
             }
 
             App.SwitchUser(anonymousUser);
-            _realmService.InitializeConnection();
+            _realmService.InitializeConfiguration();
         }
     }
 }

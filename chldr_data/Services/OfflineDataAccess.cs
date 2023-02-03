@@ -8,37 +8,15 @@ using System.Diagnostics;
 
 namespace chldr_data.Services
 {
-    public class SyncedDataAccess : DataAccess, ISyncedDataAccess
+    public class OfflineDataAccess : DataAccess
     {
         #region Properties
-        private new SyncedRealmService _realmService;
-        public App App => _realmService.GetApp();
-        public UserService UserService { get; }
-
         public override Realm Database => _realmService.GetDatabase();
         #endregion
 
-        #region Events
-        public event Action ConnectionInitialized;
-        public event Action DatabaseSynchronized;
-        #endregion
-
-        public SyncedDataAccess(IRealmService realmService, ExceptionHandler exceptionHandler, NetworkService networkService, UserService userService) : base(realmService, exceptionHandler, networkService)
+        public OfflineDataAccess(IRealmService realmService, ExceptionHandler exceptionHandler, NetworkService networkService, UserService userService) : base(realmService, exceptionHandler, networkService)
         {
-            if (base._realmService == null)
-            {
-                throw new NullReferenceException();
-            }
-
-            _realmService = (base._realmService as SyncedRealmService)!;
-
-            if (App != null)
-            {
-                return;
-            }
-
-            UserService = userService;
-
+      
             // Runs asynchronously, then continues
             new Task(async () => await Initialize()).Start();
         }
@@ -65,28 +43,18 @@ namespace chldr_data.Services
 
         }
 
-        private async Task SynchronizeDatabase()
-        {
-            await Database.SyncSession.WaitForDownloadAsync();
-            await Database.SyncSession.WaitForUploadAsync();
-            DatabaseSynchronized?.Invoke();
-        }
-
+   
         public override async Task Initialize()
         {
             // Database.SyncSession.ConnectionState == ConnectionState.Disconnected
 
             try
             {
-                await _realmService.InitializeApp();
                 _realmService.InitializeConfiguration();
-                ConnectionInitialized?.Invoke();
 
                 new Task(async () =>
                 {
                     await InitializeDatabase();
-                    await SynchronizeDatabase();
-                    await DatabaseMaintenance();
                 }).Start();
             }
             catch (Exception ex)
@@ -102,12 +70,6 @@ namespace chldr_data.Services
                 }
             }
         }
-
-        private async Task DatabaseMaintenance()
-        {
-            // Whatever is needed to be done with the database
-        }
-
         #endregion
     }
 }
