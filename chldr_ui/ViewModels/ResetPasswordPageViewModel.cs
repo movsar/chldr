@@ -1,4 +1,4 @@
-﻿using chldr_shared.Dto;
+﻿using chldr_data.Dto;
 using chldr_shared.Validators;
 using Microsoft.AspNetCore.Components;
 using Realms.Sync;

@@ -10,7 +10,7 @@ namespace chldr_data.Entities
     public class User : RealmObject, IEntity
     {
         [PrimaryKey]
-        public ObjectId _id { get; set; }
+        public ObjectId _id { get; set; } = ObjectId.GenerateNewId(DateTime.Now);
         public string? Email { get; set; }
         // This has to be remoed and shouldn't be used
         public int RateWeight { get; set; } = 1;

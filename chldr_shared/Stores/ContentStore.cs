@@ -138,7 +138,7 @@ namespace chldr_shared.Stores
         {
             // Get current Phrase from cached results
             var phrase = CachedSearchResults.SelectMany(sr => sr.Entries)
-                .Where(e => e.Type == EntryType.Phrase)
+                .Where(e => (EntryType)e.Type == EntryType.Phrase)
                 .Cast<PhraseModel>()
                 .FirstOrDefault(w => w.Id == phraseId);
 

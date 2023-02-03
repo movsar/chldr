@@ -1,5 +1,6 @@
-﻿using chldr_data.Models;
-using chldr_shared.Resources.Localizations;
+﻿using chldr_data.Dto;
+using chldr_data.Models;
+using chldr_data.Resources.Localizations;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace chldr_shared.Validators
 {
-    public class WordValidator : AbstractValidator<WordModel>
+    public class WordValidator : AbstractValidator<WordDto>
     {
         public WordValidator(IStringLocalizer<AppLocalizations> stringLocalizer)
         {

@@ -6,12 +6,13 @@ using chldr_shared.Stores;
 using chldr_shared.Validators;
 using chldr_ui.ViewModels;
 using FluentValidation;
-using chldr_shared.Dto;
+using chldr_data.Dto;
 using chldr_shared.Services;
 using System.Reflection.PortableExecutable;
 using chldr_utils;
 using chldr_utils.Services;
 using chldr_data.Factories;
+using chldr_data.Validators;
 
 namespace chldr_native.Extensions
 {
@@ -30,6 +31,7 @@ namespace chldr_native.Extensions
         {
             // Data
             appBuilder.Services.AddScoped<UserService>();
+
             appBuilder.Services.AddScoped<IRealmService, SyncedRealmService>();
             appBuilder.Services.AddScoped<IRealmService, OfflineRealmService>();
             appBuilder.Services.AddScoped<IDataAccess, OfflineDataAccess>();

@@ -65,7 +65,7 @@ namespace chldr_data.Services
                         newEntry.Translations.Add(newTranslation);
                     }
 
-                    switch (entry.Type)
+                    switch ((EntryType)entry.Type)
                     {
                         case EntryType.Word:
                             var word = new Word()
@@ -230,7 +230,7 @@ namespace chldr_data.Services
 
                 foreach (var entry in _localRealm.All<Entities.Entry>())
                 {
-                    switch (entry.Type)
+                    switch ((EntryType)entry.Type)
                     {
                         case EntryType.Word:
                             var allForms = Word.GetAllUniqueWordForms(entry.Word.Content, entry.Word.Forms, entry.Word.NounDeclensions, entry.Word.VerbTenses);
@@ -258,7 +258,7 @@ namespace chldr_data.Services
                 Debug.WriteLine("Doing stuff");
                 foreach (var entry in _localRealm.All<Entities.Entry>())
                 {
-                    if (entry.Type != EntryType.Word)
+                    if (entry.Type != (int)EntryType.Word)
                     {
                         continue;
                     }
@@ -276,7 +276,7 @@ namespace chldr_data.Services
                 Debug.WriteLine("Doing stuff");
                 foreach (var entry in _localRealm.All<Entities.Entry>())
                 {
-                    if (entry.Type != EntryType.Word)
+                    if ((EntryType)entry.Type != EntryType.Word)
                     {
                         continue;
                     }
@@ -459,7 +459,7 @@ namespace chldr_data.Services
             {
                 foreach (var entry in entriesToRemove)
                 {
-                    switch (entry.Type)
+                    switch ((EntryType)entry.Type)
                     {
                         case EntryType.Word:
                             _localRealm.Remove(entry.Word);

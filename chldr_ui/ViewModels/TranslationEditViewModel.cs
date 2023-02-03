@@ -1,8 +1,8 @@
-﻿using chldr_data.Entities;
+﻿using chldr_data.Dto;
+using chldr_data.Entities;
 using chldr_data.Enums;
 using chldr_data.Models;
-using chldr_shared.Dto;
-using chldr_shared.Validators;
+using chldr_data.Validators;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 using System;

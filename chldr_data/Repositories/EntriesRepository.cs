@@ -103,6 +103,16 @@ namespace chldr_data.Repositories
             var entryModel = EntryModelFactory.CreateEntryModel(entry) as TEntryModel;
             return entryModel!;
         }
+
+        public List<TEntryModel> Take(int limit, int skip = 0)
+        {
+            var entries = Database.All<Entry>().AsEnumerable()
+                .Skip(skip).Take(limit)
+                .Select(e => EntryModelFactory.CreateEntryModel(e) as TEntryModel)
+                .ToList();
+            return entries;
+        }
+
         public List<EntryModel> GetRandomEntries()
         {
             var randomizer = new Random();

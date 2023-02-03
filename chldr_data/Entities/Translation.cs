@@ -11,7 +11,7 @@ namespace chldr_data.Entities
     public class Translation : RealmObject, IEntity
     {
         [PrimaryKey] 
-        public ObjectId _id { get; set; }
+        public ObjectId _id { get; set; } = ObjectId.GenerateNewId(DateTime.Now);
         public Entry Entry { get; set; }
         public User User { get; set; }
         [Indexed]

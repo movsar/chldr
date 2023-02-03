@@ -1,7 +1,7 @@
-﻿using chldr_shared.Resources.Localizations;
+﻿using chldr_data.Dto;
+using chldr_data.Resources.Localizations;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
-using chldr_shared.Dto;
 
 namespace chldr_shared.Validators
 {

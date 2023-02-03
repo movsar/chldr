@@ -1,9 +1,9 @@
-﻿using chldr_data.Entities;
+﻿using chldr_data.Dto;
+using chldr_data.Entities;
 using chldr_data.Enums;
 using chldr_data.Models;
-using chldr_shared.Dto;
 using chldr_shared.Stores;
-using chldr_shared.Validators;
+using chldr_data.Validators;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 using System;
@@ -11,10 +11,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using chldr_shared.Validators;
 
 namespace chldr_ui.ViewModels
 {
-    public class WordEditViewModel : EntryEditViewModelBase<WordModel, WordValidator>
+    public class WordEditViewModel : EntryEditViewModelBase<WordDto, WordValidator>
     {
         #region Properties
         [Parameter]
@@ -35,7 +36,7 @@ namespace chldr_ui.ViewModels
 
             // Get current word from cached results
             var existingWord = ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries)
-                .Where(e => e.Type == EntryType.Word)
+                .Where(e => (EntryType)e.Type == EntryType.Word)
                 .Cast<WordModel>()
                 .FirstOrDefault(w => w.Id == wordId);
 

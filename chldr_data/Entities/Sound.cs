@@ -11,7 +11,7 @@ namespace chldr_data.Entities
     public class Sound : RealmObject, IEntity
     {
         [PrimaryKey]
-        public ObjectId _id { get; set; }
+        public ObjectId _id { get; set; } = ObjectId.GenerateNewId(DateTime.Now);
         public int UserId { get; set; }
         public int WordId { get; set; }
         public string Path { get; set; }

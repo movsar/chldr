@@ -5,7 +5,7 @@
     <div class="chldr_entries">
         @foreach (var entry in Entries)
         {
-            @switch (entry.Type)
+            @switch ((EntryType)entry.Type)
             {
                 case EntryType.Word:
                     <WordView Entry="entry" />

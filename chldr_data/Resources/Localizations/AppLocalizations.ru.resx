@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Adjective" xml:space="preserve">
+    <value>Прилагательное</value>
+  </data>
+  <data name="Adverb" xml:space="preserve">
+    <value>Наречие</value>
+  </data>
+  <data name="App_title" xml:space="preserve">
+    <value>Словарь чеченского языка</value>
+  </data>
+  <data name="Basic_form" xml:space="preserve">
+    <value>Основная форма</value>
+  </data>
+  <data name="Check_your_email_and_follow_instructions" xml:space="preserve">
+    <value>Пожалуйста, проверьте свою электронную почту и следуйте инструкциям</value>
+  </data>
+  <data name="Confirm_password" xml:space="preserve">
+    <value>Подтверждение пароля </value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Электронная почта</value>
+  </data>
+  <data name="Email:Confirm_email_html" xml:space="preserve">
+    <value>&lt;h2&gt;&lt;span style='font-family:Lucida Sans Unicode,Lucida Grande,sans-serif'&gt;Здравствуйте и добро пожаловать!&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;&lt;span style='font-size:14px'&gt;We&amp;#39;re мы рады, что вы с нами! Let&amp;#39;s сделаем чеченский язык снова великим!&lt;br /&gt;\r\nДля активации вашего аккаунта пожалуйста следуйте &lt;a href='{0}'&gt;этой ссылке&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style='font-size:12px'&gt;Это письмо создано автоматически, не отвечайте на него. Вы всегда можете связаться с нами по адресу team@nohchiyn-mott.com&lt;/span&gt;&lt;/p&gt;</value>
+  </data>
+  <data name="Email:Confirm_email_subject" xml:space="preserve">
+    <value>Пожалуйста, подтвердите свою электронную почту</value>
+  </data>
+  <data name="Email:Reset_password_html" xml:space="preserve">
+    <value>&lt;h2&gt;&lt;span style='font-family:Lucida Sans Unicode,Lucida Grande,sans-serif'&gt;Запрос на сброс пароля&lt;/span&gt;&lt;/h2&gt;
+
+&lt;p&gt;&lt;span style='font-family:Lucida Sans Unicode,Lucida Grande,sans-serif'&gt;We&amp;#39Получив запрос на сброс пароля, пожалуйста, перейдите по ссылке, чтобы установить новый пароль, или проигнорируйте сообщение, если вы его не получили&amp;#39;t start this process.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;span style='font-family:Lucida Sans Unicode,Lucida Grande,sans-serif'&gt;&lt;a href='{0}'&gt;Установите новый пароль&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+
+&lt;p&gt;&lt;span style='font-size:12px'&gt;&lt;span style='font-family:Lucida Sans Unicode,Lucida Grande,sans-serif'&gt;Это письмо создано автоматически, не отвечайте на него. Вы всегда можете связаться с нами по адресу team@nohchiyn-mott.com&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</value>
+  </data>
+  <data name="Email:Reset_password_subject" xml:space="preserve">
+    <value>Сброс пароля</value>
+  </data>
+  <data name="Email_address" xml:space="preserve">
+    <value>адрес электронной почты</value>
+  </data>
+  <data name="Email_sent" xml:space="preserve">
+    <value>Электронная почта отправлена</value>
+  </data>
+  <data name="Error:Email_not_valid" xml:space="preserve">
+    <value>Электронная почта недействительна</value>
+  </data>
+  <data name="Error:Invalid_name" xml:space="preserve">
+    <value>Недопустимое имя</value>
+  </data>
+  <data name="Error:Invalid_username" xml:space="preserve">
+    <value>Имя пользователя может содержать только латинские буквы и цифры</value>
+  </data>
+  <data name="Error:Passwords_dont_match" xml:space="preserve">
+    <value>Пароли не совпадают</value>
+  </data>
+  <data name="Error:Passwords_is_not_valid" xml:space="preserve">
+    <value>Пароль должен состоять не менее чем из 6 символов</value>
+  </data>
+  <data name="Error:Password_too_long" xml:space="preserve">
+    <value>Пароль слишком длинный</value>
+  </data>
+  <data name="First_name" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="Forgot_password" xml:space="preserve">
+    <value>Забыл пароль</value>
+  </data>
+  <data name="Go_back" xml:space="preserve">
+    <value>Вернуться назад</value>
+  </data>
+  <data name="Guest" xml:space="preserve">
+    <value>Гость</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Домой</value>
+  </data>
+  <data name="Index" xml:space="preserve">
+    <value>Индекс</value>
+  </data>
+  <data name="Last_name" xml:space="preserve">
+    <value>Фамилия</value>
+  </data>
+  <data name="Log_in" xml:space="preserve">
+    <value>Войти</value>
+  </data>
+  <data name="Or_sign_up_with:" xml:space="preserve">
+    <value>или зарегестрироваться:</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="Password_reset" xml:space="preserve">
+    <value>Сброс пароля</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Профиль</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Зарегестрироваться</value>
+  </data>
+  <data name="Registration" xml:space="preserve">
+    <value>Регистрация </value>
+  </data>
+  <data name="Registration_email_sent_message" xml:space="preserve">
+    <value>Регистрация прошла успешно, пожалуйста, проверьте свою электронную почту и перейдите по ссылке, чтобы активировать свой профиль.</value>
+  </data>
+  <data name="Reset_password" xml:space="preserve">
+    <value>Сбросить пароль</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="Set_new_password" xml:space="preserve">
+    <value>Установить новый пароль</value>
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>Источник</value>
+  </data>
+  <data name="Start_typing" xml:space="preserve">
+    <value>Начать печатать ...</value>
+  </data>
+  <data name="Update_password" xml:space="preserve">
+    <value>Обновить пароль</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Имя пользователя</value>
+  </data>
+  <data name="Verb" xml:space="preserve">
+    <value>Глагол</value>
+  </data>
+  <data name="Your_password_has_been_updated" xml:space="preserve">
+    <value>Ваш пароль был успешно обновлен</value>
+  </data>
+  <data name="You_can_reset_your_password_here" xml:space="preserve">
+    <value>Вы можете сбросить пароль здесь</value>
+  </data>
+</root>

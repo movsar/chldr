@@ -1,6 +1,6 @@
-﻿using chldr_data.Models;
-using chldr_shared.Dto;
-using chldr_shared.Resources.Localizations;
+﻿using chldr_data.Dto;
+using chldr_data.Models;
+using chldr_data.Resources.Localizations;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 using System;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_shared.Validators
+namespace chldr_data.Validators
 {
     public class TranslationValidator : AbstractValidator<TranslationDto>
     {

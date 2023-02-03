@@ -11,7 +11,7 @@ namespace chldr_data.Entities
     public class Activity : RealmObject, IEntity
     {
         [PrimaryKey]
-        public ObjectId _id { get; set; }
+        public ObjectId _id { get; set; } = ObjectId.GenerateNewId(DateTime.Now);
         public User User { get; set; }
         public ObjectId ObjectId { get; set; }
         public string ObjectClass { get; set; }

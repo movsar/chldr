@@ -17,6 +17,8 @@ namespace chldr_data.Interfaces
         EntriesRepository<EntryModel> EntriesRepository { get; }
         PhrasesRepository PhrasesRepository { get; }
         WordsRepository WordsRepository { get; }
+        LanguagesRepository LanguagesRepository { get; }
+
         void Initialize();
         List<LanguageModel> GetAllLanguages();
         List<SourceModel> GetAllNamedSources();

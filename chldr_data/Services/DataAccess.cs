@@ -24,9 +24,10 @@ namespace chldr_data.Services
         protected readonly NetworkService _networkService;
         protected readonly IRealmService _realmService;
 
-        public static DataAccessType CurrentDataAccess { get; set; } = DataAccessType.Synced;
+        public static DataAccessType CurrentDataAccess { get; set; } = DataAccessType.Offline;
 
         public abstract Realm Database { get; }
+        public LanguagesRepository LanguagesRepository { get; }
         public WordsRepository WordsRepository { get; }
         public PhrasesRepository PhrasesRepository { get; }
         public EntriesRepository<EntryModel> EntriesRepository { get; }
@@ -39,9 +40,10 @@ namespace chldr_data.Services
             _networkService = networkService;
             _realmService = realmService;
 
+            EntriesRepository = new EntriesRepository<EntryModel>(_realmService);
             WordsRepository = new WordsRepository(_realmService);
             PhrasesRepository = new PhrasesRepository(_realmService);
-            EntriesRepository = new EntriesRepository<EntryModel>(_realmService);
+            LanguagesRepository = new LanguagesRepository(_realmService);
         }
 
         public void OnDatabaseInitialized()
