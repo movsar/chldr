@@ -24,7 +24,7 @@ namespace chldr_data.Services
         protected readonly MainSearchEngine _searchEngine;
         protected readonly SyncedRealmService _realmService;
 
-        public Realm Database => _realmService.GetDatabase();
+        public abstract Realm Database { get; }
         public WordsRepository WordsRepository { get; }
         public PhrasesRepository PhrasesRepository { get; }
 
@@ -46,6 +46,7 @@ namespace chldr_data.Services
         public List<EntryModel> GetRandomEntries()
         {
             var randomizer = new Random();
+
             var entries = Database.All<Entry>().AsEnumerable()
               .Where(entry => entry.Rate > 0)
               .OrderBy(x => randomizer.Next(0, 70000))

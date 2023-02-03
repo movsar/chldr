@@ -13,7 +13,7 @@ namespace chldr_data.Entities
     public class Entry : RealmObject, IEntity
     {
         [PrimaryKey]
-        public ObjectId _id { get; set; } = ObjectId.GenerateNewId();
+        public ObjectId _id { get; set; }
         public User User { get; set; }
         public Word Word { get; set; }
         public Phrase Phrase { get; set; }

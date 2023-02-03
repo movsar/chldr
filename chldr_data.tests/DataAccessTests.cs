@@ -1,13 +1,3 @@
-using chldr_data.Entities;
-using chldr_data.Models;
-using chldr_data.Services;
-using chldr_shared.Stores;
-using chldr_utils;
-using chldr_utils.Services;
-using Microsoft.Extensions.Logging;
-using MongoDB.Bson;
-using System.Diagnostics;
-
 namespace chldr_data.tests
 {
     public class DataAccessTests
@@ -33,7 +23,8 @@ namespace chldr_data.tests
             var exceptionHandler = new ExceptionHandler(fileService);
             var networkService = new NetworkService();
             var realmService = new SyncedRealmService(fileService, exceptionHandler);
-            var dataAccess = new SyncedDataAccess(realmService, exceptionHandler, networkService);
+            var userService = new UserService(networkService, realmService);
+            var dataAccess = new SyncedDataAccess(realmService, exceptionHandler, networkService, userService);
             await dataAccess.Initialize();
 
             var contentStore = new ContentStore(dataAccess, exceptionHandler);
@@ -60,7 +51,8 @@ namespace chldr_data.tests
             var exceptionHandler = new ExceptionHandler(fileService);
             var networkService = new NetworkService();
             var realmService = new SyncedRealmService(fileService, exceptionHandler);
-            var dataAccess = new SyncedDataAccess(realmService, exceptionHandler, networkService);
+            var userService = new UserService(networkService, realmService);
+            var dataAccess = new SyncedDataAccess(realmService, exceptionHandler, networkService, userService);
             await dataAccess.Initialize();
 
             var badId = new ObjectId("1C1bB21b");

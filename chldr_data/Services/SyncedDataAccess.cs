@@ -9,7 +9,9 @@ using chldr_shared.Models;
 using chldr_utils;
 using chldr_utils.Models;
 using chldr_utils.Services;
+using Realms;
 using Realms.Sync;
+using System.Diagnostics;
 using Entry = chldr_data.Entities.Entry;
 using LogLevel = Realms.Logging.LogLevel;
 namespace chldr_data.Services
@@ -19,6 +21,8 @@ namespace chldr_data.Services
         #region Properties
         public App App => _realmService.GetApp();
         public UserService UserService { get; }
+
+        public override Realm Database => _realmService.GetDatabase();
         #endregion
 
         #region Events
@@ -46,14 +50,23 @@ namespace chldr_data.Services
         #region DB Initializaion Related
         private async Task InitializeDatabase()
         {
-            var language = Database.All<Language>().FirstOrDefault();
-            if (language == null)
+            try
             {
-                // TODO: What if there's no offline file and no network?
-                await Database.SyncSession.WaitForDownloadAsync();
+                var language = Database.All<Language>().FirstOrDefault();
+                if (language == null)
+                {
+                    // TODO: What if there's no offline file and no network?
+                    await Database.SyncSession.WaitForDownloadAsync();
+                }
+
+                OnDatabaseInitialized();
+            }
+            catch (Exception)
+            {
+                Debug.WriteLine("ERR");
+                throw;
             }
 
-            OnDatabaseInitialized();
         }
 
         private async Task SynchronizeDatabase()
@@ -78,9 +91,7 @@ namespace chldr_data.Services
                     await InitializeDatabase();
                     await SynchronizeDatabase();
                     await DatabaseMaintenance();
-                })
-                    .Start();
-
+                }).Start();
             }
             catch (Exception ex)
             {

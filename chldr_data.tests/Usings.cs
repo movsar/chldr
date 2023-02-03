@@ -1,1 +1,10 @@
 global using Xunit;
+global using chldr_data.Entities;
+global using chldr_data.Models;
+global using chldr_data.Services;
+global using chldr_shared.Stores;
+global using chldr_utils;
+global using chldr_utils.Services;
+global using Microsoft.Extensions.Logging;
+global using MongoDB.Bson;
+global using System.Diagnostics;
