@@ -1,4 +1,4 @@
-﻿using chldr_data.Dto;
+using chldr_data.Dto;
 using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Services;
@@ -38,19 +38,19 @@ namespace chldr_data.tests
             //_contentStore = new ContentStore(new DataAccessFactory(new List<IDataAccess>() { dataAccess }), exceptionHandler);
         }
 
-        /* ���� ������� ������� � ��� ��� �� ���� �� ����� ���������� ������, 
-         * ������ ��� � [Theory] � ������� �������� ����� ��������� ����� � ������� �����������
+        /* Этот атрибут говорит о том что на вход не будет подаваться ничего, 
+         * бывает еще и [Theory] с помощью которого можно запускать метод с разными параметрами
          */
         [Fact]
-        /* ��������� ����� ������� ������ ���������� ������ "�����" �� ��� �������� "Id" (��������������)
+        /* Тестируем метод который должен возвращать объект "слово" по его свойству "Id" (идентификатору)
          * 
-         * ������ ������� ���������� {��������������}_{�������������}_RETURNS{������������������}
-         * ExpectedInput - ��������� ��������, �.�. ���������� Id ���� ����� ���� Id
-         * BadId - ����������� �������������� Id � ��
+         * Следуй шаблону именования {НАЗВАНИЕМЕТОДА}_{ТИППАРАМЕТРОВ}_RETURNS{ОЖИДАЕМЫЙРЕЗУЛЬТАТ}
+         * ExpectedInput - ожидаемые параметр, т.е. правильный Id если метод ждет Id
+         * BadId - неправильно сформированный Id и тд
          */
         public static async Task GetWordById_ExpectedInput_ReturnsWord()
         {
-            // 1. ������� ����� ������ ����� �� ����� ������������ �������������
+            // 1. Создаем новый объект Слово со всеми необходимыми зависимостями
             WordDto wordToInsert = new WordDto()
             {
                 Content = "Hello",
@@ -61,31 +61,31 @@ namespace chldr_data.tests
 
             wordToInsert.Translations.Add(new TranslationDto("RUS")
             {
-                Content = "������",
+                Content = "Привет",
             });
 
-            // ��������� � ���� ������ � �������� ���������� ������������� ������������ ������� "Word"
+            // Вставляем в базу данных и получаем уникальный идентификатор вставленного объекта "Word"
             var insertedWordId = _dataAccess.WordsRepository.Insert(wordToInsert);
 
-            // 2. ��������� ����� GetById - �������� �������� �� ���� ������ ����������� �����
+            // 2. Тестируем метод GetById - пытаемся получить из базы данных добавленное слово
             var insertedWord = _dataAccess.WordsRepository.GetById(insertedWordId);
 
-            // 3. ���������
+            // 3. Проверяем
             Assert.Equal(wordToInsert.Content, insertedWord.Content);
         }
 
         [Fact]
         public static async Task GetWordById_BadId_ReturnsError()
         {
-            // 1. �������������� �������� ������������ id
+            // 1. Подготавливаем заведомо неправильный id
             ObjectId badId = new ObjectId(12, 123, 321, 12);
 
-            // 2. ����
+            // 2. Тест
             var wordById = _dataAccess.WordsRepository.GetById(badId);
 
-            // 3. ��������
-            // TODO: ������� �������, �������� ��������� ������, ������ ���� 2 � try - catch � ������ � catch ��������� �� ������
-            // � ��� ��� ����������
+            // 3. Проверка
+            // TODO: Сначала запусти, скопируй сообщение ошибки, оберни этап 2 в try - catch и сравни в catch сообщение из ошибки
+            // с тем что скопировал
         }
 
     }
