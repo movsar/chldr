@@ -20,8 +20,8 @@ namespace chldr_shared.Stores
     {
 
         #region Events
-        public event Action DatabaseInitialized;
-        public event Action<SearchResultModel> GotNewSearchResult;
+        public event Action? DatabaseInitialized;
+        public event Action<SearchResultModel>? GotNewSearchResult;
 
         private readonly ExceptionHandler _exceptionHandler;
         #endregion

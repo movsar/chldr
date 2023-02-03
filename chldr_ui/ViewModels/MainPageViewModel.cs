@@ -13,11 +13,6 @@ namespace chldr_ui.ViewModels
     {
         [Inject] JsInterop? JsInteropFunctions { get; set; }
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-            ContentStore.DatabaseInitialized += ContentStore_DatabaseInitialized;
-        }
 
         private async Task ShowRandoms()
         {
@@ -36,9 +31,16 @@ namespace chldr_ui.ViewModels
                 await JsInteropFunctions!.ClickShowRandoms();
             }
         }
-        private async void ContentStore_DatabaseInitialized()
+
+        protected override void OnInitialized()
         {
-            await ShowRandoms();
+            ContentStore.DatabaseInitialized += ContentStore_DatabaseInitialized; ;
+            base.OnInitialized();
+        }
+
+        private void ContentStore_DatabaseInitialized()
+        {
+            ShowRandoms().Start();
         }
     }
 }

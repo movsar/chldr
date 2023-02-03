@@ -50,7 +50,6 @@ namespace chldr_data.Services
         {
             DatabaseInitialized?.Invoke();
         }
-
         public List<LanguageModel> GetAllLanguages()
         {
             try
