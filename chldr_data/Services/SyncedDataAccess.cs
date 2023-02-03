@@ -40,7 +40,7 @@ namespace chldr_data.Services
             UserService = userService;
 
             // Runs asynchronously, then continues
-            new Task(async () => await Initialize()).Start();
+            new Task(() => Initialize()).Start();
         }
 
         #region DB Initializaion Related
@@ -72,18 +72,17 @@ namespace chldr_data.Services
             DatabaseSynchronized?.Invoke();
         }
 
-        public override async Task Initialize()
+        public override void Initialize()
         {
             // Database.SyncSession.ConnectionState == ConnectionState.Disconnected
-
             try
             {
-                await _realmService.InitializeApp();
-                _realmService.InitializeConfiguration();
-                ConnectionInitialized?.Invoke();
-
                 new Task(async () =>
                 {
+                    await _realmService.InitializeApp();
+                    _realmService.InitializeConfiguration();
+                    ConnectionInitialized?.Invoke();
+
                     await InitializeDatabase();
                     await SynchronizeDatabase();
                     await DatabaseMaintenance();

@@ -19,7 +19,7 @@ namespace chldr_data.Interfaces
         Realm Database { get; }
         PhrasesRepository PhrasesRepository { get; }
         WordsRepository WordsRepository { get; }
-        Task Initialize();
+        void Initialize();
         Task FindAsync(string inputText, FiltrationFlags filterationFlags);
         void RequestRandomEntries();
         void RequestEntriesOnModeration();

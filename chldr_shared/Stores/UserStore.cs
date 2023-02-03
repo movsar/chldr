@@ -1,5 +1,6 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Models;
+using chldr_data.Services;
 using chldr_shared.Enums;
 using chldr_shared.Services;
 using chldr_utils;
@@ -29,7 +30,12 @@ namespace chldr_shared.Stores
 
         public UserStore(IDataAccess dataAccess, EnvironmentService environmentService)
         {
-            _dataAccess = dataAccess as ISyncedDataAccess;
+            if (dataAccess is not SyncedDataAccess)
+            {
+                return;
+            }
+            _dataAccess = (dataAccess as ISyncedDataAccess)!;
+
             _environmentService = environmentService;
 
             _dataAccess.DatabaseSynchronized += DataAccess_ChangesSynchronized;
@@ -103,7 +109,7 @@ namespace chldr_shared.Stores
             try
             {
                 await _dataAccess.UserService.LogInEmailPasswordAsync(email, password);
-                await _dataAccess.Initialize();
+                _dataAccess.Initialize();
             }
             catch (Exception ex)
             {

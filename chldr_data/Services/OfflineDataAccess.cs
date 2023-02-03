@@ -16,46 +16,18 @@ namespace chldr_data.Services
 
         public OfflineDataAccess(IRealmService realmService, ExceptionHandler exceptionHandler, NetworkService networkService, UserService userService) : base(realmService, exceptionHandler, networkService)
         {
-      
-            // Runs asynchronously, then continues
-            new Task(async () => await Initialize()).Start();
+            Initialize();
         }
 
         #region DB Initializaion Related
-        private async Task InitializeDatabase()
-        {
-            try
-            {
-                var language = Database.All<Language>().FirstOrDefault();
-                if (language == null)
-                {
-                    // TODO: What if there's no offline file and no network?
-                    await Database.SyncSession.WaitForDownloadAsync();
-                }
 
-                OnDatabaseInitialized();
-            }
-            catch (Exception)
-            {
-                Debug.WriteLine("ERR");
-                throw;
-            }
-
-        }
-
-   
-        public override async Task Initialize()
+        public override void Initialize()
         {
             // Database.SyncSession.ConnectionState == ConnectionState.Disconnected
 
             try
             {
                 _realmService.InitializeConfiguration();
-
-                new Task(async () =>
-                {
-                    await InitializeDatabase();
-                }).Start();
             }
             catch (Exception ex)
             {

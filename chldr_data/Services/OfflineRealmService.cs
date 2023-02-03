@@ -2,6 +2,8 @@
 using chldr_data.Interfaces;
 using chldr_utils;
 using chldr_utils.Services;
+using MongoDB.Bson;
+using MongoDB.Bson.IO;
 using Realms;
 using Realms.Logging;
 using Realms.Sync;
@@ -9,6 +11,7 @@ using System;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Security.Cryptography;
+using System.Text.Json.Serialization;
 using static Realms.Sync.MongoClient;
 
 namespace chldr_data.Services
@@ -33,12 +36,32 @@ namespace chldr_data.Services
             _fileService = fileService;
         }
 
+        private string KeyAsString()
+        {
+            byte[] encryptionKey = File.ReadAllBytes(Path.Combine(_fileService.AppDataDirectory, "encryption.key"));
+
+            var key = encryptionKey.Select(b => (int)b);
+            var stringified = string.Join(":", key);
+            return stringified;
+        }
+
         public void InitializeConfiguration()
         {
             // Copy original file so that app will be able to access entries immediately
             var databasePath = Path.Combine(_fileService.AppDataDirectory, "offline.datx");
 
-            _config = new RealmConfiguration(databasePath);
+          
+
+            byte[] encKey = AppConstants.EncKey.Split(":").Select(numAsString => Convert.ToByte(numAsString)).ToArray();
+
+
+            var encryptedConfig = new RealmConfiguration(databasePath)
+            {
+                SchemaVersion = 1,
+                EncryptionKey = encKey
+            };
+
+            _config = encryptedConfig;
         }
 
     }

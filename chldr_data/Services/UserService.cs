@@ -16,8 +16,12 @@ namespace chldr_data.Services
         Realm Database => _realmService.GetDatabase();
         public UserService(NetworkService networkService, IRealmService realmService)
         {
-            _networkService = networkService;
+            if (realmService is not SyncedRealmService)
+            {
+                return;
+            }
             _realmService = (realmService as SyncedRealmService)!;
+            _networkService = networkService;
         }
 
         public UserModel GetCurrentUserInfo()

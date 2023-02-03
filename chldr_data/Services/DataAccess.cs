@@ -109,6 +109,6 @@ namespace chldr_data.Services
             return Database.All<Source>().AsEnumerable().Select(s => new SourceModel(s)).ToList();
         }
 
-        public abstract Task Initialize();
+        public abstract void Initialize();
     }
 }

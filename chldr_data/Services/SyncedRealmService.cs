@@ -152,25 +152,24 @@ namespace chldr_data.Services
                 }
             }
 
-            EncryptDatbase();
         }
 
         private void EncryptDatbase()
         {
-            //using var realm = GetDatabase();
+            using var realm = GetDatabase();
 
-            //var encryptionKey = new byte[64];
-            //using var rng = new RNGCryptoServiceProvider();
-            //rng.GetBytes(encryptionKey);
+            var encryptionKey = new byte[64];
+            using var rng = new RNGCryptoServiceProvider();
+            rng.GetBytes(encryptionKey);
 
-            //var encryptedConfig = new RealmConfiguration(Path.Combine(_fileService.AppDataDirectory, "encrypted.realm"))
-            //{
-            //    EncryptionKey = encryptionKey
-            //};
+            var encryptedConfig = new RealmConfiguration(Path.Combine(_fileService.AppDataDirectory, "encrypted.realm"))
+            {
+                EncryptionKey = encryptionKey
+            };
 
-            //realm.WriteCopy(encryptedConfig);
-            //File.WriteAllBytes(Path.Combine(_fileService.AppDataDirectory, "encryption.key"), encryptionKey);
-            //Debug.WriteLine("Encryped");
+            realm.WriteCopy(encryptedConfig);
+            File.WriteAllBytes(Path.Combine(_fileService.AppDataDirectory, "encryption.key"), encryptionKey);
+            Debug.WriteLine("Encryped");
         }
     }
 }
