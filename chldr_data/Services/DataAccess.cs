@@ -3,7 +3,6 @@ using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Repositories;
-using chldr_data.Search;
 using chldr_utils;
 using chldr_utils.Models;
 using chldr_utils.Services;
@@ -11,7 +10,9 @@ using Realms;
 using Realms.Sync;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,15 +22,16 @@ namespace chldr_data.Services
     {
         protected readonly ExceptionHandler _exceptionHandler;
         protected readonly NetworkService _networkService;
-        protected readonly MainSearchEngine _searchEngine;
         protected readonly IRealmService _realmService;
+
+        public static DataAccessType CurrentDataAccess { get; set; } = DataAccessType.Synced;
 
         public abstract Realm Database { get; }
         public WordsRepository WordsRepository { get; }
         public PhrasesRepository PhrasesRepository { get; }
+        public EntriesRepository<EntryModel> EntriesRepository { get; }
 
         public event Action? DatabaseInitialized;
-        public event Action<SearchResultModel>? GotNewSearchResult;
 
         public DataAccess(IRealmService realmService, ExceptionHandler exceptionHandler, NetworkService networkService)
         {
@@ -37,59 +39,16 @@ namespace chldr_data.Services
             _networkService = networkService;
             _realmService = realmService;
 
-            _searchEngine = new MainSearchEngine(this);
             WordsRepository = new WordsRepository(_realmService);
             PhrasesRepository = new PhrasesRepository(_realmService);
-        }
-
-
-        public async Task FindAsync(string inputText, FiltrationFlags filtrationFlags)
-        {
-            await _searchEngine.FindAsync(inputText, filtrationFlags);
-        }
-
-        public List<EntryModel> GetRandomEntries()
-        {
-            var randomizer = new Random();
-
-            var entries = Database.All<Entry>().AsEnumerable()
-              .Where(entry => entry.Rate > 0)
-              .OrderBy(x => randomizer.Next(0, 70000))
-              .Take(50)
-              .OrderBy(entry => entry.GetHashCode())
-              .Select(entry => EntryModelFactory.CreateEntryModel(entry))
-              .ToList();
-
-            return entries;
-        }
-
-        public List<EntryModel> GetEntriesOnModeration()
-        {
-            var entries = Database.All<Entry>().AsEnumerable()
-                .Where(entry => entry.Rate < UserModel.EnthusiastRateRange.Lower)
-                .Select(entry => EntryModelFactory.CreateEntryModel(entry))
-                .ToList();
-
-            return entries;
-        }
-        public void RequestRandomEntries()
-        {
-            OnNewResults(new SearchResultModel(GetRandomEntries()));
-        }
-
-        public void RequestEntriesOnModeration()
-        {
-            OnNewResults(new SearchResultModel(GetEntriesOnModeration()));
+            EntriesRepository = new EntriesRepository<EntryModel>(_realmService);
         }
 
         public void OnDatabaseInitialized()
         {
             DatabaseInitialized?.Invoke();
         }
-        public void OnNewResults(SearchResultModel results)
-        {
-            GotNewSearchResult?.Invoke(results);
-        }
+
         public List<LanguageModel> GetAllLanguages()
         {
             try
@@ -110,5 +69,25 @@ namespace chldr_data.Services
         }
 
         public abstract void Initialize();
+
+        private void EncryptDatbase(string path)
+        {
+            using var realm = Database;
+
+            var encryptionKey = new byte[64];
+            using var rng = new RNGCryptoServiceProvider();
+            rng.GetBytes(encryptionKey);
+
+            var encryptedConfig = new RealmConfiguration(path)
+            {
+                EncryptionKey = encryptionKey
+            };
+
+            realm.WriteCopy(encryptedConfig);
+
+            // Save key
+            File.WriteAllBytes("encryption.key", encryptionKey);
+        }
+
     }
 }

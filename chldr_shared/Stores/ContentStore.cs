@@ -44,12 +44,13 @@ namespace chldr_shared.Stores
         #endregion
 
         #region Constructors
-        public ContentStore(IDataAccess dataAccess, ExceptionHandler exceptionHandler)
+        public ContentStore(IDataAccessFactory dataAccessFactory, ExceptionHandler exceptionHandler)
         {
             _exceptionHandler = exceptionHandler;
-            _dataAccess = dataAccess;
-            _dataAccess.GotNewSearchResult += DataAccess_GotNewSearchResults;
+            _dataAccess = dataAccessFactory.GetInstance(DataAccess.CurrentDataAccess);
+            _dataAccess.EntriesRepository.GotNewSearchResult += DataAccess_GotNewSearchResults;
             _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
+            _dataAccess.Initialize();
         }
         #endregion
 
@@ -57,16 +58,17 @@ namespace chldr_shared.Stores
         public void Search(string inputText, FiltrationFlags filterationFlags)
         {
             CachedSearchResults.Clear();
-            Task.Run(() => _dataAccess.FindAsync(inputText, filterationFlags));
+            Task.Run(() => _dataAccess.EntriesRepository.FindAsync(inputText, filterationFlags));
         }
         public void LoadRandomEntries()
         {
             CachedSearchResults.Clear();
-            Task.Run(() => _dataAccess.RequestRandomEntries());
+            _dataAccess.EntriesRepository.RequestRandomEntries();
         }
         public List<EntryModel> GetRandomEntries()
         {
-            return _dataAccess.GetRandomEntries();
+            var randoms = _dataAccess.EntriesRepository.GetRandomEntries();
+            return randoms;
         }
         public WordModel GetWordById(ObjectId entryId)
         {
@@ -122,7 +124,7 @@ namespace chldr_shared.Stores
         public void LoadEntriesOnModeration()
         {
             CachedSearchResults.Clear();
-            Task.Run(() => _dataAccess.RequestEntriesOnModeration());
+            Task.Run(() => _dataAccess.EntriesRepository.RequestEntriesOnModeration());
         }
 
         public PhraseModel AddNewPhrase(UserModel userModel, string content, string notes)

@@ -4,6 +4,7 @@ using chldr_data.Services;
 using chldr_shared.Enums;
 using chldr_shared.Services;
 using chldr_utils;
+using chldr_utils.Services;
 using Microsoft.Extensions.Logging;
 
 namespace chldr_shared.Stores
@@ -28,13 +29,9 @@ namespace chldr_shared.Stores
         }
         #endregion
 
-        public UserStore(IDataAccess dataAccess, EnvironmentService environmentService)
+        public UserStore(IDataAccessFactory dataAccessFactory, EnvironmentService environmentService)
         {
-            if (dataAccess is not SyncedDataAccess)
-            {
-                return;
-            }
-            _dataAccess = (dataAccess as ISyncedDataAccess)!;
+            _dataAccess = dataAccessFactory.GetInstance(DataAccessType.Synced) as SyncedDataAccess;
 
             _environmentService = environmentService;
 

@@ -8,9 +8,9 @@ using chldr_ui.ViewModels;
 using FluentValidation;
 using chldr_shared.Dto;
 using chldr_shared.Services;
-using chldr_data.Search;
 using chldr_utils;
 using chldr_utils.Services;
+using chldr_data.Factories;
 
 namespace chldr_server.Extensions
 {
@@ -29,8 +29,14 @@ namespace chldr_server.Extensions
         {
             // Data
             appBuilder.Services.AddScoped<UserService>();
+
+            appBuilder.Services.AddScoped<IRealmService, SyncedRealmService>();
             appBuilder.Services.AddScoped<IRealmService, OfflineRealmService>();
             appBuilder.Services.AddScoped<IDataAccess, OfflineDataAccess>();
+            appBuilder.Services.AddScoped<IDataAccess, SyncedDataAccess>();
+
+            appBuilder.Services.AddScoped<IDataAccessFactory, DataAccessFactory>();
+            appBuilder.Services.AddScoped<IRealmServiceFactory, RealmServiceFactory>();
 
             // Shared
 

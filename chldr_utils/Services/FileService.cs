@@ -8,35 +8,26 @@ using System.Threading.Tasks;
 
 namespace chldr_utils.Services
 {
-    // ! MAIN
     public class FileService
     {
 
         #region Fields
-        private readonly string DataDirName = "data";
-        public readonly string CompressedDatabaseFileName = "synced.base.dat";
-        public readonly string DatabaseFileName = "synced.base.dbx";
+        private const string DataDirName = "data";
+        private const string OfflineDatabaseFileName = "offline.datx";
 
         public string AppBaseDirectory;
-        public string AppDataDirectory;
-        public string CompressedDatabaseFilePath;
+        public string AppDataDirectory => Path.Combine(AppBaseDirectory, DataDirName);
+        public string OfflineDatabaseFilePath => Path.Combine(AppDataDirectory, OfflineDatabaseFileName);
         #endregion
 
         public FileService(string basePath)
         {
             AppBaseDirectory = basePath;
-            AppDataDirectory = Path.Combine(AppBaseDirectory, DataDirName);
-            CompressedDatabaseFilePath = Path.Combine(AppDataDirectory, CompressedDatabaseFileName);
 
             if (!Directory.Exists(AppDataDirectory))
             {
                 Directory.CreateDirectory(AppDataDirectory);
             }
-        }
-
-        public string GetUserDatabaseName(string id)
-        {
-            return $"{id.Substring(4, 4)}.dbx";
         }
 
         async Task PrepareDatabaseFile_Android()

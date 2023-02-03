@@ -12,8 +12,16 @@ namespace chldr_data.Services
     {
         #region Properties
         private new SyncedRealmService _realmService;
+        private readonly UserService _userService;
+
+        public SyncedDataAccess(IRealmServiceFactory realmServiceFactory, UserService userService, ExceptionHandler exceptionHandler, NetworkService networkService) : base(realmServiceFactory.GetInstance(DataAccessType.Synced), exceptionHandler, networkService)
+        {
+            _userService = userService;
+            _realmService = base._realmService as SyncedRealmService;
+        }
+
         public App App => _realmService.GetApp();
-        public UserService UserService { get; }
+        public UserService UserService { get; set; }
 
         public override Realm Database => _realmService.GetDatabase();
         #endregion
@@ -23,25 +31,6 @@ namespace chldr_data.Services
         public event Action DatabaseSynchronized;
         #endregion
 
-        public SyncedDataAccess(IRealmService realmService, ExceptionHandler exceptionHandler, NetworkService networkService, UserService userService) : base(realmService, exceptionHandler, networkService)
-        {
-            if (base._realmService == null)
-            {
-                throw new NullReferenceException();
-            }
-
-            _realmService = (base._realmService as SyncedRealmService)!;
-
-            if (App != null)
-            {
-                return;
-            }
-
-            UserService = userService;
-
-            // Runs asynchronously, then continues
-            new Task(() => Initialize()).Start();
-        }
 
         #region DB Initializaion Related
         private async Task InitializeDatabase()
@@ -52,7 +41,7 @@ namespace chldr_data.Services
                 if (language == null)
                 {
                     // TODO: What if there's no offline file and no network?
-                    await Database.SyncSession.WaitForDownloadAsync();
+                    await SynchronizeDatabase();
                 }
 
                 OnDatabaseInitialized();
@@ -67,13 +56,25 @@ namespace chldr_data.Services
 
         private async Task SynchronizeDatabase()
         {
+            await Database.Subscriptions.WaitForSynchronizationAsync();
             await Database.SyncSession.WaitForDownloadAsync();
             await Database.SyncSession.WaitForUploadAsync();
+
             DatabaseSynchronized?.Invoke();
         }
 
         public override void Initialize()
         {
+            if (App != null)
+            {
+                return;
+            }
+
+            UserService = _userService;
+
+            // Runs asynchronously, then continues
+            new Task(() => Initialize()).Start();
+
             // Database.SyncSession.ConnectionState == ConnectionState.Disconnected
             try
             {
@@ -86,6 +87,7 @@ namespace chldr_data.Services
                     await InitializeDatabase();
                     await SynchronizeDatabase();
                     await DatabaseMaintenance();
+
                 }).Start();
             }
             catch (Exception ex)

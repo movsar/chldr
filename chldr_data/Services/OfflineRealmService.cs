@@ -48,14 +48,9 @@ namespace chldr_data.Services
         public void InitializeConfiguration()
         {
             // Copy original file so that app will be able to access entries immediately
-            var databasePath = Path.Combine(_fileService.AppDataDirectory, "offline.datx");
-
-          
-
             byte[] encKey = AppConstants.EncKey.Split(":").Select(numAsString => Convert.ToByte(numAsString)).ToArray();
 
-
-            var encryptedConfig = new RealmConfiguration(databasePath)
+            var encryptedConfig = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
             {
                 SchemaVersion = 1,
                 EncryptionKey = encKey
@@ -63,6 +58,5 @@ namespace chldr_data.Services
 
             _config = encryptedConfig;
         }
-
     }
 }

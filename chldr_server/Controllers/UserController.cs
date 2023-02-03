@@ -93,7 +93,7 @@ namespace chldr_server.Controllers
         }
 
         #region Constructors
-        public UserController(IDataAccess dataAccess, EmailService emailService, FileService fileService, IStringLocalizer<AppLocalizations> localizer)
+        public UserController(EmailService emailService, FileService fileService, IStringLocalizer<AppLocalizations> localizer)
         {
             _localizer = localizer;
             _emailService = emailService;

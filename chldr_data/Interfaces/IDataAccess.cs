@@ -12,19 +12,12 @@ namespace chldr_data.Interfaces
 {
     public interface IDataAccess
     {
-
         event Action DatabaseInitialized;
-        event Action<SearchResultModel> GotNewSearchResult;
-
         Realm Database { get; }
+        EntriesRepository<EntryModel> EntriesRepository { get; }
         PhrasesRepository PhrasesRepository { get; }
         WordsRepository WordsRepository { get; }
         void Initialize();
-        Task FindAsync(string inputText, FiltrationFlags filterationFlags);
-        void RequestRandomEntries();
-        void RequestEntriesOnModeration();
-        void OnNewResults(SearchResultModel args);
-        List<EntryModel> GetRandomEntries();
         List<LanguageModel> GetAllLanguages();
         List<SourceModel> GetAllNamedSources();
     }

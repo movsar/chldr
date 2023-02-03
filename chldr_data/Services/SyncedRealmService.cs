@@ -20,7 +20,6 @@ namespace chldr_data.Services
 
         private App? _app;
         private FlexibleSyncConfiguration? _config;
-        private Realm _realmInstance;
 
         private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
@@ -32,14 +31,13 @@ namespace chldr_data.Services
                 throw new Exception("Config shouldn't be null");
             }
 
-            _realmInstance = Realm.GetInstance(_config);
             if (_app.CurrentUser.Provider == Credentials.AuthProvider.Anonymous)
             {
                 // Don't try to sync anything if a legitimate user hasn't logged in
                 //realm.SyncSession.Stop();
             }
 
-            return _realmInstance;
+            return Realm.GetInstance(_config);
         }
         internal App GetApp()
         {
@@ -74,42 +72,26 @@ namespace chldr_data.Services
                 await _app.LogInAsync(Credentials.Anonymous(true));
             }
         }
-
-        private void PrepareOriginalDatabaseFile(string targetDatabasePath)
+        private string GetUserDatabaseName(string id)
         {
-            if (File.Exists(targetDatabasePath))
-            {
-                return;
-            }
-
-            var shippedDbFileName = _fileService.CompressedDatabaseFileName + "x";
-            if (!File.Exists(targetDatabasePath) && !File.Exists(shippedDbFileName))
-            {
-                try
-                {
-                    ZipFile.ExtractToDirectory(_fileService.CompressedDatabaseFilePath, _fileService.AppDataDirectory);
-                    File.Move(Path.Combine(_fileService.AppDataDirectory, shippedDbFileName), targetDatabasePath);
-                }
-                catch (Exception ex)
-                {
-                    // This exception is not critical, it will only request the database from the server
-                    _exceptionHandler.ProcessDebug(ex);
-                }
-            }
+            return $"{id.Substring(4, 4)}.dbx";
         }
         public void InitializeConfiguration()
         {
             // As this is FlexibleSync mode, the user must always be present, even if it's offline
-            if (_app.CurrentUser == null)
+            if (_app?.CurrentUser == null)
             {
                 throw new Exception("User must not be null");
             }
 
             // Copy original file so that app will be able to access entries immediately
-            var userDatabasePath = Path.Combine(_fileService.AppDataDirectory, _fileService.GetUserDatabaseName(_app.CurrentUser.Id));
-            PrepareOriginalDatabaseFile(userDatabasePath);
-            _config = new FlexibleSyncConfiguration(_app.CurrentUser, userDatabasePath)
+            var syncedDatabasePath = Path.Combine(_fileService.AppDataDirectory, GetUserDatabaseName(_app.CurrentUser.Id));
+
+            byte[] encKey = AppConstants.EncKey.Split(":").Select(numAsString => Convert.ToByte(numAsString)).ToArray();
+
+            _config = new FlexibleSyncConfiguration(_app.CurrentUser, syncedDatabasePath)
             {
+                EncryptionKey = encKey,
                 SchemaVersion = 1,
                 PopulateInitialSubscriptions = (realm) =>
                 {
@@ -122,54 +104,36 @@ namespace chldr_data.Services
                     realm.Subscriptions.Add(realm.All<Entities.Translation>());
                     realm.Subscriptions.Add(realm.All<Entities.User>());
                     realm.Subscriptions.Add(realm.All<Entities.Word>());
-                }
-            };
-            _config.OnSessionError = (session, sessionException) =>
-            {
-                switch (sessionException.ErrorCode)
+                },
+                OnSessionError = (session, sessionException) =>
                 {
-                    case ErrorCode.InvalidCredentials:
-                        // Tell the user they don't have permissions to work with that Realm
-                        Debug.WriteLine("Invalid credentials Error");
-                        _exceptionHandler.ProcessDebug(new Exception("Invalid Credentials"));
-                        break;
-                    case ErrorCode.Unknown:
-                        // See https://www.mongodb.com/docs/realm-sdks/dotnet
-                        // /latest/reference/Realms.Sync.Exceptions.ErrorCode.html
-                        // for all of the error codes
-                        _exceptionHandler.ProcessDebug(new Exception("Unknown Sync Error"));
-                        break;
+                    switch (sessionException.ErrorCode)
+                    {
+                        case ErrorCode.InvalidCredentials:
+                            // Tell the user they don't have permissions to work with that Realm
+                            Debug.WriteLine("Invalid credentials Error");
+                            _exceptionHandler.ProcessDebug(new Exception("Invalid Credentials"));
+                            break;
+                        case ErrorCode.Unknown:
+                            // See https://www.mongodb.com/docs/realm-sdks/dotnet
+                            // /latest/reference/Realms.Sync.Exceptions.ErrorCode.html
+                            // for all of the error codes
+                            _exceptionHandler.ProcessDebug(new Exception("Unknown Sync Error"));
+                            break;
+                    }
                 }
             };
 
             // Compress the database file if it exceeds 70Mb
-            if (File.Exists(userDatabasePath))
+            if (File.Exists(syncedDatabasePath))
             {
-                var fileSize = new FileInfo(userDatabasePath).Length / 1000_000;
+                var fileSize = new FileInfo(syncedDatabasePath).Length / 1000_000;
                 if (fileSize > 70)
                 {
                     Realm.Compact(_config);
                 }
             }
-
         }
 
-        private void EncryptDatbase()
-        {
-            using var realm = GetDatabase();
-
-            var encryptionKey = new byte[64];
-            using var rng = new RNGCryptoServiceProvider();
-            rng.GetBytes(encryptionKey);
-
-            var encryptedConfig = new RealmConfiguration(Path.Combine(_fileService.AppDataDirectory, "encrypted.realm"))
-            {
-                EncryptionKey = encryptionKey
-            };
-
-            realm.WriteCopy(encryptedConfig);
-            File.WriteAllBytes(Path.Combine(_fileService.AppDataDirectory, "encryption.key"), encryptionKey);
-            Debug.WriteLine("Encryped");
-        }
     }
 }

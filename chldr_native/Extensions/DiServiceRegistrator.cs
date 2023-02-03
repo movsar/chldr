@@ -11,6 +11,7 @@ using chldr_shared.Services;
 using System.Reflection.PortableExecutable;
 using chldr_utils;
 using chldr_utils.Services;
+using chldr_data.Factories;
 
 namespace chldr_native.Extensions
 {
@@ -30,7 +31,12 @@ namespace chldr_native.Extensions
             // Data
             appBuilder.Services.AddScoped<UserService>();
             appBuilder.Services.AddScoped<IRealmService, SyncedRealmService>();
+            appBuilder.Services.AddScoped<IRealmService, OfflineRealmService>();
+            appBuilder.Services.AddScoped<IDataAccess, OfflineDataAccess>();
             appBuilder.Services.AddScoped<IDataAccess, SyncedDataAccess>();
+
+            appBuilder.Services.AddScoped<IDataAccessFactory, DataAccessFactory>();
+            appBuilder.Services.AddScoped<IRealmServiceFactory, RealmServiceFactory>();
 
             // Shared
             appBuilder.Services.AddScoped<ContentStore>();
@@ -47,7 +53,7 @@ namespace chldr_native.Extensions
 #elif MACCATALYST
             platform = Platforms.MacCatalyst;
 #endif
-            appBuilder.Services.AddScoped(x => new EnvironmentService(platform));
+            appBuilder.Services.AddScoped(x => new chldr_utils.Services.EnvironmentService(platform));
             appBuilder.Services.AddScoped(x => new FileService(AppContext.BaseDirectory));
 
             // Utils

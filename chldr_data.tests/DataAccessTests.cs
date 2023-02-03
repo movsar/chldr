@@ -1,3 +1,6 @@
+using chldr_data.Factories;
+using chldr_data.Interfaces;
+
 namespace chldr_data.tests
 {
     public class DataAccessTests
@@ -17,28 +20,32 @@ namespace chldr_data.tests
             // 1. Подготовка
 
             // Инициализируем необходимые классы чтобы запустить нужный метод
-            var dataDirectory = new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, @"..\..\..\..\chldr_server\bin\Debug\net6.0\Data\"));
+            var dataDirectory = new DirectoryInfo(Path.Combine(AppContext.BaseDirectory));
 
             var fileService = new FileService(dataDirectory.FullName);
             var exceptionHandler = new ExceptionHandler(fileService);
             var networkService = new NetworkService();
-            var realmService = new SyncedRealmService(fileService, exceptionHandler);
-            var userService = new UserService(networkService, realmService);
-            var dataAccess = new SyncedDataAccess(realmService, exceptionHandler, networkService, userService);
-            await dataAccess.Initialize();
+            var realmService = new OfflineRealmService(fileService, exceptionHandler);
+            var dataAccess = new OfflineDataAccess(new RealmServiceFactory(new List<IRealmService>()
+            {
+                realmService
+            }), exceptionHandler, networkService);
+            dataAccess.Initialize();
 
-            var contentStore = new ContentStore(dataAccess, exceptionHandler);
+            // var contentStore = new ContentStore(new DataAccessFactory(new List<IDataAccess>() { dataAccess }), exceptionHandler);
 
             // Берем любое слово - в данном случае это первое слово из базы данных
-            var words = contentStore.GetRandomEntries();
+            
+
+            var words = dataAccess.WordsRepository.Add(word);
             var word = words.Where(entry => entry is WordModel).First() as WordModel;
 
             // 2. Тест
-         //   var wordById = contentStore.GetWordById(word.Id);
+            var wordById = contentStore.GetWordById(word.Id);
 
             // 3. Проверка
             // Удостоверяемся что содержимое исходного слова равно содержимому слова полученному из метода по ID
-         //   Assert.Equal(word.Content, wordById.Content);
+            Assert.Equal(word.Content, wordById.Content);
         }
 
         [Fact]
@@ -52,15 +59,15 @@ namespace chldr_data.tests
             var networkService = new NetworkService();
             var realmService = new SyncedRealmService(fileService, exceptionHandler);
             var userService = new UserService(networkService, realmService);
-            var dataAccess = new SyncedDataAccess(realmService, exceptionHandler, networkService, userService);
-            await dataAccess.Initialize();
+            //var dataAccess = new SyncedDataAccess(realmService, exceptionHandler, networkService, userService);
+            //await dataAccess.Initialize();
 
             var badId = new ObjectId("1C1bB21b");
 
             // 2. Тест
             Action callGetWordById = new Action(() =>
             {
-         //       var wordById = dataAccess.GetWordById(badId);
+                //       var wordById = dataAccess.GetWordById(badId);
             });
 
             // 3. Проверка

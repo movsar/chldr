@@ -5,6 +5,7 @@ using MongoDB.Bson;
 using Realms.Sync;
 using Realms;
 using chldr_data.Interfaces;
+using chldr_data.Factories;
 
 namespace chldr_data.Services
 {
@@ -14,13 +15,9 @@ namespace chldr_data.Services
         private readonly SyncedRealmService _realmService;
         App App => _realmService.GetApp();
         Realm Database => _realmService.GetDatabase();
-        public UserService(NetworkService networkService, IRealmService realmService)
+        public UserService(NetworkService networkService, IRealmServiceFactory realmServiceFactory)
         {
-            if (realmService is not SyncedRealmService)
-            {
-                return;
-            }
-            _realmService = (realmService as SyncedRealmService)!;
+            _realmService = realmServiceFactory.GetInstance(DataAccessType.Synced) as SyncedRealmService;
             _networkService = networkService;
         }
 
