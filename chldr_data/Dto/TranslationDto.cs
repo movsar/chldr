@@ -7,16 +7,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_shared.Dto
+namespace chldr_data.Dto
 {
     public class TranslationDto
     {
-        public ObjectId TranslationId { get; }
-        public ObjectId EntryId { get; }
-        public string Content { get; set; }
-        public string Notes { get; set; }
+        public ObjectId? TranslationId { get; }
+        public ObjectId? EntryId { get; }
+        public string Content { get; set; } = string.Empty;
+        public string Notes { get; set; } = string.Empty;
         public string LanguageCode { get; set; }
-        public int Rate { get; set; }
+        public int Rate { get; set; } = 1;
+        public TranslationDto(string languageCode)
+        {
+            LanguageCode = languageCode;
+        }
         public TranslationDto(TranslationModel translation)
         {
             TranslationId = translation.Id;

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_shared.Dto
+namespace chldr_data.Dto
 {
     public class PhraseDto : EntryDto
     {

@@ -1,4 +1,4 @@
-﻿namespace chldr_shared.Dto
+﻿namespace chldr_data.Dto
 {
     public class UserInfoDto
     {

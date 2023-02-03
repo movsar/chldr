@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_shared.Dto
+namespace chldr_data.Dto
 {
     public class WordDto : EntryDto
     {
@@ -30,12 +30,12 @@ namespace chldr_shared.Dto
             }
         }
         public WordDto() { }
-        public ObjectId WordId { get; }
-        Dictionary<string, string> Forms { get; } = new Dictionary<string, string>();
-        Dictionary<string, string> NounDeclensions { get; } = new Dictionary<string, string>();
-        Dictionary<string, string> VerbTenses { get; } = new Dictionary<string, string>();
-        public string Content { get; set; }
-        public string Notes { get; set; }
+        public ObjectId? WordId { get; }
+        public List<string> Forms { get; } = new List<string>();
+        public Dictionary<string, string> NounDeclensions { get; } = new Dictionary<string, string>();
+        public Dictionary<string, string> VerbTenses { get; } = new Dictionary<string, string>();
+        public string Content { get; set; } = string.Empty;
+        public string Notes { get; set; } = string.Empty;
         public PartsOfSpeech PartOfSpeech { get; set; }
         public int GrammaticalClass { get; set; }
     }

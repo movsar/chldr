@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace chldr_data.Enums
 {
-    public class EntryType
+    public enum EntryType
     {
-        public const byte Word = 1;
-        public const byte Phrase = 2;
-        public const byte Text = 3;
+        Word = 1,
+        Phrase = 2,
+        Text = 3
     };
 }

@@ -1,25 +1,20 @@
 using chldr_data.Factories;
 using chldr_data.Interfaces;
+using chldr_shared.Dto;
 
 namespace chldr_data.tests
 {
     public class DataAccessTests
     {
-        /* Этот атрибут говорит о том что на вход не будет подаваться ничего, 
-         * бывает еще и [Theory] с помощью которого можно запускать метод с разными параметрами
-         */
-        [Fact]
-        /* Тестируем метод который должен возвращать объект "слово" по его свойству "Id" (идентификатору)
-         * 
-         * Следуй шаблону именования {НАЗВАНИЕМЕТОДА}_{ТИППАРАМЕТРОВ}_RETURNS{ОЖИДАЕМЫЙРЕЗУЛЬТАТ}
-         * ExpectedInput - ожидаемые параметр, т.е. правильный Id если метод ждет Id
-         * BadId - неправильно сформированный Id и тд
-         */
-        public static async Task GetWordById_ExpectedInput_ReturnsWord()
-        {
-            // 1. Подготовка
+        private static IDataAccess _dataAccess;
 
-            // Инициализируем необходимые классы чтобы запустить нужный метод
+        public DataAccessTests()
+        {
+            TestSetup();
+        }
+
+        private static void TestSetup()
+        {
             var dataDirectory = new DirectoryInfo(Path.Combine(AppContext.BaseDirectory));
 
             var fileService = new FileService(dataDirectory.FullName);
@@ -32,12 +27,35 @@ namespace chldr_data.tests
             }), exceptionHandler, networkService);
             dataAccess.Initialize();
 
-            // var contentStore = new ContentStore(new DataAccessFactory(new List<IDataAccess>() { dataAccess }), exceptionHandler);
+            _dataAccess = dataAccess;
+            //_contentStore = new ContentStore(new DataAccessFactory(new List<IDataAccess>() { dataAccess }), exceptionHandler);
+        }
 
-            // Берем любое слово - в данном случае это первое слово из базы данных
-            
+        /* Этот атрибут говорит о том что на вход не будет подаваться ничего, 
+         * бывает еще и [Theory] с помощью которого можно запускать метод с разными параметрами
+         */
+        [Fact]
+        /* Тестируем метод который должен возвращать объект "слово" по его свойству "Id" (идентификатору)
+         * 
+         * Следуй шаблону именования {НАЗВАНИЕМЕТОДА}_{ТИППАРАМЕТРОВ}_RETURNS{ОЖИДАЕМЫЙРЕЗУЛЬТАТ}
+         * ExpectedInput - ожидаемые параметр, т.е. правильный Id если метод ждет Id
+         * BadId - неправильно сформированный Id и тд
+         */
+        public static async Task GetWordById_ExpectedInput_ReturnsWord()
+        {
+            WordDto newWord = new WordDto()
+            {
+                Content = "Hello",
+                PartOfSpeech = Enums.PartsOfSpeech.Noun,
+                GrammaticalClass = 1,
+            };
 
-            var words = dataAccess.WordsRepository.Add(word);
+            newWord.Translations.Add(new TranslationDto("TUR")
+            {
+                Content = "Merhaba",
+            });
+
+            var words = _dataAccess.WordsRepository.Add(newWord);
             var word = words.Where(entry => entry is WordModel).First() as WordModel;
 
             // 2. Тест
@@ -47,6 +65,8 @@ namespace chldr_data.tests
             // Удостоверяемся что содержимое исходного слова равно содержимому слова полученному из метода по ID
             Assert.Equal(word.Content, wordById.Content);
         }
+
+
 
         [Fact]
         public static async Task GetWordById_BadId_ReturnsError()

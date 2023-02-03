@@ -1,4 +1,5 @@
 ﻿using chldr_data.Interfaces;
+using Microsoft.Extensions.Primitives;
 using MongoDB.Bson;
 using Realms;
 using System;
@@ -175,6 +176,101 @@ namespace chldr_data.Entities
             }
 
             return tensesMap;
+        }
+
+        public static string JoinVerbTenses(Dictionary<string, string> tensesMap)
+        {
+            if (tensesMap.Count == 0)
+            {
+                return EmptyRawWordTensesValue;
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendJoin(";", tensesMap["VerbTensePresentContinious"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePresentContinuousCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePresentContinuousInceptive"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePresentContinuousPermissive"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePresentContinuousPermissiveCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePresentContinuousPotential"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePresentSimple"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePresentSimpleCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePresentSimpleInceptive"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePresentSimplePermissive"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePresentSimplePermissiveCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePresentSimplePotential"]);
+            sb.AppendJoin(";", tensesMap["VerbTenseFuturePossible"]);
+            sb.AppendJoin(";", tensesMap["VerbTenseFuturePossibleCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTenseFuturePossibleInceptive"]);
+            sb.AppendJoin(";", tensesMap["VerbTenseFuturePossiblePermissive"]);
+            sb.AppendJoin(";", tensesMap["VerbTenseFuturePossiblePermissiveCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTenseFuturePossiblePotential"]);
+            sb.AppendJoin(";", tensesMap["VerbTenseFutureReal"]);
+            sb.AppendJoin(";", tensesMap["VerbTenseFutureRealCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTenseFutureRealInceptive"]);
+            sb.AppendJoin(";", tensesMap["VerbTenseFutureRealPermissive"]);
+            sb.AppendJoin(";", tensesMap["VerbTenseFutureRealPermissiveCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTenseFutureRealPotential"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastImperfect"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastImperfectCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastImperfectInceptive"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastImperfectPermissive"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastImperfectPermissiveCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastImperfectPotential"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastPerfect"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastPerfectCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastPerfectInceptive"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastPerfectPermissive"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastPerfectPermissiveCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastPerfectPotential"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastRecent"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastRecentCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastRecentInceptive"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastRecentPermissive"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastRecentPermissiveCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastRecentPotential"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastWitnessed"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastWitnessedCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastWitnessedInceptive"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastWitnessedPermissive"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastWitnessedPermissiveCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastWitnessedPotential"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastRemote"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastRemoteCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastRemoteInceptive"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastRemotePermissive"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastRemotePermissiveCausative"]);
+            sb.AppendJoin(";", tensesMap["VerbTensePastRemotePotential"]);
+
+            return sb.ToString();
+        }
+        public static string JoinNounDeclensions(Dictionary<string, string> declensionsMap)
+        {
+            if (declensionsMap.Values.Count() == 0)
+            {
+                return EmptyRawWordDeclensionsValue;
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendJoin(";", declensionsMap["NounDeclensionSingularAbsolutive"]);
+            sb.AppendJoin(";", declensionsMap["NounDeclensionSingularAllative"]);
+            sb.AppendJoin(";", declensionsMap["NounDeclensionSingularComparative"]);
+            sb.AppendJoin(";", declensionsMap["NounDeclensionSingularDative"]);
+            sb.AppendJoin(";", declensionsMap["NounDeclensionSingularErgative"]);
+            sb.AppendJoin(";", declensionsMap["NounDeclensionSingularGenitive"]);
+            sb.AppendJoin(";", declensionsMap["NounDeclensionSingularInstrumental"]);
+            sb.AppendJoin(";", declensionsMap["NounDeclensionSingularLocative"]);
+            sb.AppendJoin(";", declensionsMap["NounDeclensionPluralAbsolutive"]);
+            sb.AppendJoin(";", declensionsMap["NounDeclensionPluralAllative"]);
+            sb.AppendJoin(";", declensionsMap["NounDeclensionPluralComparative"]);
+            sb.AppendJoin(";", declensionsMap["NounDeclensionPluralDative"]);
+            sb.AppendJoin(";", declensionsMap["NounDeclensionPluralErgative"]);
+            sb.AppendJoin(";", declensionsMap["NounDeclensionPluralGenitive"]);
+            sb.AppendJoin(";", declensionsMap["NounDeclensionPluralInstrumental"]);
+            sb.AppendJoin(";", declensionsMap["NounDeclensionPluralLocative"]);
+
+            return sb.ToString();
         }
         public static Dictionary<string, string> ParseNounDeclensions(string rawDeclensions)
         {
