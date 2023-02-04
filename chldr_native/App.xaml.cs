@@ -1,7 +1,30 @@
-﻿using chldr_shared.Stores;
+﻿
+/* Unmerged change from project 'chldr_native (net6.0-windows10.0.19041.0)'
+Before:
+using chldr_shared.Stores;
 using chldr_data.Services;
-using Microsoft.Extensions.DependencyInjection;
+After:
+using chldr_data.Services;
+using chldr_shared.Stores;
+*/
 
+/* Unmerged change from project 'chldr_native (net6.0-maccatalyst)'
+Before:
+using chldr_shared.Stores;
+using chldr_data.Services;
+After:
+using chldr_data.Services;
+using chldr_shared.Stores;
+*/
+
+/* Unmerged change from project 'chldr_native (net6.0-android)'
+Before:
+using chldr_shared.Stores;
+using chldr_data.Services;
+After:
+using chldr_data.Services;
+using chldr_shared.Stores;
+*/
 namespace chldr_native
 {
     public partial class App : Application

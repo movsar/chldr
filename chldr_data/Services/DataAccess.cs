@@ -1,20 +1,11 @@
 ﻿using chldr_data.Entities;
-using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Repositories;
 using chldr_utils;
-using chldr_utils.Models;
 using chldr_utils.Services;
 using Realms;
-using Realms.Sync;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chldr_data.Services
 {

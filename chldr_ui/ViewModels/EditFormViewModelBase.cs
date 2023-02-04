@@ -1,14 +1,7 @@
 ﻿using chldr_ui.Interfaces;
-using chldr_shared.Validators;
 using FluentValidation;
-using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FluentValidation.Results;
-using static Org.BouncyCastle.Bcpg.Attr.ImageAttrib;
+using Microsoft.AspNetCore.Components;
 
 namespace chldr_ui.ViewModels
 {

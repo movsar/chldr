@@ -1,13 +1,6 @@
 ﻿using chldr_data.Dto;
-using chldr_data.Interfaces;
-using chldr_data.Services;
 using chldr_shared.Validators;
 using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 
 namespace chldr_ui.ViewModels

@@ -1,13 +1,5 @@
 ﻿using chldr_data.Dto;
 using chldr_shared.Validators;
-using Microsoft.AspNetCore.Components;
-using Realms.Sync;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chldr_ui.ViewModels
 {

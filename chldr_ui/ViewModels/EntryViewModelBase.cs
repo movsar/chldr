@@ -1,16 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using chldr_data.Entities;
-using chldr_data.Enums;
-using chldr_data.Models;
+﻿using chldr_data.Models;
 using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Realms.Sync;
-using MongoDB.Bson;
 
 namespace chldr_ui.ViewModels
 {

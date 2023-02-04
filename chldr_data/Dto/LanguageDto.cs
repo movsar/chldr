@@ -1,10 +1,4 @@
-﻿using chldr_data.Entities;
-using chldr_data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using chldr_data.Models;
 
 namespace chldr_data.Dto
 {

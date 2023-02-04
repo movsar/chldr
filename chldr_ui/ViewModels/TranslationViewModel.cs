@@ -1,10 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using chldr_data.Models;
+﻿using chldr_data.Models;
+using chldr_shared.Stores;
 using Microsoft.AspNetCore.Components;
 using System.Text.RegularExpressions;
-using System.Windows.Input;
-using chldr_shared.Stores;
 
 namespace chldr_ui.ViewModels
 {

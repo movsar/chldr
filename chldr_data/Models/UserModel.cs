@@ -1,12 +1,5 @@
 ﻿using chldr_data.Enums;
 using chldr_shared.Models;
-using MongoDB.Bson;
-using Realms.Sync;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chldr_data.Models
 {
@@ -26,7 +19,7 @@ namespace chldr_data.Models
         public string? LastName { get; }
         public string? Patronymic { get; }
 
-        public UserModel(Entities.User user) :  base(user)
+        public UserModel(Entities.User user) : base(user)
         {
             Email = user.Email;
             Rate = user.Rate;

@@ -1,12 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Realms;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System;
-using Realms.Schema;
+﻿using chldr_data.Interfaces;
 using MongoDB.Bson;
-using RequiredAttribute = Realms.RequiredAttribute;
-using chldr_data.Interfaces;
+using Realms;
 
 namespace chldr_data.Entities
 {

@@ -1,14 +1,4 @@
 ﻿using chldr_data.Entities;
-using chldr_data.Enums;
-using chldr_data.Interfaces;
-using chldr_data.Services;
-using MongoDB.Bson;
-using Realms.Sync;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 namespace chldr_data.Models
 {
     public abstract class EntryModel : ModelBase

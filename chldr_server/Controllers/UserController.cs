@@ -1,19 +1,12 @@
-﻿using chldr_data.Entities;
-using chldr_data.Interfaces;
-using chldr_data.Models;
-using chldr_ui;
+﻿using chldr_shared.Models;
 using chldr_shared.Resources.Localizations;
+using chldr_utils;
+using chldr_utils.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Localization;
-using MongoDB.Bson;
-using Realms.Sync;
 using Serilog;
 using EmailService = chldr_shared.Services.EmailService;
-using chldr_shared;
-using chldr_shared.Models;
-using chldr_utils.Services;
-using chldr_utils;
 
 namespace chldr_server.Controllers
 {

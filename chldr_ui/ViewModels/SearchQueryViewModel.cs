@@ -1,13 +1,6 @@
-﻿using chldr_shared.Models;
-using chldr_utils;
-using chldr_utils.Models;
+﻿using chldr_utils.Models;
 using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chldr_ui.ViewModels
 {

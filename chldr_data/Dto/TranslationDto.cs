@@ -1,11 +1,5 @@
-﻿using chldr_data.Entities;
-using chldr_data.Models;
+﻿using chldr_data.Models;
 using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chldr_data.Dto
 {

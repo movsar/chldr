@@ -1,5 +1,4 @@
 ﻿using chldr_data.Dto;
-using chldr_data.Models;
 using chldr_data.Resources.Localizations;
 using FluentValidation;
 using Microsoft.Extensions.Localization;

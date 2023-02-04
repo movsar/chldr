@@ -1,11 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Components;
+﻿using chldr_shared.Enums;
 using chldr_shared.Stores;
-using chldr_shared.Services;
-using chldr_shared.Enums;
-using chldr_data.Models;
-using MailKit.Search;
+using Microsoft.AspNetCore.Components;
 
 namespace chldr_ui.ViewModels
 {

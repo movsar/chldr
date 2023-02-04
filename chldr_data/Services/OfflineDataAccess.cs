@@ -1,10 +1,7 @@
-﻿using chldr_data.Entities;
-using chldr_data.Interfaces;
+﻿using chldr_data.Interfaces;
 using chldr_utils;
 using chldr_utils.Services;
 using Realms;
-using Realms.Sync;
-using System.Diagnostics;
 
 namespace chldr_data.Services
 {

@@ -1,9 +1,7 @@
 ﻿using chldr_data.Interfaces;
-using Microsoft.Extensions.Primitives;
 using MongoDB.Bson;
 using Realms;
 using System.Text;
-using Entry = chldr_data.Entities.Entry;
 
 namespace chldr_data.Entities
 {
