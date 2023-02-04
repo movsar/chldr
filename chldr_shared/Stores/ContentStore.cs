@@ -12,7 +12,7 @@ namespace chldr_shared.Stores
     {
 
         #region Events
-        public event Action? DatabaseInitialized;
+        public event Action? ContentInitialized;
         public event Action<SearchResultModel>? GotNewSearchResult;
 
         private readonly ExceptionHandler _exceptionHandler;
@@ -42,7 +42,9 @@ namespace chldr_shared.Stores
             _dataAccess = dataAccessFactory.GetInstance(DataAccess.CurrentDataAccess);
             _dataAccess.EntriesRepository.GotNewSearchResult += DataAccess_GotNewSearchResults;
             _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
-            _dataAccess.Initialize();
+
+            // Must be run on a different thread, otherwise the main view will not be able to listen to its events
+            Task.Run(() => _dataAccess.Initialize());
         }
         #endregion
 
@@ -90,7 +92,7 @@ namespace chldr_shared.Stores
         #endregion
 
 
-        private void DataAccess_DatabaseInitialized()
+        public void DataAccess_DatabaseInitialized()
         {
             try
             {
@@ -100,7 +102,7 @@ namespace chldr_shared.Stores
                 var namedSources = _dataAccess.GetAllNamedSources();
                 AllNamedSources.AddRange(namedSources);
 
-                DatabaseInitialized?.Invoke();
+                ContentInitialized?.Invoke();
             }
             catch (Exception ex)
             {

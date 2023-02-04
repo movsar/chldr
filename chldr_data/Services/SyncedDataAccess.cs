@@ -72,9 +72,6 @@ namespace chldr_data.Services
 
             UserService = _userService;
 
-            // Runs asynchronously, then continues
-            new Task(() => Initialize()).Start();
-
             // Database.SyncSession.ConnectionState == ConnectionState.Disconnected
             try
             {

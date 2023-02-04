@@ -8,7 +8,6 @@ namespace chldr_ui.ViewModels
     {
         [Inject] JsInterop? JsInteropFunctions { get; set; }
 
-
         private async Task ShowRandoms()
         {
             if (ContentStore.CachedSearchResults.Count > 0)
@@ -29,13 +28,13 @@ namespace chldr_ui.ViewModels
 
         protected override void OnInitialized()
         {
-            ContentStore.DatabaseInitialized += ContentStore_DatabaseInitialized; ;
+            ContentStore.ContentInitialized += ContentStore_ContentInitialized; ;
             base.OnInitialized();
         }
 
-        private void ContentStore_DatabaseInitialized()
+        private async void ContentStore_ContentInitialized()
         {
-            ShowRandoms().Start();
+            await ShowRandoms();
         }
     }
 }
