@@ -15,28 +15,7 @@ namespace chldr_data.Services
 
         #region DB Initializaion Related
 
-        public override void Initialize()
-        {
-            // Database.SyncSession.ConnectionState == ConnectionState.Disconnected
-
-            try
-            {
-                _realmService.InitializeConfiguration();
-                OnDatabaseInitialized();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("998"))
-                {
-                    // Network error
-                    _exceptionHandler.ProcessError(new Exception("NETWORK_ERROR"));
-                }
-                else
-                {
-                    _exceptionHandler.ProcessError(ex);
-                }
-            }
-        }
+   
         #endregion
     }
 }

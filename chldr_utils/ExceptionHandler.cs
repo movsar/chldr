@@ -36,9 +36,9 @@ namespace chldr_utils
             IncomingException?.Invoke(ex);
         }
 
-        public void ProcessDebug(Exception ex)
+        public void ProcessDebug(Exception ex, string msg = "")
         {
-            string message = Regex.Replace($"{ex.Message} {ex.StackTrace}\r\n", @"\s\s+", "\r\n\t");
+            string message = Regex.Replace($"{msg} {ex.Message} {ex.StackTrace}\r\n", @"\s\s+", "\r\n\t");
 
             _fileLogger.Debug(message);
             _consoleLogger?.LogDebug(message);

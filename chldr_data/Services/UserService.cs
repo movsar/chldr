@@ -1,4 +1,5 @@
-﻿using chldr_data.Interfaces;
+﻿using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_utils;
 using chldr_utils.Services;
@@ -12,14 +13,17 @@ namespace chldr_data.Services
     {
         private readonly NetworkService _networkService;
         private readonly SyncedRealmService _realmService;
+    
         App App => _realmService.GetApp();
         Realm Database => _realmService.GetDatabase();
         public UserService(NetworkService networkService, IRealmServiceFactory realmServiceFactory)
         {
             _realmService = realmServiceFactory.GetInstance(DataAccessType.Synced) as SyncedRealmService;
             _networkService = networkService;
-        }
 
+          
+        }
+       
         public UserModel GetCurrentUserInfo()
         {
             if (!_networkService.IsNetworUp || Database.SyncSession.State == SessionState.Inactive)
@@ -47,6 +51,7 @@ namespace chldr_data.Services
 
             return new UserModel(user);
         }
+
         public async Task RegisterNewUserAsync(string email, string password)
         {
             await App.EmailPasswordAuth.RegisterUserAsync(email, password);

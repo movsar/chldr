@@ -1,4 +1,5 @@
-﻿using chldr_data.Interfaces;
+﻿using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Services;
 using chldr_shared.Enums;
@@ -12,10 +13,9 @@ namespace chldr_shared.Stores
         #region Properties, Events and Fields
         public event Action UserStateHasChanged;
 
-        private readonly ISyncedDataAccess _dataAccess;
         private readonly EnvironmentService _environmentService;
-        public UserModel? CurrentUserInfo { get; set; }
-        private SessionStatus _sessionStatus;
+        private readonly UserService _userService;
+        private SessionStatus _sessionStatus = SessionStatus.Disconnected;
         public SessionStatus SessionStatus
         {
             get => _sessionStatus;
@@ -25,51 +25,52 @@ namespace chldr_shared.Stores
                 UserStateHasChanged?.Invoke();
             }
         }
+        public UserModel? CurrentUserInfo { get; set; }
+      
         #endregion
 
-        public UserStore(IDataAccessFactory dataAccessFactory, EnvironmentService environmentService)
+        public UserStore(UserService userService, EnvironmentService environmentService, NetworkService networkService)
         {
-            _dataAccess = dataAccessFactory.GetInstance(DataAccessType.Synced) as SyncedDataAccess;
+            // Let people log in if they want (on prod turn off this for Web)
+            if (/*environmentService.CurrentPlatform != Platforms.Web &&*/ networkService.IsNetworUp)
+            {
+                SessionStatus = SessionStatus.Unauthorized;
+            }
 
             _environmentService = environmentService;
+            _userService = userService;
+            //_dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
+            //_dataAccess.DatabaseSynchronized += DataAccess_ChangesSynchronized;
 
-            _dataAccess.DatabaseSynchronized += DataAccess_ChangesSynchronized;
-            _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
         }
 
-        private void DataAccess_ChangesSynchronized()
-        {
-            // This is going to refresh logged in user info, when you register, the database is not ready, 
-            // the status is LoggingIn but need to wait for the custom user data
-            if (CurrentUserInfo == null)
-            {
-                new Task(() => SetCurrentUserInfo()).Start();
-            }
-        }
+        //private void DataAccess_ChangesSynchronized()
+        //{
+        //    // This is going to refresh logged in user info, when you register, the database is not ready, 
+        //    // the status is LoggingIn but need to wait for the custom user data
+        //    if (CurrentUserInfo == null)
+        //    {
+        //        new Task(() => SetCurrentUserInfo()).Start();
+        //    }
+        //}
 
-        private void DataAccess_DatabaseInitialized()
-        {
-            if (CurrentUserInfo != null)
-            {
-                SessionStatus = SessionStatus.LoggedIn;
-            }
-            else
-            {
-                // Request the custom user data on database initialized
-                new Task(() => SetCurrentUserInfo()).Start();
-            }
-        }
-
-        public async Task RegisterNewUser(string email, string password)
-        {
-            await _dataAccess.UserService.RegisterNewUserAsync(email, password);
-        }
-
+        //private void DataAccess_DatabaseInitialized()
+        //{
+        //    if (CurrentUserInfo != null)
+        //    {
+        //        SessionStatus = SessionStatus.LoggedIn;
+        //    }
+        //    else
+        //    {
+        //        // Request the custom user data on database initialized
+        //        new Task(() => SetCurrentUserInfo()).Start();
+        //    }
+        //}
         public void SetCurrentUserInfo()
         {
             try
             {
-                CurrentUserInfo = _dataAccess.UserService.GetCurrentUserInfo();
+                CurrentUserInfo = _userService.GetCurrentUserInfo();
                 SessionStatus = SessionStatus.LoggedIn;
                 UserStateHasChanged?.Invoke();
             }
@@ -99,12 +100,17 @@ namespace chldr_shared.Stores
             }
         }
 
+        public async Task RegisterNewUser(string email, string password)
+        {
+            await _userService.RegisterNewUserAsync(email, password);
+        }
+
+     
         public async Task LogInEmailPasswordAsync(string email, string password)
         {
             try
             {
-                await _dataAccess.UserService.LogInEmailPasswordAsync(email, password);
-                _dataAccess.Initialize();
+                await _userService.LogInEmailPasswordAsync(email, password);
             }
             catch (Exception ex)
             {
@@ -115,22 +121,22 @@ namespace chldr_shared.Stores
 
         public async Task ConfirmUserAsync(string token, string tokenId, string email)
         {
-            await _dataAccess.UserService.ConfirmUserAsync(token, tokenId, email);
+            await _userService.ConfirmUserAsync(token, tokenId, email);
         }
 
         public async Task SendPasswordResetRequestAsync(string email)
         {
-            await _dataAccess.UserService.SendPasswordResetRequestAsync(email);
+            await _userService.SendPasswordResetRequestAsync(email);
         }
 
         public async Task UpdatePasswordAsync(string token, string tokenId, string newPassword)
         {
-            await _dataAccess.UserService.UpdatePasswordAsync(token, tokenId, newPassword);
+            await _userService.UpdatePasswordAsync(token, tokenId, newPassword);
         }
 
         public async Task LogOutAsync()
         {
-            await _dataAccess.UserService.LogOutAsync();
+            await _userService.LogOutAsync();
             CurrentUserInfo = null;
             SessionStatus = SessionStatus.Unauthorized;
             UserStateHasChanged?.Invoke();

@@ -7,9 +7,6 @@ namespace chldr_data.Interfaces
     {
         App App { get; }
 
-        event Action ConnectionInitialized;
         event Action DatabaseSynchronized;
-
-        UserService UserService { get; }
     }
 }

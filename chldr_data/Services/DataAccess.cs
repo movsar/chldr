@@ -5,6 +5,7 @@ using chldr_data.Repositories;
 using chldr_utils;
 using chldr_utils.Services;
 using Realms;
+using Realms.Sync;
 using System.Security.Cryptography;
 
 namespace chldr_data.Services
@@ -27,6 +28,8 @@ namespace chldr_data.Services
 
         public DataAccess(IRealmService realmService, ExceptionHandler exceptionHandler, NetworkService networkService)
         {
+            // Must be run on a different thread, otherwise the main view will not be able to listen to its events
+
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
             _realmService = realmService;
@@ -35,6 +38,31 @@ namespace chldr_data.Services
             WordsRepository = new WordsRepository(_realmService);
             PhrasesRepository = new PhrasesRepository(_realmService);
             LanguagesRepository = new LanguagesRepository(_realmService);
+        }
+
+
+        public void Initialize()
+        {
+            // Database.SyncSession.ConnectionState == ConnectionState.Disconnected
+
+            try
+            {
+                _realmService.InitializeDataSource();
+
+                OnDatabaseInitialized();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("998"))
+                {
+                    // Network error
+                    _exceptionHandler.ProcessError(new Exception("NETWORK_ERROR"));
+                }
+                else
+                {
+                    _exceptionHandler.ProcessError(ex);
+                }
+            }
         }
 
         public void OnDatabaseInitialized()
@@ -59,8 +87,6 @@ namespace chldr_data.Services
         {
             return Database.All<Source>().AsEnumerable().Select(s => new SourceModel(s)).ToList();
         }
-
-        public abstract void Initialize();
 
         private void EncryptDatbase(string path)
         {

@@ -21,85 +21,16 @@ namespace chldr_data.Services
         }
 
         public App App => _realmService.GetApp();
-        public UserService UserService { get; set; }
 
         public override Realm Database => _realmService.GetDatabase();
         #endregion
 
         #region Events
-        public event Action ConnectionInitialized;
         public event Action DatabaseSynchronized;
         #endregion
 
 
         #region DB Initializaion Related
-        private async Task InitializeDatabase()
-        {
-            try
-            {
-                var language = Database.All<Language>().FirstOrDefault();
-                if (language == null)
-                {
-                    // TODO: What if there's no offline file and no network?
-                    await SynchronizeDatabase();
-                }
-
-                OnDatabaseInitialized();
-            }
-            catch (Exception)
-            {
-                Debug.WriteLine("ERR");
-                throw;
-            }
-
-        }
-
-        private async Task SynchronizeDatabase()
-        {
-            await Database.Subscriptions.WaitForSynchronizationAsync();
-            await Database.SyncSession.WaitForDownloadAsync();
-            await Database.SyncSession.WaitForUploadAsync();
-
-            DatabaseSynchronized?.Invoke();
-        }
-
-        public override void Initialize()
-        {
-            if (App != null)
-            {
-                return;
-            }
-
-            UserService = _userService;
-
-            // Database.SyncSession.ConnectionState == ConnectionState.Disconnected
-            try
-            {
-                new Task(async () =>
-                {
-                    await _realmService.InitializeApp();
-                    _realmService.InitializeConfiguration();
-                    ConnectionInitialized?.Invoke();
-
-                    await InitializeDatabase();
-                    await SynchronizeDatabase();
-                    await DatabaseMaintenance();
-
-                }).Start();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("998"))
-                {
-                    // Network error
-                    _exceptionHandler.ProcessError(new Exception("NETWORK_ERROR"));
-                }
-                else
-                {
-                    _exceptionHandler.ProcessError(ex);
-                }
-            }
-        }
 
         private async Task DatabaseMaintenance()
         {

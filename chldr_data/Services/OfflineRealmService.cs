@@ -10,6 +10,9 @@ namespace chldr_data.Services
         private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
         private RealmConfigurationBase? _config;
+
+        public event Action? DatasourceInitialized;
+
         public Realm GetDatabase()
         {
             if (_config == null)
@@ -46,6 +49,12 @@ namespace chldr_data.Services
             };
 
             _config = encryptedConfig;
+        }
+
+        public void InitializeDataSource()
+        {
+            InitializeConfiguration();
+            DatasourceInitialized?.Invoke();
         }
     }
 }
