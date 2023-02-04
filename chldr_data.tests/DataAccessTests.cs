@@ -1,4 +1,5 @@
 using chldr_data.Dto;
+using chldr_data.Entities;
 using chldr_data.Factories;
 using chldr_data.Interfaces;
 
@@ -79,12 +80,24 @@ namespace chldr_data.tests
             // 1. Подготавливаем заведомо неправильный id
             ObjectId badId = new ObjectId(12, 123, 321, 12);
 
-            // 2. Тест
-            var wordById = _dataAccess.WordsRepository.GetById(badId);
 
-            // 3. Проверка
-            // TODO: Сначала запусти, скопируй сообщение ошибки, оберни этап 2 в try - catch и сравни в catch сообщение из ошибки
-            // с тем что скопировал
+            // 2. Тест
+       
+            {
+                try
+                {
+                    var wordById = _dataAccess.WordsRepository.GetById(badId);
+                }
+                catch (System.Exception oshibka)
+                {
+                    // 3. Проверка
+                 // TODO: Сначала запусти, скопируй сообщение ошибки, оберни этап 2 в try - catch и сравни в catch сообщение из ошибки
+                 // с тем что скопировал
+                    Assert.Equal("There is no such word in the database", oshibka.Message);
+                }
+             
+            }
+            
         }
 
     }
