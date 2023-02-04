@@ -12,9 +12,75 @@ namespace chldr_data.Repositories
     public class EntriesRepository<TEntryModel> : Repository where TEntryModel : EntryModel
     {
         public event Action<SearchResultModel>? GotNewSearchResult;
-
         public EntriesRepository(IRealmService realmService) : base(realmService) { }
+        private static IEnumerable<EntryModel> SortDirectSearchEntries(string inputText, IEnumerable<EntryModel> entries)
+        {
+            // Entry.Content => Equal, StartsWith, Rest
+            var equalTo = new List<EntryModel>();
+            var startsWith = new List<EntryModel>();
+            var rest = new List<EntryModel>();
 
+            foreach (var entry in entries)
+            {
+                var entryContent = entry.Content.ToLower();
+
+                if (entryContent.Equals(inputText))
+                {
+                    equalTo.Add(entry);
+                }
+                else if (entryContent.ToLower().StartsWith(inputText))
+                {
+                    startsWith.Add(entry);
+                }
+                else
+                {
+                    rest.Add(entry);
+                }
+            }
+            
+            var orderedStartsWith = startsWith.OrderBy(e => e.Content).ToList();
+            var orderedRest = rest.OrderBy(e => e.Content).ToList();
+
+            var combined = equalTo.Union(orderedStartsWith.Union(orderedRest));
+            return combined;
+        }
+        private static IEnumerable<EntryModel> SortReverseSearchEntries(string inputText, IEnumerable<EntryModel> entries)
+        {
+            // Entry.Translation.Content => Equal, StartsWith, Rest
+
+            var equalTo = new List<EntryModel>();
+            var startsWith = new List<EntryModel>();
+            var rest = new List<EntryModel>();
+
+            foreach (var entry in entries)
+            {
+                foreach (var translation in entry.Translations)
+                {
+                    var translationContent = entry.Content.ToLower();
+
+                    if (translationContent.Equals(inputText))
+                    {
+                        equalTo.Add(entry);
+                    }
+                    else if (translationContent.StartsWith(inputText))
+                    {
+                        startsWith.Add(entry);
+                    }
+                    else
+                    {
+                        rest.Add(entry);
+                    }
+                }
+            }
+
+            var orderedStartsWith = startsWith.OrderBy(e => e.Content).ToList();
+            var orderedRest = rest.OrderBy(e => e.Content).ToList();
+
+            var combined = equalTo.Union(orderedStartsWith.Union(orderedRest));
+            return combined;
+        }
+
+        Expression<Func<Entities.Entry, bool>> EntryFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
         protected async Task DirectSearch(string inputText, Expression<Func<Entities.Entry, bool>> filter, int limit)
         {
             var resultingEntries = new List<EntryModel>();
@@ -24,17 +90,21 @@ namespace chldr_data.Repositories
                 using var realmInstance = Database;
 
                 var entries = realmInstance.All<Entry>().Where(filter)
+                                                        .Where(e => e.Rate > 0)
                                                         .AsEnumerable()
-                                                        //.OrderByDescending(entry => entry.Rate)
-                                                        //.ThenBy(entry => entry.RawContents.IndexOf(inputText))
-                                                        .Take(limit);
+                                                        .OrderBy(e => e.RawContents.IndexOf(inputText))
+                                                        .OrderByDescending(e => e.Rate)
+                                                        .Take(limit)
+                                                        .ToList();
+
                 foreach (var entry in entries)
                 {
                     resultingEntries.Add(EntryModelFactory.CreateEntryModel(entry));
                 }
             });
 
-            var args = new SearchResultModel(inputText, resultingEntries.ToList(), SearchResultModel.Mode.Direct);
+
+            var args = new SearchResultModel(inputText, SortDirectSearchEntries(inputText, resultingEntries), SearchResultModel.Mode.Direct);
             GotNewSearchResult?.Invoke(args);
         }
 
@@ -48,21 +118,23 @@ namespace chldr_data.Repositories
 
                 var translations = realmInstance.All<Translation>()
                                                                    .Where(filter)
+                                                                   .Where(t => t.Rate > 0)
                                                                    .AsEnumerable()
-                                                                   //.OrderBy(translation => translation.Content.IndexOf(inputText))
-                                                                   .Take(limit);
+                                                                   .OrderBy(translation => translation.Content.IndexOf(inputText))
+                                                                   .OrderByDescending(translation => translation.Rate)
+                                                                   .Take(limit)
+                                                                   .ToList();
                 foreach (var translation in translations)
                 {
                     resultingEntries.Add(EntryModelFactory.CreateEntryModel(translation.Entry));
                 }
             });
 
-            var args = new SearchResultModel(inputText, resultingEntries.ToList(), SearchResultModel.Mode.Reverse);
+            var args = new SearchResultModel(inputText, SortReverseSearchEntries(inputText, resultingEntries), SearchResultModel.Mode.Reverse);
             GotNewSearchResult?.Invoke(args);
         }
 
         Expression<Func<Entities.Entry, bool>> StartsWithFilter(string inputText) => translation => translation.RawContents.Contains(inputText);
-        Expression<Func<Entities.Entry, bool>> EntryFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
         Expression<Func<Translation, bool>> TranslationFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
 
         public async Task FindAsync(string inputText, FiltrationFlags filtrationFlags)

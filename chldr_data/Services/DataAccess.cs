@@ -15,7 +15,7 @@ namespace chldr_data.Services
         protected readonly NetworkService _networkService;
         protected readonly IRealmService _realmService;
 
-        public static DataAccessType CurrentDataAccess { get; set; } = DataAccessType.Offline;
+        public static DataAccessType CurrentDataAccess { get; set; } = DataAccessType.Synced;
 
         public abstract Realm Database { get; }
         public LanguagesRepository LanguagesRepository { get; }

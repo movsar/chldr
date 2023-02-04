@@ -40,7 +40,8 @@ namespace chldr_ui.ViewModels
                 "см",
                 "понуд.? от",
                 "потенц.? от",
-                "прил.? к"
+                "прил.? к",
+                "масд.? от"
             };
 
             foreach (var prefix in prefixesToSearch)
@@ -52,11 +53,9 @@ namespace chldr_ui.ViewModels
                 if (match.Success)
                 {
                     ContentStore.Search(match.ToString());
-                    break;
+                    return;
                 }
             }
-
-            ContentStore.Search(translationText);
         }
 
     }

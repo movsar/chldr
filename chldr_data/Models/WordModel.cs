@@ -7,7 +7,7 @@ namespace chldr_data.Models
     public class WordModel : EntryModel
     {
         public new ObjectId Id { get; }
-        public string Content { get; }
+        public override string Content { get; }
         public string Notes { get; }
         public string RawForms { get; }
         public List<string> Forms { get; } = new();

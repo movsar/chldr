@@ -1,4 +1,5 @@
 ﻿using chldr_data.Entities;
+using chldr_data.Factories;
 
 namespace chldr_data.Models
 {

@@ -7,7 +7,7 @@ namespace chldr_data.Models
     {
         // This is Phrase Id, the Entry Id is in its parent
         public new ObjectId Id { get; }
-        public string Content { get; }
+        public override string Content { get; }
         public string? Notes { get; }
         public PhraseModel(Entry entry) : this(entry.Phrase) { }
         public PhraseModel(Phrase phrase) : base(phrase.Entry)
