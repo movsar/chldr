@@ -26,7 +26,7 @@ namespace chldr_shared.Stores
             }
         }
         public UserModel? CurrentUserInfo { get; set; }
-      
+
         #endregion
 
         public UserStore(UserService userService, EnvironmentService environmentService, NetworkService networkService)
@@ -39,65 +39,13 @@ namespace chldr_shared.Stores
 
             _environmentService = environmentService;
             _userService = userService;
-            //_dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
-            //_dataAccess.DatabaseSynchronized += DataAccess_ChangesSynchronized;
-
+            userService.UserStateHasChanged += UserService_UserStateHasChanged;
         }
 
-        //private void DataAccess_ChangesSynchronized()
-        //{
-        //    // This is going to refresh logged in user info, when you register, the database is not ready, 
-        //    // the status is LoggingIn but need to wait for the custom user data
-        //    if (CurrentUserInfo == null)
-        //    {
-        //        new Task(() => SetCurrentUserInfo()).Start();
-        //    }
-        //}
-
-        //private void DataAccess_DatabaseInitialized()
-        //{
-        //    if (CurrentUserInfo != null)
-        //    {
-        //        SessionStatus = SessionStatus.LoggedIn;
-        //    }
-        //    else
-        //    {
-        //        // Request the custom user data on database initialized
-        //        new Task(() => SetCurrentUserInfo()).Start();
-        //    }
-        //}
-        public void SetCurrentUserInfo()
+        private void UserService_UserStateHasChanged(UserModel user, SessionStatus sessionStatus)
         {
-            try
-            {
-                CurrentUserInfo = _userService.GetCurrentUserInfo();
-                SessionStatus = SessionStatus.LoggedIn;
-                UserStateHasChanged?.Invoke();
-            }
-            catch (Exception ex)
-            {
-                switch (ex.Message)
-                {
-                    case AppConstants.DataErrorMessages.NetworkIsDown:
-                        SessionStatus = SessionStatus.Disconnected;
-                        break;
-
-                    case AppConstants.DataErrorMessages.AnonymousUser:
-                        SessionStatus = SessionStatus.Unauthorized;
-                        break;
-
-                    case AppConstants.DataErrorMessages.AppNotInitialized:
-                        SessionStatus = SessionStatus.Disconnected;
-                        break;
-
-                    case AppConstants.DataErrorMessages.NoUserInfo:
-                        SessionStatus = SessionStatus.LoggingIn;
-                        break;
-
-                    default:
-                        break;
-                }
-            }
+            CurrentUserInfo = user;
+            SessionStatus = sessionStatus;
         }
 
         public async Task RegisterNewUser(string email, string password)
@@ -105,12 +53,13 @@ namespace chldr_shared.Stores
             await _userService.RegisterNewUserAsync(email, password);
         }
 
-     
         public async Task LogInEmailPasswordAsync(string email, string password)
         {
             try
             {
                 await _userService.LogInEmailPasswordAsync(email, password);
+                SessionStatus = SessionStatus.LoggingIn;
+                UserStateHasChanged?.Invoke();
             }
             catch (Exception ex)
             {

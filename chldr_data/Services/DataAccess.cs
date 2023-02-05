@@ -1,4 +1,5 @@
 ﻿using chldr_data.Entities;
+using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Repositories;
@@ -12,27 +13,30 @@ namespace chldr_data.Services
 {
     public abstract class DataAccess : IDataAccess
     {
+        public event Action? DatabaseInitialized;
+
         protected readonly ExceptionHandler _exceptionHandler;
         protected readonly NetworkService _networkService;
-        protected readonly IRealmService _realmService;
-
-        public static DataAccessType CurrentDataAccess { get; set; } = DataAccessType.Offline;
+        private readonly IRealmServiceFactory _realmServiceFactory;
+        protected IRealmService _realmService;
 
         public abstract Realm Database { get; }
+        public static DataAccessType CurrentDataAccess { get; set; } = DataAccessType.Offline;
         public LanguagesRepository LanguagesRepository { get; }
         public WordsRepository WordsRepository { get; }
         public PhrasesRepository PhrasesRepository { get; }
         public EntriesRepository<EntryModel> EntriesRepository { get; }
 
-        public event Action? DatabaseInitialized;
 
-        public DataAccess(IRealmService realmService, ExceptionHandler exceptionHandler, NetworkService networkService)
+        public DataAccess(IRealmServiceFactory realmServiceFactory, ExceptionHandler exceptionHandler, NetworkService networkService)
         {
             // Must be run on a different thread, otherwise the main view will not be able to listen to its events
 
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
-            _realmService = realmService;
+
+            _realmServiceFactory = realmServiceFactory;
+            _realmService = realmServiceFactory.GetInstance();
 
             EntriesRepository = new EntriesRepository<EntryModel>(_realmService);
             WordsRepository = new WordsRepository(_realmService);
@@ -40,16 +44,18 @@ namespace chldr_data.Services
             LanguagesRepository = new LanguagesRepository(_realmService);
         }
 
+        private void RealmService_DatasourceInitialized()
+        {
+            DatabaseInitialized?.Invoke();
+        }
 
         public void Initialize()
         {
-            // Database.SyncSession.ConnectionState == ConnectionState.Disconnected
-
             try
             {
+                _realmService = _realmServiceFactory.GetInstance();
+                _realmService.DatasourceInitialized += RealmService_DatasourceInitialized;
                 _realmService.InitializeDataSource();
-
-                OnDatabaseInitialized();
             }
             catch (Exception ex)
             {
@@ -65,10 +71,6 @@ namespace chldr_data.Services
             }
         }
 
-        public void OnDatabaseInitialized()
-        {
-            DatabaseInitialized?.Invoke();
-        }
         public List<LanguageModel> GetAllLanguages()
         {
             try

@@ -29,5 +29,18 @@ namespace chldr_data.Factories
                     throw new Exception("Unknown data access type");
             }
         }
+
+        public IRealmService GetInstance()
+        {
+            switch (DataAccess.CurrentDataAccess)
+            {
+                case DataAccessType.Synced:
+                    return GetInstance(DataAccessType.Synced);
+                case DataAccessType.Offline:
+                    return GetInstance(DataAccessType.Offline);
+                default:
+                    return null;
+            }
+        }
     }
 }

@@ -12,12 +12,10 @@ namespace chldr_data.Services
     {
         #region Properties
         private new SyncedRealmService _realmService;
-        private readonly UserService _userService;
 
-        public SyncedDataAccess(IRealmServiceFactory realmServiceFactory, UserService userService, ExceptionHandler exceptionHandler, NetworkService networkService) : base(realmServiceFactory.GetInstance(DataAccessType.Synced), exceptionHandler, networkService)
+        public SyncedDataAccess(IRealmServiceFactory realmServiceFactory, UserService userService, ExceptionHandler exceptionHandler, NetworkService networkService) : base(realmServiceFactory, exceptionHandler, networkService)
         {
-            _userService = userService;
-            _realmService = base._realmService as SyncedRealmService;
+            _realmService = (realmServiceFactory.GetInstance(DataAccessType.Synced) as SyncedRealmService)!;
         }
 
         public App App => _realmService.GetApp();

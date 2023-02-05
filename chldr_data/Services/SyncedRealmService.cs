@@ -1,4 +1,5 @@
 ﻿using chldr_data.Entities;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_utils;
 using chldr_utils.Services;
@@ -7,15 +8,12 @@ using Realms.Logging;
 using Realms.Sync;
 using Realms.Sync.Exceptions;
 using System.Diagnostics;
-using static Realms.Sync.MongoClient;
 
 namespace chldr_data.Services
 {
     public class SyncedRealmService : IRealmService
     {
-
         private const string myRealmAppId = "dosham-lxwuu";
-        internal event Action? DatabaseSynchronized;
         public event Action? DatasourceInitialized;
 
         private App? _app;
@@ -56,8 +54,6 @@ namespace chldr_data.Services
                 await GetDatabase().Subscriptions.WaitForSynchronizationAsync();
                 await GetDatabase().SyncSession.WaitForDownloadAsync();
                 await GetDatabase().SyncSession.WaitForUploadAsync();
-
-                DatabaseSynchronized?.Invoke();
             }
             catch (Exception ex)
             {
@@ -65,7 +61,7 @@ namespace chldr_data.Services
             }
         }
 
-        private async Task InitializeApp()
+        private void InitializeApp()
         {
             if (_app == null)
             {
@@ -82,19 +78,6 @@ namespace chldr_data.Services
         }
         public void InitializeConfiguration()
         {
-            // As this is FlexibleSync mode, the user must always be present, even if it's offline
-
-            // Log in as anonymous user to be able to read data
-            if (_app?.CurrentUser == null)
-            {
-                throw new Exception("User must not be null");
-            }
-
-            //if (_app.CurrentUser?.State != UserState.LoggedIn)
-            //{
-            //    throw new Exception("User is not logged in");
-            //}
-
             // Copy original file so that app will be able to access entries immediately
             var syncedDatabasePath = Path.Combine(_fileService.AppDataDirectory, GetUserDatabaseName(_app.CurrentUser.Id));
 
@@ -148,19 +131,26 @@ namespace chldr_data.Services
 
         public void InitializeDataSource()
         {
-            Task.Run(async () =>
+            InitializeApp();
+
+            if (_app?.CurrentUser?.Provider == Credentials.AuthProvider.Anonymous)
             {
-                await InitializeApp();
-                InitializeConfiguration();
+                return;
+            }
 
-                var language = GetDatabase().All<Language>().FirstOrDefault();
-                if (language == null)
-                {
-                    await SynchronizeDatabase();
-                }
+            InitializeConfiguration();
 
-                DatasourceInitialized?.Invoke();
-            }).Start();
+            var language = GetDatabase().All<Language>().FirstOrDefault();
+            if (language == null)
+            {
+                var synchTask = new Task(async () => await SynchronizeDatabase());
+                synchTask.Start();
+                synchTask.Wait();
+            }
+
+            DataAccess.CurrentDataAccess = DataAccessType.Synced;
+
+            DatasourceInitialized?.Invoke();
         }
     }
 }

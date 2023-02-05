@@ -5,77 +5,11 @@ using chldr_data.Services;
 using chldr_data.Validators;
 using chldr_shared.Enums;
 using chldr_shared.Services;
-
-/* Unmerged change from project 'chldr_native (net6.0-windows10.0.19041.0)'
-Before:
-using FluentValidation;
-using chldr_data.Dto;
-using chldr_shared.Services;
-using System.Reflection.PortableExecutable;
-After:
-using chldr_shared.Stores;
-using chldr_data.Validators;
-using chldr_ui;
-using chldr_ui.ViewModels;
-*/
-
-/* Unmerged change from project 'chldr_native (net6.0-maccatalyst)'
-Before:
-using FluentValidation;
-using chldr_data.Dto;
-using chldr_shared.Services;
-using System.Reflection.PortableExecutable;
-After:
-using chldr_shared.Stores;
-using chldr_data.Validators;
-using chldr_ui;
-using chldr_ui.ViewModels;
-*/
-
-/* Unmerged change from project 'chldr_native (net6.0-android)'
-Before:
-using FluentValidation;
-using chldr_data.Dto;
-using chldr_shared.Services;
-using System.Reflection.PortableExecutable;
-After:
-using chldr_shared.Stores;
-using chldr_data.Validators;
-using chldr_ui;
-using chldr_ui.ViewModels;
-*/
 using chldr_shared.Stores;
 using chldr_shared.Validators;
 using chldr_ui;
 using chldr_ui.ViewModels;
 using chldr_utils;
-
-/* Unmerged change from project 'chldr_native (net6.0-windows10.0.19041.0)'
-Before:
-using chldr_data.Factories;
-using chldr_data.Validators;
-After:
-using FluentValidation;
-using System.Reflection.PortableExecutable;
-*/
-
-/* Unmerged change from project 'chldr_native (net6.0-maccatalyst)'
-Before:
-using chldr_data.Factories;
-using chldr_data.Validators;
-After:
-using FluentValidation;
-using System.Reflection.PortableExecutable;
-*/
-
-/* Unmerged change from project 'chldr_native (net6.0-android)'
-Before:
-using chldr_data.Factories;
-using chldr_data.Validators;
-After:
-using FluentValidation;
-using System.Reflection.PortableExecutable;
-*/
 using chldr_utils.Services;
 using FluentValidation;
 

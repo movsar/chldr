@@ -4,6 +4,7 @@ using chldr_data.Models;
 using chldr_data.Services;
 using chldr_utils;
 using chldr_utils.Models;
+using chldr_utils.Services;
 using MongoDB.Bson;
 
 namespace chldr_shared.Stores
@@ -16,6 +17,8 @@ namespace chldr_shared.Stores
         public event Action<SearchResultModel>? GotNewSearchResult;
 
         private readonly ExceptionHandler _exceptionHandler;
+        private readonly IDataAccessFactory _dataAccessFactory;
+        private readonly NetworkService _networkService;
         #endregion
 
         #region Fields and Properties
@@ -36,15 +39,17 @@ namespace chldr_shared.Stores
         #endregion
 
         #region Constructors
-        public ContentStore(IDataAccessFactory dataAccessFactory, ExceptionHandler exceptionHandler)
+        public ContentStore(IDataAccessFactory dataAccessFactory, ExceptionHandler exceptionHandler, NetworkService networkService)
         {
             _exceptionHandler = exceptionHandler;
+            _dataAccessFactory = dataAccessFactory;
+            _networkService = networkService;
             _dataAccess = dataAccessFactory.GetInstance(DataAccess.CurrentDataAccess);
             _dataAccess.EntriesRepository.GotNewSearchResult += DataAccess_GotNewSearchResults;
             _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
 
             // Must be run on a different thread, otherwise the main view will not be able to listen to its events
-            Task.Run(() => _dataAccess.Initialize());
+            Task.Run(async () => { await Task.Delay(250); _dataAccess.Initialize(); });
         }
         #endregion
 
@@ -103,6 +108,13 @@ namespace chldr_shared.Stores
                 AllNamedSources.AddRange(namedSources);
 
                 ContentInitialized?.Invoke();
+
+                if (DataAccess.CurrentDataAccess == DataAccessType.Offline && _networkService.IsNetworUp)
+                {
+                    DataAccess.CurrentDataAccess = DataAccessType.Synced;
+                    var syncedDataAccess = _dataAccessFactory.GetInstance(DataAccessType.Synced);
+                    Task.Run(async () => { await Task.Delay(250); syncedDataAccess.Initialize(); });
+                }
             }
             catch (Exception ex)
             {
@@ -126,7 +138,6 @@ namespace chldr_shared.Stores
             PhraseModel phrase = _dataAccess.PhrasesRepository.Add(content, notes);
             return phrase;
         }
-
 
         public PhraseModel GetCachedPhraseById(ObjectId phraseId)
         {
