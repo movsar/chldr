@@ -62,12 +62,20 @@ namespace chldr_shared.Stores
         public void LoadRandomEntries()
         {
             CachedSearchResults.Clear();
-            _dataAccess.EntriesRepository.RequestRandomEntries();
+            var entries = _dataAccess.EntriesRepository.GetRandomEntries();
+
+            var searchResults = new SearchResultModel(entries);
+            CachedSearchResults.Add(searchResults);
+            GotNewSearchResult?.Invoke(searchResults);
         }
-        public List<EntryModel> GetRandomEntries()
+        public void LoadEntriesOnModeration()
         {
-            var randoms = _dataAccess.EntriesRepository.GetRandomEntries();
-            return randoms;
+            CachedSearchResults.Clear();
+            var entries = _dataAccess.EntriesRepository.GetEntriesOnModeration();
+
+            var searchResults = new SearchResultModel(entries);
+            CachedSearchResults.Add(searchResults);
+            GotNewSearchResult?.Invoke(searchResults);
         }
         public WordModel GetWordById(ObjectId entryId)
         {
@@ -125,12 +133,6 @@ namespace chldr_shared.Stores
         public void Search(string query)
         {
             Search(query, new FiltrationFlags());
-        }
-
-        public void LoadEntriesOnModeration()
-        {
-            CachedSearchResults.Clear();
-            Task.Run(() => _dataAccess.EntriesRepository.RequestEntriesOnModeration());
         }
 
         public PhraseModel AddNewPhrase(UserModel userModel, string content, string notes)

@@ -8,7 +8,7 @@ namespace chldr_data.Dto
     {
         public WordDto(WordModel word) : base(word)
         {
-            WordId = word.Id;
+            WordId = word.Id.ToString();
             Content = word.Content;
             Notes = word.Notes;
             GrammaticalClass = word.GrammaticalClass;
@@ -25,7 +25,7 @@ namespace chldr_data.Dto
             }
         }
         public WordDto() { }
-        public ObjectId? WordId { get; }
+        public string? WordId { get; }
         public List<string> Forms { get; } = new List<string>();
         public Dictionary<string, string> NounDeclensions { get; } = new Dictionary<string, string>();
         public Dictionary<string, string> VerbTenses { get; } = new Dictionary<string, string>();

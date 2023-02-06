@@ -10,8 +10,8 @@ namespace chldr_ui.ViewModels
     {
         #region Properties, Fields etc
         [Parameter]
-        public ObjectId? EntryId { get; set; }
-        public ObjectId? SourceId { get; set; }
+        public string? EntryId { get; set; }
+        public string? SourceId { get; set; }
         public List<TranslationDto> Translations { get; } = new();
         protected bool IsEditMode = false;
         #endregion

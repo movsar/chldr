@@ -79,8 +79,7 @@ namespace chldr_data.Repositories
             var combined = equalTo.Union(orderedStartsWith.Union(orderedRest));
             return combined;
         }
-
-        Expression<Func<Entities.Entry, bool>> EntryFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
+        Expression<Func<Entry, bool>> EntryFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
         protected async Task DirectSearch(string inputText, Expression<Func<Entities.Entry, bool>> filter, int limit)
         {
             var resultingEntries = new List<EntryModel>();
@@ -107,7 +106,6 @@ namespace chldr_data.Repositories
             var args = new SearchResultModel(inputText, SortDirectSearchEntries(inputText, resultingEntries), SearchResultModel.Mode.Direct);
             GotNewSearchResult?.Invoke(args);
         }
-
         protected async Task ReverseSearch(string inputText, Expression<Func<Translation, bool>> filter, int limit)
         {
             var resultingEntries = new List<EntryModel>();
@@ -134,7 +132,7 @@ namespace chldr_data.Repositories
             GotNewSearchResult?.Invoke(args);
         }
 
-        Expression<Func<Entities.Entry, bool>> StartsWithFilter(string inputText) => translation => translation.RawContents.Contains(inputText);
+        Expression<Func<Entry, bool>> StartsWithFilter(string inputText) => translation => translation.RawContents.Contains(inputText);
         Expression<Func<Translation, bool>> TranslationFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
 
         public async Task FindAsync(string inputText, FiltrationFlags filtrationFlags)
@@ -201,16 +199,6 @@ namespace chldr_data.Repositories
                 .ToList();
 
             return entries;
-        }
-
-        public void RequestRandomEntries()
-        {
-            GotNewSearchResult?.Invoke(new SearchResultModel(GetRandomEntries()));
-        }
-
-        public void RequestEntriesOnModeration()
-        {
-            GotNewSearchResult?.Invoke(new SearchResultModel(GetEntriesOnModeration()));
         }
     }
 }

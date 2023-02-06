@@ -25,13 +25,13 @@
         {
             <div class="form-outline mb-4">
                 @*
-                    { 1 ,"ву, бу/ду"},
-                    { 2 ,"йу, бу/ду"},
-                    { 3 ,"йу, йу"},
-                    { 4 ,"ду, ду"},
-                    { 5 ,"бу, бу/йу"},
-                    { 6 ,"бу, ду"}
-                *@
+        { 1 ,"ву, бу/ду"},
+        { 2 ,"йу, бу/ду"},
+        { 3 ,"йу, йу"},
+        { 4 ,"ду, ду"},
+        { 5 ,"бу, бу/йу"},
+        { 6 ,"бу, ду"}
+        *@
 
                 @Localizer["Grammatical_class"]
                 <select @bind="Word.PartOfSpeech" class="form-select" title="@Localizer["Grammatical_class"]">
@@ -51,7 +51,7 @@
 
         @foreach (var translation in Translations)
         {
-            <TranslationEditView WordId="@WordId" TranslationId="@translation.TranslationId.ToString()"></TranslationEditView>
+            <TranslationEditView EntryId="@translation.EntryId" TranslationId="@translation.TranslationId"></TranslationEditView>
         }
 
     </form>

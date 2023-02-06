@@ -1,6 +1,7 @@
 ﻿using chldr_data.Dto;
 using chldr_data.Validators;
 using Microsoft.AspNetCore.Components;
+using MongoDB.Bson;
 
 namespace chldr_ui.ViewModels
 {
@@ -11,33 +12,24 @@ namespace chldr_ui.ViewModels
         public string? EntryId { get; set; }
         [Parameter]
         public string? TranslationId { get; set; }
-        public TranslationDto Translation { get; set; }
+        public TranslationDto? Translation { get; set; }
         #endregion
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            if (string.IsNullOrEmpty(TranslationId))
+            if (string.IsNullOrEmpty(TranslationId) || string.IsNullOrEmpty(EntryId))
             {
                 return;
             }
 
-            //var wordId = new ObjectId(WordId);
-            //var translationId = new ObjectId(TranslationId);
+            var entryId = new ObjectId(EntryId);
+            var entry = ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries)
+                .First(e => e.Id == entryId);
 
-            //// Get current word from cached results
-            //var word = ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries)
-            //    .Where(e => e.Type == EntryType.Word)
-            //    .Cast<WordModel>()
-            //    .First(w => w.Id == wordId);
-
-            //// Get the current translation
-            //var translation = word.Translations.Where(t => t.Id == translationId).First();
-
-            //Content = translation.Content;
-            //Notes = translation.Notes;
-            //LanguageCode = translation.Language.Code;
+            var translationId = new ObjectId(TranslationId);
+            Translation = new TranslationDto(entry.Translations.First(t => t.Id == translationId));
         }
 
         internal void Submit()

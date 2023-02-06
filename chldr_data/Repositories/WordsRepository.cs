@@ -36,7 +36,7 @@ namespace chldr_data.Repositories
                     Rate = newWord.Rate,
                     RawContents = string.Join("; ", allForms.Select(w => w)).ToLower(),
                     // TODO: Source = 
-                    Source = Database.Find<Source>(newWord.SourceId)
+                    Source = Database.Find<Source>(new ObjectId(newWord.SourceId))
                 };
 
                 Word wordEntity = new Word()

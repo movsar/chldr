@@ -7,7 +7,7 @@
 <select @bind="@Translation.LanguageCode" class="form-select" title="@Localizer["Grammatical_class"]">
     @foreach (var language in ContentStore.AllLanguages)
     {
-        <option value="@language.Id" class="form-control">@Translation.LanguageCode</option>
+        <option value="@language.Code" class="form-control">@language.Name</option>
     }
 </select>
 

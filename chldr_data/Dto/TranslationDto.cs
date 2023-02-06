@@ -5,8 +5,8 @@ namespace chldr_data.Dto
 {
     public class TranslationDto
     {
-        public ObjectId? TranslationId { get; }
-        public ObjectId? EntryId { get; }
+        public string? TranslationId { get; }
+        public string? EntryId { get; }
         public string Content { get; set; } = string.Empty;
         public string Notes { get; set; } = string.Empty;
         public string LanguageCode { get; set; }
@@ -17,7 +17,8 @@ namespace chldr_data.Dto
         }
         public TranslationDto(TranslationModel translation)
         {
-            TranslationId = translation.Id;
+            TranslationId = translation.Id.ToString();
+            EntryId = translation.EntryId.ToString();
             Content = translation.Content;
             Notes = translation.Notes;
             Rate = translation.Rate;
