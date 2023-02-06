@@ -57,13 +57,12 @@ namespace chldr_shared.Stores
         {
             try
             {
-                await _userService.LogInEmailPasswordAsync(email, password);
                 SessionStatus = SessionStatus.LoggingIn;
+                await _userService.LogInEmailPasswordAsync(email, password);
                 UserStateHasChanged?.Invoke();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Localize exception
                 throw;
             }
         }

@@ -96,15 +96,21 @@ namespace chldr_data.Services
         {
             await App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
         }
+
         public async Task LogInEmailPasswordAsync(string email, string password)
         {
-            var user = await App.LogInAsync(Credentials.EmailPassword(email, password));
+            await App.LogInAsync(Credentials.EmailPassword(email, password));
             _realmService.InitializeDataSource();
         }
 
         public async Task LogOutAsync()
         {
-            await App.CurrentUser.LogOutAsync();
+            var defaultUser = App.AllUsers.FirstOrDefault(u => u.Provider == Credentials.AuthProvider.Anonymous);
+            if (defaultUser != null)
+            {
+                App.SwitchUser(defaultUser);
+            }
+
             DataAccess.CurrentDataAccess = DataAccessType.Offline;
             var offlineRealmService = (_realmServiceFactory.GetInstance(DataAccessType.Offline) as OfflineRealmService)!;
             offlineRealmService.InitializeDataSource();
