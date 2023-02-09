@@ -19,5 +19,9 @@ namespace chldr_data.Entities
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
 
+        internal string GetRawContents()
+        {
+            return Content.ToString();
+        }
     }
 }
