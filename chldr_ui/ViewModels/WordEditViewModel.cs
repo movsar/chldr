@@ -12,20 +12,26 @@ namespace chldr_ui.ViewModels
     {
         #region Properties
         [Parameter]
-        public string? WordId { get; set; }
+        public string? wordId { get; set; }
         public WordDto? Word { get; set; }
         #endregion
+
+        public void Save()
+        {
+            var wordId = new ObjectId(this.wordId);
+            ContentStore.UpdateWord(wordId, Word);
+        }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            if (string.IsNullOrEmpty(WordId))
+            if (string.IsNullOrEmpty(this.wordId))
             {
                 return;
             }
 
-            var wordId = new ObjectId(WordId);
+            var wordId = new ObjectId(this.wordId);
 
             // Get current word from cached results
             var existingWord = ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries)

@@ -1,4 +1,5 @@
-﻿using chldr_data.Enums;
+﻿using chldr_data.Dto;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Services;
@@ -162,6 +163,11 @@ namespace chldr_shared.Stores
         public void UpdatePhrase(UserModel loggedInUser, string? phraseId, string? content, string? notes)
         {
             // _dataAccess.UpdatePhrase(loggedInUser, phraseId, content, notes);
+        }
+
+        public void UpdateWord(ObjectId wordId, WordDto? word)
+        {
+            _dataAccess.WordsRepository.Update(wordId, word);
         }
     }
 }

@@ -9,31 +9,32 @@ namespace chldr_ui.ViewModels
     {
         #region Fields and Properties
         [Parameter]
-        public string? EntryId { get; set; }
-        [Parameter]
-        public string? TranslationId { get; set; }
         public TranslationDto? Translation { get; set; }
         #endregion
+
+        private TranslationDto CreateTranslationDto(ObjectId entryId, ObjectId translationId)
+        {
+            var entry = ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries)
+                .First(e => e.Id == entryId);
+
+            return new TranslationDto(entry.Translations.First(t => t.Id == translationId));
+        }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            if (string.IsNullOrEmpty(TranslationId) || string.IsNullOrEmpty(EntryId))
+            if (Translation == null)
             {
                 return;
             }
 
-            var entryId = new ObjectId(EntryId);
-            var entry = ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries)
-                .First(e => e.Id == entryId);
-
-            var translationId = new ObjectId(TranslationId);
-            Translation = new TranslationDto(entry.Translations.First(t => t.Id == translationId));
+            // Init code
         }
 
         internal void Submit()
         {
+
         }
     }
 }

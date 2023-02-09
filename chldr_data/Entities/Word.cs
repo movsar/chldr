@@ -27,14 +27,13 @@ namespace chldr_data.Entities
         // something; thing; whatever; - order matters!
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
-        public static string[] GetAllUniqueWordForms(string content, string rawForms, string rawWordDeclensions, string rawWordTenses, bool excludeTitle = false)
+        public string GetRawContents()
         {
             var allWordForms = new HashSet<string>();
 
-
-            var declensions = String.IsNullOrEmpty(rawWordDeclensions) ? null : ParseNounDeclensions(rawWordDeclensions).Values.Where(v => !String.IsNullOrWhiteSpace(v)).ToList();
-            var tenses = String.IsNullOrEmpty(rawWordTenses) ? null : ParseVerbTenses(rawWordTenses).Values.Where(v => !String.IsNullOrWhiteSpace(v)).ToList();
-            var forms = String.IsNullOrEmpty(rawForms) ? null : rawForms.Split(";");
+            var declensions = String.IsNullOrEmpty(NounDeclensions) ? null : ParseNounDeclensions(NounDeclensions).Values.Where(v => !String.IsNullOrWhiteSpace(v)).ToList();
+            var tenses = String.IsNullOrEmpty(VerbTenses) ? null : ParseVerbTenses(VerbTenses).Values.Where(v => !String.IsNullOrWhiteSpace(v)).ToList();
+            var forms = String.IsNullOrEmpty(Forms) ? null : Forms.Split(";");
 
             if (declensions != null)
             {
@@ -60,16 +59,9 @@ namespace chldr_data.Entities
                 }
             }
 
-            if (excludeTitle)
-            {
-                allWordForms.Remove(content.ToLower());
-            }
-            else
-            {
-                allWordForms.Add(content.ToLower());
-            }
+            allWordForms.Add(Content.ToLower());
 
-            return allWordForms.ToArray();
+            return string.Join("; ", allWordForms.Select(w => w)).ToLower();
         }
         public static string ParseGrammaticalClass(int grammaticalClass)
         {
@@ -90,8 +82,7 @@ namespace chldr_data.Entities
 
             return ClassesMap[grammaticalClass];
         }
-
-        public static string JoinVerbTenses(Dictionary<string, string> tensesMap)
+        public static string StringifyVerbTenses(Dictionary<string, string> tensesMap)
         {
             if (tensesMap.Count == 0)
             {
@@ -238,7 +229,7 @@ namespace chldr_data.Entities
 
             return tensesMap;
         }
-        public static string JoinNounDeclensions(Dictionary<string, string> declensionsMap)
+        public static string StringifyNounDeclensions(Dictionary<string, string> declensionsMap)
         {
             if (declensionsMap.Values.Count() == 0)
             {
@@ -301,6 +292,10 @@ namespace chldr_data.Entities
             }
 
             return declensionsMap;
+        }
+        internal static string StringifyForms(List<string> forms)
+        {
+            return string.Join(";", forms);
         }
     }
 }

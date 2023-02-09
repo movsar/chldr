@@ -44,8 +44,8 @@ namespace chldr_data.Repositories
                     Entry = entry,
                     Content = newWord.Content,
                     Forms = string.Join(";", newWord.Forms),
-                    NounDeclensions = Word.JoinNounDeclensions(newWord.NounDeclensions),
-                    VerbTenses = Word.JoinVerbTenses(newWord.VerbTenses),
+                    NounDeclensions = Word.StringifyNounDeclensions(newWord.NounDeclensions),
+                    VerbTenses = Word.StringifyVerbTenses(newWord.VerbTenses),
                     GrammaticalClass = newWord.GrammaticalClass,
                     Notes = newWord.Notes,
                     PartOfSpeech = (int)newWord.PartOfSpeech,
@@ -81,6 +81,29 @@ namespace chldr_data.Repositories
             {
                 throw;
             }
+        }
+
+        public void Update(WordDto wordDto)
+        {
+            var word = Database.Find<Word>(new ObjectId(wordDto.WordId));
+            Database.Write(() =>
+            {
+
+                word.Entry.RawContents = word.GetRawContents();
+                foreach (var translationDto in wordDto.Translations)
+                {
+                    // Try to find and update translation, if it's not there, add a new one
+                }
+                //word.Entry.Rate = 
+
+                word.Content = wordDto.Content;
+                word.GrammaticalClass = wordDto.GrammaticalClass;
+                word.Notes = wordDto.Notes;
+                word.NounDeclensions = Word.StringifyNounDeclensions(wordDto.NounDeclensions);
+                word.VerbTenses = Word.StringifyNounDeclensions(wordDto.VerbTenses);
+                word.Forms = Word.StringifyForms(wordDto.Forms);
+
+            });
         }
     }
 }

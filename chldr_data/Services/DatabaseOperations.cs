@@ -232,13 +232,11 @@ namespace chldr_data.Services
                     switch ((EntryType)entry.Type)
                     {
                         case EntryType.Word:
-                            var allForms = Word.GetAllUniqueWordForms(entry.Word.Content, entry.Word.Forms, entry.Word.NounDeclensions, entry.Word.VerbTenses);
-                            entry.RawContents = string.Join("; ", allForms.Select(w => w)).ToLower();
-
+                            entry.RawContents = entry.Word.GetRawContents();
                             break;
 
                         case EntryType.Phrase:
-                            entry.RawContents = entry.Phrase.Content.ToLower();
+                            entry.RawContents = entry.Phrase.GetRawContents();
                             break;
                     }
                 }
