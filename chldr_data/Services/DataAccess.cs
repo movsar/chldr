@@ -1,5 +1,4 @@
 ﻿using chldr_data.Entities;
-using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Repositories;
@@ -17,11 +16,9 @@ namespace chldr_data.Services
 
         protected readonly ExceptionHandler _exceptionHandler;
         protected readonly NetworkService _networkService;
-        private readonly IRealmServiceFactory _realmServiceFactory;
-        protected IRealmService _realmService;
-
-        public abstract Realm Database { get; }
+        protected readonly IRealmServiceFactory _realmServiceFactory;
         public static DataAccessType CurrentDataAccess { get; set; } = DataAccessType.Offline;
+        public Realm Database => _realmServiceFactory.GetInstance().GetDatabase();
         public SourcesRepository SourcesRepository { get; }
         public LanguagesRepository LanguagesRepository { get; }
         public WordsRepository WordsRepository { get; }
@@ -53,9 +50,9 @@ namespace chldr_data.Services
         {
             try
             {
-                _realmService = _realmServiceFactory.GetInstance();
-                _realmService.DatasourceInitialized += RealmService_DatasourceInitialized;
-                _realmService.InitializeDataSource();
+                var realmService = _realmServiceFactory.GetInstance();
+                realmService.DatasourceInitialized += RealmService_DatasourceInitialized;
+                realmService.InitializeDataSource();
 
             }
             catch (Exception ex)
