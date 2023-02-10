@@ -12,7 +12,7 @@ namespace chldr_data.Repositories
     public class EntriesRepository<TEntryModel> : Repository where TEntryModel : EntryModel
     {
         public event Action<SearchResultModel>? GotNewSearchResult;
-        public EntriesRepository(IRealmService realmService) : base(realmService) { }
+        public EntriesRepository(IRealmServiceFactory realmServiceFactory) : base(realmServiceFactory) { }
         private static IEnumerable<EntryModel> SortDirectSearchEntries(string inputText, IEnumerable<EntryModel> entries)
         {
             // Entry.Content => Equal, StartsWith, Rest

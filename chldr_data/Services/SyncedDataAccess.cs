@@ -1,4 +1,5 @@
 ﻿using chldr_data.Entities;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_utils;
 using chldr_utils.Services;
@@ -30,9 +31,26 @@ namespace chldr_data.Services
 
         #region DB Initializaion Related
 
-        private async Task DatabaseMaintenance()
+        public async Task DatabaseMaintenance()
         {
-            // Whatever is needed to be done with the database
+            await Database.SyncSession.WaitForDownloadAsync();
+            await Database.SyncSession.WaitForUploadAsync();
+
+            try
+            {
+                var sources = Database.All<Source>().ToList();
+                var unverifiedSources = SourcesRepository.GetUnverifiedSources();
+
+                Database.Write(() =>
+                {
+
+                });
+
+            }
+            catch (Exception ex)
+            {
+                _exceptionHandler.ProcessError(ex);
+            }
         }
 
         #endregion

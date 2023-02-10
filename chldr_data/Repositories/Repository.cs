@@ -1,15 +1,16 @@
-﻿using chldr_data.Interfaces;
+﻿using chldr_data.Factories;
+using chldr_data.Interfaces;
 using Realms;
 
 namespace chldr_data.Repositories
 {
     public class Repository
     {
-        private IRealmService _realmService;
-        protected Realm Database => _realmService.GetDatabase();
-        public Repository(IRealmService realmService)
+        private IRealmServiceFactory _realmServiceFactory;
+        protected Realm Database => _realmServiceFactory.GetInstance().GetDatabase();
+        public Repository(IRealmServiceFactory realmServiceFactory)
         {
-            _realmService = realmService;
+            _realmServiceFactory = realmServiceFactory;
         }
 
     }

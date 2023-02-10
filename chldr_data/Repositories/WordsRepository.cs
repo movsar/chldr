@@ -9,7 +9,7 @@ namespace chldr_data.Repositories
 {
     public class WordsRepository : EntriesRepository<WordModel>
     {
-        public WordsRepository(IRealmService realmService) : base(realmService) { }
+        public WordsRepository(IRealmServiceFactory realmServiceFactory) : base(realmServiceFactory) { }
 
         public WordModel GetById(ObjectId entityId)
         {
@@ -101,7 +101,7 @@ namespace chldr_data.Repositories
                             Entry = word.Entry,
                             Language = Database.All<Language>().First(l => l.Code == translationDto.LanguageCode),
                             //Rate = User.rate
-                        }
+                        };
                     }
                     //translation.Rate = 
                     translation.Content = translationDto.Content;

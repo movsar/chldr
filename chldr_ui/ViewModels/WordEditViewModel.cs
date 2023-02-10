@@ -19,7 +19,7 @@ namespace chldr_ui.ViewModels
         public void Save()
         {
             var wordId = new ObjectId(this.wordId);
-            ContentStore.UpdateWord(wordId, Word);
+            ContentStore.UpdateWord(Word);
         }
 
         protected override void OnInitialized()

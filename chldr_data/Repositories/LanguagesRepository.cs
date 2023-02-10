@@ -8,7 +8,7 @@ namespace chldr_data.Repositories
 {
     public class LanguagesRepository : EntriesRepository<PhraseModel>
     {
-        public LanguagesRepository(IRealmService realmService) : base(realmService) { }
+        public LanguagesRepository(IRealmServiceFactory realmServiceFactory) : base(realmServiceFactory) { }
 
         public ObjectId Insert(LanguageDto languageInfo)
         {

@@ -22,6 +22,7 @@ namespace chldr_data.Services
 
         public abstract Realm Database { get; }
         public static DataAccessType CurrentDataAccess { get; set; } = DataAccessType.Offline;
+        public SourcesRepository SourcesRepository { get; }
         public LanguagesRepository LanguagesRepository { get; }
         public WordsRepository WordsRepository { get; }
         public PhrasesRepository PhrasesRepository { get; }
@@ -34,14 +35,13 @@ namespace chldr_data.Services
 
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
-
             _realmServiceFactory = realmServiceFactory;
-            _realmService = realmServiceFactory.GetInstance();
 
-            EntriesRepository = new EntriesRepository<EntryModel>(_realmService);
-            WordsRepository = new WordsRepository(_realmService);
-            PhrasesRepository = new PhrasesRepository(_realmService);
-            LanguagesRepository = new LanguagesRepository(_realmService);
+            EntriesRepository = new EntriesRepository<EntryModel>(_realmServiceFactory);
+            WordsRepository = new WordsRepository(_realmServiceFactory);
+            PhrasesRepository = new PhrasesRepository(_realmServiceFactory);
+            LanguagesRepository = new LanguagesRepository(_realmServiceFactory);
+            SourcesRepository = new SourcesRepository(_realmServiceFactory);
         }
 
         private void RealmService_DatasourceInitialized()
@@ -56,6 +56,7 @@ namespace chldr_data.Services
                 _realmService = _realmServiceFactory.GetInstance();
                 _realmService.DatasourceInitialized += RealmService_DatasourceInitialized;
                 _realmService.InitializeDataSource();
+
             }
             catch (Exception ex)
             {

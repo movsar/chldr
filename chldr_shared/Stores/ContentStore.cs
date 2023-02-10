@@ -121,8 +121,13 @@ namespace chldr_shared.Stores
                 if (DataAccess.CurrentDataAccess == DataAccessType.Offline && _networkService.IsNetworUp)
                 {
                     DataAccess.CurrentDataAccess = DataAccessType.Synced;
-                    var syncedDataAccess = _dataAccessFactory.GetInstance(DataAccessType.Synced);
-                    Task.Run(async () => { await Task.Delay(250); syncedDataAccess.Initialize(); });
+                    var syncedDataAccess = (SyncedDataAccess)_dataAccessFactory.GetInstance(DataAccessType.Synced);
+                    Task.Run(async () =>
+                    {
+                        await Task.Delay(250);
+                        syncedDataAccess.Initialize();
+                        //await syncedDataAccess.DatabaseMaintenance();
+                    });
                 }
             }
             catch (Exception ex)
@@ -165,9 +170,16 @@ namespace chldr_shared.Stores
             // _dataAccess.UpdatePhrase(loggedInUser, phraseId, content, notes);
         }
 
-        public void UpdateWord(ObjectId wordId, WordDto? word)
+        public void UpdateWord(WordDto? word)
         {
-            _dataAccess.WordsRepository.Update(wordId, word);
+            if (word == null)
+            {
+                var ex = new Exception("An error occurred");
+                _exceptionHandler.ProcessError(ex);
+                throw ex;
+            }
+
+            _dataAccess.WordsRepository.Update(word);
         }
     }
 }

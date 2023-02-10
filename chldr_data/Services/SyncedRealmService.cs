@@ -54,6 +54,7 @@ namespace chldr_data.Services
                 await GetDatabase().Subscriptions.WaitForSynchronizationAsync();
                 await GetDatabase().SyncSession.WaitForDownloadAsync();
                 await GetDatabase().SyncSession.WaitForUploadAsync();
+
             }
             catch (Exception ex)
             {
@@ -127,6 +128,11 @@ namespace chldr_data.Services
                     Realm.Compact(_config);
                 }
             }
+
+            //GetDatabase().WriteCopy(new RealmConfiguration(syncedDatabasePath + ".copy")
+            //{
+            //    EncryptionKey = encKey
+            //});
         }
 
         public void InitializeDataSource()
