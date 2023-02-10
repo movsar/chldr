@@ -14,6 +14,7 @@ namespace chldr_data.Services
     public class SyncedRealmService : IRealmService
     {
         private const string myRealmAppId = "dosham-lxwuu";
+        private const string myTestRealmAppId = "dosham-test-oaqel";
         public event Action? DatasourceInitialized;
 
         private App? _app;

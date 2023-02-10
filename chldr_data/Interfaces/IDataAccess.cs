@@ -12,6 +12,7 @@ namespace chldr_data.Interfaces
         PhrasesRepository PhrasesRepository { get; }
         WordsRepository WordsRepository { get; }
         LanguagesRepository LanguagesRepository { get; }
+        Task DatabaseMaintenance();
 
         void Initialize();
         List<LanguageModel> GetAllLanguages();

@@ -54,7 +54,7 @@ namespace chldr_native.Extensions
 #elif MACCATALYST
             platform = Platforms.MacCatalyst;
 #endif
-            appBuilder.Services.AddScoped(x => new chldr_utils.Services.EnvironmentService(platform));
+            appBuilder.Services.AddScoped(x => new EnvironmentService(platform));
             appBuilder.Services.AddScoped(x => new FileService(AppContext.BaseDirectory));
 
             // Utils

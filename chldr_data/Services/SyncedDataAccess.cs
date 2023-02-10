@@ -14,7 +14,7 @@ namespace chldr_data.Services
         #region Properties
         private new SyncedRealmService _realmService;
 
-        public SyncedDataAccess(IRealmServiceFactory realmServiceFactory, UserService userService, ExceptionHandler exceptionHandler, NetworkService networkService) : base(realmServiceFactory, exceptionHandler, networkService)
+        public SyncedDataAccess(IRealmServiceFactory realmServiceFactory, ExceptionHandler exceptionHandler, NetworkService networkService) : base(realmServiceFactory, exceptionHandler, networkService)
         {
             _realmService = (realmServiceFactory.GetInstance(DataAccessType.Synced) as SyncedRealmService)!;
         }
@@ -28,31 +28,5 @@ namespace chldr_data.Services
         public event Action DatabaseSynchronized;
         #endregion
 
-
-        #region DB Initializaion Related
-
-        public async Task DatabaseMaintenance()
-        {
-            await Database.SyncSession.WaitForDownloadAsync();
-            await Database.SyncSession.WaitForUploadAsync();
-
-            try
-            {
-                var sources = Database.All<Source>().ToList();
-                var unverifiedSources = SourcesRepository.GetUnverifiedSources();
-
-                Database.Write(() =>
-                {
-
-                });
-
-            }
-            catch (Exception ex)
-            {
-                _exceptionHandler.ProcessError(ex);
-            }
-        }
-
-        #endregion
     }
 }

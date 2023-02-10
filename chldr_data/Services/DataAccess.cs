@@ -110,5 +110,30 @@ namespace chldr_data.Services
             File.WriteAllBytes("encryption.key", encryptionKey);
         }
 
+        public async Task DatabaseMaintenance()
+        {
+            //await Database.SyncSession.WaitForDownloadAsync();
+            //await Database.SyncSession.WaitForUploadAsync();
+
+            string myTestRealmAppId = "dosham-test-oaqel";
+            var app = App.Create(new AppConfiguration(myTestRealmAppId));
+
+            try
+            {
+                var sources = Database.All<Source>().ToList();
+                var unverifiedSources = SourcesRepository.GetUnverifiedSources();
+
+                Database.Write(() =>
+                {
+
+                });
+
+            }
+            catch (Exception ex)
+            {
+                _exceptionHandler.ProcessError(ex);
+            }
+        }
+
     }
 }
