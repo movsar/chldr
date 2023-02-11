@@ -1,19 +1,39 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
+using chldr_data.Interfaces;
+using chldr_utils;
 using MongoDB.Bson;
 using Realms;
+using Realms.Sync;
+using Realms.Sync.Exceptions;
 using System.Diagnostics;
+using static Realms.Sync.MongoClient;
 using Entry = chldr_data.Entities.Entry;
+using User = chldr_data.Entities.User;
 
 namespace chldr_data.Services
 {
     public class DatabaseOperations
     {
         static Realm _localRealm, _syncedRealm;
-
-        public void RunMaintenance()
+        private async Task RunSyncedDatabaseMaintenance(SyncedRealmService realmService)
         {
+            var realm = realmService.GetDatabase();
+            var app = realmService.GetApp();
 
+            await realm.SyncSession.WaitForDownloadAsync();
+            await realm.SyncSession.WaitForUploadAsync();
+
+            var offlineRealm = GetLocalRealm();
+
+            realm.Write(() =>
+            {
+
+            });
+        }
+        public async Task RunMaintenanceAsync(IRealmServiceFactory realmServiceFactory)
+        {
+            //await RunSyncedDatabaseMaintenance(realmServiceFactory.GetInstance(DataAccessType.Synced) as SyncedRealmService);
         }
         private static Realm GetLocalRealm()
         {

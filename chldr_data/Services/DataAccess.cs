@@ -6,6 +6,8 @@ using chldr_utils;
 using chldr_utils.Services;
 using Realms;
 using Realms.Sync;
+using Realms.Sync.Exceptions;
+using System.Diagnostics;
 using System.Security.Cryptography;
 
 namespace chldr_data.Services
@@ -109,28 +111,14 @@ namespace chldr_data.Services
 
         public async Task DatabaseMaintenance()
         {
-            await Database.SyncSession.WaitForDownloadAsync();
-            await Database.SyncSession.WaitForUploadAsync();
-
-            string myTestRealmAppId = "dosham-test-oaqel";
-            var app = App.Create(new AppConfiguration(myTestRealmAppId));
-
             try
             {
-                var sources = Database.All<Source>().ToList();
-                var unverifiedSources = SourcesRepository.GetUnverifiedSources();
-
-                Database.Write(() =>
-                {
-
-                });
-
+                await (new DatabaseOperations()).RunMaintenanceAsync(_realmServiceFactory);
             }
             catch (Exception ex)
             {
                 _exceptionHandler.ProcessError(ex);
             }
         }
-
     }
 }

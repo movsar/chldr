@@ -66,7 +66,7 @@ namespace chldr_data.Services
         {
             if (_app == null)
             {
-                _app = App.Create(new AppConfiguration(myRealmAppId)
+                _app = App.Create(new AppConfiguration(myTestRealmAppId)
                 {
                     BaseFilePath = _fileService.AppDataDirectory,
                 });
@@ -80,6 +80,7 @@ namespace chldr_data.Services
         public void InitializeConfiguration()
         {
             // Copy original file so that app will be able to access entries immediately
+
             var syncedDatabasePath = Path.Combine(_fileService.AppDataDirectory, GetUserDatabaseName(_app.CurrentUser.Id));
 
             byte[] encKey = AppConstants.EncKey.Split(":").Select(numAsString => Convert.ToByte(numAsString)).ToArray();
@@ -139,8 +140,9 @@ namespace chldr_data.Services
         {
             InitializeApp();
 
-            if (_app?.CurrentUser?.Provider == Credentials.AuthProvider.Anonymous)
+            if (_app?.CurrentUser == null || _app?.CurrentUser?.Provider == Credentials.AuthProvider.Anonymous)
             {
+                DataAccess.CurrentDataAccess = DataAccessType.Offline;
                 return;
             }
 
