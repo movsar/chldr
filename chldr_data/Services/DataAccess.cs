@@ -109,8 +109,8 @@ namespace chldr_data.Services
 
         public async Task DatabaseMaintenance()
         {
-            //await Database.SyncSession.WaitForDownloadAsync();
-            //await Database.SyncSession.WaitForUploadAsync();
+            await Database.SyncSession.WaitForDownloadAsync();
+            await Database.SyncSession.WaitForUploadAsync();
 
             string myTestRealmAppId = "dosham-test-oaqel";
             var app = App.Create(new AppConfiguration(myTestRealmAppId));

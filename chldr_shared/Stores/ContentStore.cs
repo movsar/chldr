@@ -126,7 +126,7 @@ namespace chldr_shared.Stores
                     {
                         await Task.Delay(250);
                         syncedDataAccess.Initialize();
-                        _dataAccess.DatabaseMaintenance();
+                        //await _dataAccess.DatabaseMaintenance();
                     });
                 }
             }
