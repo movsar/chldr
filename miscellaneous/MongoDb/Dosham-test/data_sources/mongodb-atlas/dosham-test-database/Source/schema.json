@@ -1,0 +1,26 @@
+{
+    "bsonType": "object",
+    "properties": {
+        "CreatedAt": {
+            "bsonType": "date"
+        },
+        "Name": {
+            "bsonType": "string"
+        },
+        "Notes": {
+            "bsonType": "string"
+        },
+        "UpdatedAt": {
+            "bsonType": "date"
+        },
+        "_id": {
+            "bsonType": "objectId"
+        }
+    },
+    "required": [
+        "_id",
+        "CreatedAt",
+        "UpdatedAt"
+    ],
+    "title": "Source"
+}

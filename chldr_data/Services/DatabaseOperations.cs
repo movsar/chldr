@@ -1,7 +1,9 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
+using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_utils;
+using chldr_utils.Services;
 using MongoDB.Bson;
 using Realms;
 using Realms.Sync;
@@ -16,38 +18,47 @@ namespace chldr_data.Services
     public class DatabaseOperations
     {
         static Realm _localRealm, _syncedRealm;
-        private async Task RunSyncedDatabaseMaintenance(SyncedRealmService realmService)
+        private IRealmServiceFactory _realmServiceFactory;
+        private static FileService _fileService;
+
+
+
+        private async Task RunSyncedDatabaseMaintenanceAsync()
         {
-            var realm = realmService.GetDatabase();
+            DataAccess.CurrentDataAccess = DataAccessType.Synced;
+            var realmService = _realmServiceFactory.GetInstance() as SyncedRealmService;
+
             var app = realmService.GetApp();
-
-            await realm.SyncSession.WaitForDownloadAsync();
-            await realm.SyncSession.WaitForUploadAsync();
-
-            var offlineRealm = GetLocalRealm();
-
-            realm.Write(() =>
+            await app.LogInAsync(Credentials.Anonymous());
+            realmService.InitializeConfiguration();
+            if (realmService.GetDatabase() == null)
             {
+                throw new Exception("Database is null");
+            }
 
-            });
+            _syncedRealm = realmService.GetDatabase();
+            _localRealm = GetLocalRealm();
+
+            //await CopyFromLocalToSyncedRealm(5000);
         }
         public async Task RunMaintenanceAsync(IRealmServiceFactory realmServiceFactory)
         {
-            //await RunSyncedDatabaseMaintenance(realmServiceFactory.GetInstance(DataAccessType.Synced) as SyncedRealmService);
+            _realmServiceFactory = realmServiceFactory;
+            _fileService = new FileService(AppContext.BaseDirectory);
+
+            await RunSyncedDatabaseMaintenanceAsync();
         }
         private static Realm GetLocalRealm()
         {
-            var dbPath = "local.realm";
+            byte[] encKey = AppConstants.EncKey.Split(":").Select(numAsString => Convert.ToByte(numAsString)).ToArray();
 
-            return Realm.GetInstance(new RealmConfiguration(dbPath)
+            var encryptedConfig = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
             {
-                SchemaVersion = 14,
-                ShouldCompactOnLaunch = (totalBytes, usedBytes) =>
-                {
-                    ulong oneHundredMB = 30 * 1024 * 1024;
-                    return totalBytes > oneHundredMB && usedBytes / totalBytes < 0.5;
-                }
-            });
+                SchemaVersion = 1,
+                EncryptionKey = encKey
+            };
+
+            return Realm.GetInstance(encryptedConfig);
         }
         private void CopyEntriesByChunks(IEnumerable<Entities.Entry> entries)
         {
@@ -134,10 +145,8 @@ namespace chldr_data.Services
             });
         }
 
-        public async Task CopyFromLocalToSyncedRealm()
+        private async Task CopyFromLocalToSyncedRealm(int limit = 9999999)
         {
-            await _syncedRealm.Subscriptions.WaitForSynchronizationAsync();
-
             _syncedRealm.Write(() =>
             {
                 var languages = _localRealm.All<Language>();
@@ -176,7 +185,7 @@ namespace chldr_data.Services
             Debug.WriteLine($"Starting inserting entries");
             var entries = _localRealm.All<Entry>().AsEnumerable().OrderBy(e => e._id);
             int totalCount = entries.Count();
-            for (int i = 70000; i <= totalCount; i = i + 200)
+            for (int i = 0; i <= totalCount; i = i + 200)
             {
                 var entriesToUpload = entries.Skip(i);
                 entriesToUpload = entriesToUpload.Count() > 200 ? entriesToUpload.Take(200) : entriesToUpload;
@@ -186,7 +195,13 @@ namespace chldr_data.Services
                 //_syncedRealm = await GetSyncedRealmInstance();
                 await _syncedRealm.Subscriptions.WaitForSynchronizationAsync();
 
+
                 Debug.WriteLine($"Entries inserted: {i}");
+
+                if (i == limit)
+                {
+                    break;
+                }
             }
         }
 

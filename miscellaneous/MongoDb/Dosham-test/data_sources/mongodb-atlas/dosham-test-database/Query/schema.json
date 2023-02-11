@@ -1,0 +1,27 @@
+{
+    "bsonType": "object",
+    "properties": {
+        "Content": {
+            "bsonType": "string"
+        },
+        "CreatedAt": {
+            "bsonType": "date"
+        },
+        "UpdatedAt": {
+            "bsonType": "date"
+        },
+        "UserId": {
+            "bsonType": "long"
+        },
+        "_id": {
+            "bsonType": "objectId"
+        }
+    },
+    "required": [
+        "_id",
+        "UserId",
+        "CreatedAt",
+        "UpdatedAt"
+    ],
+    "title": "Query"
+}

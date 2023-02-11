@@ -1,0 +1,20 @@
+{
+    "Entry": {
+        "ref": "#/relationship/mongodb-atlas/dosham-test-database/Entry",
+        "source_key": "Entry",
+        "foreign_key": "_id",
+        "is_list": false
+    },
+    "Language": {
+        "ref": "#/relationship/mongodb-atlas/dosham-test-database/Language",
+        "source_key": "Language",
+        "foreign_key": "_id",
+        "is_list": false
+    },
+    "User": {
+        "ref": "#/relationship/mongodb-atlas/dosham-test-database/User",
+        "source_key": "User",
+        "foreign_key": "_id",
+        "is_list": false
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "User": {
+        "ref": "#/relationship/mongodb-atlas/dosham-test-database/User",
+        "source_key": "User",
+        "foreign_key": "_id",
+        "is_list": false
+    },
+    "Word": {
+        "ref": "#/relationship/mongodb-atlas/dosham-test-database/Word",
+        "source_key": "Word",
+        "foreign_key": "_id",
+        "is_list": false
+    }
+}

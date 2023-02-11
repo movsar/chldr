@@ -1,0 +1,20 @@
+[
+    {
+        "name": "SendPasswordResetLink",
+        "private": false
+    },
+    {
+        "name": "SendConfirmationLinkEmail",
+        "private": false,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "IsAnonymous",
+        "private": false
+    },
+    {
+        "name": "AddUserDataFunc",
+        "private": false,
+        "run_as_system": true
+    }
+]

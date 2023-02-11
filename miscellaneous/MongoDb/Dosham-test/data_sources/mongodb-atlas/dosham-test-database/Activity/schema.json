@@ -1,0 +1,42 @@
+{
+    "bsonType": "object",
+    "properties": {
+        "CreatedAt": {
+            "bsonType": "date"
+        },
+        "NewValue": {
+            "bsonType": "string"
+        },
+        "Notes": {
+            "bsonType": "string"
+        },
+        "ObjectClass": {
+            "bsonType": "string"
+        },
+        "ObjectId": {
+            "bsonType": "objectId"
+        },
+        "ObjectProperty": {
+            "bsonType": "string"
+        },
+        "OldValue": {
+            "bsonType": "string"
+        },
+        "UpdatedAt": {
+            "bsonType": "date"
+        },
+        "User": {
+            "bsonType": "objectId"
+        },
+        "_id": {
+            "bsonType": "objectId"
+        }
+    },
+    "required": [
+        "_id",
+        "ObjectId",
+        "CreatedAt",
+        "UpdatedAt"
+    ],
+    "title": "Activity"
+}

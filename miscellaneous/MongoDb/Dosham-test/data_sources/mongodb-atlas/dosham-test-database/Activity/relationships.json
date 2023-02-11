@@ -1,0 +1,8 @@
+{
+    "User": {
+        "ref": "#/relationship/mongodb-atlas/dosham-test-database/User",
+        "source_key": "User",
+        "foreign_key": "_id",
+        "is_list": false
+    }
+}
