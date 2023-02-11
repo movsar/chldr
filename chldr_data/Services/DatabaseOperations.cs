@@ -29,7 +29,7 @@ namespace chldr_data.Services
             var realmService = _realmServiceFactory.GetInstance() as SyncedRealmService;
 
             var app = realmService.GetApp();
-            await app.LogInAsync(Credentials.Anonymous());
+            //await app.LogInAsync(Credentials.Anonymous());
             realmService.InitializeConfiguration();
             if (realmService.GetDatabase() == null)
             {
@@ -39,14 +39,14 @@ namespace chldr_data.Services
             _syncedRealm = realmService.GetDatabase();
             _localRealm = GetLocalRealm();
 
-            //await CopyFromLocalToSyncedRealm(5000);
+            await CopyFromLocalToSyncedRealm(500);
         }
         public async Task RunMaintenanceAsync(IRealmServiceFactory realmServiceFactory)
         {
             _realmServiceFactory = realmServiceFactory;
             _fileService = new FileService(AppContext.BaseDirectory);
 
-            await RunSyncedDatabaseMaintenanceAsync();
+            //await RunSyncedDatabaseMaintenanceAsync();
         }
         private static Realm GetLocalRealm()
         {
@@ -183,7 +183,7 @@ namespace chldr_data.Services
             await _syncedRealm.Subscriptions.WaitForSynchronizationAsync();
 
             Debug.WriteLine($"Starting inserting entries");
-            var entries = _localRealm.All<Entry>().AsEnumerable().OrderBy(e => e._id);
+            var entries = _localRealm.All<Entry>().Where(e => e.Type == (int)EntryType.Phrase).AsEnumerable().OrderBy(e => e._id);
             int totalCount = entries.Count();
             for (int i = 0; i <= totalCount; i = i + 200)
             {
