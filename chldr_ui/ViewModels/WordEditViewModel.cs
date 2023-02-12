@@ -41,11 +41,10 @@ namespace chldr_ui.ViewModels
 
             if (existingWord == null)
             {
-                throw new Exception("Error:Word_shouldn't_be_null");
+                existingWord = ContentStore.GetWordById(wordId);
             }
 
             Word = new WordDto(existingWord);
-
             InitializeViewModel(Word);
         }
     }

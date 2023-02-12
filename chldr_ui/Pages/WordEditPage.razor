@@ -14,10 +14,10 @@
 
         <div class="form-outline mb-4">
             <select @bind="Word.PartOfSpeech" class="form-select">
-                <option value="1" class="form-control">@Localizer["Verb"]</option>
-                <option value="2" class="form-control">@Localizer["Noun"]</option>
-                <option value="3" class="form-control">@Localizer["Adverb"]</option>
-                <option value="4" class="form-control">@Localizer["Adjective"]</option>
+                <option value="@PartsOfSpeech.Verb" class="form-control">@Localizer["Verb"]</option>
+                <option value="@PartsOfSpeech.Noun" class="form-control">@Localizer["Noun"]</option>
+                <option value="@PartsOfSpeech.Adverb" class="form-control">@Localizer["Adverb"]</option>
+                <option value="@PartsOfSpeech.Adjective" class="form-control">@Localizer["Adjective"]</option>
             </select>
         </div>
 
@@ -34,13 +34,15 @@
         *@
 
                 @Localizer["Grammatical_class"]
-                <select @bind="Word.PartOfSpeech" class="form-select" title="@Localizer["Grammatical_class"]">
-                    <option value="1" class="form-control">@Localizer["Class:1_vu_bd"]</option>
-                    <option value="2" class="form-control">@Localizer["Class:2_yu_bd"]</option>
-                    <option value="3" class="form-control">@Localizer["Class:3_yu_yu"]</option>
-                    <option value="4" class="form-control">@Localizer["Class:4_du_du"]</option>
-                    <option value="4" class="form-control">@Localizer["Class:5_bu_by"]</option>
-                    <option value="4" class="form-control">@Localizer["Class:6_b_d"]</option>
+                <select @bind="Word.GrammaticalClass" class="form-select" title="@Localizer["Grammatical_class"]">
+                    <option value="1" class="form-control">@Localizer["Class:v_b"]</option>
+                    <option value="2" class="form-control">@Localizer["Class:y_b"]</option>
+                    <option value="3" class="form-control">@Localizer["Class:y_y"]</option>
+                    <option value="4" class="form-control">@Localizer["Class:d_d"]</option>
+                    <option value="5" class="form-control">@Localizer["Class:b_b"]</option>
+                    <option value="6" class="form-control">@Localizer["Class:b_d"]</option>
+                    @*Technically this class doesn't exist, but it's abbreviation for the words that combine 1st and 3rd classes*@
+                    <option value="7" class="form-control">@Localizer["Class:v_y"]</option>
                 </select>
             </div>
         }

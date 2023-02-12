@@ -1,4 +1,5 @@
 ﻿using chldr_data.Entities;
+using chldr_data.Enums;
 using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
@@ -37,7 +38,7 @@ namespace chldr_data.Repositories
                     rest.Add(entry);
                 }
             }
-            
+
             var orderedStartsWith = startsWith.OrderBy(e => e.Content).ToList();
             var orderedRest = rest.OrderBy(e => e.Content).ToList();
 
@@ -191,10 +192,22 @@ namespace chldr_data.Repositories
             return entries;
         }
 
+        public List<EntryModel> GetWordsToFiddleWith()
+        {
+            var entries = Database.All<Entry>().AsEnumerable()
+              .Where(entry => entry.Type == (int)EntryType.Word)
+              .Take(5)
+              .Select(entry => EntryModelFactory.CreateEntryModel(entry))
+              .ToList();
+
+            return entries;
+        }
+
         public List<EntryModel> GetEntriesOnModeration()
         {
             var entries = Database.All<Entry>().AsEnumerable()
                 .Where(entry => entry.Rate < UserModel.EnthusiastRateRange.Lower)
+                .Take(50)
                 .Select(entry => EntryModelFactory.CreateEntryModel(entry))
                 .ToList();
 

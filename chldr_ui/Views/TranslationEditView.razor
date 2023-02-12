@@ -4,6 +4,11 @@
     @Localizer["Choose_language"]
 </p>
 
+@if (@Translation == null)
+{
+    return;
+}
+
 <select @bind="@Translation.LanguageCode" class="form-select" title="@Localizer["Grammatical_class"]">
     @foreach (var language in ContentStore.AllLanguages)
     {

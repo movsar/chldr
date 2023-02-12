@@ -7,6 +7,7 @@ using chldr_utils;
 using chldr_utils.Models;
 using chldr_utils.Services;
 using MongoDB.Bson;
+using System.Collections.ObjectModel;
 
 namespace chldr_shared.Stores
 {
@@ -15,7 +16,7 @@ namespace chldr_shared.Stores
 
         #region Events
         public event Action? ContentInitialized;
-        public event Action<SearchResultModel>? GotNewSearchResult;
+        public event Action<SearchResultModel>? CachedResultsChanged;
 
         private readonly ExceptionHandler _exceptionHandler;
         private readonly IDataAccessFactory _dataAccessFactory;
@@ -25,7 +26,7 @@ namespace chldr_shared.Stores
         #region Fields and Properties
         private readonly IDataAccess _dataAccess;
         // This shouldn't be normally used, but only to request models that have already been loaded 
-        public List<SearchResultModel> CachedSearchResults { get; } = new();
+        public ObservableCollection<SearchResultModel> CachedSearchResults { get; } = new();
         public List<LanguageModel> AllLanguages { get; } = new();
         // These are the sources excluding userIds
         public List<SourceModel> AllNamedSources { get; } = new();
@@ -34,8 +35,9 @@ namespace chldr_shared.Stores
         #region EventHandlers
         private void DataAccess_GotNewSearchResults(SearchResultModel searchResult)
         {
+            CachedSearchResults.Clear();
             CachedSearchResults.Add(searchResult);
-            GotNewSearchResult?.Invoke(searchResult);
+            CachedResultsChanged?.Invoke(searchResult);
         }
         #endregion
 
@@ -57,7 +59,6 @@ namespace chldr_shared.Stores
         #region Methods
         public void Search(string inputText, FiltrationFlags filterationFlags)
         {
-            CachedSearchResults.Clear();
             Task.Run(() => _dataAccess.EntriesRepository.FindAsync(inputText, filterationFlags));
         }
         public void LoadRandomEntries()
@@ -67,7 +68,16 @@ namespace chldr_shared.Stores
 
             var searchResults = new SearchResultModel(entries);
             CachedSearchResults.Add(searchResults);
-            GotNewSearchResult?.Invoke(searchResults);
+            CachedResultsChanged?.Invoke(searchResults);
+        }
+        public void LoadEntriesToFiddleWith()
+        {
+            CachedSearchResults.Clear();
+            var entries = _dataAccess.EntriesRepository.GetWordsToFiddleWith();
+
+            var searchResults = new SearchResultModel(entries);
+            CachedSearchResults.Add(searchResults);
+            CachedResultsChanged?.Invoke(searchResults);
         }
         public void LoadEntriesOnModeration()
         {
@@ -76,7 +86,7 @@ namespace chldr_shared.Stores
 
             var searchResults = new SearchResultModel(entries);
             CachedSearchResults.Add(searchResults);
-            GotNewSearchResult?.Invoke(searchResults);
+            CachedResultsChanged?.Invoke(searchResults);
         }
         public WordModel GetWordById(ObjectId entryId)
         {

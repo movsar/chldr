@@ -2,7 +2,7 @@
     "anon-user": {
         "name": "anon-user",
         "type": "anon-user",
-        "disabled": false
+        "disabled": true
     },
     "api-key": {
         "name": "api-key",
@@ -15,9 +15,9 @@
         "config": {
             "autoConfirm": false,
             "confirmEmailSubject": "Confirm your email address",
-            "confirmationFunctionName": "SendEmailConfirmationLink",
+            "confirmationFunctionName": "SendConfirmationLinkEmail",
             "emailConfirmationUrl": "https://dosham.azurewebsites.net/api/user/confirmEmail/",
-            "resetFunctionName": "ResetPassword",
+            "resetFunctionName": "SendPasswordResetLink",
             "resetPasswordSubject": "Password Reset Link",
             "resetPasswordUrl": "https://dosham.azurewebsites.net/api/user/passwordReset/",
             "runConfirmationFunction": true,
@@ -30,11 +30,11 @@
         "type": "oauth2-google",
         "config": {
             "clientId": "777",
-            "openId": true
+            "openId": false
         },
         "secret_config": {
             "clientSecret": "my_secret"
         },
-        "disabled": false
+        "disabled": true
     }
 }

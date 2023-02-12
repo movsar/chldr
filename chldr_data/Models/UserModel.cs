@@ -5,12 +5,11 @@ namespace chldr_data.Models
 {
     public class UserModel : ModelBase
     {
-        // Members can only add and vote, they'll get their rate increased when moders approve their entries
+        // Members can only add new entries and translations they'll get their rate increased when moders approve their entries
         public static NumericRange MemberRateRange = new NumericRange(1, 10);
-        public static NumericRange EnthusiastRateRange = new NumericRange(10, 50);
-        // Initial Rate of official dictionary entries = 50, so that only contributors can edit them
-        public static NumericRange ContributorRateRange = new NumericRange(50, 500);
-        public static NumericRange EditorRateRange = new NumericRange(500, 10000);
+        public static NumericRange EnthusiastRateRange = new NumericRange(10, 100);
+        public static NumericRange ContributorRateRange = new NumericRange(100, 1000);
+        public static NumericRange EditorRateRange = new NumericRange(1000, 10000);
         public static NumericRange MaintainerRateRange = new NumericRange(10000, 500000000);
         public string? Email { get; }
         public int Rate { get; }

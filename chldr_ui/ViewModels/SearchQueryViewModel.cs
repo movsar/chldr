@@ -16,6 +16,11 @@ namespace chldr_ui.ViewModels
             //FiltrationFlags.OnModeration = !FiltrationFlags.OnModeration;
         }
 
+        internal void LoadEntriesToFiddleWith()
+        {
+            ContentStore.LoadEntriesToFiddleWith();
+        }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
