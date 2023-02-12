@@ -1,15 +1,19 @@
 ﻿using chldr_data.Models;
 using Microsoft.AspNetCore.Components;
+using MongoDB.Bson;
 
 namespace chldr_ui.ViewModels
 {
     public class WordViewModel : EntryViewModelBase
     {
-        [Inject] NavigationManager NavigationManager { get; set; }
         public WordModel? Word { get; set; }
 
         public string? Header => Word?.Content;
         public string? Subheader => CreateSubheader();
+        public void DeleteEntry()
+        {
+            ContentStore.DeleteEntry(Entry!.Id);
+        }
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
@@ -28,9 +32,8 @@ namespace chldr_ui.ViewModels
                 return null;
             }
 
-
-
             List<string> allForms = new List<string>();
+
             foreach (var item in Word!.VerbTenses.Values.Union(Word.NounDeclensions.Values))
             {
                 if (item.Length > 0)

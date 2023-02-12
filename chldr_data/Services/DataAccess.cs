@@ -28,7 +28,14 @@ namespace chldr_data.Services
         public EntriesRepository<EntryModel> EntriesRepository { get; }
 
 
-        public DataAccess(IRealmServiceFactory realmServiceFactory, ExceptionHandler exceptionHandler, NetworkService networkService)
+        public DataAccess(IRealmServiceFactory realmServiceFactory,
+            ExceptionHandler exceptionHandler,
+            NetworkService networkService,
+            EntriesRepository<EntryModel> entriesRepository,
+            WordsRepository wordsRepository,
+            PhrasesRepository phrasesRepository,
+            LanguagesRepository languagesRepository,
+            SourcesRepository sourcesRepository)
         {
             // Must be run on a different thread, otherwise the main view will not be able to listen to its events
 
@@ -36,11 +43,11 @@ namespace chldr_data.Services
             _networkService = networkService;
             _realmServiceFactory = realmServiceFactory;
 
-            EntriesRepository = new EntriesRepository<EntryModel>(_realmServiceFactory);
-            WordsRepository = new WordsRepository(_realmServiceFactory);
-            PhrasesRepository = new PhrasesRepository(_realmServiceFactory);
-            LanguagesRepository = new LanguagesRepository(_realmServiceFactory);
-            SourcesRepository = new SourcesRepository(_realmServiceFactory);
+            EntriesRepository = entriesRepository;
+            WordsRepository = wordsRepository;
+            PhrasesRepository = phrasesRepository;
+            LanguagesRepository = languagesRepository;
+            SourcesRepository = sourcesRepository;
         }
 
         private void RealmService_DatasourceInitialized()

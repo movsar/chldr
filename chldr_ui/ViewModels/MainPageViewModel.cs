@@ -10,7 +10,7 @@ namespace chldr_ui.ViewModels
 
         private async Task ShowRandoms()
         {
-            if (ContentStore.CachedSearchResults.Count > 0)
+            if (ContentStore.CachedSearchResult.Entries.Count > 0)
             {
                 return;
             }
@@ -28,9 +28,10 @@ namespace chldr_ui.ViewModels
 
         protected override void OnInitialized()
         {
-            ContentStore.ContentInitialized += ContentStore_ContentInitialized; ;
+            ContentStore.ContentInitialized += ContentStore_ContentInitialized;
             base.OnInitialized();
         }
+
 
         private async void ContentStore_ContentInitialized()
         {

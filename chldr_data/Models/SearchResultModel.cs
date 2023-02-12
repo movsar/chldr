@@ -10,14 +10,14 @@
         }
 
         public string SearchQuery { get; }
-        public IEnumerable<EntryModel> Entries { get; }
+        public List<EntryModel> Entries { get; }
         public Mode SearchMode { get; }
 
-        public SearchResultModel(IEnumerable<EntryModel> resultingEntries)
+        public SearchResultModel(List<EntryModel> resultingEntries)
         {
             Entries = resultingEntries;
         }
-        public SearchResultModel(string inputText, IEnumerable<EntryModel> resultingEntries, Mode mode)
+        public SearchResultModel(string inputText, List<EntryModel> resultingEntries, Mode mode)
         {
             SearchQuery = inputText;
             Entries = resultingEntries;

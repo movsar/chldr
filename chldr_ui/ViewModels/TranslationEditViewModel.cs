@@ -14,7 +14,7 @@ namespace chldr_ui.ViewModels
 
         private TranslationDto CreateTranslationDto(ObjectId entryId, ObjectId translationId)
         {
-            var entry = ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries)
+            var entry = ContentStore.CachedSearchResult.Entries
                 .First(e => e.Id == entryId);
 
             return new TranslationDto(entry.Translations.First(t => t.Id == translationId));

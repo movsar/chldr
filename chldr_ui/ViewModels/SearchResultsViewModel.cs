@@ -6,45 +6,49 @@ namespace chldr_ui.ViewModels
     public class SearchResultsViewModel : ViewModelBase
     {
         private string _searchQuery = string.Empty;
-        public List<EntryModel> Entries { get; } = new();
+        internal List<EntryModel> Entries { get; set; } = new();
 
         protected override void OnInitialized()
         {
             Console.WriteLine("OnInitialized");
 
-            ContentStore.CachedResultsChanged += ContentStore_GotNewSearchResult;
+            ContentStore.CachedResultsChanged += ContentStore_CachedResultsChanged;
             UserStore.UserStateHasChanged += () => new Task(async () => await CallStateHasChangedAsync());
 
             // If no new entries have been requested, show entries from the cache
-            if (ContentStore.CachedSearchResults.Count > 0 && Entries.Count == 0)
+            if (ContentStore.CachedSearchResult.Entries.Count > 0 && Entries.Count == 0)
             {
-                Entries.AddRange(ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries));
+                Entries.AddRange(ContentStore.CachedSearchResult.Entries);
             }
 
             base.OnInitialized();
         }
 
-        private async void ContentStore_GotNewSearchResult(SearchResultModel searchResult)
+        public void ContentStore_CachedResultsChanged()
         {
-            Console.WriteLine("GotNewSearchResults");
 
-            var logger = new ConsoleService("GotNewSearchResults", true);
-            logger.StartSpeedTest();
-
-            if (_searchQuery == null || !_searchQuery.Equals(searchResult.SearchQuery))
+            new Task(async () =>
             {
-                Entries.Clear();
-                _searchQuery = searchResult.SearchQuery;
+                Console.WriteLine("GotNewSearchResults");
+
+                var logger = new ConsoleService("GotNewSearchResults", true);
+                logger.StartSpeedTest();
+
+                // ! Without this the page doesn't refresh
+                Entries = null;
+                await CallStateHasChangedAsync();
+                Entries = new List<EntryModel>();
+
                 logger.StopSpeedTest($"Finished setting up");
-            }
 
-            logger.StartSpeedTest();
-            Entries.AddRange(searchResult.Entries);
-            logger.StopSpeedTest($"Finished adding entries to the collection");
+                logger.StartSpeedTest();
+                Entries.AddRange(ContentStore.CachedSearchResult.Entries);
+                logger.StopSpeedTest($"Finished adding entries to the collection");
 
-            logger.StartSpeedTest();
-            await CallStateHasChangedAsync();
-            logger.StopSpeedTest($"Finished rendering");
+                logger.StartSpeedTest();
+                await CallStateHasChangedAsync();
+                logger.StopSpeedTest($"Finished rendering");
+            }).Start();
         }
     }
 }

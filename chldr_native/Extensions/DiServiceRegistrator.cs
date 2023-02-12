@@ -1,6 +1,8 @@
 ﻿using chldr_data.Dto;
 using chldr_data.Factories;
 using chldr_data.Interfaces;
+using chldr_data.Models;
+using chldr_data.Repositories;
 using chldr_data.Services;
 using chldr_data.Validators;
 using chldr_shared.Enums;
@@ -60,6 +62,13 @@ namespace chldr_native.Extensions
             // Utils
             appBuilder.Services.AddScoped<ExceptionHandler>();
             appBuilder.Services.AddScoped<NetworkService>();
+
+            // Repositories
+            appBuilder.Services.AddTransient<EntriesRepository<EntryModel>>();
+            appBuilder.Services.AddTransient<WordsRepository>();
+            appBuilder.Services.AddTransient<LanguagesRepository>();
+            appBuilder.Services.AddTransient<PhrasesRepository>();
+            appBuilder.Services.AddTransient<SourcesRepository>();
 
             return appBuilder;
         }

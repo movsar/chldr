@@ -1,6 +1,6 @@
 ﻿@inherits SearchResultsViewModel;
 
-@if (Entries.Count != 0)
+@if (Entries != null)
 {
     <div class="chldr_entries">
         @foreach (var entry in Entries)

@@ -1,8 +1,10 @@
 ﻿using chldr_data.Dto;
+using chldr_data.Entities;
 using chldr_data.Enums;
 using chldr_data.Models;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
+using chldr_utils;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 
@@ -11,6 +13,7 @@ namespace chldr_ui.ViewModels
     public class WordEditViewModel : EntryEditViewModelBase<WordDto, WordValidator>
     {
         #region Properties
+        [Inject] NavigationManager NavigationManager { get; set; }
         [Parameter]
         public string? wordId { get; set; }
         public WordDto? Word { get; set; }
@@ -19,7 +22,16 @@ namespace chldr_ui.ViewModels
         public void Save()
         {
             var wordId = new ObjectId(this.wordId);
-            ContentStore.UpdateWord(Word);
+
+            if (Word == null)
+            {
+                var ex = new Exception("Word must not be empty");
+                //_exceptionHandler.ProcessError(ex);
+                throw ex;
+            }
+
+            ContentStore.UpdateWord(UserStore.CurrentUserInfo!, Word);
+            NavigationManager.NavigateTo("/");
         }
 
         protected override void OnInitialized()
@@ -34,7 +46,7 @@ namespace chldr_ui.ViewModels
             var wordId = new ObjectId(this.wordId);
 
             // Get current word from cached results
-            var existingWord = ContentStore.CachedSearchResults.SelectMany(sr => sr.Entries)
+            var existingWord = ContentStore.CachedSearchResult.Entries
                 .Where(e => (EntryType)e.Type == EntryType.Word)
                 .Cast<WordModel>()
                 .FirstOrDefault(w => w.Id == wordId);

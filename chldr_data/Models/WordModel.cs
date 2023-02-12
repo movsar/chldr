@@ -1,5 +1,6 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
+using chldr_utils.Services;
 using MongoDB.Bson;
 
 namespace chldr_data.Models
@@ -24,8 +25,17 @@ namespace chldr_data.Models
             RawForms = word.Forms;
             Forms = word.Forms.Split(";").ToList();
             GrammaticalClass = word.GrammaticalClass;
-            VerbTenses = Word.ParseVerbTenses(word.VerbTenses);
-            NounDeclensions = Word.ParseNounDeclensions(word.NounDeclensions);
+            try
+            {
+                VerbTenses = Word.ParseVerbTenses(word.VerbTenses);
+                NounDeclensions = Word.ParseNounDeclensions(word.NounDeclensions);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error while parsing word stuff");
+                Console.WriteLine(ex.Message);
+            }
+
             PartOfSpeech = (PartsOfSpeech)word.PartOfSpeech;
         }
     }

@@ -13,6 +13,9 @@ namespace chldr_data.Repositories
     public class EntriesRepository<TEntryModel> : Repository where TEntryModel : EntryModel
     {
         public event Action<SearchResultModel>? GotNewSearchResult;
+        public event Action<EntryModel>? EntryUpdated;
+        public event Action<WordModel>? WordUpdated;
+        public event Action<EntryModel>? EntryInserted;
         public EntriesRepository(IRealmServiceFactory realmServiceFactory) : base(realmServiceFactory) { }
         private static IEnumerable<EntryModel> SortDirectSearchEntries(string inputText, IEnumerable<EntryModel> entries)
         {
@@ -104,7 +107,7 @@ namespace chldr_data.Repositories
             });
 
 
-            var args = new SearchResultModel(inputText, SortDirectSearchEntries(inputText, resultingEntries), SearchResultModel.Mode.Direct);
+            var args = new SearchResultModel(inputText, SortDirectSearchEntries(inputText, resultingEntries).ToList(), SearchResultModel.Mode.Direct);
             GotNewSearchResult?.Invoke(args);
         }
         protected async Task ReverseSearch(string inputText, Expression<Func<Translation, bool>> filter, int limit)
@@ -129,7 +132,7 @@ namespace chldr_data.Repositories
                 }
             });
 
-            var args = new SearchResultModel(inputText, SortReverseSearchEntries(inputText, resultingEntries), SearchResultModel.Mode.Reverse);
+            var args = new SearchResultModel(inputText, SortReverseSearchEntries(inputText, resultingEntries).ToList(), SearchResultModel.Mode.Reverse);
             GotNewSearchResult?.Invoke(args);
         }
 
@@ -177,6 +180,38 @@ namespace chldr_data.Repositories
             return entries;
         }
 
+        public void Delete(ObjectId Id)
+        {
+            var entry = Database.Find<Entry>(Id);
+            if (entry == null)
+            {
+                return;
+            }
+
+            Database.Write(() =>
+            {
+                foreach (var translation in entry.Translations)
+                {
+                    Database.Remove(translation);
+                }
+                switch ((EntryType)entry.Type)
+                {
+                    case EntryType.Word:
+                        Database.Remove(entry.Word);
+                        break;
+                    case EntryType.Phrase:
+                        Database.Remove(entry.Phrase);
+                        break;
+                    case EntryType.Text:
+                        Database.Remove(entry.Text);
+                        break;
+                    default:
+                        break;
+                }
+                Database.Remove(entry);
+            });
+        }
+
         public List<EntryModel> GetRandomEntries()
         {
             var randomizer = new Random();
@@ -194,7 +229,7 @@ namespace chldr_data.Repositories
 
         public List<EntryModel> GetWordsToFiddleWith()
         {
-            var entries = Database.All<Entry>().AsEnumerable()
+            var entries = Database.All<Entry>().OrderBy(e => e.Source).ThenBy(e => e.CreatedAt).AsEnumerable()
               .Where(entry => entry.Type == (int)EntryType.Word)
               .Take(5)
               .Select(entry => EntryModelFactory.CreateEntryModel(entry))
@@ -212,6 +247,15 @@ namespace chldr_data.Repositories
                 .ToList();
 
             return entries;
+        }
+
+        protected void OnEntryInserted(EntryModel entry)
+        {
+            EntryInserted?.Invoke(entry);
+        }
+        protected void OnEntryUpdated(WordModel word)
+        {
+            WordUpdated?.Invoke(word);
         }
     }
 }

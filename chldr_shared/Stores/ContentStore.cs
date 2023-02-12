@@ -2,12 +2,13 @@
 using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
+using chldr_data.Repositories;
 using chldr_data.Services;
 using chldr_utils;
 using chldr_utils.Models;
 using chldr_utils.Services;
 using MongoDB.Bson;
-using System.Collections.ObjectModel;
+using Realms;
 
 namespace chldr_shared.Stores
 {
@@ -16,7 +17,7 @@ namespace chldr_shared.Stores
 
         #region Events
         public event Action? ContentInitialized;
-        public event Action<SearchResultModel>? CachedResultsChanged;
+        public event Action? CachedResultsChanged;
 
         private readonly ExceptionHandler _exceptionHandler;
         private readonly IDataAccessFactory _dataAccessFactory;
@@ -26,7 +27,7 @@ namespace chldr_shared.Stores
         #region Fields and Properties
         private readonly IDataAccess _dataAccess;
         // This shouldn't be normally used, but only to request models that have already been loaded 
-        public ObservableCollection<SearchResultModel> CachedSearchResults { get; } = new();
+        public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
         public List<LanguageModel> AllLanguages { get; } = new();
         // These are the sources excluding userIds
         public List<SourceModel> AllNamedSources { get; } = new();
@@ -35,9 +36,15 @@ namespace chldr_shared.Stores
         #region EventHandlers
         private void DataAccess_GotNewSearchResults(SearchResultModel searchResult)
         {
-            CachedSearchResults.Clear();
-            CachedSearchResults.Add(searchResult);
-            CachedResultsChanged?.Invoke(searchResult);
+            if (CachedSearchResult.SearchQuery == searchResult?.SearchQuery)
+            {
+                CachedSearchResult.Entries.AddRange(searchResult.Entries);
+                CachedResultsChanged?.Invoke();
+                return;
+            }
+
+            CachedSearchResult = searchResult;
+            CachedResultsChanged?.Invoke();
         }
         #endregion
 
@@ -49,10 +56,28 @@ namespace chldr_shared.Stores
             _networkService = networkService;
             _dataAccess = dataAccessFactory.GetInstance(DataAccess.CurrentDataAccess);
             _dataAccess.EntriesRepository.GotNewSearchResult += DataAccess_GotNewSearchResults;
+            _dataAccess.EntriesRepository.EntryUpdated += EntriesRepository_EntryUpdated;
+            _dataAccess.WordsRepository.WordUpdated += EntriesRepository_WordUpdated;
             _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
 
             // Must be run on a different thread, otherwise the main view will not be able to listen to its events
             Task.Run(async () => { await Task.Delay(250); _dataAccess.Initialize(); });
+        }
+
+        private void EntriesRepository_WordUpdated(WordModel obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void EntriesRepository_EntryUpdated(EntryModel entry)
+        {
+            var entryInCachedResults = CachedSearchResult.Entries.Find(e => e.Id == entry.Id);
+            if (entryInCachedResults == null)
+            {
+                return;
+            }
+
+            entryInCachedResults = entry;
         }
         #endregion
 
@@ -61,32 +86,32 @@ namespace chldr_shared.Stores
         {
             Task.Run(() => _dataAccess.EntriesRepository.FindAsync(inputText, filterationFlags));
         }
+        public void DeleteEntry(ObjectId entryId)
+        {
+            _dataAccess.EntriesRepository.Delete(entryId);
+            CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.Find(e => e.Id == entryId));
+            CachedResultsChanged?.Invoke();
+        }
         public void LoadRandomEntries()
         {
-            CachedSearchResults.Clear();
+            CachedSearchResult.Entries.Clear();
             var entries = _dataAccess.EntriesRepository.GetRandomEntries();
-
-            var searchResults = new SearchResultModel(entries);
-            CachedSearchResults.Add(searchResults);
-            CachedResultsChanged?.Invoke(searchResults);
+            CachedSearchResult.Entries.AddRange(entries);
+            CachedResultsChanged?.Invoke();
         }
         public void LoadEntriesToFiddleWith()
         {
-            CachedSearchResults.Clear();
+            CachedSearchResult.Entries.Clear();
             var entries = _dataAccess.EntriesRepository.GetWordsToFiddleWith();
-
-            var searchResults = new SearchResultModel(entries);
-            CachedSearchResults.Add(searchResults);
-            CachedResultsChanged?.Invoke(searchResults);
+            CachedSearchResult.Entries.AddRange(entries);
+            CachedResultsChanged?.Invoke();
         }
         public void LoadEntriesOnModeration()
         {
-            CachedSearchResults.Clear();
+            CachedSearchResult.Entries.Clear();
             var entries = _dataAccess.EntriesRepository.GetEntriesOnModeration();
-
-            var searchResults = new SearchResultModel(entries);
-            CachedSearchResults.Add(searchResults);
-            CachedResultsChanged?.Invoke(searchResults);
+            CachedSearchResult.Entries.AddRange(entries);
+            CachedResultsChanged?.Invoke();
         }
         public WordModel GetWordById(ObjectId entryId)
         {
@@ -160,7 +185,7 @@ namespace chldr_shared.Stores
         public PhraseModel GetCachedPhraseById(ObjectId phraseId)
         {
             // Get current Phrase from cached results
-            var phrase = CachedSearchResults.SelectMany(sr => sr.Entries)
+            var phrase = CachedSearchResult.Entries
                 .Where(e => (EntryType)e.Type == EntryType.Phrase)
                 .Cast<PhraseModel>()
                 .FirstOrDefault(w => w.Id == phraseId);
@@ -180,16 +205,9 @@ namespace chldr_shared.Stores
             // _dataAccess.UpdatePhrase(loggedInUser, phraseId, content, notes);
         }
 
-        public void UpdateWord(WordDto? word)
+        public void UpdateWord(UserModel user, WordDto word)
         {
-            if (word == null)
-            {
-                var ex = new Exception("An error occurred");
-                _exceptionHandler.ProcessError(ex);
-                throw ex;
-            }
-
-            _dataAccess.WordsRepository.Update(word);
+            _dataAccess.WordsRepository.Update(user, word);
         }
     }
 }

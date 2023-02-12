@@ -25,9 +25,9 @@ namespace chldr_ui.ViewModels
         {
             base.OnInitialized();
 
-            if (ContentStore.CachedSearchResults.Count > 0)
+            if (ContentStore.CachedSearchResult.Entries.Count > 0)
             {
-                SearchQuery = ContentStore.CachedSearchResults.TakeLast(1).First().SearchQuery;
+                SearchQuery = ContentStore.CachedSearchResult.SearchQuery;
             }
         }
 

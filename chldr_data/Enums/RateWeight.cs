@@ -1,6 +1,6 @@
 ﻿namespace chldr_data.Enums
 {
-    public enum Rank
+    public enum RateWeight
     {
         Member = 1,
         Enthusiast = 2,

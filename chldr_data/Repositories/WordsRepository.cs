@@ -75,48 +75,51 @@ namespace chldr_data.Repositories
                     Database.Add(entry);
                 });
 
+                OnEntryInserted(new WordModel(entry.Word));
                 return entry.Word._id;
             }
             catch (Exception)
             {
                 throw;
             }
+
         }
 
-        public void Update(WordDto wordDto)
+        public void Update(UserModel user, WordDto wordDto)
         {
             var word = Database.Find<Word>(new ObjectId(wordDto.WordId));
             Database.Write(() =>
             {
-
-                //word.Entry.Rate = 
+                word.Entry.Rate = user.GetRateRange().Lower;
                 word.Entry.RawContents = word.GetRawContents();
                 foreach (var translationDto in wordDto.Translations)
                 {
-                    Translation translation = Database.Find<Translation>(translationDto.TranslationId);
+                    var translationId = new ObjectId(translationDto.TranslationId);
+                    Translation translation = Database.Find<Translation>(translationId);
                     if (translation == null)
                     {
                         translation = new Translation()
                         {
                             Entry = word.Entry,
                             Language = Database.All<Language>().First(l => l.Code == translationDto.LanguageCode),
-                            //Rate = User.rate
                         };
                     }
-                    //translation.Rate = 
+                    translation.Rate = user.GetRateRange().Lower;
                     translation.Content = translationDto.Content;
                     translation.Notes = translationDto.Notes;
                     translation.RawContents = translation.GetRawContents();
                 }
-
+                word.PartOfSpeech = (int)wordDto.PartOfSpeech;
                 word.Content = wordDto.Content;
                 word.GrammaticalClass = wordDto.GrammaticalClass;
                 word.Notes = wordDto.Notes;
                 word.NounDeclensions = Word.StringifyNounDeclensions(wordDto.NounDeclensions);
-                word.VerbTenses = Word.StringifyNounDeclensions(wordDto.VerbTenses);
+                word.VerbTenses = Word.StringifyVerbTenses(wordDto.VerbTenses);
                 word.Forms = Word.StringifyForms(wordDto.Forms);
 
             });
+
+            OnEntryUpdated(new WordModel(word));
         }
     }
 }

@@ -13,7 +13,7 @@ namespace chldr_data.Models
         public static NumericRange MaintainerRateRange = new NumericRange(10000, 500000000);
         public string? Email { get; }
         public int Rate { get; }
-        public Rank Rank { get; }
+        public RateWeight RateWeight { get; }
         public string? FirstName { get; }
         public string? LastName { get; }
         public string? Patronymic { get; }
@@ -25,39 +25,71 @@ namespace chldr_data.Models
             FirstName = user.FirstName;
             LastName = user.LastName;
             Patronymic = user.Patronymic;
-            Rank = GetRankByRate(user.Rate);
+            RateWeight = GetRateWeight();
         }
 
-        private Rank GetRankByRate(int rate)
+        public RateWeight GetRateWeight()
         {
-            if (MemberRateRange.Contains(rate))
+            return GetRateWeightByRate(Rate);
+        }
+        public NumericRange GetRateRange()
+        {
+            if (MemberRateRange.Contains(Rate))
             {
-                return Rank.Member;
+                return MemberRateRange;
             }
-            else if (EnthusiastRateRange.Contains(rate))
+            else if (EnthusiastRateRange.Contains(Rate))
             {
-                return Rank.Enthusiast;
+                return EnthusiastRateRange;
             }
-            else if (ContributorRateRange.Contains(rate))
+            else if (ContributorRateRange.Contains(Rate))
             {
-                return Rank.Contributor;
+                return ContributorRateRange;
             }
-            else if (EditorRateRange.Contains(rate))
+            else if (EditorRateRange.Contains(Rate))
             {
-                return Rank.Editor;
+                return EditorRateRange;
             }
-            else if (MaintainerRateRange.Contains(rate))
+            else if (MaintainerRateRange.Contains(Rate))
             {
-                return Rank.Maintainer;
+                return MaintainerRateRange;
             }
             else
             {
-                return Rank.Member;
+                return MemberRateRange;
+            }
+        }
+
+        public static RateWeight GetRateWeightByRate(int rate)
+        {
+            if (MemberRateRange.Contains(rate))
+            {
+                return RateWeight.Member;
+            }
+            else if (EnthusiastRateRange.Contains(rate))
+            {
+                return RateWeight.Enthusiast;
+            }
+            else if (ContributorRateRange.Contains(rate))
+            {
+                return RateWeight.Contributor;
+            }
+            else if (EditorRateRange.Contains(rate))
+            {
+                return RateWeight.Editor;
+            }
+            else if (MaintainerRateRange.Contains(rate))
+            {
+                return RateWeight.Maintainer;
+            }
+            else
+            {
+                return RateWeight.Member;
             }
         }
         public bool CanEditEntry(EntryModel entry)
         {
-            if (Rank >= GetRankByRate(entry.Rate))
+            if (RateWeight >= GetRateWeightByRate(entry.Rate))
             {
                 return true;
             }
@@ -66,12 +98,13 @@ namespace chldr_data.Models
         }
         public bool CanEditTranslation(TranslationModel translation)
         {
-            if (Rank >= GetRankByRate(translation.Rate))
+            if (RateWeight >= GetRateWeightByRate(translation.Rate))
             {
                 return true;
             }
 
             return false;
         }
+
     }
 }
