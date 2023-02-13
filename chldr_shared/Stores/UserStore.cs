@@ -82,9 +82,9 @@ namespace chldr_shared.Stores
             await _userService.UpdatePasswordAsync(token, tokenId, newPassword);
         }
 
-        public async Task LogOutAsync()
+        public void LogOutAsync()
         {
-            await _userService.LogOutAsync();
+            _userService.LogOutAsync();
             CurrentUserInfo = null;
             SessionStatus = SessionStatus.Unauthorized;
             UserStateHasChanged?.Invoke();

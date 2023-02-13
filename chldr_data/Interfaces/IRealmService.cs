@@ -1,12 +1,13 @@
-﻿using Realms;
+﻿using chldr_data.Enums;
+using Realms;
 
 namespace chldr_data.Interfaces
 {
     public interface IRealmService
     {
-        event Action? DatasourceInitialized;
+        event Action<DataSourceType>? DatasourceInitialized;
         Realm GetDatabase();
         void InitializeConfiguration();
-        void InitializeDataSource();
+        void Initialize();
     }
 }

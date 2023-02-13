@@ -2,6 +2,8 @@ using chldr_data.Dto;
 using chldr_data.Entities;
 using chldr_data.Factories;
 using chldr_data.Interfaces;
+using chldr_data.Models;
+using chldr_data.Repositories;
 
 namespace chldr_data.tests
 {
@@ -19,22 +21,20 @@ namespace chldr_data.tests
             var fileService = new FileService(AppContext.BaseDirectory);
             var exceptionHandler = new ExceptionHandler(fileService);
             var networkService = new NetworkService();
+
             var realmService = new OfflineRealmService(fileService, exceptionHandler);
-            var dataAccess = new OfflineDataAccess(new RealmServiceFactory(new List<IRealmService>()
-            {
-                realmService
-            }), exceptionHandler, networkService);
-            dataAccess.Initialize();
+            var realmServiceFactory = new RealmServiceFactory(new List<IRealmService>() { realmService });
+
+            var dataAccess = new DataAccess(realmServiceFactory, exceptionHandler, networkService,
+                new EntriesRepository<EntryModel>(realmServiceFactory),
+                new WordsRepository(realmServiceFactory),
+                new PhrasesRepository(realmServiceFactory),
+                new LanguagesRepository(realmServiceFactory),
+                new SourcesRepository(realmServiceFactory));
+
+            dataAccess.RemoveAllEntries();
 
             _dataAccess = dataAccess;
-            _dataAccess.Database.Write(() =>
-            {
-                _dataAccess.Database.RemoveAll<Entry>();
-                _dataAccess.Database.RemoveAll<Text>();
-                _dataAccess.Database.RemoveAll<Word>();
-                _dataAccess.Database.RemoveAll<Phrase>();
-                _dataAccess.Database.RemoveAll<Translation>();
-            });
             //_contentStore = new ContentStore(new DataAccessFactory(new List<IDataAccess>() { dataAccess }), exceptionHandler);
         }
 
@@ -56,7 +56,7 @@ namespace chldr_data.tests
                 Content = "Hello",
                 PartOfSpeech = Enums.PartsOfSpeech.Noun,
                 GrammaticalClass = 1,
-                SourceId = _dataAccess.Database.All<Source>().First()._id.ToString(),
+                SourceId = _dataAccess.SourcesRepository.GetAllNamedSources().First().Id.ToString(),
             };
 
             wordToInsert.Translations.Add(new TranslationDto("RUS")
@@ -82,7 +82,6 @@ namespace chldr_data.tests
 
 
             // 2. Тест
-       
             {
                 try
                 {
@@ -91,13 +90,13 @@ namespace chldr_data.tests
                 catch (System.Exception oshibka)
                 {
                     // 3. Проверка
-                 // TODO: Сначала запусти, скопируй сообщение ошибки, оберни этап 2 в try - catch и сравни в catch сообщение из ошибки
-                 // с тем что скопировал
+                    // TODO: Сначала запусти, скопируй сообщение ошибки, оберни этап 2 в try - catch и сравни в catch сообщение из ошибки
+                    // с тем что скопировал
                     Assert.Equal("There is no such word in the database", oshibka.Message);
                 }
-             
+
             }
-            
+
         }
 
     }

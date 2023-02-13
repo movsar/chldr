@@ -1,10 +1,12 @@
-﻿using chldr_data.Interfaces;
+﻿using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_data.Services;
 
 namespace chldr_data.Factories
 {
     public class RealmServiceFactory : IRealmServiceFactory
     {
+        public DataSourceType CurrentDataSource { get; set; } = DataSourceType.Offline;
         private readonly IEnumerable<IRealmService> _realmServiceImplementations;
         public RealmServiceFactory(IEnumerable<IRealmService> dataAccessImplementations)
         {
@@ -15,14 +17,14 @@ namespace chldr_data.Factories
             return _realmServiceImplementations.FirstOrDefault(x => x.GetType() == type)!;
         }
 
-        public IRealmService GetInstance(DataAccessType realmServiceType)
+        public IRealmService GetInstance(DataSourceType realmServiceType)
         {
             switch (realmServiceType)
             {
-                case DataAccessType.Synced:
+                case DataSourceType.Synced:
                     var service = GetService(typeof(SyncedRealmService));
                     return service;
-                case DataAccessType.Offline:
+                case DataSourceType.Offline:
                     var service2 = GetService(typeof(OfflineRealmService));
                     return service2;
                 default:
@@ -30,16 +32,16 @@ namespace chldr_data.Factories
             }
         }
 
-        public IRealmService GetInstance()
+        public IRealmService GetActiveInstance()
         {
-            switch (DataAccess.CurrentDataAccess)
+            switch (CurrentDataSource)
             {
-                case DataAccessType.Synced:
-                    return GetInstance(DataAccessType.Synced);
-                case DataAccessType.Offline:
-                    return GetInstance(DataAccessType.Offline);
+                case DataSourceType.Synced:
+                    return GetInstance(DataSourceType.Synced);
+                case DataSourceType.Offline:
+                    return GetInstance(DataSourceType.Offline);
                 default:
-                    return null;
+                    throw new Exception("Unsupported realm service");
             }
         }
     }

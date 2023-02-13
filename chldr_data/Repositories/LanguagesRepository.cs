@@ -6,38 +6,23 @@ using MongoDB.Bson;
 
 namespace chldr_data.Repositories
 {
-    public class LanguagesRepository : EntriesRepository<PhraseModel>
+    public class LanguagesRepository : Repository
     {
         public LanguagesRepository(IRealmServiceFactory realmServiceFactory) : base(realmServiceFactory) { }
 
-        public ObjectId Insert(LanguageDto languageInfo)
+        public List<LanguageModel> GetAllLanguages()
         {
-            ObjectId insertedEntryId = new ObjectId();
             try
             {
-                Database.Write(() =>
-                {
-                    var languageEntity = new Language()
-                    {
-                        Code = languageInfo.Code,
-                        Name = languageInfo.Name
-                    };
+                var languages = Database.All<Language>().AsEnumerable().Select(l => new LanguageModel(l));
+                return languages.ToList();
 
-                    Database.Add(languageEntity);
-                    insertedEntryId = languageEntity._id;
-                });
-
-                return insertedEntryId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
-        public PhraseModel GetById(ObjectId entityId)
-        {
-            return new PhraseModel(Database.All<Phrase>().FirstOrDefault(p => p._id == entityId));
-        }
     }
 }

@@ -9,6 +9,7 @@ using Realms;
 using Realms.Sync;
 using Realms.Sync.Exceptions;
 using System.Diagnostics;
+using System.Security.Cryptography;
 using static Realms.Sync.MongoClient;
 using Entry = chldr_data.Entities.Entry;
 using User = chldr_data.Entities.User;
@@ -21,13 +22,27 @@ namespace chldr_data.Services
         private IRealmServiceFactory _realmServiceFactory;
         private static FileService _fileService;
 
+        private void EncryptDatbase(string path)
+        {
+            //using var realm = _realmServiceFactory;
 
+            //var encryptionKey = new byte[64];
+            //using var rng = new RNGCryptoServiceProvider();
+            //rng.GetBytes(encryptionKey);
 
+            //var encryptedConfig = new RealmConfiguration(path)
+            //{
+            //    EncryptionKey = encryptionKey
+            //};
+
+            //realm.WriteCopy(encryptedConfig);
+
+            //// Save key
+            //File.WriteAllBytes("encryption.key", encryptionKey);
+        }
         private async Task RunSyncedDatabaseMaintenanceAsync()
         {
-            DataAccess.CurrentDataAccess = DataAccessType.Synced;
-            var realmService = _realmServiceFactory.GetInstance() as SyncedRealmService;
-
+            var realmService = _realmServiceFactory.GetInstance(DataSourceType.Synced) as SyncedRealmService;
             var app = realmService.GetApp();
             //await app.LogInAsync(Credentials.Anonymous());
             realmService.InitializeConfiguration();

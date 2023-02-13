@@ -1,4 +1,5 @@
 ﻿using chldr_data.Entities;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_utils;
 using chldr_utils.Services;
@@ -14,7 +15,7 @@ namespace chldr_data.Services
     {
         private const string myRealmAppId = "dosham-lxwuu";
         private const string myTestRealmAppId = "dosham-test-oaqel";
-        public event Action? DatasourceInitialized;
+        public event Action<DataSourceType>? DatasourceInitialized;
 
         private App? _app;
         private FlexibleSyncConfiguration? _config;
@@ -136,13 +137,12 @@ namespace chldr_data.Services
             //});
         }
 
-        public void InitializeDataSource()
+        public void Initialize()
         {
             InitializeApp();
 
             if (_app?.CurrentUser == null || _app?.CurrentUser?.Provider == Credentials.AuthProvider.Anonymous)
             {
-                DataAccess.CurrentDataAccess = DataAccessType.Offline;
                 return;
             }
 
@@ -156,9 +156,7 @@ namespace chldr_data.Services
                 synchTask.Wait();
             }
 
-            DataAccess.CurrentDataAccess = DataAccessType.Synced;
-
-            DatasourceInitialized?.Invoke();
+            DatasourceInitialized?.Invoke(DataSourceType.Synced);
         }
     }
 }

@@ -35,10 +35,7 @@ namespace chldr_native.Extensions
 
             appBuilder.Services.AddScoped<IRealmService, SyncedRealmService>();
             appBuilder.Services.AddScoped<IRealmService, OfflineRealmService>();
-            appBuilder.Services.AddScoped<IDataAccess, OfflineDataAccess>();
-            appBuilder.Services.AddScoped<IDataAccess, SyncedDataAccess>();
-
-            appBuilder.Services.AddScoped<IDataAccessFactory, DataAccessFactory>();
+            appBuilder.Services.AddScoped<IDataAccess, DataAccess>();
             appBuilder.Services.AddScoped<IRealmServiceFactory, RealmServiceFactory>();
 
             // Shared

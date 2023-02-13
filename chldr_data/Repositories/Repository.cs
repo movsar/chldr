@@ -7,7 +7,7 @@ namespace chldr_data.Repositories
     public class Repository
     {
         private IRealmServiceFactory _realmServiceFactory;
-        protected Realm Database => _realmServiceFactory.GetInstance().GetDatabase();
+        protected Realm Database => _realmServiceFactory.GetActiveInstance().GetDatabase();
         public Repository(IRealmServiceFactory realmServiceFactory)
         {
             _realmServiceFactory = realmServiceFactory;

@@ -23,12 +23,13 @@ namespace chldr_data.Services
         {
             _networkService = networkService;
             _realmServiceFactory = realmServiceFactory;
-            _realmService = (realmServiceFactory.GetInstance(DataAccessType.Synced) as SyncedRealmService)!;
+
+            _realmService = (realmServiceFactory.GetInstance(DataSourceType.Synced) as SyncedRealmService)!;
             _realmService.DatasourceInitialized += RealmService_DatasourceInitialized;
         }
-        private void RealmService_DatasourceInitialized()
+        private void RealmService_DatasourceInitialized(DataSourceType dataSourceType)
         {
-            if (DataAccess.CurrentDataAccess != DataAccessType.Synced)
+            if (dataSourceType != DataSourceType.Synced)
             {
                 return;
             }
@@ -100,10 +101,10 @@ namespace chldr_data.Services
         public async Task LogInEmailPasswordAsync(string email, string password)
         {
             await App.LogInAsync(Credentials.EmailPassword(email, password));
-            _realmService.InitializeDataSource();
+            _realmService.Initialize();
         }
 
-        public async Task LogOutAsync()
+        public void LogOutAsync()
         {
             var defaultUser = App.AllUsers.FirstOrDefault(u => u.Provider == Credentials.AuthProvider.Anonymous);
             if (defaultUser != null)
@@ -111,9 +112,8 @@ namespace chldr_data.Services
                 App.SwitchUser(defaultUser);
             }
 
-            DataAccess.CurrentDataAccess = DataAccessType.Offline;
-            var offlineRealmService = (_realmServiceFactory.GetInstance(DataAccessType.Offline) as OfflineRealmService)!;
-            offlineRealmService.InitializeDataSource();
+            var offlineRealmService = (_realmServiceFactory.GetInstance(DataSourceType.Offline) as OfflineRealmService)!;
+            offlineRealmService.Initialize();
         }
     }
 }

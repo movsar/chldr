@@ -32,14 +32,10 @@ namespace chldr_server.Extensions
         {
             // Data
             appBuilder.Services.AddSingleton<UserService>();
-
             appBuilder.Services.AddSingleton<IRealmService, SyncedRealmService>();
             appBuilder.Services.AddSingleton<IRealmService, OfflineRealmService>();
-            appBuilder.Services.AddSingleton<IDataAccess, OfflineDataAccess>();
-            appBuilder.Services.AddSingleton<IDataAccess, SyncedDataAccess>();
-
-            appBuilder.Services.AddSingleton<IDataAccessFactory, DataAccessFactory>();
             appBuilder.Services.AddSingleton<IRealmServiceFactory, RealmServiceFactory>();
+            appBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
 
             // Shared
 

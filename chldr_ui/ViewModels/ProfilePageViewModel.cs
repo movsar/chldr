@@ -14,7 +14,7 @@ namespace chldr_ui.ViewModels
 
         public async Task LogOutAsync()
         {
-            await UserStore.LogOutAsync();
+            UserStore.LogOutAsync();
             NavigationManager.NavigateTo("/");
         }
     }

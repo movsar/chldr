@@ -1,8 +1,11 @@
-﻿namespace chldr_data.Interfaces
+﻿using chldr_data.Enums;
+
+namespace chldr_data.Interfaces
 {
     public interface IRealmServiceFactory
     {
-        IRealmService GetInstance(DataAccessType dataAccessType);
-        IRealmService GetInstance();
+        DataSourceType CurrentDataSource { get; set; }
+        IRealmService GetInstance(DataSourceType dataAccessType);
+        IRealmService GetActiveInstance();
     }
 }

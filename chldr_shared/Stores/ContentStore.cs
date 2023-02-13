@@ -20,7 +20,6 @@ namespace chldr_shared.Stores
         public event Action? CachedResultsChanged;
 
         private readonly ExceptionHandler _exceptionHandler;
-        private readonly IDataAccessFactory _dataAccessFactory;
         private readonly NetworkService _networkService;
         #endregion
 
@@ -49,19 +48,16 @@ namespace chldr_shared.Stores
         #endregion
 
         #region Constructors
-        public ContentStore(IDataAccessFactory dataAccessFactory, ExceptionHandler exceptionHandler, NetworkService networkService)
+        public ContentStore(IDataAccess dataAccess, ExceptionHandler exceptionHandler, NetworkService networkService)
         {
             _exceptionHandler = exceptionHandler;
-            _dataAccessFactory = dataAccessFactory;
             _networkService = networkService;
-            _dataAccess = dataAccessFactory.GetInstance(DataAccess.CurrentDataAccess);
+
+            _dataAccess = dataAccess;
             _dataAccess.EntriesRepository.GotNewSearchResult += DataAccess_GotNewSearchResults;
             _dataAccess.EntriesRepository.EntryUpdated += EntriesRepository_EntryUpdated;
             _dataAccess.WordsRepository.WordUpdated += EntriesRepository_WordUpdated;
-            _dataAccess.DatabaseInitialized += DataAccess_DatabaseInitialized;
-
-            // Must be run on a different thread, otherwise the main view will not be able to listen to its events
-            Task.Run(async () => { await Task.Delay(250); _dataAccess.Initialize(); });
+            _dataAccess.DatasourceInitialized += DataAccess_DatasourceInitialized;
         }
 
         private void EntriesRepository_WordUpdated(WordModel obj)
@@ -141,34 +137,9 @@ namespace chldr_shared.Stores
         #endregion
 
 
-        public void DataAccess_DatabaseInitialized()
+        public void DataAccess_DatasourceInitialized()
         {
-            try
-            {
-                var languages = _dataAccess.GetAllLanguages();
-                AllLanguages.AddRange(languages);
-
-                var namedSources = _dataAccess.GetAllNamedSources();
-                AllNamedSources.AddRange(namedSources);
-
-                ContentInitialized?.Invoke();
-
-                if (DataAccess.CurrentDataAccess == DataAccessType.Offline && _networkService.IsNetworUp)
-                {
-                    DataAccess.CurrentDataAccess = DataAccessType.Synced;
-                    var syncedDataAccess = (SyncedDataAccess)_dataAccessFactory.GetInstance(DataAccessType.Synced);
-                    Task.Run(async () =>
-                    {
-                        await Task.Delay(250);
-                        syncedDataAccess.Initialize();
-                        //await _dataAccess.DatabaseMaintenance();
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                _exceptionHandler.ProcessError(ex);
-            }
+            ContentInitialized?.Invoke();
         }
 
         public void Search(string query)

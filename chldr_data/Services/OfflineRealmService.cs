@@ -1,7 +1,10 @@
-﻿using chldr_data.Interfaces;
+﻿using chldr_data.Entities;
+using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_utils;
 using chldr_utils.Services;
 using Realms;
+using static Realms.Sync.MongoClient;
 
 namespace chldr_data.Services
 {
@@ -11,7 +14,7 @@ namespace chldr_data.Services
         private readonly FileService _fileService;
         private RealmConfigurationBase? _config;
 
-        public event Action? DatasourceInitialized;
+        public event Action<DataSourceType>? DatasourceInitialized;
 
         public Realm GetDatabase()
         {
@@ -51,10 +54,23 @@ namespace chldr_data.Services
             _config = encryptedConfig;
         }
 
-        public void InitializeDataSource()
+        public void Initialize()
         {
             InitializeConfiguration();
-            DatasourceInitialized?.Invoke();
+            DatasourceInitialized?.Invoke(DataSourceType.Offline);
+        }
+
+        internal void RemoveAllEntries()
+        {
+            var database = GetDatabase();
+            database.Write(() =>
+            {
+                database.RemoveAll<Entry>();
+                database.RemoveAll<Text>();
+                database.RemoveAll<Word>();
+                database.RemoveAll<Phrase>();
+                database.RemoveAll<Translation>();
+            });
         }
     }
 }

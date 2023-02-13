@@ -20,5 +20,11 @@ namespace chldr_data.Repositories
             return sources.ToList();
         }
 
+        public List<SourceModel> GetAllNamedSources()
+        {
+            return Database.All<Source>().AsEnumerable().Select(s => new SourceModel(s)).ToList();
+        }
+
+
     }
 }
