@@ -17,7 +17,7 @@ namespace chldr_data.Entities
         public string Content { get; set; } = string.Empty;
         [Indexed]
         public string Notes { get; set; } = string.Empty;
-        public int GrammaticalClass { get; set; }
+        private int GrammaticalClass { get; set; }
         public IList<int> GrammaticalClasses { get; } = new List<int>();
         public int PartOfSpeech { get; set; }
         // To help search work better
@@ -64,7 +64,7 @@ namespace chldr_data.Entities
 
             return string.Join("; ", allWordForms.Select(w => w)).ToLower();
         }
-        public static string ParseGrammaticalClass(int grammaticalClass)
+        public static string ParseGrammaticalClass(List<int> grammaticalClasses)
         {
             var ClassesMap = new Dictionary<int, string>()
             {
@@ -76,12 +76,13 @@ namespace chldr_data.Entities
                 { 6 ,"б, д"},
             };
 
-            if (grammaticalClass == 0)
-            {
-                return null;
-            }
+            //if (grammaticalClass == 0)
+            //{
+            //    return null;
+            //}
 
-            return ClassesMap[grammaticalClass];
+            //return ClassesMap[grammaticalClass];
+            return "";
         }
         public static string StringifyVerbTenses(Dictionary<string, string> tensesMap)
         {

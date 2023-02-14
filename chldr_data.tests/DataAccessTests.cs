@@ -55,9 +55,9 @@ namespace chldr_data.tests
             {
                 Content = "Hello",
                 PartOfSpeech = Enums.PartsOfSpeech.Noun,
-                GrammaticalClass = 1,
                 SourceId = _dataAccess.SourcesRepository.GetAllNamedSources().First().Id.ToString(),
             };
+            wordToInsert.GrammaticalClasses.Add(1);
 
             wordToInsert.Translations.Add(new TranslationDto("RUS")
             {

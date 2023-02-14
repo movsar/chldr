@@ -51,7 +51,7 @@ namespace chldr_ui.ViewModels
 
             string part1 = String.Join(", ", allForms);
 
-            string part2 = $" {chldr_data.Entities.Word.ParseGrammaticalClass(Word.GrammaticalClass)} ";
+            string part2 = $" {chldr_data.Entities.Word.ParseGrammaticalClass(Word.GrammaticalClasses)} ";
 
             return $"[ {part1}{part2}]";
         }

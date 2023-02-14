@@ -46,10 +46,14 @@ namespace chldr_data.Repositories
                     Forms = string.Join(";", newWord.Forms),
                     NounDeclensions = Word.StringifyNounDeclensions(newWord.NounDeclensions),
                     VerbTenses = Word.StringifyVerbTenses(newWord.VerbTenses),
-                    GrammaticalClass = newWord.GrammaticalClass,
                     Notes = newWord.Notes,
                     PartOfSpeech = (int)newWord.PartOfSpeech,
                 };
+
+                foreach (var grammaticalClass in newWord.GrammaticalClasses)
+                {
+                    wordEntity.GrammaticalClasses.Add(grammaticalClass);
+                }
 
                 foreach (var translationDto in newWord.Translations)
                 {
@@ -111,7 +115,10 @@ namespace chldr_data.Repositories
                 }
                 word.PartOfSpeech = (int)wordDto.PartOfSpeech;
                 word.Content = wordDto.Content;
-                word.GrammaticalClass = wordDto.GrammaticalClass;
+                foreach (var grammaticalClass in wordDto.GrammaticalClasses)
+                {
+                    word.GrammaticalClasses.Add(grammaticalClass);
+                }
                 word.Notes = wordDto.Notes;
                 word.NounDeclensions = Word.StringifyNounDeclensions(wordDto.NounDeclensions);
                 word.VerbTenses = Word.StringifyVerbTenses(wordDto.VerbTenses);

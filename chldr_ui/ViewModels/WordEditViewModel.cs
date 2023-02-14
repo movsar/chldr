@@ -17,6 +17,8 @@ namespace chldr_ui.ViewModels
         [Parameter]
         public string? wordId { get; set; }
         public WordDto? Word { get; set; }
+        public int GrammaticalClass1 { get; set; }
+        public int GrammaticalClass2 { get; set; }
         #endregion
 
         public void Save()

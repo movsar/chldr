@@ -120,7 +120,7 @@ namespace chldr_data.Services
                                 Entry = newEntry,
                                 Content = entry.Word.Content,
                                 Forms = entry.Word.Forms,
-                                GrammaticalClass = entry.Word.GrammaticalClass,
+                                //GrammaticalClass = entry.Word.GrammaticalClass,
                                 Notes = entry.Word.Notes,
                                 NounDeclensions = entry.Word.NounDeclensions,
                                 VerbTenses = entry.Word.VerbTenses,

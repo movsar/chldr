@@ -11,7 +11,7 @@ namespace chldr_data.Dto
             WordId = word.Id.ToString();
             Content = word.Content;
             Notes = word.Notes;
-            GrammaticalClass = word.GrammaticalClass;
+            GrammaticalClasses.AddRange(word.GrammaticalClasses);
             PartOfSpeech = word.PartOfSpeech;
 
             foreach (var item in word.VerbTenses)
@@ -32,6 +32,6 @@ namespace chldr_data.Dto
         public string Content { get; set; } = string.Empty;
         public string Notes { get; set; } = string.Empty;
         public PartsOfSpeech PartOfSpeech { get; set; }
-        public int GrammaticalClass { get; set; }
+        public List<int> GrammaticalClasses { get; } = new List<int>();
     }
 }

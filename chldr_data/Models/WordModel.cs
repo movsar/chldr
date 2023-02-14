@@ -15,7 +15,7 @@ namespace chldr_data.Models
         public Dictionary<string, string> NounDeclensions { get; }
         public Dictionary<string, string> VerbTenses { get; }
         public PartsOfSpeech PartOfSpeech { get; }
-        public int GrammaticalClass { get; }
+        public List<int> GrammaticalClasses { get; } = new List<int>();
         public WordModel(Entry entry) : this(entry.Word) { }
         public WordModel(Word word) : base(word.Entry)
         {
@@ -24,7 +24,7 @@ namespace chldr_data.Models
             Notes = word.Notes;
             RawForms = word.Forms;
             Forms = word.Forms.Split(";").ToList();
-            GrammaticalClass = word.GrammaticalClass;
+            GrammaticalClasses.AddRange(word.GrammaticalClasses);
             try
             {
                 VerbTenses = Word.ParseVerbTenses(word.VerbTenses);
