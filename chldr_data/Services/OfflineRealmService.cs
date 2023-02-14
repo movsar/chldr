@@ -44,10 +44,10 @@ namespace chldr_data.Services
         {
             // Copy original file so that app will be able to access entries immediately
             byte[] encKey = AppConstants.EncKey.Split(":").Select(numAsString => Convert.ToByte(numAsString)).ToArray();
-
+            var hexKey = BitConverter.ToString(encKey).Replace("-", "");
             var encryptedConfig = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
             {
-                SchemaVersion = 1,
+                SchemaVersion = 2,
                 EncryptionKey = encKey
             };
 

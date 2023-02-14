@@ -18,6 +18,7 @@ namespace chldr_data.Entities
         [Indexed]
         public string Notes { get; set; } = string.Empty;
         public int GrammaticalClass { get; set; }
+        public IList<int> GrammaticalClasses { get; } = new List<int>();
         public int PartOfSpeech { get; set; }
         // To help search work better
         public string Forms { get; set; } = string.Empty;
