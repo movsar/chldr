@@ -1,4 +1,4 @@
-﻿using chldr_shared.Resources.Localizations;
+﻿using chldr_data.Resources.Localizations;
 using chldr_shared.Stores;
 using chldr_utils.Services;
 using Microsoft.AspNetCore.Components;

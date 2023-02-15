@@ -7,6 +7,14 @@
     color: darkblue;
 }
 
+.chldr_navbar_dropdown_option {
+    cursor: pointer;
+}
+
+.chldr_navbar_dropdown {
+    cursor: pointer;
+}
+
 .chldr_registration_errors {
     font-size: 16px;
 }

@@ -14,6 +14,8 @@ namespace chldr_data.Services
         protected readonly ExceptionHandler _exceptionHandler;
         protected readonly NetworkService _networkService;
         protected readonly IRealmServiceFactory _realmServiceFactory;
+        private List<LanguageModel> localLanguages;
+
         public SourcesRepository SourcesRepository { get; }
         public LanguagesRepository LanguagesRepository { get; }
         public WordsRepository WordsRepository { get; }

@@ -10,6 +10,11 @@ namespace chldr_data.Entities
         public const string EmptyRawWordDeclensionsValue = ";;;;;;;;;;;;;;;";
         public const string EmptyRawWordTensesValue = ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
 
+        // Must be removed with migrations ===============<
+        internal int GrammaticalClass { get; set; }
+        internal string Forms { get; set; } = string.Empty;
+        // ================================================
+
         [PrimaryKey]
         public ObjectId _id { get; set; } = ObjectId.GenerateNewId(DateTime.Now);
         public Entry Entry { get; set; }
@@ -17,11 +22,8 @@ namespace chldr_data.Entities
         public string Content { get; set; } = string.Empty;
         [Indexed]
         public string Notes { get; set; } = string.Empty;
-        private int GrammaticalClass { get; set; }
         public IList<int> GrammaticalClasses { get; } = new List<int>();
         public int PartOfSpeech { get; set; }
-        // To help search work better
-        public string Forms { get; set; } = string.Empty;
         public string VerbTenses { get; set; } = string.Empty;
         // something; thing; whatever; - order matters!
         public string NounDeclensions { get; set; } = string.Empty;
@@ -63,26 +65,6 @@ namespace chldr_data.Entities
             allWordForms.Add(Content.ToLower());
 
             return string.Join("; ", allWordForms.Select(w => w)).ToLower();
-        }
-        public static string ParseGrammaticalClass(List<int> grammaticalClasses)
-        {
-            var ClassesMap = new Dictionary<int, string>()
-            {
-                { 1 ,"в, б/д"},
-                { 2 ,"й, б/д"},
-                { 3 ,"й, й"},
-                { 4 ,"д, д"},
-                { 5 ,"б, б/й"},
-                { 6 ,"б, д"},
-            };
-
-            //if (grammaticalClass == 0)
-            //{
-            //    return null;
-            //}
-
-            //return ClassesMap[grammaticalClass];
-            return "";
         }
         public static string StringifyVerbTenses(Dictionary<string, string> tensesMap)
         {

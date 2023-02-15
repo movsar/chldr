@@ -249,6 +249,24 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter translation notes.
+        /// </summary>
+        public static string Enter_translation_notes {
+            get {
+                return ResourceManager.GetString("Enter_translation_notes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter translation text.
+        /// </summary>
+        public static string Enter_translation_text {
+            get {
+                return ResourceManager.GetString("Enter_translation_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email is not valid.
         /// </summary>
         public static string Error_Email_not_valid {

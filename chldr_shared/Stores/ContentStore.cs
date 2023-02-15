@@ -27,9 +27,8 @@ namespace chldr_shared.Stores
         private readonly IDataAccess _dataAccess;
         // This shouldn't be normally used, but only to request models that have already been loaded 
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
-        public List<LanguageModel> AllLanguages { get; } = new();
+        public List<LanguageModel> Languages { get; } = new();
         // These are the sources excluding userIds
-        public List<SourceModel> AllNamedSources { get; } = new();
         #endregion
 
         #region EventHandlers
@@ -136,9 +135,13 @@ namespace chldr_shared.Stores
         }
         #endregion
 
-
         public void DataAccess_DatasourceInitialized()
         {
+            if (Languages.Count == 0)
+            {
+                Languages.AddRange(_dataAccess.LanguagesRepository.GetAllLanguages());
+            }
+
             ContentInitialized?.Invoke();
         }
 

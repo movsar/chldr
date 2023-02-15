@@ -8,12 +8,12 @@
 {
 
     <form class="col-6">
-        <div class="form-outline mb-4">
+        <div class="form-outline mb-2">
             <input type="text" class="form-control" placeholder="@Localizer["Basic_Form"]" @bind="Word.Content" />
         </div>
 
-        <div class="form-outline mb-4">
-            <select @bind="Word.PartOfSpeech" class="form-select">
+        <div class="form-outline mb-2">
+            <select @bind="@Word.PartOfSpeech" class="form-select">
                 <option value="@PartsOfSpeech.Verb" class="form-control">@Localizer["Verb"]</option>
                 <option value="@PartsOfSpeech.Noun" class="form-control">@Localizer["Noun"]</option>
                 <option value="@PartsOfSpeech.Adverb" class="form-control">@Localizer["Adverb"]</option>
@@ -23,7 +23,7 @@
 
         @if (Word.PartOfSpeech == PartsOfSpeech.Noun)
         {
-            <div class="form-outline mb-4">
+            <div class="form-outline mb-2">
                 @Localizer["Grammatical_class"]
                 <select @bind="@GrammaticalClass1" class="form-select" title="@Localizer["Grammatical_class"]">
                     <option value="1" class="form-control">@Localizer["Class:v_b"]</option>
