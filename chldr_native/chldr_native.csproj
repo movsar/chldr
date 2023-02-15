@@ -55,8 +55,8 @@
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
-        <PackageReference Include="FluentValidation" Version="11.4.0" />
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.2" />
+        <PackageReference Include="FluentValidation" Version="11.5.0" />
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.3" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
     </ItemGroup>
 

@@ -314,4 +314,10 @@
   <data name="Error:Phrase_shouldn't_be_null" xml:space="preserve">
     <value>Phrase shouldn't be null</value>
   </data>
+  <data name="Enter_translation_notes" xml:space="preserve">
+    <value>Enter translation notes</value>
+  </data>
+  <data name="Enter_translation_text" xml:space="preserve">
+    <value>Enter translation text</value>
+  </data>
 </root>

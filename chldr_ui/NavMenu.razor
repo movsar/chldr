@@ -1,6 +1,4 @@
-﻿@inject IStringLocalizer<AppLocalizations> Localizer;
-@inject UserStore UserStore;
-@inject ContentStore ContentStore;
+﻿@inherits NavMenuViewModel;
 
 <div class="top-row ps-3 navbar navbar-dark">
     <a class="navbar-brand" href="">
@@ -49,25 +47,9 @@
     </nav>
 </div>
 
-@code {
-    private bool collapseNavMenu = true;
-
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-    protected override Task OnParametersSetAsync()
-    {
-        UserStore.UserStateHasChanged += () =>
-        {
-            InvokeAsync(() =>
-          {
-              StateHasChanged();
-          });
-        };
-
-        return base.OnParametersSetAsync();
-    }
-}
+<div class="chldr_navbar_dropdown m-lg-4">
+    <select name="language" class="chldr_navbar_dropdown" @onchange="SetCurrentLanguage">
+        <option value="en-US">English</option>
+        <option value="ru-RU">Русский</option>
+    </select>
+</div>

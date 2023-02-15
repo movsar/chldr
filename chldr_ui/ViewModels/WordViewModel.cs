@@ -51,9 +51,30 @@ namespace chldr_ui.ViewModels
 
             string part1 = String.Join(", ", allForms);
 
-            string part2 = $" {chldr_data.Entities.Word.ParseGrammaticalClass(Word.GrammaticalClasses)} ";
+            string part2 = $" {ParseGrammaticalClass(Word.GrammaticalClasses)} ";
 
             return $"[ {part1}{part2}]";
+        }
+
+        public static string ParseGrammaticalClass(List<int> grammaticalClasses)
+        {
+            var ClassesMap = new Dictionary<int, string>()
+            {
+                { 1 ,"в, б/д"},
+                { 2 ,"й, б/д"},
+                { 3 ,"й, й"},
+                { 4 ,"д, д"},
+                { 5 ,"б, б/й"},
+                { 6 ,"б, д"},
+            };
+
+            //if (grammaticalClass == 0)
+            //{
+            //    return null;
+            //}
+
+            //return ClassesMap[grammaticalClass];
+            return "";
         }
     }
 }

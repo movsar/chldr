@@ -1,23 +1,19 @@
 ﻿@inherits TranslationEditViewModel
 
-<p>
-    @Localizer["Choose_language"]
-</p>
-
 @if (@Translation == null)
 {
     return;
 }
 
-<select @bind="@Translation.LanguageCode" class="form-select" title="@Localizer["Grammatical_class"]">
-    @foreach (var language in ContentStore.AllLanguages)
+<select @bind="@Translation.LanguageCode" class="form-select">
+    @foreach (var language in ContentStore.Languages)
     {
         <option value="@language.Code" class="form-control">@language.Name</option>
     }
 </select>
 
-<input type="text" class="form-control" autocomplete="off" disabled="@FormDisabled"
+<input type="text" class="form-control mt-2" autocomplete="off" disabled="@FormDisabled"
        placeholder="@Localizer["Enter_translation_text"]" required @bind="Translation.Content" />
 
-<input type="text" class="form-control" autocomplete="off" disabled="@FormDisabled"
+<input type="text" class="form-control mt-2" autocomplete="off" disabled="@FormDisabled"
        placeholder="@Localizer["Enter_translation_notes"]" @bind="Translation.Notes" />
