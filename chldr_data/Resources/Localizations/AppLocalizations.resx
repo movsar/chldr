@@ -135,22 +135,22 @@
   <data name="Choose_language" xml:space="preserve">
     <value>Choose language</value>
   </data>
-  <data name="Class:1_vu_bd" xml:space="preserve">
+  <data name="Class:1_v_b" xml:space="preserve">
     <value>1 - Vu, Bu / Du</value>
   </data>
-  <data name="Class:2_yu_bd" xml:space="preserve">
+  <data name="Class:2_y_b" xml:space="preserve">
     <value>2 - Yu, Bu / Du</value>
   </data>
-  <data name="Class:3_yu_yu" xml:space="preserve">
+  <data name="Class:3_y_y" xml:space="preserve">
     <value>3 - Yu, Yu</value>
   </data>
   <data name="Class:6_b_d" xml:space="preserve">
     <value>6 - Bu, Du</value>
   </data>
-  <data name="Class:4_du_du" xml:space="preserve">
+  <data name="Class:4_d_d" xml:space="preserve">
     <value>4 - Du, Du</value>
   </data>
-  <data name="Class:5_bu_by" xml:space="preserve">
+  <data name="Class:5_b_b" xml:space="preserve">
     <value>5 - Bu, Bu / Yu</value>
   </data>
   <data name="Confirm_password" xml:space="preserve">
@@ -319,5 +319,8 @@
   </data>
   <data name="Enter_translation_text" xml:space="preserve">
     <value>Enter translation text</value>
+  </data>
+  <data name="PageTitle:Edit_word" xml:space="preserve">
+    <value>Edit word</value>
   </data>
 </root>

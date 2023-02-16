@@ -1,12 +1,5 @@
 ﻿using chldr_shared.Stores;
 using Microsoft.AspNetCore.Components;
-using Org.BouncyCastle.Utilities.Encoders;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 namespace chldr_ui.ViewModels
 {
     public class NavMenuViewModel : ViewModelBase
@@ -17,7 +10,13 @@ namespace chldr_ui.ViewModels
 
         public void SetCurrentLanguage(ChangeEventArgs args)
         {
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(args.Value.ToString());
+            var newCulture = args.Value?.ToString();
+            if (newCulture == null)
+            {
+                return;
+            }
+
+            OnCultureChanged(newCulture);
         }
         public void ToggleNavMenu()
         {

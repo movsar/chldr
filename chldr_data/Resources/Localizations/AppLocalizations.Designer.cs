@@ -117,45 +117,45 @@ namespace chldr_data.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to 1 - Vu, Bu / Du.
         /// </summary>
-        public static string Class_1_vu_bd {
+        public static string Class_1_v_b {
             get {
-                return ResourceManager.GetString("Class:1_vu_bd", resourceCulture);
+                return ResourceManager.GetString("Class:1_v_b", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 2 - Yu, Bu / Du.
         /// </summary>
-        public static string Class_2_yu_bd {
+        public static string Class_2_y_b {
             get {
-                return ResourceManager.GetString("Class:2_yu_bd", resourceCulture);
+                return ResourceManager.GetString("Class:2_y_b", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 3 - Yu, Yu.
         /// </summary>
-        public static string Class_3_yu_yu {
+        public static string Class_3_y_y {
             get {
-                return ResourceManager.GetString("Class:3_yu_yu", resourceCulture);
+                return ResourceManager.GetString("Class:3_y_y", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 4 - Du, Du.
         /// </summary>
-        public static string Class_4_du_du {
+        public static string Class_4_d_d {
             get {
-                return ResourceManager.GetString("Class:4_du_du", resourceCulture);
+                return ResourceManager.GetString("Class:4_d_d", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 5 - Bu, Bu / Yu.
         /// </summary>
-        public static string Class_5_bu_by {
+        public static string Class_5_b_b {
             get {
-                return ResourceManager.GetString("Class:5_bu_by", resourceCulture);
+                return ResourceManager.GetString("Class:5_b_b", resourceCulture);
             }
         }
         
@@ -488,6 +488,15 @@ namespace chldr_data.Resources.Localizations {
         public static string Or_sign_up_with_ {
             get {
                 return ResourceManager.GetString("Or_sign_up_with:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit word.
+        /// </summary>
+        public static string PageTitle_Edit_word {
+            get {
+                return ResourceManager.GetString("PageTitle:Edit_word", resourceCulture);
             }
         }
         
