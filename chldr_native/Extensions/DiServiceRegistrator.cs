@@ -58,6 +58,7 @@ namespace chldr_native.Extensions
 
             // Utils
             appBuilder.Services.AddScoped<ExceptionHandler>();
+            appBuilder.Services.AddSingleton<CultureService>();
             appBuilder.Services.AddScoped<NetworkService>();
 
             // Repositories

@@ -38,7 +38,6 @@ namespace chldr_server.Extensions
             appBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
 
             // Shared
-
             appBuilder.Services.AddSingleton<ContentStore>();
             appBuilder.Services.AddScoped<UserStore>();
             appBuilder.Services.AddScoped<JsInterop>();
@@ -48,6 +47,7 @@ namespace chldr_server.Extensions
 
             // Utils
             appBuilder.Services.AddSingleton<ExceptionHandler>();
+            appBuilder.Services.AddSingleton<CultureService>();
             appBuilder.Services.AddSingleton<NetworkService>();
 
             // Repositories
