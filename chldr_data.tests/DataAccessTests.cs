@@ -1,5 +1,6 @@
 using chldr_data.Dto;
 using chldr_data.Entities;
+using chldr_data.Enums.WordDetails;
 using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
@@ -54,7 +55,7 @@ namespace chldr_data.tests
             WordDto wordToInsert = new WordDto()
             {
                 Content = "Hello",
-                PartOfSpeech = Enums.PartsOfSpeech.Noun,
+                PartOfSpeech = PartOfSpeech.Noun,
                 SourceId = _dataAccess.SourcesRepository.GetAllNamedSources().First().Id.ToString(),
             };
             wordToInsert.GrammaticalClasses.Add(1);

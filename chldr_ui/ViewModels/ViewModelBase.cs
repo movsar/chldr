@@ -29,10 +29,10 @@ namespace chldr_ui.ViewModels
             CultureService.CurrentCultureChanged += ViewModel_CurrentCultureChanged;
         }
 
-        private void ViewModel_CurrentCultureChanged(string culture)
+        private async void ViewModel_CurrentCultureChanged(string culture)
         {
             Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(culture);
-            StateHasChanged();
+            await CallStateHasChangedAsync();
         }
 
         protected void OnCultureChanged(string culture)

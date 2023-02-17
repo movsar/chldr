@@ -1,4 +1,4 @@
-﻿using chldr_data.Enums;
+﻿using chldr_data.Enums.WordDetails;
 using chldr_data.Models;
 using MongoDB.Bson;
 
@@ -31,7 +31,7 @@ namespace chldr_data.Dto
         public Dictionary<string, string> VerbTenses { get; } = new Dictionary<string, string>();
         public string Content { get; set; } = string.Empty;
         public string Notes { get; set; } = string.Empty;
-        public PartsOfSpeech PartOfSpeech { get; set; }
+        public PartOfSpeech PartOfSpeech { get; set; }
         public List<int> GrammaticalClasses { get; } = new List<int>();
     }
 }

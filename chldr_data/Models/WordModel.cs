@@ -1,29 +1,20 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_utils.Services;
 using MongoDB.Bson;
 
 namespace chldr_data.Models
 {
+
     public class WordModel : EntryModel
     {
-        public new ObjectId Id { get; }
-        public override string Content { get; }
-        public string Notes { get; }
-        public string RawForms { get; }
-        public List<string> Forms { get; } = new();
-        public Dictionary<string, string> NounDeclensions { get; }
-        public Dictionary<string, string> VerbTenses { get; }
-        public PartsOfSpeech PartOfSpeech { get; }
-        public List<int> GrammaticalClasses { get; } = new List<int>();
         public WordModel(Entry entry) : this(entry.Word) { }
         public WordModel(Word word) : base(word.Entry)
         {
             Id = word._id;
             Content = word.Content;
             Notes = word.Notes;
-            RawForms = word.Forms;
-            Forms = word.Forms.Split(";").ToList();
             GrammaticalClasses.AddRange(word.GrammaticalClasses);
             try
             {
@@ -38,5 +29,10 @@ namespace chldr_data.Models
 
             PartOfSpeech = (PartsOfSpeech)word.PartOfSpeech;
         }
+        public new ObjectId Id { get; }
+        public override string Content { get; }
+        public string Notes { get; }
+        public PartsOfSpeech PartOfSpeech { get; }
+        public IWordDetails Characteristics { get; }
     }
 }
