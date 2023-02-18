@@ -104,9 +104,9 @@ namespace chldr_data.tests
         [Fact]
         public void GetAllLanguages_NoInput_ReturnsListOfLanguages()
         {
-        var allLanguages = _dataAccess.LanguagesRepository.GetAllLanguages();
-            
-            List<int> value = new List<int>();        
+        var allLanguages = _dataAccess.LanguagesRepository.GetAllLanguages();    
+
+
             Assert.True(allLanguages.Count() > 0);           
         }
 
