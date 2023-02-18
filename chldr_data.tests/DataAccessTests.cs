@@ -4,6 +4,9 @@ using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Repositories;
+using System.Linq;
+using static MongoDB.Bson.Serialization.Serializers.SerializerHelper;
+using static Realms.Sync.MongoClient;
 
 namespace chldr_data.tests
 {
@@ -98,6 +101,21 @@ namespace chldr_data.tests
             }
 
         }
+        [Fact]
+        public void GetAllLanguages_NoInput_ReturnsListOfLanguages()
+        {
+        var allLanguages = _dataAccess.LanguagesRepository.GetAllLanguages();
+            
+            List<int> value = new List<int>();        
+            Assert.True(allLanguages.Count() > 0);           
+        }
 
+        }
     }
-}
+
+
+
+
+
+
+
