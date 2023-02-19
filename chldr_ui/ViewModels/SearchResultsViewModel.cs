@@ -26,7 +26,6 @@ namespace chldr_ui.ViewModels
 
         public void ContentStore_CachedResultsChanged()
         {
-
             new Task(async () =>
             {
                 Console.WriteLine("GotNewSearchResults");

@@ -1,4 +1,6 @@
-﻿namespace chldr_data.Models
+﻿using System.Collections.ObjectModel;
+
+namespace chldr_data.Models
 {
     public class SearchResultModel
     {
@@ -10,18 +12,27 @@
         }
 
         public string SearchQuery { get; }
-        public List<EntryModel> Entries { get; }
         public Mode SearchMode { get; }
+        public ObservableCollection<EntryModel> Entries { get; } = new();
 
         public SearchResultModel(List<EntryModel> resultingEntries)
         {
-            Entries = resultingEntries;
+            Entries.Clear();
+            foreach (var entry in resultingEntries)
+            {
+                Entries.Add(entry);
+            }
         }
         public SearchResultModel(string inputText, List<EntryModel> resultingEntries, Mode mode)
         {
             SearchQuery = inputText;
-            Entries = resultingEntries;
             SearchMode = mode;
+
+            Entries.Clear();
+            foreach (var entry in resultingEntries)
+            {
+                Entries.Add(entry);
+            }
         }
     }
 }
