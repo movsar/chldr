@@ -14,7 +14,7 @@ namespace chldr_data.Repositories
     {
         public SourcesRepository(IRealmServiceFactory realmServiceFactory) : base(realmServiceFactory) { }
 
-        internal List<Source> GetUnverifiedSources()
+        public List<Source> GetUnverifiedSources()
         {
             var sources = Database.All<Source>().Where(s => s.Notes == "Imported from legacy database" || s.Name == "User");
             return sources.ToList();
