@@ -5,17 +5,13 @@ namespace chldr_data.Models.WordDetails
 {
     public class NounDetails : IWordDetails
     {
-        // 6 Grammatical classes
+        // 6 Grammatical classes    
         public int Class { get; set; }
 
-        // Склонение
+        // Падежи по склонениям
         // 4 Declensions of nouns
         // https://nohchalla.com/literatura/chechenskiy-yazyk/audio-yazyk/791-urok28
-        public int Declension { get; set; }
-
-        public Cases SingularCases { get; set; }
-        public Cases PluralCases { get; set; }
-
+        public Dictionary<NounDeclension, Cases> Cases { get; set; }
         public NameType NameType { get; set; }
         public NumericalType NumericalType { get; set; }
     }

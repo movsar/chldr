@@ -4,12 +4,21 @@ namespace chldr_data.Models.WordDetails
 {
     public class AdjectiveDetails
     {
-        // 4 склонения - см. Мациев
-        public Declension Declension { get; set; }
+        // качественные и относительные
         public AdjectiveSemanticType SemanticType { get; set; }
+        // зависимые и независимые
         public AdjectiveCharacteristic Characteristic { get; set; }
 
-        // Only if Semantic Type is Qualitive
+        // 2 склонения для качественных (зависимые и независимые), 2 склонения для относительных (зависимые и независимые) см. Мациев
+        public Cases QualitiveDependentDeclensionCases { get; set; }
+        public Cases QualitiveIndependentDeclensionCases { get; set; }
+        public Cases RelativeDependentDeclensionCases { get; set; }
+        public Cases RelativeIndependentDeclensionCases { get; set; }
+
+
+        // Степень - только у качественных
         public Degree Degree { get; set; }
+        // Грамматический класс - только у качественных и то, некоторых 
+        public int Class { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 {
     public enum PartOfSpeech
     {
+        Undefined = 0,
         Verb = 1,
         Noun = 2,
         Adverb = 3,

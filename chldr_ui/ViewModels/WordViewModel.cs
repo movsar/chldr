@@ -27,33 +27,8 @@ namespace chldr_ui.ViewModels
         }
         private string CreateSubheader()
         {
-            if (Word?.NounDeclensions?.Count == 0 && Word?.VerbTenses?.Count == 0)
-            {
-                return null;
-            }
-
-            List<string> allForms = new List<string>();
-
-            foreach (var item in Word!.VerbTenses.Values.Union(Word.NounDeclensions.Values))
-            {
-                if (item.Length > 0)
-                {
-                    allForms.Add(item);
-                }
-            }
-
-            allForms.Remove(Word!.Content);
-
-            if (allForms.Count == 0)
-            {
-                return null;
-            }
-
-            string part1 = String.Join(", ", allForms);
-
-            string part2 = $" {ParseGrammaticalClass(Word.GrammaticalClasses)} ";
-
-            return $"[ {part1}{part2}]";
+            
+            return $"";
         }
 
         public static string ParseGrammaticalClass(List<int> grammaticalClasses)

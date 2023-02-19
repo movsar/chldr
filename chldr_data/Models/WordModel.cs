@@ -1,5 +1,5 @@
 ﻿using chldr_data.Entities;
-using chldr_data.Enums;
+using chldr_data.Enums.WordDetails;
 using chldr_data.Interfaces;
 using chldr_utils.Services;
 using MongoDB.Bson;
@@ -15,24 +15,16 @@ namespace chldr_data.Models
             Id = word._id;
             Content = word.Content;
             Notes = word.Notes;
-            GrammaticalClasses.AddRange(word.GrammaticalClasses);
-            try
-            {
-                VerbTenses = Word.ParseVerbTenses(word.VerbTenses);
-                NounDeclensions = Word.ParseNounDeclensions(word.NounDeclensions);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error while parsing word stuff");
-                Console.WriteLine(ex.Message);
-            }
 
-            PartOfSpeech = (PartsOfSpeech)word.PartOfSpeech;
+            // TODO: Build appropriate WordDetails
+            // GrammaticalClasses.AddRange(word.GrammaticalClasses);
+
+            PartOfSpeech = (PartOfSpeech)word.PartOfSpeech;
         }
         public new ObjectId Id { get; }
         public override string Content { get; }
         public string Notes { get; }
-        public PartsOfSpeech PartOfSpeech { get; }
+        public PartOfSpeech PartOfSpeech { get; }
         public IWordDetails Characteristics { get; }
     }
 }

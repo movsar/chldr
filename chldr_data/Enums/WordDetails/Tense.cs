@@ -8,14 +8,15 @@ namespace chldr_data.Enums.WordDetails
 {
     public enum VerbTenses
     {
-        PresentContinuous = 0,
-        PresentSimple = 1,
-        FuturePossible = 2,
-        FutureReal = 3,
-        PastImperfect = 4,
-        PastPerfect = 5,
-        PastRecent = 6,
-        PastWitnessed = 7,
-        PastRemote = 8
+        Undefined = 0,
+        PresentContinuous = 1,
+        PresentSimple = 2,
+        FuturePossible = 3,
+        FutureReal = 4,
+        PastImperfect = 5,
+        PastPerfect = 6,
+        PastRecent = 7,
+        PastWitnessed = 8,
+        PastRemote = 9
     }
 }

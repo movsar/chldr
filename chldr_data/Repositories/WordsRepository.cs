@@ -24,69 +24,7 @@ namespace chldr_data.Repositories
 
         public ObjectId Insert(WordDto newWord)
         {
-            try
-            {
-                var allForms = newWord.Forms.Union(newWord.NounDeclensions.Values).Union(newWord.VerbTenses.Values).ToList();
-                allForms.Remove(newWord.Content);
-                allForms.Add(newWord.Content);
-
-                Entry entry = new Entry()
-                {
-                    // TODO: User = findBy(_userStore.CurrentUserInfo()),
-                    Rate = newWord.Rate,
-                    RawContents = string.Join("; ", allForms.Select(w => w)).ToLower(),
-                    // TODO: Source = 
-                    Source = Database.Find<Source>(new ObjectId(newWord.SourceId))
-                };
-
-                Word wordEntity = new Word()
-                {
-                    Entry = entry,
-                    Content = newWord.Content,
-                    Forms = string.Join(";", newWord.Forms),
-                    NounDeclensions = Word.StringifyNounDeclensions(newWord.NounDeclensions),
-                    VerbTenses = Word.StringifyVerbTenses(newWord.VerbTenses),
-                    Notes = newWord.Notes,
-                    PartOfSpeech = (int)newWord.PartOfSpeech,
-                };
-
-                foreach (var grammaticalClass in newWord.GrammaticalClasses)
-                {
-                    wordEntity.GrammaticalClasses.Add(grammaticalClass);
-                }
-
-                foreach (var translationDto in newWord.Translations)
-                {
-                    var translationEntity = new Translation()
-                    {
-                        Entry = entry,
-                        Language = Database.All<Language>().First(l => l.Code == translationDto.LanguageCode),
-                        Notes = translationDto.Notes,
-                        Content = translationDto.Content,
-                        // TODO: Rate = 
-                        RawContents = translationDto.Content.ToLower(),
-                        // TODO: User = 
-                    };
-
-                    entry.Translations.Add(translationEntity);
-                }
-
-                entry.Type = (int)EntryType.Word;
-                entry.Word = wordEntity;
-
-                Database.Write(() =>
-                {
-                    Database.Add(entry);
-                });
-
-                OnEntryInserted(new WordModel(entry.Word));
-                return entry.Word._id;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
+            return new ObjectId();
         }
 
         public void Update(UserModel user, WordDto wordDto)
@@ -95,7 +33,7 @@ namespace chldr_data.Repositories
             Database.Write(() =>
             {
                 word.Entry.Rate = user.GetRateRange().Lower;
-                word.Entry.RawContents = word.GetRawContents();
+                word.Entry.RawContents = word.Content.ToLower();
                 foreach (var translationDto in wordDto.Translations)
                 {
                     var translationId = new ObjectId(translationDto.TranslationId);
@@ -120,10 +58,6 @@ namespace chldr_data.Repositories
                     word.GrammaticalClasses.Add(grammaticalClass);
                 }
                 word.Notes = wordDto.Notes;
-                word.NounDeclensions = Word.StringifyNounDeclensions(wordDto.NounDeclensions);
-                word.VerbTenses = Word.StringifyVerbTenses(wordDto.VerbTenses);
-                word.Forms = Word.StringifyForms(wordDto.Forms);
-
             });
 
             OnEntryUpdated(new WordModel(word));
