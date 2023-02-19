@@ -22,3 +22,8 @@ Example: **Error:Something_went_wrong**.
 - Send activation notification email after email confirmation
 - Compress DB after reaching 60Mb
 - Add SearchQueryBuilder
+
+# Notes
+
+- This dictionary's entries will not have any forms shown or made available for addition / edit.
+- Instead, I will build all the forms and adjust theire translations using AI or whatever and add them as independent entries
