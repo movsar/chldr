@@ -36,7 +36,13 @@ namespace chldr_shared.Stores
         {
             if (CachedSearchResult.SearchQuery == searchResult?.SearchQuery)
             {
-                CachedSearchResult.Entries.AddRange(searchResult.Entries);
+                CachedSearchResult.Entries.Clear();
+
+                foreach (var entry in searchResult.Entries)
+                {
+                    CachedSearchResult.Entries.Add(entry);
+                }
+
                 CachedResultsChanged?.Invoke();
                 return;
             }
@@ -59,14 +65,21 @@ namespace chldr_shared.Stores
             _dataAccess.DatasourceInitialized += DataAccess_DatasourceInitialized;
         }
 
-        private void EntriesRepository_WordUpdated(WordModel obj)
+        private async void EntriesRepository_WordUpdated(WordModel updatedWord)
         {
-            throw new NotImplementedException();
+            if (!CachedSearchResult.Entries.Any(e => e.Id == ((EntryModel)updatedWord).Id))
+            {
+                return;
+            }
+
+            var updatedWordIndex = CachedSearchResult.Entries.IndexOf(CachedSearchResult.Entries.First(e => e.Id == ((EntryModel)updatedWord).Id));
+
+            CachedSearchResult.Entries[updatedWordIndex] = updatedWord;
         }
 
         private void EntriesRepository_EntryUpdated(EntryModel entry)
         {
-            var entryInCachedResults = CachedSearchResult.Entries.Find(e => e.Id == entry.Id);
+            var entryInCachedResults = CachedSearchResult.Entries.First(e => e.Id == entry.Id);
             if (entryInCachedResults == null)
             {
                 return;
@@ -84,28 +97,46 @@ namespace chldr_shared.Stores
         public void DeleteEntry(ObjectId entryId)
         {
             _dataAccess.EntriesRepository.Delete(entryId);
-            CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.Find(e => e.Id == entryId));
+            CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.Id == entryId));
             CachedResultsChanged?.Invoke();
         }
         public void LoadRandomEntries()
         {
             CachedSearchResult.Entries.Clear();
             var entries = _dataAccess.EntriesRepository.GetRandomEntries();
-            CachedSearchResult.Entries.AddRange(entries);
+
+            CachedSearchResult.Entries.Clear();
+            foreach (var entry in entries)
+            {
+                CachedSearchResult.Entries.Add(entry);
+            }
+
             CachedResultsChanged?.Invoke();
         }
         public void LoadEntriesToFiddleWith()
         {
             CachedSearchResult.Entries.Clear();
             var entries = _dataAccess.EntriesRepository.GetWordsToFiddleWith();
-            CachedSearchResult.Entries.AddRange(entries);
+
+            CachedSearchResult.Entries.Clear();
+            foreach (var entry in entries)
+            {
+                CachedSearchResult.Entries.Add(entry);
+            }
+
             CachedResultsChanged?.Invoke();
         }
         public void LoadEntriesOnModeration()
         {
             CachedSearchResult.Entries.Clear();
             var entries = _dataAccess.EntriesRepository.GetEntriesOnModeration();
-            CachedSearchResult.Entries.AddRange(entries);
+
+            CachedSearchResult.Entries.Clear();
+            foreach (var entry in entries)
+            {
+                CachedSearchResult.Entries.Add(entry);
+            }
+
             CachedResultsChanged?.Invoke();
         }
         public WordModel GetWordById(ObjectId entryId)
