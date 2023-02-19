@@ -282,11 +282,11 @@ namespace chldr_data.Services
                     switch ((EntryType)entry.Type)
                     {
                         case EntryType.Word:
-                            entry.RawContents = entry.Word.GetRawContents();
+                            entry.RawContents = entry.Word.Content.ToLower();
                             break;
 
                         case EntryType.Phrase:
-                            entry.RawContents = entry.Phrase.GetRawContents();
+                            entry.RawContents = entry.Phrase.Content.ToLower();
                             break;
                     }
                 }
