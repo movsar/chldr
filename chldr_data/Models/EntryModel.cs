@@ -24,7 +24,6 @@ namespace chldr_data.Models
         {
             Rate = entry.Rate;
             Type = entry.Type;
-
             Source = new SourceModel(entry.Source);
 
             foreach (var translationEntity in entry.Translations)

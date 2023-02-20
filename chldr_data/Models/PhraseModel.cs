@@ -5,14 +5,14 @@ namespace chldr_data.Models
 {
     public class PhraseModel : EntryModel
     {
-        // This is Phrase Id, the Entry Id is in its parent
-        public new ObjectId Id { get; }
+        public ObjectId PhraseId { get; }
         public override string Content { get; }
         public string? Notes { get; }
-        public PhraseModel(Entry entry) : this(entry.Phrase) { }
-        public PhraseModel(Phrase phrase) : base(phrase.Entry)
+        public PhraseModel(Entry entry) : base(entry)
         {
-            Id = phrase._id;
+            var phrase = entry.Phrase;
+
+            PhraseId = phrase._id;
             Content = phrase.Content;
             Notes = phrase.Notes;
         }

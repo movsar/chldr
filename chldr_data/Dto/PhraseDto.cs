@@ -11,7 +11,7 @@ namespace chldr_data.Dto
 
         public PhraseDto(PhraseModel phrase) : base(phrase)
         {
-            PhraseId = phrase.Id.ToString();
+            PhraseId = phrase.PhraseId.ToString();
             Content = phrase.Content;
             Notes = phrase.Notes;
         }
