@@ -1,8 +1,9 @@
-﻿using chldr_data.Dto;
+﻿using chldr_data.Dto.WordDtos;
 using chldr_data.Entities;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
+using chldr_data.Models.Words;
 using MongoDB.Bson;
 
 namespace chldr_data.Repositories
@@ -53,10 +54,10 @@ namespace chldr_data.Repositories
                 }
                 word.PartOfSpeech = (int)wordDto.PartOfSpeech;
                 word.Content = wordDto.Content;
-                foreach (var grammaticalClass in wordDto.GrammaticalClasses)
-                {
-                    word.GrammaticalClasses.Add(grammaticalClass);
-                }
+                //foreach (var grammaticalClass in wordDto.GrammaticalClasses)
+                //{
+                //    word.GrammaticalClasses.Add(grammaticalClass);
+                //}
                 word.Notes = wordDto.Notes;
             });
 

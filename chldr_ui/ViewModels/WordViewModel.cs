@@ -1,4 +1,4 @@
-﻿using chldr_data.Models;
+﻿using chldr_data.Models.Words;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 

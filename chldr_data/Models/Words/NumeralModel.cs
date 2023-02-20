@@ -1,5 +1,6 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums.WordDetails;
+using chldr_data.Models.Words;
 
 namespace chldr_data.Models.Entries
 {
@@ -11,6 +12,6 @@ namespace chldr_data.Models.Entries
 
         public Complexity Complexity { get; set; }
         public NumericalCategory Category { get; set; }
-        public Case Cases { get; set; }
+        public Case Case { get; set; }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using chldr_data.Enums.WordDetails;
-using chldr_data.Models;
+using chldr_data.Models.Words;
 using MongoDB.Bson;
 
-namespace chldr_data.Dto
+namespace chldr_data.Dto.WordDtos
 {
     public class WordDto : EntryDto
     {
@@ -18,6 +18,5 @@ namespace chldr_data.Dto
         public string Content { get; set; } = string.Empty;
         public string Notes { get; set; } = string.Empty;
         public PartOfSpeech PartOfSpeech { get; set; }
-        public List<int> GrammaticalClasses { get; } = new List<int>() { 0, 0, 0 };
     }
 }

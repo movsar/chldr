@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace chldr_data.Enums.WordDetails
 {
-    public enum YesNoUnset
+    public enum Transitiveness
     {
         Unedefined = 0,
         Yes = 1,
