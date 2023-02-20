@@ -1,5 +1,4 @@
 ﻿@page "/word/edit/{WordId}";
-@using chldr_data.Enums.WordDetails;
 
 @inject NavigationManager NavManager;
 @inherits WordEditViewModel;
@@ -22,12 +21,63 @@
             </select>
         </div>
 
-        @if (Word.PartOfSpeech == PartOfSpeech.Noun)
+        @if (Word.PartOfSpeech == PartOfSpeech.Verb)
         {
+            VerbDto verb = (Word as VerbDto)!;
+
             <div class="form-outline mb-2">
-                <select @bind="@Word.GrammaticalClasses[0]"
+                <select @bind="verb.Tense"
+                        class="form-select"
+                        title="@Localizer["Tense"]">
+
+                    @foreach (VerbTense tense in (VerbTense[])Enum.GetValues(typeof(VerbTense)))
+                    {
+                        <option value="@tense" class="form-control">@Localizer[tense.ToString()]</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-outline mb-2">
+                <select @bind="verb.Transitiveness"
+                        class="form-select"
+                        title="@Localizer["Transitiveness"]">
+
+                    @foreach (Transitiveness transitiveness in (Transitiveness[])Enum.GetValues(typeof(Transitiveness)))
+                    {
+                        <option value="@transitiveness" class="form-control">@Localizer[transitiveness.ToString()]</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-outline mb-2">
+                <select @bind="verb.NumericalType"
+                        class="form-select"
+                        title="@Localizer["NumericalType"]">
+
+                    @foreach (NumericalType numericalType in (NumericalType[])Enum.GetValues(typeof(NumericalType)))
+                    {
+                        <option value="@numericalType" class="form-control">@Localizer[numericalType.ToString()]</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-outline mb-2">
+                <select @bind="verb.Conjugation"
+                        class="form-select"
+                        title="@Localizer["Conjugation"]">
+
+                    @foreach (VerbConjugation conjugation in (VerbConjugation[])Enum.GetValues(typeof(VerbConjugation)))
+                    {
+                        <option value="@conjugation" class="form-control">@Localizer[conjugation.ToString()]</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-outline mb-2">
+                <select @bind="verb.Class"
                         class="form-select"
                         title="@Localizer["Grammatical_class"]">
+
                     <option value="1" class="form-control">@Localizer["Class:1_v_b"]</option>
                     <option value="2" class="form-control">@Localizer["Class:2_y_b"]</option>
                     <option value="3" class="form-control">@Localizer["Class:3_y_y"]</option>
@@ -35,6 +85,34 @@
                     <option value="5" class="form-control">@Localizer["Class:5_b_b"]</option>
                     <option value="6" class="form-control">@Localizer["Class:6_b_d"]</option>
                 </select>
+            </div>
+
+            <div class="form-outline mb-2">
+                <select @bind="verb.Mood"
+                        class="form-select"
+                        title="@Localizer["Mood"]">
+
+                    @foreach (VerbMood mood in (VerbMood[])Enum.GetValues(typeof(VerbMood)))
+                    {
+                        <option value="@mood" class="form-control">@Localizer[mood.ToString()]</option>
+                    }
+                </select>
+            </div>
+        }
+
+        @if (Word.PartOfSpeech == PartOfSpeech.Noun)
+        {
+            <div class="form-outline mb-2">
+                @*   <select @bind="@Word.GrammaticalClasses[0]"
+        class="form-select"
+        title="@Localizer["Grammatical_class"]">
+        <option value="1" class="form-control">@Localizer["Class:1_v_b"]</option>
+        <option value="2" class="form-control">@Localizer["Class:2_y_b"]</option>
+        <option value="3" class="form-control">@Localizer["Class:3_y_y"]</option>
+        <option value="4" class="form-control">@Localizer["Class:4_d_d"]</option>
+        <option value="5" class="form-control">@Localizer["Class:5_b_b"]</option>
+        <option value="6" class="form-control">@Localizer["Class:6_b_d"]</option>
+        </select>*@
             </div>
         }
 

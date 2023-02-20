@@ -1,10 +1,8 @@
-﻿using chldr_data.Dto;
-using chldr_data.Entities;
+﻿using chldr_data.Dto.WordDtos;
 using chldr_data.Enums;
-using chldr_data.Models;
+using chldr_data.Models.Words;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
-using chldr_utils;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 

@@ -2,6 +2,7 @@
 using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
+using chldr_data.Models.Words;
 using chldr_utils.Models;
 using chldr_utils.Services;
 using MongoDB.Bson;

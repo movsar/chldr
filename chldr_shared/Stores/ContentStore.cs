@@ -1,8 +1,9 @@
-﻿using chldr_data.Dto;
+﻿using chldr_data.Dto.WordDtos;
 using chldr_data.Enums;
 using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
+using chldr_data.Models.Words;
 using chldr_data.Repositories;
 using chldr_data.Services;
 using chldr_utils;

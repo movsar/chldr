@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace chldr_data.Enums.WordDetails
 {
-    public enum VerbTenses
+    public enum VerbTense
     {
         Undefined = 0,
         PresentContinuous = 1,
