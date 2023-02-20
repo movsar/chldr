@@ -1,4 +1,4 @@
-﻿using chldr_data.Dto.WordDtos;
+﻿using chldr_data.Dto;
 using chldr_data.Resources.Localizations;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
