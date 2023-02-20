@@ -1,4 +1,4 @@
-﻿using chldr_data.Dto.WordDtos;
+﻿using chldr_data.Dto;
 using chldr_data.Enums;
 using chldr_data.Factories;
 using chldr_data.Interfaces;
