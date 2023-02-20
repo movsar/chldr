@@ -4,18 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_data.Models.WordDetails
+namespace chldr_data.Enums.WordDetails
 {
-    public class VerbMoods
+    public enum VerbMood
     {
         // Наклонение
-        public string Indicative { get; set; } = string.Empty;
-        public string Imperative { get; set; } = string.Empty;
-        public string InterrogativeIndicative { get; set; } = string.Empty;
-        public string RealConditional { get; set; } = string.Empty;
-        public string UnrealConditional { get; set; } = string.Empty;
-        public string RealDesiderative { get; set; } = string.Empty;
-        public string UnrealDesiderative { get; set; } = string.Empty;
+        Undefined = 0,
+        Indicative = 1,
+        Imperative = 2,
+        InterrogativeIndicative = 3,
+        RealConditional = 4,
+        UnrealConditional = 5,
+        RealDesiderative = 6,
+        UnrealDesiderative = 7,
     }
 }
 

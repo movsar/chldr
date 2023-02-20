@@ -15,19 +15,19 @@
 
         <div class="form-outline mb-2">
             <select @bind="@Word.PartOfSpeech" class="form-select">
-                <option value="@PartOfSpeech.Verb" class="form-control">@Localizer["Verb"]</option>
-                <option value="@PartOfSpeech.Noun" class="form-control">@Localizer["Noun"]</option>
-                <option value="@PartOfSpeech.Adverb" class="form-control">@Localizer["Adverb"]</option>
-                <option value="@PartOfSpeech.Adjective" class="form-control">@Localizer["Adjective"]</option>
+                @foreach (PartOfSpeech partOfSpeech in (PartOfSpeech[])Enum.GetValues(typeof(PartOfSpeech)))
+                {
+                    <option value="@partOfSpeech" class="form-control">@Localizer[partOfSpeech.ToString()]</option>
+                }
             </select>
         </div>
 
         @if (Word.PartOfSpeech == PartOfSpeech.Noun)
         {
             <div class="form-outline mb-2">
-
-                <select @bind="@GrammaticalClass1"
-                        class="form-select" title="@Localizer["Grammatical_class"]">
+                <select @bind="@Word.GrammaticalClasses[0]"
+                        class="form-select"
+                        title="@Localizer["Grammatical_class"]">
                     <option value="1" class="form-control">@Localizer["Class:1_v_b"]</option>
                     <option value="2" class="form-control">@Localizer["Class:2_y_b"]</option>
                     <option value="3" class="form-control">@Localizer["Class:3_y_y"]</option>
@@ -35,27 +35,6 @@
                     <option value="5" class="form-control">@Localizer["Class:5_b_b"]</option>
                     <option value="6" class="form-control">@Localizer["Class:6_b_d"]</option>
                 </select>
-
-                @*If it's a pronoun or a name of occupation, allow two more
-        @Localizer["Grammatical_class"]
-        <select @bind="@GrammaticalClass2" class="form-select" title="@Localizer["Grammatical_class"]">
-        <option value="1" class="form-control">@Localizer["Class:v_b"]</option>
-        <option value="2" class="form-control">@Localizer["Class:y_b"]</option>
-        <option value="3" class="form-control">@Localizer["Class:y_y"]</option>
-        <option value="4" class="form-control">@Localizer["Class:d_d"]</option>
-        <option value="5" class="form-control">@Localizer["Class:b_b"]</option>
-        <option value="6" class="form-control">@Localizer["Class:b_d"]</option>
-        </select>
-
-        @Localizer["Grammatical_class"]
-        <select @bind="@GrammaticalClass2" class="form-select" title="@Localizer["Grammatical_class"]">
-        <option value="1" class="form-control">@Localizer["Class:v_b"]</option>
-        <option value="2" class="form-control">@Localizer["Class:y_b"]</option>
-        <option value="3" class="form-control">@Localizer["Class:y_y"]</option>
-        <option value="4" class="form-control">@Localizer["Class:d_d"]</option>
-        <option value="5" class="form-control">@Localizer["Class:b_b"]</option>
-        <option value="6" class="form-control">@Localizer["Class:b_d"]</option>
-        </select>*@
             </div>
         }
 

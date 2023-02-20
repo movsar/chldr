@@ -19,7 +19,7 @@ namespace chldr_data.Repositories
                 throw new Exception("There is no such word in the database");
             }
 
-            return new WordModel(word);
+            return new WordModel(word.Entry);
         }
 
         public ObjectId Insert(WordDto newWord)
@@ -60,7 +60,7 @@ namespace chldr_data.Repositories
                 word.Notes = wordDto.Notes;
             });
 
-            OnEntryUpdated(new WordModel(word));
+            OnEntryUpdated(new WordModel(word.Entry));
         }
     }
 }

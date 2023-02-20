@@ -1,16 +1,18 @@
 ﻿using chldr_data.Entities;
 using MongoDB.Bson;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace chldr_data.Models
 {
     public class TextModel : EntryModel
     {
-        public new ObjectId Id { get; }
+        public ObjectId TextId { get; }
         public override string Content { get; }
-        public TextModel(Entry entry) : this(entry.Text) { }
-        public TextModel(Text text) : base(text.Entry)
+        public TextModel(Entry entry) : base(entry)
         {
-            Id = text._id;
+            var text = entry.Text;
+
+            TextId = text._id;
             Content = text.Content;
         }
     }

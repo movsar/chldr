@@ -1,7 +1,6 @@
 ﻿using chldr_data.Enums;
-using chldr_data.Models;
 
-namespace chldr_data.Factories
+namespace chldr_data.Models
 {
     internal class EntryModelFactory
     {
