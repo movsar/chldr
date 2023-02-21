@@ -297,10 +297,10 @@
     <value>Именительный</value>
   </data>
   <data name="Word:Adjective" xml:space="preserve">
-    <value>Наречие</value>
+    <value>Прилагательное</value>
   </data>
   <data name="Word:Adverb" xml:space="preserve">
-    <value>Прилагательное</value>
+    <value>Наречие</value>
   </data>
   <data name="Word:Allative" xml:space="preserve">
     <value>Местный</value>

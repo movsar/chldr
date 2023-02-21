@@ -31,7 +31,7 @@ namespace chldr_data.Dto
                     Mood = verb.Mood;
                     NumericalType = verb.NumericalType;
                     Transitiveness = verb.Transitiveness;
-                    Class = verb.Class;
+                    Classes[0] = verb.Class;
                     break;
                 case PartOfSpeech.Noun:
                     break;
@@ -57,12 +57,9 @@ namespace chldr_data.Dto
                     break;
             }
         }
-
-        #region Main Details
-        public string? WordId { get; }
-        public string Content { get; set; } = string.Empty;
-        public string Notes { get; set; } = string.Empty;
-        public PartOfSpeech PartOfSpeech { get; set; }
+        #region Pronoun Details
+        // Person can be 1,2 or 3
+        public int Person { get; }
         #endregion
 
         #region Verb Details
@@ -71,10 +68,34 @@ namespace chldr_data.Dto
         public VerbMood Mood { get; set; } = new();
         public NumericalType NumericalType { get; set; }
         public Transitiveness Transitiveness { get; set; }
-        // Should be available only for some verbs, so don't allow to set it for all verbs
-        public int Class { get; set; } = 0;
         #endregion
 
+        #region Adjective Details
+        // качественные и относительные
+        public AdjectiveSemanticType SemanticType { get; set; }
+        // зависимые и независимые
+        public AdjectiveCharacteristic Characteristic { get; set; }
+        public Case Case { get; set; }
+        // Степень - только у качественных
+        public Degree? Degree { get; set; }
+        // Грамматический класс - только у качественных и то, некоторых 
+        #endregion
 
+        #region Numeral Details
+        public Complexity Complexity { get; set; }
+        public NumericalCategory Category { get; set; }
+        #endregion
+
+        #region Main Details
+        public string? WordId { get; }
+        public string Content { get; set; } = string.Empty;
+        public string Notes { get; set; } = string.Empty;
+        public PartOfSpeech PartOfSpeech { get; set; }
+        // Class can be 1,2,3,4,5 or 6
+        // Should be available only for some verbs, and nouns so don't allow to set it for all verbs
+        // Person can have 1,2 or 3 classes
+        public int[] Classes { get; } = new int[] { 0, 0, 0 };
+
+        #endregion
     }
 }

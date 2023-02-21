@@ -107,11 +107,11 @@
 
                         <b>@Localizer["Grammatical_class"]:</b>
                         <div class="form-outline mb-2">
-                            <select @bind="Word.Class"
+                            <select @bind="Word.Classes[0]"
                                     class="form-select"
                                     title="@Localizer["Grammatical_class"]">
 
-                                <option value="0" class="form-control">@Localizer["Undefined"]</option>
+                                <option value="0" class="form-control">@Localizer["Word:Undefined"]</option>
                                 <option value="1" class="form-control">@Localizer["Class:1_v_b"]</option>
                                 <option value="2" class="form-control">@Localizer["Class:2_y_b"]</option>
                                 <option value="3" class="form-control">@Localizer["Class:3_y_y"]</option>

@@ -28,7 +28,7 @@ namespace chldr_data.tests.RepositoryTests
                 PartOfSpeech = PartOfSpeech.Noun,
                 SourceId = _dataAccess.SourcesRepository.GetAllNamedSources().First().Id.ToString(),
             };
-            wordToInsert.GrammaticalClasses.Add(1);
+            wordToInsert.Classes[0] = 1;
 
             wordToInsert.Translations.Add(new TranslationDto("RUS")
             {
