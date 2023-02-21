@@ -14,7 +14,6 @@ namespace chldr_data.Services
         protected readonly ExceptionHandler _exceptionHandler;
         protected readonly NetworkService _networkService;
         protected readonly IRealmServiceFactory _realmServiceFactory;
-        private List<LanguageModel> localLanguages;
 
         public SourcesRepository SourcesRepository { get; }
         public LanguagesRepository LanguagesRepository { get; }
@@ -48,29 +47,6 @@ namespace chldr_data.Services
         {
             _realmServiceFactory.CurrentDataSource = dataSourceType;
             DatasourceInitialized?.Invoke();
-
-            try
-            {
-                if (_realmServiceFactory.CurrentDataSource == DataSourceType.Offline && _networkService.IsNetworUp)
-                {
-                    Task.Run(async () =>
-                    {
-                        await Task.Delay(250);
-                        ActivateDatasource(DataSourceType.Synced);
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("998"))
-                {
-                    _exceptionHandler.ProcessDebug(new Exception("NETWORK_ERROR"));
-                }
-                else
-                {
-                    _exceptionHandler.ProcessDebug(ex);
-                }
-            }
         }
 
         public void ActivateDatasource(DataSourceType dataSourceType)

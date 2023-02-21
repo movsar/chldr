@@ -10,17 +10,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using chldr_data.tests.Services;
 
-namespace chldr_data.tests
+namespace chldr_data.tests.RepositoryTests
 {
     public class SourcesRepositoryTests
     {
         private static IDataAccess _dataAccess;
 
+        //public SourcesRepositoryTests()
+        //{
+        //    _dataAccess = TestDataFactory.CreateDataAccess();
+        //    _dataAccess.RemoveAllEntries();
+        //}
+
         static SourcesRepositoryTests()
         {
-        TestSetup();
+            TestSetup();
         }
+
         private static void TestSetup()
         {
             var fileService = new FileService(AppContext.BaseDirectory);
@@ -40,20 +48,18 @@ namespace chldr_data.tests
             dataAccess.RemoveAllEntries();
 
             _dataAccess = dataAccess;
+            //_contentStore = new ContentStore(new DataAccessFactory(new List<IDataAccess>() { dataAccess }), exceptionHandler);
         }
+
         [Fact]
-        private static void GetUnverifiedSources_NoInput_ReturnsSources()
+        public void GetUnverifiedSources_NoInput_ReturnsSources()
         {
-          var UnverifiedSources = _dataAccess.SourcesRepository.GetUnverifiedSources();
-
-
+            var UnverifiedSources = _dataAccess.SourcesRepository.GetUnverifiedSources();
             Assert.True(UnverifiedSources.Count() > 0);
         }
-
     }
-
 }
-    
+
 
 
 

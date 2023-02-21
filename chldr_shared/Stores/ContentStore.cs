@@ -1,5 +1,6 @@
 ﻿using chldr_data.Dto;
 using chldr_data.Enums;
+using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Repositories;
@@ -143,6 +144,29 @@ namespace chldr_shared.Stores
             }
 
             ContentInitialized?.Invoke();
+
+            try
+            {
+                if (_dCurrentDataSource == DataSourceType.Offline && _networkService.IsNetworUp)
+                {
+                    Task.Run(async () =>
+                    {
+                        await Task.Delay(250);
+                        ActivateDatasource(DataSourceType.Synced);
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("998"))
+                {
+                    _exceptionHandler.ProcessDebug(new Exception("NETWORK_ERROR"));
+                }
+                else
+                {
+                    _exceptionHandler.ProcessDebug(ex);
+                }
+            }
         }
 
         public void Search(string query)
