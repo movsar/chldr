@@ -780,6 +780,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Characteristics.
+        /// </summary>
+        public static string Word_Characteristics {
+            get {
+                return ResourceManager.GetString("Word:Characteristics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Common.
         /// </summary>
         public static string Word_Common {
@@ -1262,6 +1271,15 @@ namespace chldr_data.Resources.Localizations {
         public static string Word_Transitive {
             get {
                 return ResourceManager.GetString("Word:Transitive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Undefined.
+        /// </summary>
+        public static string Word_Undefined {
+            get {
+                return ResourceManager.GetString("Word:Undefined", resourceCulture);
             }
         }
         
