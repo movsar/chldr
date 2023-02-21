@@ -22,7 +22,10 @@ namespace chldr_data.Dto
                     break;
                 case PartOfSpeech.Verb:
                     var verb = word as VerbModel;
-
+                    if (verb == null)
+                    {
+                        return;
+                    }
                     Tense = verb.Tense;
                     Conjugation = verb.Conjugation;
                     Mood = verb.Mood;

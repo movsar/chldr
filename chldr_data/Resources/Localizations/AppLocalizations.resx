@@ -539,4 +539,10 @@
   <data name="Word:Comparative" xml:space="preserve">
     <value>Comparative</value>
   </data>
+  <data name="Word:Characteristics" xml:space="preserve">
+    <value>Characteristics</value>
+  </data>
+  <data name="Word:Undefined" xml:space="preserve">
+    <value>Undefined</value>
+  </data>
 </root>

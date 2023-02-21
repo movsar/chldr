@@ -31,7 +31,7 @@
             <div class="col-4">
                 <div class="form-group">
                     <button class="btn btn-secondary form-control" type="button" data-bs-toggle="collapse" data-bs-target=".word-details" aria-expanded="false">
-                        @Localizer["Characteristics"]
+                        @Localizer["Word:Characteristics"]
                     </button>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                         <div class="form-outline mb-2">
                             <select @bind="Word.Tense"
                                     class="form-select"
-                                    title="@Localizer["Tense"]">
+                                    title="@Localizer["Word:Tense"]">
 
                                 @foreach (VerbTense tense in (VerbTense[])Enum.GetValues(typeof(VerbTense)))
                                 {
@@ -57,11 +57,11 @@
                         <div class="form-outline mb-2">
                             <select @bind="Word.Transitiveness"
                                     class="form-select"
-                                    title="@Localizer["Transitiveness"]">
+                                    title="@Localizer["Word:Transitiveness"]">
 
                                 @foreach (Transitiveness transitiveness in (Transitiveness[])Enum.GetValues(typeof(Transitiveness)))
                                 {
-                                    <option value="@transitiveness" class="form-control">@Localizer[transitiveness.ToString()]</option>
+                                    <option value="@transitiveness" class="form-control">@Localizer[$"Word:{transitiveness}"]</option>
                                 }
                             </select>
                         </div>
@@ -74,7 +74,7 @@
 
                                 @foreach (NumericalType numericalType in (NumericalType[])Enum.GetValues(typeof(NumericalType)))
                                 {
-                                    <option value="@numericalType" class="form-control">@Localizer[numericalType.ToString()]</option>
+                                    <option value="@numericalType" class="form-control">@Localizer[$"Word:{numericalType}"]</option>
                                 }
                             </select>
                         </div>
@@ -87,7 +87,7 @@
 
                                 @foreach (VerbConjugation conjugation in (VerbConjugation[])Enum.GetValues(typeof(VerbConjugation)))
                                 {
-                                    <option value="@conjugation" class="form-control">@Localizer[conjugation.ToString()]</option>
+                                    <option value="@conjugation" class="form-control">@Localizer[$"Word:{conjugation}"]</option>
                                 }
                             </select>
                         </div>
@@ -100,7 +100,7 @@
 
                                 @foreach (VerbMood mood in (VerbMood[])Enum.GetValues(typeof(VerbMood)))
                                 {
-                                    <option value="@mood" class="form-control">@Localizer[mood.ToString()]</option>
+                                    <option value="@mood" class="form-control">@Localizer[$"Word:{mood}"]</option>
                                 }
                             </select>
                         </div>
