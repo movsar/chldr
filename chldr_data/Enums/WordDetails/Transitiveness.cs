@@ -8,8 +8,8 @@ namespace chldr_data.Enums.WordDetails
 {
     public enum Transitiveness
     {
-        Unedefined = 0,
-        Yes = 1,
-        No = 2
+        Undefined = 0,
+        Transitive = 1,
+        Intransitive = 2
     }
 }
