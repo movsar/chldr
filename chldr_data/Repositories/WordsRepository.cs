@@ -23,6 +23,12 @@ namespace chldr_data.Repositories
             return new WordModel(word.Entry);
         }
 
+        public List<WordModel> GetRandomWords(int limit)
+        {
+            var words = Database.All<Word>().AsEnumerable().Take(limit);
+            return words.Select(w => new WordModel(w.Entry)).ToList();
+        }
+
         public ObjectId Insert(WordDto newWord)
         {
             return new ObjectId();
