@@ -8,7 +8,7 @@ namespace chldr_data.Interfaces
 {
     public interface IDataAccess
     {
-        event Action DatasourceInitialized;
+        event Action<DataSourceType> DatasourceInitialized;
         void ActivateDatasource(DataSourceType dataSourceType);
         void RemoveAllEntries();
         EntriesRepository<EntryModel> EntriesRepository { get; }

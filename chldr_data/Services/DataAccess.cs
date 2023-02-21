@@ -9,7 +9,7 @@ namespace chldr_data.Services
 {
     public class DataAccess : IDataAccess
     {
-        public event Action? DatasourceInitialized;
+        public event Action<DataSourceType>? DatasourceInitialized;
 
         protected readonly ExceptionHandler _exceptionHandler;
         protected readonly NetworkService _networkService;
@@ -46,7 +46,7 @@ namespace chldr_data.Services
         private void DataSource_Initialized(DataSourceType dataSourceType)
         {
             _realmServiceFactory.CurrentDataSource = dataSourceType;
-            DatasourceInitialized?.Invoke();
+            DatasourceInitialized?.Invoke(dataSourceType);
         }
 
         public void ActivateDatasource(DataSourceType dataSourceType)

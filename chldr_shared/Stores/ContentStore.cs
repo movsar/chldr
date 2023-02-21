@@ -136,7 +136,7 @@ namespace chldr_shared.Stores
         }
         #endregion
 
-        public void DataAccess_DatasourceInitialized()
+        public void DataAccess_DatasourceInitialized(DataSourceType dataSourceType)
         {
             if (Languages.Count == 0)
             {
@@ -147,12 +147,12 @@ namespace chldr_shared.Stores
 
             try
             {
-                if (_dCurrentDataSource == DataSourceType.Offline && _networkService.IsNetworUp)
+                if (dataSourceType == DataSourceType.Offline && _networkService.IsNetworUp)
                 {
                     Task.Run(async () =>
                     {
                         await Task.Delay(250);
-                        ActivateDatasource(DataSourceType.Synced);
+                        _dataAccess.ActivateDatasource(DataSourceType.Synced);
                     });
                 }
             }

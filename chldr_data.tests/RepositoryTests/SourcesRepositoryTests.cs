@@ -18,37 +18,10 @@ namespace chldr_data.tests.RepositoryTests
     {
         private static IDataAccess _dataAccess;
 
-        //public SourcesRepositoryTests()
-        //{
-        //    _dataAccess = TestDataFactory.CreateDataAccess();
-        //    _dataAccess.RemoveAllEntries();
-        //}
-
-        static SourcesRepositoryTests()
+        public SourcesRepositoryTests()
         {
-            TestSetup();
-        }
-
-        private static void TestSetup()
-        {
-            var fileService = new FileService(AppContext.BaseDirectory);
-            var exceptionHandler = new ExceptionHandler(fileService);
-            var networkService = new NetworkService();
-
-            var realmService = new OfflineRealmService(fileService, exceptionHandler);
-            var realmServiceFactory = new RealmServiceFactory(new List<IRealmService>() { realmService });
-
-            var dataAccess = new DataAccess(realmServiceFactory, exceptionHandler, networkService,
-                new EntriesRepository<EntryModel>(realmServiceFactory),
-                new WordsRepository(realmServiceFactory),
-                new PhrasesRepository(realmServiceFactory),
-                new LanguagesRepository(realmServiceFactory),
-                new SourcesRepository(realmServiceFactory));
-
-            dataAccess.RemoveAllEntries();
-
-            _dataAccess = dataAccess;
-            //_contentStore = new ContentStore(new DataAccessFactory(new List<IDataAccess>() { dataAccess }), exceptionHandler);
+            _dataAccess = TestDataFactory.CreateDataAccess();
+            _dataAccess.RemoveAllEntries();
         }
 
         [Fact]
@@ -59,7 +32,3 @@ namespace chldr_data.tests.RepositoryTests
         }
     }
 }
-
-
-
-
