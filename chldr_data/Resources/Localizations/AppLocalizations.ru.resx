@@ -284,4 +284,175 @@
   <data name="PageTitle:Edit_word" xml:space="preserve">
     <value>Редактирование слова</value>
   </data>
+  <data name="Member" xml:space="preserve">
+    <value>Участник</value>
+  </data>
+  <data name="Maintainer" xml:space="preserve">
+    <value>Хранитель</value>
+  </data>
+  <data name="Undefined" xml:space="preserve">
+    <value>Неопределено</value>
+  </data>
+  <data name="Word:Absolutive" xml:space="preserve">
+    <value>Именительный</value>
+  </data>
+  <data name="Word:Adjective" xml:space="preserve">
+    <value>Наречие</value>
+  </data>
+  <data name="Word:Adverb" xml:space="preserve">
+    <value>Прилагательное</value>
+  </data>
+  <data name="Word:Allative" xml:space="preserve">
+    <value>Местный</value>
+  </data>
+  <data name="Word:Comparative" xml:space="preserve">
+    <value>Сравнительный</value>
+  </data>
+  <data name="Word:Composite" xml:space="preserve">
+    <value>Составное</value>
+  </data>
+  <data name="Word:Complex" xml:space="preserve">
+    <value>Сложное</value>
+  </data>
+  <data name="Word:Concessive" xml:space="preserve">
+    <value>Уступительная</value>
+  </data>
+  <data name="Word:Dative" xml:space="preserve">
+    <value>Дательный</value>
+  </data>
+  <data name="Word:Dependent" xml:space="preserve">
+    <value>Зависимое</value>
+  </data>
+  <data name="Word:Ergative" xml:space="preserve">
+    <value>Эргативный</value>
+  </data>
+  <data name="Word:First" xml:space="preserve">
+    <value>Первый</value>
+  </data>
+  <data name="Word:Fourth" xml:space="preserve">
+    <value>Чертвертый</value>
+  </data>
+  <data name="Word:Genitive" xml:space="preserve">
+    <value>Родительный</value>
+  </data>
+  <data name="Word:Independent" xml:space="preserve">
+    <value>Зависимое</value>
+  </data>
+  <data name="Word:Instrumental" xml:space="preserve">
+    <value>Творительный</value>
+  </data>
+  <data name="Word:Interjection" xml:space="preserve">
+    <value>Междометие</value>
+  </data>
+  <data name="Word:Locative" xml:space="preserve">
+    <value>Вещественный</value>
+  </data>
+  <data name="Word:Masdar" xml:space="preserve">
+    <value>Масдар</value>
+  </data>
+  <data name="Word:Noun" xml:space="preserve">
+    <value>Именительный</value>
+  </data>
+  <data name="Word:Qualitive" xml:space="preserve">
+    <value>Качестыенный</value>
+  </data>
+  <data name="Word:Quantitative" xml:space="preserve">
+    <value>Количественный</value>
+  </data>
+  <data name="Word:Verb" xml:space="preserve">
+    <value>Глагол</value>
+  </data>
+  <data name="Word:Simple" xml:space="preserve">
+    <value>Простое</value>
+  </data>
+  <data name="Word:Singular" xml:space="preserve">
+    <value>Единственное</value>
+  </data>
+  <data name="Word:Superlative" xml:space="preserve">
+    <value>Превосходная</value>
+  </data>
+  <data name="Word:Third" xml:space="preserve">
+    <value>Третий</value>
+  </data>
+  <data name="Word:Transitive" xml:space="preserve">
+    <value>Переходный</value>
+  </data>
+  <data name="Word:Second" xml:space="preserve">
+    <value>Второй</value>
+  </data>
+  <data name="Word:Pronoun" xml:space="preserve">
+    <value>Метоимение</value>
+  </data>
+  <data name="Word:PresentSimple" xml:space="preserve">
+    <value>Настоящее простое</value>
+  </data>
+  <data name="Word:PresentContinuous" xml:space="preserve">
+    <value>Настоящее продолженное</value>
+  </data>
+  <data name="Word:Potential" xml:space="preserve">
+    <value>Потенциальная</value>
+  </data>
+  <data name="Word:Plural" xml:space="preserve">
+    <value>Множественное</value>
+  </data>
+  <data name="Word:Numeral" xml:space="preserve">
+    <value>Числительное</value>
+  </data>
+  <data name="Word:Intransitive" xml:space="preserve">
+    <value>Непереходный</value>
+  </data>
+  <data name="Word:Indicative" xml:space="preserve">
+    <value>Изъявительное</value>
+  </data>
+  <data name="Word:Imperative" xml:space="preserve">
+    <value>Повелительное</value>
+  </data>
+  <data name="Word:Interrogative_indicative" xml:space="preserve">
+    <value>Вопросительная форма изъявительного наклонения</value>
+  </data>
+  <data name="Word:RealConditional" xml:space="preserve">
+    <value>Реально-условное наклонение</value>
+  </data>
+  <data name="Word:RealDesiderative" xml:space="preserve">
+    <value>Реально-желательное наклонение</value>
+  </data>
+  <data name="Word:UnrealConditional" xml:space="preserve">
+    <value>Нереально-условное наклонение</value>
+  </data>
+  <data name="Word:UnrealDesiderative" xml:space="preserve">
+    <value>Нереально-желательное наклонение</value>
+  </data>
+  <data name="Word:Future_possible" xml:space="preserve">
+    <value>Будущее возможное</value>
+  </data>
+  <data name="Word:Future_real" xml:space="preserve">
+    <value>Будущее реальное</value>
+  </data>
+  <data name="Word:Conjunction" xml:space="preserve">
+    <value>Союз</value>
+  </data>
+  <data name="Word:Multiplicative" xml:space="preserve">
+    <value>Множительное</value>
+  </data>
+  <data name="Word:Ordinal" xml:space="preserve">
+    <value>Порядковое</value>
+  </data>
+  <data name="Word:Particle" xml:space="preserve">
+    <value>Частица</value>
+  </data>
+  <data name="Word:PastImperfect" xml:space="preserve">
+    <value>Прошедшее несовершенное</value>
+  </data>
+  <data name="Word:PastPerfect" xml:space="preserve">
+    <value>Прошедшее совершенное</value>
+  </data>
+  <data name="Word:PastRecent" xml:space="preserve">
+    <value>Прошедшее недавнее</value>
+  </data>
+  <data name="Word:PastRemote" xml:space="preserve">
+    <value>Прошедшее давнее</value>
+  </data>
+  <data name="Word:PastWitnessed" xml:space="preserve">
+    <value>Прошедшее увиденное</value>
+  </data>
 </root>

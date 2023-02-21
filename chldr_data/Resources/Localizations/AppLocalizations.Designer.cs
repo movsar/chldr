@@ -88,6 +88,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authorized.
+        /// </summary>
+        public static string Authorized {
+            get {
+                return ResourceManager.GetString("Authorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Basic form.
         /// </summary>
         public static string Basic_form {
@@ -178,6 +187,24 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Contributor.
+        /// </summary>
+        public static string Contributor {
+            get {
+                return ResourceManager.GetString("Contributor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Editor.
+        /// </summary>
+        public static string Editor {
+            get {
+                return ResourceManager.GetString("Editor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email.
         /// </summary>
         public static string Email {
@@ -263,6 +290,15 @@ namespace chldr_data.Resources.Localizations {
         public static string Enter_translation_text {
             get {
                 return ResourceManager.GetString("Enter_translation_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enthusiast.
+        /// </summary>
+        public static string Enthusiast {
+            get {
+                return ResourceManager.GetString("Enthusiast", resourceCulture);
             }
         }
         
@@ -465,6 +501,42 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Logged In.
+        /// </summary>
+        public static string LoggedIn {
+            get {
+                return ResourceManager.GetString("LoggedIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logging In.
+        /// </summary>
+        public static string LoggingIn {
+            get {
+                return ResourceManager.GetString("LoggingIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maintainer.
+        /// </summary>
+        public static string Maintainer {
+            get {
+                return ResourceManager.GetString("Maintainer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Member.
+        /// </summary>
+        public static string Member {
+            get {
+                return ResourceManager.GetString("Member", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Notes.
         /// </summary>
         public static string Notes {
@@ -609,6 +681,24 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unauthorized.
+        /// </summary>
+        public static string Unauthorized {
+            get {
+                return ResourceManager.GetString("Unauthorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Undefined.
+        /// </summary>
+        public static string Undefined {
+            get {
+                return ResourceManager.GetString("Undefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Update password.
         /// </summary>
         public static string Update_password {
@@ -641,6 +731,564 @@ namespace chldr_data.Resources.Localizations {
         public static string Word {
             get {
                 return ResourceManager.GetString("Word", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AbsolutiveSingular.
+        /// </summary>
+        public static string Word_Absolutive {
+            get {
+                return ResourceManager.GetString("Word:Absolutive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adjective.
+        /// </summary>
+        public static string Word_Adjective {
+            get {
+                return ResourceManager.GetString("Word:Adjective", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adverb.
+        /// </summary>
+        public static string Word_Adverb {
+            get {
+                return ResourceManager.GetString("Word:Adverb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allative.
+        /// </summary>
+        public static string Word_Allative {
+            get {
+                return ResourceManager.GetString("Word:Allative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Causative.
+        /// </summary>
+        public static string Word_Causative {
+            get {
+                return ResourceManager.GetString("Word:Causative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Common.
+        /// </summary>
+        public static string Word_Common {
+            get {
+                return ResourceManager.GetString("Word:Common", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Comparative.
+        /// </summary>
+        public static string Word_Comparative {
+            get {
+                return ResourceManager.GetString("Word:Comparative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Complex.
+        /// </summary>
+        public static string Word_Complex {
+            get {
+                return ResourceManager.GetString("Word:Complex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Composite.
+        /// </summary>
+        public static string Word_Composite {
+            get {
+                return ResourceManager.GetString("Word:Composite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Concessive.
+        /// </summary>
+        public static string Word_Concessive {
+            get {
+                return ResourceManager.GetString("Word:Concessive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Conjunction.
+        /// </summary>
+        public static string Word_Conjunction {
+            get {
+                return ResourceManager.GetString("Word:Conjunction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dative.
+        /// </summary>
+        public static string Word_Dative {
+            get {
+                return ResourceManager.GetString("Word:Dative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dependent.
+        /// </summary>
+        public static string Word_Dependent {
+            get {
+                return ResourceManager.GetString("Word:Dependent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Derivative.
+        /// </summary>
+        public static string Word_Derivative {
+            get {
+                return ResourceManager.GetString("Word:Derivative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ergative.
+        /// </summary>
+        public static string Word_Ergative {
+            get {
+                return ResourceManager.GetString("Word:Ergative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to First.
+        /// </summary>
+        public static string Word_First {
+            get {
+                return ResourceManager.GetString("Word:First", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fourth.
+        /// </summary>
+        public static string Word_Fourth {
+            get {
+                return ResourceManager.GetString("Word:Fourth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Future possible.
+        /// </summary>
+        public static string Word_Future_possible {
+            get {
+                return ResourceManager.GetString("Word:Future_possible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FutureReal.
+        /// </summary>
+        public static string Word_Future_real {
+            get {
+                return ResourceManager.GetString("Word:Future_real", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GenitiveSingular.
+        /// </summary>
+        public static string Word_Genitive {
+            get {
+                return ResourceManager.GetString("Word:Genitive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gerund.
+        /// </summary>
+        public static string Word_Gerund {
+            get {
+                return ResourceManager.GetString("Word:Gerund", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Imperative.
+        /// </summary>
+        public static string Word_Imperative {
+            get {
+                return ResourceManager.GetString("Word:Imperative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inceptive.
+        /// </summary>
+        public static string Word_Inceptive {
+            get {
+                return ResourceManager.GetString("Word:Inceptive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Independent.
+        /// </summary>
+        public static string Word_Independent {
+            get {
+                return ResourceManager.GetString("Word:Independent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indicative.
+        /// </summary>
+        public static string Word_Indicative {
+            get {
+                return ResourceManager.GetString("Word:Indicative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to InstrumentalSingular.
+        /// </summary>
+        public static string Word_Instrumental {
+            get {
+                return ResourceManager.GetString("Word:Instrumental", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interjection.
+        /// </summary>
+        public static string Word_Interjection {
+            get {
+                return ResourceManager.GetString("Word:Interjection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to InterrogativeIndicative.
+        /// </summary>
+        public static string Word_Interrogative_indicative {
+            get {
+                return ResourceManager.GetString("Word:Interrogative_indicative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Intransitive.
+        /// </summary>
+        public static string Word_Intransitive {
+            get {
+                return ResourceManager.GetString("Word:Intransitive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LocativeSingular.
+        /// </summary>
+        public static string Word_Locative {
+            get {
+                return ResourceManager.GetString("Word:Locative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Masdar.
+        /// </summary>
+        public static string Word_Masdar {
+            get {
+                return ResourceManager.GetString("Word:Masdar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multiplicative.
+        /// </summary>
+        public static string Word_Multiplicative {
+            get {
+                return ResourceManager.GetString("Word:Multiplicative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Noun.
+        /// </summary>
+        public static string Word_Noun {
+            get {
+                return ResourceManager.GetString("Word:Noun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Numeral.
+        /// </summary>
+        public static string Word_Numeral {
+            get {
+                return ResourceManager.GetString("Word:Numeral", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ordinal.
+        /// </summary>
+        public static string Word_Ordinal {
+            get {
+                return ResourceManager.GetString("Word:Ordinal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Particle.
+        /// </summary>
+        public static string Word_Particle {
+            get {
+                return ResourceManager.GetString("Word:Particle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PastImperfect.
+        /// </summary>
+        public static string Word_PastImperfect {
+            get {
+                return ResourceManager.GetString("Word:PastImperfect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PastPerfect.
+        /// </summary>
+        public static string Word_PastPerfect {
+            get {
+                return ResourceManager.GetString("Word:PastPerfect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PastRecent.
+        /// </summary>
+        public static string Word_PastRecent {
+            get {
+                return ResourceManager.GetString("Word:PastRecent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PastRemote.
+        /// </summary>
+        public static string Word_PastRemote {
+            get {
+                return ResourceManager.GetString("Word:PastRemote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PastWitnessed.
+        /// </summary>
+        public static string Word_PastWitnessed {
+            get {
+                return ResourceManager.GetString("Word:PastWitnessed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Permissive.
+        /// </summary>
+        public static string Word_Permissive {
+            get {
+                return ResourceManager.GetString("Word:Permissive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PermissiveCausative.
+        /// </summary>
+        public static string Word_PermissiveCausative {
+            get {
+                return ResourceManager.GetString("Word:PermissiveCausative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plural.
+        /// </summary>
+        public static string Word_Plural {
+            get {
+                return ResourceManager.GetString("Word:Plural", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Potential.
+        /// </summary>
+        public static string Word_Potential {
+            get {
+                return ResourceManager.GetString("Word:Potential", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PresentContinuous.
+        /// </summary>
+        public static string Word_PresentContinuous {
+            get {
+                return ResourceManager.GetString("Word:PresentContinuous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PresentSimple.
+        /// </summary>
+        public static string Word_PresentSimple {
+            get {
+                return ResourceManager.GetString("Word:PresentSimple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pronoun.
+        /// </summary>
+        public static string Word_Pronoun {
+            get {
+                return ResourceManager.GetString("Word:Pronoun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proper.
+        /// </summary>
+        public static string Word_Proper {
+            get {
+                return ResourceManager.GetString("Word:Proper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Qualitive.
+        /// </summary>
+        public static string Word_Qualitive {
+            get {
+                return ResourceManager.GetString("Word:Qualitive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Qualitive.
+        /// </summary>
+        public static string Word_Quantitative {
+            get {
+                return ResourceManager.GetString("Word:Quantitative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RealConditional.
+        /// </summary>
+        public static string Word_RealConditional {
+            get {
+                return ResourceManager.GetString("Word:RealConditional", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RealDesiderative.
+        /// </summary>
+        public static string Word_RealDesiderative {
+            get {
+                return ResourceManager.GetString("Word:RealDesiderative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Second.
+        /// </summary>
+        public static string Word_Second {
+            get {
+                return ResourceManager.GetString("Word:Second", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Simple.
+        /// </summary>
+        public static string Word_Simple {
+            get {
+                return ResourceManager.GetString("Word:Simple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Singular.
+        /// </summary>
+        public static string Word_Singular {
+            get {
+                return ResourceManager.GetString("Word:Singular", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Superlative.
+        /// </summary>
+        public static string Word_Superlative {
+            get {
+                return ResourceManager.GetString("Word:Superlative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Third.
+        /// </summary>
+        public static string Word_Third {
+            get {
+                return ResourceManager.GetString("Word:Third", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transitive.
+        /// </summary>
+        public static string Word_Transitive {
+            get {
+                return ResourceManager.GetString("Word:Transitive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UnrealConditional.
+        /// </summary>
+        public static string Word_UnrealConditional {
+            get {
+                return ResourceManager.GetString("Word:UnrealConditional", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UnrealDesiderative.
+        /// </summary>
+        public static string Word_UnrealDesiderative {
+            get {
+                return ResourceManager.GetString("Word:UnrealDesiderative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verb.
+        /// </summary>
+        public static string Word_Verb {
+            get {
+                return ResourceManager.GetString("Word:Verb", resourceCulture);
             }
         }
         
