@@ -31,7 +31,32 @@ namespace chldr_data.Repositories
 
         public ObjectId Insert(WordDto newWord)
         {
-            return new ObjectId();
+            var source = Database.All<Source>().FirstOrDefault(s => s._id.Equals(newWord.SourceId));
+
+            // Initialize an entry object
+            var entry = new Entry()
+            {
+                Rate = Convert.ToInt32(newWord.Rate),
+                Source = source,
+            };
+
+            // Insert data
+            var word = new Word()
+            {
+                Entry = entry,
+                Content = newWord.Content,
+                Notes = newWord.Notes
+            };
+
+            entry.Type = (int)EntryType.Word;
+            entry.Word = word;
+
+            Database.Write(() =>
+            {
+                Database.Add(entry);
+            });
+
+            return entry._id;
         }
 
         public void Update(UserModel user, WordDto wordDto)

@@ -1,4 +1,6 @@
-﻿using chldr_data.Interfaces;
+﻿using chldr_data.Dto;
+using chldr_data.Interfaces;
+using chldr_data.Models.Words;
 using chldr_data.tests.Services;
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,13 @@ namespace chldr_data.tests.RepositoryTests
         {
             _dataAccess = TestDataFactory.CreateDataAccess();
             _dataAccess.RemoveAllEntries();
+        }
+
+        [Fact]
+        public async void Insert_ExpectedInput_ReturnsId()
+        {
+            
+
         }
 
         [Fact]
