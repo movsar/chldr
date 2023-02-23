@@ -34,6 +34,13 @@ namespace chldr_data.Services
         }
         internal App GetApp()
         {
+            if (_app == null)
+            {
+                _app = App.Create(new AppConfiguration(myTestRealmAppId)
+                {
+                    BaseFilePath = _fileService.AppDataDirectory,
+                });
+            }
             return _app;
         }
         public SyncedRealmService(FileService fileService, ExceptionHandler exceptionHandler)
@@ -63,17 +70,6 @@ namespace chldr_data.Services
             }
         }
 
-        private void InitializeApp()
-        {
-            if (_app == null)
-            {
-                _app = App.Create(new AppConfiguration(myTestRealmAppId)
-                {
-                    BaseFilePath = _fileService.AppDataDirectory,
-                });
-            }
-        }
-
         private string GetUserDatabaseName(string id)
         {
             return $"{id.Substring(4, 4)}.dbx";
@@ -82,11 +78,11 @@ namespace chldr_data.Services
         {
             // Copy original file so that app will be able to access entries immediately
 
-            var syncedDatabasePath = Path.Combine(_fileService.AppDataDirectory, GetUserDatabaseName(_app.CurrentUser.Id));
+            var syncedDatabasePath = Path.Combine(_fileService.AppDataDirectory, GetUserDatabaseName(GetApp().CurrentUser.Id));
 
             byte[] encKey = AppConstants.EncKey.Split(":").Select(numAsString => Convert.ToByte(numAsString)).ToArray();
 
-            _config = new FlexibleSyncConfiguration(_app.CurrentUser, syncedDatabasePath)
+            _config = new FlexibleSyncConfiguration(GetApp().CurrentUser, syncedDatabasePath)
             {
                 EncryptionKey = encKey,
                 SchemaVersion = 1,
@@ -139,9 +135,7 @@ namespace chldr_data.Services
 
         public void Initialize()
         {
-            InitializeApp();
-
-            if (_app?.CurrentUser == null || _app?.CurrentUser?.Provider == Credentials.AuthProvider.Anonymous)
+            if (GetApp()?.CurrentUser == null || GetApp()?.CurrentUser?.Provider == Credentials.AuthProvider.Anonymous)
             {
                 return;
             }

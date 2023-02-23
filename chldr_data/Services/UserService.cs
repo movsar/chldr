@@ -27,7 +27,7 @@ namespace chldr_data.Services
             _realmService = (realmServiceFactory.GetInstance(DataSourceType.Synced) as SyncedRealmService)!;
             _realmService.DatasourceInitialized += RealmService_DatasourceInitialized;
         }
-        private void RealmService_DatasourceInitialized(DataSourceType dataSourceType)
+        private async void RealmService_DatasourceInitialized(DataSourceType dataSourceType)
         {
             if (dataSourceType != DataSourceType.Synced)
             {
@@ -38,6 +38,9 @@ namespace chldr_data.Services
             {
                 return;
             }
+
+            await Database.Subscriptions.WaitForSynchronizationAsync();
+            await Database.SyncSession.WaitForDownloadAsync();
 
             var sessionStatus = GetCurrentUserSessionStatus();
             var userInfo = GetCurrentUserInfo();
