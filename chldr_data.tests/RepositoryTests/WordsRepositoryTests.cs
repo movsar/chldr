@@ -62,8 +62,9 @@ namespace chldr_data.tests.RepositoryTests
            
             var randomWord = TestDataFactory.CreateWordDto("Time", "When", "RUS", "Когда");
             var someWord = TestDataFactory.CreateWordDto("Object", "Car", "RUS", "Машина");
-            
-           
+
+            var addrandomWord = _dataAccess.WordsRepository.Insert(randomWord);
+            var addsomeWord = _dataAccess.WordsRepository.Insert(someWord);
             var words = _dataAccess.WordsRepository.GetRandomWords(2);
             Assert.True(words.Count() == 2);
         }
