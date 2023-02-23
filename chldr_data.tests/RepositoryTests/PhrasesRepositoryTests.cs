@@ -16,7 +16,7 @@ namespace chldr_data.tests.RepositoryTests
 
         public PhrasesRepositoryTests()
         {
-            _dataAccess = TestDataFactory.CreateDataAccess();
+            _dataAccess = TestDataFactory.GetTestDataAccess();
             _dataAccess.RemoveAllEntries();
         }
         public async Task GetWordById_ExpectedInput_ReturnsWord()

@@ -20,7 +20,7 @@ namespace chldr_data.tests.RepositoryTests
 
         public SourcesRepositoryTests()
         {
-            _dataAccess = TestDataFactory.CreateDataAccess();
+            _dataAccess = TestDataFactory.GetTestDataAccess();
             _dataAccess.RemoveAllEntries();
         }
 

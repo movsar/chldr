@@ -31,7 +31,12 @@ namespace chldr_data.Repositories
 
         public ObjectId Insert(WordDto newWord)
         {
-            var source = Database.All<Source>().FirstOrDefault(s => s._id.Equals(newWord.SourceId));
+            if (!string.IsNullOrEmpty(newWord.EntryId))
+            {
+                throw new InvalidOperationException();
+            }
+
+            var source = Database.Find<Source>(new ObjectId(newWord.SourceId));
 
             // Initialize an entry object
             var entry = new Entry()
@@ -50,6 +55,23 @@ namespace chldr_data.Repositories
 
             entry.Type = (int)EntryType.Word;
             entry.Word = word;
+
+            foreach (var translationDto in newWord.Translations)
+            {
+                var language = Database.All<Language>().FirstOrDefault(t => t.Code == translationDto.LanguageCode);
+                if (language == null)
+                {
+                    throw new Exception("Language cannot be empty");
+                }
+
+                entry.Translations.Add(new Translation()
+                {
+                    Entry = entry,
+                    Language = language,
+                    Content = translationDto.Content,
+                    Notes = translationDto.Notes
+                });
+            }
 
             Database.Write(() =>
             {

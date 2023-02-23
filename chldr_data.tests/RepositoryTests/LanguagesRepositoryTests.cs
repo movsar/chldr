@@ -13,7 +13,7 @@ namespace chldr_data.tests.RepositoryTests
         private readonly IDataAccess _dataAccess;
         public LanguagesRepositoryTests()
         {
-            _dataAccess = TestDataFactory.CreateDataAccess();
+            _dataAccess = TestDataFactory.GetTestDataAccess();
             _dataAccess.RemoveAllEntries();
         }
 

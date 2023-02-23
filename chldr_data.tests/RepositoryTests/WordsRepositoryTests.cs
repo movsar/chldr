@@ -16,15 +16,18 @@ namespace chldr_data.tests.RepositoryTests
 
         public WordsRepositoryTests()
         {
-            _dataAccess = TestDataFactory.CreateDataAccess();
+            _dataAccess = TestDataFactory.GetTestDataAccess();
             _dataAccess.RemoveAllEntries();
         }
 
         [Fact]
         public async void Insert_ExpectedInput_ReturnsId()
         {
+            var testWord = TestDataFactory.CreateWordDto("Something", "Whatever", "RUS", "Нечто");
             
-
+            var insertedWordId = _dataAccess.WordsRepository.Insert(testWord);
+            
+            Assert.NotEqual(ObjectId.Empty, insertedWordId);
         }
 
         [Fact]
