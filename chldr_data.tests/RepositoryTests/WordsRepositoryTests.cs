@@ -1,10 +1,12 @@
 ﻿using chldr_data.Dto;
+using chldr_data.Entities;
 using chldr_data.Interfaces;
 using chldr_data.Models.Words;
 using chldr_data.tests.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -52,6 +54,18 @@ namespace chldr_data.tests.RepositoryTests
                 }
 
             }
+            
+        }
+        [Fact]
+        public void GetRandomWords_ExpectedInput_ReturnsListOfWord()
+        {
+           
+            var randomWord = TestDataFactory.CreateWordDto("Time", "When", "RUS", "Когда");
+            var someWord = TestDataFactory.CreateWordDto("Object", "Car", "RUS", "Машина");
+            
+           
+            var words = _dataAccess.WordsRepository.GetRandomWords(2);
+            Assert.True(words.Count() == 2);
         }
     }
 }
