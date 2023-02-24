@@ -189,6 +189,9 @@ namespace chldr_shared.Stores
                         _dataAccess.ActivateDatasource(DataSourceType.Synced);
                     });
                 }
+                else
+                {
+                }
             }
             catch (Exception ex)
             {
