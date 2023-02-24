@@ -39,8 +39,6 @@ namespace chldr_data.Services
             PhrasesRepository = phrasesRepository;
             LanguagesRepository = languagesRepository;
             SourcesRepository = sourcesRepository;
-
-            ActivateDatasource(DataSourceType.Offline);
         }
 
         private void DataSource_Initialized(DataSourceType dataSourceType)
