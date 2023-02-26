@@ -56,6 +56,7 @@ namespace chldr_server.Extensions
             appBuilder.Services.AddTransient<LanguagesRepository>();
             appBuilder.Services.AddTransient<PhrasesRepository>();
             appBuilder.Services.AddTransient<SourcesRepository>();
+            appBuilder.Services.AddTransient<UsersRepository>();
 
             return appBuilder;
         }
