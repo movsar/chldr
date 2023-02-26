@@ -26,16 +26,10 @@ namespace chldr_ui.ViewModels
             }
         }
 
-        protected override void OnInitialized()
-        {
-            ContentStore.ContentInitialized += ContentStore_ContentInitialized;
-            base.OnInitialized();
-        }
-
-
-        private async void ContentStore_ContentInitialized()
+        protected override async Task OnInitializedAsync()
         {
             await ShowRandoms();
+            await base.OnInitializedAsync();
         }
     }
 }

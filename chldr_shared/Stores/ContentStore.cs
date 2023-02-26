@@ -178,32 +178,6 @@ namespace chldr_shared.Stores
             }
 
             ContentInitialized?.Invoke();
-
-            try
-            {
-                if (dataSourceType == DataSourceType.Offline && _networkService.IsNetworUp)
-                {
-                    Task.Run(async () =>
-                    {
-                        await Task.Delay(250);
-                        _dataAccess.ActivateDatasource(DataSourceType.Synced);
-                    });
-                }
-                else
-                {
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("998"))
-                {
-                    _exceptionHandler.ProcessDebug(new Exception("NETWORK_ERROR"));
-                }
-                else
-                {
-                    _exceptionHandler.ProcessDebug(ex);
-                }
-            }
         }
 
         public void Search(string query)

@@ -23,6 +23,9 @@ namespace chldr_data.Services
                 throw new Exception("Config shouldn't be null");
             }
 
+            Console.WriteLine("in GetDatabase()");
+            Console.WriteLine(_config.DatabasePath);
+
             return Realm.GetInstance(_config);
         }
         public OfflineRealmService(FileService fileService, ExceptionHandler exceptionHandler)

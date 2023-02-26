@@ -49,6 +49,31 @@ namespace chldr_data.Services
         {
             _realmServiceFactory.CurrentDataSource = dataSourceType;
             DatasourceInitialized?.Invoke(dataSourceType);
+
+            // Switch to synced if available
+            Task.Run(async () =>
+            {
+                try
+                {
+                    if (dataSourceType == DataSourceType.Offline && _networkService.IsNetworUp)
+                    {
+
+                        await Task.Delay(250);
+                        ActivateDatasource(DataSourceType.Synced);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (ex.Message.Contains("998"))
+                    {
+                        _exceptionHandler.ProcessDebug(new Exception("NETWORK_ERROR"));
+                    }
+                    else
+                    {
+                        _exceptionHandler.ProcessDebug(ex);
+                    }
+                }
+            });
         }
 
         public void ActivateDatasource(DataSourceType dataSourceType)

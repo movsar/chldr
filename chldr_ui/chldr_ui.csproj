@@ -22,7 +22,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\chldr_shared\chldr_shared.csproj" />
+		<ProjectReference Include="..\chldr_shared\chldr_shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
