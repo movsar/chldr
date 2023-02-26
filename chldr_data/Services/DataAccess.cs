@@ -20,6 +20,8 @@ namespace chldr_data.Services
         public WordsRepository WordsRepository { get; }
         public PhrasesRepository PhrasesRepository { get; }
         public EntriesRepository<EntryModel> EntriesRepository { get; }
+        public UsersRepository UsersRepository { get; }
+
 
         public DataAccess(IRealmServiceFactory realmServiceFactory,
             ExceptionHandler exceptionHandler,
@@ -28,7 +30,8 @@ namespace chldr_data.Services
             WordsRepository wordsRepository,
             PhrasesRepository phrasesRepository,
             LanguagesRepository languagesRepository,
-            SourcesRepository sourcesRepository)
+            SourcesRepository sourcesRepository,
+            UsersRepository usersRepository)
         {
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
@@ -39,6 +42,7 @@ namespace chldr_data.Services
             PhrasesRepository = phrasesRepository;
             LanguagesRepository = languagesRepository;
             SourcesRepository = sourcesRepository;
+            UsersRepository = usersRepository;
 
             ActivateDatasource(DataSourceType.Offline);
         }

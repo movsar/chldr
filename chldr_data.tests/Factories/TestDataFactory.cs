@@ -28,7 +28,8 @@ namespace chldr_data.tests.Services
                 new WordsRepository(realmServiceFactory),
                 new PhrasesRepository(realmServiceFactory),
                 new LanguagesRepository(realmServiceFactory),
-                new SourcesRepository(realmServiceFactory));
+                new SourcesRepository(realmServiceFactory),
+                new UsersRepository(realmServiceFactory));
         }
 
         public static IDataAccess GetTestDataAccess()

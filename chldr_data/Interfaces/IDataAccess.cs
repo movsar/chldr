@@ -12,6 +12,7 @@ namespace chldr_data.Interfaces
         void ActivateDatasource(DataSourceType dataSourceType);
         void RemoveAllEntries();
         EntriesRepository<EntryModel> EntriesRepository { get; }
+        UsersRepository UsersRepository { get; }
         PhrasesRepository PhrasesRepository { get; }
         WordsRepository WordsRepository { get; }
         LanguagesRepository LanguagesRepository { get; }

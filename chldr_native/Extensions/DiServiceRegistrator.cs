@@ -14,6 +14,7 @@ using chldr_ui.ViewModels;
 using chldr_utils;
 using chldr_utils.Services;
 using FluentValidation;
+using System.Reflection.PortableExecutable;
 
 namespace chldr_native.Extensions
 {
@@ -70,14 +71,15 @@ namespace chldr_native.Extensions
 
             return appBuilder;
         }
-        public static MauiAppBuilder RegisterViewModels(this MauiAppBuilder mauiAppBuilder)
+        public static MauiAppBuilder RegisterViewModels(this MauiAppBuilder appBuilder)
         {
-            mauiAppBuilder.Services.AddScoped<MainPageViewModel>();
-            mauiAppBuilder.Services.AddScoped<LoginPageViewModel>();
-            mauiAppBuilder.Services.AddScoped<RegistrationPageViewModel>();
-            mauiAppBuilder.Services.AddScoped<SearchResultsViewModel>();
+            appBuilder.Services.AddScoped<MainPageViewModel>();
+            appBuilder.Services.AddScoped<LoginPageViewModel>();
+            appBuilder.Services.AddScoped<RegistrationPageViewModel>();
+            appBuilder.Services.AddScoped<SearchResultsViewModel>();
+            appBuilder.Services.AddTransient<UsersRepository>();
 
-            return mauiAppBuilder;
+            return appBuilder;
         }
     }
 }
