@@ -36,7 +36,7 @@ namespace chldr_data.Services
 
         private string KeyAsString()
         {
-            byte[] encryptionKey = File.ReadAllBytes(Path.Combine(_fileService.AppDataDirectory, "encryption.key"));
+            byte[] encryptionKey = File.ReadAllBytes(Path.Combine(FileService.AppDataDirectory, "encryption.key"));
 
             var key = encryptionKey.Select(b => (int)b);
             var stringified = string.Join(":", key);

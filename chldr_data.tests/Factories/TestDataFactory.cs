@@ -4,6 +4,7 @@ using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Repositories;
 using chldr_data.Services;
+using chldr_utils.Services;
 
 namespace chldr_data.tests.Services
 {
@@ -12,6 +13,7 @@ namespace chldr_data.tests.Services
         private static readonly FileService _fileService;
         private static readonly ExceptionHandler _exceptionHandler;
         private static readonly NetworkService _networkService;
+        private static readonly EnvironmentService _environmentService;
         private static readonly DataAccess _dataAccess;
 
         static TestDataFactory()
@@ -19,19 +21,20 @@ namespace chldr_data.tests.Services
             _fileService = new FileService(AppContext.BaseDirectory);
             _exceptionHandler = new ExceptionHandler(_fileService);
             _networkService = new NetworkService();
+            _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Windows);
 
             var realmService = new OfflineRealmService(_fileService, _exceptionHandler);
             var realmServiceFactory = new RealmServiceFactory(new List<IRealmService>() { realmService });
 
-            _dataAccess = new DataAccess(realmServiceFactory, _exceptionHandler, _networkService,
+            _dataAccess = new DataAccess(realmServiceFactory, _exceptionHandler, _environmentService, _networkService,
                 new EntriesRepository<EntryModel>(realmServiceFactory),
                 new WordsRepository(realmServiceFactory),
                 new PhrasesRepository(realmServiceFactory),
                 new LanguagesRepository(realmServiceFactory),
                 new SourcesRepository(realmServiceFactory),
                 new UsersRepository(realmServiceFactory));
-                
-            _dataAccess.ActivateDatasource(Enums.DataSourceType.Offline);    
+
+            _dataAccess.ActivateDatasource(Enums.DataSourceType.Offline);
         }
 
         public static IDataAccess GetTestDataAccess()

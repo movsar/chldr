@@ -7,8 +7,8 @@
         private const string DataDirName = "data";
         private const string OfflineDatabaseFileName = "offline.datx";
 
-        public string AppBaseDirectory;
-        public string AppDataDirectory => Path.Combine(AppBaseDirectory, DataDirName);
+        public static string AppBaseDirectory;
+        public static string AppDataDirectory => Path.Combine(AppBaseDirectory, DataDirName);
         public string OfflineDatabaseFilePath => Path.Combine(AppDataDirectory, OfflineDatabaseFileName);
         #endregion
 

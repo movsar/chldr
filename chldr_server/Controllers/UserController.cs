@@ -86,12 +86,12 @@ namespace chldr_server.Controllers
         }
 
         #region Constructors
-        public UserController(EmailService emailService, FileService fileService, IStringLocalizer<AppLocalizations> localizer)
+        public UserController(EmailService emailService, IStringLocalizer<AppLocalizations> localizer)
         {
             _localizer = localizer;
             _emailService = emailService;
             _logger = new LoggerConfiguration()
-                          .WriteTo.File(Path.Combine(fileService.AppDataDirectory!, "logs", "log.txt"), rollingInterval: RollingInterval.Year)
+                          .WriteTo.File(Path.Combine(FileService.AppDataDirectory!, "logs", "log.txt"), rollingInterval: RollingInterval.Year)
                           .CreateLogger();
         }
         #endregion
