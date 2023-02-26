@@ -14,6 +14,7 @@ namespace chldr_data.Services
         protected readonly ExceptionHandler _exceptionHandler;
         protected readonly NetworkService _networkService;
         protected readonly IRealmServiceFactory _realmServiceFactory;
+        private readonly EnvironmentService _environmentService;
 
         public SourcesRepository SourcesRepository { get; }
         public LanguagesRepository LanguagesRepository { get; }
@@ -25,6 +26,7 @@ namespace chldr_data.Services
 
         public DataAccess(IRealmServiceFactory realmServiceFactory,
             ExceptionHandler exceptionHandler,
+            EnvironmentService environmentService,
             NetworkService networkService,
             EntriesRepository<EntryModel> entriesRepository,
             WordsRepository wordsRepository,
@@ -36,6 +38,7 @@ namespace chldr_data.Services
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
             _realmServiceFactory = realmServiceFactory;
+            _environmentService = environmentService;
 
             EntriesRepository = entriesRepository;
             WordsRepository = wordsRepository;
@@ -55,9 +58,8 @@ namespace chldr_data.Services
             {
                 try
                 {
-                    if (dataSourceType == DataSourceType.Offline && _networkService.IsNetworUp)
+                    if (dataSourceType == DataSourceType.Offline && _networkService.IsNetworUp && _environmentService.CurrentPlatform != chldr_shared.Enums.Platforms.Web)
                     {
-
                         await Task.Delay(250);
                         ActivateDatasource(DataSourceType.Synced);
                     }
