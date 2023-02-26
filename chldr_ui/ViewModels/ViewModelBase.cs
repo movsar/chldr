@@ -27,6 +27,12 @@ namespace chldr_ui.ViewModels
             base.OnInitialized();
 
             CultureService.CurrentCultureChanged += ViewModel_CurrentCultureChanged;
+            UserStore.UserStateHasChanged += UserStore_UserStateHasChanged;
+        }
+
+        private void UserStore_UserStateHasChanged()
+        {
+            CallStateHasChangedAsync();
         }
 
         private async void ViewModel_CurrentCultureChanged(string culture)

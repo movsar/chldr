@@ -65,6 +65,8 @@ namespace chldr_shared.Stores
             _dataAccess.EntriesRepository.EntryUpdated += EntriesRepository_EntryUpdated;
             _dataAccess.WordsRepository.WordUpdated += EntriesRepository_WordUpdated;
             _dataAccess.DatasourceInitialized += DataAccess_DatasourceInitialized;
+
+            _dataAccess.ActivateDatasource(DataSourceType.Offline);
         }
 
         private async void EntriesRepository_WordUpdated(WordModel updatedWord)
@@ -186,6 +188,9 @@ namespace chldr_shared.Stores
                         await Task.Delay(250);
                         _dataAccess.ActivateDatasource(DataSourceType.Synced);
                     });
+                }
+                else
+                {
                 }
             }
             catch (Exception ex)

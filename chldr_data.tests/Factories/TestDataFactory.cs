@@ -30,6 +30,8 @@ namespace chldr_data.tests.Services
                 new LanguagesRepository(realmServiceFactory),
                 new SourcesRepository(realmServiceFactory),
                 new UsersRepository(realmServiceFactory));
+                
+            _dataAccess.ActivateDatasource(Enums.DataSourceType.Offline);    
         }
 
         public static IDataAccess GetTestDataAccess()

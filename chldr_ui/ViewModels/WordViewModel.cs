@@ -6,6 +6,7 @@ namespace chldr_ui.ViewModels
 {
     public class WordViewModel : EntryViewModelBase
     {
+
         public WordModel? Word { get; set; }
 
         public string? Header => Word?.Content;
@@ -25,9 +26,9 @@ namespace chldr_ui.ViewModels
                 Source = ParseSource(Entry.Source.Name);
             }
         }
+        
         private string CreateSubheader()
         {
-            
             return $"";
         }
 

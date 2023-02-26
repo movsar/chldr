@@ -1,5 +1,6 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
+using chldr_data.Enums.WordDetails;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Models.Words;
@@ -229,13 +230,15 @@ namespace chldr_data.Repositories
 
         public List<EntryModel> GetWordsToFiddleWith()
         {
-            var entries = Database.All<Entry>().OrderBy(e => e.Source).ThenBy(e => e.CreatedAt).AsEnumerable()
-              .Where(entry => entry.Type == (int)EntryType.Word)
-              .Take(5)
-              .Select(entry => EntryModelFactory.CreateEntryModel(entry))
-              .ToList();
+            var words = Database.All<Word>().Where(w => w.PartOfSpeech == (int)PartOfSpeech.Verb);
 
-            return entries;
+            var entries = words.AsEnumerable().Select(w => w.Entry);
+
+            var entriesToReturn = entries
+              .Take(5)
+              .Select(entry => EntryModelFactory.CreateEntryModel(entry));
+
+            return entriesToReturn.ToList();
         }
 
         public List<EntryModel> GetEntriesOnModeration()

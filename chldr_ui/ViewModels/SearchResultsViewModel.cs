@@ -13,7 +13,6 @@ namespace chldr_ui.ViewModels
             Console.WriteLine("OnInitialized");
 
             ContentStore.CachedResultsChanged += ContentStore_CachedResultsChanged;
-            UserStore.UserStateHasChanged += () => new Task(async () => await CallStateHasChangedAsync());
 
             // If no new entries have been requested, show entries from the cache
             if (ContentStore.CachedSearchResult.Entries.Count > 0 && Entries.Count == 0)
