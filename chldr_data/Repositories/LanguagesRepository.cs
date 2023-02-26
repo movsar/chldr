@@ -20,7 +20,8 @@ namespace chldr_data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                //throw new Exception(ex.Message);
+                return new List<LanguageModel>();
             }
         }
 
