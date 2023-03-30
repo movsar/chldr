@@ -2,7 +2,7 @@
 
 namespace chldr_data.Interfaces
 {
-    public interface IModelBase
+    public interface IPersistentModelBase
     {
         public ObjectId Id { get; }
     }

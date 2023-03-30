@@ -2,7 +2,7 @@
 
 namespace chldr_data.Models
 {
-    public class LanguageModel : ModelBase
+    public class LanguageModel : PersistentModelBase
     {
         public string Code { get; } = string.Empty;
         public string Name { get; set; }

@@ -10,7 +10,7 @@ namespace chldr_data.Repositories
 {
     public class WordsRepository : EntriesRepository<WordModel>
     {
-        public WordsRepository(IRealmServiceFactory realmServiceFactory) : base(realmServiceFactory) { }
+        public WordsRepository(IDataAccess dataAccess) : base(dataAccess) { }
 
         public WordModel GetById(ObjectId entityId)
         {

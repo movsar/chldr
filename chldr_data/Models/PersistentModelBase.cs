@@ -3,12 +3,12 @@ using MongoDB.Bson;
 
 namespace chldr_data.Models
 {
-    public abstract class ModelBase : IModelBase
+    public abstract class PersistentModelBase : IPersistentModelBase
     {
         public ObjectId Id { get; }
         public DateTimeOffset CreatedAt { get; }
         public DateTimeOffset UpdatedAt { get; }
-        public ModelBase(IEntity entity)
+        public PersistentModelBase(IEntity entity)
         {
             Id = entity._id;
             CreatedAt = entity.CreatedAt;

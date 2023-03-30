@@ -8,7 +8,7 @@ namespace chldr_data.Repositories
 {
     public class LanguagesRepository : Repository
     {
-        public LanguagesRepository(IRealmServiceFactory realmServiceFactory) : base(realmServiceFactory) { }
+        public LanguagesRepository(IDataAccess dataAccess) : base(dataAccess) { }
 
         public List<LanguageModel> GetAllLanguages()
         {

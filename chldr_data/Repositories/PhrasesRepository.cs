@@ -7,7 +7,7 @@ namespace chldr_data.Repositories
 {
     public class PhrasesRepository : EntriesRepository<PhraseModel>
     {
-        public PhrasesRepository(IRealmServiceFactory realmServiceFactory) : base(realmServiceFactory) { }
+        public PhrasesRepository(IDataAccess dataAccess) : base(dataAccess) { }
         public PhraseModel Add(string content, string notes)
         {
             throw new NotImplementedException();

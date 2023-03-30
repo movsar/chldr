@@ -2,7 +2,7 @@
 
 namespace chldr_data.Models
 {
-    public class SourceModel : ModelBase
+    public class SourceModel : PersistentModelBase
     {
         public string Name { get; }
         public string Notes { get; }

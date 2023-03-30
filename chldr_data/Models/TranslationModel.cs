@@ -4,7 +4,7 @@ using MongoDB.Bson;
 
 namespace chldr_data.Models
 {
-    public class TranslationModel : ModelBase
+    public class TranslationModel : PersistentModelBase
     {
         public ObjectId? EntryId { get; }
         public string Content { get; }

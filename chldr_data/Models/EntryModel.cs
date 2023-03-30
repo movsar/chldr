@@ -13,7 +13,7 @@ namespace chldr_data.Models
     //        if (x.Content.s)
     //    }
     //}
-    public abstract class EntryModel : ModelBase
+    public abstract class EntryModel : PersistentModelBase
     {
         public abstract string Content { get; }
         public List<TranslationModel> Translations { get; } = new List<TranslationModel>();

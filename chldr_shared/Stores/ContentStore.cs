@@ -9,6 +9,7 @@ using chldr_data.Services;
 using chldr_utils;
 using chldr_utils.Models;
 using chldr_utils.Services;
+using FluentValidation.Results;
 using MongoDB.Bson;
 using Realms;
 
@@ -54,6 +55,12 @@ namespace chldr_shared.Stores
         }
         #endregion
 
+        EntriesRepository<EntryModel> EntriesRepository => (EntriesRepository<EntryModel>)_dataAccess.GetRepository<EntryModel>();
+        WordsRepository WordsRepository => (WordsRepository)_dataAccess.GetRepository<WordModel>();
+        PhrasesRepository PhrasesRepository => (PhrasesRepository)_dataAccess.GetRepository<PhraseModel>();
+        LanguagesRepository LanguagesRepository => (LanguagesRepository)_dataAccess.GetRepository<LanguageModel>();
+
+
         #region Constructors
         public ContentStore(IDataAccess dataAccess, ExceptionHandler exceptionHandler, NetworkService networkService)
         {
@@ -61,12 +68,13 @@ namespace chldr_shared.Stores
             _networkService = networkService;
 
             _dataAccess = dataAccess;
-            _dataAccess.EntriesRepository.GotNewSearchResult += DataAccess_GotNewSearchResults;
-            _dataAccess.EntriesRepository.EntryUpdated += EntriesRepository_EntryUpdated;
-            _dataAccess.WordsRepository.WordUpdated += EntriesRepository_WordUpdated;
+
+            EntriesRepository.GotNewSearchResult += DataAccess_GotNewSearchResults;
+            EntriesRepository.EntryUpdated += EntriesRepository_EntryUpdated;
+            WordsRepository.WordUpdated += EntriesRepository_WordUpdated;
             _dataAccess.DatasourceInitialized += DataAccess_DatasourceInitialized;
 
-            _dataAccess.ActivateDatasource(DataSourceType.Offline);
+            _dataAccess.SetActiveDataservice(DataSourceType.Offline);
         }
 
         private async void EntriesRepository_WordUpdated(WordModel updatedWord)
@@ -96,18 +104,18 @@ namespace chldr_shared.Stores
         #region Methods
         public void Search(string inputText, FiltrationFlags filterationFlags)
         {
-            Task.Run(() => _dataAccess.EntriesRepository.FindAsync(inputText, filterationFlags));
+            Task.Run(() => EntriesRepository.FindAsync(inputText, filterationFlags));
         }
         public void DeleteEntry(ObjectId entryId)
         {
-            _dataAccess.EntriesRepository.Delete(entryId);
+            EntriesRepository.Delete(entryId);
             CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.Id == entryId));
             CachedResultsChanged?.Invoke();
         }
         public void LoadRandomEntries()
         {
             CachedSearchResult.Entries.Clear();
-            var entries = _dataAccess.EntriesRepository.GetRandomEntries();
+            var entries = EntriesRepository.GetRandomEntries();
 
             CachedSearchResult.Entries.Clear();
             foreach (var entry in entries)
@@ -120,7 +128,7 @@ namespace chldr_shared.Stores
         public void LoadEntriesToFiddleWith()
         {
             CachedSearchResult.Entries.Clear();
-            var entries = _dataAccess.EntriesRepository.GetWordsToFiddleWith();
+            var entries = EntriesRepository.GetWordsToFiddleWith();
 
             CachedSearchResult.Entries.Clear();
             foreach (var entry in entries)
@@ -133,7 +141,7 @@ namespace chldr_shared.Stores
         public void LoadEntriesOnModeration()
         {
             CachedSearchResult.Entries.Clear();
-            var entries = _dataAccess.EntriesRepository.GetEntriesOnModeration();
+            var entries = EntriesRepository.GetEntriesOnModeration();
 
             CachedSearchResult.Entries.Clear();
             foreach (var entry in entries)
@@ -145,22 +153,22 @@ namespace chldr_shared.Stores
         }
         public WordModel GetWordById(ObjectId entryId)
         {
-            return _dataAccess.WordsRepository.GetById(entryId);
+            return WordsRepository.GetById(entryId);
         }
         public PhraseModel GetPhraseById(ObjectId entryId)
         {
-            return _dataAccess.PhrasesRepository.GetById(entryId);
+            return PhrasesRepository.GetById(entryId);
         }
 
         public EntryModel GetEntryById(ObjectId entryId)
         {
-            var word = _dataAccess.WordsRepository.GetByEntryId(entryId);
+            var word = WordsRepository.GetByEntryId(entryId);
             if (word != null)
             {
                 return word;
             }
 
-            var phrase = _dataAccess.PhrasesRepository.GetByEntryId(entryId);
+            var phrase = PhrasesRepository.GetByEntryId(entryId);
             if (phrase != null)
             {
                 return phrase;
@@ -174,7 +182,7 @@ namespace chldr_shared.Stores
         {
             if (Languages.Count == 0)
             {
-                Languages.AddRange(_dataAccess.LanguagesRepository.GetAllLanguages());
+                Languages.AddRange(LanguagesRepository.GetAllLanguages());
             }
 
             ContentInitialized?.Invoke();
@@ -187,7 +195,7 @@ namespace chldr_shared.Stores
 
         public PhraseModel AddNewPhrase(UserModel userModel, string content, string notes)
         {
-            PhraseModel phrase = _dataAccess.PhrasesRepository.Add(content, notes);
+            PhraseModel phrase = PhrasesRepository.Add(content, notes);
             return phrase;
         }
 
@@ -216,7 +224,7 @@ namespace chldr_shared.Stores
 
         public void UpdateWord(UserModel user, WordDto word)
         {
-            _dataAccess.WordsRepository.Update(user, word);
+            WordsRepository.Update(user, word);
         }
     }
 }

@@ -30,9 +30,9 @@ namespace chldr_ui.ViewModels
             UserStore.UserStateHasChanged += UserStore_UserStateHasChanged;
         }
 
-        private void UserStore_UserStateHasChanged()
+        private async void UserStore_UserStateHasChanged()
         {
-            CallStateHasChangedAsync();
+            await CallStateHasChangedAsync();
         }
 
         private async void ViewModel_CurrentCultureChanged(string culture)

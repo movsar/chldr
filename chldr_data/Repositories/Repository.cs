@@ -4,14 +4,18 @@ using Realms;
 
 namespace chldr_data.Repositories
 {
-    public class Repository
+    public abstract class Repository
     {
-        private IRealmServiceFactory _realmServiceFactory;
-        protected Realm Database => _realmServiceFactory.GetActiveInstance().GetDatabase();
-        public Repository(IRealmServiceFactory realmServiceFactory)
+        public IDataAccess DataAccess { get; }
+        public Realm Database => DataAccess.GetActiveDataservice().GetDatabase();
+        public Repository(IDataAccess dataAccess)
         {
-            _realmServiceFactory = realmServiceFactory;
+            DataAccess = dataAccess;
         }
 
+        //TModel Find<TModel>(ObjectId Id) where TModel : IModelBase;
+        //void Add<TModel>(TModel model) where TModel : IModelBase;
+        //void Delete<TModel>(TModel model) where TModel : IModelBase;
+        //void Update<TModel>(TModel model) where TModel : IModelBase;
     }
 }

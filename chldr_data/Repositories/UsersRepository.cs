@@ -6,7 +6,7 @@ namespace chldr_data.Repositories
 {
     public class UsersRepository : Repository
     {
-        public UsersRepository(IRealmServiceFactory realmServiceFactory) : base(realmServiceFactory) { }
+        public UsersRepository(IDataAccess dataAccess) : base(dataAccess) { }
         public UserModel GetUserByEmail(string email)
         {
             var user = Database.All<User>().Where(u => u.Email == email).FirstOrDefault();

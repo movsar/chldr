@@ -17,7 +17,7 @@ namespace chldr_data.Repositories
         public event Action<EntryModel>? EntryUpdated;
         public event Action<WordModel>? WordUpdated;
         public event Action<EntryModel>? EntryInserted;
-        public EntriesRepository(IRealmServiceFactory realmServiceFactory) : base(realmServiceFactory) { }
+        public EntriesRepository(IDataAccess dataAccess) : base(dataAccess) { }
         private static IEnumerable<EntryModel> SortDirectSearchEntries(string inputText, IEnumerable<EntryModel> entries)
         {
             // Entry.Content => Equal, StartsWith, Rest

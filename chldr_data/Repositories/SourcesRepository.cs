@@ -12,7 +12,7 @@ namespace chldr_data.Repositories
 {
     public class SourcesRepository : Repository
     {
-        public SourcesRepository(IRealmServiceFactory realmServiceFactory) : base(realmServiceFactory) { }
+        public SourcesRepository(IDataAccess dataAccess) : base(dataAccess) { }
 
         public List<Source> GetUnverifiedSources()
         {
