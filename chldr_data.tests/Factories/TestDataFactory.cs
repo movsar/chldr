@@ -4,7 +4,9 @@ using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Repositories;
 using chldr_data.Services;
+using chldr_utils;
 using chldr_utils.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace chldr_data.tests.Services
 {
@@ -25,14 +27,8 @@ namespace chldr_data.tests.Services
 
             var realmService = new OfflineRealmService(_fileService, _exceptionHandler);
             var realmServiceFactory = new RealmServiceFactory(new List<IRealmService>() { realmService });
-
-            _dataAccess = new DataAccess(realmServiceFactory, _exceptionHandler, _environmentService, _networkService,
-                new EntriesRepository<EntryModel>(realmServiceFactory),
-                new WordsRepository(realmServiceFactory),
-                new PhrasesRepository(realmServiceFactory),
-                new LanguagesRepository(realmServiceFactory),
-                new SourcesRepository(realmServiceFactory),
-                new UsersRepository(realmServiceFactory));
+ 
+            _dataAccess = new DataAccess( realmServiceFactory, _exceptionHandler, _environmentService, _networkService);
 
             _dataAccess.SetActiveDataservice(Enums.DataSourceType.Offline);
         }

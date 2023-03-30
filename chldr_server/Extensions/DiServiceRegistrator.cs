@@ -39,7 +39,7 @@ namespace chldr_server.Extensions
 
             // Shared
             appBuilder.Services.AddSingleton<ContentStore>();
-            appBuilder.Services.AddScoped<UserStore>();
+            appBuilder.Services.AddSingleton<UserStore>();
             appBuilder.Services.AddScoped<JsInterop>();
             appBuilder.Services.AddSingleton<EmailService>();
             appBuilder.Services.AddSingleton(x => new EnvironmentService(Platforms.Web));
@@ -51,12 +51,12 @@ namespace chldr_server.Extensions
             appBuilder.Services.AddSingleton<NetworkService>();
 
             // Repositories
-            appBuilder.Services.AddTransient<EntriesRepository<EntryModel>>();
-            appBuilder.Services.AddTransient<WordsRepository>();
-            appBuilder.Services.AddTransient<LanguagesRepository>();
-            appBuilder.Services.AddTransient<PhrasesRepository>();
-            appBuilder.Services.AddTransient<SourcesRepository>();
-            appBuilder.Services.AddTransient<UsersRepository>();
+            appBuilder.Services.AddSingleton<EntriesRepository<EntryModel>>();
+            appBuilder.Services.AddSingleton<WordsRepository>();
+            appBuilder.Services.AddSingleton<LanguagesRepository>();
+            appBuilder.Services.AddSingleton<PhrasesRepository>();
+            appBuilder.Services.AddSingleton<SourcesRepository>();
+            appBuilder.Services.AddSingleton<UsersRepository>();
 
             return appBuilder;
         }

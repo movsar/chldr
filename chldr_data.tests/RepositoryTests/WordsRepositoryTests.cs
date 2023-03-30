@@ -1,20 +1,20 @@
 ﻿using chldr_data.Dto;
 using chldr_data.Entities;
 using chldr_data.Interfaces;
+using chldr_data.Models;
 using chldr_data.Models.Words;
+using chldr_data.Repositories;
 using chldr_data.tests.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chldr_data.tests.RepositoryTests
 {
     public class WordsRepositoryTests
     {
         private IDataAccess _dataAccess;
+        EntriesRepository<EntryModel> EntriesRepository => (EntriesRepository<EntryModel>)_dataAccess.GetRepository<EntryModel>();
+        WordsRepository WordsRepository => (WordsRepository)_dataAccess.GetRepository<WordModel>();
+        PhrasesRepository PhrasesRepository => (PhrasesRepository)_dataAccess.GetRepository<PhraseModel>();
+        LanguagesRepository LanguagesRepository => (LanguagesRepository)_dataAccess.GetRepository<LanguageModel>();
 
         public WordsRepositoryTests()
         {
@@ -26,9 +26,9 @@ namespace chldr_data.tests.RepositoryTests
         public async void Insert_ExpectedInput_ReturnsId()
         {
             var testWord = TestDataFactory.CreateWordDto("Something", "Whatever", "RUS", "Нечто");
-            
-            var insertedWordId = _dataAccess.WordsRepository.Insert(testWord);
-            
+
+            var insertedWordId = WordsRepository.Insert(testWord);
+
             Assert.NotEqual(ObjectId.Empty, insertedWordId);
         }
 
@@ -43,7 +43,7 @@ namespace chldr_data.tests.RepositoryTests
             {
                 try
                 {
-                    var wordById = _dataAccess.WordsRepository.GetById(badId);
+                    var wordById = WordsRepository.GetById(badId);
                 }
                 catch (System.Exception oshibka)
                 {
@@ -54,18 +54,18 @@ namespace chldr_data.tests.RepositoryTests
                 }
 
             }
-            
+
         }
         [Fact]
         public void GetRandomWords_ExpectedInput_ReturnsListOfWord()
         {
-           
+
             var randomWord = TestDataFactory.CreateWordDto("Time", "When", "RUS", "Когда");
             var someWord = TestDataFactory.CreateWordDto("Object", "Car", "RUS", "Машина");
 
-            var addrandomWord = _dataAccess.WordsRepository.Insert(randomWord);
-            var addsomeWord = _dataAccess.WordsRepository.Insert(someWord);
-            var words = _dataAccess.WordsRepository.GetRandomWords(2);
+            var addrandomWord = WordsRepository.Insert(randomWord);
+            var addsomeWord = WordsRepository.Insert(someWord);
+            var words = WordsRepository.GetRandomWords(2);
             Assert.True(words.Count() == 2);
         }
     }
