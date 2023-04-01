@@ -1,32 +1,21 @@
-﻿using chldr_data.Dto;
-using chldr_data.Entities;
-using chldr_data.Interfaces;
-using chldr_data.Models;
-using chldr_data.Models.Words;
-using chldr_data.Repositories;
+﻿using chldr_data.Repositories;
 using chldr_data.tests.Services;
 
 namespace chldr_data.tests.RepositoryTests
 {
-    public class WordsRepositoryTests
+    public class WordsRepositoryTests : TestsBase
     {
-        private IDataAccess _dataAccess;
-        EntriesRepository<EntryModel> EntriesRepository => (EntriesRepository<EntryModel>)_dataAccess.GetRepository<EntryModel>();
-        WordsRepository WordsRepository => (WordsRepository)_dataAccess.GetRepository<WordModel>();
-        PhrasesRepository PhrasesRepository => (PhrasesRepository)_dataAccess.GetRepository<PhraseModel>();
-        LanguagesRepository LanguagesRepository => (LanguagesRepository)_dataAccess.GetRepository<LanguageModel>();
-
-        public WordsRepositoryTests()
-        {
-            _dataAccess = TestDataFactory.GetTestDataAccess();
-            _dataAccess.RemoveAllEntries();
-        }
-
         [Fact]
         public async void Insert_ExpectedInput_ReturnsId()
         {
+            // Create a test word dto
             var testWord = TestDataFactory.CreateWordDto("Something", "Whatever", "RUS", "Нечто");
 
+            // Set an existing source
+            var sources = SourcesRepository.GetAllNamedSources();
+            testWord.SourceId = sources[0].Id.ToString();
+
+            // Insert
             var insertedWordId = WordsRepository.Insert(testWord);
 
             Assert.NotEqual(ObjectId.Empty, insertedWordId);

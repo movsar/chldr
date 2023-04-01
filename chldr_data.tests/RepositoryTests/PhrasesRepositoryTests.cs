@@ -1,24 +1,11 @@
 ﻿using chldr_data.Dto;
 using chldr_data.Enums.WordDetails;
-using chldr_data.Interfaces;
-using chldr_data.tests.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using chldr_data.Repositories;
 
 namespace chldr_data.tests.RepositoryTests
 {
-    internal class PhrasesRepositoryTests
+    internal class PhrasesRepositoryTests : TestsBase
     {
-        private IDataAccess _dataAccess;
-
-        public PhrasesRepositoryTests()
-        {
-            _dataAccess = TestDataFactory.GetTestDataAccess();
-            _dataAccess.RemoveAllEntries();
-        }
         public async Task GetWordById_ExpectedInput_ReturnsWord()
         {
             // 1. Создаем новый объект Слово со всеми необходимыми зависимостями
@@ -26,7 +13,7 @@ namespace chldr_data.tests.RepositoryTests
             {
                 Content = "Hello",
                 PartOfSpeech = PartOfSpeech.Noun,
-                SourceId = _dataAccess.SourcesRepository.GetAllNamedSources().First().Id.ToString(),
+                SourceId = SourcesRepository.GetAllNamedSources().First().Id.ToString(),
             };
             wordToInsert.Classes[0] = 1;
 
@@ -36,10 +23,10 @@ namespace chldr_data.tests.RepositoryTests
             });
 
             // Вставляем в базу данных и получаем уникальный идентификатор вставленного объекта "Word"
-            var insertedWordId = _dataAccess.WordsRepository.Insert(wordToInsert);
+            var insertedWordId = WordsRepository.Insert(wordToInsert);
 
             // 2. Тестируем метод GetById - пытаемся получить из базы данных добавленное слово
-            var insertedWord = _dataAccess.WordsRepository.GetById(insertedWordId);
+            var insertedWord = WordsRepository.GetById(insertedWordId);
 
             // 3. Проверяем
             Assert.Equal(wordToInsert.Content, insertedWord.Content);

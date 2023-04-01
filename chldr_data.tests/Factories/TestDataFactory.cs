@@ -3,10 +3,6 @@ using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Repositories;
-using chldr_data.Services;
-using chldr_utils;
-using chldr_utils.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace chldr_data.tests.Services
 {
@@ -17,6 +13,7 @@ namespace chldr_data.tests.Services
         private static readonly NetworkService _networkService;
         private static readonly EnvironmentService _environmentService;
         private static readonly DataAccess _dataAccess;
+        private static SourcesRepository SourcesRepository => (SourcesRepository)_dataAccess.GetRepository<SourceModel>();
 
         static TestDataFactory()
         {
@@ -27,9 +24,9 @@ namespace chldr_data.tests.Services
 
             var realmService = new OfflineRealmService(_fileService, _exceptionHandler);
             var realmServiceFactory = new RealmServiceFactory(new List<IRealmService>() { realmService });
- 
-            _dataAccess = new DataAccess( realmServiceFactory, _exceptionHandler, _environmentService, _networkService);
+            var serviceLocator = new ServiceLocator();
 
+            _dataAccess = new DataAccess(serviceLocator, realmServiceFactory, _exceptionHandler, _environmentService, _networkService);
             _dataAccess.SetActiveDataservice(Enums.DataSourceType.Offline);
         }
 
@@ -40,7 +37,8 @@ namespace chldr_data.tests.Services
 
         internal static WordDto CreateWordDto(string content, string notes, string languageCode, string translation)
         {
-            var source = _dataAccess.SourcesRepository.GetAllNamedSources()[0];
+
+            var source = SourcesRepository.GetAllNamedSources()[0];
             var wordDto = new WordDto();
             wordDto.Content = content;
             wordDto.Notes = notes;

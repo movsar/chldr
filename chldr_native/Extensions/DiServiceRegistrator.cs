@@ -32,18 +32,19 @@ namespace chldr_native.Extensions
         public static MauiAppBuilder RegisterAppServices(this MauiAppBuilder appBuilder)
         {
             // Data
-            appBuilder.Services.AddScoped<UserService>();
-
-            appBuilder.Services.AddScoped<IRealmService, SyncedRealmService>();
-            appBuilder.Services.AddScoped<IRealmService, OfflineRealmService>();
-            appBuilder.Services.AddScoped<IDataAccess, DataAccess>();
-            appBuilder.Services.AddScoped<IRealmServiceFactory, RealmServiceFactory>();
+            appBuilder.Services.AddSingleton<ServiceLocator>();
+            appBuilder.Services.AddSingleton<UserService>();
+            appBuilder.Services.AddSingleton<IRealmService, SyncedRealmService>();
+            appBuilder.Services.AddSingleton<IRealmService, OfflineRealmService>();
+            appBuilder.Services.AddSingleton<IRealmServiceFactory, RealmServiceFactory>();
+            appBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
 
             // Shared
-            appBuilder.Services.AddScoped<ContentStore>();
-            appBuilder.Services.AddScoped<UserStore>();
+            appBuilder.Services.AddSingleton<ContentStore>();
+            appBuilder.Services.AddSingleton<UserStore>();
             appBuilder.Services.AddScoped<JsInterop>();
-            appBuilder.Services.AddScoped<EmailService>();
+            appBuilder.Services.AddSingleton<EmailService>();
+
             var platform = Platforms.Web;
 #if ANDROID
             platform = Platforms.Android;
@@ -54,20 +55,21 @@ namespace chldr_native.Extensions
 #elif MACCATALYST
             platform = Platforms.MacCatalyst;
 #endif
-            appBuilder.Services.AddScoped(x => new EnvironmentService(platform));
-            appBuilder.Services.AddScoped(x => new FileService(AppContext.BaseDirectory));
+            appBuilder.Services.AddSingleton(x => new EnvironmentService(platform));
+            appBuilder.Services.AddSingleton(x => new FileService(AppContext.BaseDirectory));
 
             // Utils
-            appBuilder.Services.AddScoped<ExceptionHandler>();
+            appBuilder.Services.AddSingleton<ExceptionHandler>();
             appBuilder.Services.AddSingleton<CultureService>();
-            appBuilder.Services.AddScoped<NetworkService>();
+            appBuilder.Services.AddSingleton<NetworkService>();
 
             // Repositories
-            appBuilder.Services.AddTransient<EntriesRepository<EntryModel>>();
-            appBuilder.Services.AddTransient<WordsRepository>();
-            appBuilder.Services.AddTransient<LanguagesRepository>();
-            appBuilder.Services.AddTransient<PhrasesRepository>();
-            appBuilder.Services.AddTransient<SourcesRepository>();
+            appBuilder.Services.AddSingleton<EntriesRepository<EntryModel>>();
+            appBuilder.Services.AddSingleton<WordsRepository>();
+            appBuilder.Services.AddSingleton<LanguagesRepository>();
+            appBuilder.Services.AddSingleton<PhrasesRepository>();
+            appBuilder.Services.AddSingleton<SourcesRepository>();
+            appBuilder.Services.AddSingleton<UsersRepository>();
 
             return appBuilder;
         }
