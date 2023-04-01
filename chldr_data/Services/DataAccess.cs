@@ -14,13 +14,13 @@ namespace chldr_data.Services
     {
         public event Action<DataSourceType>? DatasourceInitialized;
 
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ServiceLocator _serviceProvider;
         protected readonly ExceptionHandler _exceptionHandler;
         protected readonly NetworkService _networkService;
         protected readonly IRealmServiceFactory _realmServiceFactory;
         private readonly EnvironmentService _environmentService;
 
-        public DataAccess(IServiceProvider serviceProvider, IRealmServiceFactory realmServiceFactory,
+        public DataAccess(ServiceLocator serviceProvider, IRealmServiceFactory realmServiceFactory,
             ExceptionHandler exceptionHandler,
             EnvironmentService environmentService,
             NetworkService networkService)
@@ -30,6 +30,14 @@ namespace chldr_data.Services
             _networkService = networkService;
             _realmServiceFactory = realmServiceFactory;
             _environmentService = environmentService;
+
+            serviceProvider.Register(new EntriesRepository<EntryModel>(this));
+            serviceProvider.Register(new WordsRepository(this));
+            serviceProvider.Register(new PhrasesRepository(this));
+            serviceProvider.Register(new LanguagesRepository(this));
+            serviceProvider.Register(new SourcesRepository(this));
+            serviceProvider.Register(new TranslationsRepository(this));
+            serviceProvider.Register(new UsersRepository(this));
         }
 
         private void DataSource_Initialized(DataSourceType dataSourceType)
@@ -69,31 +77,31 @@ namespace chldr_data.Services
             switch (typeof(T).Name)
             {
                 case nameof(EntryModel):
-                    repository = _serviceProvider.GetService(typeof(EntriesRepository<EntryModel>));
+                    repository = _serviceProvider.GetService<EntriesRepository<EntryModel>>();
                     break;
 
                 case nameof(WordModel):
-                    repository = _serviceProvider.GetService(typeof(WordsRepository));
+                    repository = _serviceProvider.GetService<WordsRepository>();
                     break;
 
                 case nameof(PhraseModel):
-                    repository = _serviceProvider.GetService(typeof(PhrasesRepository));
+                    repository = _serviceProvider.GetService<PhrasesRepository>();
                     break;
 
                 case nameof(LanguageModel):
-                    repository = _serviceProvider.GetService(typeof(LanguagesRepository));
+                    repository = _serviceProvider.GetService<LanguagesRepository>();
                     break;
 
                 case nameof(SourceModel):
-                    repository = _serviceProvider.GetService(typeof(SourcesRepository));
+                    repository = _serviceProvider.GetService<SourcesRepository>();
                     break;
 
                 case nameof(TranslationModel):
-                    repository = _serviceProvider.GetService(typeof(TranslationsRepository));
+                    repository = _serviceProvider.GetService<TranslationsRepository>();
                     break;
 
                 case nameof(UserModel):
-                    repository = _serviceProvider.GetService(typeof(UsersRepository));
+                    repository = _serviceProvider.GetService<UsersRepository>();
                     break;
             }
 

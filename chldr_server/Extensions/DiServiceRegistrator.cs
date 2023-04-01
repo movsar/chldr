@@ -31,6 +31,7 @@ namespace chldr_server.Extensions
         public static WebApplicationBuilder RegisterAppServices(this WebApplicationBuilder appBuilder)
         {
             // Data
+            appBuilder.Services.AddSingleton<ServiceLocator>();
             appBuilder.Services.AddSingleton<UserService>();
             appBuilder.Services.AddSingleton<IRealmService, SyncedRealmService>();
             appBuilder.Services.AddSingleton<IRealmService, OfflineRealmService>();
