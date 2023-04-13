@@ -1,12 +1,8 @@
-﻿using chldr_data.Entities;
-using chldr_data.Factories;
+﻿using chldr_data.Dto;
+using chldr_data.Entities;
 using chldr_data.Interfaces;
 using chldr_data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MongoDB.Bson;
 
 namespace chldr_data.Repositories
 {
@@ -25,6 +21,25 @@ namespace chldr_data.Repositories
             return Database.All<Source>().AsEnumerable().Select(s => new SourceModel(s)).ToList();
         }
 
+        public ObjectId Insert(SourceDto sourceDto)
+        {
+            if (!string.IsNullOrEmpty(sourceDto.SourceId))
+            {
+                throw new InvalidOperationException();
+            }
 
+            var source = new Source()
+            {
+                Name = sourceDto.Name,
+                Notes = sourceDto.Notes
+            };
+
+            Database.Write(() =>
+            {
+                Database.Add(source);
+            });
+
+            return source._id;
+        }
     }
 }
