@@ -32,7 +32,7 @@ namespace chldr_data.Services
 
             return Realm.GetInstance(_config);
         }
-        internal App GetApp()
+        public App GetApp()
         {
             if (_app == null)
             {

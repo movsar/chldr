@@ -2,6 +2,7 @@
 using chldr_data.Enums;
 using chldr_data.Factories;
 using chldr_data.Interfaces;
+using chldr_data.Services;
 using chldr_utils;
 using chldr_utils.Services;
 using MongoDB.Bson;
@@ -11,10 +12,11 @@ using Realms.Sync.Exceptions;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using static Realms.Sync.MongoClient;
+using Entities = chldr_data.Entities;
 using Entry = chldr_data.Entities.Entry;
 using User = chldr_data.Entities.User;
 
-namespace chldr_data.Services
+namespace chldr_tools.Services
 {
     public class DatabaseOperations
     {
@@ -119,11 +121,8 @@ namespace chldr_data.Services
                                 UpdatedAt = entry.Word.UpdatedAt,
                                 Entry = newEntry,
                                 Content = entry.Word.Content,
-                                Forms = entry.Word.Forms,
                                 //GrammaticalClass = entry.Word.GrammaticalClass,
                                 Notes = entry.Word.Notes,
-                                NounDeclensions = entry.Word.NounDeclensions,
-                                VerbTenses = entry.Word.VerbTenses,
                                 PartOfSpeech = entry.Word.PartOfSpeech,
                             };
 
@@ -310,8 +309,6 @@ namespace chldr_data.Services
                         continue;
                     }
 
-                    var forms = entry.Word?.Forms;
-                    entry.Word.Forms = forms.Replace(",", ";");
                 }
 
             });
@@ -327,9 +324,6 @@ namespace chldr_data.Services
                     {
                         continue;
                     }
-
-                    entry.Word.NounDeclensions = entry.Word.NounDeclensions.ToLower();
-                    entry.Word.VerbTenses = entry.Word.VerbTenses.ToLower();
                 }
             });
         }

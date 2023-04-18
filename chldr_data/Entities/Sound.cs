@@ -7,9 +7,12 @@ namespace chldr_data.Entities
     {
         [PrimaryKey]
         public ObjectId _id { get; set; } = ObjectId.GenerateNewId(DateTime.Now);
-        public User User { get; set; }
-        public Entry Entry { get; set; }
-        public string FileName { get; set; }
+        // Has to be updated
+        public int UserId { get; set; }
+        // Has to be updated
+        public int WordId { get; set; }
+        // Has to be updated
+        public string Path { get; set; }
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
     }

@@ -28,6 +28,7 @@ namespace chldr_data.Services
 
             return Realm.GetInstance(_config);
         }
+     
         public OfflineRealmService(FileService fileService, ExceptionHandler exceptionHandler)
         {
             _exceptionHandler = exceptionHandler;
