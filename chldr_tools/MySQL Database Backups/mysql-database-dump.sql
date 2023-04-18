@@ -63,6 +63,7 @@ CREATE TABLE `entry` (
   `source_id` varchar(40) NOT NULL,
   `type` int DEFAULT NULL,
   `rate` int NOT NULL,
+  `raw_contents` varchar(500) NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`entry_id`),
