@@ -15,7 +15,7 @@ using chldr_utils;
 using chldr_utils.Services;
 using FluentValidation;
 
-namespace chldr_server.Extensions
+namespace chldr_blazor.Extensions
 {
     internal static class DiServiceRegistrator
     {

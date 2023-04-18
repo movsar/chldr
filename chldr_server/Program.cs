@@ -1,7 +1,7 @@
-﻿using chldr_server.Extensions;
+﻿using chldr_blazor.Extensions;
 using System.Reflection.PortableExecutable;
 
-namespace chldr_server
+namespace chldr_blazor
 {
     public class Program
     {

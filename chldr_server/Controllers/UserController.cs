@@ -8,7 +8,7 @@ using Microsoft.Extensions.Localization;
 using Serilog;
 using EmailService = chldr_shared.Services.EmailService;
 
-namespace chldr_server.Controllers
+namespace chldr_blazor.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
