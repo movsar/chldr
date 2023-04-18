@@ -8,8 +8,11 @@ namespace chldr_data.Entities
         [PrimaryKey]
         public ObjectId _id { get; set; } = ObjectId.GenerateNewId(DateTime.Now);
         public User User { get; set; }
+        // Change to Entry
         public Word Word { get; set; }
+        // Change to FileName
         public string Path { get; set; }
+        // Add rate
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
     }

@@ -21,6 +21,7 @@ namespace chldr_data.Entities
         public string Content { get; set; } = string.Empty;
         [Indexed]
         public string Notes { get; set; } = string.Empty;
+        // Change to string AdditionalDetails JSON
         public IList<int> GrammaticalClasses { get; } = new List<int>();
         public int PartOfSpeech { get; set; }
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;

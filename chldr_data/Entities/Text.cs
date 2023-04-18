@@ -10,6 +10,7 @@ namespace chldr_data.Entities
         public Entry Entry { get; set; }
         [Indexed]
         public string Content { get; set; }
+        // Add notes
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
     }
