@@ -14,6 +14,8 @@ namespace chldr_tools
 
         static void Main(string[] args)
         {
+            Console.WriteLine("Hello, World!");
+
             _fileService = new FileService(AppContext.BaseDirectory);
             _exceptionHandler = new ExceptionHandler(_fileService);
             _networkService = new NetworkService();
@@ -21,10 +23,9 @@ namespace chldr_tools
 
             var realmService = new OfflineRealmService(_fileService, _exceptionHandler);
             realmService.Initialize();
-            var database = realmService.GetDatabase();
-            var entries = database.All<Entry>().First();
 
-            Console.WriteLine("Hello, World!");
+            var dbFiller = new MySqlDbFiller(realmService);
+            dbFiller.Run();
         }
     }
 }
