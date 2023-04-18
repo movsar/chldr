@@ -6,24 +6,11 @@ A project to build an interactive Chechen language dictionary. Started form scra
 
 ### Localization expression names
 
-
  - Must follow the same style
  - If specified, prefix starts with uppercase letter and ends with a colon (:)
  - Always starts with uppercase letter followed by lowercase letters separated by underscore (_)
 
 Example: **Error:Something_went_wrong**.
 
-# TO DO
-
-- Create a login trigger that inserts custom data record - done
-- Pass email if it's not empty when switching from LoginPage to Registration or Password reset pages
-- What if the user deletes confirmation email and wants to request a new one?
-	(it's possible to call again confirmation func)
-- Send activation notification email after email confirmation
-- Compress DB after reaching 60Mb
-- Add SearchQueryBuilder
-
-# Notes
-
-- This dictionary's entries will not have any forms shown or made available for addition / edit.
-- Instead, I will build all the forms and adjust theire translations using AI or whatever and add them as independent entries
+## Database model
+![model](https://user-images.githubusercontent.com/18250365/232744059-4a7f1008-53e8-4dec-baac-e785b538ffca.svg)
