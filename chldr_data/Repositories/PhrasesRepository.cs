@@ -18,9 +18,9 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
-        public PhraseModel GetById(ObjectId entityId)
+        public PhraseModel GetById(string entityId)
         {
-            return new PhraseModel(Database.All<Phrase>().FirstOrDefault(p => p._id == entityId).Entry);
+            return new PhraseModel(Database.All<Phrase>().FirstOrDefault(p => p.PhraseId == entityId).Entry);
         }
     }
 }

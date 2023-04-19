@@ -1,16 +1,20 @@
 ﻿using chldr_data.Interfaces;
-using MongoDB.Bson;
 using Realms;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace chldr_data.Entities
+namespace chldr_data.Entities;
+[Table("Language")]
+public partial class Language : RealmObject, IEntity
 {
-    public class Language : RealmObject, IEntity
-    {
-        [PrimaryKey]
-        public ObjectId _id { get; set; } = ObjectId.GenerateNewId(DateTime.Now);
-        public string? Name { get; set; }
-        public string Code { get; set; } = string.Empty;
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
-        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
-    }
+    [Realms.PrimaryKey]
+    public string LanguageId { get; set; } = Guid.NewGuid().ToString();
+    public string? UserId { get; set; }
+    public string Name { get; set; } = null!;
+    public string Code { get; set; } = null!;
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    public virtual ICollection<Translation> Translations { get; set; } = new List<Translation>();
+    public virtual User? User { get; set; }
 }

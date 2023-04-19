@@ -106,7 +106,7 @@ namespace chldr_shared.Stores
         {
             Task.Run(() => EntriesRepository.FindAsync(inputText, filterationFlags));
         }
-        public void DeleteEntry(ObjectId entryId)
+        public void DeleteEntry(string entryId)
         {
             EntriesRepository.Delete(entryId);
             CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.Id == entryId));
@@ -151,16 +151,16 @@ namespace chldr_shared.Stores
 
             CachedResultsChanged?.Invoke();
         }
-        public WordModel GetWordById(ObjectId entryId)
+        public WordModel GetWordById(string entryId)
         {
             return WordsRepository.GetById(entryId);
         }
-        public PhraseModel GetPhraseById(ObjectId entryId)
+        public PhraseModel GetPhraseById(string entryId)
         {
             return PhrasesRepository.GetById(entryId);
         }
 
-        public EntryModel GetEntryById(ObjectId entryId)
+        public EntryModel GetEntryById(string entryId)
         {
             var word = WordsRepository.GetByEntryId(entryId);
             if (word != null)
@@ -199,7 +199,7 @@ namespace chldr_shared.Stores
             return phrase;
         }
 
-        public PhraseModel GetCachedPhraseById(ObjectId phraseId)
+        public PhraseModel GetCachedPhraseById(string phraseId)
         {
             // Get current Phrase from cached results
             var phrase = CachedSearchResult.Entries

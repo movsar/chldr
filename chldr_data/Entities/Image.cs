@@ -1,19 +1,21 @@
 ﻿using chldr_data.Interfaces;
-using MongoDB.Bson;
 using Realms;
-namespace chldr_data.Entities
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace chldr_data.Entities;
+[Table("Image")]
+public partial class Image : RealmObject, IEntity
 {
-    public class Image : RealmObject, IEntity
-    {
-        [PrimaryKey]
-        public ObjectId _id { get; set; } = ObjectId.GenerateNewId(DateTime.Now);
-        public User User { get; set; }
-        // Change to Entry
-        public Word Word { get; set; }
-        // Change to FileName
-        public string Path { get; set; }
-        // Add rate
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
-        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
-    }
+    [Realms.PrimaryKey]
+    public string ImageId { get; set; } = Guid.NewGuid().ToString();
+    public string? UserId { get; set; }
+    public string EntryId { get; set; } = null!;
+    public string? FileName { get; set; }
+    public int Rate { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    public virtual Entry Entry { get; set; } = null!;
+    public virtual User? User { get; set; }
 }

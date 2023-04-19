@@ -1,7 +1,7 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
 using chldr_data.Services;
-using chldr_tools.Models;
+using chldr_data.Entities;
 using Realms;
 using User = chldr_data.Entities.User;
 
@@ -31,7 +31,7 @@ namespace chldr_tools
         {
             foreach (var translation in _realm.All<Translation>())
             {
-                var sqlTranslation = new SqlTranslation()
+                var sqlTranslation = new Translation()
                 {
                     TranslationId = translation._id.ToString(),
                     EntryId = translation.Entry._id.ToString(),
@@ -54,7 +54,7 @@ namespace chldr_tools
 
             foreach (var source in _realm.All<Source>())
             {
-                _context.Add(new SqlSource()
+                _context.Add(new Source()
                 {
                     SourceId = source._id.ToString(),
                     UserId = adminUser._id.ToString(),
@@ -72,7 +72,7 @@ namespace chldr_tools
             foreach (var user in _realm.All<chldr_data.Entities.User>())
             {
                 _context.Add(
-                    new SqlUser()
+                    new Models.User()
                     {
                         UserId = user._id.ToString(),
                         CreatedAt = user.CreatedAt.UtcDateTime,
@@ -96,7 +96,7 @@ namespace chldr_tools
 
             foreach (var language in languages)
             {
-                _context.Languages.Add(new Models.SqlLanguage()
+                _context.Languages.Add(new Models.Language()
                 {
                     LanguageId = language._id.ToString(),
                     CreatedAt = language.CreatedAt.UtcDateTime,
@@ -112,7 +112,7 @@ namespace chldr_tools
         {
             foreach (var entry in _realm.All<Entry>())
             {
-                var sqlEntry = new SqlEntry()
+                var sqlEntry = new Entry()
                 {
                     EntryId = entry._id.ToString(),
                     UserId = entry.User._id.ToString(),
@@ -128,7 +128,7 @@ namespace chldr_tools
                 switch ((EntryType)entry.Type)
                 {
                     case EntryType.Word:
-                        var word = new SqlWord()
+                        var word = new Word()
                         {
                             EntryId = entry._id.ToString(),
                             WordId = entry.Word._id.ToString(),
@@ -140,7 +140,7 @@ namespace chldr_tools
 
                         break;
                     case EntryType.Phrase:
-                        var phrase = new SqlPhrase()
+                        var phrase = new Phrase()
                         {
                             EntryId = entry._id.ToString(),
                             PhraseId = entry.Phrase._id.ToString(),
@@ -151,7 +151,7 @@ namespace chldr_tools
 
                         break;
                     case EntryType.Text:
-                        var text = new SqlText()
+                        var text = new Text()
                         {
                             EntryId = entry._id.ToString(),
                             TextId = entry.Text._id.ToString(),

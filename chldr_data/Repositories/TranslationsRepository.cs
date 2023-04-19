@@ -11,7 +11,7 @@ namespace chldr_data.Repositories
 
         internal void SetPropertiesFromDto(Translation translation, TranslationDto translationDto)
         {
-            translation.Entry = Database.All<Entry>().First(e => e._id == new ObjectId(translationDto.EntryId));
+            translation.Entry = Database.All<Entry>().First(e => e.EntryId == translationDto.EntryId);
             translation.Language = Database.All<Language>().First(l => l.Code == translationDto.LanguageCode);
             translation.Rate = translationDto.Rate;
             translation.Content = translationDto.Content;

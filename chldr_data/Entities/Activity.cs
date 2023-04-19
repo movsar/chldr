@@ -1,20 +1,22 @@
-﻿using chldr_data.Interfaces;
-using MongoDB.Bson;
-using Realms;
-namespace chldr_data.Entities
+﻿using Realms;
+using System.ComponentModel.DataAnnotations.Schema;
+using chldr_data.Interfaces;
+
+namespace chldr_data.Entities;
+
+[Table("Activity")]
+public partial class Activity : RealmObject, IEntity
 {
-    public class Activity : RealmObject, IEntity
-    {
-        [PrimaryKey]
-        public ObjectId _id { get; set; } = ObjectId.GenerateNewId(DateTime.Now);
-        public User User { get; set; }
-        public ObjectId ObjectId { get; set; }
-        public string ObjectClass { get; set; }
-        public string ObjectProperty { get; set; }
-        public string OldValue { get; set; }
-        public string NewValue { get; set; }
-        public string Notes { get; set; }
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
-        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
-    }
+    [PrimaryKey]
+    public string ActivityId { get; set; } = Guid.NewGuid().ToString();
+    public string UserId { get; set; } = null!;
+    public string ObjectId { get; set; } = null!;
+    public string ObjectClass { get; set; } = null!;
+    public string ObjectProperty { get; set; } = null!;
+    public string OldValue { get; set; } = null!;
+    public string NewValue { get; set; } = null!;
+    public string? Notes { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    public virtual User User { get; set; } = null!;
 }

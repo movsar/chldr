@@ -1,27 +1,28 @@
 ﻿using chldr_data.Interfaces;
-using MongoDB.Bson;
 using Realms;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace chldr_data.Entities
+namespace chldr_data.Entities;
+[Table("Translation")]
+
+public partial class Translation : RealmObject, IEntity
 {
-    public class Translation : RealmObject, IEntity
+    [Realms.PrimaryKey]
+    public string TranslationId { get; set; } = Guid.NewGuid().ToString();
+    public string LanguageId { get; set; } = null!;
+    public string EntryId { get; set; } = null!;
+    public string UserId { get; set; } = null!;
+    public string Content { get; set; } = null!;
+    public string RawContents { get; set; } = null!;
+    public string? Notes { get; set; }
+    public int Rate { get; set; } = 0;
+    public virtual Entry Entry { get; set; } = null!;
+    public virtual Language Language { get; set; } = null!;
+    public virtual User User { get; set; } = null!;
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    internal string GetRawContents()
     {
-        [PrimaryKey]
-        public ObjectId _id { get; set; } = ObjectId.GenerateNewId(DateTime.Now);
-        public Entry Entry { get; set; }
-        public User User { get; set; }
-        [Indexed]
-        public string Content { get; set; } = string.Empty;
-        public string RawContents { get; set; }
-        public string Notes { get; set; } = string.Empty;
-        public Language Language { get; set; }
-        public int Rate { get; set; }
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
-        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
-
-        internal string GetRawContents()
-        {
-            return Content.ToString();
-        }
+        return Content.ToString();
     }
 }

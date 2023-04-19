@@ -5,7 +5,7 @@ namespace chldr_data.Models
 {
     public class PhraseModel : EntryModel
     {
-        public ObjectId PhraseId { get; }
+        public string PhraseId { get; }
         public override string Content { get; }
         public string? Notes { get; }
         public PhraseModel(Entry entry) : base(entry)

@@ -1,15 +1,16 @@
 ﻿using chldr_data.Interfaces;
-using MongoDB.Bson;
 using Realms;
-namespace chldr_data.Entities
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace chldr_data.Entities;
+[Table("Query")]
+public partial class Query : RealmObject, IEntity
 {
-    public class Query : RealmObject, IEntity
-    {
-        [PrimaryKey]
-        public ObjectId _id { get; set; } = ObjectId.GenerateNewId(DateTime.Now);
-        public int UserId { get; set; }
-        public string Content { get; set; }
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
-        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
-    }
+    [Realms.PrimaryKey]
+    public string QueryId { get; set; } =  Guid.NewGuid().ToString();
+    public string UserId { get; set; } = null!;
+    public string Content { get; set; } = null!;
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    public virtual User User { get; set; } = null!;
 }

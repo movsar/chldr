@@ -160,9 +160,9 @@ namespace chldr_data.Repositories
             logger.StopSpeedTest($"FindAsync finished");
         }
 
-        public TEntryModel GetByEntryId(ObjectId entryId)
+        public TEntryModel GetByEntryId(string entryId)
         {
-            var entry = Database.All<Entry>().FirstOrDefault(e => e._id == entryId);
+            var entry = Database.All<Entry>().FirstOrDefault(e => e.EntryId == entryId);
             if (entry == null)
             {
                 throw new NullReferenceException();
@@ -181,7 +181,7 @@ namespace chldr_data.Repositories
             return entries;
         }
 
-        public void Delete(ObjectId Id)
+        public void Delete(string Id)
         {
             var entry = Database.Find<Entry>(Id);
             if (entry == null)
@@ -197,17 +197,17 @@ namespace chldr_data.Repositories
                 }
                 switch ((EntryType)entry.Type)
                 {
-                    case EntryType.Word:
-                        Database.Remove(entry.Word);
-                        break;
-                    case EntryType.Phrase:
-                        Database.Remove(entry.Phrase);
-                        break;
-                    case EntryType.Text:
-                        Database.Remove(entry.Text);
-                        break;
-                    default:
-                        break;
+                    //case EntryType.Word:
+                    //    Database.Remove(entry.Word);
+                    //    break;
+                    //case EntryType.Phrase:
+                    //    Database.Remove(entry.Phrase);
+                    //    break;
+                    //case EntryType.Text:
+                    //    Database.Remove(entry.Text);
+                    //    break;
+                    //default:
+                    //    break;
                 }
                 Database.Remove(entry);
             });

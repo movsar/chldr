@@ -1,30 +1,20 @@
 ﻿using chldr_data.Interfaces;
-using MongoDB.Bson;
 using Realms;
-using System.Text;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace chldr_data.Entities
+namespace chldr_data.Entities;
+[Table("Word")]
+
+public partial class Word : RealmObject, IEntity
 {
-    public class Word : RealmObject, IEntity
-    {
-        // Must be removed with migrations ===============<
-        internal int GrammaticalClass { get; set; }
-        internal string Forms { get; set; } = string.Empty;
-        internal string VerbTenses { get; set; } = string.Empty;
-        internal string NounDeclensions { get; set; } = string.Empty;
-        // ================================================
-
-        [PrimaryKey]
-        public ObjectId _id { get; set; } = ObjectId.GenerateNewId(DateTime.Now);
-        public Entry Entry { get; set; }
-        [Indexed]
-        public string Content { get; set; } = string.Empty;
-        [Indexed]
-        public string Notes { get; set; } = string.Empty;
-        // Change to string AdditionalDetails JSON
-        public IList<int> GrammaticalClasses { get; } = new List<int>();
-        public int PartOfSpeech { get; set; }
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
-        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
-    }
+    [Realms.PrimaryKey]
+    public string WordId { get; set; } = Guid.NewGuid().ToString();
+    public string EntryId { get; set; } = null!;
+    public string Content { get; set; } = null!;
+    public string? Notes { get; set; }
+    public int? PartOfSpeech { get; set; }
+    public string? AdditionalDetails { get; set; }
+    public virtual Entry Entry { get; set; } = null!;
 }

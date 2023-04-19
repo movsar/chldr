@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using chldr_tools.Models;
+using chldr_data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace chldr_tools;
@@ -16,31 +16,31 @@ public partial class SqlContext : DbContext
     {
     }
 
-    public virtual DbSet<SqlActivity> Activities { get; set; }
+    public virtual DbSet<Activity> Activities { get; set; }
 
     public virtual DbSet<Efmigrationshistory> Efmigrationshistories { get; set; }
 
-    public virtual DbSet<SqlEntry> Entries { get; set; }
+    public virtual DbSet<Entry> Entries { get; set; }
 
-    public virtual DbSet<SqlImage> Images { get; set; }
+    public virtual DbSet<Image> Images { get; set; }
 
-    public virtual DbSet<SqlLanguage> Languages { get; set; }
+    public virtual DbSet<Language> Languages { get; set; }
 
-    public virtual DbSet<SqlPhrase> Phrases { get; set; }
+    public virtual DbSet<Phrase> Phrases { get; set; }
 
-    public virtual DbSet<SqlQuery> Queries { get; set; }
+    public virtual DbSet<Query> Queries { get; set; }
 
-    public virtual DbSet<SqlSound> Sounds { get; set; }
+    public virtual DbSet<Sound> Sounds { get; set; }
 
-    public virtual DbSet<SqlSource> Sources { get; set; }
+    public virtual DbSet<Source> Sources { get; set; }
 
-    public virtual DbSet<SqlText> Texts { get; set; }
+    public virtual DbSet<Text> Texts { get; set; }
 
-    public virtual DbSet<SqlTranslation> Translations { get; set; }
+    public virtual DbSet<Translation> Translations { get; set; }
 
-    public virtual DbSet<SqlUser> Users { get; set; }
+    public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<SqlWord> Words { get; set; }
+    public virtual DbSet<Word> Words { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -48,7 +48,7 @@ public partial class SqlContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<SqlActivity>(entity =>
+        modelBuilder.Entity<Activity>(entity =>
         {
             entity.HasKey(e => e.ActivityId).HasName("PRIMARY");
 
@@ -103,7 +103,7 @@ public partial class SqlContext : DbContext
             entity.Property(e => e.ProductVersion).HasMaxLength(32);
         });
 
-        modelBuilder.Entity<SqlEntry>(entity =>
+        modelBuilder.Entity<Entry>(entity =>
         {
             entity.HasKey(e => e.EntryId).HasName("PRIMARY");
 
@@ -147,7 +147,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_entry_user_id");
         });
 
-        modelBuilder.Entity<SqlImage>(entity =>
+        modelBuilder.Entity<Image>(entity =>
         {
             entity.HasKey(e => e.ImageId).HasName("PRIMARY");
 
@@ -189,7 +189,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_image_user_id");
         });
 
-        modelBuilder.Entity<SqlLanguage>(entity =>
+        modelBuilder.Entity<Language>(entity =>
         {
             entity.HasKey(e => e.LanguageId).HasName("PRIMARY");
 
@@ -223,7 +223,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_language_user_id");
         });
 
-        modelBuilder.Entity<SqlPhrase>(entity =>
+        modelBuilder.Entity<Phrase>(entity =>
         {
             entity.HasKey(e => e.PhraseId).HasName("PRIMARY");
 
@@ -249,7 +249,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_phrase_user_id");
         });
 
-        modelBuilder.Entity<SqlQuery>(entity =>
+        modelBuilder.Entity<Query>(entity =>
         {
             entity.HasKey(e => e.QueryId).HasName("PRIMARY");
 
@@ -281,7 +281,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_query_user_id");
         });
 
-        modelBuilder.Entity<SqlSound>(entity =>
+        modelBuilder.Entity<Sound>(entity =>
         {
             entity.HasKey(e => e.SoundId).HasName("PRIMARY");
 
@@ -323,7 +323,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_sound_user_id");
         });
 
-        modelBuilder.Entity<SqlSource>(entity =>
+        modelBuilder.Entity<Source>(entity =>
         {
             entity.HasKey(e => e.SourceId).HasName("PRIMARY");
 
@@ -360,7 +360,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_source_user_id");
         });
 
-        modelBuilder.Entity<SqlText>(entity =>
+        modelBuilder.Entity<Text>(entity =>
         {
             entity.HasKey(e => e.TextId).HasName("PRIMARY");
 
@@ -387,7 +387,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_text_entry_id");
         });
 
-        modelBuilder.Entity<SqlTranslation>(entity =>
+        modelBuilder.Entity<Translation>(entity =>
         {
             entity.HasKey(e => e.TranslationId).HasName("PRIMARY");
 
@@ -446,7 +446,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_translation_user_id");
         });
 
-        modelBuilder.Entity<SqlUser>(entity =>
+        modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.UserId).HasName("PRIMARY");
 
@@ -473,10 +473,10 @@ public partial class SqlContext : DbContext
             entity.Property(e => e.LastName)
                 .HasMaxLength(100)
                 .HasColumnName("last_name");
-            entity.Property(e => e.ModifiedAt)
+            entity.Property(e => e.UpdatedAt)
                 .ValueGeneratedOnAddOrUpdate()
                 .HasColumnType("datetime")
-                .HasColumnName("modified_at");
+                .HasColumnName("updated_at");
             entity.Property(e => e.Password)
                 .HasMaxLength(250)
                 .HasColumnName("password");
@@ -486,7 +486,7 @@ public partial class SqlContext : DbContext
             entity.Property(e => e.Rate).HasColumnName("rate");
         });
 
-        modelBuilder.Entity<SqlWord>(entity =>
+        modelBuilder.Entity<Word>(entity =>
         {
             entity.HasKey(e => e.WordId).HasName("PRIMARY");
 

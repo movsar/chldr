@@ -1,18 +1,16 @@
 ﻿using chldr_data.Interfaces;
-using MongoDB.Bson;
 using Realms;
-namespace chldr_data.Entities
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace chldr_data.Entities;
+[Table("Phrase")]
+
+public partial class Phrase : RealmObject, IEntity
 {
-    public class Phrase : RealmObject, IEntity
-    {
-        [PrimaryKey]
-        public ObjectId _id { get; set; } = ObjectId.GenerateNewId(DateTime.Now);
-        public Entry Entry { get; set; }
-        [Indexed]
-        public string Content { get; set; }
-        [Indexed]
-        public string Notes { get; set; }
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
-        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
-    }
+    [Realms.PrimaryKey]
+    public string PhraseId { get; set; } =Guid.NewGuid().ToString();
+    public string EntryId { get; set; } = null!;
+    public string Content { get; set; } = null!;
+    public string? Notes { get; set; }
+    public virtual Entry Entry { get; set; } = null!;
 }

@@ -21,7 +21,7 @@ namespace chldr_data.Repositories
             return Database.All<Source>().AsEnumerable().Select(s => new SourceModel(s)).ToList();
         }
 
-        public ObjectId Insert(SourceDto sourceDto)
+        public string Insert(SourceDto sourceDto)
         {
             if (!string.IsNullOrEmpty(sourceDto.SourceId))
             {
@@ -39,7 +39,7 @@ namespace chldr_data.Repositories
                 Database.Add(source);
             });
 
-            return source._id;
+            return source.SourceId;
         }
     }
 }

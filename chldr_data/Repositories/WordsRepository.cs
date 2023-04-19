@@ -12,9 +12,9 @@ namespace chldr_data.Repositories
     {
         public WordsRepository(IDataAccess dataAccess) : base(dataAccess) { }
 
-        public WordModel GetById(ObjectId entityId)
+        public WordModel GetById(string entityId)
         {
-            var word = Database.All<Word>().FirstOrDefault(w => w._id == entityId);
+            var word = Database.All<Word>().FirstOrDefault(w => w.WordId == entityId);
             if (word == null)
             {
                 throw new Exception("There is no such word in the database");
@@ -29,7 +29,7 @@ namespace chldr_data.Repositories
             return words.Select(w => new WordModel(w.Entry)).ToList();
         }
 
-        public ObjectId Insert(WordDto newWord)
+        public string Insert(WordDto newWord)
         {
             if (!string.IsNullOrEmpty(newWord.EntryId))
             {
@@ -78,7 +78,7 @@ namespace chldr_data.Repositories
                 Database.Add(entry);
             });
 
-            return entry._id;
+            return entry.EntryId;
         }
 
         public void Update(UserModel user, WordDto wordDto)

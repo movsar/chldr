@@ -70,8 +70,8 @@ namespace chldr_data.Services
 
         public UserModel GetCurrentUserInfo()
         {
-            var appUserId = new ObjectId(App.CurrentUser.Id);
-            var user = Database.All<Entities.User>().FirstOrDefault(u => u._id == appUserId);
+            var appUserId = App.CurrentUser.Id;
+            var user = Database.All<Entities.User>().FirstOrDefault(u => u.UserId == appUserId);
 
             if (user == null)
             {

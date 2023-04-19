@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `chldr` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `chldr`;
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: localhost    Database: chldr
@@ -16,6 +14,20 @@ USE `chldr`;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `__efmigrationshistory`
+--
+
+DROP TABLE IF EXISTS `__efmigrationshistory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `__efmigrationshistory` (
+  `MigrationId` varchar(150) NOT NULL,
+  `ProductVersion` varchar(32) NOT NULL,
+  PRIMARY KEY (`MigrationId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `activity`
@@ -52,8 +64,8 @@ CREATE TABLE `entry` (
   `entry_id` varchar(40) NOT NULL,
   `user_id` varchar(40) NOT NULL,
   `source_id` varchar(40) NOT NULL,
-  `type` int DEFAULT NULL,
-  `rate` int NOT NULL,
+  `type` int NOT NULL DEFAULT '0',
+  `rate` int NOT NULL DEFAULT '0',
   `raw_contents` varchar(1500) DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -221,7 +233,7 @@ CREATE TABLE `translation` (
   `content` varchar(10000) NOT NULL,
   `raw_contents` varchar(10000) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `notes` varchar(1000) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
-  `rate` int DEFAULT NULL,
+  `rate` int NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`translation_id`),
@@ -245,7 +257,7 @@ CREATE TABLE `users` (
   `user_id` varchar(40) NOT NULL,
   `email` varchar(200) DEFAULT NULL,
   `password` varchar(250) DEFAULT NULL,
-  `rate` int DEFAULT NULL,
+  `rate` int NOT NULL DEFAULT '0',
   `image_path` varchar(250) DEFAULT NULL,
   `first_name` varchar(100) DEFAULT NULL,
   `last_name` varchar(100) DEFAULT NULL,
@@ -253,7 +265,7 @@ CREATE TABLE `users` (
   `is_moderator` tinyint DEFAULT NULL,
   `account_status` tinyint DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `modified_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -287,4 +299,4 @@ CREATE TABLE `word` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-19 13:20:01
+-- Dump completed on 2023-04-19 15:19:08
