@@ -13,4 +13,4 @@ A project to build an interactive Chechen language dictionary. Started form scra
 Example: **Error:Something_went_wrong**.
 
 ## Database model
-![model](https://user-images.githubusercontent.com/18250365/232744059-4a7f1008-53e8-4dec-baac-e785b538ffca.svg)
+![model](https://user-images.githubusercontent.com/18250365/233087918-a1d51105-87d7-4529-b188-a52e9c07cda9.svg)
