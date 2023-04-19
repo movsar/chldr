@@ -24,8 +24,11 @@ namespace chldr_tools
             var realmService = new OfflineRealmService(_fileService, _exceptionHandler);
             realmService.Initialize();
 
-            var dbFiller = new MySqlDbFiller(realmService);
-            dbFiller.Run();
+            var chldrContext = new SqlContext();
+            var g = chldrContext.Entries.First();
+
+            //var dbFiller = new MySqlDbFiller(realmService);
+            //dbFiller.Run();
         }
     }
 }

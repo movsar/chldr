@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace chldr_tools;
 
-public partial class ChldrContext : DbContext
+public partial class SqlContext : DbContext
 {
-    public ChldrContext()
+    public SqlContext()
     {
     }
 
-    public ChldrContext(DbContextOptions<ChldrContext> options)
+    public SqlContext(DbContextOptions<SqlContext> options)
         : base(options)
     {
     }
@@ -237,21 +237,12 @@ public partial class ChldrContext : DbContext
             entity.Property(e => e.Content)
                 .HasMaxLength(500)
                 .HasColumnName("content");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
             entity.Property(e => e.EntryId)
                 .HasMaxLength(40)
                 .HasColumnName("entry_id");
             entity.Property(e => e.Notes)
                 .HasMaxLength(500)
                 .HasColumnName("notes");
-            entity.Property(e => e.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate()
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
-
             entity.HasOne(d => d.Entry).WithMany(p => p.Phrases)
                 .HasForeignKey(d => d.EntryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -383,20 +374,12 @@ public partial class ChldrContext : DbContext
             entity.Property(e => e.Content)
                 .HasMaxLength(500)
                 .HasColumnName("content");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
             entity.Property(e => e.EntryId)
                 .HasMaxLength(40)
                 .HasColumnName("entry_id");
             entity.Property(e => e.Notes)
                 .HasMaxLength(500)
                 .HasColumnName("notes");
-            entity.Property(e => e.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate()
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
 
             entity.HasOne(d => d.Entry).WithMany(p => p.Texts)
                 .HasForeignKey(d => d.EntryId)
@@ -520,10 +503,6 @@ public partial class ChldrContext : DbContext
             entity.Property(e => e.Content)
                 .HasMaxLength(500)
                 .HasColumnName("content");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
             entity.Property(e => e.EntryId)
                 .HasMaxLength(40)
                 .HasColumnName("entry_id");
@@ -531,10 +510,6 @@ public partial class ChldrContext : DbContext
                 .HasMaxLength(500)
                 .HasColumnName("notes");
             entity.Property(e => e.PartOfSpeech).HasColumnName("part_of_speech");
-            entity.Property(e => e.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate()
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
 
             entity.HasOne(d => d.Entry).WithMany(p => p.Words)
                 .HasForeignKey(d => d.EntryId)

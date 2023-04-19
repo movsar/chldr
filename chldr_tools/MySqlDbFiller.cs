@@ -9,22 +9,22 @@ namespace chldr_tools
 {
     public class MySqlDbFiller
     {
-        private readonly ChldrContext _context;
+        private readonly SqlContext _context;
         private readonly OfflineRealmService _realmService;
         private readonly Realm _realm;
         public MySqlDbFiller(OfflineRealmService realmService)
         {
-            _context = new ChldrContext();
+            _context = new SqlContext();
             _realmService = realmService;
             _realm = realmService.GetDatabase();
         }
         internal void Run()
         {
-            //InsertUsers();
-            //InsertLanguages();
-            //InsertSources();
-            //InsertEntries();
-            //InsertTranslations();
+            InsertUsers();
+            InsertLanguages();
+            InsertSources();
+            InsertEntries();
+            InsertTranslations();
         }
 
         private void InsertTranslations()
@@ -48,7 +48,6 @@ namespace chldr_tools
             }
             _context.SaveChanges();
         }
-
         private void InsertSources()
         {
             var adminUser = _realm.All<chldr_data.Entities.User>().First();
