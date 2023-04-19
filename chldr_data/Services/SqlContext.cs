@@ -345,9 +345,6 @@ public partial class SqlContext : DbContext
             entity.Property(e => e.Notes)
                 .HasMaxLength(500)
                 .HasColumnName("notes");
-            entity.Property(e => e.Sourcecol)
-                .HasMaxLength(45)
-                .HasColumnName("sourcecol");
             entity.Property(e => e.UpdatedAt)
                 .ValueGeneratedOnAddOrUpdate()
                 .HasColumnType("datetime")

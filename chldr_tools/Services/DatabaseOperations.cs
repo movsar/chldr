@@ -161,6 +161,7 @@ namespace chldr_tools.Services
                         TranslationId = translation.TranslationId,
                         LanguageId = translation.LanguageId,
                         EntryId = entry.EntryId,
+                        UserId= translation.UserId,
                         Content = translation.Content,
                         RawContents = translation.RawContents,
                         Notes = translation.Notes,
