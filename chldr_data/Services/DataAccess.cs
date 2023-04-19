@@ -53,7 +53,7 @@ namespace chldr_data.Services
                     if (dataSourceType == DataSourceType.Offline && _networkService.IsNetworUp && _environmentService.CurrentPlatform != chldr_shared.Enums.Platforms.Web)
                     {
                         await Task.Delay(250);
-                        SetActiveDataservice(DataSourceType.Synced);
+                        //SetActiveDataservice(DataSourceType.Synced);
                     }
                 }
                 catch (Exception ex)

@@ -42,15 +42,6 @@ CREATE TABLE `activity` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `activity`
---
-
-LOCK TABLES `activity` WRITE;
-/*!40000 ALTER TABLE `activity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `activity` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `entry`
 --
 
@@ -63,7 +54,7 @@ CREATE TABLE `entry` (
   `source_id` varchar(40) NOT NULL,
   `type` int DEFAULT NULL,
   `rate` int NOT NULL,
-  `raw_contents` varchar(500) NULL,
+  `raw_contents` varchar(1500) DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`entry_id`),
@@ -73,15 +64,6 @@ CREATE TABLE `entry` (
   CONSTRAINT `fk_entry_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `entry`
---
-
-LOCK TABLES `entry` WRITE;
-/*!40000 ALTER TABLE `entry` DISABLE KEYS */;
-/*!40000 ALTER TABLE `entry` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `image`
@@ -107,15 +89,6 @@ CREATE TABLE `image` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `image`
---
-
-LOCK TABLES `image` WRITE;
-/*!40000 ALTER TABLE `image` DISABLE KEYS */;
-/*!40000 ALTER TABLE `image` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `language`
 --
 
@@ -136,15 +109,6 @@ CREATE TABLE `language` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `language`
---
-
-LOCK TABLES `language` WRITE;
-/*!40000 ALTER TABLE `language` DISABLE KEYS */;
-/*!40000 ALTER TABLE `language` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `phrase`
 --
 
@@ -154,24 +118,13 @@ DROP TABLE IF EXISTS `phrase`;
 CREATE TABLE `phrase` (
   `phrase_id` varchar(40) NOT NULL,
   `entry_id` varchar(40) NOT NULL,
-  `content` varchar(500) NOT NULL,
-  `notes` varchar(500) DEFAULT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `content` varchar(20000) NOT NULL,
+  `notes` varchar(1500) DEFAULT NULL,
   PRIMARY KEY (`phrase_id`),
   KEY `fk_phrase_user_id` (`entry_id`),
   CONSTRAINT `fk_phrase_user_id` FOREIGN KEY (`entry_id`) REFERENCES `entry` (`entry_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `phrase`
---
-
-LOCK TABLES `phrase` WRITE;
-/*!40000 ALTER TABLE `phrase` DISABLE KEYS */;
-/*!40000 ALTER TABLE `phrase` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `query`
@@ -191,15 +144,6 @@ CREATE TABLE `query` (
   CONSTRAINT `fk_query_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `query`
---
-
-LOCK TABLES `query` WRITE;
-/*!40000 ALTER TABLE `query` DISABLE KEYS */;
-/*!40000 ALTER TABLE `query` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `sound`
@@ -224,15 +168,6 @@ CREATE TABLE `sound` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `sound`
---
-
-LOCK TABLES `sound` WRITE;
-/*!40000 ALTER TABLE `sound` DISABLE KEYS */;
-/*!40000 ALTER TABLE `sound` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `source`
 --
 
@@ -254,15 +189,6 @@ CREATE TABLE `source` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `source`
---
-
-LOCK TABLES `source` WRITE;
-/*!40000 ALTER TABLE `source` DISABLE KEYS */;
-/*!40000 ALTER TABLE `source` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `text`
 --
 
@@ -272,24 +198,13 @@ DROP TABLE IF EXISTS `text`;
 CREATE TABLE `text` (
   `text_id` varchar(40) NOT NULL,
   `entry_id` varchar(40) NOT NULL,
-  `content` varchar(500) NOT NULL,
-  `notes` varchar(500) DEFAULT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `content` varchar(20000) NOT NULL,
+  `notes` varchar(1500) DEFAULT NULL,
   PRIMARY KEY (`text_id`),
   KEY `fk_text_entry_id` (`entry_id`),
   CONSTRAINT `fk_text_entry_id` FOREIGN KEY (`entry_id`) REFERENCES `entry` (`entry_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `text`
---
-
-LOCK TABLES `text` WRITE;
-/*!40000 ALTER TABLE `text` DISABLE KEYS */;
-/*!40000 ALTER TABLE `text` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `translation`
@@ -303,9 +218,9 @@ CREATE TABLE `translation` (
   `language_id` varchar(40) NOT NULL,
   `entry_id` varchar(40) NOT NULL,
   `user_id` varchar(40) NOT NULL,
-  `content` varchar(500) NOT NULL,
-  `raw_contents` varchar(500) NOT NULL,
-  `notes` varchar(500) DEFAULT NULL,
+  `content` varchar(10000) NOT NULL,
+  `raw_contents` varchar(10000) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `notes` varchar(1000) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `rate` int DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -318,15 +233,6 @@ CREATE TABLE `translation` (
   CONSTRAINT `fk_translation_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `translation`
---
-
-LOCK TABLES `translation` WRITE;
-/*!40000 ALTER TABLE `translation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `translation` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `users`
@@ -353,15 +259,6 @@ CREATE TABLE `users` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `users`
---
-
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `word`
 --
 
@@ -371,30 +268,15 @@ DROP TABLE IF EXISTS `word`;
 CREATE TABLE `word` (
   `word_id` varchar(40) NOT NULL,
   `entry_id` varchar(40) NOT NULL,
-  `content` varchar(500) NOT NULL,
-  `notes` varchar(500) DEFAULT NULL,
+  `content` varchar(10000) NOT NULL,
+  `notes` varchar(1500) DEFAULT NULL,
   `part_of_speech` int DEFAULT NULL,
   `additional_details` json DEFAULT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`word_id`),
   KEY `fk_word_entry_id` (`entry_id`),
   CONSTRAINT `fk_word_entry_id` FOREIGN KEY (`entry_id`) REFERENCES `entry` (`entry_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `word`
---
-
-LOCK TABLES `word` WRITE;
-/*!40000 ALTER TABLE `word` DISABLE KEYS */;
-/*!40000 ALTER TABLE `word` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping routines for database 'chldr'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -405,4 +287,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-18 12:14:13
+-- Dump completed on 2023-04-19 13:20:01

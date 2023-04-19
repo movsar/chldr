@@ -133,8 +133,6 @@ namespace chldr_tools
                         {
                             EntryId = entry._id.ToString(),
                             WordId = entry.Word._id.ToString(),
-                            CreatedAt = entry.Word.CreatedAt.UtcDateTime,
-                            UpdatedAt = entry.Word.UpdatedAt.UtcDateTime,
                             Content = entry.Word.Content,
                             Notes = entry.Word.Notes,
                             PartOfSpeech = entry.Word.PartOfSpeech,
@@ -147,8 +145,6 @@ namespace chldr_tools
                         {
                             EntryId = entry._id.ToString(),
                             PhraseId = entry.Phrase._id.ToString(),
-                            CreatedAt = entry.Phrase.CreatedAt.UtcDateTime,
-                            UpdatedAt = entry.Phrase.UpdatedAt.UtcDateTime,
                             Content = entry.Phrase.Content,
                             Notes = entry.Phrase.Notes,
                         };
@@ -160,8 +156,6 @@ namespace chldr_tools
                         {
                             EntryId = entry._id.ToString(),
                             TextId = entry.Text._id.ToString(),
-                            CreatedAt = entry.Text.CreatedAt.UtcDateTime,
-                            UpdatedAt = entry.Text.UpdatedAt.UtcDateTime,
                             Content = entry.Text.Content,
                         };
                         _context.Texts.Add(text);
