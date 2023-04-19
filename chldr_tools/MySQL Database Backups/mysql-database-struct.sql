@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `chldr` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `chldr`;
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: localhost    Database: chldr
@@ -133,7 +135,7 @@ CREATE TABLE `phrase` (
   `content` varchar(20000) NOT NULL,
   `notes` varchar(1500) DEFAULT NULL,
   PRIMARY KEY (`phrase_id`),
-  KEY `fk_phrase_user_id` (`entry_id`),
+  UNIQUE KEY `entry_id_UNIQUE` (`entry_id`),
   CONSTRAINT `fk_phrase_user_id` FOREIGN KEY (`entry_id`) REFERENCES `entry` (`entry_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -213,7 +215,7 @@ CREATE TABLE `text` (
   `content` varchar(20000) NOT NULL,
   `notes` varchar(1500) DEFAULT NULL,
   PRIMARY KEY (`text_id`),
-  KEY `fk_text_entry_id` (`entry_id`),
+  UNIQUE KEY `entry_id_UNIQUE` (`entry_id`),
   CONSTRAINT `fk_text_entry_id` FOREIGN KEY (`entry_id`) REFERENCES `entry` (`entry_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -285,7 +287,7 @@ CREATE TABLE `word` (
   `part_of_speech` int DEFAULT NULL,
   `additional_details` json DEFAULT NULL,
   PRIMARY KEY (`word_id`),
-  KEY `fk_word_entry_id` (`entry_id`),
+  UNIQUE KEY `entry_id_UNIQUE` (`entry_id`),
   CONSTRAINT `fk_word_entry_id` FOREIGN KEY (`entry_id`) REFERENCES `entry` (`entry_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -299,4 +301,4 @@ CREATE TABLE `word` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-19 15:19:08
+-- Dump completed on 2023-04-19 16:01:29
