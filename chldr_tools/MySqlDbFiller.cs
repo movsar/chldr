@@ -3,11 +3,7 @@ using chldr_data.Enums;
 using chldr_data.Services;
 using chldr_tools.Models;
 using Realms;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using User = chldr_data.Entities.User;
 
 namespace chldr_tools
 {
@@ -22,33 +18,86 @@ namespace chldr_tools
             _realmService = realmService;
             _realm = realmService.GetDatabase();
         }
-        internal async void Run()
+        internal void Run()
         {
-            FillUsers();
-            FillLanguages();
+            //InsertUsers();
+            //InsertLanguages();
+            //InsertSources();
+            //InsertEntries();
+            //InsertTranslations();
         }
 
-        private void FillUsers()
+        private void InsertTranslations()
         {
-            var users = _realm.All<User>();
-            foreach (var user in users)
+            foreach (var translation in _realm.All<Translation>())
             {
-                _context.Add(new SqlUser()
+                var sqlTranslation = new SqlTranslation()
                 {
+                    TranslationId = translation._id.ToString(),
+                    EntryId = translation.Entry._id.ToString(),
+                    UserId = translation.User._id.ToString(),
+                    LanguageId = translation.Language._id.ToString(),
+                    CreatedAt = translation.CreatedAt.UtcDateTime,
+                    UpdatedAt = translation.UpdatedAt.UtcDateTime,
+                    Rate = translation.Rate,
+                    RawContents = translation.RawContents,
+                    Notes = translation.Notes,
+                    Content = translation.Content,
+                };
+                _context.Add(sqlTranslation);
+            }
+            _context.SaveChanges();
+        }
 
+        private void InsertSources()
+        {
+            var adminUser = _realm.All<chldr_data.Entities.User>().First();
+
+            foreach (var source in _realm.All<Source>())
+            {
+                _context.Add(new SqlSource()
+                {
+                    SourceId = source._id.ToString(),
+                    UserId = adminUser._id.ToString(),
+                    CreatedAt = source.CreatedAt.UtcDateTime,
+                    UpdatedAt = source.UpdatedAt.UtcDateTime,
+                    Name = source.Name,
+                    Notes = source.Notes,
                 });
             }
+
+            _context.SaveChanges();
         }
-
-        internal async void FillLanguages()
+        private void InsertUsers()
         {
+            foreach (var user in _realm.All<chldr_data.Entities.User>())
+            {
+                _context.Add(
+                    new SqlUser()
+                    {
+                        UserId = user._id.ToString(),
+                        CreatedAt = user.CreatedAt.UtcDateTime,
+                        ModifiedAt = user.UpdatedAt.UtcDateTime,
+                        AccountStatus = (sbyte)user.Status,
+                        Email = user.Email,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Patronymic = user.Patronymic,
+                        ImagePath = user.ImagePath,
+                        Rate = user.Rate,
+                    });
+            }
 
+            _context.SaveChanges();
+        }
+        internal void InsertLanguages()
+        {
             var languages = _realm.All<Language>();
             var adminUser = _realm.All<User>().First();
 
             foreach (var language in languages)
             {
-                context.Languages.Add(new Models.SqlLanguage()
+                _context.Languages.Add(new Models.SqlLanguage()
                 {
                     LanguageId = language._id.ToString(),
                     CreatedAt = language.CreatedAt.UtcDateTime,
@@ -58,77 +107,69 @@ namespace chldr_tools
                     Code = language.Code,
                 });
             }
-            context.SaveChanges();
+            _context.SaveChanges();
         }
-        internal void FillEntries()
+        internal void InsertEntries()
         {
             foreach (var entry in _realm.All<Entry>())
             {
-                var newEntry = new chldr_data.Entities.Entry()
+                var sqlEntry = new SqlEntry()
                 {
-                    _id = entry._id,
-                    UpdatedAt = entry.UpdatedAt,
+                    EntryId = entry._id.ToString(),
+                    UserId = entry.User._id.ToString(),
+                    CreatedAt = entry.CreatedAt.UtcDateTime,
+                    UpdatedAt = entry.UpdatedAt.UtcDateTime,
                     Rate = entry.Rate,
                     RawContents = entry.RawContents,
-                    Source = _realm.All<Source>().FirstOrDefault(s => s.Name == entry.Source.Name),
+                    SourceId = entry.Source._id.ToString(),
                     Type = entry.Type,
-                    User = _realm.All<User>().FirstOrDefault(u => u.Email == entry.User.Email),
                 };
-
-                foreach (var translation in entry.Translations)
-                {
-                    var newTranslation = new Translation()
-                    {
-                        _id = translation._id,
-                        UpdatedAt = translation.UpdatedAt,
-                        Content = translation.Content,
-                        Notes = translation.Notes,
-                        Rate = translation.Rate,
-                        RawContents = translation.RawContents,
-                        Entry = newEntry,
-                        Language = _realm.All<Language>().FirstOrDefault(l => l.Code == translation.Language.Code),
-                        User = _realm.All<User>().FirstOrDefault(u => u.Email == translation.User.Email),
-                    };
-
-                    newEntry.Translations.Add(newTranslation);
-                }
+                _context.Entries.Add(sqlEntry);
 
                 switch ((EntryType)entry.Type)
                 {
                     case EntryType.Word:
-                        var word = new Word()
+                        var word = new SqlWord()
                         {
-                            _id = entry.Word._id,
-                            UpdatedAt = entry.Word.UpdatedAt,
-                            Entry = newEntry,
+                            EntryId = entry._id.ToString(),
+                            WordId = entry.Word._id.ToString(),
+                            CreatedAt = entry.Word.CreatedAt.UtcDateTime,
+                            UpdatedAt = entry.Word.UpdatedAt.UtcDateTime,
                             Content = entry.Word.Content,
-                            //GrammaticalClass = entry.Word.GrammaticalClass,
                             Notes = entry.Word.Notes,
                             PartOfSpeech = entry.Word.PartOfSpeech,
                         };
+                        _context.Words.Add(word);
 
-                        newEntry.Word = word;
                         break;
-
                     case EntryType.Phrase:
-                        var phrase = new Phrase()
+                        var phrase = new SqlPhrase()
                         {
-                            _id = entry.Phrase._id,
-                            UpdatedAt = entry.Phrase.UpdatedAt,
-                            Entry = newEntry,
+                            EntryId = entry._id.ToString(),
+                            PhraseId = entry.Phrase._id.ToString(),
+                            CreatedAt = entry.Phrase.CreatedAt.UtcDateTime,
+                            UpdatedAt = entry.Phrase.UpdatedAt.UtcDateTime,
                             Content = entry.Phrase.Content,
-                            Notes = entry.Phrase.Content
+                            Notes = entry.Phrase.Notes,
                         };
+                        _context.Phrases.Add(phrase);
 
-                        newEntry.Phrase = phrase;
                         break;
+                    case EntryType.Text:
+                        var text = new SqlText()
+                        {
+                            EntryId = entry._id.ToString(),
+                            TextId = entry.Text._id.ToString(),
+                            CreatedAt = entry.Text.CreatedAt.UtcDateTime,
+                            UpdatedAt = entry.Text.UpdatedAt.UtcDateTime,
+                            Content = entry.Text.Content,
+                        };
+                        _context.Texts.Add(text);
 
-                    default:
                         break;
                 }
-
-                // newEntry
             }
+            _context.SaveChanges();
         }
     }
 }
