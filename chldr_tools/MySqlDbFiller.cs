@@ -1,6 +1,7 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
 using chldr_data.Services;
+using chldr_tools.Models;
 using Realms;
 using System;
 using System.Collections.Generic;
@@ -12,25 +13,52 @@ namespace chldr_tools
 {
     public class MySqlDbFiller
     {
+        private readonly ChldrContext _context;
         private readonly OfflineRealmService _realmService;
         private readonly Realm _realm;
         public MySqlDbFiller(OfflineRealmService realmService)
         {
+            _context = new ChldrContext();
             _realmService = realmService;
             _realm = realmService.GetDatabase();
         }
-        internal void Run()
+        internal async void Run()
         {
-            FillEntries();
+            FillUsers();
+            FillLanguages();
         }
 
-        internal void FillLanguages()
+        private void FillUsers()
         {
+            var users = _realm.All<User>();
+            foreach (var user in users)
+            {
+                _context.Add(new SqlUser()
+                {
+
+                });
+            }
+        }
+
+        internal async void FillLanguages()
+        {
+
             var languages = _realm.All<Language>();
+            var adminUser = _realm.All<User>().First();
+
             foreach (var language in languages)
             {
-
+                context.Languages.Add(new Models.SqlLanguage()
+                {
+                    LanguageId = language._id.ToString(),
+                    CreatedAt = language.CreatedAt.UtcDateTime,
+                    UpdatedAt = language.UpdatedAt.UtcDateTime,
+                    Name = language.Name,
+                    UserId = adminUser._id.ToString(),
+                    Code = language.Code,
+                });
             }
+            context.SaveChanges();
         }
         internal void FillEntries()
         {
