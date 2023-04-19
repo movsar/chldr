@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <Folder Include="MySQL Database Backups\" />
-    <Folder Include="NewFolder\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>

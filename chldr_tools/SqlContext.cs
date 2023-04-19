@@ -243,10 +243,6 @@ public partial class SqlContext : DbContext
             entity.Property(e => e.Notes)
                 .HasMaxLength(500)
                 .HasColumnName("notes");
-            entity.HasOne(d => d.Entry).WithMany(p => p.Phrases)
-                .HasForeignKey(d => d.EntryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_phrase_user_id");
         });
 
         modelBuilder.Entity<Query>(entity =>
@@ -380,11 +376,6 @@ public partial class SqlContext : DbContext
             entity.Property(e => e.Notes)
                 .HasMaxLength(500)
                 .HasColumnName("notes");
-
-            entity.HasOne(d => d.Entry).WithMany(p => p.Texts)
-                .HasForeignKey(d => d.EntryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_text_entry_id");
         });
 
         modelBuilder.Entity<Translation>(entity =>
@@ -510,11 +501,6 @@ public partial class SqlContext : DbContext
                 .HasMaxLength(500)
                 .HasColumnName("notes");
             entity.Property(e => e.PartOfSpeech).HasColumnName("part_of_speech");
-
-            entity.HasOne(d => d.Entry).WithMany(p => p.Words)
-                .HasForeignKey(d => d.EntryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_word_entry_id");
         });
 
         OnModelCreatingPartial(modelBuilder);

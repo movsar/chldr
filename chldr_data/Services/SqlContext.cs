@@ -122,7 +122,7 @@ public partial class SqlContext : DbContext
                 .HasColumnName("created_at");
             entity.Property(e => e.Rate).HasColumnName("rate");
             entity.Property(e => e.RawContents)
-                .HasMaxLength(500)
+                .HasMaxLength(1500)
                 .HasColumnName("raw_contents");
             entity.Property(e => e.SourceId)
                 .HasMaxLength(40)
@@ -229,22 +229,23 @@ public partial class SqlContext : DbContext
 
             entity.ToTable("phrase");
 
-            entity.HasIndex(e => e.EntryId, "fk_phrase_user_id");
+            entity.HasIndex(e => e.EntryId, "entry_id_UNIQUE").IsUnique();
 
             entity.Property(e => e.PhraseId)
                 .HasMaxLength(40)
                 .HasColumnName("phrase_id");
             entity.Property(e => e.Content)
-                .HasMaxLength(500)
+                .HasColumnType("varchar(20000)")
                 .HasColumnName("content");
             entity.Property(e => e.EntryId)
                 .HasMaxLength(40)
                 .HasColumnName("entry_id");
             entity.Property(e => e.Notes)
-                .HasMaxLength(500)
+                .HasMaxLength(1500)
                 .HasColumnName("notes");
-            entity.HasOne(d => d.Entry).WithMany(p => p.Phrases)
-                .HasForeignKey(d => d.EntryId)
+
+            entity.HasOne(d => d.Entry).WithOne(p => p.Phrase)
+                .HasForeignKey<Phrase>(d => d.EntryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_phrase_user_id");
         });
@@ -366,23 +367,23 @@ public partial class SqlContext : DbContext
 
             entity.ToTable("text");
 
-            entity.HasIndex(e => e.EntryId, "fk_text_entry_id");
+            entity.HasIndex(e => e.EntryId, "entry_id_UNIQUE").IsUnique();
 
             entity.Property(e => e.TextId)
                 .HasMaxLength(40)
                 .HasColumnName("text_id");
             entity.Property(e => e.Content)
-                .HasMaxLength(500)
+                .HasColumnType("varchar(20000)")
                 .HasColumnName("content");
             entity.Property(e => e.EntryId)
                 .HasMaxLength(40)
                 .HasColumnName("entry_id");
             entity.Property(e => e.Notes)
-                .HasMaxLength(500)
+                .HasMaxLength(1500)
                 .HasColumnName("notes");
 
-            entity.HasOne(d => d.Entry).WithMany(p => p.Texts)
-                .HasForeignKey(d => d.EntryId)
+            entity.HasOne(d => d.Entry).WithOne(p => p.Text)
+                .HasForeignKey<Text>(d => d.EntryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_text_entry_id");
         });
@@ -403,7 +404,7 @@ public partial class SqlContext : DbContext
                 .HasMaxLength(40)
                 .HasColumnName("translation_id");
             entity.Property(e => e.Content)
-                .HasMaxLength(500)
+                .HasMaxLength(10000)
                 .HasColumnName("content");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -416,11 +417,11 @@ public partial class SqlContext : DbContext
                 .HasMaxLength(40)
                 .HasColumnName("language_id");
             entity.Property(e => e.Notes)
-                .HasMaxLength(500)
+                .HasMaxLength(1000)
                 .HasColumnName("notes");
             entity.Property(e => e.Rate).HasColumnName("rate");
             entity.Property(e => e.RawContents)
-                .HasMaxLength(500)
+                .HasMaxLength(10000)
                 .HasColumnName("raw_contents");
             entity.Property(e => e.UpdatedAt)
                 .ValueGeneratedOnAddOrUpdate()
@@ -473,10 +474,6 @@ public partial class SqlContext : DbContext
             entity.Property(e => e.LastName)
                 .HasMaxLength(100)
                 .HasColumnName("last_name");
-            entity.Property(e => e.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate()
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
             entity.Property(e => e.Password)
                 .HasMaxLength(250)
                 .HasColumnName("password");
@@ -484,6 +481,9 @@ public partial class SqlContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("patronymic");
             entity.Property(e => e.Rate).HasColumnName("rate");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
         });
 
         modelBuilder.Entity<Word>(entity =>
@@ -492,7 +492,7 @@ public partial class SqlContext : DbContext
 
             entity.ToTable("word");
 
-            entity.HasIndex(e => e.EntryId, "fk_word_entry_id");
+            entity.HasIndex(e => e.EntryId, "entry_id_UNIQUE").IsUnique();
 
             entity.Property(e => e.WordId)
                 .HasMaxLength(40)
@@ -501,18 +501,18 @@ public partial class SqlContext : DbContext
                 .HasColumnType("json")
                 .HasColumnName("additional_details");
             entity.Property(e => e.Content)
-                .HasMaxLength(500)
+                .HasMaxLength(10000)
                 .HasColumnName("content");
             entity.Property(e => e.EntryId)
                 .HasMaxLength(40)
                 .HasColumnName("entry_id");
             entity.Property(e => e.Notes)
-                .HasMaxLength(500)
+                .HasMaxLength(1500)
                 .HasColumnName("notes");
             entity.Property(e => e.PartOfSpeech).HasColumnName("part_of_speech");
 
-            entity.HasOne(d => d.Entry).WithMany(p => p.Words)
-                .HasForeignKey(d => d.EntryId)
+            entity.HasOne(d => d.Entry).WithOne(p => p.Word)
+                .HasForeignKey<Word>(d => d.EntryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_word_entry_id");
         });
