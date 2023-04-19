@@ -11,15 +11,15 @@ namespace chldr_data.Models.Words
     {
         public WordModel(Entry entry) : base(entry)
         {
-            var word = entry.Word;
+            //var word = entry.Word;
 
-            WordId = word._id;
-            Content = word.Content;
-            Notes = word.Notes;
-            PartOfSpeech = (PartOfSpeech)word.PartOfSpeech;
+            //WordId = word._id;
+            //Content = word.Content;
+            //Notes = word.Notes;
+            //PartOfSpeech = (PartOfSpeech)word.PartOfSpeech;
         }
 
-        public ObjectId WordId { get; }
+        public string WordId { get; }
         public override string Content { get; }
         public string Notes { get; }
         public PartOfSpeech PartOfSpeech { get; }

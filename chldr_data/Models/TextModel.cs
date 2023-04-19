@@ -10,10 +10,10 @@ namespace chldr_data.Models
         public override string Content { get; }
         public TextModel(Entry entry) : base(entry)
         {
-            var text = entry.Text;
+            //var text = entry.Text;
 
-            TextId = text._id;
-            Content = text.Content;
+            //TextId = text._id;
+            //Content = text.Content;
         }
     }
 }

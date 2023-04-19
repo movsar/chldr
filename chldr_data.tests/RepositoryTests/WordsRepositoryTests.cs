@@ -18,14 +18,14 @@ namespace chldr_data.tests.RepositoryTests
             // Insert
             var insertedWordId = WordsRepository.Insert(testWord);
 
-            Assert.NotEqual(ObjectId.Empty, insertedWordId);
+            Assert.NotEqual(string.Empty, insertedWordId);
         }
 
         [Fact]
         public async Task GetWordById_BadId_ReturnsError()
         {
             // 1. Подготавливаем заведомо неправильный id
-            ObjectId badId = new ObjectId(12, 123, 321, 12);
+            string badId ="2, 123, 321, 12";
 
 
             // 2. Тест

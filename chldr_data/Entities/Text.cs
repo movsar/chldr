@@ -13,5 +13,5 @@ public partial class Text : RealmObject, IEntity
     public string EntryId { get; set; } = null!;
     public string Content { get; set; } = null!;
     public string? Notes { get; set; }
-    public virtual Entry Entry { get; set; } = null!;
+    [Ignored] public virtual Entry Entry { get; set; } = null!;
 }

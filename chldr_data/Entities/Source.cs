@@ -14,9 +14,9 @@ public partial class Source : RealmObject, IEntity
     public string? UserId { get; set; }
     public string Name { get; set; } = null!;
     public string? Notes { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
-    public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
+    public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
     public string? Sourcecol { get; set; }
-    public virtual ICollection<Entry> Entries { get; set; } = new List<Entry>();
-    public virtual User? User { get; set; }
+    [Ignored] public virtual ICollection<Entry> Entries { get; set; } = new List<Entry>();
+    [Ignored] public virtual User? User { get; set; }
 }

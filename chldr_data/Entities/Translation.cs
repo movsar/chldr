@@ -16,11 +16,11 @@ public partial class Translation : RealmObject, IEntity
     public string RawContents { get; set; } = null!;
     public string? Notes { get; set; }
     public int Rate { get; set; } = 0;
-    public virtual Entry Entry { get; set; } = null!;
-    public virtual Language Language { get; set; } = null!;
-    public virtual User User { get; set; } = null!;
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
-    public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    [Ignored] public virtual Entry Entry { get; set; } = null!;
+    [Ignored] public virtual Language Language { get; set; } = null!;
+    [Ignored] public virtual User User { get; set; } = null!;
+    public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
+    public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
     internal string GetRawContents()
     {
         return Content.ToString();

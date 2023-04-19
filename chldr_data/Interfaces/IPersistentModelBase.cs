@@ -4,6 +4,6 @@ namespace chldr_data.Interfaces
 {
     public interface IPersistentModelBase
     {
-        public ObjectId Id { get; }
+        public string Id { get; }
     }
 }

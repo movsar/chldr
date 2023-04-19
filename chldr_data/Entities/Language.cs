@@ -13,8 +13,8 @@ public partial class Language : RealmObject, IEntity
     public string? UserId { get; set; }
     public string Name { get; set; } = null!;
     public string Code { get; set; } = null!;
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
-    public DateTime UpdatedAt { get; set; } = DateTime.Now;
-    public virtual ICollection<Translation> Translations { get; set; } = new List<Translation>();
-    public virtual User? User { get; set; }
+    public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
+    public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
+    [Ignored] public virtual ICollection<Translation> Translations { get; set; } = new List<Translation>();
+    [Ignored] public virtual User? User { get; set; }
 }

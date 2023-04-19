@@ -14,8 +14,8 @@ public partial class Sound : RealmObject, IEntity
     public string UserId { get; set; } = null!;
     public string EntryId { get; set; } = null!;
     public string FileName { get; set; } = null!;
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
-    public DateTime UpdatedAt { get; set; } = DateTime.Now;
-    public virtual Entry Entry { get; set; } = null!;
-    public virtual User User { get; set; } = null!;
+    public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
+    public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
+    [Ignored] public virtual Entry Entry { get; set; } = null!;
+    [Ignored] public virtual User User { get; set; } = null!;
 }

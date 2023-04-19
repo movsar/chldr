@@ -473,10 +473,10 @@ public partial class SqlContext : DbContext
             entity.Property(e => e.LastName)
                 .HasMaxLength(100)
                 .HasColumnName("last_name");
-            entity.Property(e => e.ModifiedAt)
+            entity.Property(e => e.UpdatedAt)
                 .ValueGeneratedOnAddOrUpdate()
                 .HasColumnType("datetime")
-                .HasColumnName("modified_at");
+                .HasColumnName("updated_at");
             entity.Property(e => e.Password)
                 .HasMaxLength(250)
                 .HasColumnName("password");

@@ -16,5 +16,5 @@ public partial class Word : RealmObject, IEntity
     public string? Notes { get; set; }
     public int? PartOfSpeech { get; set; }
     public string? AdditionalDetails { get; set; }
-    public virtual Entry Entry { get; set; } = null!;
+    [Ignored] public virtual Entry Entry { get; set; } = null!;
 }

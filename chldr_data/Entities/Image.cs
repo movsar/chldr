@@ -14,8 +14,8 @@ public partial class Image : RealmObject, IEntity
     public string EntryId { get; set; } = null!;
     public string? FileName { get; set; }
     public int Rate { get; set; }
-    public DateTime? CreatedAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
-    public virtual Entry Entry { get; set; } = null!;
-    public virtual User? User { get; set; }
+    public DateTimeOffset? CreatedAt { get; set; } 
+    public DateTimeOffset? UpdatedAt { get; set; }
+    [Ignored] public virtual Entry Entry { get; set; } = null!;
+    [Ignored] public virtual User? User { get; set; }
 }

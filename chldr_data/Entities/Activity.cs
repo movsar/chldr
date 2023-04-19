@@ -16,7 +16,7 @@ public partial class Activity : RealmObject, IEntity
     public string OldValue { get; set; } = null!;
     public string NewValue { get; set; } = null!;
     public string? Notes { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
-    public DateTime UpdatedAt { get; set; } = DateTime.Now;
-    public virtual User User { get; set; } = null!;
+    public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
+    public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
+    [Ignored] public virtual User User { get; set; } = null!;
 }

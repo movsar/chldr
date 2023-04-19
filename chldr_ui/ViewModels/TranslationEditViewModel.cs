@@ -12,7 +12,7 @@ namespace chldr_ui.ViewModels
         public TranslationDto? Translation { get; set; }
         #endregion
 
-        private TranslationDto CreateTranslationDto(ObjectId entryId, ObjectId translationId)
+        private TranslationDto CreateTranslationDto(string entryId, string translationId)
         {
             var entry = ContentStore.CachedSearchResult.Entries
                 .First(e => e.Id == entryId);

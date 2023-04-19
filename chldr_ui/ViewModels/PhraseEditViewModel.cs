@@ -27,7 +27,7 @@ namespace chldr_ui.ViewModels
             // Edit entry mode
             IsEditMode = true;
 
-            var existingPhrase = ContentStore.GetCachedPhraseById(new ObjectId(PhraseId));
+            var existingPhrase = ContentStore.GetCachedPhraseById(PhraseId);
             Phrase = new PhraseDto(existingPhrase);
 
             InitializeViewModel(Phrase);

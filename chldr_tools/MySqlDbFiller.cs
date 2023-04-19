@@ -33,10 +33,10 @@ namespace chldr_tools
             {
                 var sqlTranslation = new Translation()
                 {
-                    TranslationId = translation._id.ToString(),
-                    EntryId = translation.Entry._id.ToString(),
-                    UserId = translation.User._id.ToString(),
-                    LanguageId = translation.Language._id.ToString(),
+                    //TranslationId = translation._id.ToString(),
+                    //EntryId = translation.Entry._id.ToString(),
+                    //UserId = translation.User._id.ToString(),
+                    //LanguageId = translation.Language._id.ToString(),
                     CreatedAt = translation.CreatedAt.UtcDateTime,
                     UpdatedAt = translation.UpdatedAt.UtcDateTime,
                     Rate = translation.Rate,
@@ -56,8 +56,8 @@ namespace chldr_tools
             {
                 _context.Add(new Source()
                 {
-                    SourceId = source._id.ToString(),
-                    UserId = adminUser._id.ToString(),
+                    //SourceId = source._id.ToString(),
+                    //UserId = adminUser._id.ToString(),
                     CreatedAt = source.CreatedAt.UtcDateTime,
                     UpdatedAt = source.UpdatedAt.UtcDateTime,
                     Name = source.Name,
@@ -72,12 +72,12 @@ namespace chldr_tools
             foreach (var user in _realm.All<chldr_data.Entities.User>())
             {
                 _context.Add(
-                    new Models.User()
+                    new User()
                     {
-                        UserId = user._id.ToString(),
+                        //UserId = user._id.ToString(),
                         CreatedAt = user.CreatedAt.UtcDateTime,
-                        ModifiedAt = user.UpdatedAt.UtcDateTime,
-                        AccountStatus = (sbyte)user.Status,
+                        UpdatedAt = user.UpdatedAt.UtcDateTime,
+                        //AccountStatus = (sbyte)user.Status,
                         Email = user.Email,
                         FirstName = user.FirstName,
                         LastName = user.LastName,
@@ -96,13 +96,13 @@ namespace chldr_tools
 
             foreach (var language in languages)
             {
-                _context.Languages.Add(new Models.Language()
+                _context.Languages.Add(new Language()
                 {
-                    LanguageId = language._id.ToString(),
+                    //LanguageId = language._id.ToString(),
                     CreatedAt = language.CreatedAt.UtcDateTime,
                     UpdatedAt = language.UpdatedAt.UtcDateTime,
                     Name = language.Name,
-                    UserId = adminUser._id.ToString(),
+                    //UserId = adminUser._id.ToString(),
                     Code = language.Code,
                 });
             }
@@ -114,13 +114,13 @@ namespace chldr_tools
             {
                 var sqlEntry = new Entry()
                 {
-                    EntryId = entry._id.ToString(),
-                    UserId = entry.User._id.ToString(),
+                //    EntryId = entry._id.ToString(),
+                //    UserId = entry.User._id.ToString(),
                     CreatedAt = entry.CreatedAt.UtcDateTime,
                     UpdatedAt = entry.UpdatedAt.UtcDateTime,
                     Rate = entry.Rate,
                     RawContents = entry.RawContents,
-                    SourceId = entry.Source._id.ToString(),
+                    //SourceId = entry.Source._id.ToString(),
                     Type = entry.Type,
                 };
                 _context.Entries.Add(sqlEntry);
@@ -130,11 +130,11 @@ namespace chldr_tools
                     case EntryType.Word:
                         var word = new Word()
                         {
-                            EntryId = entry._id.ToString(),
-                            WordId = entry.Word._id.ToString(),
-                            Content = entry.Word.Content,
-                            Notes = entry.Word.Notes,
-                            PartOfSpeech = entry.Word.PartOfSpeech,
+                            //EntryId = entry._id.ToString(),
+                            //WordId = entry.Word._id.ToString(),
+                            //Content = entry.Word.Content,
+                            //Notes = entry.Word.Notes,
+                            //PartOfSpeech = entry.Word.PartOfSpeech,
                         };
                         _context.Words.Add(word);
 
@@ -142,10 +142,10 @@ namespace chldr_tools
                     case EntryType.Phrase:
                         var phrase = new Phrase()
                         {
-                            EntryId = entry._id.ToString(),
-                            PhraseId = entry.Phrase._id.ToString(),
-                            Content = entry.Phrase.Content,
-                            Notes = entry.Phrase.Notes,
+                            //EntryId = entry._id.ToString(),
+                            //PhraseId = entry.Phrase._id.ToString(),
+                            //Content = entry.Phrase.Content,
+                            //Notes = entry.Phrase.Notes,
                         };
                         _context.Phrases.Add(phrase);
 
@@ -153,9 +153,9 @@ namespace chldr_tools
                     case EntryType.Text:
                         var text = new Text()
                         {
-                            EntryId = entry._id.ToString(),
-                            TextId = entry.Text._id.ToString(),
-                            Content = entry.Text.Content,
+                            //EntryId = entry._id.ToString(),
+                            //TextId = entry.Text._id.ToString(),
+                            //Content = entry.Text.Content,
                         };
                         _context.Texts.Add(text);
 

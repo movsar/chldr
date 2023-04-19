@@ -10,11 +10,11 @@ namespace chldr_data.Models
         public string? Notes { get; }
         public PhraseModel(Entry entry) : base(entry)
         {
-            var phrase = entry.Phrase;
+            //var phrase = entry.Phrase;
 
-            PhraseId = phrase._id;
-            Content = phrase.Content;
-            Notes = phrase.Notes;
+            //PhraseId = phrase._id;
+            //Content = phrase.Content;
+            //Notes = phrase.Notes;
         }
     }
 }

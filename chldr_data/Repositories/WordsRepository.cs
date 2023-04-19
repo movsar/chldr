@@ -54,7 +54,7 @@ namespace chldr_data.Repositories
             };
 
             entry.Type = (int)EntryType.Word;
-            entry.Word = word;
+            //entry.Word = word;
 
             foreach (var translationDto in newWord.Translations)
             {

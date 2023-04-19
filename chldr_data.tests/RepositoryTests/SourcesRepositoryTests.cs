@@ -18,7 +18,7 @@ namespace chldr_data.tests.RepositoryTests
             var insertedSourceId = SourcesRepository.Insert(sourceDto);
 
             // Check
-            Assert.NotEqual(ObjectId.Empty, insertedSourceId);
+            Assert.NotEqual(string.Empty, insertedSourceId);
         }
 
         [Fact]

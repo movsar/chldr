@@ -21,7 +21,7 @@ namespace chldr_ui.ViewModels
 
         public void Save()
         {
-            var wordId = new ObjectId(this.wordId);
+            var wordId = this.wordId;
 
             if (Word == null)
             {
@@ -43,7 +43,7 @@ namespace chldr_ui.ViewModels
                 return;
             }
 
-            var wordId = new ObjectId(this.wordId);
+            var wordId = this.wordId;
 
             // Get current word from cached results
             var existingWord = ContentStore.CachedSearchResult.Entries
