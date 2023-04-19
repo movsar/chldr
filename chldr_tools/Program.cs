@@ -1,7 +1,7 @@
-﻿using chldr_data.Entities;
-using chldr_data.Services;
+﻿using chldr_data.Services;
 using chldr_utils.Services;
 using chldr_utils;
+using chldr_tools.Services;
 
 namespace chldr_tools
 {
@@ -24,9 +24,8 @@ namespace chldr_tools
             var realmService = new OfflineRealmService(_fileService, _exceptionHandler);
             realmService.Initialize();
 
-            var chldrContext = new SqlContext();
-            var g = chldrContext.Entries.First();
-
+            DatabaseOperations databaseOperations = new DatabaseOperations();
+            databaseOperations.CopySqlToRealm();
             //var dbFiller = new MySqlDbFiller(realmService);
             //dbFiller.Run();
         }

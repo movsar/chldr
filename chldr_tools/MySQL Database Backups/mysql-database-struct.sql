@@ -195,7 +195,6 @@ CREATE TABLE `source` (
   `notes` varchar(500) DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `sourcecol` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`source_id`),
   KEY `fk_source_user_id` (`user_id`),
   CONSTRAINT `fk_source_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
@@ -301,4 +300,4 @@ CREATE TABLE `word` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-19 16:01:29
+-- Dump completed on 2023-04-19 19:25:22

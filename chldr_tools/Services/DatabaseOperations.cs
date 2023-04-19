@@ -5,6 +5,7 @@ using chldr_data.Interfaces;
 using chldr_data.Services;
 using chldr_utils;
 using chldr_utils.Services;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using Realms;
 using Realms.Sync;
@@ -77,87 +78,137 @@ namespace chldr_tools.Services
 
         //    return Realm.GetInstance(encryptedConfig);
         //}
-        //private void CopyEntriesByChunks(IEnumerable<Entities.Entry> entries)
-        //{
-        //    _syncedRealm.Write(() =>
-        //    {
-        //        foreach (var entry in entries)
-        //        {
-        //            var newEntry = new Entities.Entry()
-        //            {
-        //                _id = entry._id,
-        //                UpdatedAt = entry.UpdatedAt,
-        //                Rate = entry.Rate,
-        //                RawContents = entry.RawContents,
-        //                Source = _syncedRealm.All<Source>().FirstOrDefault(s => s.Name == entry.Source.Name),
-        //                Type = entry.Type,
-        //                User = _syncedRealm.All<User>().FirstOrDefault(u => u.Email == entry.User.Email),
-        //            };
+        public void CopySqlToRealm()
+        {
+            var sqlContext = new SqlContext();
+            var realmContext = Realm.GetInstance();
 
-        //            foreach (var translation in entry.Translations)
-        //            {
-        //                var newTranslation = new Translation()
-        //                {
-        //                    _id = translation._id,
-        //                    UpdatedAt = translation.UpdatedAt,
-        //                    Content = translation.Content,
-        //                    Notes = translation.Notes,
-        //                    Rate = translation.Rate,
-        //                    RawContents = translation.RawContents,
-        //                    Entry = newEntry,
-        //                    Language = _syncedRealm.All<Language>().FirstOrDefault(l => l.Code == translation.Language.Code),
-        //                    User = _syncedRealm.All<User>().FirstOrDefault(u => u.Email == translation.User.Email),
-        //                };
+            realmContext.Write(() =>
+        {
+            var languages = sqlContext.Languages;
+            foreach (var language in languages)
+            {
+                realmContext.Add(new Language()
+                {
+                    LanguageId = language.LanguageId,
+                    Code = language.Code,
+                    CreatedAt = language.CreatedAt,
+                    Name = language.Name,
+                    UpdatedAt = language.UpdatedAt,
+                    UserId = language.UserId
+                });
+            }
 
-        //                newEntry.Translations.Add(newTranslation);
-        //            }
+            var sources = sqlContext.Sources;
+            foreach (var item in sources)
+            {
+                realmContext.Add(new Source()
+                {
+                    SourceId = item.SourceId,
+                    CreatedAt = item.CreatedAt,
+                    UpdatedAt = item.UpdatedAt,
+                    UserId = item.UserId,
+                    Name = item.Name,
+                    Notes = item.Notes,
+                });
+            }
 
-        //            switch ((EntryType)entry.Type)
-        //            {
-        //                case EntryType.Word:
-        //                    var word = new Word()
-        //                    {
-        //                        _id = entry.Word._id,
-        //                        UpdatedAt = entry.Word.UpdatedAt,
-        //                        Entry = newEntry,
-        //                        Content = entry.Word.Content,
-        //                        //GrammaticalClass = entry.Word.GrammaticalClass,
-        //                        Notes = entry.Word.Notes,
-        //                        PartOfSpeech = entry.Word.PartOfSpeech,
-        //                    };
+            var users = sqlContext.Users;
+            foreach (var item in users)
+            {
+                realmContext.Add(new User()
+                {
+                    UserId = item.UserId,
+                    AccountStatus = item.AccountStatus,
+                    Activities = item.Activities,
+                    CreatedAt = item.CreatedAt,
+                    ImagePath = item.ImagePath,
+                    IsModerator = item.IsModerator,
+                    LastName = item.LastName,
+                    Password = item.Password,
+                    Patronymic = item.Patronymic,
+                    Rate = item.Rate,
+                    Email = item.Email,
+                    FirstName = item.FirstName,
+                    UpdatedAt = item.UpdatedAt,
+                });
+            }
 
-        //                    newEntry.Word = word;
-        //                    break;
+            foreach (var entry in sqlContext.Entries
+                .Include(e => e.Word)
+                .Include(e => e.Phrase)
+                .Include(e => e.Text)
+                .Include(e => e.Translations))
+            {
 
-        //                case EntryType.Phrase:
-        //                    var phrase = new Phrase()
-        //                    {
-        //                        _id = entry.Phrase._id,
-        //                        UpdatedAt = entry.Phrase.UpdatedAt,
-        //                        Entry = newEntry,
-        //                        Content = entry.Phrase.Content,
-        //                        Notes = entry.Phrase.Content
-        //                    };
+                var newEntry = new Entry()
+                {
+                    EntryId = entry.EntryId,
+                    SourceId = entry.SourceId,
+                    UserId = entry.UserId,
+                    Rate = entry.Rate,
+                    RawContents = entry.RawContents,
+                    Type = entry.Type,
+                    CreatedAt = entry.CreatedAt,
+                    UpdatedAt = entry.UpdatedAt,
+                };
+                realmContext.Add(newEntry);
 
-        //                    newEntry.Phrase = phrase;
-        //                    break;
+                foreach (var translation in entry.Translations)
+                {
+                    var newTranslation = new Translation()
+                    {
+                        TranslationId = translation.TranslationId,
+                        LanguageId = translation.LanguageId,
+                        EntryId = entry.EntryId,
+                        Content = translation.Content,
+                        RawContents = translation.RawContents,
+                        Notes = translation.Notes,
+                        Rate = translation.Rate,
+                        CreatedAt = entry.CreatedAt,
+                        UpdatedAt = entry.UpdatedAt,
+                    };
 
-        //                default:
-        //                    break;
-        //            }
+                    realmContext.Add(newTranslation);
+                    newEntry.Translations.Add(newTranslation);
+                }
 
-        //            try
-        //            {
-        //                _syncedRealm.Add(newEntry);
-        //            }
-        //            catch (Exception)
-        //            {
-        //                continue;
-        //            }
-        //        }
+                switch ((EntryType)entry.Type)
+                {
+                    case EntryType.Word:
+                        var word = new Word()
+                        {
+                            WordId = entry.Word.WordId,
+                            EntryId = newEntry.EntryId,
+                            Content = entry.Word.Content,
+                            Notes = entry.Word.Notes,
+                            PartOfSpeech = entry.Word.PartOfSpeech,
+                        };
 
-        //    });
-        //}
+                        realmContext.Add(word);
+                        newEntry.Word = word;
+                        break;
+
+                    case EntryType.Phrase:
+                        var phrase = new Phrase()
+                        {
+                            PhraseId = entry.Phrase.PhraseId,
+                            EntryId = newEntry.EntryId,
+                            Content = entry.Phrase.Content,
+                            Notes = entry.Phrase.Notes
+                        };
+
+                        realmContext.Add(phrase);
+                        newEntry.Phrase = phrase;
+                        break;
+
+                    default:
+                        break;
+                }
+
+            }
+        });
+        }
 
         //private async Task CopyFromLocalToSyncedRealm(int limit = 9999999)
         //{

@@ -56,6 +56,8 @@ namespace chldr_data.Services
             };
 
             _config = encryptedConfig;
+            var realm = GetDatabase();
+            realm.WriteCopy(new RealmConfiguration("da.realm"));
         }
 
         public void Initialize()
