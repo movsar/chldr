@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
 [MapTo("Query")]
-public class RealmQuery : RealmObject, IEntity
+internal class RealmQuery : RealmObject, IEntity
 {
     [PrimaryKey]
     public string QueryId { get; set; } =  Guid.NewGuid().ToString();

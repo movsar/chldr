@@ -4,7 +4,7 @@ using Realms;
 namespace chldr_data.Entities;
 
 [MapTo("Text")]
-public  class RealmText : RealmObject, IEntity
+internal class RealmText : RealmObject, IEntity
 {
     [PrimaryKey]
     public string TextId { get; set; } = Guid.NewGuid().ToString();

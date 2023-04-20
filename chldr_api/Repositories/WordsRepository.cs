@@ -1,10 +1,5 @@
-﻿using chldr_data.Dto;
-using chldr_data.Entities;
-using chldr_data.Enums;
-using chldr_data.Interfaces;
-using chldr_data.Models;
+﻿
 using chldr_data.Models.Words;
-using MongoDB.Bson;
 
 namespace chldr_data.Repositories
 {

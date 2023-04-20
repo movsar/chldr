@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace chldr_data.Entities;
 [MapTo("Source")]
-public class RealmSource : RealmObject, IEntity
+internal class RealmSource : RealmObject, IEntity
 {
     [PrimaryKey]
     public string SourceId { get; set; } = Guid.NewGuid().ToString();

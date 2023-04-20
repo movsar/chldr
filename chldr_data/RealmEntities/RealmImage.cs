@@ -3,7 +3,7 @@ using Realms;
 
 namespace chldr_data.Entities;
 [MapTo("Image")]
-public class RealmImage : RealmObject, IEntity
+internal class RealmImage : RealmObject, IEntity
 {
     [PrimaryKey]
     public string ImageId { get; set; } = Guid.NewGuid().ToString();
