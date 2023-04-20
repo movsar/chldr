@@ -10,7 +10,7 @@ namespace chldr_data.Models.Entries
 {
     public class ParticleModel : WordModel
     {
-        public ParticleModel(SqlEntry entry) : base(entry)
+        public ParticleModel(Entry entry) : base(entry)
         {
         }
     }

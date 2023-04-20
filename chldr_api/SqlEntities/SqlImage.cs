@@ -1,14 +1,9 @@
-﻿using chldr_data.Interfaces;
-using Realms;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
 [Table("Image")]
-public partial class SqlImage : RealmObject, IEntity
+public partial class SqlImage
 {
-    [Realms.PrimaryKey]
     public string ImageId { get; set; } = Guid.NewGuid().ToString();
     public string? UserId { get; set; }
     public string EntryId { get; set; } = null!;
@@ -16,6 +11,6 @@ public partial class SqlImage : RealmObject, IEntity
     public int Rate { get; set; }
     public DateTimeOffset? CreatedAt { get; set; } 
     public DateTimeOffset? UpdatedAt { get; set; }
-    [Ignored] public virtual SqlEntry Entry { get; set; } = null!;
-    [Ignored] public virtual SqlUser? User { get; set; }
+    public virtual SqlEntry Entry { get; set; } = null!;
+    public virtual SqlUser? User { get; set; }
 }

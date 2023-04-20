@@ -14,7 +14,7 @@ namespace chldr_data.Repositories
 
         public WordModel GetById(string entityId)
         {
-            var word = Database.All<SqlWord>().FirstOrDefault(w => w.WordId == entityId);
+            var word = Database.All<Word>().FirstOrDefault(w => w.WordId == entityId);
             if (word == null)
             {
                 throw new Exception("There is no such word in the database");
@@ -25,7 +25,7 @@ namespace chldr_data.Repositories
 
         public List<WordModel> GetRandomWords(int limit)
         {
-            var words = Database.All<SqlWord>().AsEnumerable().Take(limit);
+            var words = Database.All<Word>().AsEnumerable().Take(limit);
             return words.Select(w => new WordModel(w.Entry)).ToList();
         }
 
@@ -36,17 +36,17 @@ namespace chldr_data.Repositories
                 throw new InvalidOperationException();
             }
 
-            var source = Database.Find<SqlSource>(new ObjectId(newWord.SourceId));
+            var source = Database.Find<Source>(new ObjectId(newWord.SourceId));
 
             // Initialize an entry object
-            var entry = new SqlEntry()
+            var entry = new Entry()
             {
                 Rate = Convert.ToInt32(newWord.Rate),
                 Source = source,
             };
 
             // Insert data
-            var word = new SqlWord()
+            var word = new Word()
             {
                 Entry = entry,
                 Content = newWord.Content,
@@ -58,13 +58,13 @@ namespace chldr_data.Repositories
 
             foreach (var translationDto in newWord.Translations)
             {
-                var language = Database.All<SqlLanguage>().FirstOrDefault(t => t.Code == translationDto.LanguageCode);
+                var language = Database.All<Language>().FirstOrDefault(t => t.Code == translationDto.LanguageCode);
                 if (language == null)
                 {
                     throw new Exception("Language cannot be empty");
                 }
 
-                entry.Translations.Add(new SqlTranslation()
+                entry.Translations.Add(new Translation()
                 {
                     Entry = entry,
                     Language = language,
@@ -83,7 +83,7 @@ namespace chldr_data.Repositories
 
         public void Update(UserModel user, WordDto wordDto)
         {
-            var word = Database.Find<SqlWord>(new ObjectId(wordDto.WordId));
+            var word = Database.Find<Word>(new ObjectId(wordDto.WordId));
             Database.Write(() =>
             {
                 word.Entry.Rate = user.GetRateRange().Lower;
@@ -91,13 +91,13 @@ namespace chldr_data.Repositories
                 foreach (var translationDto in wordDto.Translations)
                 {
                     var translationId = new ObjectId(translationDto.TranslationId);
-                    SqlTranslation translation = Database.Find<SqlTranslation>(translationId);
+                    Translation translation = Database.Find<Translation>(translationId);
                     if (translation == null)
                     {
-                        translation = new SqlTranslation()
+                        translation = new Translation()
                         {
                             Entry = word.Entry,
-                            Language = Database.All<SqlLanguage>().First(l => l.Code == translationDto.LanguageCode),
+                            Language = Database.All<Language>().First(l => l.Code == translationDto.LanguageCode),
                         };
                     }
                     translation.Rate = user.GetRateRange().Lower;

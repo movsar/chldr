@@ -10,7 +10,7 @@ namespace chldr_data.Models.Entries
 {
     public class ConjunctionModel : WordModel
     {
-        public ConjunctionModel(SqlEntry entry) : base(entry)
+        public ConjunctionModel(Entry entry) : base(entry)
         {
         }
     }

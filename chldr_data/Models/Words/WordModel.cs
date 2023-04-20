@@ -9,7 +9,7 @@ namespace chldr_data.Models.Words
 
     public class WordModel : EntryModel
     {
-        public WordModel(SqlEntry entry) : base(entry)
+        public WordModel(Entry entry) : base(entry)
         {
             var word = entry.Word;
 

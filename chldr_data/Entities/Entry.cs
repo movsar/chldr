@@ -1,6 +1,5 @@
 ﻿using chldr_data.Interfaces;
 using Realms;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
 public  class Entry : RealmObject, IEntity
@@ -17,7 +16,7 @@ public  class Entry : RealmObject, IEntity
     public Word? Word { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
-    IList<Image> Images { get; set; } = new List<Image>();
-    IList<Sound> Sounds { get; set; } = new List<Sound>();
-    IList<Translation> Translations { get; set; } = new List<Translation>();
+    public IList<Image> Images { get; } = new List<Image>();
+    public IList<Sound> Sounds { get; } = new List<Sound>();
+    public IList<Translation> Translations { get; } = new List<Translation>();
 }

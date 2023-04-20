@@ -15,7 +15,7 @@ using System.Security.Cryptography;
 using static Realms.Sync.MongoClient;
 using Entities = chldr_data.Entities;
 using Entry = chldr_data.Entities.SqlEntry;
-using User = chldr_data.Entities.SqlUser;
+using User = chldr_data.Entities.User;
 
 namespace chldr_tools.Services
 {

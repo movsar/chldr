@@ -13,5 +13,5 @@ public  class Language : RealmObject, IEntity
     public string Code { get; set; } = null!;
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
-    public IList<Translation> Translations { get; set; } = new List<Translation>();
+    public IList<Translation> Translations { get; } = new List<Translation>();
 }

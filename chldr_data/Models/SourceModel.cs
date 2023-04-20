@@ -7,7 +7,7 @@ namespace chldr_data.Models
         public string Name { get; }
         public string Notes { get; }
 
-        public SourceModel(SqlSource source) : base(source)
+        public SourceModel(Source source) : base(source)
         {
             Name = source.Name;
             Notes = source.Notes;

@@ -3,7 +3,7 @@ using chldr_data.Enums;
 using chldr_data.Services;
 using chldr_data.Entities;
 using Realms;
-using SqlUser = chldr_data.Entities.SqlUser;
+using User = chldr_data.Entities.User;
 
 namespace chldr_tools
 {
@@ -50,7 +50,7 @@ namespace chldr_tools
         }
         private void InsertSources()
         {
-            var adminUser = _realm.All<chldr_data.Entities.SqlUser>().First();
+            var adminUser = _realm.All<chldr_data.Entities.User>().First();
 
             foreach (var source in _realm.All<SqlSource>())
             {
@@ -69,7 +69,7 @@ namespace chldr_tools
         }
         private void InsertUsers()
         {
-            foreach (var user in _realm.All<chldr_data.Entities.SqlUser>())
+            foreach (var user in _realm.All<chldr_data.Entities.User>())
             {
                 _context.Add(
                     new User()
@@ -92,7 +92,7 @@ namespace chldr_tools
         internal void InsertLanguages()
         {
             var languages = _realm.All<SqlLanguage>();
-            var adminUser = _realm.All<SqlUser>().First();
+            var adminUser = _realm.All<User>().First();
 
             foreach (var language in languages)
             {

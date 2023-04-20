@@ -8,7 +8,7 @@ namespace chldr_data.Models
         public string PhraseId { get; }
         public override string Content { get; }
         public string? Notes { get; }
-        public PhraseModel(SqlEntry entry) : base(entry)
+        public PhraseModel(Entry entry) : base(entry)
         {
             //var phrase = entry.Phrase;
 

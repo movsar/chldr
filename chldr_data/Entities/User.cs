@@ -15,14 +15,14 @@ public  class User : RealmObject, IEntity
     public string? Patronymic { get; set; }
     public byte? IsModerator { get; set; }
     public byte? AccountStatus { get; set; }
-    public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
-    public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
-    public IList<Activity> Activities { get; set; } = new List<Activity>();
-    public IList<Entry> Entries { get; set; } = new List<Entry>();
-    public IList<Image> Images { get; set; } = new List<Image>();
-    public IList<Language> Languages { get; set; } = new List<Language>();
-    public IList<Query> Queries { get; set; } = new List<Query>();
-    public IList<Sound> Sounds { get; set; } = new List<Sound>();
-    public IList<Source> Sources { get; set; } = new List<Source>();
-    public IList<Translation> Translations { get; set; } = new List<Translation>();
+    public DateTimeOffset CreatedAt { get; } = DateTime.Now;
+    public DateTimeOffset UpdatedAt { get; } = DateTime.Now;
+    public IList<Activity> Activities { get; } = new List<Activity>();
+    public IList<Entry> Entries { get; } = new List<Entry>();
+    public IList<Image> Images { get; } = new List<Image>();
+    public IList<Language> Languages { get; } = new List<Language>();
+    public IList<Query> Queries { get; } = new List<Query>();
+    public IList<Sound> Sounds { get; } = new List<Sound>();
+    public IList<Source> Sources { get; } = new List<Source>();
+    public IList<Translation> Translations { get; } = new List<Translation>();
 }

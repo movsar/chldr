@@ -7,7 +7,7 @@ namespace chldr_data.Models.Entries
 {
     public class NounModel : WordModel
     {
-        public NounModel(SqlEntry entry) : base(entry)
+        public NounModel(Entry entry) : base(entry)
         {
         }
 

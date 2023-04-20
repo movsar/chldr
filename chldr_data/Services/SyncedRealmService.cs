@@ -90,13 +90,13 @@ namespace chldr_data.Services
                 {
                     Debug.WriteLine($"APP: Realm : PopulateInitialSubscriptions");
 
-                    realm.Subscriptions.Add(realm.All<Entities.SqlEntry>());
-                    realm.Subscriptions.Add(realm.All<Entities.SqlLanguage>());
-                    realm.Subscriptions.Add(realm.All<Entities.SqlPhrase>());
-                    realm.Subscriptions.Add(realm.All<Entities.SqlSource>());
-                    realm.Subscriptions.Add(realm.All<Entities.SqlTranslation>());
-                    realm.Subscriptions.Add(realm.All<Entities.SqlUser>());
-                    realm.Subscriptions.Add(realm.All<Entities.SqlWord>());
+                    realm.Subscriptions.Add(realm.All<Entities.Entry>());
+                    realm.Subscriptions.Add(realm.All<Entities.Language>());
+                    realm.Subscriptions.Add(realm.All<Entities.Phrase>());
+                    realm.Subscriptions.Add(realm.All<Entities.Source>());
+                    realm.Subscriptions.Add(realm.All<Entities.Translation>());
+                    realm.Subscriptions.Add(realm.All<Entities.User>());
+                    realm.Subscriptions.Add(realm.All<Entities.Word>());
                 },
                 OnSessionError = (session, sessionException) =>
                 {
@@ -142,7 +142,7 @@ namespace chldr_data.Services
 
             InitializeConfiguration();
 
-            var language = GetDatabase().All<SqlLanguage>().FirstOrDefault();
+            var language = GetDatabase().All<Language>().FirstOrDefault();
             if (language == null)
             {
                 var synchTask = new Task(async () => await SynchronizeDatabase());

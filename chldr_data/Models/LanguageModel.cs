@@ -6,7 +6,7 @@ namespace chldr_data.Models
     {
         public string Code { get; } = string.Empty;
         public string Name { get; set; }
-        public LanguageModel(SqlLanguage languageEntity) : base(languageEntity)
+        public LanguageModel(Language languageEntity) : base(languageEntity)
         {
             Code = languageEntity.Code;
             Name = languageEntity.Name ?? string.Empty;

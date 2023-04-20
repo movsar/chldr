@@ -13,5 +13,5 @@ public class Source : RealmObject, IEntity
     public string? Notes { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
-    public  IList<Entry> Entries { get; set; } = new List<Entry>();
+    public  IList<Entry> Entries { get; } = new List<Entry>();
 }

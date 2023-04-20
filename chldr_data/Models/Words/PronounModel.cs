@@ -5,7 +5,7 @@ namespace chldr_data.Models.Entries
 {
     public class PronounModel : WordModel
     {
-        public PronounModel(SqlEntry entry) : base(entry)
+        public PronounModel(Entry entry) : base(entry)
         {
         }
 

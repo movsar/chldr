@@ -10,15 +10,15 @@ namespace chldr_data.Repositories
     {
         public SourcesRepository(IDataAccess dataAccess) : base(dataAccess) { }
 
-        public List<SqlSource> GetUnverifiedSources()
+        public List<Source> GetUnverifiedSources()
         {
-            var sources = Database.All<SqlSource>().Where(s => s.Notes == "Imported from legacy database" || s.Name == "User");
+            var sources = Database.All<Source>().Where(s => s.Notes == "Imported from legacy database" || s.Name == "User");
             return sources.ToList();
         }
 
         public List<SourceModel> GetAllNamedSources()
         {
-            return Database.All<SqlSource>().AsEnumerable().Select(s => new SourceModel(s)).ToList();
+            return Database.All<Source>().AsEnumerable().Select(s => new SourceModel(s)).ToList();
         }
 
         public string Insert(SourceDto sourceDto)
@@ -28,7 +28,7 @@ namespace chldr_data.Repositories
                 throw new InvalidOperationException();
             }
 
-            var source = new SqlSource()
+            var source = new Source()
             {
                 Name = sourceDto.Name,
                 Notes = sourceDto.Notes

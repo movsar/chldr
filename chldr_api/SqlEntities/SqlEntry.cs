@@ -1,12 +1,9 @@
-﻿using chldr_data.Interfaces;
-using Realms;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
 [Table("Entry")]
-public partial class SqlEntry : RealmObject, IEntity
+public partial class SqlEntry
 {
-    [PrimaryKey]
     public string EntryId { get; set; } = Guid.NewGuid().ToString();
     public string UserId { get; set; } = null!;
     public string SourceId { get; set; } = null!;
@@ -15,13 +12,13 @@ public partial class SqlEntry : RealmObject, IEntity
     public string? RawContents { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
-    [Ignored] public virtual ICollection<SqlImage> Images { get; set; } = new List<SqlImage>();
-    [Ignored] public virtual ICollection<SqlSound> Sounds { get; set; } = new List<SqlSound>();
-    [Ignored] public virtual SqlSource Source { get; set; } = null!;
-    [Ignored] public virtual ICollection<SqlTranslation> Translations { get; set; } = new List<SqlTranslation>();
-    [Ignored] public virtual SqlUser User { get; set; } = null!;
-    [Ignored] public virtual SqlText? Text { get; set; }
-    [Ignored] public virtual SqlPhrase? Phrase { get; set; }
-    [Ignored] public virtual SqlWord? Word { get; set; }
+    public virtual ICollection<SqlImage> Images { get; set; } = new List<SqlImage>();
+    public virtual ICollection<SqlSound> Sounds { get; set; } = new List<SqlSound>();
+    public virtual SqlSource Source { get; set; } = null!;
+    public virtual ICollection<SqlTranslation> Translations { get; set; } = new List<SqlTranslation>();
+    public virtual SqlUser User { get; set; } = null!;
+    public virtual SqlText? Text { get; set; }
+    public virtual SqlPhrase? Phrase { get; set; }
+    public virtual SqlWord? Word { get; set; }
 
 }
