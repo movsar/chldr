@@ -24,7 +24,8 @@ namespace chldr_tools
             var realmService = new OfflineRealmService(_fileService, _exceptionHandler);
             realmService.Initialize();
 
-            //var databaseOperations = new DatabaseOperations();
+            var databaseOperations = new DatabaseOperations();
+            databaseOperations.CopySqlToRealm();
         }
     }
 }

@@ -29,7 +29,7 @@ namespace chldr_tools
 
         private void InsertTranslations()
         {
-            foreach (var translation in _realm.All<SqlTranslation>())
+            foreach (var translation in _realm.All<Translation>())
             {
                 var sqlTranslation = new SqlTranslation()
                 {
@@ -52,7 +52,7 @@ namespace chldr_tools
         {
             var adminUser = _realm.All<chldr_data.Entities.User>().First();
 
-            foreach (var source in _realm.All<SqlSource>())
+            foreach (var source in _realm.All<Source>())
             {
                 _context.Add(new SqlSource()
                 {
@@ -69,14 +69,12 @@ namespace chldr_tools
         }
         private void InsertUsers()
         {
-            foreach (var user in _realm.All<chldr_data.Entities.User>())
+            foreach (var user in _realm.All<User>())
             {
                 _context.Add(
                     new User()
                     {
                         //UserId = user._id.ToString(),
-                        CreatedAt = user.CreatedAt.UtcDateTime,
-                        UpdatedAt = user.UpdatedAt.UtcDateTime,
                         //AccountStatus = (sbyte)user.Status,
                         Email = user.Email,
                         FirstName = user.FirstName,
@@ -91,7 +89,7 @@ namespace chldr_tools
         }
         internal void InsertLanguages()
         {
-            var languages = _realm.All<SqlLanguage>();
+            var languages = _realm.All<Language>();
             var adminUser = _realm.All<User>().First();
 
             foreach (var language in languages)
@@ -110,7 +108,7 @@ namespace chldr_tools
         }
         internal void InsertEntries()
         {
-            foreach (var entry in _realm.All<SqlEntry>())
+            foreach (var entry in _realm.All<Entry>())
             {
                 var sqlEntry = new SqlEntry()
                 {

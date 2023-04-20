@@ -14,7 +14,7 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using static Realms.Sync.MongoClient;
 using Entities = chldr_data.Entities;
-using Entry = chldr_data.Entities.SqlEntry;
+using Entry = chldr_data.Entities.Entry;
 using User = chldr_data.Entities.User;
 
 namespace chldr_tools.Services
@@ -85,34 +85,6 @@ namespace chldr_tools.Services
 
             realmContext.Write(() =>
         {
-            var languages = sqlContext.Languages;
-            foreach (var language in languages)
-            {
-                realmContext.Add(new SqlLanguage()
-                {
-                    LanguageId = language.LanguageId,
-                    Code = language.Code,
-                    CreatedAt = language.CreatedAt,
-                    Name = language.Name,
-                    UpdatedAt = language.UpdatedAt,
-                    UserId = language.UserId
-                });
-            }
-
-            var sources = sqlContext.Sources;
-            foreach (var item in sources)
-            {
-                realmContext.Add(new SqlSource()
-                {
-                    SourceId = item.SourceId,
-                    CreatedAt = item.CreatedAt,
-                    UpdatedAt = item.UpdatedAt,
-                    UserId = item.UserId,
-                    Name = item.Name,
-                    Notes = item.Notes,
-                });
-            }
-
             var users = sqlContext.Users;
             foreach (var item in users)
             {
@@ -120,8 +92,6 @@ namespace chldr_tools.Services
                 {
                     UserId = item.UserId,
                     AccountStatus = item.AccountStatus,
-                    Activities = item.Activities,
-                    CreatedAt = item.CreatedAt,
                     ImagePath = item.ImagePath,
                     IsModerator = item.IsModerator,
                     LastName = item.LastName,
@@ -130,9 +100,38 @@ namespace chldr_tools.Services
                     Rate = item.Rate,
                     Email = item.Email,
                     FirstName = item.FirstName,
-                    UpdatedAt = item.UpdatedAt,
                 });
             }
+
+            var languages = sqlContext.Languages;
+            foreach (var language in languages)
+            {
+                realmContext.Add(new Language()
+                {
+                    LanguageId = language.LanguageId,
+                    Code = language.Code,
+                    CreatedAt = language.CreatedAt,
+                    Name = language.Name,
+                    UpdatedAt = language.UpdatedAt,
+                    User = realmContext.Find<User>(language.UserId)
+                });
+            }
+
+            var sources = sqlContext.Sources;
+            foreach (var item in sources)
+            {
+                realmContext.Add(new Source()
+                {
+                    SourceId = item.SourceId,
+                    CreatedAt = item.CreatedAt,
+                    UpdatedAt = item.UpdatedAt,
+                    User = realmContext.Find<User>(item.UserId),
+                    Name = item.Name,
+                    Notes = item.Notes,
+                });
+            }
+
+
 
             foreach (var entry in sqlContext.Entries
                 .Include(e => e.Word)
@@ -140,12 +139,11 @@ namespace chldr_tools.Services
                 .Include(e => e.Text)
                 .Include(e => e.Translations))
             {
-
                 var newEntry = new Entry()
                 {
                     EntryId = entry.EntryId,
-                    SourceId = entry.SourceId,
-                    UserId = entry.UserId,
+                    Source = realmContext.Find<Source>(entry.SourceId),
+                    User = realmContext.Find<User>(entry.UserId),
                     Rate = entry.Rate,
                     RawContents = entry.RawContents,
                     Type = entry.Type,
@@ -156,12 +154,12 @@ namespace chldr_tools.Services
 
                 foreach (var translation in entry.Translations)
                 {
-                    var newTranslation = new SqlTranslation()
+                    var newTranslation = new Translation()
                     {
                         TranslationId = translation.TranslationId,
-                        LanguageId = translation.LanguageId,
-                        EntryId = entry.EntryId,
-                        UserId= translation.UserId,
+                        Entry = realmContext.Find<Entry>(translation.EntryId),
+                        Language = realmContext.Find<Language>(translation.LanguageId),
+                        User = realmContext.Find<User>(translation.UserId),
                         Content = translation.Content,
                         RawContents = translation.RawContents,
                         Notes = translation.Notes,
@@ -177,10 +175,10 @@ namespace chldr_tools.Services
                 switch ((EntryType)entry.Type)
                 {
                     case EntryType.Word:
-                        var word = new SqlWord()
+                        var word = new Word()
                         {
                             WordId = entry.Word.WordId,
-                            EntryId = newEntry.EntryId,
+                            Entry = realmContext.Find<Entry>(entry.Word.EntryId),
                             Content = entry.Word.Content,
                             Notes = entry.Word.Notes,
                             PartOfSpeech = entry.Word.PartOfSpeech,
@@ -191,10 +189,10 @@ namespace chldr_tools.Services
                         break;
 
                     case EntryType.Phrase:
-                        var phrase = new SqlPhrase()
+                        var phrase = new Phrase()
                         {
                             PhraseId = entry.Phrase.PhraseId,
-                            EntryId = newEntry.EntryId,
+                            Entry = realmContext.Find<Entry>(entry.Phrase.EntryId),
                             Content = entry.Phrase.Content,
                             Notes = entry.Phrase.Notes
                         };
