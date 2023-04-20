@@ -16,31 +16,31 @@ public partial class SqlContext : DbContext
     {
     }
 
-    public virtual DbSet<Activity> Activities { get; set; }
+    public virtual DbSet<SqlActivity> Activities { get; set; }
 
     public virtual DbSet<Efmigrationshistory> Efmigrationshistories { get; set; }
 
-    public virtual DbSet<Entry> Entries { get; set; }
+    public virtual DbSet<SqlEntry> Entries { get; set; }
 
-    public virtual DbSet<Image> Images { get; set; }
+    public virtual DbSet<SqlImage> Images { get; set; }
 
-    public virtual DbSet<Language> Languages { get; set; }
+    public virtual DbSet<SqlLanguage> Languages { get; set; }
 
-    public virtual DbSet<Phrase> Phrases { get; set; }
+    public virtual DbSet<SqlPhrase> Phrases { get; set; }
 
-    public virtual DbSet<Query> Queries { get; set; }
+    public virtual DbSet<SqlQuery> Queries { get; set; }
 
-    public virtual DbSet<Sound> Sounds { get; set; }
+    public virtual DbSet<SqlSound> Sounds { get; set; }
 
-    public virtual DbSet<Source> Sources { get; set; }
+    public virtual DbSet<SqlSource> Sources { get; set; }
 
-    public virtual DbSet<Text> Texts { get; set; }
+    public virtual DbSet<SqlText> Texts { get; set; }
 
-    public virtual DbSet<Translation> Translations { get; set; }
+    public virtual DbSet<SqlTranslation> Translations { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<SqlUser> Users { get; set; }
 
-    public virtual DbSet<Word> Words { get; set; }
+    public virtual DbSet<SqlWord> Words { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -48,7 +48,7 @@ public partial class SqlContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Activity>(entity =>
+        modelBuilder.Entity<SqlActivity>(entity =>
         {
             entity.HasKey(e => e.ActivityId).HasName("PRIMARY");
 
@@ -103,7 +103,7 @@ public partial class SqlContext : DbContext
             entity.Property(e => e.ProductVersion).HasMaxLength(32);
         });
 
-        modelBuilder.Entity<Entry>(entity =>
+        modelBuilder.Entity<SqlEntry>(entity =>
         {
             entity.HasKey(e => e.EntryId).HasName("PRIMARY");
 
@@ -147,7 +147,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_entry_user_id");
         });
 
-        modelBuilder.Entity<Image>(entity =>
+        modelBuilder.Entity<SqlImage>(entity =>
         {
             entity.HasKey(e => e.ImageId).HasName("PRIMARY");
 
@@ -189,7 +189,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_image_user_id");
         });
 
-        modelBuilder.Entity<Language>(entity =>
+        modelBuilder.Entity<SqlLanguage>(entity =>
         {
             entity.HasKey(e => e.LanguageId).HasName("PRIMARY");
 
@@ -223,7 +223,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_language_user_id");
         });
 
-        modelBuilder.Entity<Phrase>(entity =>
+        modelBuilder.Entity<SqlPhrase>(entity =>
         {
             entity.HasKey(e => e.PhraseId).HasName("PRIMARY");
 
@@ -245,12 +245,12 @@ public partial class SqlContext : DbContext
                 .HasColumnName("notes");
 
             entity.HasOne(d => d.Entry).WithOne(p => p.Phrase)
-                .HasForeignKey<Phrase>(d => d.EntryId)
+                .HasForeignKey<SqlPhrase>(d => d.EntryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_phrase_user_id");
         });
 
-        modelBuilder.Entity<Query>(entity =>
+        modelBuilder.Entity<SqlQuery>(entity =>
         {
             entity.HasKey(e => e.QueryId).HasName("PRIMARY");
 
@@ -282,7 +282,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_query_user_id");
         });
 
-        modelBuilder.Entity<Sound>(entity =>
+        modelBuilder.Entity<SqlSound>(entity =>
         {
             entity.HasKey(e => e.SoundId).HasName("PRIMARY");
 
@@ -324,7 +324,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_sound_user_id");
         });
 
-        modelBuilder.Entity<Source>(entity =>
+        modelBuilder.Entity<SqlSource>(entity =>
         {
             entity.HasKey(e => e.SourceId).HasName("PRIMARY");
 
@@ -358,7 +358,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_source_user_id");
         });
 
-        modelBuilder.Entity<Text>(entity =>
+        modelBuilder.Entity<SqlText>(entity =>
         {
             entity.HasKey(e => e.TextId).HasName("PRIMARY");
 
@@ -380,12 +380,12 @@ public partial class SqlContext : DbContext
                 .HasColumnName("notes");
 
             entity.HasOne(d => d.Entry).WithOne(p => p.Text)
-                .HasForeignKey<Text>(d => d.EntryId)
+                .HasForeignKey<SqlText>(d => d.EntryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_text_entry_id");
         });
 
-        modelBuilder.Entity<Translation>(entity =>
+        modelBuilder.Entity<SqlTranslation>(entity =>
         {
             entity.HasKey(e => e.TranslationId).HasName("PRIMARY");
 
@@ -444,7 +444,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_translation_user_id");
         });
 
-        modelBuilder.Entity<User>(entity =>
+        modelBuilder.Entity<SqlUser>(entity =>
         {
             entity.HasKey(e => e.UserId).HasName("PRIMARY");
 
@@ -483,7 +483,7 @@ public partial class SqlContext : DbContext
                 .HasColumnName("updated_at");
         });
 
-        modelBuilder.Entity<Word>(entity =>
+        modelBuilder.Entity<SqlWord>(entity =>
         {
             entity.HasKey(e => e.WordId).HasName("PRIMARY");
 
@@ -509,7 +509,7 @@ public partial class SqlContext : DbContext
             entity.Property(e => e.PartOfSpeech).HasColumnName("part_of_speech");
 
             entity.HasOne(d => d.Entry).WithOne(p => p.Word)
-                .HasForeignKey<Word>(d => d.EntryId)
+                .HasForeignKey<SqlWord>(d => d.EntryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_word_entry_id");
         });

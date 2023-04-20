@@ -7,7 +7,7 @@ namespace chldr_data.Models.Entries
     // Прилагательное
     public class AdjectiveModel : WordModel
     {
-        public AdjectiveModel(Entry entry) : base(entry)
+        public AdjectiveModel(SqlEntry entry) : base(entry)
         {
         }
 

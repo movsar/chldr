@@ -3,7 +3,7 @@ using chldr_data.Enums;
 using chldr_data.Services;
 using chldr_data.Entities;
 using Realms;
-using User = chldr_data.Entities.User;
+using SqlUser = chldr_data.Entities.SqlUser;
 
 namespace chldr_tools
 {
@@ -29,9 +29,9 @@ namespace chldr_tools
 
         private void InsertTranslations()
         {
-            foreach (var translation in _realm.All<Translation>())
+            foreach (var translation in _realm.All<SqlTranslation>())
             {
-                var sqlTranslation = new Translation()
+                var sqlTranslation = new SqlTranslation()
                 {
                     //TranslationId = translation._id.ToString(),
                     //EntryId = translation.Entry._id.ToString(),
@@ -50,11 +50,11 @@ namespace chldr_tools
         }
         private void InsertSources()
         {
-            var adminUser = _realm.All<chldr_data.Entities.User>().First();
+            var adminUser = _realm.All<chldr_data.Entities.SqlUser>().First();
 
-            foreach (var source in _realm.All<Source>())
+            foreach (var source in _realm.All<SqlSource>())
             {
-                _context.Add(new Source()
+                _context.Add(new SqlSource()
                 {
                     //SourceId = source._id.ToString(),
                     //UserId = adminUser._id.ToString(),
@@ -69,7 +69,7 @@ namespace chldr_tools
         }
         private void InsertUsers()
         {
-            foreach (var user in _realm.All<chldr_data.Entities.User>())
+            foreach (var user in _realm.All<chldr_data.Entities.SqlUser>())
             {
                 _context.Add(
                     new User()
@@ -91,12 +91,12 @@ namespace chldr_tools
         }
         internal void InsertLanguages()
         {
-            var languages = _realm.All<Language>();
-            var adminUser = _realm.All<User>().First();
+            var languages = _realm.All<SqlLanguage>();
+            var adminUser = _realm.All<SqlUser>().First();
 
             foreach (var language in languages)
             {
-                _context.Languages.Add(new Language()
+                _context.Languages.Add(new SqlLanguage()
                 {
                     //LanguageId = language._id.ToString(),
                     CreatedAt = language.CreatedAt.UtcDateTime,
@@ -110,9 +110,9 @@ namespace chldr_tools
         }
         internal void InsertEntries()
         {
-            foreach (var entry in _realm.All<Entry>())
+            foreach (var entry in _realm.All<SqlEntry>())
             {
-                var sqlEntry = new Entry()
+                var sqlEntry = new SqlEntry()
                 {
                 //    EntryId = entry._id.ToString(),
                 //    UserId = entry.User._id.ToString(),
@@ -128,7 +128,7 @@ namespace chldr_tools
                 switch ((EntryType)entry.Type)
                 {
                     case EntryType.Word:
-                        var word = new Word()
+                        var word = new SqlWord()
                         {
                             //EntryId = entry._id.ToString(),
                             //WordId = entry.Word._id.ToString(),
@@ -140,7 +140,7 @@ namespace chldr_tools
 
                         break;
                     case EntryType.Phrase:
-                        var phrase = new Phrase()
+                        var phrase = new SqlPhrase()
                         {
                             //EntryId = entry._id.ToString(),
                             //PhraseId = entry.Phrase._id.ToString(),
@@ -151,7 +151,7 @@ namespace chldr_tools
 
                         break;
                     case EntryType.Text:
-                        var text = new Text()
+                        var text = new SqlText()
                         {
                             //EntryId = entry._id.ToString(),
                             //TextId = entry.Text._id.ToString(),

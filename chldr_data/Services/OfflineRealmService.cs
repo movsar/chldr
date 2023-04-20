@@ -43,19 +43,21 @@ namespace chldr_data.Services
             var stringified = string.Join(":", key);
             return stringified;
         }
-
-        public void InitializeConfiguration()
+        private RealmConfiguration GetEncryptedCOnfig()
         {
             // Copy original file so that app will be able to access entries immediately
             byte[] encKey = AppConstants.EncKey.Split(":").Select(numAsString => Convert.ToByte(numAsString)).ToArray();
             var hexKey = BitConverter.ToString(encKey).Replace("-", "");
             var encryptedConfig = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
             {
-                SchemaVersion = 2,
                 EncryptionKey = encKey
             };
 
-            _config = encryptedConfig;
+            return encryptedConfig;
+        }
+        public void InitializeConfiguration()
+        {
+            _config = new RealmConfiguration(_fileService.OfflineDatabaseFilePath);
         }
 
         public void Initialize()
@@ -69,11 +71,11 @@ namespace chldr_data.Services
             var database = GetDatabase();
             database.Write(() =>
             {
-                database.RemoveAll<Entry>();
-                database.RemoveAll<Text>();
-                database.RemoveAll<Word>();
-                database.RemoveAll<Phrase>();
-                database.RemoveAll<Translation>();
+                database.RemoveAll<SqlEntry>();
+                database.RemoveAll<SqlText>();
+                database.RemoveAll<SqlWord>();
+                database.RemoveAll<SqlPhrase>();
+                database.RemoveAll<SqlTranslation>();
             });
         }
     }

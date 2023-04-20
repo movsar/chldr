@@ -14,8 +14,8 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using static Realms.Sync.MongoClient;
 using Entities = chldr_data.Entities;
-using Entry = chldr_data.Entities.Entry;
-using User = chldr_data.Entities.User;
+using Entry = chldr_data.Entities.SqlEntry;
+using User = chldr_data.Entities.SqlUser;
 
 namespace chldr_tools.Services
 {
@@ -88,7 +88,7 @@ namespace chldr_tools.Services
             var languages = sqlContext.Languages;
             foreach (var language in languages)
             {
-                realmContext.Add(new Language()
+                realmContext.Add(new SqlLanguage()
                 {
                     LanguageId = language.LanguageId,
                     Code = language.Code,
@@ -102,7 +102,7 @@ namespace chldr_tools.Services
             var sources = sqlContext.Sources;
             foreach (var item in sources)
             {
-                realmContext.Add(new Source()
+                realmContext.Add(new SqlSource()
                 {
                     SourceId = item.SourceId,
                     CreatedAt = item.CreatedAt,
@@ -156,7 +156,7 @@ namespace chldr_tools.Services
 
                 foreach (var translation in entry.Translations)
                 {
-                    var newTranslation = new Translation()
+                    var newTranslation = new SqlTranslation()
                     {
                         TranslationId = translation.TranslationId,
                         LanguageId = translation.LanguageId,
@@ -177,7 +177,7 @@ namespace chldr_tools.Services
                 switch ((EntryType)entry.Type)
                 {
                     case EntryType.Word:
-                        var word = new Word()
+                        var word = new SqlWord()
                         {
                             WordId = entry.Word.WordId,
                             EntryId = newEntry.EntryId,
@@ -191,7 +191,7 @@ namespace chldr_tools.Services
                         break;
 
                     case EntryType.Phrase:
-                        var phrase = new Phrase()
+                        var phrase = new SqlPhrase()
                         {
                             PhraseId = entry.Phrase.PhraseId,
                             EntryId = newEntry.EntryId,

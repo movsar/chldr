@@ -2,16 +2,20 @@
 using Realms;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
-public class Source : RealmObject, IEntity
+[Table("Source")]
+
+public partial class SqlSource : RealmObject, IEntity
 {
-    [PrimaryKey]
+    [Realms.PrimaryKey]
     public string SourceId { get; set; } = Guid.NewGuid().ToString();
-    public User? User { get; set; }
+    public string? UserId { get; set; }
     public string Name { get; set; } = null!;
     public string? Notes { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
-    public  IList<Entry> Entries { get; set; } = new List<Entry>();
+    [Ignored] public virtual ICollection<SqlEntry> Entries { get; set; } = new List<SqlEntry>();
+    [Ignored] public virtual SqlUser? User { get; set; }
 }

@@ -20,7 +20,7 @@ namespace chldr_data.Models
         public SourceModel Source { get; }
         public int Rate { get; }
         public int Type { get; }
-        public EntryModel(Entry entry) : base(entry)
+        public EntryModel(SqlEntry entry) : base(entry)
         {
             Rate = entry.Rate;
             Type = entry.Type;

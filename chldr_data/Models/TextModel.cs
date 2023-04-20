@@ -8,7 +8,7 @@ namespace chldr_data.Models
     {
         public ObjectId TextId { get; }
         public override string Content { get; }
-        public TextModel(Entry entry) : base(entry)
+        public TextModel(SqlEntry entry) : base(entry)
         {
             //var text = entry.Text;
 

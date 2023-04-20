@@ -9,10 +9,10 @@ namespace chldr_data.Repositories
     {
         public TranslationsRepository(IDataAccess dataAccess) : base(dataAccess) { }
 
-        internal void SetPropertiesFromDto(Translation translation, TranslationDto translationDto)
+        internal void SetPropertiesFromDto(SqlTranslation translation, TranslationDto translationDto)
         {
-            translation.Entry = Database.All<Entry>().First(e => e.EntryId == translationDto.EntryId);
-            translation.Language = Database.All<Language>().First(l => l.Code == translationDto.LanguageCode);
+            translation.Entry = Database.All<SqlEntry>().First(e => e.EntryId == translationDto.EntryId);
+            translation.Language = Database.All<SqlLanguage>().First(l => l.Code == translationDto.LanguageCode);
             translation.Rate = translationDto.Rate;
             translation.Content = translationDto.Content;
             translation.Notes = translationDto.Notes;

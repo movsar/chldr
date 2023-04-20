@@ -10,7 +10,7 @@ namespace chldr_data.Models.Entries
 {
     public class MasdarModel : WordModel
     {
-        public MasdarModel(Entry entry) : base(entry)
+        public MasdarModel(SqlEntry entry) : base(entry)
         {
         }
     }

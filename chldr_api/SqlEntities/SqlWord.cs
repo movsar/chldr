@@ -1,14 +1,20 @@
 ﻿using chldr_data.Interfaces;
 using Realms;
-namespace chldr_data.Entities;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public partial class Word : RealmObject, IEntity
+namespace chldr_data.Entities;
+[Table("Word")]
+
+public partial class SqlWord : RealmObject, IEntity
 {
-    [PrimaryKey]
+    [Realms.PrimaryKey]
     public string WordId { get; set; } = Guid.NewGuid().ToString();
-    public Entry Entry { get; set; } = null!;
+    public string EntryId { get; set; } = null!;
     public string Content { get; set; } = null!;
     public string? Notes { get; set; }
     public int? PartOfSpeech { get; set; }
     public string? AdditionalDetails { get; set; }
+    [Ignored] public virtual SqlEntry Entry { get; set; } = null!;
 }

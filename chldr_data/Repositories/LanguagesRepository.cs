@@ -15,7 +15,7 @@ namespace chldr_data.Repositories
             try
             {
                 Console.WriteLine("before langs");
-                var languages = Database.All<Language>().AsEnumerable().Select(l => new LanguageModel(l));
+                var languages = Database.All<SqlLanguage>().AsEnumerable().Select(l => new LanguageModel(l));
                 Console.WriteLine("after langs");
                 return languages.ToList();
 

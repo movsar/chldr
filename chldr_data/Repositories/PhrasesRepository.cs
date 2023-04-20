@@ -20,7 +20,7 @@ namespace chldr_data.Repositories
 
         public PhraseModel GetById(string entityId)
         {
-            return new PhraseModel(Database.All<Phrase>().FirstOrDefault(p => p.PhraseId == entityId).Entry);
+            return new PhraseModel(Database.All<SqlPhrase>().FirstOrDefault(p => p.PhraseId == entityId).Entry);
         }
     }
 }

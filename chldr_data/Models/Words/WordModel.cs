@@ -9,14 +9,14 @@ namespace chldr_data.Models.Words
 
     public class WordModel : EntryModel
     {
-        public WordModel(Entry entry) : base(entry)
+        public WordModel(SqlEntry entry) : base(entry)
         {
-            //var word = entry.Word;
+            var word = entry.Word;
 
-            //WordId = word._id;
-            //Content = word.Content;
-            //Notes = word.Notes;
-            //PartOfSpeech = (PartOfSpeech)word.PartOfSpeech;
+            WordId = word.WordId;
+            Content = word.Content;
+            Notes = word.Notes;
+            PartOfSpeech = (PartOfSpeech)word.PartOfSpeech;
         }
 
         public string WordId { get; }

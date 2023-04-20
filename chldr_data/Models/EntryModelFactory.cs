@@ -5,7 +5,7 @@ namespace chldr_data.Models
 {
     internal class EntryModelFactory
     {
-        public static EntryModel CreateEntryModel(Entities.Entry entryEntity)
+        public static EntryModel CreateEntryModel(Entities.SqlEntry entryEntity)
         {
             switch ((EntryType)entryEntity?.Type)
             {
