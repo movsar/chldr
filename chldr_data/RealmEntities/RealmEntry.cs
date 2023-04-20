@@ -2,6 +2,7 @@
 using Realms;
 
 namespace chldr_data.Entities;
+[MapTo("Entry")]
 public  class RealmEntry : RealmObject, IEntity
 {
     [PrimaryKey]

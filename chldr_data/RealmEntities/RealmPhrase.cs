@@ -2,7 +2,8 @@
 using Realms;
 
 namespace chldr_data.Entities;
-public  class RealmPhrase : RealmObject, IEntity
+[MapTo("Phrase")]
+public class RealmPhrase : RealmObject, IEntity
 {
     [PrimaryKey]
     public string PhraseId { get; set; } =Guid.NewGuid().ToString();

@@ -2,7 +2,7 @@
 using chldr_data.Interfaces;
 
 namespace chldr_data.Entities;
-
+[MapTo("Activity")]
 public class RealmActivity : RealmObject, IEntity
 {
     [PrimaryKey]

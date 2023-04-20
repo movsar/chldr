@@ -67,136 +67,136 @@ namespace chldr_tools.Services
 
         //    return Realm.GetInstance(encryptedConfig);
         //}
-        public void CopySqlToRealm()
-        {
-            var sqlContext = new SqlContext();
-            var realmContext = Realm.GetInstance();
+        //public void CopySqlToRealm()
+        //{
+        //    var sqlContext = new SqlContext();
+        //    var realmContext = Realm.GetInstance();
 
-            realmContext.Write((Action)(() =>
-        {
-            var users = sqlContext.Users;
-            foreach (var item in users)
-            {
-                realmContext.Add<RealmUser>(new RealmUser()
-                {
-                    UserId = item.UserId,
-                    AccountStatus = item.AccountStatus,
-                    ImagePath = item.ImagePath,
-                    IsModerator = item.IsModerator,
-                    LastName = item.LastName,
-                    Password = item.Password,
-                    Patronymic = item.Patronymic,
-                    Rate = item.Rate,
-                    Email = item.Email,
-                    FirstName = item.FirstName,
-                });
-            }
+        //    realmContext.Write((Action)(() =>
+        //{
+        //    var users = sqlContext.Users;
+        //    foreach (var item in users)
+        //    {
+        //        realmContext.Add<RealmUser>(new RealmUser()
+        //        {
+        //            UserId = item.UserId,
+        //            AccountStatus = item.AccountStatus,
+        //            ImagePath = item.ImagePath,
+        //            IsModerator = item.IsModerator,
+        //            LastName = item.LastName,
+        //            Password = item.Password,
+        //            Patronymic = item.Patronymic,
+        //            Rate = item.Rate,
+        //            Email = item.Email,
+        //            FirstName = item.FirstName,
+        //        });
+        //    }
 
-            var languages = sqlContext.Languages;
-            foreach (var language in languages)
-            {
-                realmContext.Add<RealmLanguage>(new RealmLanguage()
-                {
-                    LanguageId = language.LanguageId,
-                    Code = language.Code,
-                    CreatedAt = language.CreatedAt,
-                    Name = language.Name,
-                    UpdatedAt = language.UpdatedAt,
-                    User = realmContext.Find<RealmUser>(language.UserId)
-                });
-            }
+        //    var languages = sqlContext.Languages;
+        //    foreach (var language in languages)
+        //    {
+        //        realmContext.Add<RealmLanguage>(new RealmLanguage()
+        //        {
+        //            LanguageId = language.LanguageId,
+        //            Code = language.Code,
+        //            CreatedAt = language.CreatedAt,
+        //            Name = language.Name,
+        //            UpdatedAt = language.UpdatedAt,
+        //            User = realmContext.Find<RealmUser>(language.UserId)
+        //        });
+        //    }
 
-            var sources = sqlContext.Sources;
-            foreach (var item in sources)
-            {
-                realmContext.Add<RealmSource>(new RealmSource()
-                {
-                    SourceId = item.SourceId,
-                    CreatedAt = item.CreatedAt,
-                    UpdatedAt = item.UpdatedAt,
-                    User = realmContext.Find<RealmUser>(item.UserId),
-                    Name = item.Name,
-                    Notes = item.Notes,
-                });
-            }
+        //    var sources = sqlContext.Sources;
+        //    foreach (var item in sources)
+        //    {
+        //        realmContext.Add<RealmSource>(new RealmSource()
+        //        {
+        //            SourceId = item.SourceId,
+        //            CreatedAt = item.CreatedAt,
+        //            UpdatedAt = item.UpdatedAt,
+        //            User = realmContext.Find<RealmUser>(item.UserId),
+        //            Name = item.Name,
+        //            Notes = item.Notes,
+        //        });
+        //    }
 
 
 
-            foreach (var entry in sqlContext.Entries
-                .Include<SqlEntry, SqlWord>(e => e.Word)
-                .Include<SqlEntry, SqlPhrase>(e => e.Phrase)
-                .Include<SqlEntry, SqlText>(e => e.Text)
-                .Include<SqlEntry, ICollection<SqlTranslation>>(e => e.Translations))
-            {
-                var newEntry = new Entities.RealmEntry()
-                {
-                    EntryId = entry.EntryId,
-                    Source = realmContext.Find<RealmSource>(entry.SourceId),
-                    User = realmContext.Find<RealmUser>(entry.UserId),
-                    Rate = entry.Rate,
-                    RawContents = entry.RawContents,
-                    Type = entry.Type,
-                    CreatedAt = entry.CreatedAt,
-                    UpdatedAt = entry.UpdatedAt,
-                };
-                realmContext.Add<RealmEntry>((RealmEntry)newEntry);
+        //    foreach (var entry in sqlContext.Entries
+        //        .Include<SqlEntry, SqlWord>(e => e.Word)
+        //        .Include<SqlEntry, SqlPhrase>(e => e.Phrase)
+        //        .Include<SqlEntry, SqlText>(e => e.Text)
+        //        .Include<SqlEntry, ICollection<SqlTranslation>>(e => e.Translations))
+        //    {
+        //        var newEntry = new Entities.RealmEntry()
+        //        {
+        //            EntryId = entry.EntryId,
+        //            Source = realmContext.Find<RealmSource>(entry.SourceId),
+        //            User = realmContext.Find<RealmUser>(entry.UserId),
+        //            Rate = entry.Rate,
+        //            RawContents = entry.RawContents,
+        //            Type = entry.Type,
+        //            CreatedAt = entry.CreatedAt,
+        //            UpdatedAt = entry.UpdatedAt,
+        //        };
+        //        realmContext.Add<RealmEntry>((RealmEntry)newEntry);
 
-                foreach (var translation in entry.Translations)
-                {
-                    var newTranslation = new RealmTranslation()
-                    {
-                        TranslationId = translation.TranslationId,
-                        Entry = realmContext.Find<Entities.RealmEntry>(translation.EntryId),
-                        Language = realmContext.Find<RealmLanguage>(translation.LanguageId),
-                        User = realmContext.Find<RealmUser>(translation.UserId),
-                        Content = translation.Content,
-                        RawContents = translation.RawContents,
-                        Notes = translation.Notes,
-                        Rate = translation.Rate,
-                        CreatedAt = entry.CreatedAt,
-                        UpdatedAt = entry.UpdatedAt,
-                    };
+        //        foreach (var translation in entry.Translations)
+        //        {
+        //            var newTranslation = new RealmTranslation()
+        //            {
+        //                TranslationId = translation.TranslationId,
+        //                Entry = realmContext.Find<Entities.RealmEntry>(translation.EntryId),
+        //                Language = realmContext.Find<RealmLanguage>(translation.LanguageId),
+        //                User = realmContext.Find<RealmUser>(translation.UserId),
+        //                Content = translation.Content,
+        //                RawContents = translation.RawContents,
+        //                Notes = translation.Notes,
+        //                Rate = translation.Rate,
+        //                CreatedAt = entry.CreatedAt,
+        //                UpdatedAt = entry.UpdatedAt,
+        //            };
 
-                    realmContext.Add<RealmTranslation>(newTranslation);
-                    newEntry.Translations.Add(newTranslation);
-                }
+        //            realmContext.Add<RealmTranslation>(newTranslation);
+        //            newEntry.Translations.Add(newTranslation);
+        //        }
 
-                switch ((EntryType)entry.Type)
-                {
-                    case EntryType.Word:
-                        var word = new RealmWord()
-                        {
-                            WordId = entry.Word.WordId,
-                            Entry = realmContext.Find<Entities.RealmEntry>(entry.Word.EntryId),
-                            Content = entry.Word.Content,
-                            Notes = entry.Word.Notes,
-                            PartOfSpeech = entry.Word.PartOfSpeech,
-                        };
+        //        switch ((EntryType)entry.Type)
+        //        {
+        //            case EntryType.Word:
+        //                var word = new RealmWord()
+        //                {
+        //                    WordId = entry.Word.WordId,
+        //                    Entry = realmContext.Find<Entities.RealmEntry>(entry.Word.EntryId),
+        //                    Content = entry.Word.Content,
+        //                    Notes = entry.Word.Notes,
+        //                    PartOfSpeech = entry.Word.PartOfSpeech,
+        //                };
 
-                        realmContext.Add<RealmWord>(word);
-                        newEntry.Word = word;
-                        break;
+        //                realmContext.Add<RealmWord>(word);
+        //                newEntry.Word = word;
+        //                break;
 
-                    case EntryType.Phrase:
-                        var phrase = new RealmPhrase()
-                        {
-                            PhraseId = entry.Phrase.PhraseId,
-                            Entry = realmContext.Find<Entities.RealmEntry>(entry.Phrase.EntryId),
-                            Content = entry.Phrase.Content,
-                            Notes = entry.Phrase.Notes
-                        };
+        //            case EntryType.Phrase:
+        //                var phrase = new RealmPhrase()
+        //                {
+        //                    PhraseId = entry.Phrase.PhraseId,
+        //                    Entry = realmContext.Find<Entities.RealmEntry>(entry.Phrase.EntryId),
+        //                    Content = entry.Phrase.Content,
+        //                    Notes = entry.Phrase.Notes
+        //                };
 
-                        realmContext.Add<RealmPhrase>(phrase);
-                        newEntry.Phrase = phrase;
-                        break;
+        //                realmContext.Add<RealmPhrase>(phrase);
+        //                newEntry.Phrase = phrase;
+        //                break;
 
-                    default:
-                        break;
-                }
+        //            default:
+        //                break;
+        //        }
 
-            }
-        }));
-        }
+        //    }
+        //}));
+        //}
 
         //private async Task CopyFromLocalToSyncedRealm(int limit = 9999999)
         //{

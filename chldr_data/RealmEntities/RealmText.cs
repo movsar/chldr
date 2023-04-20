@@ -3,6 +3,7 @@ using Realms;
 
 namespace chldr_data.Entities;
 
+[MapTo("Text")]
 public  class RealmText : RealmObject, IEntity
 {
     [PrimaryKey]

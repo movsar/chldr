@@ -3,7 +3,8 @@ using Realms;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
-public  class RealmQuery : RealmObject, IEntity
+[MapTo("Query")]
+public class RealmQuery : RealmObject, IEntity
 {
     [PrimaryKey]
     public string QueryId { get; set; } =  Guid.NewGuid().ToString();

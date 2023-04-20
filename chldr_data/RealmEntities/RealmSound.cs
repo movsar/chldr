@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
 
+[MapTo("Sound")]
 public  class RealmSound : RealmObject, IEntity
 {
     [PrimaryKey]

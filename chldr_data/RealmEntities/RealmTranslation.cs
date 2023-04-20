@@ -2,6 +2,7 @@
 using Realms;
 
 namespace chldr_data.Entities;
+[MapTo("Translation")]
 public  class RealmTranslation : RealmObject, IEntity
 {
     [PrimaryKey]

@@ -216,6 +216,7 @@ namespace chldr_data.Repositories
         public List<EntryModel> GetRandomEntries()
         {
             var randomizer = new Random();
+            var realm = Database.All<RealmEntry>();
 
             var entries = Database.All<RealmEntry>().AsEnumerable()
               .Where(entry => entry.Rate > 0)
