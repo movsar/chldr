@@ -1,18 +1,6 @@
 ﻿using chldr_data.Entities;
 namespace chldr_data.Models
 {
-    //public class EntryComparer : IComparer<EntryModel>
-    //{
-    //    public int Compare(EntryModel? x, EntryModel? y)
-    //    {
-    //        if (x.Content == y.Content)
-    //        {
-    //            return 0;
-    //        }
-
-    //        if (x.Content.s)
-    //    }
-    //}
     public abstract class EntryModel : PersistentModelBase
     {
         public abstract string Content { get; }
@@ -20,7 +8,7 @@ namespace chldr_data.Models
         public SourceModel Source { get; }
         public int Rate { get; }
         public int Type { get; }
-        public EntryModel(Entry entry) : base(entry)
+        public EntryModel(RealmEntry entry) : base(entry)
         {
             Rate = entry.Rate;
             Type = entry.Type;

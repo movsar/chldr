@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_tools;
 
-public partial class Efmigrationshistory
+[Table("Efmigrationshistory")]
+public partial class SqlEfmigrationshistory
 {
     public string MigrationId { get; set; } = null!;
 

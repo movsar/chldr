@@ -9,7 +9,7 @@ namespace chldr_data.Models.Words
 
     public class WordModel : EntryModel
     {
-        public WordModel(Entry entry) : base(entry)
+        public WordModel(RealmEntry entry) : base(entry)
         {
             var word = entry.Word;
 

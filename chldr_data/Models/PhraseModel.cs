@@ -8,13 +8,13 @@ namespace chldr_data.Models
         public string PhraseId { get; }
         public override string Content { get; }
         public string? Notes { get; }
-        public PhraseModel(Entry entry) : base(entry)
+        public PhraseModel(RealmEntry entry) : base(entry)
         {
-            //var phrase = entry.Phrase;
+            var phrase = entry.Phrase;
 
-            //PhraseId = phrase._id;
-            //Content = phrase.Content;
-            //Notes = phrase.Notes;
+            PhraseId = phrase.PhraseId;
+            Content = phrase.Content;
+            Notes = phrase.Notes;
         }
     }
 }

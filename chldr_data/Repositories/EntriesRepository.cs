@@ -84,8 +84,8 @@ namespace chldr_data.Repositories
             var combined = equalTo.Union(orderedStartsWith.Union(orderedRest));
             return combined;
         }
-        Expression<Func<Entry, bool>> EntryFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
-        protected async Task DirectSearch(string inputText, Expression<Func<Entities.Entry, bool>> filter, int limit)
+        Expression<Func<RealmEntry, bool>> EntryFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
+        protected async Task DirectSearch(string inputText, Expression<Func<Entities.RealmEntry, bool>> filter, int limit)
         {
             var resultingEntries = new List<EntryModel>();
 
@@ -93,7 +93,7 @@ namespace chldr_data.Repositories
             {
                 using var realmInstance = Database;
 
-                var entries = realmInstance.All<Entry>().Where(filter)
+                var entries = realmInstance.All<RealmEntry>().Where(filter)
                                                         .Where(e => e.Rate > 0)
                                                         .AsEnumerable()
                                                         .OrderBy(e => e.RawContents.IndexOf(inputText))
@@ -111,7 +111,7 @@ namespace chldr_data.Repositories
             var args = new SearchResultModel(inputText, SortDirectSearchEntries(inputText, resultingEntries).ToList(), SearchResultModel.Mode.Direct);
             GotNewSearchResult?.Invoke(args);
         }
-        protected async Task ReverseSearch(string inputText, Expression<Func<Translation, bool>> filter, int limit)
+        protected async Task ReverseSearch(string inputText, Expression<Func<RealmTranslation, bool>> filter, int limit)
         {
             var resultingEntries = new List<EntryModel>();
 
@@ -119,7 +119,7 @@ namespace chldr_data.Repositories
             {
                 using var realmInstance = Database;
 
-                var translations = realmInstance.All<Translation>()
+                var translations = realmInstance.All<RealmTranslation>()
                                                                    .Where(filter)
                                                                    .Where(t => t.Rate > 0)
                                                                    .AsEnumerable()
@@ -137,8 +137,8 @@ namespace chldr_data.Repositories
             GotNewSearchResult?.Invoke(args);
         }
 
-        Expression<Func<Entry, bool>> StartsWithFilter(string inputText) => translation => translation.RawContents.Contains(inputText);
-        Expression<Func<Translation, bool>> TranslationFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
+        Expression<Func<RealmEntry, bool>> StartsWithFilter(string inputText) => translation => translation.RawContents.Contains(inputText);
+        Expression<Func<RealmTranslation, bool>> TranslationFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
 
         public async Task FindAsync(string inputText, FiltrationFlags filtrationFlags)
         {
@@ -162,7 +162,7 @@ namespace chldr_data.Repositories
 
         public TEntryModel GetByEntryId(string entryId)
         {
-            var entry = Database.All<Entry>().FirstOrDefault(e => e.EntryId == entryId);
+            var entry = Database.All<RealmEntry>().FirstOrDefault(e => e.EntryId == entryId);
             if (entry == null)
             {
                 throw new NullReferenceException();
@@ -174,7 +174,7 @@ namespace chldr_data.Repositories
 
         public List<TEntryModel> Take(int limit, int skip = 0)
         {
-            var entries = Database.All<Entry>().AsEnumerable()
+            var entries = Database.All<RealmEntry>().AsEnumerable()
                 .Skip(skip).Take(limit)
                 .Select(e => EntryModelFactory.CreateEntryModel(e) as TEntryModel)
                 .ToList();
@@ -183,7 +183,7 @@ namespace chldr_data.Repositories
 
         public void Delete(string Id)
         {
-            var entry = Database.Find<Entry>(Id);
+            var entry = Database.Find<RealmEntry>(Id);
             if (entry == null)
             {
                 return;
@@ -197,17 +197,17 @@ namespace chldr_data.Repositories
                 }
                 switch ((EntryType)entry.Type)
                 {
-                    //case EntryType.Word:
-                    //    Database.Remove(entry.Word);
-                    //    break;
-                    //case EntryType.Phrase:
-                    //    Database.Remove(entry.Phrase);
-                    //    break;
-                    //case EntryType.Text:
-                    //    Database.Remove(entry.Text);
-                    //    break;
-                    //default:
-                    //    break;
+                    case EntryType.Word:
+                        Database.Remove(entry.Word);
+                        break;
+                    case EntryType.Phrase:
+                        Database.Remove(entry.Phrase);
+                        break;
+                    case EntryType.Text:
+                        Database.Remove(entry.Text);
+                        break;
+                    default:
+                        break;
                 }
                 Database.Remove(entry);
             });
@@ -217,7 +217,7 @@ namespace chldr_data.Repositories
         {
             var randomizer = new Random();
 
-            var entries = Database.All<Entry>().AsEnumerable()
+            var entries = Database.All<RealmEntry>().AsEnumerable()
               .Where(entry => entry.Rate > 0)
               .OrderBy(x => randomizer.Next(0, 70000))
               .Take(50)
@@ -230,7 +230,7 @@ namespace chldr_data.Repositories
 
         public List<EntryModel> GetWordsToFiddleWith()
         {
-            var words = Database.All<Word>().Where(w => w.PartOfSpeech == (int)PartOfSpeech.Verb);
+            var words = Database.All<RealmWord>().Where(w => w.PartOfSpeech == (int)PartOfSpeech.Verb);
 
             var entries = words.AsEnumerable().Select(w => w.Entry);
 
@@ -243,7 +243,7 @@ namespace chldr_data.Repositories
 
         public List<EntryModel> GetEntriesOnModeration()
         {
-            var entries = Database.All<Entry>().AsEnumerable()
+            var entries = Database.All<RealmEntry>().AsEnumerable()
                 .Where(entry => entry.Rate < UserModel.EnthusiastRateRange.Lower)
                 .Take(50)
                 .Select(entry => EntryModelFactory.CreateEntryModel(entry))

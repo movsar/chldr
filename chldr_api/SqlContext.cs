@@ -18,7 +18,7 @@ public partial class SqlContext : DbContext
 
     public virtual DbSet<SqlActivity> Activities { get; set; }
 
-    public virtual DbSet<Efmigrationshistory> Efmigrationshistories { get; set; }
+    public virtual DbSet<SqlEfmigrationshistory> Efmigrationshistories { get; set; }
 
     public virtual DbSet<SqlEntry> Entries { get; set; }
 
@@ -93,7 +93,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("fk_user_id");
         });
 
-        modelBuilder.Entity<Efmigrationshistory>(entity =>
+        modelBuilder.Entity<SqlEfmigrationshistory>(entity =>
         {
             entity.HasKey(e => e.MigrationId).HasName("PRIMARY");
 

@@ -2,13 +2,13 @@
 using Realms;
 
 namespace chldr_data.Entities;
-public  class Translation : RealmObject, IEntity
+public  class RealmTranslation : RealmObject, IEntity
 {
     [PrimaryKey]
     public string TranslationId { get; set; } = Guid.NewGuid().ToString();
-    public Language Language { get; set; } = null!;
-    public Entry Entry { get; set; } = null!;
-    public User User { get; set; } = null!;
+    public RealmLanguage Language { get; set; } = null!;
+    public RealmEntry Entry { get; set; } = null!;
+    public RealmUser User { get; set; } = null!;
     public string Content { get; set; } = null!;
     public string RawContents { get; set; } = null!;
     public string? Notes { get; set; }

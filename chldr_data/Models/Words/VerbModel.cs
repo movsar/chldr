@@ -5,7 +5,7 @@ namespace chldr_data.Models.Words
 {
     public class VerbModel : WordModel
     {
-        public VerbModel(Entry entry) : base(entry)
+        public VerbModel(RealmEntry entry) : base(entry)
         {
         }
 

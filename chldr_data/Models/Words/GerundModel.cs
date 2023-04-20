@@ -10,7 +10,7 @@ namespace chldr_data.Models.Entries
 {
     public class GerundModel : WordModel
     {
-        public GerundModel(Entry entry) : base(entry)
+        public GerundModel(RealmEntry entry) : base(entry)
         {
         }
     }

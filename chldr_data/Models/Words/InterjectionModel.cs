@@ -10,7 +10,7 @@ namespace chldr_data.Models.Entries
 {
     public class InterjectionModel : WordModel
     {
-        public InterjectionModel(Entry entry) : base(entry)
+        public InterjectionModel(RealmEntry entry) : base(entry)
         {
         }
     }

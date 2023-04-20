@@ -1,21 +1,10 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
-using chldr_data.Factories;
-using chldr_data.Interfaces;
-using chldr_data.Services;
-using chldr_utils;
-using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using Realms;
 using Realms.Sync;
-using Realms.Sync.Exceptions;
-using System.Diagnostics;
-using System.Security.Cryptography;
-using static Realms.Sync.MongoClient;
 using Entities = chldr_data.Entities;
-using Entry = chldr_data.Entities.Entry;
-using User = chldr_data.Entities.User;
 
 namespace chldr_tools.Services
 {
@@ -83,12 +72,12 @@ namespace chldr_tools.Services
             var sqlContext = new SqlContext();
             var realmContext = Realm.GetInstance();
 
-            realmContext.Write(() =>
+            realmContext.Write((Action)(() =>
         {
             var users = sqlContext.Users;
             foreach (var item in users)
             {
-                realmContext.Add(new User()
+                realmContext.Add<RealmUser>(new RealmUser()
                 {
                     UserId = item.UserId,
                     AccountStatus = item.AccountStatus,
@@ -106,26 +95,26 @@ namespace chldr_tools.Services
             var languages = sqlContext.Languages;
             foreach (var language in languages)
             {
-                realmContext.Add(new Language()
+                realmContext.Add<RealmLanguage>(new RealmLanguage()
                 {
                     LanguageId = language.LanguageId,
                     Code = language.Code,
                     CreatedAt = language.CreatedAt,
                     Name = language.Name,
                     UpdatedAt = language.UpdatedAt,
-                    User = realmContext.Find<User>(language.UserId)
+                    User = realmContext.Find<RealmUser>(language.UserId)
                 });
             }
 
             var sources = sqlContext.Sources;
             foreach (var item in sources)
             {
-                realmContext.Add(new Source()
+                realmContext.Add<RealmSource>(new RealmSource()
                 {
                     SourceId = item.SourceId,
                     CreatedAt = item.CreatedAt,
                     UpdatedAt = item.UpdatedAt,
-                    User = realmContext.Find<User>(item.UserId),
+                    User = realmContext.Find<RealmUser>(item.UserId),
                     Name = item.Name,
                     Notes = item.Notes,
                 });
@@ -134,32 +123,32 @@ namespace chldr_tools.Services
 
 
             foreach (var entry in sqlContext.Entries
-                .Include(e => e.Word)
-                .Include(e => e.Phrase)
-                .Include(e => e.Text)
-                .Include(e => e.Translations))
+                .Include<SqlEntry, SqlWord>(e => e.Word)
+                .Include<SqlEntry, SqlPhrase>(e => e.Phrase)
+                .Include<SqlEntry, SqlText>(e => e.Text)
+                .Include<SqlEntry, ICollection<SqlTranslation>>(e => e.Translations))
             {
-                var newEntry = new Entry()
+                var newEntry = new Entities.RealmEntry()
                 {
                     EntryId = entry.EntryId,
-                    Source = realmContext.Find<Source>(entry.SourceId),
-                    User = realmContext.Find<User>(entry.UserId),
+                    Source = realmContext.Find<RealmSource>(entry.SourceId),
+                    User = realmContext.Find<RealmUser>(entry.UserId),
                     Rate = entry.Rate,
                     RawContents = entry.RawContents,
                     Type = entry.Type,
                     CreatedAt = entry.CreatedAt,
                     UpdatedAt = entry.UpdatedAt,
                 };
-                realmContext.Add(newEntry);
+                realmContext.Add<RealmEntry>((RealmEntry)newEntry);
 
                 foreach (var translation in entry.Translations)
                 {
-                    var newTranslation = new Translation()
+                    var newTranslation = new RealmTranslation()
                     {
                         TranslationId = translation.TranslationId,
-                        Entry = realmContext.Find<Entry>(translation.EntryId),
-                        Language = realmContext.Find<Language>(translation.LanguageId),
-                        User = realmContext.Find<User>(translation.UserId),
+                        Entry = realmContext.Find<Entities.RealmEntry>(translation.EntryId),
+                        Language = realmContext.Find<RealmLanguage>(translation.LanguageId),
+                        User = realmContext.Find<RealmUser>(translation.UserId),
                         Content = translation.Content,
                         RawContents = translation.RawContents,
                         Notes = translation.Notes,
@@ -168,36 +157,36 @@ namespace chldr_tools.Services
                         UpdatedAt = entry.UpdatedAt,
                     };
 
-                    realmContext.Add(newTranslation);
+                    realmContext.Add<RealmTranslation>(newTranslation);
                     newEntry.Translations.Add(newTranslation);
                 }
 
                 switch ((EntryType)entry.Type)
                 {
                     case EntryType.Word:
-                        var word = new Word()
+                        var word = new RealmWord()
                         {
                             WordId = entry.Word.WordId,
-                            Entry = realmContext.Find<Entry>(entry.Word.EntryId),
+                            Entry = realmContext.Find<Entities.RealmEntry>(entry.Word.EntryId),
                             Content = entry.Word.Content,
                             Notes = entry.Word.Notes,
                             PartOfSpeech = entry.Word.PartOfSpeech,
                         };
 
-                        realmContext.Add(word);
+                        realmContext.Add<RealmWord>(word);
                         newEntry.Word = word;
                         break;
 
                     case EntryType.Phrase:
-                        var phrase = new Phrase()
+                        var phrase = new RealmPhrase()
                         {
                             PhraseId = entry.Phrase.PhraseId,
-                            Entry = realmContext.Find<Entry>(entry.Phrase.EntryId),
+                            Entry = realmContext.Find<Entities.RealmEntry>(entry.Phrase.EntryId),
                             Content = entry.Phrase.Content,
                             Notes = entry.Phrase.Notes
                         };
 
-                        realmContext.Add(phrase);
+                        realmContext.Add<RealmPhrase>(phrase);
                         newEntry.Phrase = phrase;
                         break;
 
@@ -206,7 +195,7 @@ namespace chldr_tools.Services
                 }
 
             }
-        });
+        }));
         }
 
         //private async Task CopyFromLocalToSyncedRealm(int limit = 9999999)

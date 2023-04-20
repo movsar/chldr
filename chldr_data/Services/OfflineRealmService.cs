@@ -71,11 +71,11 @@ namespace chldr_data.Services
             var database = GetDatabase();
             database.Write(() =>
             {
-                database.RemoveAll<Entry>();
-                database.RemoveAll<Text>();
-                database.RemoveAll<Word>();
-                database.RemoveAll<Phrase>();
-                database.RemoveAll<Translation>();
+                database.RemoveAll<RealmEntry>();
+                database.RemoveAll<RealmText>();
+                database.RemoveAll<RealmWord>();
+                database.RemoveAll<RealmPhrase>();
+                database.RemoveAll<RealmTranslation>();
             });
         }
     }

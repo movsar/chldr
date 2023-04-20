@@ -2,7 +2,7 @@
 using Realms;
 
 namespace chldr_data.Entities;
-public  class User : RealmObject, IEntity
+public  class RealmUser : RealmObject, IEntity
 {
     [PrimaryKey]
     public string UserId { get; set; } = Guid.NewGuid().ToString();
@@ -17,12 +17,12 @@ public  class User : RealmObject, IEntity
     public byte? AccountStatus { get; set; }
     public DateTimeOffset CreatedAt { get; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; } = DateTime.Now;
-    public IList<Activity> Activities { get; } = new List<Activity>();
-    public IList<Entry> Entries { get; } = new List<Entry>();
-    public IList<Image> Images { get; } = new List<Image>();
-    public IList<Language> Languages { get; } = new List<Language>();
-    public IList<Query> Queries { get; } = new List<Query>();
-    public IList<Sound> Sounds { get; } = new List<Sound>();
-    public IList<Source> Sources { get; } = new List<Source>();
-    public IList<Translation> Translations { get; } = new List<Translation>();
+    public IList<RealmActivity> Activities { get; } 
+    public IList<RealmEntry> Entries { get; } 
+    public IList<RealmImage> Images { get; }
+    public IList<RealmLanguage> Languages { get; } 
+    public IList<RealmQuery> Queries { get; }
+    public IList<RealmSound> Sounds { get; }
+    public IList<RealmSource> Sources { get; }
+    public IList<RealmTranslation> Translations { get; }
 }

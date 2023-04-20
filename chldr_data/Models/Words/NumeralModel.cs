@@ -6,7 +6,7 @@ namespace chldr_data.Models.Entries
 {
     public class NumeralModel : WordModel
     {
-        public NumeralModel(Entry entry) : base(entry)
+        public NumeralModel(RealmEntry entry) : base(entry)
         {
         }
 

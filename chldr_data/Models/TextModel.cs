@@ -6,14 +6,14 @@ namespace chldr_data.Models
 {
     public class TextModel : EntryModel
     {
-        public ObjectId TextId { get; }
+        public string TextId { get; }
         public override string Content { get; }
-        public TextModel(Entry entry) : base(entry)
+        public TextModel(RealmEntry entry) : base(entry)
         {
-            //var text = entry.Text;
+            var text = entry.Text;
 
-            //TextId = text._id;
-            //Content = text.Content;
+            TextId = text.TextId;
+            Content = text.Content;
         }
     }
 }

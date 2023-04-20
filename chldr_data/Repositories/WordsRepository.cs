@@ -14,7 +14,7 @@ namespace chldr_data.Repositories
 
         public WordModel GetById(string entityId)
         {
-            var word = Database.All<Word>().FirstOrDefault(w => w.WordId == entityId);
+            var word = Database.All<RealmWord>().FirstOrDefault(w => w.WordId == entityId);
             if (word == null)
             {
                 throw new Exception("There is no such word in the database");
@@ -25,7 +25,7 @@ namespace chldr_data.Repositories
 
         public List<WordModel> GetRandomWords(int limit)
         {
-            var words = Database.All<Word>().AsEnumerable().Take(limit);
+            var words = Database.All<RealmWord>().AsEnumerable().Take(limit);
             return words.Select(w => new WordModel(w.Entry)).ToList();
         }
 
@@ -36,17 +36,17 @@ namespace chldr_data.Repositories
                 throw new InvalidOperationException();
             }
 
-            var source = Database.Find<Source>(new ObjectId(newWord.SourceId));
+            var source = Database.Find<RealmSource>(new ObjectId(newWord.SourceId));
 
             // Initialize an entry object
-            var entry = new Entry()
+            var entry = new RealmEntry()
             {
                 Rate = Convert.ToInt32(newWord.Rate),
                 Source = source,
             };
 
             // Insert data
-            var word = new Word()
+            var word = new RealmWord()
             {
                 Entry = entry,
                 Content = newWord.Content,
@@ -54,17 +54,17 @@ namespace chldr_data.Repositories
             };
 
             entry.Type = (int)EntryType.Word;
-            //entry.Word = word;
+            entry.Word = word;
 
             foreach (var translationDto in newWord.Translations)
             {
-                var language = Database.All<Language>().FirstOrDefault(t => t.Code == translationDto.LanguageCode);
+                var language = Database.All<RealmLanguage>().FirstOrDefault(t => t.Code == translationDto.LanguageCode);
                 if (language == null)
                 {
                     throw new Exception("Language cannot be empty");
                 }
 
-                entry.Translations.Add(new Translation()
+                entry.Translations.Add(new RealmTranslation()
                 {
                     Entry = entry,
                     Language = language,
@@ -83,7 +83,7 @@ namespace chldr_data.Repositories
 
         public void Update(UserModel user, WordDto wordDto)
         {
-            var word = Database.Find<Word>(new ObjectId(wordDto.WordId));
+            var word = Database.Find<RealmWord>(new ObjectId(wordDto.WordId));
             Database.Write(() =>
             {
                 word.Entry.Rate = user.GetRateRange().Lower;
@@ -91,13 +91,13 @@ namespace chldr_data.Repositories
                 foreach (var translationDto in wordDto.Translations)
                 {
                     var translationId = new ObjectId(translationDto.TranslationId);
-                    Translation translation = Database.Find<Translation>(translationId);
+                    RealmTranslation translation = Database.Find<RealmTranslation>(translationId);
                     if (translation == null)
                     {
-                        translation = new Translation()
+                        translation = new RealmTranslation()
                         {
                             Entry = word.Entry,
-                            Language = Database.All<Language>().First(l => l.Code == translationDto.LanguageCode),
+                            Language = Database.All<RealmLanguage>().First(l => l.Code == translationDto.LanguageCode),
                         };
                     }
                     translation.Rate = user.GetRateRange().Lower;

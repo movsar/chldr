@@ -5,7 +5,7 @@ namespace chldr_data.Models.Entries
 {
     public class PronounModel : WordModel
     {
-        public PronounModel(Entry entry) : base(entry)
+        public PronounModel(RealmEntry entry) : base(entry)
         {
         }
 

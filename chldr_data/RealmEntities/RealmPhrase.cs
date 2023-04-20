@@ -2,12 +2,11 @@
 using Realms;
 
 namespace chldr_data.Entities;
-
-public  class Text : RealmObject, IEntity
+public  class RealmPhrase : RealmObject, IEntity
 {
     [PrimaryKey]
-    public string TextId { get; set; } = Guid.NewGuid().ToString();
-    public Entry Entry { get; set; } = null!;
+    public string PhraseId { get; set; } =Guid.NewGuid().ToString();
+    public RealmEntry Entry { get; set; } = null!;
     public string Content { get; set; } = null!;
     public string? Notes { get; set; }
 }

@@ -6,12 +6,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
 
-public  class Sound : RealmObject, IEntity
+public  class RealmSound : RealmObject, IEntity
 {
     [PrimaryKey]
     public string SoundId { get; set; } = Guid.NewGuid().ToString();
-    public User User { get; set; } = null!;
-    public Entry Entry { get; set; } = null!;
+    public RealmUser User { get; set; } = null!;
+    public RealmEntry Entry { get; set; } = null!;
     public string FileName { get; set; } = null!;
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;

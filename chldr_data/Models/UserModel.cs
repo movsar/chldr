@@ -18,7 +18,7 @@ namespace chldr_data.Models
         public string? LastName { get; }
         public string? Patronymic { get; }
 
-        public UserModel(Entities.User user) : base(user)
+        public UserModel(Entities.RealmUser user) : base(user)
         {
             Email = user.Email;
             Rate = user.Rate;
