@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace chldr_data.Entities;
 [MapTo("Language")]
-internal class RealmLanguage : RealmObject, IEntity
+public class RealmLanguage : RealmObject, IEntity
 {
     [PrimaryKey]
     public string LanguageId { get; set; } = Guid.NewGuid().ToString();

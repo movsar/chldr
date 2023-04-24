@@ -3,7 +3,7 @@ using Realms;
 
 namespace chldr_data.Entities;
 [MapTo("Translation")]
-internal  class RealmTranslation : RealmObject, IEntity
+public class RealmTranslation : RealmObject, IEntity
 {
     [PrimaryKey]
     public string TranslationId { get; set; } = Guid.NewGuid().ToString();

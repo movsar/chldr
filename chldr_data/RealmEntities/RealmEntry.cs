@@ -3,7 +3,7 @@ using Realms;
 
 namespace chldr_data.Entities;
 [MapTo("Entry")]
-internal class RealmEntry : RealmObject, IEntity
+public class RealmEntry : RealmObject, IEntity
 {
     [PrimaryKey]
     public string EntryId { get; set; } = Guid.NewGuid().ToString();

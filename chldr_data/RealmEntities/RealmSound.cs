@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace chldr_data.Entities;
 
 [MapTo("Sound")]
-internal class RealmSound : RealmObject, IEntity
+public class RealmSound : RealmObject, IEntity
 {
     [PrimaryKey]
     public string SoundId { get; set; } = Guid.NewGuid().ToString();

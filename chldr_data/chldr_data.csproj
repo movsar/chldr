@@ -21,7 +21,7 @@
     <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="7.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="7.0.2" />
-    <PackageReference Include="Realm" Version="10.19.0" />
+    <PackageReference Include="Realm" Version="10.21.1" />
   </ItemGroup>
 
   <ItemGroup>

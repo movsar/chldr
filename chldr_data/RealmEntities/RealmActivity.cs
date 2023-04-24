@@ -3,7 +3,7 @@ using chldr_data.Interfaces;
 
 namespace chldr_data.Entities;
 [MapTo("Activity")]
-internal class RealmActivity : RealmObject, IEntity
+public class RealmActivity : RealmObject, IEntity
 {
     [PrimaryKey]
     public string ActivityId { get; set; } = Guid.NewGuid().ToString();

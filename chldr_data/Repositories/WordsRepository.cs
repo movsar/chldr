@@ -1,4 +1,9 @@
 ﻿
+using chldr_data.Dto;
+using chldr_data.Entities;
+using chldr_data.Enums;
+using chldr_data.Interfaces;
+using chldr_data.Models;
 using chldr_data.Models.Words;
 
 namespace chldr_data.Repositories
@@ -31,7 +36,7 @@ namespace chldr_data.Repositories
                 throw new InvalidOperationException();
             }
 
-            var source = Database.Find<RealmSource>(new ObjectId(newWord.SourceId));
+            var source = Database.Find<RealmSource>(newWord.SourceId);
 
             // Initialize an entry object
             var entry = new RealmEntry()
@@ -78,14 +83,14 @@ namespace chldr_data.Repositories
 
         public void Update(UserModel user, WordDto wordDto)
         {
-            var word = Database.Find<RealmWord>(new ObjectId(wordDto.WordId));
+            var word = Database.Find<RealmWord>(wordDto.WordId);
             Database.Write(() =>
             {
                 word.Entry.Rate = user.GetRateRange().Lower;
                 word.Entry.RawContents = word.Content.ToLower();
                 foreach (var translationDto in wordDto.Translations)
                 {
-                    var translationId = new ObjectId(translationDto.TranslationId);
+                    var translationId = translationDto.TranslationId;
                     RealmTranslation translation = Database.Find<RealmTranslation>(translationId);
                     if (translation == null)
                     {
