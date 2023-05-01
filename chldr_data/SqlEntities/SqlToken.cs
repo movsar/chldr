@@ -1,15 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Realms.Sync;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
 [Table("Tokens")]
 public partial class SqlToken
 {
     public string TokenId { get; set; } = Guid.NewGuid().ToString();
+
     public string UserId { get; set; } = null!;
-    // 0 - unspecified; 1 - refresh; 2 - access
-    public int Type { get; set; } = 0;
+    // See, TokenType enum
+    public int? Type { get; set; }
+
     public string? Value { get; set; }
-    public DateTimeOffset? ExpiresAt { get; set; }
-    public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
+
+    public DateTime? ExpiresIn { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
+
     public virtual SqlUser User { get; set; } = null!;
 }

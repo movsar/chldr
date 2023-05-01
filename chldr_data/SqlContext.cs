@@ -516,32 +516,34 @@ public partial class SqlContext : DbContext
         modelBuilder.Entity<SqlToken>(entity =>
         {
             entity.HasKey(e => e.TokenId).HasName("PRIMARY");
+
             entity.ToTable("tokens");
 
-            entity.Property(e => e.UserId)
-                          .HasMaxLength(40)
-                          .HasColumnName("user_id");
+            entity.HasIndex(e => e.UserId, "fk_tokens_user_id_idx");
 
+            entity.Property(e => e.TokenId)
+                .HasMaxLength(40)
+                .HasColumnName("token_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.ExpiresIn)
+                .HasColumnType("datetime")
+                .HasColumnName("expires_in");
             entity.Property(e => e.Type)
+                .HasDefaultValueSql("'0'")
                 .HasColumnName("type");
-            
+            entity.Property(e => e.UserId)
+                .HasMaxLength(40)
+                .HasColumnName("user_id");
             entity.Property(e => e.Value)
                 .HasMaxLength(300)
                 .HasColumnName("value");
 
-            entity.Property(e => e.ExpiresAt)
-                .HasColumnType("datetime")
-                .HasColumnName("expires_in");
-
-            entity.Property(e => e.CreatedAt)
-              .HasDefaultValueSql("CURRENT_TIMESTAMP")
-              .HasColumnType("datetime")
-              .HasColumnName("created_at");
-
             entity.HasOne(d => d.User).WithMany(p => p.Tokens)
-            .HasForeignKey(d => d.UserId)
-            .OnDelete(DeleteBehavior.ClientSetNull)
-            .HasConstraintName("fk_tokens_user_id");
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_tokens_user_id");
         });
 
         OnModelCreatingPartial(modelBuilder);

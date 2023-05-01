@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `chldr` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `chldr`;
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: localhost    Database: chldr
@@ -220,6 +218,26 @@ CREATE TABLE `text` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tokens`
+--
+
+DROP TABLE IF EXISTS `tokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tokens` (
+  `token_id` varchar(40) NOT NULL,
+  `user_id` varchar(40) NOT NULL,
+  `type` int DEFAULT '0',
+  `value` varchar(300) DEFAULT NULL,
+  `expires_in` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`token_id`),
+  KEY `fk_tokens_user_id_idx` (`user_id`),
+  CONSTRAINT `fk_tokens_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `translation`
 --
 
@@ -265,9 +283,6 @@ CREATE TABLE `users` (
   `patronymic` varchar(100) DEFAULT NULL,
   `is_moderator` tinyint DEFAULT NULL,
   `account_status` tinyint DEFAULT NULL,
-  `tokenExpiresIn` datetime DEFAULT NULL,
-  `refreshToken` varchar(100) DEFAULT NULL,
-  `accessToken` varchar(100) DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`user_id`)
@@ -303,4 +318,4 @@ CREATE TABLE `word` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-01 17:27:54
+-- Dump completed on 2023-05-01 20:09:59

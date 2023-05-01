@@ -35,7 +35,7 @@ namespace chldr_api
                 UserId = user.UserId,
                 Type = (int)TokenType.PasswordReset,
                 Value = tokenValue,
-                ExpiresAt = DateTime.UtcNow.AddMinutes(60),
+                ExpiresIn = DateTime.UtcNow.AddMinutes(60),
             };
 
             dbContext.Tokens.Add(token);
@@ -43,7 +43,7 @@ namespace chldr_api
 
             // Send the password reset link to the user's email
 
-            var resetUrl = $"/set-new-password?token={tokenValue}";
+            var resetUrl = @$"/set-new-password?token={tokenValue}";
             var emailBody = $"To reset your password, click the following link: {resetUrl}";
 
             var message = new EmailMessage(new string[] { email },
@@ -58,7 +58,7 @@ namespace chldr_api
         [UseDbContext(typeof(SqlContext))]
         public async Task ResetPassword([Service] SqlContext dbContext, string tokenValue, string newPassword)
         {
-            var token = await dbContext.Tokens.FirstOrDefaultAsync(t => t.Type == (int)TokenType.PasswordReset && t.Value == tokenValue && t.ExpiresAt > DateTimeOffset.UtcNow);
+            var token = await dbContext.Tokens.FirstOrDefaultAsync(t => t.Type == (int)TokenType.PasswordReset && t.Value == tokenValue && t.ExpiresIn > DateTimeOffset.UtcNow);
 
             if (token == null)
             {
@@ -132,7 +132,7 @@ namespace chldr_api
                 UserId = user.UserId,
                 Type = (int)TokenType.Access,
                 Value = accessToken,
-                ExpiresAt = accessTokenExpiration
+                ExpiresIn = accessTokenExpiration
             });
             await dbContext.SaveChangesAsync();
             return user;
