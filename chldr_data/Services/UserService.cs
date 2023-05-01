@@ -91,9 +91,9 @@ namespace chldr_data.Services
             await App.EmailPasswordAuth.CallResetPasswordFunctionAsync(email, "somerandomsuperhardpassword");
         }
 
-        public async Task UpdatePasswordAsync(string token, string tokenId, string newPassword)
+        public async Task UpdatePasswordAsync(string token,string newPassword)
         {
-            await App.EmailPasswordAuth.ResetPasswordAsync(newPassword, token, tokenId);
+            //await App.EmailPasswordAuth.ResetPasswordAsync(newPassword, token);
         }
 
         public async Task ConfirmUserAsync(string token, string tokenId, string userEmail)

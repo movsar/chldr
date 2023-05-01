@@ -1,8 +1,8 @@
 ﻿using chldr_shared.Models;
-using MailKit.Net.Smtp;
 using MimeKit;
+using MailKit.Net.Smtp;
 
-namespace chldr_shared.Services
+namespace chldr_utils.Services
 {
     public class EmailService
     {

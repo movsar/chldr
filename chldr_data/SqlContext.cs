@@ -17,7 +17,6 @@ public partial class SqlContext : DbContext
     }
 
     public virtual DbSet<SqlActivity> Activities { get; set; }
-
     public virtual DbSet<SqlEfmigrationshistory> Efmigrationshistories { get; set; }
 
     public virtual DbSet<SqlEntry> Entries { get; set; }
@@ -41,7 +40,7 @@ public partial class SqlContext : DbContext
     public virtual DbSet<SqlUser> Users { get; set; }
 
     public virtual DbSet<SqlWord> Words { get; set; }
-
+    public virtual DbSet<SqlToken> Tokens { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseMySQL("server=localhost;database=chldr;user=root;password=io34j0f934j9g034!#Aa-");
@@ -478,18 +477,6 @@ public partial class SqlContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("patronymic");
             entity.Property(e => e.Rate).HasColumnName("rate");
-            entity.Property(e => e.ExpiresIn)
-            .HasMaxLength(100)
-            .HasColumnName("tokenExpiresIn"); 
-
-            entity.Property(e => e.RefreshToken)
-            .HasMaxLength(100)
-            .HasColumnName("refreshToken");
-
-            entity.Property(e => e.AccessToken)
-            .HasMaxLength(100)
-            .HasColumnName("accessToken");
-
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
@@ -524,6 +511,37 @@ public partial class SqlContext : DbContext
                 .HasForeignKey<SqlWord>(d => d.EntryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_word_entry_id");
+        });
+
+        modelBuilder.Entity<SqlToken>(entity =>
+        {
+            entity.HasKey(e => e.TokenId).HasName("PRIMARY");
+            entity.ToTable("tokens");
+
+            entity.Property(e => e.UserId)
+                          .HasMaxLength(40)
+                          .HasColumnName("user_id");
+
+            entity.Property(e => e.Type)
+                .HasColumnName("type");
+            
+            entity.Property(e => e.Value)
+                .HasMaxLength(300)
+                .HasColumnName("value");
+
+            entity.Property(e => e.ExpiresAt)
+                .HasColumnType("datetime")
+                .HasColumnName("expires_in");
+
+            entity.Property(e => e.CreatedAt)
+              .HasDefaultValueSql("CURRENT_TIMESTAMP")
+              .HasColumnType("datetime")
+              .HasColumnName("created_at");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Tokens)
+            .HasForeignKey(d => d.UserId)
+            .OnDelete(DeleteBehavior.ClientSetNull)
+            .HasConstraintName("fk_tokens_user_id");
         });
 
         OnModelCreatingPartial(modelBuilder);

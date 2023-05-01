@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Localization;
 using Serilog;
-using EmailService = chldr_shared.Services.EmailService;
 
 namespace chldr_blazor.Controllers
 {

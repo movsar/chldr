@@ -1,11 +1,85 @@
 ﻿using chldr_data.Entities;
+using chldr_data.Enums;
+using chldr_data.Resources.Localizations;
+using chldr_shared.Models;
 using chldr_tools;
+using chldr_utils.Services;
+using HotChocolate.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using System.Web;
 
 namespace chldr_api
 {
     public class Mutation
     {
+        [UseDbContext(typeof(SqlContext))]
+        public async Task<string> InitiatePasswordReset(
+          [Service] SqlContext dbContext, [Service] IStringLocalizer<AppLocalizations> _localizer,
+          [Service] EmailService emailService,
+          string email)
+        {
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                throw new ArgumentException($"User with email {email} does not exist.");
+            }
+
+            // Generate a password reset token with a short expiration time
+            var tokenExpiresAt = TimeSpan.FromMinutes(60);
+            var tokenValue = JwtUtils.GenerateToken(user.UserId, "password-reset-secret", tokenExpiresAt);
+
+            // Store the token in the Tokens table
+            var token = new SqlToken
+            {
+                UserId = user.UserId,
+                Type = (int)TokenType.PasswordReset,
+                Value = tokenValue,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(60),
+            };
+
+            dbContext.Tokens.Add(token);
+            await dbContext.SaveChangesAsync();
+
+            // Send the password reset link to the user's email
+
+            var resetUrl = $"/set-new-password?token={tokenValue}";
+            var emailBody = $"To reset your password, click the following link: {resetUrl}";
+
+            var message = new EmailMessage(new string[] { email },
+                            _localizer["Email:Reset_password_subject"],
+                            _localizer["Email:Reset_password_html", resetUrl]);
+
+            emailService.Send(message);
+
+            return tokenValue;
+        }
+
+        [UseDbContext(typeof(SqlContext))]
+        public async Task ResetPassword([Service] SqlContext dbContext, string tokenValue, string newPassword)
+        {
+            var token = await dbContext.Tokens.FirstOrDefaultAsync(t => t.Type == (int)TokenType.PasswordReset && t.Value == tokenValue && t.ExpiresAt > DateTimeOffset.UtcNow);
+
+            if (token == null)
+            {
+                throw new Exception("Invalid token");
+            }
+
+            var user = await dbContext.Users.FindAsync(token.UserId);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            // Hash the new password and update the user's password in the Users table
+            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            await dbContext.SaveChangesAsync();
+
+            // Remove the used password reset token from the Tokens table
+            dbContext.Tokens.Remove(token);
+            await dbContext.SaveChangesAsync();
+        }
+
         [UseDbContext(typeof(SqlContext))]
         public async Task<SqlUser> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic, [ScopedService] SqlContext dbContext)
         {
@@ -47,6 +121,20 @@ namespace chldr_api
                 throw new GraphQLException("Incorrect password");
             }
 
+            // Generate a new access token and calculate expiration time
+            var secret = "asdf";
+            var accessToken = JwtUtils.GenerateAccessToken(user.UserId, secret);
+            var accessTokenExpiration = DateTime.UtcNow.AddSeconds(120);
+
+            // Save the access token to the database
+            dbContext.Tokens.Add(new SqlToken
+            {
+                UserId = user.UserId,
+                Type = (int)TokenType.Access,
+                Value = accessToken,
+                ExpiresAt = accessTokenExpiration
+            });
+            await dbContext.SaveChangesAsync();
             return user;
         }
     }

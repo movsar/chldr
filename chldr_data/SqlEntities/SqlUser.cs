@@ -17,9 +17,6 @@ public partial class SqlUser
     public byte? AccountStatus { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
-    public string RefreshToken { get; set; }
-    public string AccessToken { get; set; }
-    public DateTimeOffset ExpiresIn { get; set; }
     public virtual ICollection<SqlActivity> Activities { get; set; } = new List<SqlActivity>();
     public virtual ICollection<SqlEntry> Entries { get; set; } = new List<SqlEntry>();
     public virtual ICollection<SqlImage> Images { get; set; } = new List<SqlImage>();
@@ -28,4 +25,5 @@ public partial class SqlUser
     public virtual ICollection<SqlSound> Sounds { get; set; } = new List<SqlSound>();
     public virtual ICollection<SqlSource> Sources { get; set; } = new List<SqlSource>();
     public virtual ICollection<SqlTranslation> Translations { get; set; } = new List<SqlTranslation>();
+    public virtual ICollection<SqlToken> Tokens { get; set; } = new List<SqlToken>();
 }
