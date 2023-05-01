@@ -478,6 +478,18 @@ public partial class SqlContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("patronymic");
             entity.Property(e => e.Rate).HasColumnName("rate");
+            entity.Property(e => e.ExpiresIn)
+            .HasMaxLength(100)
+            .HasColumnName("tokenExpiresIn"); 
+
+            entity.Property(e => e.RefreshToken)
+            .HasMaxLength(100)
+            .HasColumnName("refreshToken");
+
+            entity.Property(e => e.AccessToken)
+            .HasMaxLength(100)
+            .HasColumnName("accessToken");
+
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");

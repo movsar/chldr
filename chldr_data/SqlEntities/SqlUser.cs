@@ -17,6 +17,9 @@ public partial class SqlUser
     public byte? AccountStatus { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
+    public string RefreshToken { get; set; }
+    public string AccessToken { get; set; }
+    public DateTimeOffset ExpiresIn { get; set; }
     public virtual ICollection<SqlActivity> Activities { get; set; } = new List<SqlActivity>();
     public virtual ICollection<SqlEntry> Entries { get; set; } = new List<SqlEntry>();
     public virtual ICollection<SqlImage> Images { get; set; } = new List<SqlImage>();

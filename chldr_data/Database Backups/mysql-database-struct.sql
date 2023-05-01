@@ -265,6 +265,9 @@ CREATE TABLE `users` (
   `patronymic` varchar(100) DEFAULT NULL,
   `is_moderator` tinyint DEFAULT NULL,
   `account_status` tinyint DEFAULT NULL,
+  `tokenExpiresIn` datetime DEFAULT NULL,
+  `refreshToken` varchar(100) DEFAULT NULL,
+  `accessToken` varchar(100) DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`user_id`)
@@ -300,4 +303,4 @@ CREATE TABLE `word` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-19 19:25:22
+-- Dump completed on 2023-05-01 17:27:54
