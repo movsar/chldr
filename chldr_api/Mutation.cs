@@ -58,19 +58,19 @@ namespace chldr_api
         }
 
         [UseDbContext(typeof(SqlContext))]
-        public async Task<MutationResponse> ResetPassword([Service] SqlContext dbContext, string token, string newPassword)
+        public async Task<MutationResponse> ResetPasswordAsync([Service] SqlContext dbContext, string token, string newPassword)
         {
             var tokenInDatabase = await dbContext.Tokens.FirstOrDefaultAsync(t => t.Type == (int)TokenType.PasswordReset && t.Value == token && t.ExpiresIn > DateTimeOffset.UtcNow);
 
             if (tokenInDatabase == null)
             {
-                throw new Exception("Invalid token");
+                return new MutationResponse("Invalid token");
             }
 
             var user = await dbContext.Users.FindAsync(tokenInDatabase.UserId);
             if (user == null)
             {
-                throw new Exception("User not found");
+                return new MutationResponse("User not found");
             }
 
             // Hash the new password and update the user's password in the Users table
@@ -85,13 +85,13 @@ namespace chldr_api
         }
 
         [UseDbContext(typeof(SqlContext))]
-        public async Task<SqlUser> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic, [ScopedService] SqlContext dbContext)
+        public async Task<MutationResponse> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic, [ScopedService] SqlContext dbContext)
         {
             // Check if a user with this email already exists
             var existingUser = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
             if (existingUser != null)
             {
-                throw new GraphQLException("A user with this email already exists");
+                return new MutationResponse("A user with this email already exists");
             }
 
             // Create the new user
@@ -106,27 +106,27 @@ namespace chldr_api
             dbContext.Users.Add(user);
             await dbContext.SaveChangesAsync();
 
-            return user;
+            return new MutationResponse() { Success = true };
         }
 
         [UseDbContext(typeof(SqlContext))]
-        public async Task<SqlUser> LoginUserAsync(string email, string password, [ScopedService] SqlContext dbContext)
+        public async Task<LoginResponse> LoginUserAsync(string email, string password, [ScopedService] SqlContext dbContext)
         {
             // Check if a user with this email exists
             var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
             if (user == null)
             {
-                throw new GraphQLException("No user found with this email");
+                return new MutationResponse("No user found with this email") as LoginResponse;
             }
 
             // Check if the password is correct
             if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
             {
-                throw new GraphQLException("Incorrect password");
+                return new MutationResponse("Incorrect Password") as LoginResponse;
             }
 
             // Generate a new access token and calculate expiration time
-            var secret = "asdf";
+            var secret = "asio9823ru8934rhy348t3498gh45893gh43589g223423df";
             var accessToken = JwtUtils.GenerateAccessToken(user.UserId, secret);
             var accessTokenExpiration = DateTime.UtcNow.AddSeconds(120);
 
@@ -139,7 +139,7 @@ namespace chldr_api
                 ExpiresIn = accessTokenExpiration
             });
             await dbContext.SaveChangesAsync();
-            return user;
+            return new LoginResponse() { AccessToken = accessToken, ExpiresIn = accessTokenExpiration, Success = true };
         }
     }
 }

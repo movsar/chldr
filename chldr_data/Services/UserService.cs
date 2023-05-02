@@ -157,7 +157,35 @@ namespace chldr_data.Services
 
         public async Task LogInEmailPasswordAsync(string email, string password)
         {
-            await App.LogInAsync(Credentials.EmailPassword(email, password));
+            var graphQlClient = new GraphQLHttpClient("https://localhost:7065/graphql/", new NewtonsoftJsonSerializer());
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                        mutation($email: String!, $password: String!) {
+                            loginUser(email: $email, password: $password) {
+                                success
+                                errorMessage
+                                accessToken
+                            }
+                        }",
+
+                Variables = new { email, password }
+            };
+
+            var response = await graphQlClient.SendMutationAsync<JObject>(request);
+            var responseData = response.Data["loginUser"].ToObject<LoginResponse>();
+
+            if (responseData.Success)
+            {
+                // Password reset initiated successfully
+                var resetToken = responseData.AccessToken;
+            }
+            else
+            {
+                // Password reset initiation failed
+                var errorMessage = responseData.ErrorMessage;
+            }
+
             _realmService.Initialize();
         }
 
