@@ -7,6 +7,7 @@ using chldr_tools;
 using chldr_utils.Services;
 using HotChocolate.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Localization;
 using System.Web;
 
@@ -29,7 +30,7 @@ namespace chldr_api
 
             // Generate a password reset token with a short expiration time
             var tokenExpiresAt = TimeSpan.FromMinutes(60);
-            var tokenValue = JwtUtils.GenerateToken(user.UserId, "password-reset-secret", tokenExpiresAt);
+            var tokenValue = JwtService.GenerateToken(user.UserId, "password-reset-secret", tokenExpiresAt);
 
             // Store the token in the Tokens table
             var token = new SqlToken
@@ -58,7 +59,7 @@ namespace chldr_api
         }
 
         [UseDbContext(typeof(SqlContext))]
-        public async Task<MutationResponse> ResetPasswordAsync([Service] SqlContext dbContext, string token, string newPassword)
+        public async Task<MutationResponse> UpdatePasswordAsync([Service] SqlContext dbContext, string token, string newPassword)
         {
             var tokenInDatabase = await dbContext.Tokens.FirstOrDefaultAsync(t => t.Type == (int)TokenType.PasswordReset && t.Value == token && t.ExpiresIn > DateTimeOffset.UtcNow);
 
@@ -127,8 +128,8 @@ namespace chldr_api
 
             // Generate a new access token and calculate expiration time
             var secret = "asio9823ru8934rhy348t3498gh45893gh43589g223423df";
-            var accessToken = JwtUtils.GenerateAccessToken(user.UserId, secret);
-            var accessTokenExpiration = DateTime.UtcNow.AddSeconds(120);
+            var accessToken = JwtService.GenerateAccessToken(user.UserId, secret);
+            var accessTokenExpiration = DateTime.UtcNow.AddMinutes(120);
 
             // Save the access token to the database
             dbContext.Tokens.Add(new SqlToken

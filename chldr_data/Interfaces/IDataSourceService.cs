@@ -3,7 +3,7 @@ using Realms;
 
 namespace chldr_data.Interfaces
 {
-    public interface IRealmService
+    public interface IDataSourceService
     {
         event Action<DataSourceType>? DatasourceInitialized;
         Realm GetDatabase();

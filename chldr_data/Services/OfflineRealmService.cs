@@ -8,7 +8,7 @@ using static Realms.Sync.MongoClient;
 
 namespace chldr_data.Services
 {
-    public class OfflineRealmService : IRealmService
+    public class OfflineRealmService : IDataSourceService
     {
         private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;

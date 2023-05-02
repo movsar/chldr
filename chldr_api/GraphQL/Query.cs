@@ -1,6 +1,5 @@
 ﻿using chldr_data.Entities;
 using chldr_tools;
-using Microsoft.AspNetCore.Identity;
 
 namespace chldr_api
 {
@@ -9,8 +8,6 @@ namespace chldr_api
         [UseProjection]
         [UseFiltering]
         [UseSorting]
-        public IQueryable<SqlEntry> GetEntries([Service] SqlContext context, int limit) => context.Entries.Take(limit);
-
-        
+        public IQueryable<SqlEntry> GetEntries([Service] SqlContext context, int limit) => context.Entries.Take(limit);        
     }
 }

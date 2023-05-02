@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.DataProtection;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace chldr_api
+namespace chldr_tools
 {
-    public static class JwtUtils
+    public static class JwtService
     {
         public static string GenerateAccessToken(string userId, string secret)
         {
@@ -52,7 +51,7 @@ namespace chldr_api
             }
         }
 
-        internal static string GenerateToken(string userId, string secret, TimeSpan timeSpan)
+        public static string GenerateToken(string userId, string secret, TimeSpan timeSpan)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secret);

@@ -23,7 +23,7 @@ namespace chldr_data.tests.Services
             _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Windows);
 
             var realmService = new OfflineRealmService(_fileService, _exceptionHandler);
-            var realmServiceFactory = new RealmServiceFactory(new List<IRealmService>() { realmService });
+            var realmServiceFactory = new RealmServiceFactory(new List<IDataSourceService>() { realmService });
             var serviceLocator = new ServiceLocator();
 
             _dataAccess = new DataAccess(serviceLocator, realmServiceFactory, _exceptionHandler, _environmentService, _networkService);

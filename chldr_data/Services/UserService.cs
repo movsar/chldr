@@ -21,17 +21,17 @@ namespace chldr_data.Services
         public event Action<UserModel, SessionStatus>? UserStateHasChanged;
         private readonly NetworkService _networkService;
         private readonly IRealmServiceFactory _realmServiceFactory;
-        private readonly SyncedRealmService _realmService;
+        private readonly SyncedRealmService _dataSourceService;
 
-        private App App => _realmService.GetApp();
-        private Realm Database => _realmService.GetDatabase();
+        private App App => _dataSourceService.GetApp();
+        private Realm Database => _dataSourceService.GetDatabase();
         public UserService(NetworkService networkService, IRealmServiceFactory realmServiceFactory)
         {
             _networkService = networkService;
             _realmServiceFactory = realmServiceFactory;
 
-            _realmService = (realmServiceFactory.GetInstance(DataSourceType.Synced) as SyncedRealmService)!;
-            _realmService.DatasourceInitialized += RealmService_DatasourceInitialized;
+            _dataSourceService = (realmServiceFactory.GetInstance(DataSourceType.Synced) as SyncedRealmService)!;
+            _dataSourceService.DatasourceInitialized += RealmService_DatasourceInitialized;
         }
         private async void RealmService_DatasourceInitialized(DataSourceType dataSourceType)
         {
@@ -131,7 +131,7 @@ namespace chldr_data.Services
             {
                 Query = @"
                         mutation($token: String!, $newPassword: String!) {
-                            resetPassword(token: $token, newPassword: $newPassword) {
+                            updatePassword(token: $token, newPassword: $newPassword) {
                                 success
                                 errorMessage
                             }
@@ -141,7 +141,7 @@ namespace chldr_data.Services
             };
 
             var response = await graphQlClient.SendMutationAsync<JObject>(request);            
-            var responseData = response.Data["resetPassword"].ToObject<MutationResponse>();
+            var responseData = response.Data["updatePassword"].ToObject<MutationResponse>();
 
             if (!responseData.Success)
             {
@@ -186,7 +186,7 @@ namespace chldr_data.Services
                 var errorMessage = responseData.ErrorMessage;
             }
 
-            _realmService.Initialize();
+            _dataSourceService.Initialize();
         }
 
         public void LogOutAsync()

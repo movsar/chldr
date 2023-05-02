@@ -1,5 +1,6 @@
 ﻿using chldr_data.Resources.Localizations;
 using chldr_shared.Stores;
+using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
@@ -14,6 +15,7 @@ namespace chldr_ui.ViewModels
         [Inject] internal UserStore UserStore { get; set; }
         [Inject] internal IStringLocalizer<AppLocalizations> Localizer { get; set; }
         [Inject] internal EnvironmentService? EnvironmentService { get; set; }
+        [Inject] internal ExceptionHandler? ExceptionHandler { get; set; }
         protected async Task CallStateHasChangedAsync()
         {
             await InvokeAsync(() =>

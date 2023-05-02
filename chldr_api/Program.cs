@@ -1,6 +1,5 @@
 using chldr_tools;
 using chldr_utils.Services;
-using Microsoft.EntityFrameworkCore;
 
 namespace chldr_api
 {
@@ -13,7 +12,6 @@ namespace chldr_api
             // Add services to the container.
 
             builder.Services.AddControllers();
-            //builder.Services.AddDbContext<SqlContext>();
             builder.Services.AddDbContextFactory<SqlContext>();
             builder.Services.AddLocalization();
             builder.Services.AddSingleton<EmailService>();

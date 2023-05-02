@@ -7,17 +7,17 @@ namespace chldr_data.Factories
     public class RealmServiceFactory : IRealmServiceFactory
     {
         public DataSourceType CurrentDataSource { get; set; } = DataSourceType.Offline;
-        private readonly IEnumerable<IRealmService> _realmServiceImplementations;
-        public RealmServiceFactory(IEnumerable<IRealmService> dataAccessImplementations)
+        private readonly IEnumerable<IDataSourceService> _realmServiceImplementations;
+        public RealmServiceFactory(IEnumerable<IDataSourceService> dataAccessImplementations)
         {
             _realmServiceImplementations = dataAccessImplementations;
         }
-        private IRealmService GetService(Type type)
+        private IDataSourceService GetService(Type type)
         {
             return _realmServiceImplementations.FirstOrDefault(x => x.GetType() == type)!;
         }
 
-        public IRealmService GetInstance(DataSourceType realmServiceType)
+        public IDataSourceService GetInstance(DataSourceType realmServiceType)
         {
             switch (realmServiceType)
             {
@@ -32,7 +32,7 @@ namespace chldr_data.Factories
             }
         }
 
-        public IRealmService GetActiveInstance()
+        public IDataSourceService GetActiveInstance()
         {
             switch (CurrentDataSource)
             {

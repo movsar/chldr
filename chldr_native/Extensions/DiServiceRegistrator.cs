@@ -33,8 +33,8 @@ namespace chldr_native.Extensions
             // Data
             appBuilder.Services.AddSingleton<ServiceLocator>();
             appBuilder.Services.AddSingleton<UserService>();
-            appBuilder.Services.AddSingleton<IRealmService, SyncedRealmService>();
-            appBuilder.Services.AddSingleton<IRealmService, OfflineRealmService>();
+            appBuilder.Services.AddSingleton<IDataSourceService, SyncedRealmService>();
+            appBuilder.Services.AddSingleton<IDataSourceService, OfflineRealmService>();
             appBuilder.Services.AddSingleton<IRealmServiceFactory, RealmServiceFactory>();
             appBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
 

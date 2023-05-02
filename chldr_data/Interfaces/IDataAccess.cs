@@ -10,7 +10,7 @@ namespace chldr_data.Interfaces
     {
         event Action<DataSourceType> DatasourceInitialized;
         void SetActiveDataservice(DataSourceType dataSourceType);
-        IRealmService GetActiveDataservice();
+        IDataSourceService GetActiveDataservice();
         void RemoveAllEntries();
         Repository GetRepository<T>() where T : IPersistentModelBase;
     }

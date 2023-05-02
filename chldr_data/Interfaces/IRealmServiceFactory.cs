@@ -5,7 +5,7 @@ namespace chldr_data.Interfaces
     public interface IRealmServiceFactory
     {
         DataSourceType CurrentDataSource { get; set; }
-        IRealmService GetInstance(DataSourceType dataAccessType);
-        IRealmService GetActiveInstance();
+        IDataSourceService GetInstance(DataSourceType dataAccessType);
+        IDataSourceService GetActiveInstance();
     }
 }

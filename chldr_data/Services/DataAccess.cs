@@ -113,7 +113,7 @@ namespace chldr_data.Services
             return (Repository)repository;
         }
 
-        public IRealmService GetActiveDataservice()
+        public IDataSourceService GetActiveDataservice()
         {
             var dataSource = _realmServiceFactory.GetActiveInstance();
             return dataSource;
