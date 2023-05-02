@@ -1,6 +1,7 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
 using chldr_data.Resources.Localizations;
+using chldr_data.ResponseTypes;
 using chldr_shared.Models;
 using chldr_tools;
 using chldr_utils.Services;
@@ -14,7 +15,8 @@ namespace chldr_api
     public class Mutation
     {
         [UseDbContext(typeof(SqlContext))]
-        public async Task<string> InitiatePasswordReset(
+        public async Task<InitiatePasswordResetResponse> InitiatePasswordReset(
+          [Service] IConfiguration configuration,
           [Service] SqlContext dbContext, [Service] IStringLocalizer<AppLocalizations> _localizer,
           [Service] EmailService emailService,
           string email)
@@ -42,8 +44,8 @@ namespace chldr_api
             await dbContext.SaveChangesAsync();
 
             // Send the password reset link to the user's email
-
-            var resetUrl = @$"/set-new-password?token={tokenValue}";
+            var host = configuration.GetValue<string>("AppHost");
+            var resetUrl = @$"{host}/set-new-password?token={tokenValue}";
             var emailBody = $"To reset your password, click the following link: {resetUrl}";
 
             var message = new EmailMessage(new string[] { email },
@@ -52,11 +54,11 @@ namespace chldr_api
 
             emailService.Send(message);
 
-            return tokenValue;
+            return new InitiatePasswordResetResponse() { Success = true, ResetToken = tokenValue };
         }
 
         [UseDbContext(typeof(SqlContext))]
-        public async Task ResetPassword([Service] SqlContext dbContext, string tokenValue, string newPassword)
+        public async Task<MutationResponse> ResetPassword([Service] SqlContext dbContext, string tokenValue, string newPassword)
         {
             var token = await dbContext.Tokens.FirstOrDefaultAsync(t => t.Type == (int)TokenType.PasswordReset && t.Value == tokenValue && t.ExpiresIn > DateTimeOffset.UtcNow);
 
@@ -78,6 +80,8 @@ namespace chldr_api
             // Remove the used password reset token from the Tokens table
             dbContext.Tokens.Remove(token);
             await dbContext.SaveChangesAsync();
+
+            return new MutationResponse() { Success = true };
         }
 
         [UseDbContext(typeof(SqlContext))]

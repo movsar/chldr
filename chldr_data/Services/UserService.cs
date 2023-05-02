@@ -2,9 +2,15 @@
 using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
+using chldr_data.ResponseTypes;
 using chldr_utils;
 using chldr_utils.Services;
+using GraphQL;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
 using MongoDB.Bson;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Realms;
 using Realms.Sync;
 
@@ -88,10 +94,37 @@ namespace chldr_data.Services
 
         public async Task SendPasswordResetRequestAsync(string email)
         {
-            await App.EmailPasswordAuth.CallResetPasswordFunctionAsync(email, "somerandomsuperhardpassword");
+            var graphQlClient = new GraphQLHttpClient("https://localhost:7065/graphql/", new NewtonsoftJsonSerializer());
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                        mutation($email: String!) {
+                            initiatePasswordReset(email: $email) {
+                                success
+                                errorMessage
+                                resetToken
+                            }
+                        }",
+
+                Variables = new { email }
+            };
+
+            var response = await graphQlClient.SendMutationAsync<JObject>(request);
+            var responseData = response.Data["initiatePasswordReset"].ToObject<InitiatePasswordResetResponse>();
+
+            if (responseData.Success)
+            {
+                // Password reset initiated successfully
+                var resetToken = responseData.ResetToken;
+            }
+            else
+            {
+                // Password reset initiation failed
+                var errorMessage = responseData.ErrorMessage;
+            }
         }
 
-        public async Task UpdatePasswordAsync(string token,string newPassword)
+        public async Task UpdatePasswordAsync(string token, string newPassword)
         {
             //await App.EmailPasswordAuth.ResetPasswordAsync(newPassword, token);
         }
