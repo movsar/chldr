@@ -140,7 +140,7 @@ namespace chldr_data.Services
                 Variables = new { token, newPassword }
             };
 
-            var response = await graphQlClient.SendMutationAsync<JObject>(request);            
+            var response = await graphQlClient.SendMutationAsync<JObject>(request);
             var responseData = response.Data["updatePassword"].ToObject<MutationResponse>();
 
             if (!responseData.Success)
@@ -155,7 +155,7 @@ namespace chldr_data.Services
             await App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
         }
 
-        public async Task LogInEmailPasswordAsync(string email, string password)
+        public async Task<LoggedInUserStatus> LogInEmailPasswordAsync(string email, string password)
         {
             var graphQlClient = new GraphQLHttpClient("https://localhost:7065/graphql/", new NewtonsoftJsonSerializer());
             var request = new GraphQLRequest
@@ -166,27 +166,38 @@ namespace chldr_data.Services
                                 success
                                 errorMessage
                                 accessToken
+                                user {
+                                    email,
+                                    firstName,
+                                    lastName,
+                                    rate
+                                }
                             }
                         }",
 
                 Variables = new { email, password }
             };
 
-            var response = await graphQlClient.SendMutationAsync<JObject>(request);
-            var responseData = response.Data["loginUser"].ToObject<LoginResponse>();
-
-            if (responseData.Success)
+            try
             {
-                // Password reset initiated successfully
-                var resetToken = responseData.AccessToken;
-            }
-            else
-            {
-                // Password reset initiation failed
-                var errorMessage = responseData.ErrorMessage;
-            }
+                var response = await graphQlClient.SendMutationAsync<JObject>(request);
+                var responseData = response.Data["loginUser"]!.ToObject<LoginResponse>();
 
-          //  _dataSourceService.Initialize();
+                if (responseData!.Success == false)
+                {
+                    throw new Exception(responseData.ErrorMessage);
+                }
+                return new LoggedInUserStatus()
+                {
+                    AccessToken = responseData.AccessToken,
+                    ExpiresIn = responseData.ExpiresIn,
+                    User = responseData.User
+                };
+            }
+            catch (Exception)
+            {
+                throw new Exception("Unexpected error occurred while logging in");
+            }
         }
 
         public void LogOutAsync()

@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using chldr_data.Interfaces;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
 [Table("User")]
 
-public partial class SqlUser
+public partial class SqlUser : IUser
 {
     public string UserId { get; set; } = Guid.NewGuid().ToString();
     public string? Email { get; set; }

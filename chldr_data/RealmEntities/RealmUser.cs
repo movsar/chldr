@@ -3,7 +3,7 @@ using Realms;
 
 namespace chldr_data.Entities;
 [MapTo("User")]
-public class RealmUser : RealmObject, IEntity
+public class RealmUser : RealmObject, IEntity, IUser
 {
     [PrimaryKey]
     public string UserId { get; set; } = Guid.NewGuid().ToString();

@@ -6,11 +6,11 @@ using System.Web;
 
 namespace chldr_ui.ViewModels
 {
-    public class SetNewPasswordPageViewModel : EditFormViewModelBase<UserInfoDto, UserInfoValidator>
+    public class SetNewPasswordPageViewModel : EditFormViewModelBase<UserDto, UserInfoValidator>
     {
         #region Properties
         [Inject] NavigationManager? NavigationManager { get; set; }
-        public UserInfoDto UserInfo { get; } = new();
+        public UserDto UserInfo { get; } = new();
         #endregion
 
         private async Task UpdatePasswordAsync(string token, string newPassword)

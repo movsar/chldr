@@ -58,7 +58,7 @@ namespace chldr_shared.Stores
             try
             {
                 SessionStatus = SessionStatus.LoggingIn;
-                await _userService.LogInEmailPasswordAsync(email, password);
+                var user = await _userService.LogInEmailPasswordAsync(email, password);
                 UserStateHasChanged?.Invoke();
             }
             catch (Exception)

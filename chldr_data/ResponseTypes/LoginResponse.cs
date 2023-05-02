@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using chldr_data.Dto;
+using chldr_data.Interfaces;
+using chldr_data.Models;
 
 namespace chldr_data.ResponseTypes
 {
@@ -10,5 +8,6 @@ namespace chldr_data.ResponseTypes
     {
         public string AccessToken { get; set; } = string.Empty;
         public DateTimeOffset ExpiresIn { get; set; }
+        public UserDto User { get; set; }
     }
 }

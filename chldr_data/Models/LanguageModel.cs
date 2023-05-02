@@ -6,7 +6,7 @@ namespace chldr_data.Models
     {
         public string Code { get; } = string.Empty;
         public string Name { get; set; }
-        public LanguageModel(RealmLanguage languageEntity) : base(languageEntity)
+        public LanguageModel(RealmLanguage languageEntity) 
         {
             Code = languageEntity.Code;
             Name = languageEntity.Name ?? string.Empty;

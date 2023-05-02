@@ -1,9 +1,10 @@
 ﻿using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_shared.Models;
 
 namespace chldr_data.Models
 {
-    public class UserModel : PersistentModelBase
+    public class UserModel : PersistentModelBase, IUser
     {
         // Members can only add new entries and translations they'll get their rate increased when moders approve their entries
         public static NumericRange MemberRateRange = new NumericRange(1, 10);
@@ -11,14 +12,14 @@ namespace chldr_data.Models
         public static NumericRange ContributorRateRange = new NumericRange(100, 1000);
         public static NumericRange EditorRateRange = new NumericRange(1000, 10000);
         public static NumericRange MaintainerRateRange = new NumericRange(10000, 500000000);
-        public string? Email { get; }
-        public int Rate { get; }
-        public RateWeight RateWeight { get; }
-        public string? FirstName { get; }
-        public string? LastName { get; }
-        public string? Patronymic { get; }
+        public string? Email { get; set; }
+        public int Rate { get; set; }
+        public RateWeight RateWeight { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? Patronymic { get; set; }
 
-        public UserModel(Entities.RealmUser user) : base(user)
+        public UserModel(IUser user)
         {
             Email = user.Email;
             Rate = user.Rate;
@@ -27,7 +28,7 @@ namespace chldr_data.Models
             Patronymic = user.Patronymic;
             RateWeight = GetRateWeight();
         }
-
+        
         public RateWeight GetRateWeight()
         {
             return GetRateWeightByRate(Rate);

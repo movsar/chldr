@@ -3,9 +3,9 @@ using chldr_shared.Validators;
 
 namespace chldr_ui.ViewModels
 {
-    public class ResetPasswordPageViewModel : EditFormViewModelBase<UserInfoDto, UserInfoValidator>
+    public class ResetPasswordPageViewModel : EditFormViewModelBase<UserDto, UserInfoValidator>
     {
-        public UserInfoDto UserInfo { get; set; } = new();
+        public UserDto UserInfo { get; set; } = new();
         private async Task SendPasswordResetRequest()
         {
             await UserStore.SendPasswordResetRequestAsync(UserInfo.Email);

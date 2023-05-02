@@ -3,9 +3,9 @@ using chldr_shared.Validators;
 
 namespace chldr_ui.ViewModels
 {
-    public class RegistrationPageViewModel : EditFormViewModelBase<UserInfoDto, UserInfoValidator>
+    public class RegistrationPageViewModel : EditFormViewModelBase<UserDto, UserInfoValidator>
     {
-        public UserInfoDto UserInfo { get; } = new();
+        public UserDto UserInfo { get; } = new();
         private async Task SendRegistrationRequest()
         {
             await UserStore.RegisterNewUser(UserInfo.Email, UserInfo.Password);

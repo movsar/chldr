@@ -24,7 +24,7 @@ namespace chldr_native.Extensions
             mauiAppBuilder.Services.AddScoped<WordValidator>();
             mauiAppBuilder.Services.AddScoped<TranslationValidator>();
             mauiAppBuilder.Services.AddScoped<UserInfoValidator>();
-            mauiAppBuilder.Services.AddScoped<IValidator<UserInfoDto>, UserInfoValidator>();
+            mauiAppBuilder.Services.AddScoped<IValidator<UserDto>, UserInfoValidator>();
 
             return mauiAppBuilder;
         }

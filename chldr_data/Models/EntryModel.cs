@@ -8,7 +8,7 @@ namespace chldr_data.Models
         public SourceModel Source { get; }
         public int Rate { get; }
         public int Type { get; }
-        public EntryModel(RealmEntry entry) : base(entry)
+        public EntryModel(RealmEntry entry)
         {
             Rate = entry.Rate;
             Type = entry.Type;

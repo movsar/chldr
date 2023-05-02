@@ -7,7 +7,7 @@ namespace chldr_data.Models
         public string Name { get; }
         public string Notes { get; }
 
-        public SourceModel(RealmSource source) : base(source)
+        public SourceModel(RealmSource source)
         {
             Name = source.Name;
             Notes = source.Notes;

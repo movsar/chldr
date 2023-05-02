@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace chldr_ui.ViewModels
 {
-    public class ProfilePageViewModel : EditFormViewModelBase<UserInfoDto, UserInfoValidator>
+    public class ProfilePageViewModel : EditFormViewModelBase<UserDto, UserInfoValidator>
     {
         [Inject] NavigationManager NavigationManager { get; set; }
         public Task ValidateAndSubmitAsync()

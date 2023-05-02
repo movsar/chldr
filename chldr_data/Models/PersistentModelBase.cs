@@ -8,8 +8,5 @@ namespace chldr_data.Models
         public string Id { get; }
         public DateTimeOffset CreatedAt { get; }
         public DateTimeOffset UpdatedAt { get; }
-        public PersistentModelBase(IEntity entity)
-        {
-        }
     }
 }

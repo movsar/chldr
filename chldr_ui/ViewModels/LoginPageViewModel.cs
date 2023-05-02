@@ -5,11 +5,11 @@ using System.Web;
 
 namespace chldr_ui.ViewModels
 {
-    public class LoginPageViewModel : EditFormViewModelBase<UserInfoDto, UserInfoValidator>
+    public class LoginPageViewModel : EditFormViewModelBase<UserDto, UserInfoValidator>
     {
         #region Properties
         [Inject] NavigationManager? NavigationManager { get; set; }
-        public UserInfoDto UserInfo { get; } = new();
+        public UserDto UserInfo { get; } = new();
         internal static bool PageInitialized { get; private set; } = false;
         internal static bool EmailConfirmationCompleted { get; private set; } = false;
         #endregion

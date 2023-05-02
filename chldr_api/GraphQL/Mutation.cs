@@ -1,5 +1,7 @@
-﻿using chldr_data.Entities;
+﻿using chldr_data.Dto;
+using chldr_data.Entities;
 using chldr_data.Enums;
+using chldr_data.Models;
 using chldr_data.Resources.Localizations;
 using chldr_data.ResponseTypes;
 using chldr_shared.Models;
@@ -117,13 +119,13 @@ namespace chldr_api
             var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
             if (user == null)
             {
-                return new MutationResponse("No user found with this email") as LoginResponse;
+                return new LoginResponse() { ErrorMessage = "No user found with this email" };
             }
 
             // Check if the password is correct
             if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
             {
-                return new MutationResponse("Incorrect Password") as LoginResponse;
+                return new LoginResponse() { ErrorMessage = "Incorrect Password" };
             }
 
             // Generate a new access token and calculate expiration time
@@ -140,7 +142,13 @@ namespace chldr_api
                 ExpiresIn = accessTokenExpiration
             });
             await dbContext.SaveChangesAsync();
-            return new LoginResponse() { AccessToken = accessToken, ExpiresIn = accessTokenExpiration, Success = true };
+            return new LoginResponse()
+            {
+                User = new UserDto(user),
+                AccessToken = accessToken,
+                ExpiresIn = accessTokenExpiration,
+                Success = true
+            };
         }
     }
 }

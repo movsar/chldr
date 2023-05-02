@@ -23,7 +23,7 @@ namespace chldr_blazor.Extensions
             appBuilder.Services.AddSingleton<WordValidator>();
             appBuilder.Services.AddSingleton<TranslationValidator>();
             appBuilder.Services.AddSingleton<UserInfoValidator>();
-            appBuilder.Services.AddSingleton<IValidator<UserInfoDto>, UserInfoValidator>();
+            appBuilder.Services.AddSingleton<IValidator<UserDto>, UserInfoValidator>();
 
             return appBuilder;
         }
