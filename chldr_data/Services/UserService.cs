@@ -166,6 +166,7 @@ namespace chldr_data.Services
                                 success
                                 errorMessage
                                 accessToken
+                                refreshToken
                                 user {
                                     email,
                                     firstName,

@@ -31,8 +31,8 @@ namespace chldr_api
             }
 
             // Generate a password reset token with a short expiration time
-            var tokenExpiresAt = TimeSpan.FromMinutes(60);
-            var tokenValue = JwtService.GenerateToken(user.UserId, "password-reset-secret", tokenExpiresAt);
+            var tokenExpiresIn = DateTime.UtcNow.AddMinutes(60);
+            var tokenValue = JwtService.GenerateToken(user.UserId, "password-reset-secret", tokenExpiresIn);
 
             // Store the token in the Tokens table
             var token = new SqlToken
@@ -40,7 +40,7 @@ namespace chldr_api
                 UserId = user.UserId,
                 Type = (int)TokenType.PasswordReset,
                 Value = tokenValue,
-                ExpiresIn = DateTime.UtcNow.AddMinutes(60),
+                ExpiresIn = tokenExpiresIn,
             };
 
             dbContext.Tokens.Add(token);
@@ -129,11 +129,13 @@ namespace chldr_api
             }
 
             // Generate a new access token and calculate expiration time
-            var secret = "asio9823ru8934rhy348t3498gh45893gh43589g223423df";
-            var accessToken = JwtService.GenerateAccessToken(user.UserId, secret);
             var accessTokenExpiration = DateTime.UtcNow.AddMinutes(120);
+            var refreshTokenExpiration = DateTime.UtcNow.AddDays(30);
 
-            // Save the access token to the database
+            var accessToken = JwtService.GenerateToken(user.UserId, "access-token-secret", accessTokenExpiration);
+            var refreshToken = JwtService.GenerateToken(user.UserId, "refresh-token-secret", refreshTokenExpiration);
+
+            // Save the tokens to the database
             dbContext.Tokens.Add(new SqlToken
             {
                 UserId = user.UserId,
@@ -141,11 +143,22 @@ namespace chldr_api
                 Value = accessToken,
                 ExpiresIn = accessTokenExpiration
             });
+
+            dbContext.Tokens.Add(new SqlToken
+            {
+                UserId = user.UserId,
+                Type = (int)TokenType.Refresh,
+                Value = refreshToken,
+                ExpiresIn = refreshTokenExpiration
+            });
+
             await dbContext.SaveChangesAsync();
+
             return new LoginResponse()
             {
                 User = new UserDto(user),
                 AccessToken = accessToken,
+                RefreshToken = refreshToken,
                 ExpiresIn = accessTokenExpiration,
                 Success = true
             };

@@ -8,7 +8,7 @@ namespace chldr_tools
 {
     public static class JwtService
     {
-        public static string GenerateAccessToken(string userId, string secret)
+        public static string GenerateToken(string userId, string secret, DateTime expiresAt)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secret);
@@ -19,7 +19,7 @@ namespace chldr_tools
                 {
                 new Claim(ClaimTypes.NameIdentifier, userId)
                 }),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = expiresAt,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -49,25 +49,6 @@ namespace chldr_tools
             {
                 return null;
             }
-        }
-
-        public static string GenerateToken(string userId, string secret, TimeSpan timeSpan)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(secret);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                new Claim(ClaimTypes.NameIdentifier, userId)
-                }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
         }
     }
 
