@@ -186,7 +186,7 @@ namespace chldr_data.Services
                 var errorMessage = responseData.ErrorMessage;
             }
 
-            _dataSourceService.Initialize();
+          //  _dataSourceService.Initialize();
         }
 
         public void LogOutAsync()
