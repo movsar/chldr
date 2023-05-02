@@ -126,7 +126,28 @@ namespace chldr_data.Services
 
         public async Task UpdatePasswordAsync(string token, string newPassword)
         {
-            //await App.EmailPasswordAuth.ResetPasswordAsync(newPassword, token);
+            var graphQlClient = new GraphQLHttpClient("https://localhost:7065/graphql/", new NewtonsoftJsonSerializer());
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                        mutation($token: String!, $newPassword: String!) {
+                            resetPassword(token: $token, newPassword: $newPassword) {
+                                success
+                                errorMessage
+                            }
+                        }",
+
+                Variables = new { token, newPassword }
+            };
+
+            var response = await graphQlClient.SendMutationAsync<JObject>(request);            
+            var responseData = response.Data["resetPassword"].ToObject<MutationResponse>();
+
+            if (!responseData.Success)
+            {
+                // Password reset initiation failed
+                var errorMessage = responseData.ErrorMessage;
+            }
         }
 
         public async Task ConfirmUserAsync(string token, string tokenId, string userEmail)

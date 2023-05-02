@@ -58,16 +58,16 @@ namespace chldr_api
         }
 
         [UseDbContext(typeof(SqlContext))]
-        public async Task<MutationResponse> ResetPassword([Service] SqlContext dbContext, string tokenValue, string newPassword)
+        public async Task<MutationResponse> ResetPassword([Service] SqlContext dbContext, string token, string newPassword)
         {
-            var token = await dbContext.Tokens.FirstOrDefaultAsync(t => t.Type == (int)TokenType.PasswordReset && t.Value == tokenValue && t.ExpiresIn > DateTimeOffset.UtcNow);
+            var tokenInDatabase = await dbContext.Tokens.FirstOrDefaultAsync(t => t.Type == (int)TokenType.PasswordReset && t.Value == token && t.ExpiresIn > DateTimeOffset.UtcNow);
 
-            if (token == null)
+            if (tokenInDatabase == null)
             {
                 throw new Exception("Invalid token");
             }
 
-            var user = await dbContext.Users.FindAsync(token.UserId);
+            var user = await dbContext.Users.FindAsync(tokenInDatabase.UserId);
             if (user == null)
             {
                 throw new Exception("User not found");
@@ -78,7 +78,7 @@ namespace chldr_api
             await dbContext.SaveChangesAsync();
 
             // Remove the used password reset token from the Tokens table
-            dbContext.Tokens.Remove(token);
+            dbContext.Tokens.Remove(tokenInDatabase);
             await dbContext.SaveChangesAsync();
 
             return new MutationResponse() { Success = true };
