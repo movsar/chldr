@@ -167,6 +167,7 @@ namespace chldr_data.Services
                                 errorMessage
                                 accessToken
                                 refreshToken
+                                accessTokenExpiresIn
                                 user {
                                     email,
                                     firstName,
@@ -192,7 +193,7 @@ namespace chldr_data.Services
                 {
                     AccessToken = responseData.AccessToken,
                     RefreshToken = responseData.RefreshToken,
-                    ExpiresIn = responseData.ExpiresIn,
+                    AccessTokenExpiresIn = responseData.AccessTokenExpiresIn,
                     Status = SessionStatus.LoggedIn,
                     User = responseData.User
                 };

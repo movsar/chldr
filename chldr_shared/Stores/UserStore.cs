@@ -11,12 +11,13 @@ namespace chldr_shared.Stores
         #region Properties, Events and Fields
         public event Action UserStateHasChanged;
 
+        private readonly LocalStorageService _localStorageService;
         private readonly EnvironmentService _environmentService;
         private readonly UserService _userService;
         public ActiveSession ActiveSession { get; private set; } = new ActiveSession();
         #endregion
 
-        public UserStore(UserService userService, EnvironmentService environmentService, NetworkService networkService)
+        public UserStore(UserService userService, EnvironmentService environmentService, NetworkService networkService, LocalStorageService localStorageService)
         {
             // Let people log in if they want (on prod turn off this for Web)
             if (/*environmentService.CurrentPlatform != Platforms.Web &&*/ networkService.IsNetworUp)
@@ -24,8 +25,29 @@ namespace chldr_shared.Stores
                 ActiveSession.Status = SessionStatus.Anonymous;
             }
 
+            _localStorageService = localStorageService;
             _environmentService = environmentService;
             _userService = userService;
+
+            RestoreLastSession();
+        }
+
+        private async Task SaveActiveSession()
+        {
+            await _localStorageService.SetItem<ActiveSession>("session", ActiveSession);
+        }
+
+        private async Task RestoreLastSession()
+        {
+            var session = await _localStorageService.GetItem<ActiveSession>("session");
+            if (session != null)
+            {
+                ActiveSession = session;
+            }
+
+            // TODO: Validate access token
+
+            UserStateHasChanged?.Invoke();
         }
 
         public async Task RegisterNewUser(string email, string password)
@@ -38,6 +60,7 @@ namespace chldr_shared.Stores
             try
             {
                 ActiveSession = await _userService.LogInEmailPasswordAsync(email, password);
+                await SaveActiveSession();
 
                 // TODO: Save somewhere refresh and access tokens with expiresIn value
                 UserStateHasChanged?.Invoke();
@@ -63,10 +86,11 @@ namespace chldr_shared.Stores
             await _userService.UpdatePasswordAsync(token, newPassword);
         }
 
-        public void LogOutAsync()
+        public async Task LogOutAsync()
         {
             _userService.LogOutAsync();
             ActiveSession.Clear();
+            await SaveActiveSession();
             UserStateHasChanged?.Invoke();
         }
     }

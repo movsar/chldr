@@ -8,7 +8,7 @@ namespace chldr_data.ResponseTypes
     {
         public string AccessToken { get; set; } = string.Empty;
         public string RefreshToken { get; set; } = string.Empty;
-        public DateTimeOffset ExpiresIn { get; set; }
+        public DateTimeOffset AccessTokenExpiresIn { get; set; }
         public UserDto User { get; set; }
     }
 }

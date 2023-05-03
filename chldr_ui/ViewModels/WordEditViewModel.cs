@@ -31,7 +31,8 @@ namespace chldr_ui.ViewModels
                 throw ex;
             }
 
-            ContentStore.UpdateWord((UserModel)UserStore.ActiveSession.User!, Word);
+            UserModel user = null; // new UserModel(); // Get usermodel
+            ContentStore.UpdateWord(user, Word);
             NavigationManager.NavigateTo("/");
         }
 

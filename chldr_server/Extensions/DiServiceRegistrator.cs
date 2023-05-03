@@ -38,9 +38,10 @@ namespace chldr_blazor.Extensions
             appBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
 
             // Shared
-            appBuilder.Services.AddSingleton<ContentStore>();
-            appBuilder.Services.AddSingleton<UserStore>();
+            appBuilder.Services.AddScoped<ContentStore>();
+            appBuilder.Services.AddScoped<UserStore>();
             appBuilder.Services.AddScoped<JsInterop>();
+            appBuilder.Services.AddScoped<LocalStorageService>();
             appBuilder.Services.AddSingleton<EmailService>();
             appBuilder.Services.AddSingleton(x => new EnvironmentService(Platforms.Web));
             appBuilder.Services.AddSingleton(x => new FileService(AppContext.BaseDirectory));
@@ -62,9 +63,9 @@ namespace chldr_blazor.Extensions
         }
         public static WebApplicationBuilder RegisterViewModels(this WebApplicationBuilder appBuilder)
         {
-            appBuilder.Services.AddSingleton<MainPageViewModel>();
-            appBuilder.Services.AddSingleton<LoginPageViewModel>();
-            appBuilder.Services.AddSingleton<RegistrationPageViewModel>();
+            appBuilder.Services.AddScoped<MainPageViewModel>();
+            appBuilder.Services.AddScoped<LoginPageViewModel>();
+            appBuilder.Services.AddScoped<RegistrationPageViewModel>();
 
             return appBuilder;
         }

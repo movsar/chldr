@@ -39,9 +39,10 @@ namespace chldr_native.Extensions
             appBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
 
             // Shared
-            appBuilder.Services.AddSingleton<ContentStore>();
-            appBuilder.Services.AddSingleton<UserStore>();
+            appBuilder.Services.AddScoped<ContentStore>();
+            appBuilder.Services.AddScoped<UserStore>();
             appBuilder.Services.AddScoped<JsInterop>();
+            appBuilder.Services.AddScoped<LocalStorageService>();
             appBuilder.Services.AddSingleton<EmailService>();
 
             var platform = Platforms.Web;

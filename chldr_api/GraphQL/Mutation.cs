@@ -159,7 +159,7 @@ namespace chldr_api
                 User = new UserDto(user),
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
-                ExpiresIn = accessTokenExpiration,
+                AccessTokenExpiresIn = accessTokenExpiration,
                 Success = true
             };
         }
