@@ -193,7 +193,7 @@ namespace chldr_shared.Stores
             Search(query, new FiltrationFlags());
         }
 
-        public PhraseModel AddNewPhrase(UserModel userModel, string content, string notes)
+        public PhraseModel AddNewPhrase(IUser userModel, string content, string notes)
         {
             PhraseModel phrase = PhrasesRepository.Add(content, notes);
             return phrase;
@@ -217,7 +217,7 @@ namespace chldr_shared.Stores
             return phrase;
         }
 
-        public void UpdatePhrase(UserModel loggedInUser, string? phraseId, string? content, string? notes)
+        public void UpdatePhrase(IUser loggedInUser, string? phraseId, string? content, string? notes)
         {
             // _dataAccess.UpdatePhrase(loggedInUser, phraseId, content, notes);
         }

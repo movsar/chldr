@@ -1,5 +1,6 @@
 ﻿using chldr_data.Dto;
 using chldr_data.Enums;
+using chldr_data.Models;
 using chldr_data.Models.Words;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
@@ -30,7 +31,7 @@ namespace chldr_ui.ViewModels
                 throw ex;
             }
 
-            ContentStore.UpdateWord(UserStore.CurrentUserInfo!, Word);
+            ContentStore.UpdateWord((UserModel)UserStore.ActiveSession.User!, Word);
             NavigationManager.NavigateTo("/");
         }
 

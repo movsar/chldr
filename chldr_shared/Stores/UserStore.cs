@@ -2,8 +2,6 @@
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Services;
-using chldr_shared.Enums;
-using chldr_utils;
 using chldr_utils.Services;
 
 namespace chldr_shared.Stores
@@ -15,18 +13,7 @@ namespace chldr_shared.Stores
 
         private readonly EnvironmentService _environmentService;
         private readonly UserService _userService;
-        private SessionStatus _sessionStatus = SessionStatus.Disconnected;
-        public SessionStatus SessionStatus
-        {
-            get => _sessionStatus;
-            set
-            {
-                _sessionStatus = value;
-                UserStateHasChanged?.Invoke();
-            }
-        }
-        public UserModel? CurrentUserInfo { get; set; }
-
+        public ActiveSession ActiveSession { get; } = new ActiveSession();
         #endregion
 
         public UserStore(UserService userService, EnvironmentService environmentService, NetworkService networkService)
@@ -34,18 +21,11 @@ namespace chldr_shared.Stores
             // Let people log in if they want (on prod turn off this for Web)
             if (/*environmentService.CurrentPlatform != Platforms.Web &&*/ networkService.IsNetworUp)
             {
-                SessionStatus = SessionStatus.Unauthorized;
+                ActiveSession.Status = SessionStatus.Anonymous;
             }
 
             _environmentService = environmentService;
             _userService = userService;
-            userService.UserStateHasChanged += UserService_UserStateHasChanged;
-        }
-
-        private void UserService_UserStateHasChanged(UserModel user, SessionStatus sessionStatus)
-        {
-            CurrentUserInfo = user;
-            SessionStatus = sessionStatus;
         }
 
         public async Task RegisterNewUser(string email, string password)
@@ -57,8 +37,9 @@ namespace chldr_shared.Stores
         {
             try
             {
-                SessionStatus = SessionStatus.LoggingIn;
-                var user = await _userService.LogInEmailPasswordAsync(email, password);
+                var activeSession = await _userService.LogInEmailPasswordAsync(email, password);
+
+                // TODO: Save somewhere refresh and access tokens with expiresIn value
                 UserStateHasChanged?.Invoke();
             }
             catch (Exception)
@@ -77,7 +58,7 @@ namespace chldr_shared.Stores
             await _userService.SendPasswordResetRequestAsync(email);
         }
 
-        public async Task UpdatePasswordAsync(string token,  string newPassword)
+        public async Task UpdatePasswordAsync(string token, string newPassword)
         {
             await _userService.UpdatePasswordAsync(token, newPassword);
         }
@@ -85,8 +66,7 @@ namespace chldr_shared.Stores
         public void LogOutAsync()
         {
             _userService.LogOutAsync();
-            CurrentUserInfo = null;
-            SessionStatus = SessionStatus.Unauthorized;
+            ActiveSession.Clear();
             UserStateHasChanged?.Invoke();
         }
     }

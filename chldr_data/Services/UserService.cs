@@ -18,7 +18,7 @@ namespace chldr_data.Services
 {
     public class UserService
     {
-        public event Action<UserModel, SessionStatus>? UserStateHasChanged;
+        public event Action<IUser, SessionStatus>? UserStateHasChanged;
         private readonly NetworkService _networkService;
         private readonly IRealmServiceFactory _realmServiceFactory;
         private readonly SyncedRealmService _dataSourceService;
@@ -49,7 +49,7 @@ namespace chldr_data.Services
             await Database.SyncSession.WaitForDownloadAsync();
 
             var sessionStatus = GetCurrentUserSessionStatus();
-            var userInfo = GetCurrentUserInfo();
+            var userInfo = GetActiveSession();
 
             UserStateHasChanged?.Invoke(userInfo, sessionStatus);
         }
@@ -58,23 +58,23 @@ namespace chldr_data.Services
         {
             if (!_networkService.IsNetworUp || Database.SyncSession.State == SessionState.Inactive)
             {
-                return SessionStatus.Disconnected;
+                return SessionStatus.Offline;
             }
 
             if (App?.CurrentUser?.Id == null)
             {
-                return SessionStatus.Unauthorized;
+                return SessionStatus.Anonymous;
             }
 
             if (App.CurrentUser.Provider == Credentials.AuthProvider.Anonymous)
             {
-                return SessionStatus.Unauthorized;
+                return SessionStatus.Anonymous;
             }
 
             return SessionStatus.LoggedIn;
         }
 
-        public UserModel GetCurrentUserInfo()
+        public UserModel GetActiveSession()
         {
             var appUserId = App.CurrentUser.Id;
             var user = Database.All<Entities.RealmUser>().FirstOrDefault(u => u.UserId == appUserId);
@@ -155,7 +155,7 @@ namespace chldr_data.Services
             await App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
         }
 
-        public async Task<LoggedInUserStatus> LogInEmailPasswordAsync(string email, string password)
+        public async Task<ActiveSession> LogInEmailPasswordAsync(string email, string password)
         {
             var graphQlClient = new GraphQLHttpClient("https://localhost:7065/graphql/", new NewtonsoftJsonSerializer());
             var request = new GraphQLRequest
@@ -188,10 +188,12 @@ namespace chldr_data.Services
                 {
                     throw new Exception(responseData.ErrorMessage);
                 }
-                return new LoggedInUserStatus()
+                return new ActiveSession()
                 {
                     AccessToken = responseData.AccessToken,
+                    RefreshToken = responseData.RefreshToken,
                     ExpiresIn = responseData.ExpiresIn,
+                    Status = SessionStatus.LoggedIn,
                     User = responseData.User
                 };
             }

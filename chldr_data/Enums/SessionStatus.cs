@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace chldr_data.Enums
+﻿namespace chldr_data.Enums
 {
     public enum SessionStatus
     {
-        // Offline
-        Disconnected = 0,
-
-        // Anonumous user logged in
-        Unauthorized = 1,
-
+        Offline = 0,
+        Anonymous = 1,
         LoggingIn = 2,
         LoggedIn = 3,
+        LoggingOut = 4,
+        LoggedOut = 5
     }
 }
