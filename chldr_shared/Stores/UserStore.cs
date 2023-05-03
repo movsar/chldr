@@ -13,7 +13,7 @@ namespace chldr_shared.Stores
 
         private readonly EnvironmentService _environmentService;
         private readonly UserService _userService;
-        public ActiveSession ActiveSession { get; } = new ActiveSession();
+        public ActiveSession ActiveSession { get; private set; } = new ActiveSession();
         #endregion
 
         public UserStore(UserService userService, EnvironmentService environmentService, NetworkService networkService)
@@ -37,7 +37,7 @@ namespace chldr_shared.Stores
         {
             try
             {
-                var activeSession = await _userService.LogInEmailPasswordAsync(email, password);
+                ActiveSession = await _userService.LogInEmailPasswordAsync(email, password);
 
                 // TODO: Save somewhere refresh and access tokens with expiresIn value
                 UserStateHasChanged?.Invoke();

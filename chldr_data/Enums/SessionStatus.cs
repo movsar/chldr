@@ -7,6 +7,5 @@
         LoggingIn = 2,
         LoggedIn = 3,
         LoggingOut = 4,
-        LoggedOut = 5
     }
 }

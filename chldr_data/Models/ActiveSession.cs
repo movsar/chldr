@@ -15,7 +15,7 @@ namespace chldr_data.Models
         {
             AccessToken = string.Empty;
             RefreshToken = string.Empty;
-            Status = SessionStatus.LoggedOut;
+            Status = SessionStatus.Anonymous;
             ExpiresIn = DateTimeOffset.MinValue;
             User = null;
         }
