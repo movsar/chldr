@@ -91,10 +91,10 @@ namespace chldr_data.Services
         {
             await App.EmailPasswordAuth.RegisterUserAsync(email, password);
         }
-
+        private const string AppHost = "https://api.nohchiyn-mott.com";
         public async Task SendPasswordResetRequestAsync(string email)
         {
-            var graphQlClient = new GraphQLHttpClient("https://localhost:7065/graphql/", new NewtonsoftJsonSerializer());
+            var graphQlClient = new GraphQLHttpClient($"{AppHost}/graphql/", new NewtonsoftJsonSerializer());
             var request = new GraphQLRequest
             {
                 Query = @"
@@ -126,7 +126,7 @@ namespace chldr_data.Services
 
         public async Task UpdatePasswordAsync(string token, string newPassword)
         {
-            var graphQlClient = new GraphQLHttpClient("https://localhost:7065/graphql/", new NewtonsoftJsonSerializer());
+            var graphQlClient = new GraphQLHttpClient($"{AppHost}/graphql/", new NewtonsoftJsonSerializer());
             var request = new GraphQLRequest
             {
                 Query = @"
@@ -157,7 +157,7 @@ namespace chldr_data.Services
 
         public async Task<ActiveSession> LogInEmailPasswordAsync(string email, string password)
         {
-            var graphQlClient = new GraphQLHttpClient("https://localhost:7065/graphql/", new NewtonsoftJsonSerializer());
+            var graphQlClient = new GraphQLHttpClient($"{AppHost}/graphql/", new NewtonsoftJsonSerializer());
             var request = new GraphQLRequest
             {
                 Query = @"
