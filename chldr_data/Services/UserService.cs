@@ -91,7 +91,7 @@ namespace chldr_data.Services
         {
             await App.EmailPasswordAuth.RegisterUserAsync(email, password);
         }
-        private const string AppHost = "https://api.nohchiyn-mott.com";
+        private const string AppHost = "https://localhost:7065/graphql/";
         public async Task SendPasswordResetRequestAsync(string email)
         {
             var graphQlClient = new GraphQLHttpClient($"{AppHost}/graphql/", new NewtonsoftJsonSerializer());
