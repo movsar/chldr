@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace chldr_api.GraphQL.MutationServices
 {
-    public class UpdatePasswordMutation
+    public class UpdatePasswordMutation : MutationService
     {
-        internal async Task<MutationResponse> ExecuteAsync(SqlContext dbContext, string token, string newPassword)
+        internal async Task<MutationResponse> ExecuteAsync(string token, string newPassword)
         {
             var tokenInDatabase = await dbContext.Tokens.FirstOrDefaultAsync(t => t.Type == (int)TokenType.PasswordReset && t.Value == token && t.ExpiresIn > DateTimeOffset.UtcNow);
 

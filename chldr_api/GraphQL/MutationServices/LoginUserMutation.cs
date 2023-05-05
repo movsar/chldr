@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace chldr_api.GraphQL.MutationServices
 {
-    public class LoginUserMutation
+    public class LoginUserMutation : MutationService
     {
-        internal  async Task<LoginResponse> ExecuteAsync(SqlContext dbContext, string email, string password)
+        internal async Task<LoginResponse> ExecuteAsync(string email, string password)
         {
             // Check if a user with this email exists
             var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);

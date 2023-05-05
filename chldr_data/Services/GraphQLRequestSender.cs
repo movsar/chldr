@@ -21,13 +21,11 @@ namespace chldr_data.Services
             try
             {
                 var response = await _graphQLClient.SendMutationAsync<JObject>(request);
-                var deserializedResponse = new GraphQLResponse<T>
+                return new GraphQLResponse<T>
                 {
-
                     Data = response.Data[mutation]!.ToObject<T>(),
                     Errors = response.Errors,
                 };
-                return deserializedResponse;
             }
             catch (Exception ex)
             {

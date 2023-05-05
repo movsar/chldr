@@ -106,7 +106,7 @@ namespace chldr_data.Services
             {
                 AccessToken = response.Data.AccessToken,
                 RefreshToken = response.Data.RefreshToken,
-                AccessTokenExpiresIn = response.Data.AccessTokenExpiresIn,
+                AccessTokenExpiresIn = (DateTimeOffset)response.Data.AccessTokenExpiresIn,
                 Status = SessionStatus.LoggedIn,
                 User = response.Data.User
             };
@@ -146,7 +146,7 @@ namespace chldr_data.Services
             {
                 AccessToken = response.Data.AccessToken,
                 RefreshToken = response.Data.RefreshToken,
-                AccessTokenExpiresIn = response.Data.AccessTokenExpiresIn,
+                AccessTokenExpiresIn = (DateTimeOffset)response.Data.AccessTokenExpiresIn,
                 Status = SessionStatus.LoggedIn,
                 User = response.Data.User
             };

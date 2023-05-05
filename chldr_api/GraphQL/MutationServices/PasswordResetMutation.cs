@@ -10,9 +10,9 @@ using Microsoft.Extensions.Localization;
 
 namespace chldr_api.GraphQL.MutationServices
 {
-    public class PasswordResetMutation
+    public class PasswordResetMutation : MutationService
     {
-        internal  async Task<PasswordResetResponse> ExecuteAsync(IConfiguration configuration, SqlContext dbContext, IStringLocalizer<AppLocalizations> localizer, EmailService emailService, string email)
+        internal async Task<PasswordResetResponse> ExecuteAsync(IConfiguration configuration, IStringLocalizer<AppLocalizations> localizer, EmailService emailService, string email)
         {
             var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (user == null)
