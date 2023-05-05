@@ -103,9 +103,9 @@ namespace chldr_data.Services
             await _authService.UpdatePasswordAsync(token, newPassword);
         }
 
-        public async Task ConfirmUserAsync(string token, string tokenId, string userEmail)
+        public async Task ConfirmUserAsync(string token)
         {
-            await _authService.ConfirmUserAsync(token, tokenId, userEmail);
+             await _authService.ConfirmUserAsync(token);
         }
 
         public async Task<ActiveSession> LogInEmailPasswordAsync(string email, string password)

@@ -7,28 +7,16 @@ using chldr_tools;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using Realms.Sync;
 
 namespace chldr_api.GraphQL.MutationServices
 {
-    public class LoginUserMutation : MutationService
+    public class LoginResolver : ServiceResolver
     {
-        public LoginUserMutation(IConfiguration configuration, IStringLocalizer<AppLocalizations> localizer, EmailService emailService) : base(configuration, localizer, emailService)        {        }
+        public LoginResolver(IConfiguration configuration, IStringLocalizer<AppLocalizations> localizer, EmailService emailService) : base(configuration, localizer, emailService) { }
 
-        internal async Task<LoginResponse> ExecuteAsync(string email, string password)
+        internal static async Task<LoginResponse> SignInAsync(SqlContext dbContext, SqlUser user)
         {
-            // Check if a user with this email exists
-            var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
-            if (user == null)
-            {
-                return new LoginResponse() { ErrorMessage = "No user found with this email" };
-            }
-
-            // Check if the password is correct
-            if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
-            {
-                return new LoginResponse() { ErrorMessage = "Incorrect Password" };
-            }
-
             // Generate a new access token and calculate expiration time
             var accessTokenExpiration = DateTime.UtcNow.AddMinutes(120);
             var refreshTokenExpiration = DateTime.UtcNow.AddDays(30);
@@ -63,6 +51,23 @@ namespace chldr_api.GraphQL.MutationServices
                 AccessTokenExpiresIn = accessTokenExpiration,
                 Success = true
             };
+        }
+        internal async Task<LoginResponse> ExecuteAsync(string email, string password)
+        {
+            // Check if a user with this email exists
+            var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                return new LoginResponse() { ErrorMessage = "No user found with this email" };
+            }
+
+            // Check if the password is correct
+            if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
+            {
+                return new LoginResponse() { ErrorMessage = "Incorrect Password" };
+            }
+
+            return await SignInAsync(dbContext, user);
         }
     }
 }

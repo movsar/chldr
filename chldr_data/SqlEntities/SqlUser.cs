@@ -15,7 +15,7 @@ public partial class SqlUser : IUser
     public string? LastName { get; set; }
     public string? Patronymic { get; set; }
     public byte? IsModerator { get; set; }
-    public byte? AccountStatus { get; set; }
+    public byte? UserStatus { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
     public virtual ICollection<SqlActivity> Activities { get; set; } = new List<SqlActivity>();

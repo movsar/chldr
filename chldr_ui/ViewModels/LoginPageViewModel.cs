@@ -23,9 +23,9 @@ namespace chldr_ui.ViewModels
             await UserStore.LogInEmailPasswordAsync(UserInfo.Email, UserInfo.Password);
             NavigationManager!.NavigateTo("/");
         }
-        private async Task ConfirmEmail(string token, string tokenId, string email)
+        private async Task ConfirmEmail(string token)
         {
-            await UserStore.ConfirmUserAsync(token!, tokenId!, email!);
+            await UserStore.ConfirmUserAsync(token!);
             EmailConfirmationCompleted = true;
             StateHasChanged();
         }
@@ -51,15 +51,13 @@ namespace chldr_ui.ViewModels
             // Check whether this page has been opened from the email confirmation link
             var queryParams = HttpUtility.ParseQueryString(new Uri(NavigationManager!.Uri).Query);
             var token = queryParams.Get("token");
-            var tokenId = queryParams.Get("tokenId");
-            var email = queryParams.Get("email");
 
-            if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(tokenId) || string.IsNullOrWhiteSpace(email))
+            if (string.IsNullOrWhiteSpace(token))
             {
                 return;
             }
 
-            await ExecuteSafelyAsync(() => ConfirmEmail(token!, tokenId!, email!));
+            await ExecuteSafelyAsync(() => ConfirmEmail(token!));
         }
 
         public async Task ValidateAndSubmitAsync()

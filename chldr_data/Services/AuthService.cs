@@ -67,9 +67,26 @@ namespace chldr_data.Services
             }
         }
 
-        public async Task ConfirmUserAsync(string token, string tokenId, string userEmail)
+        public async Task ConfirmUserAsync(string token)
         {
-            // TODO: change await App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                        mutation($token: String!) {
+                            confirmEmail(token: $token) {
+                                success
+                                errorMessage
+                            }
+                        }",
+
+                Variables = new { token }
+            };
+
+            var response = await _requestSender.SendRequestAsync<MutationResponse>(request, "confirmEmail");
+            if (!response.Data.Success)
+            {
+                throw new Exception(response.Data.ErrorMessage);
+            }
         }
 
         internal async Task<ActiveSession> LogInEmailPasswordAsync(string email, string password)
@@ -134,7 +151,8 @@ namespace chldr_data.Services
                 throw new Exception(response.Data.ErrorMessage);
             }
 
-            if (string.IsNullOrWhiteSpace(response.Data.Token)) {
+            if (string.IsNullOrWhiteSpace(response.Data.Token))
+            {
                 throw new Exception("Token shouldn't be null");
             }
 

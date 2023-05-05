@@ -9,23 +9,33 @@ namespace chldr_api
 {
     public class Mutation
     {
-        private readonly PasswordResetMutation _passwordResetMutation;
-        private readonly UpdatePasswordMutation _updatePasswordMutation;
-        private readonly RegisterUserMutation _registerUserMutation;
-        private readonly LoginUserMutation _loginUserMutation;
+        private readonly PasswordResetResolver _passwordResetMutation;
+        private readonly UpdatePasswordResolver _updatePasswordMutation;
+        private readonly RegisterUserResolver _registerUserMutation;
+        private readonly ConfirmEmailResolver _confirmEmailResolver;
+        private readonly LoginResolver _loginUserMutation;
 
         public Mutation(
-            PasswordResetMutation passwordResetMutation,
-            UpdatePasswordMutation updatePasswordMutation,
-            RegisterUserMutation registerUserMutation,
-            LoginUserMutation loginUserMutation)
+            PasswordResetResolver passwordResetResolver,
+            UpdatePasswordResolver updatePasswordResolver,
+            RegisterUserResolver registerUserResolver,
+            ConfirmEmailResolver confirmEmailResolver,
+            LoginResolver loginUserResolver)
         {
-            _passwordResetMutation = passwordResetMutation;
-            _updatePasswordMutation = updatePasswordMutation;
-            _registerUserMutation = registerUserMutation;
-            _loginUserMutation = loginUserMutation;
+            _passwordResetMutation = passwordResetResolver;
+            _updatePasswordMutation = updatePasswordResolver;
+            _registerUserMutation = registerUserResolver;
+            _confirmEmailResolver = confirmEmailResolver;
+            _loginUserMutation = loginUserResolver;
         }
-
+        public async Task<RegistrationResponse> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
+        {
+            return await _registerUserMutation.ExecuteAsync(email, password, firstName, lastName, patronymic);
+        }
+        public async Task<MutationResponse> ConfirmEmailAsync(string token)
+        {
+            return await _confirmEmailResolver.ExecuteAsync(token);
+        }
         public async Task<PasswordResetResponse> PasswordReset(string email)
         {
             return await _passwordResetMutation.ExecuteAsync(email);
@@ -36,10 +46,7 @@ namespace chldr_api
             return await _updatePasswordMutation.ExecuteAsync(token, newPassword);
         }
 
-        public async Task<RegistrationResponse> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
-        {
-            return await _registerUserMutation.ExecuteAsync(email, password, firstName, lastName, patronymic);
-        }
+      
 
         public async Task<LoginResponse> LoginUserAsync(string email, string password)
         {

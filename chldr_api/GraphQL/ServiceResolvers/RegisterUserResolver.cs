@@ -14,9 +14,9 @@ using System.Configuration;
 
 namespace chldr_api.GraphQL.MutationServices
 {
-    public class RegisterUserMutation : MutationService
+    public class RegisterUserResolver : ServiceResolver
     {
-        public RegisterUserMutation(IConfiguration configuration, IStringLocalizer<AppLocalizations> localizer, EmailService emailService) : base(configuration, localizer, emailService) { }
+        public RegisterUserResolver(IConfiguration configuration, IStringLocalizer<AppLocalizations> localizer, EmailService emailService) : base(configuration, localizer, emailService) { }
 
         internal async Task<RegistrationResponse> ExecuteAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
@@ -32,7 +32,7 @@ namespace chldr_api.GraphQL.MutationServices
             {
                 Email = email,
                 Password = BCrypt.Net.BCrypt.HashPassword(password),
-                AccountStatus = (int)UserStatus.Unconfirmed,
+                UserStatus = (int)UserStatus.Unconfirmed,
                 FirstName = firstName,
                 LastName = lastName,
                 Patronymic = patronymic
@@ -51,6 +51,7 @@ namespace chldr_api.GraphQL.MutationServices
                 Value = confirmationToken,
                 ExpiresIn = confirmationTokenExpiration
             });
+            await dbContext.SaveChangesAsync();
 
             var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{AppConstants.Host}/login", new Dictionary<string, string?>(){
                 { "token", confirmationToken},

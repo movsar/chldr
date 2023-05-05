@@ -11,7 +11,7 @@ public partial class SqlToken
     // See, TokenType enum
     public int? Type { get; set; }
 
-    public string? Value { get; set; }
+    public string Value { get; set; }
 
     public DateTime? ExpiresIn { get; set; }
 

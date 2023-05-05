@@ -27,6 +27,19 @@ namespace chldr_tools
             return tokenHandler.WriteToken(token);
         }
 
+        public static bool IsTokenExpired(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+
+            if (jwtToken == null)
+            {
+                return true;
+            }
+
+            return jwtToken.ValidTo <= DateTime.UtcNow;
+        }
+
         public static ClaimsPrincipal ValidateToken(string token, string secret)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

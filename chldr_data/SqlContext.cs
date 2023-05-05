@@ -452,7 +452,7 @@ public partial class SqlContext : DbContext
             entity.Property(e => e.UserId)
                 .HasMaxLength(40)
                 .HasColumnName("user_id");
-            entity.Property(e => e.AccountStatus).HasColumnName("account_status");
+            entity.Property(e => e.UserStatus).HasColumnName("user_status");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
@@ -542,7 +542,7 @@ public partial class SqlContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Tokens)
                 .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_tokens_user_id");
         });
 

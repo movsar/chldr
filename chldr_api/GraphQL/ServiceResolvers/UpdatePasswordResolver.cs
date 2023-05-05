@@ -8,9 +8,9 @@ using Microsoft.Extensions.Localization;
 
 namespace chldr_api.GraphQL.MutationServices
 {
-    public class UpdatePasswordMutation : MutationService
+    public class UpdatePasswordResolver : ServiceResolver
     {
-        public UpdatePasswordMutation(IConfiguration configuration, IStringLocalizer<AppLocalizations> localizer, EmailService emailService) : base(configuration, localizer, emailService)
+        public UpdatePasswordResolver(IConfiguration configuration, IStringLocalizer<AppLocalizations> localizer, EmailService emailService) : base(configuration, localizer, emailService)
         {}
 
         internal async Task<MutationResponse> ExecuteAsync(string token, string newPassword)

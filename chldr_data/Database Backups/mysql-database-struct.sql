@@ -1,8 +1,10 @@
+CREATE DATABASE  IF NOT EXISTS `u1072762_chldr` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `u1072762_chldr`;
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
--- Host: localhost    Database: chldr
+-- Host: 165.22.89.128    Database: u1072762_chldr
 -- ------------------------------------------------------
--- Server version	8.0.32
+-- Server version	8.0.32-0ubuntu0.22.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -233,7 +235,7 @@ CREATE TABLE `tokens` (
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`token_id`),
   KEY `fk_tokens_user_id_idx` (`user_id`),
-  CONSTRAINT `fk_tokens_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
+  CONSTRAINT `fk_tokens_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -250,8 +252,8 @@ CREATE TABLE `translation` (
   `entry_id` varchar(40) NOT NULL,
   `user_id` varchar(40) NOT NULL,
   `content` varchar(10000) NOT NULL,
-  `raw_contents` varchar(10000) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `notes` varchar(1000) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `raw_contents` varchar(10000) NOT NULL,
+  `notes` varchar(1000) DEFAULT NULL,
   `rate` int NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -282,7 +284,7 @@ CREATE TABLE `users` (
   `last_name` varchar(100) DEFAULT NULL,
   `patronymic` varchar(100) DEFAULT NULL,
   `is_moderator` tinyint DEFAULT NULL,
-  `account_status` tinyint DEFAULT NULL,
+  `user_status` tinyint DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`user_id`)
@@ -302,10 +304,11 @@ CREATE TABLE `word` (
   `content` varchar(10000) NOT NULL,
   `notes` varchar(1500) DEFAULT NULL,
   `part_of_speech` int DEFAULT NULL,
-  `additional_details` json DEFAULT NULL,
+  `additional_details` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   PRIMARY KEY (`word_id`),
   UNIQUE KEY `entry_id_UNIQUE` (`entry_id`),
-  CONSTRAINT `fk_word_entry_id` FOREIGN KEY (`entry_id`) REFERENCES `entry` (`entry_id`) ON UPDATE CASCADE
+  CONSTRAINT `fk_word_entry_id` FOREIGN KEY (`entry_id`) REFERENCES `entry` (`entry_id`) ON UPDATE CASCADE,
+  CONSTRAINT `word_chk_1` CHECK (json_valid(`additional_details`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -318,4 +321,4 @@ CREATE TABLE `word` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-01 20:09:59
+-- Dump completed on 2023-05-05 19:37:42

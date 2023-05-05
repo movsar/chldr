@@ -5,14 +5,14 @@ using Microsoft.Extensions.Localization;
 
 namespace chldr_api.GraphQL.MutationServices
 {
-    public class MutationService
+    public class ServiceResolver
     {
         protected readonly SqlContext dbContext;
         protected readonly IConfiguration _configuration;
         protected readonly IStringLocalizer<AppLocalizations> _localizer;
         protected readonly EmailService _emailService;
 
-        public MutationService(IConfiguration configuration, IStringLocalizer<AppLocalizations> localizer, EmailService emailService)
+        public ServiceResolver(IConfiguration configuration, IStringLocalizer<AppLocalizations> localizer, EmailService emailService)
         {
             dbContext = new SqlContext();
             _configuration = configuration;

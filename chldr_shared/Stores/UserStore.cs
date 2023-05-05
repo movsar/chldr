@@ -71,9 +71,9 @@ namespace chldr_shared.Stores
             }
         }
 
-        public async Task ConfirmUserAsync(string token, string tokenId, string email)
+        public async Task ConfirmUserAsync(string token)
         {
-            await _userService.ConfirmUserAsync(token, tokenId, email);
+            await _userService.ConfirmUserAsync(token);
         }
 
         public async Task SendPasswordResetRequestAsync(string email)
