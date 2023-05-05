@@ -88,7 +88,7 @@ namespace chldr_data.Services
             return new UserModel(user);
         }
 
-        public async Task<ActiveSession> RegisterNewUserAsync(string email, string password)
+        public async Task<string> RegisterNewUserAsync(string email, string password)
         {
             return await _authService.RegisterUserAsync(email, password);
         }

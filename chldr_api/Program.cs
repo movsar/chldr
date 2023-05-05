@@ -1,3 +1,4 @@
+using chldr_api.GraphQL.MutationServices;
 using chldr_tools;
 using chldr_utils.Services;
 
@@ -12,7 +13,13 @@ namespace chldr_api
             // Add services to the container.
 
             builder.Services.AddControllers();
+
             builder.Services.AddDbContextFactory<SqlContext>();
+
+            builder.Services.AddScoped<PasswordResetMutation>();
+            builder.Services.AddScoped<UpdatePasswordMutation>();
+            builder.Services.AddScoped<RegisterUserMutation>();
+            builder.Services.AddScoped<LoginUserMutation>();
 
             builder.Services.AddLocalization();
             builder.Services.AddSingleton<EmailService>();

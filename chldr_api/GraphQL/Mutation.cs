@@ -9,40 +9,41 @@ namespace chldr_api
 {
     public class Mutation
     {
-        private readonly IConfiguration _configuration;
-        private readonly IStringLocalizer<AppLocalizations> _localizer;
-        private readonly EmailService _emailService;
+        private readonly PasswordResetMutation _passwordResetMutation;
+        private readonly UpdatePasswordMutation _updatePasswordMutation;
+        private readonly RegisterUserMutation _registerUserMutation;
+        private readonly LoginUserMutation _loginUserMutation;
 
-        public Mutation(IConfiguration configuration,
-            IStringLocalizer<AppLocalizations> localizer, EmailService emailService)
+        public Mutation(
+            PasswordResetMutation passwordResetMutation,
+            UpdatePasswordMutation updatePasswordMutation,
+            RegisterUserMutation registerUserMutation,
+            LoginUserMutation loginUserMutation)
         {
-            _configuration = configuration;
-            _localizer = localizer;
-            _emailService = emailService;
+            _passwordResetMutation = passwordResetMutation;
+            _updatePasswordMutation = updatePasswordMutation;
+            _registerUserMutation = registerUserMutation;
+            _loginUserMutation = loginUserMutation;
         }
 
         public async Task<PasswordResetResponse> PasswordReset(string email)
         {
-            var passwordResetMutation = new PasswordResetMutation();
-            return await passwordResetMutation.ExecuteAsync(_configuration, _localizer, _emailService, email);
+            return await _passwordResetMutation.ExecuteAsync(email);
         }
 
         public async Task<MutationResponse> UpdatePasswordAsync(string token, string newPassword)
         {
-            var updatePasswordMutation = new UpdatePasswordMutation();
-            return await updatePasswordMutation.ExecuteAsync(token, newPassword);
+            return await _updatePasswordMutation.ExecuteAsync(token, newPassword);
         }
 
-        public async Task<MutationResponse> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
+        public async Task<RegistrationResponse> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
-            var registerUserMutation = new RegisterUserMutation();
-            return await registerUserMutation.ExecuteAsync(email, password, firstName, lastName, patronymic);
+            return await _registerUserMutation.ExecuteAsync(email, password, firstName, lastName, patronymic);
         }
 
         public async Task<LoginResponse> LoginUserAsync(string email, string password)
         {
-            var loginUserMutation = new LoginUserMutation();
-            return await loginUserMutation.ExecuteAsync( email, password);
+            return await _loginUserMutation.ExecuteAsync(email, password);
         }
     }
 

@@ -1,20 +1,30 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
+using chldr_data.Resources.Localizations;
 using chldr_data.ResponseTypes;
+using chldr_shared.Models;
 using chldr_tools;
+using chldr_utils;
+using chldr_utils.Services;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using System.Configuration;
 
 namespace chldr_api.GraphQL.MutationServices
 {
     public class RegisterUserMutation : MutationService
     {
-        internal async Task<MutationResponse> ExecuteAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
+        public RegisterUserMutation(IConfiguration configuration, IStringLocalizer<AppLocalizations> localizer, EmailService emailService) : base(configuration, localizer, emailService) { }
+
+        internal async Task<RegistrationResponse> ExecuteAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
             // Check if a user with this email already exists
             var existingUser = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
             if (existingUser != null)
             {
-                return new MutationResponse("A user with this email already exists");
+                return new RegistrationResponse() { ErrorMessage = "A user with this email already exists" };
             }
 
             // Create the new user
@@ -42,9 +52,28 @@ namespace chldr_api.GraphQL.MutationServices
                 ExpiresIn = confirmationTokenExpiration
             });
 
-            // TODO: Send email with confirmation link
+            var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{AppConstants.Host}/login", new Dictionary<string, string?>(){
+                { "token", confirmationToken},
+            })).ToString();
 
-            return new MutationResponse() { Success = true };
+            var message = new EmailMessage(new string[] { email },
+                _localizer["Email:Confirm_email_subject"],
+                _localizer["Email:Confirm_email_html", confirmEmailLink]);
+
+            try
+            {
+                _emailService.Send(message);
+                return new RegistrationResponse()
+                {
+                    Success = true,
+                    Token = confirmationToken
+                };
+            }
+            catch (Exception ex)
+            {
+                //LogError(ex);
+                return new RegistrationResponse();
+            }
         }
     }
 }

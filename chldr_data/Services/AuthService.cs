@@ -112,7 +112,7 @@ namespace chldr_data.Services
             };
         }
 
-        internal async Task<ActiveSession> RegisterUserAsync(string email, string password)
+        internal async Task<string> RegisterUserAsync(string email, string password)
         {
             var request = new GraphQLRequest
             {
@@ -121,35 +121,24 @@ namespace chldr_data.Services
                             registerUser(email: $email, password: $password) {
                                 success
                                 errorMessage
-                                accessToken
-                                refreshToken
-                                accessTokenExpiresIn
-                                user {
-                                    email,
-                                    firstName,
-                                    lastName,
-                                    rate
-                                }
+                                token
                             }
                         }",
 
                 Variables = new { email, password }
             };
 
-            var response = await _requestSender.SendRequestAsync<LoginResponse>(request, "registerUser");
+            var response = await _requestSender.SendRequestAsync<RegistrationResponse>(request, "registerUser");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);
             }
 
-            return new ActiveSession()
-            {
-                AccessToken = response.Data.AccessToken,
-                RefreshToken = response.Data.RefreshToken,
-                AccessTokenExpiresIn = (DateTimeOffset)response.Data.AccessTokenExpiresIn,
-                Status = SessionStatus.LoggedIn,
-                User = response.Data.User
-            };
+            if (string.IsNullOrWhiteSpace(response.Data.Token)) {
+                throw new Exception("Token shouldn't be null");
+            }
+
+            return response.Data.Token;
         }
     }
 }
