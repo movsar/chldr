@@ -6,5 +6,6 @@
         Refresh = 1,
         Access = 2,
         PasswordReset = 3,
+        Confirmation = 4,
     }
 }

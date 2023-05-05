@@ -1,4 +1,5 @@
 ﻿using chldr_data.Entities;
+using chldr_data.Enums;
 using chldr_data.ResponseTypes;
 using chldr_tools;
 using Microsoft.EntityFrameworkCore;
@@ -21,12 +22,27 @@ namespace chldr_api.GraphQL.MutationServices
             {
                 Email = email,
                 Password = BCrypt.Net.BCrypt.HashPassword(password),
+                AccountStatus = (int)UserStatus.Unconfirmed,
                 FirstName = firstName,
                 LastName = lastName,
                 Patronymic = patronymic
             };
             dbContext.Users.Add(user);
             await dbContext.SaveChangesAsync();
+
+            var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
+            var confirmationToken = JwtService.GenerateToken(user.UserId, "confirmation-token-secret", confirmationTokenExpiration);
+
+            // Save the tokens to the database
+            dbContext.Tokens.Add(new SqlToken
+            {
+                UserId = user.UserId,
+                Type = (int)TokenType.Confirmation,
+                Value = confirmationToken,
+                ExpiresIn = confirmationTokenExpiration
+            });
+
+            // TODO: Send email with confirmation link
 
             return new MutationResponse() { Success = true };
         }
