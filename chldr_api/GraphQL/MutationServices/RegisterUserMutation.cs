@@ -7,7 +7,7 @@ namespace chldr_api.GraphQL.MutationServices
 {
     public class RegisterUserMutation
     {
-        internal static async Task<MutationResponse> ExecuteAsync(SqlContext dbContext, string email, string password, string? firstName, string? lastName, string? patronymic)
+        internal  async Task<MutationResponse> ExecuteAsync(SqlContext dbContext, string email, string password, string? firstName, string? lastName, string? patronymic)
         {
             // Check if a user with this email already exists
             var existingUser = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);

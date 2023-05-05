@@ -21,15 +21,16 @@ namespace chldr_data.Services
         public event Action<IUser, SessionStatus>? UserStateHasChanged;
         private readonly NetworkService _networkService;
         private readonly IRealmServiceFactory _realmServiceFactory;
+        private readonly AuthService _authService;
         private readonly SyncedRealmService _dataSourceService;
 
         private App App => _dataSourceService.GetApp();
         private Realm Database => _dataSourceService.GetDatabase();
-        public UserService(NetworkService networkService, IRealmServiceFactory realmServiceFactory)
+        public UserService(NetworkService networkService, IRealmServiceFactory realmServiceFactory, AuthService authService)
         {
             _networkService = networkService;
             _realmServiceFactory = realmServiceFactory;
-
+            _authService = authService;
             _dataSourceService = (realmServiceFactory.GetInstance(DataSourceType.Synced) as SyncedRealmService)!;
             _dataSourceService.DatasourceInitialized += RealmService_DatasourceInitialized;
         }
@@ -87,121 +88,29 @@ namespace chldr_data.Services
             return new UserModel(user);
         }
 
-        public async Task RegisterNewUserAsync(string email, string password)
+        public async Task<ActiveSession> RegisterNewUserAsync(string email, string password)
         {
-            await App.EmailPasswordAuth.RegisterUserAsync(email, password);
+            return await _authService.RegisterUserAsync(email, password);
         }
-        private const string AppHost = "https://localhost:7065/graphql/";
+
         public async Task SendPasswordResetRequestAsync(string email)
         {
-            var graphQlClient = new GraphQLHttpClient($"{AppHost}/graphql/", new NewtonsoftJsonSerializer());
-            var request = new GraphQLRequest
-            {
-                Query = @"
-                        mutation($email: String!) {
-                            initiatePasswordReset(email: $email) {
-                                success
-                                errorMessage
-                                resetToken
-                            }
-                        }",
-
-                Variables = new { email }
-            };
-
-            var response = await graphQlClient.SendMutationAsync<JObject>(request);
-            var responseData = response.Data["initiatePasswordReset"].ToObject<InitiatePasswordResetResponse>();
-
-            if (responseData.Success)
-            {
-                // Password reset initiated successfully
-                var resetToken = responseData.ResetToken;
-            }
-            else
-            {
-                // Password reset initiation failed
-                var errorMessage = responseData.ErrorMessage;
-            }
+            await _authService.PasswordResetRequestAsync(email);
         }
 
         public async Task UpdatePasswordAsync(string token, string newPassword)
         {
-            var graphQlClient = new GraphQLHttpClient($"{AppHost}/graphql/", new NewtonsoftJsonSerializer());
-            var request = new GraphQLRequest
-            {
-                Query = @"
-                        mutation($token: String!, $newPassword: String!) {
-                            updatePassword(token: $token, newPassword: $newPassword) {
-                                success
-                                errorMessage
-                            }
-                        }",
-
-                Variables = new { token, newPassword }
-            };
-
-            var response = await graphQlClient.SendMutationAsync<JObject>(request);
-            var responseData = response.Data["updatePassword"].ToObject<MutationResponse>();
-
-            if (!responseData.Success)
-            {
-                // Password reset initiation failed
-                var errorMessage = responseData.ErrorMessage;
-            }
+            await _authService.UpdatePasswordAsync(token, newPassword);
         }
 
         public async Task ConfirmUserAsync(string token, string tokenId, string userEmail)
         {
-            await App.EmailPasswordAuth.ConfirmUserAsync(token, tokenId);
+            await _authService.ConfirmUserAsync(token, tokenId, userEmail);
         }
 
         public async Task<ActiveSession> LogInEmailPasswordAsync(string email, string password)
         {
-            var graphQlClient = new GraphQLHttpClient($"{AppHost}/graphql/", new NewtonsoftJsonSerializer());
-            var request = new GraphQLRequest
-            {
-                Query = @"
-                        mutation($email: String!, $password: String!) {
-                            loginUser(email: $email, password: $password) {
-                                success
-                                errorMessage
-                                accessToken
-                                refreshToken
-                                accessTokenExpiresIn
-                                user {
-                                    email,
-                                    firstName,
-                                    lastName,
-                                    rate
-                                }
-                            }
-                        }",
-
-                Variables = new { email, password }
-            };
-
-            try
-            {
-                var response = await graphQlClient.SendMutationAsync<JObject>(request);
-                var responseData = response.Data["loginUser"]!.ToObject<LoginResponse>();
-
-                if (responseData!.Success == false)
-                {
-                    throw new Exception(responseData.ErrorMessage);
-                }
-                return new ActiveSession()
-                {
-                    AccessToken = responseData.AccessToken,
-                    RefreshToken = responseData.RefreshToken,
-                    AccessTokenExpiresIn = responseData.AccessTokenExpiresIn,
-                    Status = SessionStatus.LoggedIn,
-                    User = responseData.User
-                };
-            }
-            catch (Exception)
-            {
-                throw new Exception("Unexpected error occurred while logging in");
-            }
+            return await _authService.LogInEmailPasswordAsync(email, password);
         }
 
         public void LogOutAsync()

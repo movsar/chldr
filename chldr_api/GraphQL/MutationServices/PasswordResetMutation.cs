@@ -12,7 +12,7 @@ namespace chldr_api.GraphQL.MutationServices
 {
     public class PasswordResetMutation
     {
-        internal static async Task<InitiatePasswordResetResponse> ExecuteAsync(IConfiguration configuration, SqlContext dbContext, IStringLocalizer<AppLocalizations> localizer, EmailService emailService, string email)
+        internal  async Task<PasswordResetResponse> ExecuteAsync(IConfiguration configuration, SqlContext dbContext, IStringLocalizer<AppLocalizations> localizer, EmailService emailService, string email)
         {
             var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (user == null)
@@ -47,7 +47,7 @@ namespace chldr_api.GraphQL.MutationServices
 
             emailService.Send(message);
 
-            return new InitiatePasswordResetResponse() { Success = true, ResetToken = tokenValue };
+            return new PasswordResetResponse() { Success = true, ResetToken = tokenValue };
         }
     }
 }

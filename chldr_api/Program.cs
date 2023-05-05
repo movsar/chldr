@@ -13,6 +13,7 @@ namespace chldr_api
 
             builder.Services.AddControllers();
             builder.Services.AddDbContextFactory<SqlContext>();
+
             builder.Services.AddLocalization();
             builder.Services.AddSingleton<EmailService>();
             builder.Services.AddGraphQLServer()

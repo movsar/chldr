@@ -9,7 +9,7 @@ namespace chldr_api.GraphQL.MutationServices
 {
     public class LoginUserMutation
     {
-        internal static async Task<LoginResponse> ExecuteAsync(SqlContext dbContext, string email, string password)
+        internal  async Task<LoginResponse> ExecuteAsync(SqlContext dbContext, string email, string password)
         {
             // Check if a user with this email exists
             var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);

@@ -9,45 +9,43 @@ namespace chldr_api
 {
     public class Mutation
     {
-        [UseDbContext(typeof(SqlContext))]
-        public async Task<InitiatePasswordResetResponse> PasswordReset(
-          [Service] IConfiguration configuration,
-          [Service] SqlContext dbContext,
-          [Service] IStringLocalizer<AppLocalizations> _localizer,
-          [Service] EmailService emailService,
-          string email)
+        private readonly SqlContext _dbContext;
+        private readonly IConfiguration _configuration;
+        private readonly IStringLocalizer<AppLocalizations> _localizer;
+        private readonly EmailService _emailService;
+
+        public Mutation(SqlContext dbContext, IConfiguration configuration,
+            IStringLocalizer<AppLocalizations> localizer, EmailService emailService)
         {
-            return await PasswordResetMutation.ExecuteAsync(configuration, dbContext, _localizer, emailService, email);
+            _dbContext = dbContext;
+            _configuration = configuration;
+            _localizer = localizer;
+            _emailService = emailService;
         }
 
-        [UseDbContext(typeof(SqlContext))]
-        public async Task<MutationResponse> UpdatePasswordAsync(
-            [Service] SqlContext dbContext,
-            string token,
-            string newPassword)
+        public async Task<PasswordResetResponse> PasswordReset(string email)
         {
-            return await UpdatePasswordMutation.ExecuteAsync(dbContext, token, newPassword);
+            var passwordResetMutation = new PasswordResetMutation();
+            return await passwordResetMutation.ExecuteAsync(_configuration, _dbContext, _localizer, _emailService, email);
         }
 
-        [UseDbContext(typeof(SqlContext))]
-        public async Task<MutationResponse> RegisterUserAsync(
-            [ScopedService] SqlContext dbContext,
-            string email,
-            string password,
-            string? firstName,
-            string? lastName,
-            string? patronymic)
+        public async Task<MutationResponse> UpdatePasswordAsync(string token, string newPassword)
         {
-            return await RegisterUserMutation.ExecuteAsync(dbContext, email, password, firstName, lastName, patronymic);
+            var updatePasswordMutation = new UpdatePasswordMutation();
+            return await updatePasswordMutation.ExecuteAsync(_dbContext, token, newPassword);
         }
 
-        [UseDbContext(typeof(SqlContext))]
-        public async Task<LoginResponse> LoginUserAsync(
-            [ScopedService] SqlContext dbContext,
-            string email,
-            string password)
+        public async Task<MutationResponse> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
-            return await LoginUserMutation.ExecuteAsync(dbContext, email, password);
+            var registerUserMutation = new RegisterUserMutation();
+            return await registerUserMutation.ExecuteAsync(_dbContext, email, password, firstName, lastName, patronymic);
+        }
+
+        public async Task<LoginResponse> LoginUserAsync(string email, string password)
+        {
+            var loginUserMutation = new LoginUserMutation();
+            return await loginUserMutation.ExecuteAsync(_dbContext, email, password);
         }
     }
+
 }
