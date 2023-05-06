@@ -1,10 +1,12 @@
 ﻿using chldr_data.Entities;
 using chldr_tools;
+using HotChocolate.Authorization;
 
 namespace chldr_api
 {
     public class Query
     {
+        [Authorize]
         [UseProjection]
         [UseFiltering]
         [UseSorting]

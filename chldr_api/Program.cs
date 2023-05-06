@@ -1,6 +1,9 @@
 using chldr_api.GraphQL.MutationServices;
 using chldr_tools;
 using chldr_utils.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace chldr_api
 {
@@ -21,9 +24,29 @@ namespace chldr_api
             builder.Services.AddScoped<RegisterUserResolver>();
             builder.Services.AddScoped<ConfirmEmailResolver>();
             builder.Services.AddScoped<LoginResolver>();
-            
-            builder.Services.AddLocalization();
+
             builder.Services.AddSingleton<EmailService>();
+            builder.Services.AddLocalization();
+
+            var signingKey = new SymmetricSecurityKey(
+         Encoding.UTF8.GetBytes("MySuperSecretKey"));
+
+            builder.Services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters =
+                    new TokenValidationParameters
+                    {
+                        ValidIssuer = "https://auth.chillicream.com",
+                        ValidAudience = "https://graphql.chillicream.com",
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = signingKey
+                    };
+            });
+
+            builder.Services.AddAuthorization();
+
             builder.Services.AddGraphQLServer()
                 .AddQueryType<Query>()
                 .AddMutationType<Mutation>()
@@ -40,6 +63,7 @@ namespace chldr_api
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
