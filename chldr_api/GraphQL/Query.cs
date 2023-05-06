@@ -6,7 +6,6 @@ namespace chldr_api
 {
     public class Query
     {
-        [Authorize]
         [UseProjection]
         [UseFiltering]
         [UseSorting]
