@@ -1,20 +1,13 @@
 ﻿using chldr_data.Enums;
-using chldr_data.Resources.Localizations;
 using chldr_data.ResponseTypes;
 using chldr_tools;
-using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 
 namespace chldr_api.GraphQL.MutationServices
 {
-    public class ConfirmEmailResolver : ServiceResolver
+    public class ConfirmEmailResolver
     {
-        public ConfirmEmailResolver(IConfiguration configuration, IStringLocalizer<AppLocalizations> localizer, EmailService emailService) : base(configuration, localizer, emailService)
-        {
-        }
-
-        internal async Task<MutationResponse> ExecuteAsync(string tokenValue)
+        internal async Task<MutationResponse> ExecuteAsync(SqlContext dbContext, string tokenValue)
         {
             // Check if a user with this email already exists
             var token = await dbContext.Tokens.SingleOrDefaultAsync(t => t.Value.Equals(tokenValue));

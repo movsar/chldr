@@ -12,11 +12,14 @@ using Microsoft.Extensions.Localization;
 
 namespace chldr_api.GraphQL.MutationServices
 {
-    public class PasswordResetResolver : ServiceResolver
+    public class PasswordResetResolver
     {
-        public PasswordResetResolver(IConfiguration configuration, IStringLocalizer<AppLocalizations> localizer, EmailService emailService) : base(configuration, localizer, emailService) { }
-
-        internal async Task<PasswordResetResponse> ExecuteAsync(string email)
+        internal async Task<PasswordResetResponse> ExecuteAsync(
+            SqlContext dbContext, 
+            IConfiguration _configuration, 
+            IStringLocalizer<AppLocalizations> _localizer, 
+            EmailService _emailService,
+            string email)
         {
             var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (user == null)

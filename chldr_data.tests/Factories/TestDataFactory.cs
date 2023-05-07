@@ -6,7 +6,7 @@ using chldr_data.Repositories;
 
 namespace chldr_data.tests.Services
 {
-    public static class TestDataFactory
+    internal static class TestDataFactory
     {
         private static readonly FileService _fileService;
         private static readonly ExceptionHandler _exceptionHandler;
@@ -30,7 +30,7 @@ namespace chldr_data.tests.Services
             _dataAccess.SetActiveDataservice(Enums.DataSourceType.Offline);
         }
 
-        public static IDataAccess GetTestDataAccess()
+        internal static IDataAccess GetTestDataAccess()
         {
             return _dataAccess;
         }

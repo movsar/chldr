@@ -8,12 +8,9 @@ using Microsoft.Extensions.Localization;
 
 namespace chldr_api.GraphQL.MutationServices
 {
-    public class UpdatePasswordResolver : ServiceResolver
+    public class UpdatePasswordResolver
     {
-        public UpdatePasswordResolver(IConfiguration configuration, IStringLocalizer<AppLocalizations> localizer, EmailService emailService) : base(configuration, localizer, emailService)
-        {}
-
-        internal async Task<MutationResponse> ExecuteAsync(string token, string newPassword)
+        internal async Task<MutationResponse> ExecuteAsync(SqlContext dbContext, string token, string newPassword)
         {
             var tokenInDatabase = await dbContext.Tokens.FirstOrDefaultAsync(t => t.Type == (int)TokenType.PasswordReset && t.Value == token && t.ExpiresIn > DateTimeOffset.UtcNow);
 

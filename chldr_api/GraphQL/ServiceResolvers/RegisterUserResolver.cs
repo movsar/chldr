@@ -14,11 +14,14 @@ using System.Configuration;
 
 namespace chldr_api.GraphQL.MutationServices
 {
-    public class RegisterUserResolver : ServiceResolver
+    public class RegisterUserResolver
     {
-        public RegisterUserResolver(IConfiguration configuration, IStringLocalizer<AppLocalizations> localizer, EmailService emailService) : base(configuration, localizer, emailService) { }
-
-        internal async Task<RegistrationResponse> ExecuteAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
+        internal async Task<RegistrationResponse> ExecuteAsync(
+            SqlContext dbContext, 
+            IConfiguration _configuration, 
+            IStringLocalizer<AppLocalizations> _localizer, 
+            EmailService _emailService,
+            string email, string password, string? firstName, string? lastName, string? patronymic)
         {
             // Check if a user with this email already exists
             var existingUser = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);

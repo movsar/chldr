@@ -10,10 +10,8 @@ using Microsoft.Extensions.Localization;
 
 namespace chldr_api.GraphQL.MutationServices
 {
-    public class LoginResolver : ServiceResolver
+    public class LoginResolver 
     {
-        public LoginResolver(IConfiguration configuration, IStringLocalizer<AppLocalizations> localizer, EmailService emailService) : base(configuration, localizer, emailService) { }
-
         internal static async Task<LoginResponse> SignInAsync(SqlContext dbContext, SqlUser user)
         {
             // Generate a new access token and calculate expiration time
@@ -52,7 +50,7 @@ namespace chldr_api.GraphQL.MutationServices
             };
         }
 
-        internal async Task<LoginResponse> ExecuteAsync(string refreshToken)
+        internal async Task<LoginResponse> ExecuteAsync(SqlContext dbContext, string refreshToken)
         {
 
             // Check if a user with this email exists
@@ -82,7 +80,7 @@ namespace chldr_api.GraphQL.MutationServices
             return await SignInAsync(dbContext, user);
         }
 
-        internal async Task<LoginResponse> ExecuteAsync(string email, string password)
+        internal async Task<LoginResponse> ExecuteAsync(SqlContext dbContext, string email, string password)
         {
             // Check if a user with this email exists
             var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
