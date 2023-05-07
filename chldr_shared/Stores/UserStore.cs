@@ -39,15 +39,24 @@ namespace chldr_shared.Stores
 
         private async Task RestoreLastSession()
         {
+            // Get last session info from the local storage
             var session = await _localStorageService.GetItem<ActiveSession>("session");
-            if (session != null)
+            if (session == null)
             {
-                ActiveSession = session;
+                return;
             }
 
-            // TODO: Validate access token
-
+            ActiveSession = session;
             UserStateHasChanged?.Invoke();
+
+            var expired = DateTimeOffset.UtcNow > ActiveSession.AccessTokenExpiresIn;
+            if (expired)
+            {
+                // Try to refresh Access Token
+                ActiveSession = await _userService.RefreshTokens(ActiveSession.RefreshToken);
+                await SaveActiveSession();
+            }
+
         }
 
         public async Task<string> RegisterNewUser(string email, string password)

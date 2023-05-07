@@ -36,7 +36,7 @@
             }
         </div>
 
-        @if (UserStore?.ActiveSession.User != null)
+        @if (UserStore.ActiveSession.Status == SessionStatus.LoggedIn)
         {
             <div class="chldr_entry_actions">
                 <i class="bi bi-translate" @onclick="NewTranslation"></i>
@@ -45,9 +45,9 @@
                 <i class="bi bi-star" @onclick="AddToFavorites"></i>
 
                 @*@if (UserModel.CanEditEntry(Entry!) == true)
-                {
-                    <a href="/phrase/@Phrase?.PhraseId"><i class="bi bi-pencil"></i></a>
-                }*@
+            {
+            <a href="/phrase/@Phrase?.PhraseId"><i class="bi bi-pencil"></i></a>
+            }*@
             </div>
         }
     </div>

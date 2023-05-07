@@ -46,9 +46,12 @@ namespace chldr_api
             return await _updatePasswordMutation.ExecuteAsync(token, newPassword);
         }
 
-      
+        public async Task<LoginResponse> AutoLoginAsync(string refreshToken)
+        {
+            return await _loginUserMutation.ExecuteAsync(refreshToken);
+        }
 
-        public async Task<LoginResponse> LoginUserAsync(string email, string password)
+        public async Task<LoginResponse> LoginEmailPasswordAsync(string email, string password)
         {
             return await _loginUserMutation.ExecuteAsync(email, password);
         }

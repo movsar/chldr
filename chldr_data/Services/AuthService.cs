@@ -95,7 +95,7 @@ namespace chldr_data.Services
             {
                 Query = @"
                         mutation($email: String!, $password: String!) {
-                            loginUser(email: $email, password: $password) {
+                            loginEmailPassword(email: $email, password: $password) {
                                 success
                                 errorMessage
                                 accessToken
@@ -113,7 +113,7 @@ namespace chldr_data.Services
                 Variables = new { email, password }
             };
 
-            var response = await _requestSender.SendRequestAsync<LoginResponse>(request, "loginUser");
+            var response = await _requestSender.SendRequestAsync<LoginResponse>(request, "loginEmailPassword");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);
@@ -157,6 +157,46 @@ namespace chldr_data.Services
             }
 
             return response.Data.Token;
+        }
+
+        internal async Task<ActiveSession> RefreshTokens(string refreshToken)
+        {
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                        mutation($refreshToken: String!) {
+                            autoLogin(refreshToken: $refreshToken) {
+                                success
+                                errorMessage
+                                accessToken
+                                refreshToken
+                                accessTokenExpiresIn
+                                user {
+                                    email,
+                                    firstName,
+                                    lastName,
+                                    rate
+                                }
+                            }
+                        }",
+
+                Variables = new { refreshToken }
+            };
+
+            var response = await _requestSender.SendRequestAsync<LoginResponse>(request, "autoLogin");
+            if (!response.Data.Success)
+            {
+                throw new Exception(response.Data.ErrorMessage);
+            }
+
+            return new ActiveSession()
+            {
+                AccessToken = response.Data.AccessToken,
+                RefreshToken = response.Data.RefreshToken,
+                AccessTokenExpiresIn = (DateTimeOffset)response.Data.AccessTokenExpiresIn,
+                Status = SessionStatus.LoggedIn,
+                User = response.Data.User
+            };
         }
     }
 }

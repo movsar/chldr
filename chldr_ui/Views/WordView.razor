@@ -36,7 +36,7 @@
             }
         </div>
 
-        @if (UserStore?.ActiveSession.User != null)
+        @if (UserStore.ActiveSession.Status == SessionStatus.LoggedIn)
         {
             <div class="chldr_entry_actions">
                 <i class="bi bi-translate" @onclick="NewTranslation"></i>
@@ -44,11 +44,11 @@
                 <i class="bi bi-flag" @onclick="Flag"></i>
                 <i class="bi bi-star" @onclick="AddToFavorites"></i>
 
-             @*   @if (UserStore?.ActiveSession.User?.CanEditEntry(Entry!) == true || true == true)
-                {
-                    <a href="/word/edit/@Word?.WordId"><i class="bi bi-pencil"></i></a>
-                    <i class="bi bi-recycle" @onclick="@DeleteEntry"></i>
-                }*@
+                @*   @if (UserStore?.IsLoggedIn)
+            {
+            <a href="/word/edit/@Word?.WordId"><i class="bi bi-pencil"></i></a>
+            <i class="bi bi-recycle" @onclick="@DeleteEntry"></i>
+            }*@
             </div>
         }
     </div>

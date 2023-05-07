@@ -124,5 +124,10 @@ namespace chldr_data.Services
             var offlineRealmService = (_realmServiceFactory.GetInstance(DataSourceType.Offline) as OfflineRealmService)!;
             offlineRealmService.Initialize();
         }
+
+        public async Task<ActiveSession> RefreshTokens(string refreshToken)
+        {
+            return await _authService.RefreshTokens(refreshToken);
+        }
     }
 }
