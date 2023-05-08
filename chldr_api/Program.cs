@@ -2,6 +2,7 @@ using chldr_api.GraphQL.MutationServices;
 using chldr_tools;
 using chldr_utils.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -17,7 +18,8 @@ namespace chldr_api
 
             builder.Services.AddControllers();
 
-            builder.Services.AddDbContextFactory<SqlContext>();
+            builder.Services.AddDbContextFactory<SqlContext>(options =>
+                options.UseMySQL("server=165.22.89.128;port=3306;database=u1072762_chldr;user=admin;password=password"));
 
             builder.Services.AddScoped<PasswordResetResolver>();
             builder.Services.AddScoped<UpdatePasswordResolver>();
