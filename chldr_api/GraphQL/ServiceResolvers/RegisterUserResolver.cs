@@ -6,11 +6,9 @@ using chldr_shared.Models;
 using chldr_tools;
 using chldr_utils;
 using chldr_utils.Services;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using System.Configuration;
 
 namespace chldr_api.GraphQL.MutationServices
 {
@@ -18,7 +16,6 @@ namespace chldr_api.GraphQL.MutationServices
     {
         internal async Task<RegistrationResponse> ExecuteAsync(
             SqlContext dbContext, 
-            IConfiguration _configuration, 
             IStringLocalizer<AppLocalizations> _localizer, 
             EmailService _emailService,
             string email, string password, string? firstName, string? lastName, string? patronymic)

@@ -45,7 +45,7 @@ namespace chldr_api
 
         public async Task<RegistrationResponse> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
-            return await _registerUserMutation.ExecuteAsync(_dbContext, _configuration, _localizer, _emailService, email, password, firstName, lastName, patronymic);
+            return await _registerUserMutation.ExecuteAsync(_dbContext, _localizer, _emailService, email, password, firstName, lastName, patronymic);
         }
 
         public async Task<MutationResponse> ConfirmEmailAsync(string token)
