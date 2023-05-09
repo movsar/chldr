@@ -1,6 +1,6 @@
 ﻿using chldr_data.Dto;
 using chldr_data.Interfaces.DatabaseEntities;
-using Org.BouncyCastle.Crypto.Generators;
+using chldr_data.SqlEntities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
@@ -41,4 +41,5 @@ public partial class SqlUser : IUser
     public virtual ICollection<SqlSource> Sources { get; set; } = new List<SqlSource>();
     public virtual ICollection<SqlTranslation> Translations { get; set; } = new List<SqlTranslation>();
     public virtual ICollection<SqlToken> Tokens { get; set; } = new List<SqlToken>();
+    public virtual ICollection<SqlChangeSet> ChangeSets { get; set; } = new List<SqlChangeSet>();
 }

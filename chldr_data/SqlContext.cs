@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using chldr_data.Entities;
+using chldr_data.SqlEntities;
 using Microsoft.EntityFrameworkCore;
 
 namespace chldr_tools;
@@ -540,6 +541,46 @@ public partial class SqlContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_tokens_user_id");
+        });
+
+        modelBuilder.Entity<SqlChangeSet>(entity =>
+        {
+            entity.HasKey(e => e.ChangeSetId).HasName("PRIMARY");
+
+            entity.ToTable("changesets");
+
+            entity.HasIndex(e => e.UserId, "fk_changesets_user_id_idx");
+
+            entity.Property(e => e.ChangeSetId)
+                .HasMaxLength(40)
+                .HasColumnName("changeset_id");
+
+            entity.Property(e => e.UserId)
+              .HasMaxLength(40)
+              .HasColumnName("user_id");
+
+            entity.Property(e => e.CreatedAt)
+              .HasDefaultValueSql("CURRENT_TIMESTAMP")
+              .HasColumnType("datetime")
+              .HasColumnName("created_at");
+
+            entity.Property(e => e.SequenceNumber)
+                .HasDefaultValueSql("bigint")
+                .HasColumnName("sequence_number");
+
+            entity.Property(e => e.Operation)
+                .HasColumnName("operation");
+
+            entity.Property(e => e.RecordType)
+                .HasColumnName("record_type");
+
+            entity.Property(e => e.RecordId)
+             .HasColumnName("record_id");
+
+            entity.HasOne(d => d.User).WithMany(p => p.ChangeSets)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.NoAction)
+                .HasConstraintName("fk_changesets_user_id");
         });
 
         OnModelCreatingPartial(modelBuilder);
