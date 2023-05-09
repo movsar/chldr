@@ -1,4 +1,6 @@
-﻿using chldr_data.Interfaces;
+﻿using chldr_data.Dto;
+using chldr_data.Interfaces;
+using Org.BouncyCastle.Crypto.Generators;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
@@ -6,6 +8,18 @@ namespace chldr_data.Entities;
 
 public partial class SqlUser : IUser
 {
+    public SqlUser() { }
+    public SqlUser(UserDto testUser)
+    {
+
+        Email = testUser.Email;
+        Password = testUser.Password;
+        UserStatus = (byte)testUser.UserStatus;
+        FirstName = testUser.FirstName;
+        LastName = testUser.LastName;
+        Patronymic = testUser.Patronymic;
+    }
+
     public string UserId { get; set; } = Guid.NewGuid().ToString();
     public string? Email { get; set; }
     public string? Password { get; set; }

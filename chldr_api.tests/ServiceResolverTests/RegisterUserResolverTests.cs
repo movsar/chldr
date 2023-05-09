@@ -1,53 +1,35 @@
 ﻿using chldr_api.GraphQL.MutationServices;
+using chldr_api.tests.Factories;
 using chldr_data.Entities;
-using chldr_data.Enums;
 using chldr_data.Resources.Localizations;
-using chldr_tools;
 using chldr_utils.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
-using Moq;
 
 namespace chldr_api.tests.ServiceResolverTests
 {
     public class RegisterUserResolverTests
     {
-        private readonly IConfiguration _configuration;
         private readonly IStringLocalizer<AppLocalizations> _localizer;
         private readonly EmailService _emailService;
 
         public RegisterUserResolverTests()
         {
-            _configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-          //  _localizer = new Mock<IStringLocalizer<AppLocalizations>>().Object;
-            _emailService = new Mock<EmailService>().Object;
-
-            var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
-            var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
-            _localizer = new StringLocalizer<AppLocalizations>(factory);
+            _emailService = TestServiceFactory.CreateTestEmailService();
+            _localizer = TestServiceFactory.CreateTestStringLocalizer();
         }
 
         [Fact]
         public async Task ExecuteAsync_WithValidInput_ReturnsSuccessResponse()
         {
             // Arrange
-            using var dbContext = new SqlContext(CreateNewContextOptions());
-            var email = "test@example.com";
-            var password = "password";
-            var firstName = "John";
-            var lastName = "Doe";
-            var patronymic = "Smith";
-
+            using var dbContext = TestServiceFactory.CreateTestDbContext();
+            var testUser = TestDataFactory.CreateUser();
             var registerUserResolver = new RegisterUserResolver();
 
             // Act
             var response = await registerUserResolver.ExecuteAsync(
                 dbContext, _localizer, _emailService,
-                email, password, firstName, lastName, patronymic);
+                testUser.Email!, testUser.Password, testUser.FirstName, testUser.LastName, testUser.Patronymic);
 
             // Assert
             Assert.True(response.Success);
@@ -58,23 +40,11 @@ namespace chldr_api.tests.ServiceResolverTests
         public async Task ExecuteAsync_WithExistingEmail_ReturnsErrorResponse()
         {
             // Arrange
-            using var dbContext = new SqlContext(CreateNewContextOptions());
-            var email = "existing@example.com";
-            var password = "password";
-            var firstName = "John";
-            var lastName = "Doe";
-            var patronymic = "Smith";
+            using var dbContext = TestServiceFactory.CreateTestDbContext();     
+            var testUser = TestDataFactory.CreateUser();
 
             // Add existing user to the database
-            dbContext.Users.Add(new SqlUser
-            {
-                Email = email,
-                Password = BCrypt.Net.BCrypt.HashPassword(password),
-                UserStatus = (int)UserStatus.Unconfirmed,
-                FirstName = firstName,
-                LastName = lastName,
-                Patronymic = patronymic
-            });
+            dbContext.Users.Add(new SqlUser(testUser));
             await dbContext.SaveChangesAsync();
 
             var registerUserResolver = new RegisterUserResolver();
@@ -82,29 +52,13 @@ namespace chldr_api.tests.ServiceResolverTests
             // Act
             var response = await registerUserResolver.ExecuteAsync(
                 dbContext, _localizer, _emailService,
-                email, password, firstName, lastName, patronymic);
+                testUser.Email!, testUser.Password, testUser.FirstName, testUser.LastName, testUser.Patronymic);
 
             // Assert
             Assert.False(response.Success);
             Assert.Equal("A user with this email already exists", response.ErrorMessage);
         }
 
-        private static DbContextOptions<SqlContext> CreateNewContextOptions()
-        {
-            // Create a fresh service provider, and therefore a fresh 
-            // InMemory database instance.
-            var serviceProvider = new ServiceCollection()
-                .AddEntityFrameworkInMemoryDatabase()
-                .BuildServiceProvider();
-
-            // Create a new options instance telling the context to use an
-            // InMemory database and the new service provider.
-            var builder = new DbContextOptionsBuilder<SqlContext>();
-            builder.UseInMemoryDatabase("TestDatabase")
-                   .UseInternalServiceProvider(serviceProvider);
-
-            return builder.Options;
-        }
     }
 
 }
