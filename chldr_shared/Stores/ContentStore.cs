@@ -79,19 +79,19 @@ namespace chldr_shared.Stores
 
         private async void EntriesRepository_WordUpdated(WordModel updatedWord)
         {
-            if (!CachedSearchResult.Entries.Any(e => e.Id == ((EntryModel)updatedWord).Id))
+            if (!CachedSearchResult.Entries.Any(e => e.EntryId == updatedWord.EntryId))
             {
                 return;
             }
 
-            var updatedWordIndex = CachedSearchResult.Entries.IndexOf(CachedSearchResult.Entries.First(e => e.Id == ((EntryModel)updatedWord).Id));
+            var updatedWordIndex = CachedSearchResult.Entries.IndexOf(CachedSearchResult.Entries.First(e => e.EntryId == updatedWord.EntryId));
 
             CachedSearchResult.Entries[updatedWordIndex] = updatedWord;
         }
 
         private void EntriesRepository_EntryUpdated(EntryModel entry)
         {
-            var entryInCachedResults = CachedSearchResult.Entries.First(e => e.Id == entry.Id);
+            var entryInCachedResults = CachedSearchResult.Entries.First(e => e.EntryId == entry.EntryId);
             if (entryInCachedResults == null)
             {
                 return;
@@ -109,7 +109,7 @@ namespace chldr_shared.Stores
         public void DeleteEntry(string entryId)
         {
             EntriesRepository.Delete(entryId);
-            CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.Id == entryId));
+            CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
             CachedResultsChanged?.Invoke();
         }
         public void LoadRandomEntries()

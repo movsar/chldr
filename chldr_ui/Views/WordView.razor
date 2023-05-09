@@ -44,11 +44,11 @@
                 <i class="bi bi-flag" @onclick="Flag"></i>
                 <i class="bi bi-star" @onclick="AddToFavorites"></i>
 
-                @*   @if (UserStore?.IsLoggedIn)
-            {
-            <a href="/word/edit/@Word?.WordId"><i class="bi bi-pencil"></i></a>
-            <i class="bi bi-recycle" @onclick="@DeleteEntry"></i>
-            }*@
+                @if (UserStore?.ActiveSession.Status == SessionStatus.LoggedIn)
+                {
+                    <a href="/word/edit/@Word?.WordId"><i class="bi bi-pencil"></i></a>
+                    <i class="bi bi-recycle" @onclick="@DeleteEntry"></i>
+                }
             </div>
         }
     </div>

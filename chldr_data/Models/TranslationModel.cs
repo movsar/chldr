@@ -9,8 +9,11 @@ namespace chldr_data.Models
         public string Notes { get; }
         public LanguageModel Language { get; }
         public int Rate { get; set; }
+        public string? TranslationId { get; internal set; }
+
         public TranslationModel(RealmTranslation translation)
         {
+            TranslationId = translation.TranslationId;
             EntryId = translation.Entry.EntryId;
             Content = translation.Content;
             Notes = translation.Notes;

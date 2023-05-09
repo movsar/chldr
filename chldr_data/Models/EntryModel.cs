@@ -8,8 +8,11 @@ namespace chldr_data.Models
         public SourceModel Source { get; }
         public int Rate { get; }
         public int Type { get; }
+        public string? EntryId { get; internal set; }
+
         public EntryModel(RealmEntry entry)
         {
+            EntryId = entry.EntryId;
             Rate = entry.Rate;
             Type = entry.Type;
             Source = new SourceModel(entry.Source);

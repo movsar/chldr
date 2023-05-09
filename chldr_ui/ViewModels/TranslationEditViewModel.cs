@@ -15,9 +15,9 @@ namespace chldr_ui.ViewModels
         private TranslationDto CreateTranslationDto(string entryId, string translationId)
         {
             var entry = ContentStore.CachedSearchResult.Entries
-                .First(e => e.Id == entryId);
+                .First(e => e.EntryId == entryId);
 
-            return new TranslationDto(entry.Translations.First(t => t.Id == translationId));
+            return new TranslationDto(entry.Translations.First(t => t.TranslationId == translationId));
         }
 
         protected override void OnInitialized()

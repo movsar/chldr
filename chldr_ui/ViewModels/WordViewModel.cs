@@ -13,7 +13,7 @@ namespace chldr_ui.ViewModels
         public string? Subheader => CreateSubheader();
         public void DeleteEntry()
         {
-            ContentStore.DeleteEntry(Entry!.Id);
+            ContentStore.DeleteEntry(Entry!.EntryId);
         }
         protected override void OnParametersSet()
         {

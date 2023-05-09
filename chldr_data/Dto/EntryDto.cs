@@ -14,8 +14,8 @@ namespace chldr_data.Dto
         public EntryDto() { }
         public EntryDto(EntryModel entry)
         {
-            EntryId = entry.Id.ToString();
-            SourceId = entry.Source.Id.ToString();
+            EntryId = entry.EntryId;
+            SourceId = entry.Source.SourceId;
             Rate = entry.Rate;
             EntryType = (EntryType)entry.Type;
             foreach (var translation in entry.Translations)

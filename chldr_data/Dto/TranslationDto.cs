@@ -17,7 +17,7 @@ namespace chldr_data.Dto
         }
         public TranslationDto(TranslationModel translation)
         {
-            TranslationId = translation.Id.ToString();
+            TranslationId = translation.TranslationId;
             EntryId = translation.EntryId.ToString();
             Content = translation.Content;
             Notes = translation.Notes;

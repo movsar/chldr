@@ -13,7 +13,7 @@ namespace chldr_data.Dto
 
         public SourceDto(SourceModel source)
         {
-            SourceId = source.Id.ToString();
+            SourceId = source.SourceId;
             Name = source.Name;
             Notes = source.Notes;
         }
