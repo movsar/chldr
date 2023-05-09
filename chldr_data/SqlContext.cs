@@ -575,7 +575,8 @@ public partial class SqlContext : DbContext
                 .HasColumnName("record_type");
 
             entity.Property(e => e.RecordId)
-             .HasColumnName("record_id");
+                .HasMaxLength(40)
+                .HasColumnName("record_id");
 
             entity.HasOne(d => d.User).WithMany(p => p.ChangeSets)
                 .HasForeignKey(d => d.UserId)

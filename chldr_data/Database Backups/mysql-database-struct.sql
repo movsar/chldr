@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `u1072762_chldr` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `u1072762_chldr`;
--- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
 --
 -- Host: 165.22.89.128    Database: u1072762_chldr
 -- ------------------------------------------------------
--- Server version	8.0.32-0ubuntu0.22.04.2
+-- Server version	8.0.33-0ubuntu0.22.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -18,20 +18,6 @@ USE `u1072762_chldr`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `__efmigrationshistory`
---
-
-DROP TABLE IF EXISTS `__efmigrationshistory`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `__efmigrationshistory` (
-  `MigrationId` varchar(150) NOT NULL,
-  `ProductVersion` varchar(32) NOT NULL,
-  PRIMARY KEY (`MigrationId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `activity`
 --
 
@@ -39,20 +25,41 @@ DROP TABLE IF EXISTS `activity`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `activity` (
-  `activity_id` varchar(40) NOT NULL,
-  `user_id` varchar(40) NOT NULL,
-  `object_id` varchar(40) NOT NULL,
-  `object_class` varchar(255) NOT NULL,
-  `object_property` varchar(255) NOT NULL,
-  `old_value` varchar(255) NOT NULL,
-  `new_value` varchar(255) NOT NULL,
-  `notes` text,
+  `activity_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `user_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `object_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `object_class` varchar(255) CHARACTER SET utf8mb3 NOT NULL,
+  `object_property` varchar(255) CHARACTER SET utf8mb3 NOT NULL,
+  `old_value` varchar(255) CHARACTER SET utf8mb3 NOT NULL,
+  `new_value` varchar(255) CHARACTER SET utf8mb3 NOT NULL,
+  `notes` text CHARACTER SET utf8mb3,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`activity_id`),
   KEY `fk_user_id_idx` (`user_id`),
   CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `changesets`
+--
+
+DROP TABLE IF EXISTS `changesets`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `changesets` (
+  `changeset_id` varchar(40) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `user_id` varchar(40) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `sequence_number` bigint NOT NULL DEFAULT '0',
+  `record_id` varchar(40) NOT NULL,
+  `record_type` int NOT NULL,
+  `operation` int NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`changeset_id`),
+  KEY `fk_changesets_user_id_idx` (`user_id`),
+  CONSTRAINT `fk_changesets_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -63,12 +70,12 @@ DROP TABLE IF EXISTS `entry`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `entry` (
-  `entry_id` varchar(40) NOT NULL,
-  `user_id` varchar(40) NOT NULL,
-  `source_id` varchar(40) NOT NULL,
+  `entry_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `user_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `source_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
   `type` int NOT NULL DEFAULT '0',
   `rate` int NOT NULL DEFAULT '0',
-  `raw_contents` varchar(1500) DEFAULT NULL,
+  `raw_contents` varchar(1500) CHARACTER SET utf8mb3 DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`entry_id`),
@@ -76,7 +83,7 @@ CREATE TABLE `entry` (
   KEY `fk_entry_source_id` (`source_id`),
   CONSTRAINT `fk_entry_source_id` FOREIGN KEY (`source_id`) REFERENCES `source` (`source_id`) ON UPDATE CASCADE,
   CONSTRAINT `fk_entry_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -87,10 +94,10 @@ DROP TABLE IF EXISTS `image`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `image` (
-  `image_id` varchar(40) NOT NULL,
-  `user_id` varchar(40) DEFAULT NULL,
-  `entry_id` varchar(40) NOT NULL,
-  `file_name` varchar(250) DEFAULT NULL,
+  `image_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `user_id` varchar(40) CHARACTER SET utf8mb3 DEFAULT NULL,
+  `entry_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `file_name` varchar(250) CHARACTER SET utf8mb3 DEFAULT NULL,
   `rate` int NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -99,7 +106,7 @@ CREATE TABLE `image` (
   KEY `fk_image_user_id` (`user_id`),
   CONSTRAINT `fk_image_entry_id` FOREIGN KEY (`entry_id`) REFERENCES `entry` (`entry_id`) ON UPDATE CASCADE,
   CONSTRAINT `fk_image_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -130,14 +137,14 @@ DROP TABLE IF EXISTS `phrase`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `phrase` (
-  `phrase_id` varchar(40) NOT NULL,
-  `entry_id` varchar(40) NOT NULL,
-  `content` varchar(20000) NOT NULL,
-  `notes` varchar(1500) DEFAULT NULL,
+  `phrase_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `entry_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `content` varchar(20000) CHARACTER SET utf8mb3 NOT NULL,
+  `notes` varchar(1500) CHARACTER SET utf8mb3 DEFAULT NULL,
   PRIMARY KEY (`phrase_id`),
   UNIQUE KEY `entry_id_UNIQUE` (`entry_id`),
   CONSTRAINT `fk_phrase_user_id` FOREIGN KEY (`entry_id`) REFERENCES `entry` (`entry_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -148,15 +155,15 @@ DROP TABLE IF EXISTS `query`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `query` (
-  `query_id` varchar(40) NOT NULL,
-  `user_id` varchar(40) NOT NULL,
-  `content` varchar(500) NOT NULL,
+  `query_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `user_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `content` varchar(500) CHARACTER SET utf8mb3 NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`query_id`),
   KEY `fk_query_user_id` (`user_id`),
   CONSTRAINT `fk_query_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -167,10 +174,10 @@ DROP TABLE IF EXISTS `sound`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sound` (
-  `sound_id` varchar(40) NOT NULL,
-  `user_id` varchar(40) NOT NULL,
-  `entry_id` varchar(40) NOT NULL,
-  `file_name` varchar(250) NOT NULL,
+  `sound_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `user_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `entry_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `file_name` varchar(250) CHARACTER SET utf8mb3 NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`sound_id`),
@@ -178,7 +185,7 @@ CREATE TABLE `sound` (
   KEY `fk_sound_user_id` (`user_id`),
   CONSTRAINT `fk_sound_entry_id` FOREIGN KEY (`entry_id`) REFERENCES `entry` (`entry_id`) ON UPDATE CASCADE,
   CONSTRAINT `fk_sound_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -189,16 +196,16 @@ DROP TABLE IF EXISTS `source`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `source` (
-  `source_id` varchar(40) NOT NULL,
-  `user_id` varchar(40) DEFAULT NULL,
-  `name` varchar(200) NOT NULL,
-  `notes` varchar(500) DEFAULT NULL,
+  `source_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `user_id` varchar(40) CHARACTER SET utf8mb3 DEFAULT NULL,
+  `name` varchar(200) CHARACTER SET utf8mb3 NOT NULL,
+  `notes` varchar(500) CHARACTER SET utf8mb3 DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`source_id`),
   KEY `fk_source_user_id` (`user_id`),
   CONSTRAINT `fk_source_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -209,14 +216,14 @@ DROP TABLE IF EXISTS `text`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `text` (
-  `text_id` varchar(40) NOT NULL,
-  `entry_id` varchar(40) NOT NULL,
-  `content` varchar(20000) NOT NULL,
-  `notes` varchar(1500) DEFAULT NULL,
+  `text_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `entry_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `content` varchar(20000) CHARACTER SET utf8mb3 NOT NULL,
+  `notes` varchar(1500) CHARACTER SET utf8mb3 DEFAULT NULL,
   PRIMARY KEY (`text_id`),
   UNIQUE KEY `entry_id_UNIQUE` (`entry_id`),
   CONSTRAINT `fk_text_entry_id` FOREIGN KEY (`entry_id`) REFERENCES `entry` (`entry_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -227,16 +234,16 @@ DROP TABLE IF EXISTS `tokens`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tokens` (
-  `token_id` varchar(40) NOT NULL,
-  `user_id` varchar(40) NOT NULL,
+  `token_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `user_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
   `type` int DEFAULT '0',
-  `value` varchar(300) DEFAULT NULL,
+  `value` varchar(300) CHARACTER SET utf8mb3 DEFAULT NULL,
   `expires_in` datetime DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`token_id`),
   KEY `fk_tokens_user_id_idx` (`user_id`),
   CONSTRAINT `fk_tokens_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -247,13 +254,13 @@ DROP TABLE IF EXISTS `translation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `translation` (
-  `translation_id` varchar(40) NOT NULL,
-  `language_id` varchar(40) NOT NULL,
-  `entry_id` varchar(40) NOT NULL,
-  `user_id` varchar(40) NOT NULL,
-  `content` varchar(10000) NOT NULL,
-  `raw_contents` varchar(10000) NOT NULL,
-  `notes` varchar(1000) DEFAULT NULL,
+  `translation_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `language_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `entry_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `user_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `content` varchar(10000) CHARACTER SET utf8mb3 NOT NULL,
+  `raw_contents` varchar(10000) CHARACTER SET utf8mb3 NOT NULL,
+  `notes` varchar(1000) CHARACTER SET utf8mb3 DEFAULT NULL,
   `rate` int NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -264,7 +271,7 @@ CREATE TABLE `translation` (
   CONSTRAINT `fk_translation_entry_id` FOREIGN KEY (`entry_id`) REFERENCES `entry` (`entry_id`) ON UPDATE CASCADE,
   CONSTRAINT `fk_translation_language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`language_id`) ON UPDATE CASCADE,
   CONSTRAINT `fk_translation_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -275,20 +282,20 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
-  `user_id` varchar(40) NOT NULL,
-  `email` varchar(200) DEFAULT NULL,
-  `password` varchar(250) DEFAULT NULL,
+  `user_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `email` varchar(200) CHARACTER SET utf8mb3 DEFAULT NULL,
+  `password` varchar(250) CHARACTER SET utf8mb3 DEFAULT NULL,
   `rate` int NOT NULL DEFAULT '0',
-  `image_path` varchar(250) DEFAULT NULL,
-  `first_name` varchar(100) DEFAULT NULL,
-  `last_name` varchar(100) DEFAULT NULL,
-  `patronymic` varchar(100) DEFAULT NULL,
+  `image_path` varchar(250) CHARACTER SET utf8mb3 DEFAULT NULL,
+  `first_name` varchar(100) CHARACTER SET utf8mb3 DEFAULT NULL,
+  `last_name` varchar(100) CHARACTER SET utf8mb3 DEFAULT NULL,
+  `patronymic` varchar(100) CHARACTER SET utf8mb3 DEFAULT NULL,
   `is_moderator` tinyint DEFAULT NULL,
   `user_status` tinyint DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -299,17 +306,17 @@ DROP TABLE IF EXISTS `word`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `word` (
-  `word_id` varchar(40) NOT NULL,
-  `entry_id` varchar(40) NOT NULL,
-  `content` varchar(10000) NOT NULL,
-  `notes` varchar(1500) DEFAULT NULL,
+  `word_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `entry_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
+  `content` varchar(10000) CHARACTER SET utf8mb3 NOT NULL,
+  `notes` varchar(1500) CHARACTER SET utf8mb3 DEFAULT NULL,
   `part_of_speech` int DEFAULT NULL,
   `additional_details` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   PRIMARY KEY (`word_id`),
   UNIQUE KEY `entry_id_UNIQUE` (`entry_id`),
   CONSTRAINT `fk_word_entry_id` FOREIGN KEY (`entry_id`) REFERENCES `entry` (`entry_id`) ON UPDATE CASCADE,
   CONSTRAINT `word_chk_1` CHECK (json_valid(`additional_details`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -321,4 +328,4 @@ CREATE TABLE `word` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-05 19:37:42
+-- Dump completed on 2023-05-09 21:14:52
