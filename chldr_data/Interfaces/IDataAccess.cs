@@ -1,4 +1,5 @@
 ﻿using chldr_data.Enums;
+using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models;
 using chldr_data.Repositories;
 using chldr_data.Services;
@@ -12,6 +13,6 @@ namespace chldr_data.Interfaces
         void SetActiveDataservice(DataSourceType dataSourceType);
         IDataSourceService GetActiveDataservice();
         void RemoveAllEntries();
-        Repository GetRepository<T>() where T : IPersistentModelBase;
+        Repository GetRepository<T>() where T : IEntity;
     }
 }

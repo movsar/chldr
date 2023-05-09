@@ -1,4 +1,4 @@
-﻿using chldr_data.Interfaces;
+﻿using chldr_data.Interfaces.DatabaseEntities;
 using Realms;
 using System.ComponentModel.DataAnnotations.Schema;
 

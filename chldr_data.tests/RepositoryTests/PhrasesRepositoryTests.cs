@@ -13,7 +13,7 @@ namespace chldr_data.tests.RepositoryTests
             {
                 Content = "Hello",
                 PartOfSpeech = PartOfSpeech.Noun,
-                SourceId = SourcesRepository.GetAllNamedSources().First().Id.ToString(),
+                SourceId = SourcesRepository.GetAllNamedSources().First().SourceId,
             };
             wordToInsert.Classes[0] = 1;
 

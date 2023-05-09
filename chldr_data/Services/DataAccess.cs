@@ -1,5 +1,6 @@
 ﻿using chldr_data.Enums;
 using chldr_data.Interfaces;
+using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models;
 using chldr_data.Models.Words;
 using chldr_data.Repositories;
@@ -70,7 +71,7 @@ namespace chldr_data.Services
             });
         }
 
-        public Repository GetRepository<T>() where T : IPersistentModelBase
+        public Repository GetRepository<T>() where T : IEntity
         {
             object? repository = null;
 

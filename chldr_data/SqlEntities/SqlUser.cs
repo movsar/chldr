@@ -1,5 +1,5 @@
 ﻿using chldr_data.Dto;
-using chldr_data.Interfaces;
+using chldr_data.Interfaces.DatabaseEntities;
 using Org.BouncyCastle.Crypto.Generators;
 using System.ComponentModel.DataAnnotations.Schema;
 

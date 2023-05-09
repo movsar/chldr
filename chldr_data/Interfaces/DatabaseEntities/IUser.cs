@@ -1,4 +1,4 @@
-﻿namespace chldr_data.Interfaces
+﻿namespace chldr_data.Interfaces.DatabaseEntities
 {
     public interface IUser
     {

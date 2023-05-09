@@ -1,6 +1,7 @@
 ﻿using chldr_data.Enums;
 using chldr_data.Factories;
 using chldr_data.Interfaces;
+using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models;
 using chldr_data.ResponseTypes;
 using chldr_utils;

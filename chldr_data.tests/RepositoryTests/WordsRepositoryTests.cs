@@ -13,7 +13,7 @@ namespace chldr_data.tests.RepositoryTests
 
             // Set an existing source
             var sources = SourcesRepository.GetAllNamedSources();
-            testWord.SourceId = sources[0].Id.ToString();
+            testWord.SourceId = sources[0].SourceId;
 
             // Insert
             var insertedWordId = WordsRepository.Insert(testWord);
@@ -25,7 +25,7 @@ namespace chldr_data.tests.RepositoryTests
         public async Task GetWordById_BadId_ReturnsError()
         {
             // 1. Подготавливаем заведомо неправильный id
-            string badId ="2, 123, 321, 12";
+            string badId = "2, 123, 321, 12";
 
 
             // 2. Тест

@@ -1,7 +1,10 @@
 ﻿using chldr_data.Entities;
+using chldr_data.Interfaces;
+using chldr_data.Interfaces.DatabaseEntities;
+
 namespace chldr_data.Models
 {
-    public abstract class EntryModel : PersistentModelBase
+    public abstract class EntryModel : IEntity
     {
         public abstract string Content { get; }
         public List<TranslationModel> Translations { get; } = new List<TranslationModel>();

@@ -1,5 +1,5 @@
 ﻿using chldr_data.Enums;
-using chldr_data.Interfaces;
+using chldr_data.Interfaces.DatabaseEntities;
 using chldr_shared.Models;
 
 namespace chldr_data.Models
