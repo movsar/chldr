@@ -1,6 +1,6 @@
 ﻿namespace chldr_data.Enums
 {
-    internal enum Operation
+    public enum Operation
     {
         Insert,
         Delete,

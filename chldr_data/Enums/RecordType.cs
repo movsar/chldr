@@ -1,6 +1,6 @@
 ﻿namespace chldr_data.Enums
 {
-    internal enum RecordType
+    public enum RecordType
     {
         entry,
         word,
