@@ -1,6 +1,6 @@
 CREATE DATABASE  IF NOT EXISTS `u1072762_chldr` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `u1072762_chldr`;
--- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: 165.22.89.128    Database: u1072762_chldr
 -- ------------------------------------------------------
@@ -49,9 +49,8 @@ DROP TABLE IF EXISTS `changesets`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `changesets` (
-  `changeset_id` varchar(40) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `changeset_id` bigint NOT NULL AUTO_INCREMENT,
   `user_id` varchar(40) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `sequence_number` bigint NOT NULL DEFAULT '0',
   `record_id` varchar(40) NOT NULL,
   `record_type` int NOT NULL,
   `operation` int NOT NULL,
@@ -59,7 +58,7 @@ CREATE TABLE `changesets` (
   PRIMARY KEY (`changeset_id`),
   KEY `fk_changesets_user_id_idx` (`user_id`),
   CONSTRAINT `fk_changesets_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -328,4 +327,4 @@ CREATE TABLE `word` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-09 21:14:52
+-- Dump completed on 2023-05-15 18:47:35
