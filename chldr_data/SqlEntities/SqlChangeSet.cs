@@ -9,7 +9,7 @@ namespace chldr_data.SqlEntities
         public string ChangeSetId { get; set; } = Guid.NewGuid().ToString();
         public string UserId { get; set; }
         public long SequenceNumber { get; set; }
-        public int RecordId { get; set; }
+        public string RecordId { get; set; }
         public RecordType RecordType { get; set; }
         public Operation Operation { get; set; }
         public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;

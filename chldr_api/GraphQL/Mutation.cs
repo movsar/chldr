@@ -48,14 +48,17 @@ namespace chldr_api
             _emailService = emailService;
         }
 
-        public async Task<MutationResponse> UpdateWord(string wordId,
-                                                          string content,
-                                                          int partOfSpeech,
-                                                          string notes)
+        public async Task<MutationResponse> UpdateWord(
+                                                        string userId, 
+                                                        string wordId,
+                                                        string content,
+                                                        int partOfSpeech,
+                                                        string notes,
+                                                        List<TranslationDto> translationDtos)
         {
             try
             {
-                return await _updateWordResolver.ExecuteAsync(_dbContext, wordId, content, partOfSpeech, notes/*, translationDtos*/);
+                return await _updateWordResolver.ExecuteAsync(_dbContext, userId, wordId, content, partOfSpeech, notes, translationDtos);
             }
             catch (Exception ex)
             {

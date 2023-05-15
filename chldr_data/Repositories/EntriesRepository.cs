@@ -257,9 +257,9 @@ namespace chldr_data.Repositories
         {
             EntryInserted?.Invoke(entry);
         }
-        protected void OnEntryUpdated(WordModel word)
+        protected void OnEntryUpdated(EntryModel entry)
         {
-            WordUpdated?.Invoke(word);
+            EntryUpdated?.Invoke(entry);
         }
     }
 }

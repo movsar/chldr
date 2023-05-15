@@ -7,21 +7,24 @@ namespace chldr_data.Models
     {
         public string EntryId { get; set; }
         public string Content { get; }
-        public string Notes { get; }
         public LanguageModel Language { get; }
-        public int Rate { get; set; }
+        public int Rate { get; set; } = 1;
+        public string UserId { get; set; }
+        public string LanguageId { get; set; }
+        
         public string? TranslationId { get; internal set; }
-        public string UserId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string LanguageId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string? Notes { get; }
 
         public TranslationModel(RealmTranslation translation)
         {
             TranslationId = translation.TranslationId;
             EntryId = translation.Entry.EntryId;
             Content = translation.Content;
+            UserId = translation.User.UserId;
             Notes = translation.Notes;
             Rate = translation.Rate;
             Language = new LanguageModel(translation.Language);
+            LanguageId = translation.Language.LanguageId;
         }
     }
 }

@@ -11,6 +11,7 @@ public class SqlContext : DbContext
         : base(options) { }
 
     public virtual DbSet<SqlEfmigrationshistory> Efmigrationshistories { get; set; }
+    public virtual DbSet<SqlChangeSet> ChangeSets { get; set; }
     public virtual DbSet<SqlActivity> Activities { get; set; }
     public virtual DbSet<SqlEntry> Entries { get; set; }
     public virtual DbSet<SqlImage> Images { get; set; }
