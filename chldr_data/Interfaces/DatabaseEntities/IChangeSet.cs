@@ -4,9 +4,8 @@ namespace chldr_data.Interfaces.DatabaseEntities
 {
     internal interface IChangeSet : IEntity
     {
-        public string ChangeSetId { get; set; }
+        public long ChangeSetId { get; set; }
         public string UserId { get; set; }
-        public long SequenceNumber { get; set; }
         public RecordType RecordType { get; set; }
         public string RecordId { get; set; }
         public Operation Operation { get; set; }

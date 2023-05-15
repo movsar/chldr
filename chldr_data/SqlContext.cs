@@ -1,6 +1,7 @@
 ﻿using chldr_data.Entities;
 using chldr_data.SqlEntities;
 using Microsoft.EntityFrameworkCore;
+using MySql.EntityFrameworkCore.Extensions;
 
 namespace chldr_tools;
 
@@ -536,8 +537,9 @@ public class SqlContext : DbContext
             entity.HasIndex(e => e.UserId, "fk_changesets_user_id_idx");
 
             entity.Property(e => e.ChangeSetId)
-                .HasMaxLength(40)
-                .HasColumnName("changeset_id");
+                     .HasDefaultValueSql("bigint")
+                     .HasColumnName("changeset_id")
+                     .UseMySQLAutoIncrementColumn("changeset_id");
 
             entity.Property(e => e.UserId)
               .HasMaxLength(40)
@@ -547,10 +549,6 @@ public class SqlContext : DbContext
               .HasDefaultValueSql("CURRENT_TIMESTAMP")
               .HasColumnType("datetime")
               .HasColumnName("created_at");
-
-            entity.Property(e => e.SequenceNumber)
-                .HasDefaultValueSql("bigint")
-                .HasColumnName("sequence_number");
 
             entity.Property(e => e.Operation)
                 .HasColumnName("operation");
