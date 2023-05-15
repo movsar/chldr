@@ -530,16 +530,15 @@ public class SqlContext : DbContext
 
         modelBuilder.Entity<SqlChangeSet>(entity =>
         {
-            entity.HasKey(e => e.ChangeSetId).HasName("PRIMARY");
-
             entity.ToTable("changesets");
-
-            entity.HasIndex(e => e.UserId, "fk_changesets_user_id_idx");
+            entity.HasKey(e => e.ChangeSetId).HasName("PRIMARY");
 
             entity.Property(e => e.ChangeSetId)
                      .HasDefaultValueSql("bigint")
-                     .HasColumnName("changeset_id")
+                     //.HasColumnName("changeset_id");
                      .UseMySQLAutoIncrementColumn("changeset_id");
+
+            entity.HasIndex(e => e.UserId, "fk_changesets_user_id_idx");
 
             entity.Property(e => e.UserId)
               .HasMaxLength(40)
