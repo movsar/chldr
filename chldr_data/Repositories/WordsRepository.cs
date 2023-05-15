@@ -102,6 +102,7 @@ namespace chldr_data.Repositories
                         mutation UpdateWord($userId: String!, $wordId: String!, $content: String!, $partOfSpeech: Int!, $notes: String!, $translationDtos: [TranslationDtoInput!]!) {
                           updateWord(userId: $userId, wordId: $wordId, content: $content, partOfSpeech: $partOfSpeech, notes: $notes, translationDtos: $translationDtos) {
                             success
+                            entry
                           }
                         }
                         ",
@@ -114,6 +115,7 @@ namespace chldr_data.Repositories
                 throw new Exception(response.Data.ErrorMessage);
             }
 
+            var entry = response.Data.Entry;
             OnEntryUpdated(null);
         }
     }
