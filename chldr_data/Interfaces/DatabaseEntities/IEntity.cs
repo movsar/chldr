@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson;
-
-namespace chldr_data.Interfaces.DatabaseEntities
+﻿namespace chldr_data.Interfaces.DatabaseEntities
 {
     public interface IEntity
     {

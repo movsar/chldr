@@ -10,7 +10,7 @@ using Microsoft.Extensions.Localization;
 
 namespace chldr_api.GraphQL.MutationServices
 {
-    public class LoginResolver 
+    public class LoginResolver
     {
         internal static async Task<LoginResponse> SignInAsync(SqlContext dbContext, SqlUser user)
         {

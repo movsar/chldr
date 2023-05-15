@@ -20,17 +20,24 @@ namespace chldr_data.Services
         protected readonly NetworkService _networkService;
         protected readonly IRealmServiceFactory _realmServiceFactory;
         private readonly EnvironmentService _environmentService;
+        public IGraphQLRequestSender RequestSender { get; set; }
 
-        public DataAccess(ServiceLocator serviceProvider, IRealmServiceFactory realmServiceFactory,
+        public DataAccess(
+            ServiceLocator serviceProvider,
+            IRealmServiceFactory realmServiceFactory,
             ExceptionHandler exceptionHandler,
             EnvironmentService environmentService,
-            NetworkService networkService)
+            NetworkService networkService,
+            IGraphQLRequestSender requestSender
+            )
         {
             _serviceProvider = serviceProvider;
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
             _realmServiceFactory = realmServiceFactory;
             _environmentService = environmentService;
+
+            RequestSender = requestSender;
 
             serviceProvider.Register(new EntriesRepository<EntryModel>(this));
             serviceProvider.Register(new WordsRepository(this));

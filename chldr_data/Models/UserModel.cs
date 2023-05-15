@@ -4,7 +4,7 @@ using chldr_shared.Models;
 
 namespace chldr_data.Models
 {
-    public class UserModel : PersistentModelBase, IUser
+    public class UserModel : IUser
     {
         // Members can only add new entries and translations they'll get their rate increased when moders approve their entries
         public static NumericRange MemberRateRange = new NumericRange(1, 10);
@@ -18,6 +18,7 @@ namespace chldr_data.Models
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Patronymic { get; set; }
+        public string? UserId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public UserModel(IUser user)
         {

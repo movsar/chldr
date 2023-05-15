@@ -102,6 +102,7 @@ namespace chldr_data.Services
                                 refreshToken
                                 accessTokenExpiresIn
                                 user {
+                                    userId,
                                     email,
                                     firstName,
                                     lastName,

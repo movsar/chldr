@@ -2,9 +2,13 @@
 using chldr_data.Dto;
 using chldr_data.Entities;
 using chldr_data.Enums;
+using chldr_data.Enums.WordDetails;
 using chldr_data.Interfaces;
+using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models;
 using chldr_data.Models.Words;
+using chldr_data.ResponseTypes;
+using GraphQL;
 
 namespace chldr_data.Repositories
 {
@@ -81,40 +85,64 @@ namespace chldr_data.Repositories
             return entry.EntryId;
         }
 
-        public void Update(UserModel user, WordDto wordDto)
+        public async Task Update(IUser loggedInUser, WordDto wordDto)
         {
-            var word = Database.Find<RealmWord>(wordDto.WordId);
-            Database.Write(() =>
-            {
-                word.Entry.Rate = user.GetRateRange().Lower;
-                word.Entry.RawContents = word.Content.ToLower();
-                foreach (var translationDto in wordDto.Translations)
-                {
-                    var translationId = translationDto.TranslationId;
-                    RealmTranslation translation = Database.Find<RealmTranslation>(translationId);
-                    if (translation == null)
-                    {
-                        translation = new RealmTranslation()
-                        {
-                            Entry = word.Entry,
-                            Language = Database.All<RealmLanguage>().First(l => l.Code == translationDto.LanguageCode),
-                        };
-                    }
-                    translation.Rate = user.GetRateRange().Lower;
-                    translation.Content = translationDto.Content;
-                    translation.Notes = translationDto.Notes;
-                    translation.RawContents = translation.GetRawContents();
-                }
-                word.PartOfSpeech = (int)wordDto.PartOfSpeech;
-                word.Content = wordDto.Content;
-                //foreach (var grammaticalClass in wordDto.GrammaticalClasses)
-                //{
-                //    word.GrammaticalClasses.Add(grammaticalClass);
-                //}
-                word.Notes = wordDto.Notes;
-            });
+            var partOfSpeechValue = (int)wordDto.PartOfSpeech;
 
-            OnEntryUpdated(new WordModel(word.Entry));
+            // , $translationDtos: [TranslationDtoInput!]!
+            // , translationDtos: $translationDtos
+            var request = new GraphQLRequest
+            {
+
+                Query = @"
+                        mutation UpdateWord($wordId: String!, $content: String!, $partOfSpeech: Int!, $notes: String!) {
+                          updateWord(wordId: $wordId, content: $content, partOfSpeech: $partOfSpeech, notes: $notes) {
+                            success
+                          }
+                        }
+                        ",
+
+                Variables = new { loggedInUser.UserId, wordDto.Content, partOfSpeechValue, wordDto.Notes }
+            };
+
+            var response = await DataAccess.RequestSender.SendRequestAsync<MutationResponse>(request, "updateWord");
+            if (!response.Data.Success)
+            {
+                throw new Exception(response.Data.ErrorMessage);
+            }
+
+            //var word = Database.Find<RealmWord>(wordDto.WordId);
+            //Database.Write(() =>
+            //{
+            //    word.Entry.Rate = user.GetRateRange().Lower;
+            //    word.Entry.RawContents = word.Content.ToLower();
+            //    foreach (var translationDto in wordDto.Translations)
+            //    {
+            //        var translationId = translationDto.TranslationId;
+            //        RealmTranslation translation = Database.Find<RealmTranslation>(translationId);
+            //        if (translation == null)
+            //        {
+            //            translation = new RealmTranslation()
+            //            {
+            //                Entry = word.Entry,
+            //                Language = Database.All<RealmLanguage>().First(l => l.Code == translationDto.LanguageCode),
+            //            };
+            //        }
+            //        translation.Rate = user.GetRateRange().Lower;
+            //        translation.Content = translationDto.Content;
+            //        translation.Notes = translationDto.Notes;
+            //        translation.RawContents = translation.GetRawContents();
+            //    }
+            //    word.PartOfSpeech = (int)wordDto.PartOfSpeech;
+            //    word.Content = wordDto.Content;
+            //    //foreach (var grammaticalClass in wordDto.GrammaticalClasses)
+            //    //{
+            //    //    word.GrammaticalClasses.Add(grammaticalClass);
+            //    //}
+            //    word.Notes = wordDto.Notes;
+            //});
+
+            OnEntryUpdated(null);
         }
     }
 }

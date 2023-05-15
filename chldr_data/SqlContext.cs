@@ -1,47 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using chldr_data.Entities;
+﻿using chldr_data.Entities;
 using chldr_data.SqlEntities;
 using Microsoft.EntityFrameworkCore;
 
 namespace chldr_tools;
 
-public partial class SqlContext : DbContext
+public class SqlContext : DbContext
 {
-    public SqlContext()
-    {
-    }
-
+    public SqlContext() { }
     public SqlContext(DbContextOptions<SqlContext> options)
-        : base(options)
-    {
-    }
+        : base(options) { }
 
-    public virtual DbSet<SqlActivity> Activities { get; set; }
     public virtual DbSet<SqlEfmigrationshistory> Efmigrationshistories { get; set; }
-
+    public virtual DbSet<SqlActivity> Activities { get; set; }
     public virtual DbSet<SqlEntry> Entries { get; set; }
-
     public virtual DbSet<SqlImage> Images { get; set; }
-
     public virtual DbSet<SqlLanguage> Languages { get; set; }
-
     public virtual DbSet<SqlPhrase> Phrases { get; set; }
-
     public virtual DbSet<SqlQuery> Queries { get; set; }
-
     public virtual DbSet<SqlSound> Sounds { get; set; }
-
     public virtual DbSet<SqlSource> Sources { get; set; }
-
     public virtual DbSet<SqlText> Texts { get; set; }
-
     public virtual DbSet<SqlTranslation> Translations { get; set; }
-
     public virtual DbSet<SqlUser> Users { get; set; }
-
     public virtual DbSet<SqlWord> Words { get; set; }
     public virtual DbSet<SqlToken> Tokens { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<SqlActivity>(entity =>
@@ -583,9 +566,5 @@ public partial class SqlContext : DbContext
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasConstraintName("fk_changesets_user_id");
         });
-
-        OnModelCreatingPartial(modelBuilder);
     }
-
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

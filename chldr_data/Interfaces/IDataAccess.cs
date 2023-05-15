@@ -14,5 +14,7 @@ namespace chldr_data.Interfaces
         IDataSourceService GetActiveDataservice();
         void RemoveAllEntries();
         Repository GetRepository<T>() where T : IEntity;
+        IGraphQLRequestSender RequestSender { get; set; }
+
     }
 }

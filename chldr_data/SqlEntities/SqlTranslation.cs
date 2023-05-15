@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using chldr_data.Interfaces;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
+
 [Table("Translation")]
 
-public partial class SqlTranslation
+public partial class SqlTranslation : ITranslation
 {
     public string TranslationId { get; set; } = Guid.NewGuid().ToString();
     public string LanguageId { get; set; } = null!;
@@ -22,4 +24,21 @@ public partial class SqlTranslation
     {
         return Content.ToString();
     }
+
+    public SqlTranslation()
+    {
+
+    }
+
+    public SqlTranslation(ITranslation translation)
+    {
+        TranslationId = translation.TranslationId;
+        LanguageId = translation.LanguageId;
+        EntryId = translation.EntryId;
+        UserId = translation.UserId;
+        Content = translation.Content;
+        Rate = translation.Rate;
+        Notes = translation.Notes;
+    }
+
 }

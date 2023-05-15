@@ -1,4 +1,6 @@
 ﻿using chldr_api.GraphQL.MutationServices;
+using chldr_api.GraphQL.ServiceResolvers;
+using chldr_data.Dto;
 using chldr_data.Resources.Localizations;
 using chldr_data.ResponseTypes;
 using chldr_tools;
@@ -15,18 +17,20 @@ namespace chldr_api
         private readonly RegisterUserResolver _registerUserMutation;
         private readonly ConfirmEmailResolver _confirmEmailResolver;
         private readonly LoginResolver _loginUserMutation;
-
+        private readonly UpdateWordResolver _updateWordResolver;
         protected readonly SqlContext _dbContext;
         protected readonly IConfiguration _configuration;
         protected readonly IStringLocalizer<AppLocalizations> _localizer;
         protected readonly EmailService _emailService;
 
         public Mutation(
+            UpdateWordResolver updateWordResolver,
             PasswordResetResolver passwordResetResolver,
             UpdatePasswordResolver updatePasswordResolver,
             RegisterUserResolver registerUserResolver,
             ConfirmEmailResolver confirmEmailResolver,
             LoginResolver loginUserResolver,
+            SqlContext dbContext,
             IConfiguration configuration,
             IStringLocalizer<AppLocalizations> localizer,
             EmailService emailService)
@@ -36,11 +40,27 @@ namespace chldr_api
             _registerUserMutation = registerUserResolver;
             _confirmEmailResolver = confirmEmailResolver;
             _loginUserMutation = loginUserResolver;
+            _updateWordResolver = updateWordResolver;
 
-            _dbContext = new SqlContext();
+            _dbContext = dbContext;
             _configuration = configuration;
             _localizer = localizer;
             _emailService = emailService;
+        }
+
+        public async Task<MutationResponse> UpdateWord(string wordId,
+                                                          string content,
+                                                          int partOfSpeech,
+                                                          string notes)
+        {
+            try
+            {
+                return await _updateWordResolver.ExecuteAsync(_dbContext, wordId, content, partOfSpeech, notes/*, translationDtos*/);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public async Task<RegistrationResponse> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
@@ -70,7 +90,14 @@ namespace chldr_api
 
         public async Task<LoginResponse> LoginEmailPasswordAsync(string email, string password)
         {
-            return await _loginUserMutation.ExecuteAsync(_dbContext, email, password);
+            try
+            {
+                return await _loginUserMutation.ExecuteAsync(_dbContext, email, password);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 

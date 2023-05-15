@@ -10,12 +10,14 @@ namespace chldr_data.Dto
     {
         public UserDto(IUser user)
         {
+            UserId = user.UserId;
             Email = user.Email;
             FirstName = user.FirstName;
             LastName = user.LastName;
             Rate = user.Rate;
         }
         public UserDto() { }
+        public string? UserId { get; set; }
         public string? Email { get; set; }
         [JsonIgnore]
         public string Password { get; set; }

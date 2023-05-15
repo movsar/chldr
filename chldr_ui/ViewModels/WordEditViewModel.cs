@@ -20,10 +20,8 @@ namespace chldr_ui.ViewModels
         public int GrammaticalClass2 { get; set; }
         #endregion
 
-        public void Save()
+        public async Task Save()
         {
-            var wordId = this.wordId;
-
             if (Word == null)
             {
                 var ex = new Exception("Word must not be empty");
@@ -31,8 +29,7 @@ namespace chldr_ui.ViewModels
                 throw ex;
             }
 
-            UserModel user = null; // new UserModel(); // Get usermodel
-            ContentStore.UpdateWord(user, Word);
+            await ContentStore.UpdateWord(UserStore.ActiveSession.User!, Word);
             NavigationManager.NavigateTo("/");
         }
 
@@ -45,17 +42,15 @@ namespace chldr_ui.ViewModels
                 return;
             }
 
-            var wordId = this.wordId;
-
             // Get current word from cached results
             var existingWord = ContentStore.CachedSearchResult.Entries
                 .Where(e => (EntryType)e.Type == EntryType.Word)
                 .Cast<WordModel>()
-                .FirstOrDefault(w => w.WordId == wordId);
+                .FirstOrDefault(w => w.WordId == this.wordId);
 
             if (existingWord == null)
             {
-                existingWord = ContentStore.GetWordById(wordId);
+                existingWord = ContentStore.GetWordById(this.wordId);
             }
 
             Word = new WordDto(existingWord);

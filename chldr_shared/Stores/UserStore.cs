@@ -50,7 +50,7 @@ namespace chldr_shared.Stores
             UserStateHasChanged?.Invoke();
 
             var expired = DateTimeOffset.UtcNow > ActiveSession.AccessTokenExpiresIn;
-            if (expired)
+            if (expired && !string.IsNullOrWhiteSpace(ActiveSession.RefreshToken))
             {
                 // Try to refresh Access Token
                 ActiveSession = await _userService.RefreshTokens(ActiveSession.RefreshToken);

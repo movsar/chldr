@@ -223,9 +223,9 @@ namespace chldr_shared.Stores
             // _dataAccess.UpdatePhrase(loggedInUser, phraseId, content, notes);
         }
 
-        public void UpdateWord(UserModel user, WordDto word)
+        public async Task UpdateWord(IUser loggedInUser, WordDto word)
         {
-            WordsRepository.Update(user, word);
+            await WordsRepository.Update(loggedInUser, word);
         }
     }
 }
