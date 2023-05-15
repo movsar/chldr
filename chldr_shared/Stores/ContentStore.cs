@@ -211,7 +211,7 @@ namespace chldr_shared.Stores
             if (phrase == null)
             {
                 var npe = new Exception("Error:Phrase_shouldn't_be_null");
-                _exceptionHandler.ProcessError(npe);
+                _exceptionHandler.LogAndThrow(npe);
                 throw npe;
             }
 

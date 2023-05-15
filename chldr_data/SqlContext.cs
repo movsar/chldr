@@ -535,7 +535,7 @@ public class SqlContext : DbContext
 
             entity.Property(e => e.ChangeSetId)
                      .HasDefaultValueSql("bigint")
-                     //.HasColumnName("changeset_id");
+                     .HasColumnName("changeset_id")
                      .UseMySQLAutoIncrementColumn("changeset_id");
 
             entity.HasIndex(e => e.UserId, "fk_changesets_user_id_idx");

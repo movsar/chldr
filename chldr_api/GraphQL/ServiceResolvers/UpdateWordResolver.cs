@@ -17,7 +17,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
                                                           string notes,
                                                           List<TranslationDto> translationDtos)
         {
-            var word = dbContext.Words.SingleOrDefault(w => w.WordId.Equals(wordId));
+            var word = await dbContext.Words.FindAsync(wordId);
             if (word == null)
             {
                 throw new ArgumentException("Word not found", nameof(wordId));

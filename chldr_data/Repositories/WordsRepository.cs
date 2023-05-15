@@ -102,6 +102,10 @@ namespace chldr_data.Repositories
                         mutation UpdateWord($userId: String!, $wordId: String!, $content: String!, $partOfSpeech: Int!, $notes: String!, $translationDtos: [TranslationDtoInput!]!) {
                           updateWord(userId: $userId, wordId: $wordId, content: $content, partOfSpeech: $partOfSpeech, notes: $notes, translationDtos: $translationDtos) {
                             success
+                            errorMessage
+                            entry {
+                                *
+                            }
                           }
                         }
                         ",

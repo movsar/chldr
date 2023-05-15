@@ -26,7 +26,7 @@ namespace chldr_utils
                          .CreateLogger();
         }
 
-        public void ProcessError(Exception ex)
+        public void LogAndThrow(Exception ex)
         {
             string message = Regex.Replace($"{ex.Message} {ex.StackTrace}\r\n", @"\s\s+", "\r\n\t");
 
@@ -36,12 +36,21 @@ namespace chldr_utils
             IncomingException?.Invoke(ex);
         }
 
-        public void ProcessDebug(Exception ex, string msg = "")
+        public void LogError(Exception ex, string msg = "")
         {
             string message = Regex.Replace($"{msg} {ex.Message} {ex.StackTrace}\r\n", @"\s\s+", "\r\n\t");
+            LogError(message);
+        }
 
+        public void LogDebug(string message)
+        {
             _fileLogger.Debug(message);
             _consoleLogger?.LogDebug(message);
+        }
+        public void LogError(string message)
+        {
+            _fileLogger.Error(message);
+            _consoleLogger?.LogError(message);
         }
     }
 

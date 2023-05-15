@@ -52,7 +52,7 @@ namespace chldr_data.Services
             Logger.Default = Logger.Function(message =>
             {
                 Debug.WriteLine($"Realm : {message}");
-                _exceptionHandler.ProcessDebug(new Exception($"Realm : {message}"));
+                _exceptionHandler.LogError(new Exception($"Realm : {message}"));
             });
         }
         private async Task SynchronizeDatabase()
@@ -66,7 +66,7 @@ namespace chldr_data.Services
             }
             catch (Exception ex)
             {
-                _exceptionHandler.ProcessDebug(ex, "Error whille synchronizing database");
+                _exceptionHandler.LogError(ex, "Error whille synchronizing database");
             }
         }
 
@@ -105,13 +105,13 @@ namespace chldr_data.Services
                         case ErrorCode.InvalidCredentials:
                             // Tell the user they don't have permissions to work with that Realm
                             Debug.WriteLine("Invalid credentials Error");
-                            _exceptionHandler.ProcessDebug(new Exception("Invalid Credentials"));
+                            _exceptionHandler.LogError(new Exception("Invalid Credentials"));
                             break;
                         case ErrorCode.Unknown:
                             // See https://www.mongodb.com/docs/realm-sdks/dotnet
                             // /latest/reference/Realms.Sync.Exceptions.ErrorCode.html
                             // for all of the error codes
-                            _exceptionHandler.ProcessDebug(new Exception("Unknown Sync Error"));
+                            _exceptionHandler.LogError(new Exception("Unknown Sync Error"));
                             break;
                     }
                 }

@@ -18,6 +18,7 @@ namespace chldr_api
         private readonly ConfirmEmailResolver _confirmEmailResolver;
         private readonly LoginResolver _loginUserMutation;
         private readonly UpdateWordResolver _updateWordResolver;
+
         protected readonly SqlContext _dbContext;
         protected readonly IConfiguration _configuration;
         protected readonly IStringLocalizer<AppLocalizations> _localizer;
@@ -48,7 +49,7 @@ namespace chldr_api
             _emailService = emailService;
         }
 
-        public async Task<MutationResponse> UpdateWord(
+        public async Task<UpdateResponse> UpdateWord(
                                                         string userId, 
                                                         string wordId,
                                                         string content,

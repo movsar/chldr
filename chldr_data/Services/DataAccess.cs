@@ -68,11 +68,11 @@ namespace chldr_data.Services
                 {
                     if (ex.Message.Contains("998"))
                     {
-                        _exceptionHandler.ProcessDebug(new Exception("NETWORK_ERROR"));
+                        _exceptionHandler.LogError(new Exception("NETWORK_ERROR"));
                     }
                     else
                     {
-                        _exceptionHandler.ProcessDebug(ex);
+                        _exceptionHandler.LogError(ex);
                     }
                 }
             });

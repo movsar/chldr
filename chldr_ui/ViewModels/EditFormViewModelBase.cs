@@ -39,7 +39,7 @@ namespace chldr_ui.ViewModels
                 ErrorMessages.Clear();
                 ErrorMessages.Add(ex.Message);
 
-                ExceptionHandler?.ProcessDebug(ex); 
+                ExceptionHandler?.LogError(ex); 
                 return false;
             }
         }

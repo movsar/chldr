@@ -2,7 +2,7 @@
 
 namespace chldr_data.Entities;
 [Table("Entry")]
-public partial class SqlEntry
+public class SqlEntry
 {
     public string EntryId { get; set; } = Guid.NewGuid().ToString();
     public string UserId { get; set; } = null!;
