@@ -102,11 +102,11 @@ namespace chldr_data.Services
                 {
                     switch (sessionException.ErrorCode)
                     {
-                        case ErrorCode.InvalidCredentials:
-                            // Tell the user they don't have permissions to work with that Realm
-                            Debug.WriteLine("Invalid credentials Error");
-                            _exceptionHandler.LogError(new Exception("Invalid Credentials"));
-                            break;
+                        //case ErrorCode.InvalidCredentials:
+                        //    // Tell the user they don't have permissions to work with that Realm
+                        //    Debug.WriteLine("Invalid credentials Error");
+                        //    _exceptionHandler.LogError(new Exception("Invalid Credentials"));
+                        //    break;
                         case ErrorCode.Unknown:
                             // See https://www.mongodb.com/docs/realm-sdks/dotnet
                             // /latest/reference/Realms.Sync.Exceptions.ErrorCode.html
