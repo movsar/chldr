@@ -14,10 +14,10 @@
 	<ItemGroup>
 		<PackageReference Include="banditoth.MAUI.Multilanguage" Version="1.0.4" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
-		<PackageReference Include="FluentValidation" Version="11.4.0" />
+		<PackageReference Include="FluentValidation" Version="11.5.0" />
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.4.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.13" />
-		<PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
