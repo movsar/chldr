@@ -171,7 +171,6 @@ namespace chldr_data.Repositories
 
             // Sync offline database
             var changeSetEntity = new RealmChangeSet(changeSet);
-            Database.WriteCopy(new RealmConfiguration("blabla"));
 
             await Sync(new List<IChangeSet> { changeSet });
 
