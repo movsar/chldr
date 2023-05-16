@@ -28,7 +28,7 @@ namespace chldr_data.Services
 
             return Realm.GetInstance(_config);
         }
-     
+
         public OfflineRealmService(FileService fileService, ExceptionHandler exceptionHandler)
         {
             _exceptionHandler = exceptionHandler;
@@ -57,7 +57,10 @@ namespace chldr_data.Services
         }
         public void InitializeConfiguration()
         {
-            _config = new RealmConfiguration(_fileService.OfflineDatabaseFilePath);
+            _config = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
+            {
+                SchemaVersion = 2
+            };
         }
 
         public void Initialize()
