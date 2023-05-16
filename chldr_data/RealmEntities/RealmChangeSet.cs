@@ -9,7 +9,7 @@ namespace chldr_data.RealmEntities
     public class RealmChangeSet : RealmObject, IChangeSet, IEntity
     {
         private int _operation;
-        private int _recordType;
+        private int _recordType;    
 
         [PrimaryKey]
         public long ChangeSetId { get; set; }
@@ -26,5 +26,15 @@ namespace chldr_data.RealmEntities
             set => _operation = (int)value;
         }
         public DateTimeOffset CreatedAt { get; set; }
+        public RealmChangeSet() { }
+        public RealmChangeSet(IChangeSet changeSet)
+        {
+            ChangeSetId = changeSet.ChangeSetId;
+            UserId = changeSet.UserId;
+            RecordId = changeSet.RecordId;
+            RecordType = changeSet.RecordType;
+            Operation = changeSet.Operation;
+            CreatedAt = changeSet.CreatedAt;
+        }
     }
 }

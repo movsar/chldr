@@ -5,6 +5,7 @@ using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models.Words;
+using chldr_data.RealmEntities;
 using chldr_data.ResponseTypes;
 using GraphQL;
 using MongoDB.Bson;
@@ -163,10 +164,19 @@ namespace chldr_data.Repositories
         {
             // Update
             var changeSet = await UpdateRemote(loggedInUser, wordDto);
-            
+
+            var localChangeSets = Database.All<RealmChangeSet>().ToList();
+
+
             // Sync offline database
+            var changeSetEntity = new RealmChangeSet(changeSet);
+            Database.Write(() =>
+            {
+                Database.Add<RealmChangeSet>(changeSetEntity);
+            });
+
             await Sync(new List<IChangeSet> { changeSet });
-             
+
             // Refresh UI with new object 
             var entry = Database.Find<RealmEntry>(wordDto.EntryId);
             OnEntryUpdated(new WordModel(entry));
