@@ -2,18 +2,12 @@
 using chldr_data.Dto;
 using chldr_data.Entities;
 using chldr_data.Enums;
-using chldr_data.Enums.WordDetails;
 using chldr_data.Interfaces;
 using chldr_data.Interfaces.DatabaseEntities;
-using chldr_data.Models;
 using chldr_data.Models.Words;
 using chldr_data.ResponseTypes;
-using chldr_data.SqlEntities;
 using GraphQL;
-using GraphQL.Validation;
 using MongoDB.Bson;
-using Org.BouncyCastle.Utilities;
-using Realms.Sync;
 
 namespace chldr_data.Repositories
 {
@@ -89,6 +83,7 @@ namespace chldr_data.Repositories
 
             return entry.EntryId;
         }
+
         internal async Task UpdateLocal(IUser loggedInUser, WordDto wordDto)
         {
             var word = Database.Find<RealmWord>(new ObjectId(wordDto.WordId));
@@ -124,6 +119,7 @@ namespace chldr_data.Repositories
 
             OnEntryUpdated(new WordModel(word.Entry));
         }
+
         internal async Task<IChangeSet> UpdateRemote(IUser loggedInUser, WordDto wordDto)
         {
             var partOfSpeech = (int)wordDto.PartOfSpeech;
@@ -162,11 +158,16 @@ namespace chldr_data.Repositories
 
             return response.Data.ChangeSet;
         }
+
         public async Task Update(IUser loggedInUser, WordDto wordDto)
         {
+            // Update
             var changeSet = await UpdateRemote(loggedInUser, wordDto);
-            await UpdateLocal(loggedInUser, wordDto);
-
+            
+            // Sync offline database
+            await Sync(new List<IChangeSet> { changeSet });
+             
+            // Refresh UI with new object 
             var entry = Database.Find<RealmEntry>(wordDto.EntryId);
             OnEntryUpdated(new WordModel(entry));
         }

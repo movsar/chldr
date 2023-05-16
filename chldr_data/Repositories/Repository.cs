@@ -1,6 +1,8 @@
 ﻿using chldr_data.Factories;
 using chldr_data.Interfaces;
+using chldr_data.Interfaces.DatabaseEntities;
 using Realms;
+using System.Runtime.CompilerServices;
 
 namespace chldr_data.Repositories
 {
@@ -11,6 +13,20 @@ namespace chldr_data.Repositories
         public Repository(IDataAccess dataAccess)
         {
             DataAccess = dataAccess;
+        }
+        protected async Task Sync(List<IChangeSet>? changeSets = null)
+        {
+            var changeSetsToApply = changeSets;
+            if (changeSetsToApply == null)
+            {
+                // TODO: Get latest changesets based on...?
+            }
+
+            foreach (var changeSet in changeSetsToApply)
+            {
+
+            }
+
         }
     }
 }

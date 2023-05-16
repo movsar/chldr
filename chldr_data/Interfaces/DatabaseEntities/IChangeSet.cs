@@ -2,7 +2,7 @@
 
 namespace chldr_data.Interfaces.DatabaseEntities
 {
-    internal interface IChangeSet : IEntity
+    public interface IChangeSet : IEntity
     {
         public long ChangeSetId { get; set; }
         public string UserId { get; set; }
