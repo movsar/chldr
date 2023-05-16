@@ -9,6 +9,7 @@ using chldr_data.RealmEntities;
 using chldr_data.ResponseTypes;
 using GraphQL;
 using MongoDB.Bson;
+using Realms;
 
 namespace chldr_data.Repositories
 {
@@ -170,10 +171,7 @@ namespace chldr_data.Repositories
 
             // Sync offline database
             var changeSetEntity = new RealmChangeSet(changeSet);
-            Database.Write(() =>
-            {
-                Database.Add<RealmChangeSet>(changeSetEntity);
-            });
+            Database.WriteCopy(new RealmConfiguration("blabla"));
 
             await Sync(new List<IChangeSet> { changeSet });
 
