@@ -8,9 +8,12 @@ using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models;
 using chldr_data.Models.Words;
 using chldr_data.ResponseTypes;
+using chldr_data.SqlEntities;
 using GraphQL;
 using GraphQL.Validation;
+using MongoDB.Bson;
 using Org.BouncyCastle.Utilities;
+using Realms.Sync;
 
 namespace chldr_data.Repositories
 {
@@ -86,8 +89,42 @@ namespace chldr_data.Repositories
 
             return entry.EntryId;
         }
+        internal async Task UpdateLocal(IUser loggedInUser, WordDto wordDto)
+        {
+            var word = Database.Find<RealmWord>(new ObjectId(wordDto.WordId));
+            Database.Write(() =>
+            {
+                //word.Entry.Rate = loggedInUser.GetRateRange().Lower;
+                word.Entry.RawContents = word.Content.ToLower();
+                foreach (var translationDto in wordDto.Translations)
+                {
+                    var translationId = new ObjectId(translationDto.TranslationId);
+                    RealmTranslation translation = Database.Find<RealmTranslation>(translationId);
+                    if (translation == null)
+                    {
+                        translation = new RealmTranslation()
+                        {
+                            Entry = word.Entry,
+                            Language = Database.All<RealmLanguage>().First(l => l.Code == translationDto.LanguageCode),
+                        };
+                    }
+                    //translation.Rate = loggedInUser.GetRateRange().Lower;
+                    translation.Content = translationDto.Content;
+                    translation.Notes = translationDto.Notes;
+                    translation.RawContents = translation.GetRawContents();
+                }
+                word.PartOfSpeech = (int)wordDto.PartOfSpeech;
+                word.Content = wordDto.Content;
+                //foreach (var grammaticalClass in wordDto.GrammaticalClasses)
+                //{
+                //    word.GrammaticalClasses.Add(grammaticalClass);
+                //}
+                word.Notes = wordDto.Notes;
+            });
 
-        public async Task Update(IUser loggedInUser, WordDto wordDto)
+            OnEntryUpdated(new WordModel(word.Entry));
+        }
+        internal async Task<IChangeSet> UpdateRemote(IUser loggedInUser, WordDto wordDto)
         {
             var partOfSpeech = (int)wordDto.PartOfSpeech;
             var userId = loggedInUser.UserId;
@@ -103,12 +140,17 @@ namespace chldr_data.Repositories
                           updateWord(userId: $userId, wordId: $wordId, content: $content, partOfSpeech: $partOfSpeech, notes: $notes, translationDtos: $translationDtos) {
                             success
                             errorMessage
-                            entry {
-                                *
-                            }
+                            changeSet {
+                                changeSetId
+                                recordId
+                                recordType
+                                operation
+                                userId
+                            }   
                           }
                         }
                         ",
+                // The names here must exactly match the names defined in the graphql schema
                 Variables = new { userId, wordId, content, partOfSpeech, notes, translationDtos }
             };
 
@@ -118,8 +160,15 @@ namespace chldr_data.Repositories
                 throw new Exception(response.Data.ErrorMessage);
             }
 
-            var entry = response.Data.Entry;
-            OnEntryUpdated(null);
+            return response.Data.ChangeSet;
+        }
+        public async Task Update(IUser loggedInUser, WordDto wordDto)
+        {
+            var changeSet = await UpdateRemote(loggedInUser, wordDto);
+            await UpdateLocal(loggedInUser, wordDto);
+
+            var entry = Database.Find<RealmEntry>(wordDto.EntryId);
+            OnEntryUpdated(new WordModel(entry));
         }
     }
 }

@@ -62,7 +62,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
             var entry = dbContext.Entries.Single(e => e.EntryId.Equals(word.EntryId));
             changeset = dbContext.ChangeSets.Single(c => c.ChangeSetId.Equals(changeset.ChangeSetId));
 
-            return new UpdateResponse() { Success = true, Entry = entry };
+            return new UpdateResponse() { Success = true, ChangeSet = changeset };
         }
     }
 }
