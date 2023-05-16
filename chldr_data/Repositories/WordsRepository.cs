@@ -168,7 +168,6 @@ namespace chldr_data.Repositories
 
             var localChangeSets = Database.All<RealmChangeSet>().ToList();
 
-
             // Sync offline database
             var changeSetEntity = new RealmChangeSet(changeSet);
 
