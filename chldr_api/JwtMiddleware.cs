@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 
 namespace chldr_api
 {
@@ -17,7 +18,8 @@ namespace chldr_api
             var r = context.Request;
             var isLoginMutation = context.Request.Method == "POST" && requestedPath.StartsWith("/graphql") && requestedPath.EndsWith("/loginUser");
 
-            if (!isLoginMutation && !context.Request.Headers.TryGetValue("Authorization", out var authorizationHeader))
+            StringValues authorizationHeader = string.Empty;
+            if (!isLoginMutation && !context.Request.Headers.TryGetValue("Authorization", out authorizationHeader))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;

@@ -3,6 +3,7 @@ using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Repositories;
+using GraphQL.Validation;
 
 namespace chldr_data.tests.Services
 {
@@ -25,8 +26,8 @@ namespace chldr_data.tests.Services
             var realmService = new OfflineRealmService(_fileService, _exceptionHandler);
             var realmServiceFactory = new RealmServiceFactory(new List<IDataSourceService>() { realmService });
             var serviceLocator = new ServiceLocator();
-
-            _dataAccess = new DataAccess(serviceLocator, realmServiceFactory, _exceptionHandler, _environmentService, _networkService);
+            var requestSender = new GraphQLRequestSender(_exceptionHandler);
+            _dataAccess = new DataAccess(serviceLocator, realmServiceFactory, _exceptionHandler, _environmentService, _networkService, requestSender);
             _dataAccess.SetActiveDataservice(Enums.DataSourceType.Offline);
         }
 

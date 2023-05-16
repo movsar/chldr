@@ -1,5 +1,5 @@
 ﻿
-/* Unmerged change from project 'chldr_native (net6.0-windows10.0.19041.0)'
+/* Unmerged change from project 'chldr_native (net7.0-windows10.0.19041.0)'
 Before:
 using chldr_shared.Stores;
 using chldr_data.Services;
@@ -8,7 +8,7 @@ using chldr_data.Services;
 using chldr_shared.Stores;
 */
 
-/* Unmerged change from project 'chldr_native (net6.0-maccatalyst)'
+/* Unmerged change from project 'chldr_native (net7.0-maccatalyst)'
 Before:
 using chldr_shared.Stores;
 using chldr_data.Services;
@@ -17,7 +17,7 @@ using chldr_data.Services;
 using chldr_shared.Stores;
 */
 
-/* Unmerged change from project 'chldr_native (net6.0-android)'
+/* Unmerged change from project 'chldr_native (net7.0-android)'
 Before:
 using chldr_shared.Stores;
 using chldr_data.Services;

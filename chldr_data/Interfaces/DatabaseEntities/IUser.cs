@@ -1,6 +1,6 @@
 ﻿namespace chldr_data.Interfaces.DatabaseEntities
 {
-    public interface IUser
+    public interface IUser : IEntity
     {
         string? UserId { get; set; }
         string? Email { get; set; }
