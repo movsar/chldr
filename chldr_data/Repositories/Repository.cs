@@ -1,6 +1,8 @@
 ﻿using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Interfaces.DatabaseEntities;
+using chldr_data.Models;
+using Newtonsoft.Json;
 using Realms;
 using System.Runtime.CompilerServices;
 
@@ -24,7 +26,10 @@ namespace chldr_data.Repositories
 
             foreach (var changeSet in changeSetsToApply)
             {
-
+                if (changeSet.RecordType == Enums.RecordType.entry)
+                {
+                    var updatedEntry = JsonConvert.DeserializeObject<EntryModel>(changeSet.RecordSerialized);
+                }
             }
 
         }

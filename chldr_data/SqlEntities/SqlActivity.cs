@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
 
 [Table("Activity")]
-public partial class SqlActivity 
+public partial class SqlActivity
 {
     public string ActivityId { get; set; } = Guid.NewGuid().ToString();
     public string UserId { get; set; } = null!;
@@ -15,5 +16,6 @@ public partial class SqlActivity
     public string? Notes { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
+    [JsonIgnore]
     public virtual SqlUser User { get; set; } = null!;
 }

@@ -20,6 +20,7 @@ namespace chldr_data.SqlEntities
         public RecordType RecordType { get; set; }
         public Operation Operation { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
+        [JsonIgnore]
         public virtual SqlUser User { get; set; } = null!;
     }
 }

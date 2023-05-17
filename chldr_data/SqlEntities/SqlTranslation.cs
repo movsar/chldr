@@ -1,4 +1,5 @@
 ﻿using chldr_data.Interfaces;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
@@ -15,6 +16,7 @@ public partial class SqlTranslation : ITranslation
     public string RawContents { get; set; } = null!;
     public string? Notes { get; set; }
     public int Rate { get; set; } = 0;
+    [JsonIgnore]
     public virtual SqlEntry Entry { get; set; } = null!;
     public virtual SqlLanguage Language { get; set; } = null!;
     public virtual SqlUser User { get; set; } = null!;

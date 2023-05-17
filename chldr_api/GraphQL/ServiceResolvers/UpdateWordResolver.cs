@@ -62,10 +62,11 @@ namespace chldr_api.GraphQL.ServiceResolvers
             await dbContext.SaveChangesAsync();
 
             var entry = dbContext.Entries.Single(e => e.EntryId.Equals(word.EntryId));
-            changeset.RecordSerialized = JsonConvert.SerializeObject(word);
             changeset = dbContext.ChangeSets.Single(c => c.ChangeSetId.Equals(changeset.ChangeSetId));
+            changeset.RecordSerialized = JsonConvert.SerializeObject(entry);
 
-            return new UpdateResponse() { Success = true, ChangeSet = changeset };
+            var response = new UpdateResponse() { Success = true, ChangeSet = changeset };
+            return response;
         }
     }
 }

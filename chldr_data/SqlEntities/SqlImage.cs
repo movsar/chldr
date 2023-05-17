@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace chldr_data.Entities;
 [Table("Image")]
@@ -9,8 +11,10 @@ public partial class SqlImage
     public string EntryId { get; set; } = null!;
     public string? FileName { get; set; }
     public int Rate { get; set; }
-    public DateTimeOffset? CreatedAt { get; set; } 
+    public DateTimeOffset? CreatedAt { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }
+    [JsonIgnore]
     public virtual SqlEntry Entry { get; set; } = null!;
+    [JsonIgnore]
     public virtual SqlUser? User { get; set; }
 }
