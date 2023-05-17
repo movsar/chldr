@@ -3,6 +3,9 @@ using chldr_data.Entities;
 using chldr_data.ResponseTypes;
 using chldr_data.SqlEntities;
 using chldr_tools;
+using MongoDB.Bson.IO;
+using Newtonsoft.Json;
+using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace chldr_api.GraphQL.ServiceResolvers
 {
@@ -50,16 +53,16 @@ namespace chldr_api.GraphQL.ServiceResolvers
             var changeset = new SqlChangeSet()
             {
                 Operation = chldr_data.Enums.Operation.Update,
+                UserId = userId,
                 RecordId = word.EntryId,
                 RecordType = chldr_data.Enums.RecordType.entry,
-                UserId = userId
             };
 
             dbContext.Add(changeset);
-
             await dbContext.SaveChangesAsync();
 
             var entry = dbContext.Entries.Single(e => e.EntryId.Equals(word.EntryId));
+            changeset.RecordSerialized = JsonConvert.SerializeObject(word);
             changeset = dbContext.ChangeSets.Single(c => c.ChangeSetId.Equals(changeset.ChangeSetId));
 
             return new UpdateResponse() { Success = true, ChangeSet = changeset };

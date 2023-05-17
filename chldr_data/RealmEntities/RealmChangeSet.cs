@@ -9,11 +9,13 @@ namespace chldr_data.RealmEntities
     public class RealmChangeSet : RealmObject, IChangeSet, IEntity
     {
         private int _operation;
-        private int _recordType;    
+        private int _recordType;
 
         [PrimaryKey]
         public long ChangeSetId { get; set; }
         public string UserId { get; set; }
+        [Ignored]
+        public string RecordSerialized { get; set; }
         public string RecordId { get; set; }
         public RecordType RecordType
         {
