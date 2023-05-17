@@ -27,10 +27,7 @@ public partial class SqlTranslation : ITranslation
         return Content.ToString();
     }
 
-    public SqlTranslation()
-    {
-
-    }
+    public SqlTranslation() { }
 
     public SqlTranslation(ITranslation translation)
     {

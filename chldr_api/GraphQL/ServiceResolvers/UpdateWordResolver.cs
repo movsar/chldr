@@ -5,6 +5,8 @@ using chldr_data.SqlEntities;
 using chldr_tools;
 using MongoDB.Bson.IO;
 using Newtonsoft.Json;
+using System.Buffers.Text;
+using System.Text;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace chldr_api.GraphQL.ServiceResolvers
@@ -55,7 +57,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
                 Operation = chldr_data.Enums.Operation.Update,
                 UserId = userId,
                 RecordId = word.EntryId,
-                RecordType = chldr_data.Enums.RecordType.entry,
+                RecordType = chldr_data.Enums.RecordType.word,
             };
 
             dbContext.Add(changeset);
@@ -63,7 +65,11 @@ namespace chldr_api.GraphQL.ServiceResolvers
 
             var entry = dbContext.Entries.Single(e => e.EntryId.Equals(word.EntryId));
             changeset = dbContext.ChangeSets.Single(c => c.ChangeSetId.Equals(changeset.ChangeSetId));
-            changeset.RecordSerialized = JsonConvert.SerializeObject(entry);
+
+            string serializedObject = JsonConvert.SerializeObject(entry);
+            byte[] bytes = Encoding.UTF8.GetBytes(serializedObject);
+            string base64String = Convert.ToBase64String(bytes);
+            changeset.RecordValue = serializedObject;
 
             var response = new UpdateResponse() { Success = true, ChangeSet = changeset };
             return response;

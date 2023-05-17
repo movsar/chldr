@@ -2,6 +2,7 @@
 using chldr_data.Interfaces;
 using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models;
+using chldr_data.Models.Words;
 using Newtonsoft.Json;
 using Realms;
 using System.Runtime.CompilerServices;
@@ -26,9 +27,9 @@ namespace chldr_data.Repositories
 
             foreach (var changeSet in changeSetsToApply)
             {
-                if (changeSet.RecordType == Enums.RecordType.entry)
+                if (changeSet.RecordType == Enums.RecordType.word)
                 {
-                    var updatedEntry = JsonConvert.DeserializeObject<EntryModel>(changeSet.RecordSerialized);
+                    var updatedEntry = JsonConvert.DeserializeObject<WordModel>(changeSet.RecordValue);
                 }
             }
 

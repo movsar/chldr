@@ -1,6 +1,6 @@
 ﻿namespace chldr_data.Interfaces.DatabaseEntities
 {
-    public interface ILanguageModel : IEntity
+    public interface ILanguage : IEntity
     {
         string Code { get; }
         string? LanguageId { get; set; }

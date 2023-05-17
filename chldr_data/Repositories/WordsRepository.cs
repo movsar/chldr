@@ -7,6 +7,7 @@ using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models.Words;
 using chldr_data.RealmEntities;
 using chldr_data.ResponseTypes;
+using chldr_data.SqlEntities;
 using GraphQL;
 using MongoDB.Bson;
 using Realms;
@@ -141,6 +142,7 @@ namespace chldr_data.Repositories
                             changeSet {
                                 changeSetId
                                 recordId
+                                recordValue
                                 recordType
                                 operation
                                 userId
@@ -165,12 +167,8 @@ namespace chldr_data.Repositories
         {
             // Update
             var changeSet = await UpdateRemote(loggedInUser, wordDto);
-
-            var localChangeSets = Database.All<RealmChangeSet>().ToList();
-
+                        
             // Sync offline database
-            var changeSetEntity = new RealmChangeSet(changeSet);
-
             await Sync(new List<IChangeSet> { changeSet });
 
             // Refresh UI with new object 

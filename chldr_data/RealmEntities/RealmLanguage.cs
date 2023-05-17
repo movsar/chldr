@@ -1,11 +1,9 @@
 ﻿using chldr_data.Interfaces.DatabaseEntities;
 using Realms;
-using System;
-using System.Collections.Generic;
 
 namespace chldr_data.Entities;
 [MapTo("Language")]
-public class RealmLanguage : RealmObject, IEntity
+public class RealmLanguage : RealmObject, ILanguage
 {
     [PrimaryKey]
     public string LanguageId { get; set; } = Guid.NewGuid().ToString();

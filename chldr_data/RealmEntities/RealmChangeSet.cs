@@ -15,7 +15,7 @@ namespace chldr_data.RealmEntities
         public long ChangeSetId { get; set; }
         public string UserId { get; set; }
         [Ignored]
-        public string RecordSerialized { get; set; }
+        public string RecordValue { get; set; }
         public string RecordId { get; set; }
         public RecordType RecordType
         {

@@ -1,9 +1,10 @@
-﻿using chldr_data.Interfaces.DatabaseEntities;
+﻿using chldr_data.Interfaces;
+using chldr_data.Interfaces.DatabaseEntities;
 using Realms;
 
 namespace chldr_data.Entities;
 [MapTo("Translation")]
-public class RealmTranslation : RealmObject, IEntity
+public class RealmTranslation : RealmObject, ITranslation
 {
     [PrimaryKey]
     public string TranslationId { get; set; } = Guid.NewGuid().ToString();
@@ -16,6 +17,14 @@ public class RealmTranslation : RealmObject, IEntity
     public int Rate { get; set; } = 0;
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
+
+    [Ignored]
+    public string EntryId => Entry.EntryId;
+    [Ignored]
+    public string UserId => User.UserId;
+    [Ignored]
+    public string LanguageId => Language.LanguageId;
+
     internal string GetRawContents()
     {
         return Content.ToString();

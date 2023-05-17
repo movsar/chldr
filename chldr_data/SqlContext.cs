@@ -540,6 +540,8 @@ public class SqlContext : DbContext
 
             entity.HasIndex(e => e.UserId, "fk_changesets_user_id_idx");
 
+            entity.Ignore(e => e.RecordValue);
+
             entity.Property(e => e.UserId)
               .HasMaxLength(40)
               .HasColumnName("user_id");
