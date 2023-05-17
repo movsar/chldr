@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using chldr_data.Interfaces.DatabaseEntities;
 
 namespace chldr_data.Entities;
 [Table("Entry")]

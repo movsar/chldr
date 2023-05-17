@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.Buffers.Text;
 using System.Text;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_api.GraphQL.ServiceResolvers
 {
@@ -37,14 +38,14 @@ namespace chldr_api.GraphQL.ServiceResolvers
             foreach (var translationDto in translationDtos)
             {
                 var translation = await dbContext.Translations.FindAsync(translationDto.TranslationId);
-
                 if (translation == null)
                 {
                     if (!string.IsNullOrEmpty(translationDto.TranslationId))
                     {
                         throw new Exception("Translation Id is not empty while translation is null");
                     }
-                    dbContext.Translations.Add(new SqlTranslation(translationDto));
+                    translation = new SqlTranslation(translationDto);
+                    dbContext.Translations.Add(translation);
                 }
 
                 translation.Content = translationDto.Content;
@@ -52,6 +53,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
                 translation.Notes = translationDto.Notes;
             }
 
+            // Record changes for the sync mechanism
             var changeset = new SqlChangeSet()
             {
                 Operation = chldr_data.Enums.Operation.Update,
@@ -63,12 +65,17 @@ namespace chldr_api.GraphQL.ServiceResolvers
             dbContext.Add(changeset);
             await dbContext.SaveChangesAsync();
 
-            var entry = dbContext.Entries.Single(e => e.EntryId.Equals(word.EntryId));
+            // Convert to a word dto
+            var wordEntryEntity = dbContext.Entries
+                .Include(e => e.Source)
+                .Include(e => e.User)
+                .First(e => e.EntryId.Equals(word.EntryId));
+
+            var wordDto = new WordDto(wordEntryEntity);
+
             changeset = dbContext.ChangeSets.Single(c => c.ChangeSetId.Equals(changeset.ChangeSetId));
 
-            string serializedObject = JsonConvert.SerializeObject(entry);
-            byte[] bytes = Encoding.UTF8.GetBytes(serializedObject);
-            string base64String = Convert.ToBase64String(bytes);
+            string serializedObject = JsonConvert.SerializeObject(wordDto);
             changeset.RecordValue = serializedObject;
 
             var response = new UpdateResponse() { Success = true, ChangeSet = changeset };

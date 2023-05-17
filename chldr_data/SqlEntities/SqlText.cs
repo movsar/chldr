@@ -10,6 +10,5 @@ public partial class SqlText
     public string EntryId { get; set; } = null!;
     public string Content { get; set; } = null!;
     public string? Notes { get; set; }
-    [JsonIgnore]
     public virtual SqlEntry Entry { get; set; } = null!;
 }

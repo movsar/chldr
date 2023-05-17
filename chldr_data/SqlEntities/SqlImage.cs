@@ -13,8 +13,6 @@ public partial class SqlImage
     public int Rate { get; set; }
     public DateTimeOffset? CreatedAt { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }
-    [JsonIgnore]
     public virtual SqlEntry Entry { get; set; } = null!;
-    [JsonIgnore]
     public virtual SqlUser? User { get; set; }
 }

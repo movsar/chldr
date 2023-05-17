@@ -14,6 +14,5 @@ public partial class SqlToken
     public DateTime? ExpiresIn { get; set; }
     public DateTime? CreatedAt { get; set; }
 
-    [JsonIgnore]
     public virtual SqlUser User { get; set; } = null!;
 }

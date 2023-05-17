@@ -25,5 +25,18 @@ namespace chldr_data.Models
                 Translations.Add(new TranslationModel(translationEntity));
             }
         }
+
+        public EntryModel(SqlEntry entry)
+        {
+            EntryId = entry.EntryId;
+            Rate = entry.Rate;
+            Type = entry.Type;
+            Source = new SourceModel(entry.Source);
+
+            foreach (var translationEntity in entry.Translations)
+            {
+                Translations.Add(new TranslationModel(translationEntity));
+            }
+        }
     }
 }

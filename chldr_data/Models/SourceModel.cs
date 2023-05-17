@@ -15,5 +15,12 @@ namespace chldr_data.Models
             Name = source.Name;
             Notes = source.Notes;
         }
+
+        public SourceModel(SqlSource source)
+        {
+            SourceId = source.SourceId;
+            Name = source.Name;
+            Notes = source.Notes;
+        }
     }
 }

@@ -13,11 +13,9 @@ namespace chldr_data.Models
         public int Rate { get; set; } = 1;
         public string UserId { get; set; }
         public string LanguageId { get; set; }
-
         public string? Notes { get; }
 
-        [JsonConstructor]
-        public TranslationModel(ITranslation translation)
+        public TranslationModel(SqlTranslation translation)
         {
             TranslationId = translation.TranslationId;
             EntryId = translation.EntryId;
@@ -25,7 +23,8 @@ namespace chldr_data.Models
             UserId = translation.UserId;
             Notes = translation.Notes;
             Rate = translation.Rate;
-            LanguageId = translation.LanguageId;
+            Language = new LanguageModel(translation.Language);
+            LanguageId = translation.Language.LanguageId;
         }
 
         public TranslationModel(RealmTranslation translation)

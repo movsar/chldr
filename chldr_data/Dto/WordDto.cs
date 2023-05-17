@@ -1,7 +1,6 @@
-﻿using chldr_data.Enums.WordDetails;
+﻿using chldr_data.Entities;
+using chldr_data.Enums.WordDetails;
 using chldr_data.Models.Words;
-using MongoDB.Bson;
-using System.Security.Claims;
 
 namespace chldr_data.Dto
 {
@@ -9,6 +8,7 @@ namespace chldr_data.Dto
     {
 
         public WordDto() { }
+        public WordDto(SqlEntry sqlEntry) : this(new WordModel(sqlEntry)) { }
         public WordDto(WordModel word) : base(word)
         {
             WordId = word.WordId.ToString();

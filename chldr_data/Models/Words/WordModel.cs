@@ -1,15 +1,22 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums.WordDetails;
-using chldr_data.Interfaces;
-using chldr_utils.Services;
-using MongoDB.Bson;
+using chldr_data.Interfaces.DatabaseEntities;
 
 namespace chldr_data.Models.Words
 {
-
     public class WordModel : EntryModel
     {
         public WordModel(RealmEntry entry) : base(entry)
+        {
+            var word = entry.Word;
+
+            WordId = word.WordId;
+            Content = word.Content;
+            Notes = word.Notes;
+            PartOfSpeech = (PartOfSpeech)word.PartOfSpeech;
+        }
+
+        public WordModel(SqlEntry entry) : base(entry)
         {
             var word = entry.Word;
 
