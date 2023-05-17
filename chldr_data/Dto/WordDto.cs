@@ -1,12 +1,13 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums.WordDetails;
 using chldr_data.Models.Words;
+using Newtonsoft.Json;
 
 namespace chldr_data.Dto
 {
+    // ! All public properties of this class must have setters, to allow serialization
     public class WordDto : EntryDto
     {
-
         public WordDto() { }
         public WordDto(SqlEntry sqlEntry) : this(new WordModel(sqlEntry)) { }
         public WordDto(WordModel word) : base(word)
@@ -59,7 +60,7 @@ namespace chldr_data.Dto
         }
         #region Pronoun Details
         // Person can be 1,2 or 3
-        public int Person { get; }
+        public int Person { get; set; }
         #endregion
 
         #region Verb Details
@@ -87,14 +88,14 @@ namespace chldr_data.Dto
         #endregion
 
         #region Main Details
-        public string? WordId { get; }
+        public string? WordId { get; set; }
         public string Content { get; set; } = string.Empty;
         public string Notes { get; set; } = string.Empty;
         public PartOfSpeech PartOfSpeech { get; set; }
         // Class can be 1,2,3,4,5 or 6
         // Should be available only for some verbs, and nouns so don't allow to set it for all verbs
         // Person can have 1,2 or 3 classes
-        public int[] Classes { get; } = new int[] { 0, 0, 0 };
+        public int[] Classes { get; set; } = new int[] { 0, 0, 0 };
 
         #endregion
     }

@@ -1,4 +1,5 @@
-﻿using chldr_data.Factories;
+﻿using chldr_data.Dto;
+using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models;
@@ -29,7 +30,13 @@ namespace chldr_data.Repositories
             {
                 if (changeSet.RecordType == Enums.RecordType.word)
                 {
-                    var updatedEntry = JsonConvert.DeserializeObject<WordModel>(changeSet.RecordValue);
+                    try
+                    {
+                        var updatedWord = JsonConvert.DeserializeObject<WordDto>(changeSet.RecordValue);
+                    }
+                    catch (Exception ex) { 
+                    
+                    }
                 }
             }
 

@@ -74,7 +74,6 @@ namespace chldr_api.GraphQL.ServiceResolvers
             var wordDto = new WordDto(wordEntryEntity);
 
             changeset = dbContext.ChangeSets.Single(c => c.ChangeSetId.Equals(changeset.ChangeSetId));
-
             string serializedObject = JsonConvert.SerializeObject(wordDto);
             changeset.RecordValue = serializedObject;
 

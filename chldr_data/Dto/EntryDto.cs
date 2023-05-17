@@ -13,7 +13,8 @@ namespace chldr_data.Dto
         public int Rate { get; set; }
         public EntryType EntryType { get; set; }
         public EntryDto() { }
-        public EntryDto(SqlEntry entry) {
+        public EntryDto(SqlEntry entry)
+        {
             EntryId = entry.EntryId;
             SourceId = entry.Source.SourceId;
             Rate = entry.Rate;

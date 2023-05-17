@@ -11,13 +11,13 @@ namespace chldr_data.Dto
         public string LanguageCode { get; set; }
         public string Content { get; set; }
         public int Rate { get; set; } = 1;
-
         public string? TranslationId { get; set; }
         public string? LanguageId { get; set; }
         public string? Notes { get; set; }
 
-    
-
+        public TranslationDto()
+        {
+        }
         public TranslationDto(string languageCode)
         {
             LanguageCode = languageCode;
