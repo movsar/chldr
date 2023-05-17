@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace chldr_data.Entities;
 
 [Table("Translation")]
-
 public  class SqlTranslation : ITranslation
 {
     public string TranslationId { get; set; } = Guid.NewGuid().ToString();

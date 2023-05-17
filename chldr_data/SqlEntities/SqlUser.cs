@@ -5,9 +5,9 @@ using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
-[Table("User")]
 
-public partial class SqlUser : IUser
+[Table("User")]
+public class SqlUser : IUser
 {
     public SqlUser() { }
     public SqlUser(UserDto testUser)

@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
 [Table("Source")]
-
 public class SqlSource
 {
     public string SourceId { get; set; } = Guid.NewGuid().ToString();
