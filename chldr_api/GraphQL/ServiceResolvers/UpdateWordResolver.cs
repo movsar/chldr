@@ -11,14 +11,18 @@ namespace chldr_api.GraphQL.ServiceResolvers
     {
         public List<ChangeDto> GetChanges(WordDto updatedDto, WordDto existingDto, string changeSetId)
         {
+            // This method compares the two dto's and returns the changed properties with their names and values
+
             var changes = new List<ChangeDto>();
             var properties = typeof(WordDto).GetProperties();
 
             foreach (var property in properties)
             {
-                var currentValue = property.GetValue(updatedDto);
-                var existingValue = property.GetValue(existingDto);
-                
+                // Get currenta and old values, use empty string if they're null
+                var currentValue = property.GetValue(updatedDto) ?? "";
+                var existingValue = property.GetValue(existingDto) ?? "";
+
+                // ! Serialization allows comparision between complex objects, it might slow down the process though and worth reconsidering
                 if (!Equals(JsonConvert.SerializeObject(currentValue), JsonConvert.SerializeObject(existingValue)))
                 {
                     changes.Add(new ChangeDto()
@@ -33,7 +37,14 @@ namespace chldr_api.GraphQL.ServiceResolvers
 
             return changes;
         }
-
+        public void SetPropertyValue(object obj, string propertyName, object value)
+        {
+            var propertyInfo = obj.GetType().GetProperty(propertyName);
+            if (propertyInfo != null)
+            {
+                propertyInfo.SetValue(obj, value);
+            }
+        }
         internal async Task<UpdateResponse> ExecuteAsync(SqlContext dbContext, UserDto userDto, WordDto updatedWordDto)
         {
             // Try retrieving corresponding object from the database with all the related objects
@@ -64,6 +75,11 @@ namespace chldr_api.GraphQL.ServiceResolvers
             var changes = GetChanges(updatedWordDto, existingWordDto, changeset.ChangeSetId);
 
             // Apply changes
+            foreach (var change in changes)
+            {
+                change.Property
+            }
+
             dbContext.Add(changeset);
             await dbContext.SaveChangesAsync();
 
