@@ -163,11 +163,43 @@ namespace chldr_data.Repositories
             return response.Data.ChangeSet;
         }
 
+        internal async Task<IChangeSet> UpdateW(IUser loggedInUser, WordDto wordDto)
+        {
+            var partOfSpeech = (int)wordDto.PartOfSpeech;
+            var userId = loggedInUser.UserId;
+            var wordId = wordDto.WordId;
+            var content = wordDto.Content;
+            var notes = wordDto.Notes;
+            var translationDtos = wordDto.Translations;
+
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                        mutation UpdateWord($wordDto: WordDtoInput!) {
+                          updateWord(wordDto: $wordDto) {
+                            success
+                            errorMessage
+                          }
+                        }
+                        ",
+                // The names here must exactly match the names defined in the graphql schema
+                Variables = new { userId, wordId, content, partOfSpeech, notes, translationDtos }
+            };
+
+            var response = await DataAccess.RequestSender.SendRequestAsync<UpdateResponse>(request, "updateWord");
+            if (!response.Data.Success)
+            {
+                throw new Exception(response.Data.ErrorMessage);
+            }
+
+            return response.Data.ChangeSet;
+        }
+
         public async Task Update(IUser loggedInUser, WordDto wordDto)
         {
             // Update
-            var changeSet = await UpdateRemote(loggedInUser, wordDto);
-                        
+            var changeSet = await UpdateW(loggedInUser, wordDto);
+
             // Sync offline database
             await Sync(new List<IChangeSet> { changeSet });
 

@@ -5,6 +5,7 @@ using chldr_data.Resources.Localizations;
 using chldr_data.ResponseTypes;
 using chldr_tools;
 using chldr_utils.Services;
+using GraphQL.Validation;
 using Microsoft.Extensions.Localization;
 using System.Configuration;
 
@@ -50,7 +51,7 @@ namespace chldr_api
         }
 
         public async Task<UpdateResponse> UpdateWord(
-                                                        string userId, 
+                                                        string userId,
                                                         string wordId,
                                                         string content,
                                                         int partOfSpeech,
@@ -60,6 +61,19 @@ namespace chldr_api
             try
             {
                 return await _updateWordResolver.ExecuteAsync(_dbContext, userId, wordId, content, partOfSpeech, notes, translationDtos);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<UpdateResponse> UpdateW(WordDto wordDto)
+        {
+            try
+            {
+                var g = 2;
+                return new UpdateResponse() { Success = true };
             }
             catch (Exception ex)
             {

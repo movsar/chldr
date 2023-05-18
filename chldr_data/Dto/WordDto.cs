@@ -8,8 +8,9 @@ namespace chldr_data.Dto
     // ! All public properties of this class must have setters, to allow serialization
     public class WordDto : EntryDto
     {
+        [JsonConstructor]
         public WordDto() { }
-        public WordDto(SqlEntry sqlEntry) : this(new WordModel(sqlEntry)) { }
+        public WordDto(SqlWord sqlWord) : this(new WordModel(sqlWord.Entry)) { }
         public WordDto(WordModel word) : base(word)
         {
             WordId = word.WordId.ToString();

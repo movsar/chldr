@@ -33,7 +33,6 @@ public class SqlUser : IUser
     public byte? UserStatus { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
-    public virtual ICollection<SqlChange> Activities { get; set; } = new List<SqlChange>();
     public virtual ICollection<SqlEntry> Entries { get; set; } = new List<SqlEntry>();
     public virtual ICollection<SqlImage> Images { get; set; } = new List<SqlImage>();
     public virtual ICollection<SqlLanguage> Languages { get; set; } = new List<SqlLanguage>();

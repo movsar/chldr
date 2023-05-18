@@ -32,7 +32,7 @@ namespace chldr_data.Repositories
                 {
                     try
                     {
-                        var updatedWord = JsonConvert.DeserializeObject<WordDto>(changeSet.RecordValue);
+                        //var updatedWord = JsonConvert.DeserializeObject<WordDto>(changeSet.RecordValue);
                     }
                     catch (Exception ex) { 
                     

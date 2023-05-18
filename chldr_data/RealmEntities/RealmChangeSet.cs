@@ -14,9 +14,9 @@ namespace chldr_data.RealmEntities
         [PrimaryKey]
         public long ChangeSetId { get; set; }
         public string UserId { get; set; }
-        [Ignored]
-        public string RecordValue { get; set; }
         public string RecordId { get; set; }
+        public string RecordChanges { get; set; }
+
         public RecordType RecordType
         {
             get => (RecordType)_recordType;
