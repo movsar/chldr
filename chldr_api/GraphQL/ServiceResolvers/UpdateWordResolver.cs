@@ -4,6 +4,7 @@ using chldr_data.ResponseTypes;
 using chldr_data.SqlEntities;
 using chldr_tools;
 using Microsoft.EntityFrameworkCore;
+using Realms;
 using System.Diagnostics;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 
@@ -49,6 +50,8 @@ namespace chldr_api.GraphQL.ServiceResolvers
         }
         internal async Task<UpdateResponse> ExecuteAsync(SqlContext dbContext, UserDto userDto, WordDto updatedWordDto)
         {
+            var response = new UpdateResponse() { Success = true };
+
             // Try retrieving corresponding object from the database with all the related objects
             var existingSqlWord = dbContext.Words
                 .Include(w => w.Entry)
@@ -66,37 +69,80 @@ namespace chldr_api.GraphQL.ServiceResolvers
             // Create a dto based on the existing object
             var existingWordDto = new WordDto(existingSqlWord);
 
-            // ! There should be a separate ChangeSet for each changed / inserted / deleted object
-
-            // TODO: Check if any of the translations have been inserted / deleted, if so, create changesets for them
-            // TODO: Check if any of the translations have been changed, if so, create changesets for them
-
-
             // Create a changeset with all the differences between existing and updated objects
-            var changeset = new SqlChangeSet()
+            // ! There should be a separate ChangeSet for each changed / inserted / deleted object
+            var existingTranslationIds = existingWordDto.Translations.Select(t => t.TranslationId).ToHashSet();
+            var updatedTranslationIds = updatedWordDto.Translations.Select(t => t.TranslationId).ToHashSet();
+
+            var insertedTranslations = updatedWordDto.Translations.Where(t => !existingTranslationIds.Contains(t.TranslationId));
+            var deletedTranslations = existingWordDto.Translations.Where(t => !updatedTranslationIds.Contains(t.TranslationId));
+            var updatedTranslations = updatedWordDto.Translations.Where(t => existingTranslationIds.Contains(t.TranslationId) && updatedTranslationIds.Contains(t.TranslationId));
+
+            foreach (var insertedTranslation in insertedTranslations)
+            {
+                response.ChangeSets.Add(new SqlChangeSet()
+                {
+                    Operation = (int)chldr_data.Enums.Operation.Insert,
+                    UserId = userDto.UserId,
+                    RecordId = existingSqlWord.EntryId,
+                    RecordType = (int)chldr_data.Enums.RecordType.word,
+                });
+            }
+
+            foreach (var deletedTranslation in deletedTranslations)
+            {
+                response.ChangeSets.Add(new SqlChangeSet()
+                {
+                    Operation = (int)chldr_data.Enums.Operation.Delete,
+                    UserId = userDto.UserId,
+                    RecordId = existingSqlWord.EntryId,
+                    RecordType = (int)chldr_data.Enums.RecordType.word,
+                });
+            }
+
+            foreach (var updatedTranslation in updatedTranslations)
+            {
+                var updateTranslationChangeSet = new SqlChangeSet()
+                {
+                    Operation = (int)chldr_data.Enums.Operation.Update,
+                    UserId = userDto.UserId,
+                    RecordId = existingSqlWord.EntryId,
+                    RecordType = (int)chldr_data.Enums.RecordType.word,
+                };
+
+                var changes = GetChanges(updatedTranslation, existingWordDto.Translations.First(t => t.TranslationId!.Equals(updatedTranslation.TranslationId)), updateTranslationChangeSet.ChangeSetId);
+                if (changes.Count != 0)
+                {
+                    updateTranslationChangeSet.RecordChanges = JsonConvert.SerializeObject(changes);
+                    response.ChangeSets.Add(updateTranslationChangeSet);
+                }
+            }
+
+            var updateWordChangeSet = new SqlChangeSet()
             {
                 Operation = (int)chldr_data.Enums.Operation.Update,
                 UserId = userDto.UserId,
                 RecordId = existingSqlWord.EntryId,
                 RecordType = (int)chldr_data.Enums.RecordType.word,
             };
-            var wordChanges = GetChanges(updatedWordDto, existingWordDto, changeset.ChangeSetId);
 
+            var wordChanges = GetChanges(updatedWordDto, existingWordDto, updateWordChangeSet.ChangeSetId);
+            if (wordChanges.Count != 0)
+            {
+                response.ChangeSets.Add(updateWordChangeSet);
+            }
 
-
+            // TODO:
+            // Update SqlEntry
             //var entryChanges = GetChanges(updatedWordDto, existingWordDto, changeset.ChangeSetId);
 
             // Apply changes
 
-            // TODO:
-            // Update SqlEntry
-            // Update SqlTranslation
-            // Update SqlWord
 
             var updatedSqlWord = new SqlWord(updatedWordDto);
             dbContext.Update(updatedSqlWord);
 
-            dbContext.Add(changeset);
+            dbContext.AddRange(response.ChangeSets);
             await dbContext.SaveChangesAsync();
 
             // Convert to a word dto
@@ -105,12 +151,6 @@ namespace chldr_api.GraphQL.ServiceResolvers
                 .Include(e => e.User)
                 .First(e => e.EntryId.Equals(existingSqlWord.EntryId));
 
-            changeset = dbContext.ChangeSets.Single(c => c.ChangeSetId.Equals(changeset.ChangeSetId));
-            string serializedObject = JsonConvert.SerializeObject(existingWordDto);
-
-
-            var response = new UpdateResponse() { Success = true };
-            response.ChangeSets.Add(changeset);
             return response;
 
             // Update the word fields
@@ -138,8 +178,6 @@ namespace chldr_api.GraphQL.ServiceResolvers
             //}
 
             // Extract the changes
-
-
         }
     }
 }
