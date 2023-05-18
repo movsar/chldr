@@ -13,7 +13,6 @@ public class SqlContext : DbContext
 
     public virtual DbSet<SqlEfmigrationshistory> Efmigrationshistories { get; set; }
     public virtual DbSet<SqlChangeSet> ChangeSets { get; set; }
-    public virtual DbSet<SqlActivity> Activities { get; set; }
     public virtual DbSet<SqlEntry> Entries { get; set; }
     public virtual DbSet<SqlImage> Images { get; set; }
     public virtual DbSet<SqlLanguage> Languages { get; set; }
@@ -29,51 +28,6 @@ public class SqlContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<SqlActivity>(entity =>
-        {
-            entity.HasKey(e => e.ActivityId).HasName("PRIMARY");
-
-            entity.ToTable("activity");
-
-            entity.HasIndex(e => e.UserId, "fk_user_id_idx");
-
-            entity.Property(e => e.ActivityId)
-                .HasMaxLength(40)
-                .HasColumnName("activity_id");
-            entity.Property(e => e.CreatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.NewValue)
-                .HasMaxLength(255)
-                .HasColumnName("new_value");
-            entity.Property(e => e.Notes)
-                .HasColumnType("text")
-                .HasColumnName("notes");
-            entity.Property(e => e.ObjectClass)
-                .HasMaxLength(255)
-                .HasColumnName("object_class");
-            entity.Property(e => e.ObjectId)
-                .HasMaxLength(40)
-                .HasColumnName("object_id");
-            entity.Property(e => e.ObjectProperty)
-                .HasMaxLength(255)
-                .HasColumnName("object_property");
-            entity.Property(e => e.OldValue)
-                .HasMaxLength(255)
-                .HasColumnName("old_value");
-            entity.Property(e => e.UpdatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
-            entity.Property(e => e.UserId)
-                .HasMaxLength(40)
-                .HasColumnName("user_id");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Activities)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_user_id");
-        });
-
         modelBuilder.Entity<SqlEfmigrationshistory>(entity =>
         {
             entity.HasKey(e => e.MigrationId).HasName("PRIMARY");
@@ -540,26 +494,27 @@ public class SqlContext : DbContext
 
             entity.HasIndex(e => e.UserId, "fk_changesets_user_id_idx");
 
-            entity.Ignore(e => e.RecordValue);
-
             entity.Property(e => e.UserId)
               .HasMaxLength(40)
               .HasColumnName("user_id");
-
-            entity.Property(e => e.CreatedAt)
-              .HasDefaultValueSql("CURRENT_TIMESTAMP")
-              .HasColumnType("datetime")
-              .HasColumnName("created_at");
-
+       
             entity.Property(e => e.Operation)
                 .HasColumnName("operation");
-
-            entity.Property(e => e.RecordType)
-                .HasColumnName("record_type");
 
             entity.Property(e => e.RecordId)
                 .HasMaxLength(40)
                 .HasColumnName("record_id");
+
+            entity.Property(e => e.RecordType)
+                .HasColumnName("record_type");
+       
+            entity.Property(e => e.RecordChanges)
+                .HasColumnName("record_changes");
+
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
 
             entity.HasOne(d => d.User).WithMany(p => p.ChangeSets)
                 .HasForeignKey(d => d.UserId)
