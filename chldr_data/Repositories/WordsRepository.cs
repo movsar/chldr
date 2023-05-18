@@ -123,13 +123,13 @@ namespace chldr_data.Repositories
             OnEntryUpdated(new WordModel(word.Entry));
         }
 
-        internal async Task<IChangeSetEntity> UpdateWord(IUser loggedInUser, WordDto wordDto)
+        internal async Task<IChangeSetEntity> UpdateWord(UserDto userDto, WordDto wordDto)
         {
             var request = new GraphQLRequest
             {
                 Query = @"
-                        mutation updateWord($wordDto: WordDtoInput!) {
-                          updateWord(wordDto: $wordDto) {
+                        mutation updateWord($userDto: UserDtoInput!, $wordDto: WordDtoInput!) {
+                          updateWord(userDto: $userDto, wordDto: $wordDto) {
                             success
                             errorMessage 
                             changeSet {
@@ -143,8 +143,8 @@ namespace chldr_data.Repositories
                           }
                         }
                         ",
-                // The names here must exactly match the names defined in the graphql schema
-                Variables = new { wordDto }
+                // ! The names here must exactly match the names defined in the graphql schema
+                Variables = new { userDto, wordDto }
             };
 
             var response = await DataAccess.RequestSender.SendRequestAsync<UpdateResponse>(request, "updateWord");
@@ -159,7 +159,8 @@ namespace chldr_data.Repositories
         public async Task Update(IUser loggedInUser, WordDto wordDto)
         {
             // Update
-            var changeSet = await UpdateWord(loggedInUser, wordDto);
+            var userDto = new UserDto(loggedInUser);
+            var changeSet = await UpdateWord(userDto, wordDto);
 
             // Sync offline database
             await Sync(new List<IChangeSetEntity> { changeSet });

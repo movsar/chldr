@@ -5,7 +5,8 @@ namespace chldr_data.Interfaces.DatabaseEntities
 {
     public interface IChangeSetEntity : IEntity
     {
-        public long ChangeSetId { get; set; }
+        public long ChangeSetIndex { get; set; }
+        public string ChangeSetId { get; set; }
         public string UserId { get; set; }
         public string RecordId { get; set; }
         public string RecordChanges { get; set; }

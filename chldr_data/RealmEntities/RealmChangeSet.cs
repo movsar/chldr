@@ -7,7 +7,8 @@ namespace chldr_data.RealmEntities
     public class RealmChangeSet : RealmObject, IChangeSetEntity, IEntity
     {
         [PrimaryKey]
-        public long ChangeSetId { get; set; }
+        public long ChangeSetIndex { get; set; }
+        public string ChangeSetId { get; set; } = Guid.NewGuid().ToString();
         public string UserId { get; set; }
         public string RecordId { get; set; }
         public string RecordChanges { get; set; }
@@ -20,6 +21,7 @@ namespace chldr_data.RealmEntities
 
         public RealmChangeSet(IChangeSetEntity changeSet)
         {
+            ChangeSetIndex = changeSet.ChangeSetIndex;
             ChangeSetId = changeSet.ChangeSetId;
             UserId = changeSet.UserId;
             RecordId = changeSet.RecordId;

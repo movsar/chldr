@@ -485,19 +485,22 @@ public class SqlContext : DbContext
         modelBuilder.Entity<SqlChangeSet>(entity =>
         {
             entity.ToTable("changesets");
-            entity.HasKey(e => e.ChangeSetId).HasName("PRIMARY");
+            entity.HasKey(e => e.ChangeSetIndex).HasName("PRIMARY");
+
+            entity.Property(e => e.ChangeSetIndex)
+                     .HasDefaultValueSql("bigint")
+                     .HasColumnName("changeset_index")
+                     .UseMySQLAutoIncrementColumn("changeset_index");
 
             entity.Property(e => e.ChangeSetId)
-                     .HasDefaultValueSql("bigint")
-                     .HasColumnName("changeset_id")
-                     .UseMySQLAutoIncrementColumn("changeset_id");
+              .HasMaxLength(40)
+              .HasColumnName("changeset_id");
 
             entity.HasIndex(e => e.UserId, "fk_changesets_user_id_idx");
-
             entity.Property(e => e.UserId)
-              .HasMaxLength(40)
-              .HasColumnName("user_id");
-       
+                          .HasMaxLength(40)
+                          .HasColumnName("user_id");
+
             entity.Property(e => e.Operation)
                 .HasColumnName("operation");
 

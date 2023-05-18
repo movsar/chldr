@@ -1,6 +1,7 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
 using chldr_data.Interfaces.DatabaseEntities;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace chldr_data.SqlEntities
@@ -9,7 +10,8 @@ namespace chldr_data.SqlEntities
     [JsonObject("changeSet")]
     public class SqlChangeSet : IChangeSetEntity
     {
-        public long ChangeSetId { get; set; }
+        public long ChangeSetIndex { get; set; } 
+        public string ChangeSetId { get; set; } = Guid.NewGuid().ToString();
         public string UserId { get; set; }
         public string RecordId { get; set; }
         public string RecordChanges { get; set; }

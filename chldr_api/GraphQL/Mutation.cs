@@ -50,15 +50,15 @@ namespace chldr_api
             _emailService = emailService;
         }
 
-        public async Task<UpdateResponse> UpdateWord(WordDto wordDto)
+        public async Task<UpdateResponse> UpdateWord(UserDto userDto, WordDto wordDto)
         {
             try
             {
-                return await _updateWordResolver.ExecuteAsync(_dbContext, wordDto);
+                return await _updateWordResolver.ExecuteAsync(_dbContext, userDto, wordDto);
             }
             catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 

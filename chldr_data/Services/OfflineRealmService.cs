@@ -60,7 +60,7 @@ namespace chldr_data.Services
         {
             _config = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
             {
-                SchemaVersion = 3
+                SchemaVersion = 4
             };
 
             var realm = GetDatabase();

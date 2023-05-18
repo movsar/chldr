@@ -20,14 +20,14 @@ namespace chldr_data.Dto
         public string? UserId { get; set; }
         public string? Email { get; set; }
         [JsonIgnore]
-        public string Password { get; set; }
+        public string? Password { get; set; }
         [JsonIgnore]
-        public string PasswordConfirmation { get; set; }
-        public int RateWeight { get; set; }
-        public int Rate { get; set; }
+        public string? PasswordConfirmation { get; set; }
+        public int RateWeight { get; set; } = 1;
+        public int Rate { get; set; } = 1;
         public string? Patronymic { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
-        public UserStatus UserStatus { get; set; }
+        public UserStatus UserStatus { get; set; } = UserStatus.Unconfirmed;
     }
 }
