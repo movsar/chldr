@@ -1,6 +1,7 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
+using chldr_data.RealmEntities;
 using chldr_utils;
 using chldr_utils.Services;
 using Realms;
@@ -61,6 +62,9 @@ namespace chldr_data.Services
             {
                 SchemaVersion = 3
             };
+
+            var realm = GetDatabase();
+            //realm.WriteCopy(new RealmConfiguration("whatever.realm"));
         }
 
         public void Initialize()

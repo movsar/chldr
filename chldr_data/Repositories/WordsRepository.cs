@@ -123,7 +123,7 @@ namespace chldr_data.Repositories
             OnEntryUpdated(new WordModel(word.Entry));
         }
 
-        internal async Task<IChangeSet> UpdateWord(IUser loggedInUser, WordDto wordDto)
+        internal async Task<IChangeSetEntity> UpdateWord(IUser loggedInUser, WordDto wordDto)
         {
             var request = new GraphQLRequest
             {
@@ -162,7 +162,7 @@ namespace chldr_data.Repositories
             var changeSet = await UpdateWord(loggedInUser, wordDto);
 
             // Sync offline database
-            await Sync(new List<IChangeSet> { changeSet });
+            await Sync(new List<IChangeSetEntity> { changeSet });
 
             // Refresh UI with new object 
             var entry = Database.Find<RealmEntry>(wordDto.EntryId);

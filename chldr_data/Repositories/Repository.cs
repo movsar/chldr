@@ -18,7 +18,7 @@ namespace chldr_data.Repositories
         {
             DataAccess = dataAccess;
         }
-        protected async Task Sync(List<IChangeSet>? changeSets = null)
+        protected async Task Sync(List<IChangeSetEntity>? changeSets = null)
         {
             var changeSetsToApply = changeSets;
             if (changeSetsToApply == null)
@@ -28,14 +28,15 @@ namespace chldr_data.Repositories
 
             foreach (var changeSet in changeSetsToApply)
             {
-                if (changeSet.RecordType == Enums.RecordType.word)
+                if (changeSet.RecordType == (int)Enums.RecordType.word)
                 {
                     try
                     {
                         //var updatedWord = JsonConvert.DeserializeObject<WordDto>(changeSet.RecordValue);
                     }
-                    catch (Exception ex) { 
-                    
+                    catch (Exception ex)
+                    {
+
                     }
                 }
             }

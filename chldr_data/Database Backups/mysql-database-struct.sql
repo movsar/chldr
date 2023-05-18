@@ -4,7 +4,7 @@ USE `u1072762_chldr`;
 --
 -- Host: 165.22.89.128    Database: u1072762_chldr
 -- ------------------------------------------------------
--- Server version	8.0.33-0ubuntu0.22.04.1
+-- Server version	8.0.33-0ubuntu0.22.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -18,30 +18,6 @@ USE `u1072762_chldr`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `activity`
---
-
-DROP TABLE IF EXISTS `activity`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `activity` (
-  `activity_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
-  `user_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
-  `object_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
-  `object_class` varchar(255) CHARACTER SET utf8mb3 NOT NULL,
-  `object_property` varchar(255) CHARACTER SET utf8mb3 NOT NULL,
-  `old_value` varchar(255) CHARACTER SET utf8mb3 NOT NULL,
-  `new_value` varchar(255) CHARACTER SET utf8mb3 NOT NULL,
-  `notes` text CHARACTER SET utf8mb3,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`activity_id`),
-  KEY `fk_user_id_idx` (`user_id`),
-  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `changesets`
 --
 
@@ -53,12 +29,13 @@ CREATE TABLE `changesets` (
   `user_id` varchar(40) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `record_id` varchar(40) NOT NULL,
   `record_type` int NOT NULL,
+  `record_changes` text NOT NULL,
   `operation` int NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`changeset_id`),
   KEY `fk_changesets_user_id_idx` (`user_id`),
   CONSTRAINT `fk_changesets_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -310,7 +287,7 @@ CREATE TABLE `word` (
   `content` varchar(10000) CHARACTER SET utf8mb3 NOT NULL,
   `notes` varchar(1500) CHARACTER SET utf8mb3 DEFAULT NULL,
   `part_of_speech` int DEFAULT NULL,
-  `additional_details` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `additional_details` varchar(999) DEFAULT NULL,
   PRIMARY KEY (`word_id`),
   UNIQUE KEY `entry_id_UNIQUE` (`entry_id`),
   CONSTRAINT `fk_word_entry_id` FOREIGN KEY (`entry_id`) REFERENCES `entry` (`entry_id`) ON UPDATE CASCADE,
@@ -327,4 +304,4 @@ CREATE TABLE `word` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-15 18:47:35
+-- Dump completed on 2023-05-18 13:03:58

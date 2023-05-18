@@ -48,10 +48,10 @@ namespace chldr_api.GraphQL.ServiceResolvers
             // Record changes for the sync mechanism
             var changeset = new SqlChangeSet()
             {
-                Operation = chldr_data.Enums.Operation.Update,
+                Operation = (int)chldr_data.Enums.Operation.Update,
                 //UserId = updatedWordDto,
                 RecordId = existingSqlWord.EntryId,
-                RecordType = chldr_data.Enums.RecordType.word,
+                RecordType = (int)chldr_data.Enums.RecordType.word,
             };
 
             dbContext.Add(changeset);

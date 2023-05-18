@@ -7,14 +7,14 @@ namespace chldr_data.SqlEntities
 {
     [Serializable]
     [JsonObject("changeSet")]
-    public class SqlChangeSet : IChangeSet
+    public class SqlChangeSet : IChangeSetEntity
     {
         public long ChangeSetId { get; set; }
         public string UserId { get; set; }
         public string RecordId { get; set; }
         public string RecordChanges { get; set; }
-        public RecordType RecordType { get; set; }
-        public Operation Operation { get; set; }
+        public int RecordType { get; set; }
+        public int Operation { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public virtual SqlUser User { get; set; } = null!;
     }

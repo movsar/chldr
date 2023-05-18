@@ -2,16 +2,15 @@
 {
     public enum RecordType
     {
-        word,
-        phrase,
-        text,
-        user,
-        activity,
-        query,
-        source,
-        sound,
-        image,
-        translation,
-        language
+        word = 0,
+        phrase = 1,
+        text = 2,
+        user = 3,
+        query = 4,
+        source = 5,
+        sound = 6,
+        image = 7,
+        translation = 8,
+        language = 9
     }
 }
