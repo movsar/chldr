@@ -123,7 +123,7 @@ namespace chldr_data.Repositories
             OnEntryUpdated(new WordModel(word.Entry));
         }
 
-        internal async Task<IChangeSetEntity> UpdateWord(UserDto userDto, WordDto wordDto)
+        internal async Task<List<IChangeSetEntity>> UpdateWord(UserDto userDto, WordDto wordDto)
         {
             var request = new GraphQLRequest
             {
@@ -132,14 +132,14 @@ namespace chldr_data.Repositories
                           updateWord(userDto: $userDto, wordDto: $wordDto) {
                             success
                             errorMessage 
-                            changeSet {
+                            changeSets {
                                 changeSetId
                                 recordId
                                 recordChanges
                                 recordType
                                 operation
                                 userId
-                            }   
+                            }
                           }
                         }
                         ",
@@ -153,17 +153,17 @@ namespace chldr_data.Repositories
                 throw new Exception(response.Data.ErrorMessage);
             }
 
-            return response.Data.ChangeSet;
+            return response.Data.ChangeSets.Cast<IChangeSetEntity>().ToList();
         }
 
         public async Task Update(IUser loggedInUser, WordDto wordDto)
         {
             // Update
             var userDto = new UserDto(loggedInUser);
-            var changeSet = await UpdateWord(userDto, wordDto);
+            var changeSets = await UpdateWord(userDto, wordDto);
 
             // Sync offline database
-            await Sync(new List<IChangeSetEntity> { changeSet });
+            await Sync(changeSets);
 
             // Refresh UI with new object 
             var entry = Database.Find<RealmEntry>(wordDto.EntryId);

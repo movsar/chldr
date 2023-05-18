@@ -84,19 +84,19 @@ namespace chldr_data.Services
 
             switch (typeof(T).Name)
             {
-                case nameof(EntryModel):
+                case nameof(IEntryEntity):
                     repository = _serviceProvider.GetService<EntriesRepository<EntryModel>>();
                     break;
 
-                case nameof(WordModel):
+                case nameof(IWordEntity):
                     repository = _serviceProvider.GetService<WordsRepository>();
                     break;
 
-                case nameof(PhraseModel):
+                case nameof(IPhraseEntity):
                     repository = _serviceProvider.GetService<PhrasesRepository>();
                     break;
 
-                case nameof(LanguageModel):
+                case nameof(ILanguageEntity):
                     repository = _serviceProvider.GetService<LanguagesRepository>();
                     break;
 
@@ -104,7 +104,7 @@ namespace chldr_data.Services
                     repository = _serviceProvider.GetService<SourcesRepository>();
                     break;
 
-                case nameof(TranslationModel):
+                case nameof(ITranslationEntity):
                     repository = _serviceProvider.GetService<TranslationsRepository>();
                     break;
 

@@ -8,6 +8,11 @@ namespace chldr_data.Models
     {
         public string TextId { get; }
         public override string Content { get; }
+
+        public override DateTimeOffset CreatedAt { get; }
+
+        public override DateTimeOffset UpdatedAt { get; }
+
         public TextModel(RealmEntry entry) : base(entry)
         {
             var text = entry.Text;

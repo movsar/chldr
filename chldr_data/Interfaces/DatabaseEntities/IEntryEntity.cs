@@ -3,7 +3,8 @@
     public interface IEntryEntity : IEntry, IEntity
     {
         string? RawContents { get; }
-     
+        int Type { get; }
+
         //RealmPhrase? Phrase { get; set; }
         //RealmSource Source { get; set; }
         //RealmText? Text { get; set; }

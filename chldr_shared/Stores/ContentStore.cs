@@ -56,10 +56,10 @@ namespace chldr_shared.Stores
         }
         #endregion
 
-        EntriesRepository<EntryModel> EntriesRepository => (EntriesRepository<EntryModel>)_dataAccess.GetRepository<EntryModel>();
-        WordsRepository WordsRepository => (WordsRepository)_dataAccess.GetRepository<WordModel>();
-        PhrasesRepository PhrasesRepository => (PhrasesRepository)_dataAccess.GetRepository<PhraseModel>();
-        LanguagesRepository LanguagesRepository => (LanguagesRepository)_dataAccess.GetRepository<LanguageModel>();
+        EntriesRepository<EntryModel> EntriesRepository => (EntriesRepository<EntryModel>)_dataAccess.GetRepository<IEntryEntity>();
+        WordsRepository WordsRepository => (WordsRepository)_dataAccess.GetRepository<IWordEntity>();
+        PhrasesRepository PhrasesRepository => (PhrasesRepository)_dataAccess.GetRepository<IPhraseEntity>();
+        LanguagesRepository LanguagesRepository => (LanguagesRepository)_dataAccess.GetRepository<ILanguageEntity>();
 
 
         #region Constructors

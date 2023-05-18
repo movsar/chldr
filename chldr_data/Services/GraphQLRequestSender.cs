@@ -36,10 +36,14 @@ namespace chldr_data.Services
                     Errors = response.Errors,
                 };
             }
+            catch (GraphQLHttpRequestException graphQlException){
+                _exceptionHandler.LogError(graphQlException.Content);
+                throw new Exception("Unexpected error occurred while sending GraphQL request", graphQlException);
+            }
             catch (Exception ex)
-            {
+            {                
                 _exceptionHandler.LogError(ex.Message);
-                throw new Exception("Unexpected error occurred while sending GraphQL request", ex);
+                throw new Exception("Unexpected error occurred", ex);
             }
         }
     }

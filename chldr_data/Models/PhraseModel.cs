@@ -8,6 +8,11 @@ namespace chldr_data.Models
         public string PhraseId { get; }
         public override string Content { get; }
         public string? Notes { get; }
+
+        public override DateTimeOffset CreatedAt { get; }
+
+        public override DateTimeOffset UpdatedAt { get; }
+
         public PhraseModel(RealmEntry entry) : base(entry)
         {
             var phrase = entry.Phrase;

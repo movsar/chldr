@@ -4,33 +4,34 @@ using chldr_data.ResponseTypes;
 using chldr_data.SqlEntities;
 using chldr_tools;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace chldr_api.GraphQL.ServiceResolvers
 {
     public class UpdateWordResolver
     {
-        public List<ChangeDto> GetChanges(WordDto updatedDto, WordDto existingDto, string changeSetId)
+        public List<ChangeDto> GetChanges<T>(T updated, T existing, string changeSetId)
         {
             // This method compares the two dto's and returns the changed properties with their names and values
 
             var changes = new List<ChangeDto>();
-            var properties = typeof(WordDto).GetProperties();
+            var properties = typeof(T).GetProperties();
 
             foreach (var property in properties)
             {
                 // Get currenta and old values, use empty string if they're null
-                var currentValue = property.GetValue(updatedDto) ?? "";
-                var existingValue = property.GetValue(existingDto) ?? "";
+                var newValue = property.GetValue(updated) ?? "";
+                var oldValue = property.GetValue(existing) ?? "";
 
                 // ! Serialization allows comparision between complex objects, it might slow down the process though and worth reconsidering
-                if (!Equals(JsonConvert.SerializeObject(currentValue), JsonConvert.SerializeObject(existingValue)))
+                if (!Equals(JsonConvert.SerializeObject(newValue), JsonConvert.SerializeObject(oldValue)))
                 {
                     changes.Add(new ChangeDto()
                     {
                         Property = property.Name,
-                        NewValue = currentValue,
-                        OldValue = existingValue,
+                        NewValue = newValue,
+                        OldValue = oldValue,
                         ChangeSetId = changeSetId
                     });
                 }
@@ -65,6 +66,12 @@ namespace chldr_api.GraphQL.ServiceResolvers
             // Create a dto based on the existing object
             var existingWordDto = new WordDto(existingSqlWord);
 
+            // ! There should be a separate ChangeSet for each changed / inserted / deleted object
+
+            // TODO: Check if any of the translations have been inserted / deleted, if so, create changesets for them
+            // TODO: Check if any of the translations have been changed, if so, create changesets for them
+
+
             // Create a changeset with all the differences between existing and updated objects
             var changeset = new SqlChangeSet()
             {
@@ -73,7 +80,11 @@ namespace chldr_api.GraphQL.ServiceResolvers
                 RecordId = existingSqlWord.EntryId,
                 RecordType = (int)chldr_data.Enums.RecordType.word,
             };
-            var changes = GetChanges(updatedWordDto, existingWordDto, changeset.ChangeSetId);
+            var wordChanges = GetChanges(updatedWordDto, existingWordDto, changeset.ChangeSetId);
+
+
+
+            //var entryChanges = GetChanges(updatedWordDto, existingWordDto, changeset.ChangeSetId);
 
             // Apply changes
 
@@ -98,7 +109,8 @@ namespace chldr_api.GraphQL.ServiceResolvers
             string serializedObject = JsonConvert.SerializeObject(existingWordDto);
 
 
-            var response = new UpdateResponse() { Success = true, ChangeSet = changeset };
+            var response = new UpdateResponse() { Success = true };
+            response.ChangeSets.Add(changeset);
             return response;
 
             // Update the word fields

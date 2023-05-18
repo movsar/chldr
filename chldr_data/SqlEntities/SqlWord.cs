@@ -14,6 +14,7 @@ public class SqlWord : IWordEntity
     public int? PartOfSpeech { get; set; }
     public string? AdditionalDetails { get; set; }
     public virtual SqlEntry Entry { get; set; } = null!;
+    public SqlWord() { }
 
     public SqlWord(WordDto wordDto)
     {

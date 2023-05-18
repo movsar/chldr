@@ -30,9 +30,7 @@ namespace chldr_data.Models.Words
         public override string Content { get; }
         public string Notes { get; }
         public PartOfSpeech PartOfSpeech { get; }
-
         public override DateTimeOffset CreatedAt { get; }
-
         public override DateTimeOffset UpdatedAt { get; }
     }
     /*

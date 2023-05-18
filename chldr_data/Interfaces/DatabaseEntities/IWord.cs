@@ -1,6 +1,6 @@
 ﻿namespace chldr_data.Interfaces.DatabaseEntities
 {
-    public interface IWord : IEntity
+    public interface IWord
     {
         string Content { get;}
         string? Notes { get; }

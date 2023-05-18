@@ -14,6 +14,7 @@ namespace chldr_data.Models
         public abstract string Content { get; }
         public abstract DateTimeOffset CreatedAt { get; }
         public abstract DateTimeOffset UpdatedAt { get; }
+        public string? SourceId => Source.SourceId;
 
         public EntryModel(RealmEntry entry)
         {

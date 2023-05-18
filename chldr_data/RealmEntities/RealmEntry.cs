@@ -8,6 +8,8 @@ public class RealmEntry : RealmObject, IEntryEntity
 {
     [PrimaryKey]
     public string EntryId { get; set; } = Guid.NewGuid().ToString();
+    [Ignored]
+    public string? SourceId => Source.SourceId;
     public RealmUser User { get; set; } = null!;
     public RealmSource Source { get; set; } = null!;
     public int Type { get; set; } = 0;
@@ -21,4 +23,5 @@ public class RealmEntry : RealmObject, IEntryEntity
     public IList<RealmImage> Images { get; }
     public IList<RealmSound> Sounds { get; }
     public IList<RealmTranslation> Translations { get; }
+
 }

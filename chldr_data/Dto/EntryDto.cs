@@ -1,17 +1,21 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
+using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models;
-using MongoDB.Bson;
 
 namespace chldr_data.Dto
 {
-    public abstract class EntryDto
+  
+    public abstract class EntryDto : IEntryDto
     {
-        public string? EntryId { get; set; }
+        public string EntryId { get; set; }
         public string? SourceId { get; set; }
-        public List<TranslationDto> Translations { get; set; } = new List<TranslationDto>();
         public int Rate { get; set; }
+        public List<TranslationDto> Translations { get; set; } = new List<TranslationDto>();
         public EntryType EntryType { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
+
         public EntryDto() { }
         public EntryDto(SqlEntry entry)
         {

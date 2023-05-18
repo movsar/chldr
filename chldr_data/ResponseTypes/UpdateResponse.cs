@@ -6,6 +6,6 @@ namespace chldr_data.ResponseTypes
 {
     public class UpdateResponse : MutationResponse
     {
-        public SqlChangeSet ChangeSet { get; set; }
+        public List<SqlChangeSet> ChangeSets { get; } = new List<SqlChangeSet>();
     }
 }

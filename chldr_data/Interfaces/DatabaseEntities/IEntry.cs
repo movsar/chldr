@@ -3,8 +3,8 @@
     public interface IEntry
     {
         string EntryId { get; }
+        string? SourceId { get; }
         int Rate { get; }
-        int Type { get; }
         DateTimeOffset CreatedAt { get; }
         DateTimeOffset UpdatedAt { get; }
     }

@@ -58,7 +58,7 @@ namespace chldr_api
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
 
