@@ -10,6 +10,11 @@ namespace chldr_data.Dto
     {
         [JsonConstructor]
         public WordDto() { }
+
+        public WordDto(List<TranslationDto> translations)
+        {
+            Translations = translations;
+        }
         public WordDto(SqlWord sqlWord) : this(new WordModel(sqlWord.Entry)) { }
         public WordDto(WordModel word) : base(word)
         {

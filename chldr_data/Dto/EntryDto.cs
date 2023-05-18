@@ -9,7 +9,7 @@ namespace chldr_data.Dto
     {
         public string? EntryId { get; set; }
         public string? SourceId { get; set; }
-        public List<TranslationDto> Translations { get; } = new List<TranslationDto>();
+        public List<TranslationDto> Translations { get; set; } = new List<TranslationDto>();
         public int Rate { get; set; }
         public EntryType EntryType { get; set; }
         public EntryDto() { }

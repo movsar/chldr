@@ -175,8 +175,8 @@ namespace chldr_data.Repositories
             var request = new GraphQLRequest
             {
                 Query = @"
-                        mutation UpdateWord($wordDto: WordDtoInput!) {
-                          updateWord(wordDto: $wordDto) {
+                        mutation UpdateW($wordDto: WordDtoInput!) {
+                          UpdateW(wordDto: $wordDto) {
                             success
                             errorMessage
                           }
@@ -186,7 +186,7 @@ namespace chldr_data.Repositories
                 Variables = new { userId, wordId, content, partOfSpeech, notes, translationDtos }
             };
 
-            var response = await DataAccess.RequestSender.SendRequestAsync<UpdateResponse>(request, "updateWord");
+            var response = await DataAccess.RequestSender.SendRequestAsync<UpdateResponse>(request, "UpdateW");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);
