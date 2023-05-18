@@ -9,19 +9,12 @@ namespace chldr_api.GraphQL.ServiceResolvers
 {
     public class UpdateWordResolver
     {
-        internal async Task<UpdateResponse> ExecuteAsync(
-                                                          SqlContext dbContext,
-                                                          string userId,
-                                                          string wordId,
-                                                          string content,
-                                                          int partOfSpeech,
-                                                          string notes,
-                                                          List<TranslationDto> translationDtos)
+        internal async Task<UpdateResponse> ExecuteAsync(SqlContext dbContext, WordDto updatedWordDto)
         {
-            var sqlWord = await dbContext.Words.FindAsync(wordId);
-            if (sqlWord == null)
+            var existingSqlWord = await dbContext.Words.FindAsync(updatedWordDto.WordId);
+            if (existingSqlWord == null)
             {
-                throw new ArgumentException("Word not found", nameof(wordId));
+                throw new ArgumentException($"Word not found WordId: {updatedWordDto.WordId}");
             }
 
             // Update the word fields
@@ -50,14 +43,14 @@ namespace chldr_api.GraphQL.ServiceResolvers
 
             // Extract the changes
 
-            var existingWordDto = new WordDto(sqlWord);
+            var existingWordDto = new WordDto(existingSqlWord);
 
             // Record changes for the sync mechanism
             var changeset = new SqlChangeSet()
             {
                 Operation = chldr_data.Enums.Operation.Update,
-                UserId = userId,
-                RecordId = sqlWord.EntryId,
+                //UserId = updatedWordDto,
+                RecordId = existingSqlWord.EntryId,
                 RecordType = chldr_data.Enums.RecordType.word,
             };
 
@@ -68,7 +61,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
             var wordEntryEntity = dbContext.Entries
                 .Include(e => e.Source)
                 .Include(e => e.User)
-                .First(e => e.EntryId.Equals(sqlWord.EntryId));
+                .First(e => e.EntryId.Equals(existingSqlWord.EntryId));
 
             changeset = dbContext.ChangeSets.Single(c => c.ChangeSetId.Equals(changeset.ChangeSetId));
             string serializedObject = JsonConvert.SerializeObject(existingWordDto);

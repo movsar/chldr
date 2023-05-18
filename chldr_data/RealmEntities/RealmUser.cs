@@ -18,7 +18,6 @@ public class RealmUser : RealmObject, IEntity, IUser
     public byte? AccountStatus { get; set; }
     public DateTimeOffset CreatedAt { get; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; } = DateTime.Now;
-    public IList<RealmActivity> Activities { get; } 
     public IList<RealmEntry> Entries { get; } 
     public IList<RealmImage> Images { get; }
     public IList<RealmLanguage> Languages { get; } 

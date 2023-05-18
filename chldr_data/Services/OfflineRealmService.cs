@@ -59,7 +59,7 @@ namespace chldr_data.Services
         {
             _config = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
             {
-                SchemaVersion = 2
+                SchemaVersion = 3
             };
         }
 

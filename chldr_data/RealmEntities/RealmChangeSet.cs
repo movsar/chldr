@@ -34,6 +34,7 @@ namespace chldr_data.RealmEntities
             ChangeSetId = changeSet.ChangeSetId;
             UserId = changeSet.UserId;
             RecordId = changeSet.RecordId;
+            RecordChanges = changeSet.RecordChanges;
             RecordType = changeSet.RecordType;
             Operation = changeSet.Operation;
             CreatedAt = changeSet.CreatedAt;
