@@ -4,7 +4,7 @@ using chldr_data.Interfaces.DatabaseEntities;
 
 namespace chldr_data.Models.Words
 {
-    public class WordModel : EntryModel
+    public class WordModel : EntryModel, IWord
     {
         public WordModel(RealmEntry entry) : base(entry)
         {
@@ -30,6 +30,10 @@ namespace chldr_data.Models.Words
         public override string Content { get; }
         public string Notes { get; }
         public PartOfSpeech PartOfSpeech { get; }
+
+        public override DateTimeOffset CreatedAt { get; }
+
+        public override DateTimeOffset UpdatedAt { get; }
     }
     /*
 

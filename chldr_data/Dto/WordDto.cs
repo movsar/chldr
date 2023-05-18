@@ -1,12 +1,13 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums.WordDetails;
+using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models.Words;
 using Newtonsoft.Json;
 
 namespace chldr_data.Dto
 {
     // ! All public properties of this class must have setters, to allow serialization
-    public class WordDto : EntryDto
+    public class WordDto : EntryDto, IWord
     {
         [JsonConstructor]
         public WordDto() { }

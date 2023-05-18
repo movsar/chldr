@@ -4,14 +4,16 @@ using chldr_data.Interfaces.DatabaseEntities;
 
 namespace chldr_data.Models
 {
-    public abstract class EntryModel : IEntity
+    public abstract class EntryModel : IEntry
     {
-        public abstract string Content { get; }
         public List<TranslationModel> Translations { get; } = new List<TranslationModel>();
         public SourceModel Source { get; }
         public int Rate { get; }
         public int Type { get; }
         public string? EntryId { get; internal set; }
+        public abstract string Content { get; }
+        public abstract DateTimeOffset CreatedAt { get; }
+        public abstract DateTimeOffset UpdatedAt { get; }
 
         public EntryModel(RealmEntry entry)
         {

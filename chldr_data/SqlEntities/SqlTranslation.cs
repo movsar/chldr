@@ -1,4 +1,5 @@
-﻿using chldr_data.Interfaces;
+﻿using chldr_data.Dto;
+using chldr_data.Interfaces;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -27,7 +28,7 @@ public  class SqlTranslation : ITranslation
 
     public SqlTranslation() { }
 
-    public SqlTranslation(ITranslation translation)
+    public SqlTranslation(TranslationDto translation)
     {
         TranslationId = translation.TranslationId;
         LanguageId = translation.LanguageId;

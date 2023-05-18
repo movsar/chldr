@@ -3,7 +3,7 @@ using chldr_data.Interfaces.DatabaseEntities;
 
 namespace chldr_data.Entities;
 [Table("Entry")]
-public class SqlEntry
+public class SqlEntry : IEntryEntity
 {
     public string EntryId { get; set; } = Guid.NewGuid().ToString();
     public string UserId { get; set; } = null!;

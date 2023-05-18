@@ -1,4 +1,5 @@
 ﻿using chldr_data.Dto;
+using chldr_data.Entities;
 using chldr_data.ResponseTypes;
 using chldr_data.SqlEntities;
 using chldr_tools;
@@ -75,10 +76,14 @@ namespace chldr_api.GraphQL.ServiceResolvers
             var changes = GetChanges(updatedWordDto, existingWordDto, changeset.ChangeSetId);
 
             // Apply changes
-            foreach (var change in changes)
-            {
-                change.Property
-            }
+
+            // TODO:
+            // Update SqlEntry
+            // Update SqlTranslation
+            // Update SqlWord
+
+            var updatedSqlWord = new SqlWord(updatedWordDto);
+            dbContext.Update(updatedSqlWord);
 
             dbContext.Add(changeset);
             await dbContext.SaveChangesAsync();
