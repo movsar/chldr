@@ -484,44 +484,42 @@ public class SqlContext : DbContext
 
         modelBuilder.Entity<SqlChangeSet>(entity =>
         {
-            entity.ToTable("changesets");
             entity.HasKey(e => e.ChangeSetIndex).HasName("PRIMARY");
 
+            entity.ToTable("changesets");
+            
+            entity.HasIndex(e => e.UserId, "fk_changesets_user_id_idx");
+
             entity.Property(e => e.ChangeSetIndex)
-                     .HasDefaultValueSql("bigint")
-                     .HasColumnName("changeset_index")
-                     .UseMySQLAutoIncrementColumn("changeset_index");
+                .HasColumnName("changeset_index");
 
             entity.Property(e => e.ChangeSetId)
-              .HasMaxLength(40)
-              .HasColumnName("changeset_id");
-
-            entity.HasIndex(e => e.UserId, "fk_changesets_user_id_idx");
-            entity.Property(e => e.UserId)
-                          .HasMaxLength(40)
-                          .HasColumnName("user_id");
-
-            entity.Property(e => e.Operation)
-                .HasColumnName("operation");
-
-            entity.Property(e => e.RecordId)
                 .HasMaxLength(40)
-                .HasColumnName("record_id");
-
-            entity.Property(e => e.RecordType)
-                .HasColumnName("record_type");
-       
-            entity.Property(e => e.RecordChanges)
-                .HasColumnName("record_changes");
+                .HasColumnName("changeset_id");
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
 
+            entity.Property(e => e.Operation)
+                .HasColumnName("operation");
+            entity.Property(e => e.RecordChanges)
+                .HasColumnType("text")
+                .HasColumnName("record_changes");
+            entity.Property(e => e.RecordId)
+                .HasMaxLength(40)
+                .HasColumnName("record_id");
+            entity.Property(e => e.RecordType).HasColumnName("record_type");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(40)
+                .HasColumnName("user_id")
+                .UseCollation("utf8mb3_general_ci")
+                .HasCharSet("utf8mb3");
+
             entity.HasOne(d => d.User).WithMany(p => p.ChangeSets)
                 .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.NoAction)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_changesets_user_id");
         });
     }
