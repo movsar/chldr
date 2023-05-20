@@ -73,16 +73,23 @@ namespace chldr_api.GraphQL.ServiceResolvers
 
             // Create a dto based on the existing object
             var existingWordDto = new WordDto(existingSqlWord);
+
             var translationChangeSets = SetDbTranslations(dbContext, userDto, existingWordDto, updatedWordDto);
-            var wordChangeSet = SetDbWord(dbContext, userDto, existingWordDto, updatedWordDto);
+            var wordChangeSets = SetDbWord(dbContext, userDto, existingWordDto, updatedWordDto);
+
+            response.ChangeSets.AddRange(translationChangeSets);
+            response.ChangeSets.AddRange(wordChangeSets);
 
             // Apply changes
-
-            var updatedSqlWord = new SqlWord(updatedWordDto);
-            dbContext.Update(updatedSqlWord);
-
             dbContext.AddRange(response.ChangeSets);
-            await dbContext.SaveChangesAsync();
+            try
+            {
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
 
             // Convert to a word dto
             var wordEntryEntity = dbContext.Entries
@@ -120,6 +127,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
                     SetPropertyValue(sqlWord, change.Property, change.NewValue);
                 }
 
+                updateWordChangeSet.RecordChanges = JsonConvert.SerializeObject(updateWordChangeSet);
                 changeSets.Add(updateWordChangeSet);
             }
 
@@ -130,7 +138,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
                 RecordId = updatedWordDto.EntryId,
                 RecordType = (int)chldr_data.Enums.RecordType.entry,
             };
-            var entryChanges = GetChanges(updatedWordDto, existingWordDto, updateEntryChangeSet.ChangeSetId);
+            var entryChanges = GetChanges((IEntryDto)updatedWordDto, (IEntryDto)existingWordDto, updateEntryChangeSet.ChangeSetId);
             if (entryChanges.Count != 0)
             {
                 var sqlEntry = dbContext.Entries.Find(updatedWordDto.EntryId);
@@ -144,6 +152,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
                     SetPropertyValue(sqlEntry, change.Property, change.NewValue);
                 }
 
+                updateEntryChangeSet.RecordChanges = JsonConvert.SerializeObject(entryChanges);
                 changeSets.Add(updateEntryChangeSet);
             }
 
