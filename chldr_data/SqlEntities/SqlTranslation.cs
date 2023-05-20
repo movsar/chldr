@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace chldr_data.Entities;
 
 [Table("Translation")]
-public  class SqlTranslation : ITranslation
+public class SqlTranslation : ITranslation
 {
     public string TranslationId { get; set; } = Guid.NewGuid().ToString();
     public string LanguageId { get; set; } = null!;
@@ -35,8 +35,9 @@ public  class SqlTranslation : ITranslation
         EntryId = translation.EntryId;
         UserId = translation.UserId;
         Content = translation.Content;
-        Rate = translation.Rate;
+        RawContents = translation.Content.ToLower();
         Notes = translation.Notes;
+        Rate = translation.Rate;
     }
 
 }
