@@ -1,6 +1,8 @@
-﻿using chldr_data.Enums;
+﻿using chldr_data.Dto;
+using chldr_data.Enums;
 using chldr_data.Interfaces.DatabaseEntities;
 using chldr_shared.Models;
+using Realms.Sync;
 
 namespace chldr_data.Models
 {
@@ -18,10 +20,15 @@ namespace chldr_data.Models
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Patronymic { get; set; }
-        public string? UserId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
+        public string? UserId { get; set; }
         public UserModel(IUser user)
         {
+            if (string.IsNullOrWhiteSpace(user.UserId))
+            {
+                throw new NullReferenceException("UserId is null");
+            }
+
+            UserId = user.UserId;
             Email = user.Email;
             Rate = user.Rate;
             FirstName = user.FirstName;
@@ -29,7 +36,7 @@ namespace chldr_data.Models
             Patronymic = user.Patronymic;
             RateWeight = GetRateWeight();
         }
-        
+
         public RateWeight GetRateWeight()
         {
             return GetRateWeightByRate(Rate);

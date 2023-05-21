@@ -1,12 +1,10 @@
-﻿using chldr_data.Dto;
-using chldr_data.Enums;
+﻿using chldr_data.Enums;
 using chldr_data.Interfaces.DatabaseEntities;
-
-namespace chldr_data.Models
+namespace chldr_data.Dto
 {
-    public class ChangeSetModel : IChangeSet
+    public class ChangeSetDto : IChangeSet
     {
-        public long ChangeSetIndex { get; }
+        public long ChangeSetIndex { get; set; }
         public string ChangeSetId { get; set; }
         public RecordType RecordType { get; set; }
         public string UserId { get; set; }
@@ -14,18 +12,8 @@ namespace chldr_data.Models
         public string RecordChanges { get; set; }
         public Operation Operation { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
-        public ChangeSetModel(ChangeSetDto c)
-        {
-            ChangeSetIndex = c.ChangeSetIndex;
-            ChangeSetId = c.ChangeSetId;
-            UserId = c.UserId;
-            Operation = c.Operation;
-            RecordId = c.RecordId;
-            RecordType = c.RecordType;
-            RecordChanges = c.RecordChanges;
-            CreatedAt = c.CreatedAt;
-        }
-        public ChangeSetModel(IChangeSetEntity changeSetEntity)
+        public ChangeSetDto() { }
+        public ChangeSetDto(IChangeSetEntity changeSetEntity)
         {
             ChangeSetIndex = changeSetEntity.ChangeSetIndex;
             ChangeSetId = changeSetEntity.ChangeSetId;

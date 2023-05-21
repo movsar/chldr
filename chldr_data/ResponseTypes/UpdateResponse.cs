@@ -1,11 +1,10 @@
-﻿using chldr_data.Entities;
-using chldr_data.SqlEntities;
-using Newtonsoft.Json;
+﻿using chldr_data.Dto;
+using chldr_data.Models;
 
 namespace chldr_data.ResponseTypes
 {
     public class UpdateResponse : MutationResponse
     {
-        public List<SqlChangeSet> ChangeSets { get; } = new List<SqlChangeSet>();
+        public List<ChangeSetDto> ChangeSets { get; } = new List<ChangeSetDto>();
     }
 }

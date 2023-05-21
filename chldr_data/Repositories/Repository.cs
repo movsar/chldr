@@ -18,7 +18,7 @@ namespace chldr_data.Repositories
         {
             DataAccess = dataAccess;
         }
-        protected async Task Sync(List<IChangeSetModel>? changeSets = null)
+        protected async Task Sync(List<ChangeSetModel>? changeSets = null)
         {
             var changeSetsToApply = changeSets;
             if (changeSetsToApply == null)
@@ -28,6 +28,8 @@ namespace chldr_data.Repositories
 
             foreach (var changeSet in changeSetsToApply)
             {
+                var changes = JsonConvert.DeserializeObject<List<ChangeDto>>(changeSet.RecordChanges);
+
                 if (changeSet.RecordType == Enums.RecordType.Word)
                 {
                     try

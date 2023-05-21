@@ -79,14 +79,14 @@ namespace chldr_data.Services
         public UserModel GetActiveSession()
         {
             var appUserId = App.CurrentUser.Id;
-            var user = Database.All<Entities.RealmUser>().FirstOrDefault(u => u.UserId == appUserId);
+            var userEntity = Database.All<Entities.RealmUser>().FirstOrDefault(u => u.UserId == appUserId);
 
-            if (user == null)
+            if (userEntity == null)
             {
                 throw new Exception(AppConstants.DataErrorMessages.NoUserInfo);
             }
 
-            return new UserModel(user);
+            return new UserModel(userEntity);
         }
 
         public async Task<string> RegisterNewUserAsync(string email, string password)

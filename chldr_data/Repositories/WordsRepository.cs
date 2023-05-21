@@ -12,6 +12,7 @@ using chldr_data.SqlEntities;
 using GraphQL;
 using MongoDB.Bson;
 using Realms;
+using System.Linq;
 
 namespace chldr_data.Repositories
 {
@@ -124,7 +125,7 @@ namespace chldr_data.Repositories
             OnEntryUpdated(new WordModel(word.Entry));
         }
 
-        internal async Task<List<IChangeSetModel>> UpdateWord(UserDto userDto, WordDto wordDto)
+        internal async Task<List<ChangeSetModel>> UpdateWord(UserDto userDto, WordDto wordDto)
         {
             var request = new GraphQLRequest
             {
@@ -154,7 +155,7 @@ namespace chldr_data.Repositories
                 throw new Exception(response.Data.ErrorMessage);
             }
 
-            return response.Data.ChangeSets.Select(ch => new ChangeSetModel((IChangeSetEntity)ch)).ToList();
+            return response.Data.ChangeSets.Select(c => new ChangeSetModel(c)).ToList();
         }
 
         public async Task Update(IUser loggedInUser, WordDto wordDto)

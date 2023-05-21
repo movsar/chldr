@@ -1,6 +1,7 @@
 ﻿using chldr_data.Dto;
 using chldr_data.Entities;
 using chldr_data.Interfaces.DatabaseEntities;
+using chldr_data.Models;
 using chldr_data.ResponseTypes;
 using chldr_data.SqlEntities;
 using chldr_tools;
@@ -55,6 +56,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
 
         internal async Task<UpdateResponse> ExecuteAsync(SqlContext dbContext, UserDto userDto, WordDto updatedWordDto)
         {
+            var user = new UserModel(userDto);
             var response = new UpdateResponse() { Success = true };
 
             // Try retrieving corresponding object from the database with all the related objects
@@ -77,25 +79,21 @@ namespace chldr_api.GraphQL.ServiceResolvers
             var translationChangeSets = SetDbTranslations(dbContext, userDto, existingWordDto, updatedWordDto);
             var wordChangeSets = SetDbWord(dbContext, userDto, existingWordDto, updatedWordDto);
 
-            response.ChangeSets.AddRange(translationChangeSets);
-            response.ChangeSets.AddRange(wordChangeSets);
-
             // Apply changes
-            dbContext.AddRange(response.ChangeSets);
-            try
-            {
-                await dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-
-            }
+            var changesets = translationChangeSets.Union(wordChangeSets);
+            dbContext.AddRange(changesets);
+            await dbContext.SaveChangesAsync();
 
             // Convert to a word dto
             var wordEntryEntity = dbContext.Entries
                 .Include(e => e.Source)
                 .Include(e => e.User)
                 .First(e => e.EntryId.Equals(existingSqlWord.EntryId));
+
+            var changeSetIds = changesets.Select(c => c.ChangeSetId);
+            var allChangeSets = dbContext.ChangeSets.ToList();
+            var updatedChangeSets = dbContext.ChangeSets.Where(c => changeSetIds.Contains(c.ChangeSetId));
+            response.ChangeSets.AddRange(updatedChangeSets.Select(c => new ChangeSetDto(c)));
 
             return response;
         }
@@ -127,7 +125,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
                     SetPropertyValue(sqlWord, change.Property, change.NewValue);
                 }
 
-                updateWordChangeSet.RecordChanges = JsonConvert.SerializeObject(updateWordChangeSet);
+                updateWordChangeSet.RecordChanges = JsonConvert.SerializeObject(wordChanges);
                 changeSets.Add(updateWordChangeSet);
             }
 
@@ -179,7 +177,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
                     Operation = (int)chldr_data.Enums.Operation.Insert,
                     UserId = user.UserId!,
                     RecordId = insertedTranslation.TranslationId!,
-                    RecordType = (int)chldr_data.Enums.RecordType.translation,
+                    RecordType = (int)chldr_data.Enums.RecordType.Translation,
                 });
             }
 
@@ -198,7 +196,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
                     Operation = (int)chldr_data.Enums.Operation.Delete,
                     UserId = user.UserId!,
                     RecordId = deletedTranslation.TranslationId!,
-                    RecordType = (int)chldr_data.Enums.RecordType.translation,
+                    RecordType = (int)chldr_data.Enums.RecordType.Translation,
                 });
             }
 
@@ -215,7 +213,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
                     Operation = (int)chldr_data.Enums.Operation.Update,
                     UserId = user.UserId!,
                     RecordId = updatedTranslation.TranslationId!,
-                    RecordType = (int)chldr_data.Enums.RecordType.translation,
+                    RecordType = (int)chldr_data.Enums.RecordType.Translation,
                 };
 
                 var changes = GetChanges(updatedTranslation, existingWordDto.Translations.First(t => t.TranslationId!.Equals(updatedTranslation.TranslationId)), updateTranslationChangeSet.ChangeSetId);
