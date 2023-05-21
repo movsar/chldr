@@ -2,22 +2,14 @@
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.ResponseTypes;
+using chldr_utils;
 using GraphQL;
-using GraphQL.Client.Http;
-using GraphQL.Client.Serializer.Newtonsoft;
-using Newtonsoft.Json.Linq;
-using Realms.Sync;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chldr_data.Services
 {
     public class AuthService
     {
-        private readonly IGraphQLRequestSender _requestSender;
+        private readonly IGraphQLRequestSender _requestSender;        
 
         public AuthService(IGraphQLRequestSender requestSender)
         {
@@ -166,7 +158,7 @@ namespace chldr_data.Services
             {
                 Query = @"
                         mutation($refreshToken: String!) {
-                            autoLogin(refreshToken: $refreshToken) {
+                            logInRefreshToken(refreshToken: $refreshToken) {
                                 success
                                 errorMessage
                                 accessToken
@@ -184,19 +176,14 @@ namespace chldr_data.Services
                 Variables = new { refreshToken }
             };
 
-            var response = await _requestSender.SendRequestAsync<LoginResponse>(request, "autoLogin");
-            if (!response.Data.Success)
-            {
-                throw new Exception(response.Data.ErrorMessage);
-            }
-
+            var response = await _requestSender.SendRequestAsync<LoginResponse>(request, "logInRefreshToken");
             return new ActiveSession()
             {
-                AccessToken = response.Data.AccessToken,
-                RefreshToken = response.Data.RefreshToken,
-                AccessTokenExpiresIn = (DateTimeOffset)response.Data.AccessTokenExpiresIn,
-                Status = SessionStatus.LoggedIn,
-                User = response.Data.User
+                AccessToken = response.Data.Success ? response.Data.AccessToken! : "",
+                RefreshToken = response.Data.Success ? response.Data.RefreshToken! : "",
+                AccessTokenExpiresIn = response.Data.Success ? (DateTimeOffset)response.Data.AccessTokenExpiresIn! : DateTime.UtcNow,
+                Status = response.Data.Success ? SessionStatus.LoggedIn : SessionStatus.Anonymous,
+                User = response.Data.Success ? response.Data.User : null
             };
         }
     }

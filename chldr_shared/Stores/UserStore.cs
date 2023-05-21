@@ -2,6 +2,7 @@
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Services;
+using chldr_utils;
 using chldr_utils.Services;
 
 namespace chldr_shared.Stores
@@ -14,10 +15,12 @@ namespace chldr_shared.Stores
         private readonly LocalStorageService _localStorageService;
         private readonly EnvironmentService _environmentService;
         private readonly UserService _userService;
+        private readonly ExceptionHandler _exceptionHandler;
+
         public ActiveSession ActiveSession { get; private set; } = new ActiveSession();
         #endregion
 
-        public UserStore(UserService userService, EnvironmentService environmentService, NetworkService networkService, LocalStorageService localStorageService)
+        public UserStore(UserService userService, ExceptionHandler exceptionHandler, EnvironmentService environmentService, NetworkService networkService, LocalStorageService localStorageService)
         {
             // Let people log in if they want (on prod turn off this for Web)
             if (/*environmentService.CurrentPlatform != Platforms.Web &&*/ networkService.IsNetworUp)
@@ -28,8 +31,19 @@ namespace chldr_shared.Stores
             _localStorageService = localStorageService;
             _environmentService = environmentService;
             _userService = userService;
+            _exceptionHandler = exceptionHandler;
 
-            RestoreLastSession();
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await RestoreLastSession();
+                }
+                catch (Exception ex)
+                {
+                    _exceptionHandler.LogAndThrow(ex);
+                };
+            });
         }
 
         private async Task SaveActiveSession()
@@ -55,6 +69,7 @@ namespace chldr_shared.Stores
                 // Try to refresh Access Token
                 ActiveSession = await _userService.RefreshTokens(ActiveSession.RefreshToken);
                 await SaveActiveSession();
+                UserStateHasChanged?.Invoke();
             }
 
         }

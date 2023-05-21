@@ -82,7 +82,7 @@ namespace chldr_api
             return await _updatePasswordMutation.ExecuteAsync(_dbContext, token, newPassword);
         }
 
-        public async Task<LoginResponse> AutoLoginAsync(string refreshToken)
+        public async Task<LoginResponse> LogInRefreshTokenAsync(string refreshToken)
         {
             return await _loginUserMutation.ExecuteAsync(_dbContext, refreshToken);
         }

@@ -6,6 +6,5 @@
         Anonymous = 1,
         LoggingIn = 2,
         LoggedIn = 3,
-        LoggingOut = 4,
     }
 }
