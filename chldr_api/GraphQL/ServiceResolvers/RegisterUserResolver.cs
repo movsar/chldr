@@ -41,7 +41,7 @@ namespace chldr_api.GraphQL.MutationServices
             await dbContext.SaveChangesAsync();
 
             var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
-            var confirmationToken = JwtService.GenerateToken(user.UserId, "confirmation-token-secret", confirmationTokenExpiration);
+            var confirmationToken = JwtService.GenerateToken(user.UserId, "confirmation-token-secretconfirmation-token-secretconfirmation-token-secret", confirmationTokenExpiration);
 
             // Save the tokens to the database
             dbContext.Tokens.Add(new SqlToken

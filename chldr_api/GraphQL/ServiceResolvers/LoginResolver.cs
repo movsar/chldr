@@ -18,8 +18,8 @@ namespace chldr_api.GraphQL.MutationServices
             var accessTokenExpiration = DateTime.UtcNow.AddMinutes(60);
             var refreshTokenExpiration = DateTime.UtcNow.AddDays(60);
 
-            var accessToken = JwtService.GenerateToken(user.UserId, "access-token-secret", accessTokenExpiration);
-            var refreshToken = JwtService.GenerateToken(user.UserId, "refresh-token-secret", refreshTokenExpiration);
+            var accessToken = JwtService.GenerateToken(user.UserId, "access-token-secretaccess-token-secretaccess-token-secret", accessTokenExpiration);
+            var refreshToken = JwtService.GenerateToken(user.UserId, "refresh-token-secretrefresh-token-secretrefresh-token-secret", refreshTokenExpiration);
 
             // Save the tokens to the database
             dbContext.Tokens.Add(new SqlToken
