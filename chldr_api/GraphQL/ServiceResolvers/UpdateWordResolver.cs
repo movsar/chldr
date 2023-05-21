@@ -110,7 +110,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
                 Operation = (int)chldr_data.Enums.Operation.Update,
                 UserId = user.UserId!,
                 RecordId = updatedWordDto.WordId,
-                RecordType = (int)chldr_data.Enums.RecordType.word,
+                RecordType = (int)chldr_data.Enums.RecordType.Word,
             };
 
             var wordChanges = GetChanges(updatedWordDto, existingWordDto, updateWordChangeSet.ChangeSetId);
@@ -136,9 +136,9 @@ namespace chldr_api.GraphQL.ServiceResolvers
                 Operation = (int)chldr_data.Enums.Operation.Update,
                 UserId = user.UserId!,
                 RecordId = updatedWordDto.EntryId,
-                RecordType = (int)chldr_data.Enums.RecordType.entry,
+                RecordType = (int)chldr_data.Enums.RecordType.Entry,
             };
-            var entryChanges = GetChanges((IEntryDto)updatedWordDto, (IEntryDto)existingWordDto, updateEntryChangeSet.ChangeSetId);
+            var entryChanges = GetChanges<IEntryDto>(updatedWordDto, existingWordDto, updateEntryChangeSet.ChangeSetId);
             if (entryChanges.Count != 0)
             {
                 var sqlEntry = dbContext.Entries.Find(updatedWordDto.EntryId);

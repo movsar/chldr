@@ -4,6 +4,7 @@ using chldr_data.Entities;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Interfaces.DatabaseEntities;
+using chldr_data.Models;
 using chldr_data.Models.Words;
 using chldr_data.RealmEntities;
 using chldr_data.ResponseTypes;
@@ -123,7 +124,7 @@ namespace chldr_data.Repositories
             OnEntryUpdated(new WordModel(word.Entry));
         }
 
-        internal async Task<List<IChangeSetEntity>> UpdateWord(UserDto userDto, WordDto wordDto)
+        internal async Task<List<IChangeSetModel>> UpdateWord(UserDto userDto, WordDto wordDto)
         {
             var request = new GraphQLRequest
             {
@@ -153,7 +154,7 @@ namespace chldr_data.Repositories
                 throw new Exception(response.Data.ErrorMessage);
             }
 
-            return response.Data.ChangeSets.Cast<IChangeSetEntity>().ToList();
+            return response.Data.ChangeSets.Select(ch => new ChangeSetModel((IChangeSetEntity)ch)).ToList();
         }
 
         public async Task Update(IUser loggedInUser, WordDto wordDto)
