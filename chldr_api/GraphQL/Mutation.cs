@@ -52,14 +52,7 @@ namespace chldr_api
 
         public async Task<UpdateResponse> UpdateWord(UserDto userDto, WordDto wordDto)
         {
-            try
-            {
-                return await _updateWordResolver.ExecuteAsync(_dbContext, userDto, wordDto);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return await _updateWordResolver.ExecuteAsync(_dbContext, userDto, wordDto);
         }
 
         public async Task<RegistrationResponse> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
@@ -89,14 +82,7 @@ namespace chldr_api
 
         public async Task<LoginResponse> LoginEmailPasswordAsync(string email, string password)
         {
-            try
-            {
-                return await _loginUserMutation.ExecuteAsync(_dbContext, email, password);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return await _loginUserMutation.ExecuteAsync(_dbContext, email, password);
         }
     }
 

@@ -45,7 +45,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
 
             return changes;
         }
-        public void SetPropertyValue(object obj, string propertyName, object value)
+        private void SetPropertyValue(object obj, string propertyName, object value)
         {
             var propertyInfo = obj.GetType().GetProperty(propertyName);
             if (propertyInfo != null)
