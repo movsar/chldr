@@ -1,2 +1,0 @@
-Recreate models from the database
-Scaffold-DbContext "server=165.22.89.128;port=3306;database=u1072762_chldr;user=admin;password=password" Pomelo.EntityFrameworkCore.MySql -OutputDir Models

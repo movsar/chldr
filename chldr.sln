@@ -20,13 +20,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B8E27A14-49EB-49DC-8B77-EA52A38CDE7C}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		ProjectNotes.txt = ProjectNotes.txt
+		ToDo.txt = ToDo.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_maintenance", "chldr_tools\chldr_maintenance.csproj", "{42DAB62C-43FE-4164-BC15-0460A0D73288}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_api", "chldr_api\chldr_api.csproj", "{97E541F2-AB38-4EC8-8A84-F158B25B8CA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chldr_api.tests", "chldr_api.tests\chldr_api.tests.csproj", "{F640B8A1-7948-410F-81F8-26CDFB024C22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_api.tests", "chldr_api.tests\chldr_api.tests.csproj", "{F640B8A1-7948-410F-81F8-26CDFB024C22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

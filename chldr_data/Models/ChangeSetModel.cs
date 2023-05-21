@@ -6,7 +6,7 @@ namespace chldr_data.Models
 {
     public class ChangeSetModel : IChangeSet
     {
-        public long ChangeSetIndex { get; }
+        public long ChangeSetIndex { get; set; }
         public string ChangeSetId { get; set; }
         public RecordType RecordType { get; set; }
         public string UserId { get; set; }
@@ -14,27 +14,40 @@ namespace chldr_data.Models
         public string RecordChanges { get; set; }
         public Operation Operation { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
-        public ChangeSetModel(ChangeSetDto c)
+        private ChangeSetModel() { }
+
+        public static ChangeSetModel FromEntity(IChangeSetEntity entity)
         {
-            ChangeSetIndex = c.ChangeSetIndex;
-            ChangeSetId = c.ChangeSetId;
-            UserId = c.UserId;
-            Operation = c.Operation;
-            RecordId = c.RecordId;
-            RecordType = c.RecordType;
-            RecordChanges = c.RecordChanges;
-            CreatedAt = c.CreatedAt;
+            // To be used when retrieving objects from the database
+
+            return new ChangeSetModel()
+            {
+                ChangeSetIndex = entity.ChangeSetIndex,
+                ChangeSetId = entity.ChangeSetId,
+                UserId = entity.UserId,
+                Operation = (Operation)entity.Operation,
+                RecordType = (RecordType)entity.RecordType,
+                RecordId = entity.RecordId,
+                RecordChanges = entity.RecordChanges,
+                CreatedAt = entity.CreatedAt,
+            };
         }
-        public ChangeSetModel(IChangeSetEntity changeSetEntity)
+
+        public static ChangeSetModel FromDto(ChangeSetDto entity)
         {
-            ChangeSetIndex = changeSetEntity.ChangeSetIndex;
-            ChangeSetId = changeSetEntity.ChangeSetId;
-            UserId = changeSetEntity.UserId;
-            Operation = (Operation)changeSetEntity.Operation;
-            RecordId = changeSetEntity.RecordId;
-            RecordType = (RecordType)changeSetEntity.RecordType;
-            RecordChanges = changeSetEntity.RecordChanges;
-            CreatedAt = changeSetEntity.CreatedAt;
+            // To be used when receiving objects from the API
+
+            return new ChangeSetModel()
+            {
+                ChangeSetIndex = entity.ChangeSetIndex,
+                ChangeSetId = entity.ChangeSetId,
+                UserId = entity.UserId,
+                Operation = entity.Operation,
+                RecordType = entity.RecordType,
+                RecordId = entity.RecordId,
+                RecordChanges = entity.RecordChanges,
+                CreatedAt = entity.CreatedAt,
+            };
         }
     }
 }

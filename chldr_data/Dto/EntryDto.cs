@@ -1,12 +1,11 @@
 ﻿using chldr_data.Entities;
 using chldr_data.Enums;
-using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models;
 
 namespace chldr_data.Dto
 {
-  
-    public abstract class EntryDto : IEntryDto
+
+    public abstract class EntryDto
     {
         public string EntryId { get; set; }
         public string? SourceId { get; set; }

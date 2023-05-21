@@ -155,7 +155,7 @@ namespace chldr_data.Repositories
                 throw new Exception(response.Data.ErrorMessage);
             }
 
-            return response.Data.ChangeSets.Select(c => new ChangeSetModel(c)).ToList();
+            return response.Data.ChangeSets.Select(c => ChangeSetModel.FromDto(c)).ToList();
         }
 
         public async Task Update(IUser loggedInUser, WordDto wordDto)

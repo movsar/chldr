@@ -136,7 +136,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
                 RecordId = updatedWordDto.EntryId,
                 RecordType = (int)chldr_data.Enums.RecordType.Entry,
             };
-            var entryChanges = GetChanges<IEntryDto>(updatedWordDto, existingWordDto, updateEntryChangeSet.ChangeSetId);
+            var entryChanges = GetChanges<EntryDto>(updatedWordDto, existingWordDto, updateEntryChangeSet.ChangeSetId);
             if (entryChanges.Count != 0)
             {
                 var sqlEntry = dbContext.Entries.Find(updatedWordDto.EntryId);
