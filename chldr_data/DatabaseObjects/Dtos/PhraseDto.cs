@@ -19,13 +19,15 @@ namespace chldr_data.DatabaseObjects.Dtos
                 SourceId = phrase.Source.SourceId,
                 Rate = phrase.Rate,
                 EntryType = (EntryType)phrase.Type,
+                CreatedAt = phrase.CreatedAt,
+                UpdatedAt = phrase.UpdatedAt,
 
-                PhraseId = phrase.PhraseId.ToString(),
+                PhraseId = phrase.PhraseId,
                 Content = phrase.Content,
                 Notes = phrase.Notes,
             };
 
-            phraseDto.Translations.AddRange(phrase.Translations.Select(t => TranslationDto.FromModel(t)).ToList());
+            phraseDto.Translations.AddRange(phrase.Translations.Select(t => TranslationDto.FromModel(t)));
             return phraseDto;
         }
     }
