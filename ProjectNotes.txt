@@ -8,8 +8,8 @@ Model (Used in normal cases)
 	FromDto (When receiving from API, Which objects really need this?)
 	FromEntity (When reading from local db, all objects implement this)
 
-Entity (Used to save/change objects in the database)
-	FromDto (all editable objects must implement this: word, phrase, text, translation)
+Entity (Used to save/change objects in the database) ???
+	FromDto (all editable objects must implement this: word, phrase, text, translation) ???
 
 * Except for the Dto objects, all others (persistent objects) must have closed constructors
 * Use "FromBaseInterface" to extract assignments which are in a shared interface - to prevent code duplication
