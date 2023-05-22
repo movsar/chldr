@@ -28,7 +28,7 @@ namespace chldr_ui.ViewModels
             IsEditMode = true;
 
             var existingPhrase = ContentStore.GetCachedPhraseById(PhraseId);
-            Phrase = new PhraseDto(existingPhrase);
+            Phrase = PhraseDto.FromModel(existingPhrase);
 
             InitializeViewModel(Phrase);
         }

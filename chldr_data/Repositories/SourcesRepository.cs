@@ -18,7 +18,7 @@ namespace chldr_data.Repositories
 
         public List<SourceModel> GetAllNamedSources()
         {
-            return Database.All<RealmSource>().AsEnumerable().Select(s => new SourceModel(s)).ToList();
+            return Database.All<RealmSource>().AsEnumerable().Select(s => SourceModel.FromEntity(s)).ToList();
         }
 
         public string Insert(SourceDto sourceDto)

@@ -10,8 +10,5 @@ namespace chldr_data.Models.Entries
 {
     public class ParticleModel : WordModel
     {
-        public ParticleModel(RealmEntry entry) : base(entry)
-        {
-        }
     }
 }

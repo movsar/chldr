@@ -5,8 +5,5 @@ namespace chldr_data.Models.Entries
 {
     public class AdverbModel : WordModel
     {
-        public AdverbModel(RealmEntry entry) : base(entry)
-        {
-        }
     }
 }

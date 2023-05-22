@@ -28,13 +28,13 @@ namespace chldr_data.Repositories
                 throw new Exception("There is no such word in the database");
             }
 
-            return new WordModel(word.Entry);
+            return WordModel.FromEntity(word);
         }
 
         public List<WordModel> GetRandomWords(int limit)
         {
             var words = Database.All<RealmWord>().AsEnumerable().Take(limit);
-            return words.Select(w => new WordModel(w.Entry)).ToList();
+            return words.Select(w => WordModel.FromEntity(w)).ToList();
         }
 
         public string Insert(WordDto newWord)
@@ -122,7 +122,7 @@ namespace chldr_data.Repositories
                 word.Notes = wordDto.Notes;
             });
 
-            OnEntryUpdated(new WordModel(word.Entry));
+            OnEntryUpdated(WordModel.FromEntity(word));
         }
 
         internal async Task<List<ChangeSetModel>> UpdateWord(UserDto userDto, WordDto wordDto)
@@ -169,7 +169,7 @@ namespace chldr_data.Repositories
 
             // Refresh UI with new object 
             var entry = Database.Find<RealmEntry>(wordDto.EntryId);
-            OnEntryUpdated(new WordModel(entry));
+            OnEntryUpdated(WordModel.FromEntity(entry.Word));
         }
     }
 }

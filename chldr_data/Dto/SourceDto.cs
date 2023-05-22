@@ -1,21 +1,24 @@
-﻿using chldr_data.Models;
+﻿using chldr_data.Interfaces.DatabaseEntities;
+using chldr_data.Models;
 
 namespace chldr_data.Dto
 {
-    public class SourceDto
+    public class SourceDto : ISource
     {
-        public string? SourceId { get; }
+        public string? SourceId { get; set; }
         public string Name { get; set; }
         public string Notes { get; set; }
-
-        public SourceDto()
-        { }
-
-        public SourceDto(SourceModel source)
+        public string? UserId { get; set; }
+        public static SourceDto FromModel(SourceModel source)
         {
-            SourceId = source.SourceId;
-            Name = source.Name;
-            Notes = source.Notes;
+            return new SourceDto()
+            {
+                UserId = source.UserId,
+                SourceId = source.SourceId,
+                Name = source.Name,
+                Notes = source.Notes,
+            };
         }
+
     }
 }

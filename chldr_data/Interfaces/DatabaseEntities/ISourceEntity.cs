@@ -1,11 +1,9 @@
-﻿using chldr_data.Entities;
-using System.Threading.Tasks;
+﻿using chldr_data.Dto;
 
 namespace chldr_data.Interfaces.DatabaseEntities
 {
-    public interface ILanguageEntity : ILanguage
+    public interface ISourceEntity : ISource, IEntity
     {
-        string? UserId { get; }
         DateTimeOffset CreatedAt { get; set; }
         DateTimeOffset UpdatedAt { get; set; }
     }

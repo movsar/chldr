@@ -7,9 +7,6 @@ namespace chldr_data.Models.Entries
 {
     public class NounModel : WordModel
     {
-        public NounModel(RealmEntry entry) : base(entry)
-        {
-        }
 
         // One of 6 grammatical classes    
         public int Class { get; set; }

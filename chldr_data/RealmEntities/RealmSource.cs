@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace chldr_data.Entities;
 [MapTo("Source")]
-public class RealmSource : RealmObject, IEntity
+public class RealmSource : RealmObject, ISourceEntity
 {
     [PrimaryKey]
     public string SourceId { get; set; } = Guid.NewGuid().ToString();
@@ -14,5 +14,7 @@ public class RealmSource : RealmObject, IEntity
     public string? Notes { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
-    public  IList<RealmEntry> Entries { get; } 
+    public  IList<RealmEntry> Entries { get; }
+    [Ignored]
+    public string? UserId => User?.UserId;
 }

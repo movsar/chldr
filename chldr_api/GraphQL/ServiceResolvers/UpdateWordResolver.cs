@@ -1,7 +1,9 @@
 ﻿using chldr_data.Dto;
 using chldr_data.Entities;
+using chldr_data.Interfaces;
 using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models;
+using chldr_data.Models.Words;
 using chldr_data.ResponseTypes;
 using chldr_data.SqlEntities;
 using chldr_tools;
@@ -74,7 +76,8 @@ namespace chldr_api.GraphQL.ServiceResolvers
             }
 
             // Create a dto based on the existing object
-            var existingWordDto = new WordDto(existingSqlWord);
+
+            var existingWordDto = WordDto.FromModel(WordModel.FromEntity(existingSqlWord));
 
             var translationChangeSets = SetDbTranslations(dbContext, userDto, existingWordDto, updatedWordDto);
             var wordChangeSets = SetDbWord(dbContext, userDto, existingWordDto, updatedWordDto);
@@ -93,7 +96,8 @@ namespace chldr_api.GraphQL.ServiceResolvers
             var changeSetIds = changesets.Select(c => c.ChangeSetId);
             var allChangeSets = dbContext.ChangeSets.ToList();
             var updatedChangeSets = dbContext.ChangeSets.Where(c => changeSetIds.Contains(c.ChangeSetId));
-            response.ChangeSets.AddRange(updatedChangeSets.Select(c => new ChangeSetDto(c)));
+
+            response.ChangeSets.AddRange(updatedChangeSets.Select(c => ChangeSetDto.FromModel(ChangeSetModel.FromEntity(c))));
 
             return response;
         }
@@ -170,7 +174,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
 
             foreach (var insertedTranslation in insertedTranslations)
             {
-                var sqlTranslation = new SqlTranslation(insertedTranslation);
+                var sqlTranslation = SqlTranslation.FromDto(insertedTranslation);
                 dbContext.Add(sqlTranslation);
                 changeSets.Add(new SqlChangeSet()
                 {

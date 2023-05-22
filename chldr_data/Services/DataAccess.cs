@@ -100,7 +100,7 @@ namespace chldr_data.Services
                     repository = _serviceProvider.GetService<LanguagesRepository>();
                     break;
 
-                case nameof(SourceModel):
+                case nameof(ISourceEntity):
                     repository = _serviceProvider.GetService<SourcesRepository>();
                     break;
 
@@ -108,7 +108,7 @@ namespace chldr_data.Services
                     repository = _serviceProvider.GetService<TranslationsRepository>();
                     break;
 
-                case nameof(UserModel):
+                case nameof(IUserEntity):
                     repository = _serviceProvider.GetService<UsersRepository>();
                     break;
             }

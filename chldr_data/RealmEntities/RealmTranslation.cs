@@ -1,10 +1,9 @@
-﻿using chldr_data.Interfaces;
-using chldr_data.Interfaces.DatabaseEntities;
+﻿using chldr_data.Interfaces.DatabaseEntities;
 using Realms;
 
 namespace chldr_data.Entities;
 [MapTo("Translation")]
-public class RealmTranslation : RealmObject, ITranslation
+public class RealmTranslation : RealmObject, ITranslationEntity
 {
     [PrimaryKey]
     public string TranslationId { get; set; } = Guid.NewGuid().ToString();

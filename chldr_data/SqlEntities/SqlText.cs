@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using chldr_data.Interfaces.DatabaseEntities;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
 [Table("Text")]
 
-public partial class SqlText 
+public class SqlText : ITextEntity
 {
     public string TextId { get; set; } = Guid.NewGuid().ToString();
     public string EntryId { get; set; } = null!;

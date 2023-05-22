@@ -6,40 +6,14 @@ namespace chldr_data.Models
 {
     public abstract class EntryModel : IEntry
     {
-        public List<TranslationModel> Translations { get; } = new List<TranslationModel>();
-        public SourceModel Source { get; }
-        public int Rate { get; }
-        public int Type { get; }
+        public List<TranslationModel> Translations { get; set; } = new List<TranslationModel>();
+        public SourceModel Source { get; set; }
+        public int Rate { get; set; }
+        public int Type { get; set; }
         public string EntryId { get; internal set; }
-        public abstract string Content { get; }
-        public abstract DateTimeOffset CreatedAt { get; }
-        public abstract DateTimeOffset UpdatedAt { get; }
+        public abstract string Content { get; set; }
+        public abstract DateTimeOffset CreatedAt { get; set; }
+        public abstract DateTimeOffset UpdatedAt { get; set; }
         public string? SourceId => Source.SourceId;
-
-        public EntryModel(RealmEntry entry)
-        {
-            EntryId = entry.EntryId;
-            Rate = entry.Rate;
-            Type = entry.Type;
-            Source = new SourceModel(entry.Source);
-
-            foreach (var translationEntity in entry.Translations)
-            {
-                Translations.Add(new TranslationModel(translationEntity));
-            }
-        }
-
-        public EntryModel(SqlEntry entry)
-        {
-            EntryId = entry.EntryId;
-            Rate = entry.Rate;
-            Type = entry.Type;
-            Source = new SourceModel(entry.Source);
-
-            foreach (var translationEntity in entry.Translations)
-            {
-                Translations.Add(new TranslationModel(translationEntity));
-            }
-        }
     }
 }

@@ -1,9 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using chldr_data.Dto;
+using chldr_data.Interfaces.DatabaseEntities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
+
 [Table("Source")]
-public class SqlSource
+public class SqlSource : ISourceEntity
 {
     public string SourceId { get; set; } = Guid.NewGuid().ToString();
     public string? UserId { get; set; }
@@ -13,4 +15,14 @@ public class SqlSource
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
     public virtual ICollection<SqlEntry> Entries { get; set; } = new List<SqlEntry>();
     public virtual SqlUser? User { get; set; }
+    public static ISourceEntity FromDto(SourceDto source)
+    {
+        return new SqlSource()
+        {
+            SourceId = source.SourceId,
+            UserId = source.UserId,
+            Name = source.Name,
+            Notes = source.Notes,
+        };
+    }
 }

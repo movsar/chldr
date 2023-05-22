@@ -5,9 +5,6 @@ namespace chldr_data.Models.Entries
 {
     public class PronounModel : WordModel
     {
-        public PronounModel(RealmEntry entry) : base(entry)
-        {
-        }
 
         // Class can be 1,2,3,4,5 or 6
         public List<int> Classes { get; } = new List<int>() { 0, 0, 0 };

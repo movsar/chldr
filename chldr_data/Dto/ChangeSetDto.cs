@@ -1,5 +1,7 @@
 ﻿using chldr_data.Enums;
 using chldr_data.Interfaces.DatabaseEntities;
+using chldr_data.Models;
+
 namespace chldr_data.Dto
 {
     public class ChangeSetDto : IChangeSet
@@ -12,17 +14,19 @@ namespace chldr_data.Dto
         public string RecordChanges { get; set; }
         public Operation Operation { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
-        public ChangeSetDto() { }
-        public ChangeSetDto(IChangeSetEntity changeSetEntity)
+        public static ChangeSetDto FromModel(ChangeSetModel changeSetModel)
         {
-            ChangeSetIndex = changeSetEntity.ChangeSetIndex;
-            ChangeSetId = changeSetEntity.ChangeSetId;
-            UserId = changeSetEntity.UserId;
-            Operation = (Operation)changeSetEntity.Operation;
-            RecordId = changeSetEntity.RecordId;
-            RecordType = (RecordType)changeSetEntity.RecordType;
-            RecordChanges = changeSetEntity.RecordChanges;
-            CreatedAt = changeSetEntity.CreatedAt;
+            return new ChangeSetDto()
+            {
+                ChangeSetIndex = changeSetModel.ChangeSetIndex,
+                ChangeSetId = changeSetModel.ChangeSetId,
+                UserId = changeSetModel.UserId,
+                Operation = changeSetModel.Operation,
+                RecordId = changeSetModel.RecordId,
+                RecordType = changeSetModel.RecordType,
+                RecordChanges = changeSetModel.RecordChanges,
+                CreatedAt = changeSetModel.CreatedAt,
+            };
         }
     }
 }

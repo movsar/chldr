@@ -5,22 +5,19 @@ namespace chldr_data.Models
 {
     public class SourceModel : IEntity
     {
-        public string Name { get; }
-        public string Notes { get; }
+        public string Name { get; set; }
+        public string Notes { get; set; }
         public string? SourceId { get; internal set; }
+        public string? UserId { get; internal set; }
 
-        public SourceModel(RealmSource source)
+        public static SourceModel FromEntity(ISource source)
         {
-            SourceId = source.SourceId;
-            Name = source.Name;
-            Notes = source.Notes;
-        }
-
-        public SourceModel(SqlSource source)
-        {
-            SourceId = source.SourceId;
-            Name = source.Name;
-            Notes = source.Notes;
+            return new SourceModel()
+            {
+                SourceId = source.SourceId,
+                Name = source.Name,
+                Notes = source.Notes,
+            };
         }
     }
 }

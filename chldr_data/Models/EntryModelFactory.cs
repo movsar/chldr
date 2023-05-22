@@ -10,11 +10,11 @@ namespace chldr_data.Models
             switch ((EntryType)entryEntity?.Type)
             {
                 case EntryType.Word:
-                    return new WordModel(entryEntity);
+                    return WordModel.FromEntity(entryEntity.Word);
                 case EntryType.Phrase:
-                    return new PhraseModel(entryEntity);
+                    return PhraseModel.FromEntity(entryEntity.Phrase);
                 case EntryType.Text:
-                    return new TextModel(entryEntity);
+                    return TextModel.FromEntity(entryEntity.Text);
                 default:
                     return null;
             }

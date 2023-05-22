@@ -10,8 +10,5 @@ namespace chldr_data.Models.Entries
 {
     public class ConjunctionModel : WordModel
     {
-        public ConjunctionModel(RealmEntry entry) : base(entry)
-        {
-        }
     }
 }

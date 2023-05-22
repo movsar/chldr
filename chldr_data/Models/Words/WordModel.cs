@@ -6,32 +6,57 @@ namespace chldr_data.Models.Words
 {
     public class WordModel : EntryModel, IWord
     {
-        public WordModel(RealmEntry entry) : base(entry)
-        {
-            var word = entry.Word;
+        public string WordId { get; set; }
+        public string Notes { get; set; }
+        public PartOfSpeech PartOfSpeech { get; set; }
+        public override string Content { get; set; }
+        public override DateTimeOffset CreatedAt { get; set; }
+        public override DateTimeOffset UpdatedAt { get; set; }
 
-            WordId = word.WordId;
-            Content = word.Content;
-            Notes = word.Notes;
-            PartOfSpeech = (PartOfSpeech)word.PartOfSpeech;
+        private static WordModel FromEntity(IEntryEntity entry, IWordEntity word, ISourceEntity source, IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translationEntityInfos)
+        {
+            var wordModel = new WordModel()
+            {
+                EntryId = entry.EntryId,
+                Rate = entry.Rate,
+                Type = entry.Type,
+                Source = SourceModel.FromEntity(source),
+                CreatedAt = entry.CreatedAt,
+                UpdatedAt = entry.UpdatedAt,
+
+                WordId = word.WordId,
+                Content = word.Content,
+                Notes = word.Notes,
+                PartOfSpeech = (PartOfSpeech)word.PartOfSpeech
+            };
+
+            foreach (var translationEntityToLanguage in translationEntityInfos)
+            {
+                wordModel.Translations.Add(TranslationModel.FromEntity(translationEntityToLanguage.Value, translationEntityToLanguage.Key));
+            }
+
+            return wordModel;
         }
 
-        public WordModel(SqlEntry entry) : base(entry)
+        public static WordModel FromEntity(SqlWord wordEntity)
         {
-            var word = entry.Word;
-
-            WordId = word.WordId;
-            Content = word.Content;
-            Notes = word.Notes;
-            PartOfSpeech = (PartOfSpeech)word.PartOfSpeech;
+            return FromEntity(wordEntity.Entry,
+                wordEntity.Entry.Word,
+                wordEntity.Entry.Source,
+                wordEntity.Entry.Translations.Select(
+                    t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)
+                ));
         }
 
-        public string WordId { get; }
-        public override string Content { get; }
-        public string Notes { get; }
-        public PartOfSpeech PartOfSpeech { get; }
-        public override DateTimeOffset CreatedAt { get; }
-        public override DateTimeOffset UpdatedAt { get; }
+        public static WordModel FromEntity(RealmWord wordEntity)
+        {
+            return FromEntity(wordEntity.Entry,
+                 wordEntity.Entry.Word,
+                 wordEntity.Entry.Source,
+                 wordEntity.Entry.Translations.Select(
+                     t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)
+                 ));
+        }
     }
     /*
 

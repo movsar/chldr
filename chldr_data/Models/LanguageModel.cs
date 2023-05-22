@@ -6,14 +6,17 @@ namespace chldr_data.Models
     public class LanguageModel : ILanguage
     {
         public string? LanguageId { get; set; }
-        public string Code { get; } = string.Empty;
+        public string Code { get; set; } = string.Empty;
         public string Name { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
-        public LanguageModel(ILanguage languageEntity)
+        public static LanguageModel FromEntity(ILanguageEntity languageEntity)
         {
-            Code = languageEntity.Code;
-            Name = languageEntity.Name ?? string.Empty;
+            return new LanguageModel()
+            {
+                Code = languageEntity.Code,
+                Name = languageEntity.Name ?? string.Empty
+            };
         }
     }
 }

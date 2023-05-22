@@ -1,5 +1,5 @@
 ﻿using chldr_data.Entities;
-using chldr_data.Interfaces;
+using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models;
 
 namespace chldr_data.Dto
@@ -22,22 +22,7 @@ namespace chldr_data.Dto
         {
             LanguageCode = languageCode;
         }
-        public static TranslationDto FromEntity(ITranslationEntity translation)
-        {
-            return new TranslationDto()
-            {
-                UserId = translation.UserId,
-                TranslationId = translation.TranslationId,
-                LanguageId = translation.Language.LanguageId,
-                EntryId = translation.EntryId.ToString(),
-
-                LanguageCode = translation.Language.Code,
-                Content = translation.Content,
-                Notes = translation.Notes,
-                Rate = translation.Rate
-            };
-        }
-
+ 
         public static TranslationDto FromModel(TranslationModel translation)
         {
             if (translation == null || translation.Language == null)

@@ -7,10 +7,6 @@ namespace chldr_data.Models.Entries
     // Прилагательное
     public class AdjectiveModel : WordModel
     {
-        public AdjectiveModel(RealmEntry entry) : base(entry)
-        {
-        }
-
         // качественные и относительные
         public AdjectiveSemanticType SemanticType { get; set; }
         // зависимые и независимые

@@ -1,6 +1,4 @@
-﻿using chldr_data.Interfaces;
-using chldr_data.Interfaces.DatabaseEntities;
-using Newtonsoft.Json;
+﻿using chldr_data.Interfaces.DatabaseEntities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
@@ -15,6 +13,6 @@ public class SqlLanguage : ILanguageEntity
     public string Code { get; set; } = null!;
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
-    public virtual ICollection<ITranslationEntity> Translations { get; set; }
-    public virtual IUserEntity? User { get; set; }
+    public virtual ICollection<SqlTranslation> Translations { get; set; }
+    public virtual SqlUser? User { get; set; }
 }

@@ -20,8 +20,8 @@ namespace chldr_data.tests
         protected WordsRepository WordsRepository => (WordsRepository)_dataAccess.GetRepository<IWordEntity>();
         protected PhrasesRepository PhrasesRepository => (PhrasesRepository)_dataAccess.GetRepository<IPhraseEntity>();
         protected LanguagesRepository LanguagesRepository => (LanguagesRepository)_dataAccess.GetRepository<ILanguageEntity>();
-        protected SourcesRepository SourcesRepository => (SourcesRepository)_dataAccess.GetRepository<SourceModel>();
-        protected UsersRepository UsersRepository => (UsersRepository)_dataAccess.GetRepository<UserModel>();
+        protected SourcesRepository SourcesRepository => (SourcesRepository)_dataAccess.GetRepository<ISourceEntity>();
+        protected UsersRepository UsersRepository => (UsersRepository)_dataAccess.GetRepository<IUserEntity>();
 
     }
 }

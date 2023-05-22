@@ -1,6 +1,6 @@
 ﻿namespace chldr_data.Interfaces.DatabaseEntities
 {
-    public interface IUserEntity : IUser
+    public interface IUserEntity : IUser, IEntity
     {
         public string? Password { get; set; }
         public string? ImagePath { get; set; }

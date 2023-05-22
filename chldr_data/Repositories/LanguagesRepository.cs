@@ -15,7 +15,7 @@ namespace chldr_data.Repositories
             try
             {
                 Console.WriteLine("before langs");
-                var languages = Database.All<RealmLanguage>().AsEnumerable().Select(l => new LanguageModel(l));
+                var languages = Database.All<RealmLanguage>().AsEnumerable().Select(l =>  LanguageModel.FromEntity(l));
                 Console.WriteLine("after langs");
                 return languages.ToList();
 

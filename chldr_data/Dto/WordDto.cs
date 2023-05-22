@@ -14,11 +14,6 @@ namespace chldr_data.Dto
         [JsonConstructor]
         public WordDto() { }
 
-        public WordDto(List<TranslationDto> translations)
-        {
-            Translations = translations;
-        }
-
         public static WordDto FromModel(WordModel wordModel)
         {
             var wordDto = new WordDto()
@@ -34,7 +29,7 @@ namespace chldr_data.Dto
                 AdditionalDetails = new WordDetailsModel(wordModel, wordModel.PartOfSpeech)
             };
 
-            wordDto.Translations.AddRange(wordModel.Translations.Select(t => new TranslationDto(t)).ToList());
+            wordDto.Translations.AddRange(wordModel.Translations.Select(t => TranslationDto.FromModel(t)).ToList());
             return wordDto;
         }
 

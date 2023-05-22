@@ -1,6 +1,6 @@
 ﻿using chldr_data.Enums.WordDetails;
 
-namespace chldr_data.Interfaces
+namespace chldr_data.Interfaces.DatabaseEntities
 {
     public interface IWordDetails
     {

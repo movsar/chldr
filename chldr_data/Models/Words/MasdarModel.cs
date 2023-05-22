@@ -10,8 +10,5 @@ namespace chldr_data.Models.Entries
 {
     public class MasdarModel : WordModel
     {
-        public MasdarModel(RealmEntry entry) : base(entry)
-        {
-        }
     }
 }

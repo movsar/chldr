@@ -5,10 +5,6 @@ namespace chldr_data.Models.Words
 {
     public class VerbModel : WordModel
     {
-        public VerbModel(RealmEntry entry) : base(entry)
-        {
-        }
-
         public VerbTense Tense { get; set; }
         public VerbConjugation Conjugation { get; set; }
         public VerbMood Mood { get; set; } = new();
