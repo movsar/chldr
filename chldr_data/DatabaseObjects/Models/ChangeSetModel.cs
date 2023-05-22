@@ -15,7 +15,6 @@ namespace chldr_data.DatabaseObjects.Models
         public Operation Operation { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         private ChangeSetModel() { }
-
         public static ChangeSetModel FromEntity(IChangeSetEntity entity)
         {
             // To be used when retrieving objects from the database

@@ -19,6 +19,10 @@ namespace chldr_data.DatabaseObjects.Dtos
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public UserStatus UserStatus { get; set; } = UserStatus.Unconfirmed;
+        public string? ImagePath { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
+
         public static UserDto FromModel(UserModel model)
         {
             return new UserDto()

@@ -6,6 +6,7 @@ namespace chldr_data.DatabaseObjects.Models
 {
     public class TextModel : EntryModel, IText
     {
+        private TextModel() { }
         public string TextId { get; set; }
         public override string Content { get; set; }
         public override DateTimeOffset CreatedAt { get; set; }

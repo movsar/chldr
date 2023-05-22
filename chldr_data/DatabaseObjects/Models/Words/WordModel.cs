@@ -13,7 +13,7 @@ namespace chldr_data.DatabaseObjects.Models.Words
         public override string Content { get; set; }
         public override DateTimeOffset CreatedAt { get; set; }
         public override DateTimeOffset UpdatedAt { get; set; }
-
+        private WordModel() { }
         private static WordModel FromEntity(IEntryEntity entry, IWordEntity word, ISourceEntity source, IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translationEntityInfos)
         {
             var wordModel = new WordModel()

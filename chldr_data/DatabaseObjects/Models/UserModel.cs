@@ -22,6 +22,8 @@ namespace chldr_data.DatabaseObjects.Models
         public string? LastName { get; set; }
         public string? Patronymic { get; set; }
         public string? UserId { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
 
         public NumericRange GetRateRange()
         {
@@ -96,7 +98,7 @@ namespace chldr_data.DatabaseObjects.Models
 
             return false;
         }
-        public static UserModel FromDto(UserDto? user)
+        private static UserModel FromBaseInterface(IUser user)
         {
             if (string.IsNullOrWhiteSpace(user.UserId))
             {
@@ -113,6 +115,19 @@ namespace chldr_data.DatabaseObjects.Models
                 Patronymic = user.Patronymic,
                 RateWeight = GetRateWeightByRate(user.Rate)
             };
+        }
+        public static UserModel FromDto(UserDto? userDto)
+        {
+            var userModel = FromBaseInterface(userDto);
+            // Specific dto fields
+            return userModel;
+        }
+
+        public static UserModel FromEntity(IUserEntity? userEntity)
+        {
+            var userModel = FromBaseInterface(userEntity);
+            // Specific entity fields
+            return userModel;
         }
     }
 }

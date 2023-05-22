@@ -6,6 +6,7 @@ namespace chldr_data.DatabaseObjects.Models
 {
     public class PhraseModel : EntryModel, IPhrase
     {
+        private PhraseModel() { }   
         public string PhraseId { get; set; }
         public override string Content { get; set; }
         public string? Notes { get; set; }
