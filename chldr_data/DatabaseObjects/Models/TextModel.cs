@@ -1,4 +1,4 @@
-﻿using chldr_data.DatabaseObjects.DatabaseEntities;
+﻿using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.RealmEntities;
 using chldr_data.DatabaseObjects.SqlEntities;
 
@@ -38,7 +38,7 @@ namespace chldr_data.DatabaseObjects.Models
         public static TextModel FromEntity(SqlText entity)
         {
             return FromEntity(entity.Entry,
-                entity.Entry.Text,
+                entity.Entry.Text!,
                 entity.Entry.Source,
                 entity.Entry.Translations.Select(
                     t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)
@@ -48,7 +48,7 @@ namespace chldr_data.DatabaseObjects.Models
         public static TextModel FromEntity(RealmText entity)
         {
             return FromEntity(entity.Entry,
-                 entity.Entry.Text,
+                 entity.Entry.Text!,
                  entity.Entry.Source,
                  entity.Entry.Translations.Select(
                      t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)

@@ -1,9 +1,9 @@
-﻿namespace chldr_data.DatabaseObjects.DatabaseEntities
+﻿namespace chldr_data.DatabaseObjects.Interfaces
 {
     public interface IUserEntity : IUser, IEntity
     {
         public string? Password { get; set; }
-        public byte? IsModerator { get; set; }
-        public byte? UserStatus { get; set; }
+        public int? IsModerator { get; set; }
+        public int? Status { get; set; }
     }
 }

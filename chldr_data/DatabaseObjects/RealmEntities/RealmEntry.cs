@@ -1,4 +1,4 @@
-﻿using chldr_data.DatabaseObjects.DatabaseEntities;
+﻿using chldr_data.DatabaseObjects.Interfaces;
 using Realms;
 
 namespace chldr_data.DatabaseObjects.RealmEntities;
@@ -14,13 +14,12 @@ public class RealmEntry : RealmObject, IEntryEntity
     public RealmSource Source { get; set; } = null!;
     public int Type { get; set; } = 0;
     public int Rate { get; set; } = 0;
-    public string? RawContents { get; set; }
+    public string RawContents { get; set; } = string.Empty;
     public RealmText? Text { get; set; }
     public RealmPhrase? Phrase { get; set; }
     public RealmWord? Word { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
-    public IList<RealmImage> Images { get; }
     public IList<RealmSound> Sounds { get; }
     public IList<RealmTranslation> Translations { get; }
 

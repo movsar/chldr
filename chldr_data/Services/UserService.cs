@@ -2,7 +2,7 @@
 using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
-using chldr_data.DatabaseObjects.DatabaseEntities;
+using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.RealmEntities;
 using chldr_data.ResponseTypes;
@@ -88,7 +88,7 @@ namespace chldr_data.Services
                 throw new Exception(AppConstants.DataErrorMessages.NoUserInfo);
             }
 
-            return new UserModel(userEntity);
+            return UserModel.FromEntity(userEntity);
         }
 
         public async Task<string> RegisterNewUserAsync(string email, string password)

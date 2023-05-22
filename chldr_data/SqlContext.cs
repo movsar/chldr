@@ -13,7 +13,6 @@ public class SqlContext : DbContext
     public virtual DbSet<SqlEfmigrationshistory> Efmigrationshistories { get; set; }
     public virtual DbSet<SqlChangeSet> ChangeSets { get; set; }
     public virtual DbSet<SqlEntry> Entries { get; set; }
-    public virtual DbSet<SqlImage> Images { get; set; }
     public virtual DbSet<SqlLanguage> Languages { get; set; }
     public virtual DbSet<SqlPhrase> Phrases { get; set; }
     public virtual DbSet<SqlQuery> Queries { get; set; }
@@ -79,48 +78,6 @@ public class SqlContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_entry_user_id");
-        });
-
-        modelBuilder.Entity<SqlImage>(entity =>
-        {
-            entity.HasKey(e => e.ImageId).HasName("PRIMARY");
-
-            entity.ToTable("image");
-
-            entity.HasIndex(e => e.EntryId, "fk_image_entry_id");
-
-            entity.HasIndex(e => e.UserId, "fk_image_user_id");
-
-            entity.Property(e => e.ImageId)
-                .HasMaxLength(40)
-                .HasColumnName("image_id");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.EntryId)
-                .HasMaxLength(40)
-                .HasColumnName("entry_id");
-            entity.Property(e => e.FileName)
-                .HasMaxLength(250)
-                .HasColumnName("file_name");
-            entity.Property(e => e.Rate).HasColumnName("rate");
-            entity.Property(e => e.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate()
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
-            entity.Property(e => e.UserId)
-                .HasMaxLength(40)
-                .HasColumnName("user_id");
-
-            entity.HasOne(d => d.Entry).WithMany(p => p.Images)
-                .HasForeignKey(d => d.EntryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_image_entry_id");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Images)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("fk_image_user_id");
         });
 
         modelBuilder.Entity<SqlLanguage>(entity =>
@@ -387,7 +344,7 @@ public class SqlContext : DbContext
             entity.Property(e => e.UserId)
                 .HasMaxLength(40)
                 .HasColumnName("user_id");
-            entity.Property(e => e.UserStatus).HasColumnName("user_status");
+            entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
@@ -488,7 +445,8 @@ public class SqlContext : DbContext
             entity.ToTable("changesets");
             
             entity.HasIndex(e => e.UserId, "fk_changesets_user_id_idx");
-
+            entity.HasIndex(e => e.ChangeSetId, "fk_changesets_id_idx");
+            
             entity.Property(e => e.ChangeSetIndex)
                 .HasColumnName("changeset_index");
 

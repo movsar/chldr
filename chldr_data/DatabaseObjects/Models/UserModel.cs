@@ -1,5 +1,5 @@
 ﻿using chldr_data.Enums;
-using chldr_data.DatabaseObjects.DatabaseEntities;
+using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_shared.Models;
 using Realms.Sync;
@@ -24,6 +24,7 @@ namespace chldr_data.DatabaseObjects.Models
         public string? UserId { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
+        public string? ImagePath { get; set; }
 
         public NumericRange GetRateRange()
         {
@@ -110,6 +111,7 @@ namespace chldr_data.DatabaseObjects.Models
                 UserId = user.UserId,
                 Email = user.Email,
                 Rate = user.Rate,
+                ImagePath = user.ImagePath,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Patronymic = user.Patronymic,

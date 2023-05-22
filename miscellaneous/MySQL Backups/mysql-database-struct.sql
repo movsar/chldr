@@ -25,17 +25,19 @@ DROP TABLE IF EXISTS `changesets`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `changesets` (
-  `changeset_id` bigint NOT NULL AUTO_INCREMENT,
+  `changeset_index` bigint NOT NULL AUTO_INCREMENT,
+  `changeset_id` varchar(40) NOT NULL,
   `user_id` varchar(40) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `record_id` varchar(40) NOT NULL,
   `record_type` int NOT NULL,
   `record_changes` text NOT NULL,
   `operation` int NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`changeset_id`),
+  PRIMARY KEY (`changeset_index`),
   KEY `fk_changesets_user_id_idx` (`user_id`),
+  KEY `fk_changesets_id_idx` (`changeset_id`) USING BTREE,
   CONSTRAINT `fk_changesets_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -59,29 +61,6 @@ CREATE TABLE `entry` (
   KEY `fk_entry_source_id` (`source_id`),
   CONSTRAINT `fk_entry_source_id` FOREIGN KEY (`source_id`) REFERENCES `source` (`source_id`) ON UPDATE CASCADE,
   CONSTRAINT `fk_entry_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `image`
---
-
-DROP TABLE IF EXISTS `image`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `image` (
-  `image_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
-  `user_id` varchar(40) CHARACTER SET utf8mb3 DEFAULT NULL,
-  `entry_id` varchar(40) CHARACTER SET utf8mb3 NOT NULL,
-  `file_name` varchar(250) CHARACTER SET utf8mb3 DEFAULT NULL,
-  `rate` int NOT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`image_id`),
-  KEY `fk_image_entry_id` (`entry_id`),
-  KEY `fk_image_user_id` (`user_id`),
-  CONSTRAINT `fk_image_entry_id` FOREIGN KEY (`entry_id`) REFERENCES `entry` (`entry_id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_image_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -266,8 +245,8 @@ CREATE TABLE `users` (
   `first_name` varchar(100) CHARACTER SET utf8mb3 DEFAULT NULL,
   `last_name` varchar(100) CHARACTER SET utf8mb3 DEFAULT NULL,
   `patronymic` varchar(100) CHARACTER SET utf8mb3 DEFAULT NULL,
-  `is_moderator` tinyint DEFAULT NULL,
-  `user_status` tinyint DEFAULT NULL,
+  `is_moderator` int DEFAULT NULL,
+  `status` int DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`user_id`)
@@ -304,4 +283,4 @@ CREATE TABLE `word` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-18 13:03:58
+-- Dump completed on 2023-05-22 13:16:06

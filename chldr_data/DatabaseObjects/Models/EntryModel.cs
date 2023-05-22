@@ -1,6 +1,6 @@
 ﻿
 using chldr_data.Interfaces;
-using chldr_data.DatabaseObjects.DatabaseEntities;
+using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_data.DatabaseObjects.Models
 {

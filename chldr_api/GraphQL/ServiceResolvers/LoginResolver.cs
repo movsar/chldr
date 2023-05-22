@@ -7,6 +7,8 @@ using chldr_tools;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Models;
 
 namespace chldr_api.GraphQL.MutationServices
 {
@@ -42,7 +44,7 @@ namespace chldr_api.GraphQL.MutationServices
 
             return new LoginResponse()
             {
-                User = new UserDto(user),
+                User = UserDto.FromModel(UserModel.FromEntity(user)),
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
                 AccessTokenExpiresIn = accessTokenExpiration,

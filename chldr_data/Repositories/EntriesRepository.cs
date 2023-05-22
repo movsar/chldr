@@ -199,13 +199,13 @@ namespace chldr_data.Repositories
                 switch ((EntryType)entry.Type)
                 {
                     case EntryType.Word:
-                        Database.Remove(entry.Word);
+                        Database.Remove(entry.Word!);
                         break;
                     case EntryType.Phrase:
-                        Database.Remove(entry.Phrase);
+                        Database.Remove(entry.Phrase!);
                         break;
                     case EntryType.Text:
-                        Database.Remove(entry.Text);
+                        Database.Remove(entry.Text!);
                         break;
                     default:
                         break;

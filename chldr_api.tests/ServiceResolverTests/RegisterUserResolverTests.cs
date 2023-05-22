@@ -1,6 +1,6 @@
 ﻿using chldr_api.GraphQL.MutationServices;
 using chldr_api.tests.Factories;
-
+using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Resources.Localizations;
 using chldr_utils.Services;
 using Microsoft.Extensions.Localization;
@@ -40,11 +40,11 @@ namespace chldr_api.tests.ServiceResolverTests
         public async Task ExecuteAsync_WithExistingEmail_ReturnsErrorResponse()
         {
             // Arrange
-            using var dbContext = TestServiceFactory.CreateTestDbContext();     
+            using var dbContext = TestServiceFactory.CreateTestDbContext();
             var testUser = TestDataFactory.CreateUser();
 
             // Add existing user to the database
-            dbContext.Users.Add(new SqlUser(testUser));
+            dbContext.Users.Add(SqlUser.FromDto(testUser));
             await dbContext.SaveChangesAsync();
 
             var registerUserResolver = new RegisterUserResolver();

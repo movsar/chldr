@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using chldr_data.DatabaseObjects.DatabaseEntities;
+using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_data.DatabaseObjects.SqlEntities;
 [Table("Entry")]
@@ -10,10 +10,9 @@ public class SqlEntry : IEntryEntity
     public string SourceId { get; set; } = null!;
     public int Type { get; set; } = 0;
     public int Rate { get; set; } = 0;
-    public string? RawContents { get; set; }
+    public string RawContents { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
-    public virtual ICollection<SqlImage> Images { get; set; } = new List<SqlImage>();
     public virtual ICollection<SqlSound> Sounds { get; set; } = new List<SqlSound>();
     public virtual SqlSource Source { get; set; } = null!;
     public virtual ICollection<SqlTranslation> Translations { get; set; } = new List<SqlTranslation>();

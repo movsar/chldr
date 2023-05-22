@@ -1,4 +1,5 @@
 ﻿
+using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Repositories;
 
 namespace chldr_data.tests.RepositoryTests

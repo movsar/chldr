@@ -1,4 +1,5 @@
 ﻿
+using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Enums;
 using chldr_data.Resources.Localizations;
 using chldr_data.ResponseTypes;
@@ -32,7 +33,7 @@ namespace chldr_api.GraphQL.MutationServices
             {
                 Email = email,
                 Password = BCrypt.Net.BCrypt.HashPassword(password),
-                UserStatus = (int)UserStatus.Unconfirmed,
+                Status = (int)UserStatus.Unconfirmed,
                 FirstName = firstName,
                 LastName = lastName,
                 Patronymic = patronymic

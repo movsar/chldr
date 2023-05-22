@@ -1,4 +1,4 @@
-﻿using chldr_data.DatabaseObjects.DatabaseEntities;
+﻿using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.RealmEntities;
 using chldr_data.DatabaseObjects.SqlEntities;
 

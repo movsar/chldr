@@ -1,5 +1,5 @@
 ﻿using chldr_data.Enums.WordDetails;
-using chldr_data.DatabaseObjects.DatabaseEntities;
+using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.RealmEntities;
 using chldr_data.DatabaseObjects.SqlEntities;
 
@@ -13,7 +13,7 @@ namespace chldr_data.DatabaseObjects.Models.Words
         public override string Content { get; set; }
         public override DateTimeOffset CreatedAt { get; set; }
         public override DateTimeOffset UpdatedAt { get; set; }
-        private WordModel() { }
+        protected WordModel() { }
         private static WordModel FromEntity(IEntryEntity entry, IWordEntity word, ISourceEntity source, IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translationEntityInfos)
         {
             var wordModel = new WordModel()

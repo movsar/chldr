@@ -1,4 +1,4 @@
-﻿using chldr_data.DatabaseObjects.DatabaseEntities;
+﻿using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Dtos;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,18 +6,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace chldr_data.DatabaseObjects.SqlEntities;
 
 [Table("User")]
-public class SqlUser : IUser
+public class SqlUser : IUserEntity
 {
     public SqlUser() { }
-    public SqlUser(UserDto testUser)
+    public static SqlUser FromDto(UserDto testUser)
     {
-
-        Email = testUser.Email;
-        Password = testUser.Password;
-        UserStatus = (byte)testUser.UserStatus;
-        FirstName = testUser.FirstName;
-        LastName = testUser.LastName;
-        Patronymic = testUser.Patronymic;
+        return new SqlUser()
+        {
+            Email = testUser.Email,
+            Password = testUser.Password,
+            Status = (int)testUser.Status,
+            FirstName = testUser.FirstName,
+            LastName = testUser.LastName,
+            Patronymic = testUser.Patronymic
+        };
     }
 
     public string UserId { get; set; } = Guid.NewGuid().ToString();
@@ -28,12 +30,11 @@ public class SqlUser : IUser
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Patronymic { get; set; }
-    public byte? IsModerator { get; set; }
-    public byte? UserStatus { get; set; }
+    public int? IsModerator { get; set; }
+    public int? Status { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
     public virtual ICollection<SqlEntry> Entries { get; set; } = new List<SqlEntry>();
-    public virtual ICollection<SqlImage> Images { get; set; } = new List<SqlImage>();
     public virtual ICollection<SqlLanguage> Languages { get; set; } = new List<SqlLanguage>();
     public virtual ICollection<SqlQuery> Queries { get; set; } = new List<SqlQuery>();
     public virtual ICollection<SqlSound> Sounds { get; set; } = new List<SqlSound>();

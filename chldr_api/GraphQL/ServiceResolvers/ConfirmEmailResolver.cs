@@ -23,7 +23,7 @@ namespace chldr_api.GraphQL.MutationServices
             }
 
             var user = dbContext.Users.First(u => u.UserId.Equals(token.UserId));
-            user.UserStatus = (int)UserStatus.Active;
+            user.Status = (int)UserStatus.Active;
             await dbContext.SaveChangesAsync();
 
             return new MutationResponse();

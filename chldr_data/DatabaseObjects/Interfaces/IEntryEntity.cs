@@ -1,8 +1,8 @@
-﻿namespace chldr_data.DatabaseObjects.DatabaseEntities
+﻿namespace chldr_data.DatabaseObjects.Interfaces
 {
     public interface IEntryEntity : IEntry, IEntity
     {
-        string? RawContents { get; }
+        string RawContents { get; }
         int Type { get; }
 
         //RealmPhrase? Phrase { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace chldr_data.DatabaseObjects.DatabaseEntities
+﻿namespace chldr_data.DatabaseObjects.Interfaces
 {
     public interface IUser
     {
@@ -9,7 +9,7 @@
         string? LastName { get; set; }
         string? Patronymic { get; set; }
         int Rate { get; set; }
-        DateTimeOffset CreatedAt { get; set; }
-        DateTimeOffset UpdatedAt { get; set; }
+        DateTimeOffset CreatedAt { get; }
+        DateTimeOffset UpdatedAt { get;  }
     }
 }

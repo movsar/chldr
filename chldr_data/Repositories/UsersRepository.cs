@@ -10,7 +10,7 @@ namespace chldr_data.Repositories
         public UserModel GetUserByEmail(string email)
         {
             var user = Database.All<RealmUser>().Where(u => u.Email == email).FirstOrDefault();
-            return new UserModel(user);
+            return UserModel.FromEntity(user);
         }
     }
 }
