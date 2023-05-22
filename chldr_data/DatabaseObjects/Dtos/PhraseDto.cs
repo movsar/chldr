@@ -7,8 +7,8 @@ namespace chldr_data.DatabaseObjects.Dtos
 {
     public class PhraseDto : EntryDto
     {
+        public override string Content { get; set; } = string.Empty;
         public string? PhraseId { get; set; }
-        public string Content { get; set; } = string.Empty;
         public string? Notes { get; set; } = string.Empty;
 
         public static PhraseDto FromModel(PhraseModel phrase)

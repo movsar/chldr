@@ -3,7 +3,6 @@ using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
 using GraphQL;
 using Newtonsoft.Json.Linq;
-using chldr_data.ResponseTypes;
 using chldr_utils;
 
 namespace chldr_data.Services
@@ -38,7 +37,7 @@ namespace chldr_data.Services
             }
             catch (GraphQLHttpRequestException graphQlException){
                 _exceptionHandler.LogError(graphQlException.Content);
-                throw new Exception("Unexpected error occurred while sending GraphQL request", graphQlException);
+                throw new Exception("An error occurred while sending the request", graphQlException);
             }
             catch (Exception ex)
             {                

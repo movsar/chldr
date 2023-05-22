@@ -7,7 +7,7 @@ namespace chldr_data.DatabaseObjects.Dtos
     public class TextDto : EntryDto, IText
     {
         public string TextId { get; set; }
-        public string Content { get; set; }
+        public override string Content { get; set; }
         public static TextDto FromModel(TextModel model)
         {
             var phraseDto = new TextDto()
