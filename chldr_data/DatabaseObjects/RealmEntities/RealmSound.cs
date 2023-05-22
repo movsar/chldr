@@ -1,13 +1,11 @@
 ﻿using chldr_data.DatabaseObjects.Interfaces;
 using Realms;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.DatabaseObjects.RealmEntities;
 
+
 [MapTo("Sound")]
-public class RealmSound : RealmObject, IEntity
+public class RealmSound : RealmObject, ISoundEntity
 {
     [PrimaryKey]
     public string SoundId { get; set; } = Guid.NewGuid().ToString();
