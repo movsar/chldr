@@ -1,12 +1,13 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.Enums;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 
 namespace chldr_ui.ViewModels
 {
-    public abstract class EntryEditViewModelBase<TFormDto, TFormValidator> : EditFormViewModelBase<TFormDto, TFormValidator>
-        where TFormValidator : AbstractValidator<TFormDto>
+    public abstract class EntryEditViewModelBase<TDto, TValidator> : EditFormViewModelBase<TDto, TValidator>
+        where TValidator : AbstractValidator<TDto>
     {
         #region Properties, Fields etc
         [Parameter]

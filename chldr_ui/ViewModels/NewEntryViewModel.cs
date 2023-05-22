@@ -1,41 +1,30 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.Enums;
+using FluentValidation;
 using Microsoft.AspNetCore.Components;
 
 namespace chldr_ui.ViewModels
 {
     public class NewEntryViewModel : ViewModelBase
     {
-        internal EntryDto EntryDto;
-        
-
-        protected override void OnInitialized()
-        {
-            EntryDto = new WordDto(); // Initialize with a default DTO, such as WordDto
-            base.OnInitialized();
-    
-        }
-
+        internal EntryDto EntryDto { get; set; } = new WordDto();
+        internal EntryType SelectedEntryType { get; set; } = EntryType.Word;
         internal void HandleEntryTypeChange(ChangeEventArgs e)
         {
-            var entryType = e.Value.ToString();
-            switch (entryType)
+            if (Enum.TryParse(e.Value?.ToString(), out EntryType selectedEntryType))
             {
-                case "WordDto":
-                    EntryDto = new WordDto();
-                    break;
-                case "PhraseDto":
-                    EntryDto = new PhraseDto();
-                    break;
-                case "TextDto":
-                    EntryDto = new TextDto();
-                    break;
+                SelectedEntryType = selectedEntryType;
+
+                // Initialize the corresponding DTO based on the selected entry type
+                EntryDto = SelectedEntryType switch
+                {
+                    EntryType.Word => new WordDto(),
+                    EntryType.Phrase => new PhraseDto(),
+                    EntryType.Text => new TextDto(),
+                    _ => null
+                };
             }
         }
 
-        internal void HandleSubmit()
-        {
-            // Handle form submission
-        }
     }
-
 }
