@@ -3,11 +3,13 @@ using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_shared.Models;
 using Realms.Sync;
+using Newtonsoft.Json;
 
 namespace chldr_data.DatabaseObjects.Models
 {
     public class UserModel : IUser
     {
+        [JsonConstructor]
         private UserModel() { }
         // Members can only add new entries and translations they'll get their rate increased when moders approve their entries
         public static NumericRange MemberRateRange = new NumericRange(1, 10);
@@ -99,6 +101,7 @@ namespace chldr_data.DatabaseObjects.Models
 
             return false;
         }
+
         private static UserModel FromBaseInterface(IUser user)
         {
             if (string.IsNullOrWhiteSpace(user.UserId))
@@ -118,6 +121,7 @@ namespace chldr_data.DatabaseObjects.Models
                 RateWeight = GetRateWeightByRate(user.Rate)
             };
         }
+
         public static UserModel FromDto(UserDto? userDto)
         {
             var userModel = FromBaseInterface(userDto);

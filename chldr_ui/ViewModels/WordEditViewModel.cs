@@ -6,6 +6,7 @@ using chldr_shared.Stores;
 using chldr_shared.Validators;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
+using chldr_data.DatabaseObjects.Models;
 
 namespace chldr_ui.ViewModels
 {
@@ -29,7 +30,7 @@ namespace chldr_ui.ViewModels
                 throw ex;
             }
 
-            await ContentStore.UpdateWord(UserStore.ActiveSession.User!, Word);
+            await ContentStore.UpdateWord(UserModel.FromDto(UserStore.ActiveSession.User!), Word);
             NavigationManager.NavigateTo("/");
         }
 

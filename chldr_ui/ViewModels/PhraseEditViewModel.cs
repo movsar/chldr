@@ -1,4 +1,5 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Models;
 using chldr_shared.Validators;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
@@ -35,12 +36,12 @@ namespace chldr_ui.ViewModels
 
         private void SavePhrase()
         {
-            ContentStore.UpdatePhrase(UserStore.ActiveSession.User!, PhraseId, Phrase?.Content, Phrase?.Notes);
+            ContentStore.UpdatePhrase(UserModel.FromDto(UserStore.ActiveSession.User!), PhraseId, Phrase?.Content, Phrase?.Notes);
         }
 
         private void AddPhrase()
         {
-            ContentStore.AddNewPhrase(UserStore.ActiveSession.User!, Phrase?.Content!, Phrase?.Notes!);
+            ContentStore.AddNewPhrase(UserModel.FromDto(UserStore.ActiveSession.User!), Phrase?.Content!, Phrase?.Notes!);
         }
 
         public void Submit()

@@ -18,10 +18,12 @@ namespace chldr_utils.Services
     public class LocalStorageService : ILocalStorageService
     {
         private IJSRuntime _jsRuntime;
+        private ExceptionHandler _exceptionHandler;
 
-        public LocalStorageService(IJSRuntime jsRuntime)
+        public LocalStorageService(IJSRuntime jsRuntime, ExceptionHandler exceptionHandler)
         {
             _jsRuntime = jsRuntime;
+            _exceptionHandler = exceptionHandler;
         }
 
         public async Task<T> GetItem<T>(string key)
@@ -35,9 +37,9 @@ namespace chldr_utils.Services
 
                 return JsonSerializer.Deserialize<T>(json);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: Process debug;
+                _exceptionHandler.LogDebug(ex.Message);
                 return default;
             }
         }

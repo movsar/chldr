@@ -5,6 +5,7 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_data.ResponseTypes;
 using chldr_utils;
 using GraphQL;
+using chldr_data.DatabaseObjects.Dtos;
 
 namespace chldr_data.Services
 {
@@ -119,7 +120,7 @@ namespace chldr_data.Services
                 RefreshToken = response.Data.RefreshToken,
                 AccessTokenExpiresIn = (DateTimeOffset)response.Data.AccessTokenExpiresIn,
                 Status = SessionStatus.LoggedIn,
-                User = UserModel.FromDto(response.Data.User)
+                User = response.Data.User
             };
         }
 
@@ -185,7 +186,7 @@ namespace chldr_data.Services
                 RefreshToken = response.Data.Success ? response.Data.RefreshToken! : "",
                 AccessTokenExpiresIn = response.Data.Success ? (DateTimeOffset)response.Data.AccessTokenExpiresIn! : DateTime.UtcNow,
                 Status = response.Data.Success ? SessionStatus.LoggedIn : SessionStatus.Anonymous,
-                User = response.Data.Success ? UserModel.FromDto(response.Data.User) : null
+                User = response.Data.Success ? response.Data.User : null
             };
         }
     }

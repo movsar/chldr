@@ -55,13 +55,11 @@ namespace chldr_shared.Stores
         {
             // Get last session info from the local storage
             var session = await _localStorageService.GetItem<ActiveSession>("session");
-            if (session == null)
+            if (session != null)
             {
-                return;
+                ActiveSession = session;
+                UserStateHasChanged?.Invoke();
             }
-
-            ActiveSession = session;
-            UserStateHasChanged?.Invoke();
 
             var expired = DateTimeOffset.UtcNow > ActiveSession.AccessTokenExpiresIn;
             if (expired && !string.IsNullOrWhiteSpace(ActiveSession.RefreshToken))
