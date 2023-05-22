@@ -1,5 +1,4 @@
-﻿using chldr_data.Entities;
-using chldr_data.SqlEntities;
+﻿using chldr_data.DatabaseObjects.SqlEntities;
 using Microsoft.EntityFrameworkCore;
 using MySql.EntityFrameworkCore.Extensions;
 

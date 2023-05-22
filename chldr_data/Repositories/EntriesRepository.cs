@@ -1,9 +1,10 @@
-﻿using chldr_data.Entities;
-using chldr_data.Enums;
+﻿using chldr_data.Enums;
 using chldr_data.Enums.WordDetails;
 using chldr_data.Interfaces;
 using chldr_data.Models;
-using chldr_data.Models.Words;
+using chldr_data.DatabaseObjects.Models;
+using chldr_data.DatabaseObjects.Models.Words;
+using chldr_data.DatabaseObjects.RealmEntities;
 using chldr_utils.Models;
 using chldr_utils.Services;
 using MongoDB.Bson;
@@ -85,7 +86,7 @@ namespace chldr_data.Repositories
             return combined;
         }
         Expression<Func<RealmEntry, bool>> EntryFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
-        protected async Task DirectSearch(string inputText, Expression<Func<Entities.RealmEntry, bool>> filter, int limit)
+        protected async Task DirectSearch(string inputText, Expression<Func<RealmEntry, bool>> filter, int limit)
         {
             var resultingEntries = new List<EntryModel>();
 

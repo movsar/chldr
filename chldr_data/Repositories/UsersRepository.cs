@@ -1,6 +1,6 @@
-﻿using chldr_data.Entities;
-using chldr_data.Interfaces;
-using chldr_data.Models;
+﻿using chldr_data.Interfaces;
+using chldr_data.DatabaseObjects.Models;
+using chldr_data.DatabaseObjects.RealmEntities;
 
 namespace chldr_data.Repositories
 {

@@ -1,6 +1,6 @@
-﻿using chldr_data.Dto;
-using chldr_data.Entities;
-using chldr_data.Interfaces;
+﻿using chldr_data.Interfaces;
+using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.RealmEntities;
 using MongoDB.Bson;
 
 namespace chldr_data.Repositories

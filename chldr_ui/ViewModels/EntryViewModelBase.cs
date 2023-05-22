@@ -1,4 +1,4 @@
-﻿using chldr_data.Models;
+﻿using chldr_data.DatabaseObjects.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace chldr_ui.ViewModels

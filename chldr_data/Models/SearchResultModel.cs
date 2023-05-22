@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using chldr_data.DatabaseObjects.Models;
 
 namespace chldr_data.Models
 {

@@ -1,9 +1,10 @@
-﻿using chldr_data.Dto;
-using chldr_data.Enums;
+﻿using chldr_data.Enums;
 using chldr_data.Interfaces;
-using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models;
-using chldr_data.Models.Words;
+using chldr_data.DatabaseObjects.DatabaseEntities;
+using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Models;
+using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Repositories;
 using chldr_utils;
 using chldr_utils.Models;
@@ -213,12 +214,12 @@ namespace chldr_shared.Stores
             return phrase;
         }
 
-        public void UpdatePhrase(IUser loggedInUser, string? phraseId, string? content, string? notes)
+        public void UpdatePhrase(UserModel loggedInUser, string? phraseId, string? content, string? notes)
         {
             // _dataAccess.UpdatePhrase(loggedInUser, phraseId, content, notes);
         }
 
-        public async Task UpdateWord(IUser loggedInUser, WordDto word)
+        public async Task UpdateWord(UserModel loggedInUser, WordDto word)
         {
             await WordsRepository.Update(loggedInUser, word);
         }

@@ -1,4 +1,4 @@
-﻿using chldr_data.Entities;
+﻿using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_tools;
 using HotChocolate.Authorization;
 

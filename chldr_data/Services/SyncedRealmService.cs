@@ -1,6 +1,6 @@
-﻿using chldr_data.Entities;
-using chldr_data.Enums;
+﻿using chldr_data.Enums;
 using chldr_data.Interfaces;
+using chldr_data.DatabaseObjects.RealmEntities;
 using chldr_utils;
 using chldr_utils.Services;
 using Realms;
@@ -90,13 +90,13 @@ namespace chldr_data.Services
                 {
                     Debug.WriteLine($"APP: Realm : PopulateInitialSubscriptions");
 
-                    realm.Subscriptions.Add(realm.All<Entities.RealmEntry>());
-                    realm.Subscriptions.Add(realm.All<Entities.RealmLanguage>());
-                    realm.Subscriptions.Add(realm.All<Entities.RealmPhrase>());
-                    realm.Subscriptions.Add(realm.All<Entities.RealmSource>());
-                    realm.Subscriptions.Add(realm.All<Entities.RealmTranslation>());
-                    realm.Subscriptions.Add(realm.All<Entities.RealmUser>());
-                    realm.Subscriptions.Add(realm.All<Entities.RealmWord>());
+                    realm.Subscriptions.Add(realm.All<RealmEntry>());
+                    realm.Subscriptions.Add(realm.All<RealmLanguage>());
+                    realm.Subscriptions.Add(realm.All<RealmPhrase>());
+                    realm.Subscriptions.Add(realm.All<RealmSource>());
+                    realm.Subscriptions.Add(realm.All<RealmTranslation>());
+                    realm.Subscriptions.Add(realm.All<RealmUser>());
+                    realm.Subscriptions.Add(realm.All<RealmWord>());
                 },
                 OnSessionError = (session, sessionException) =>
                 {

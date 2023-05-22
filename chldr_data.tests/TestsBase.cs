@@ -1,9 +1,9 @@
-﻿using chldr_data.Models.Words;
-using chldr_data.Models;
+﻿
 using chldr_data.Repositories;
 using chldr_data.Interfaces;
 using chldr_data.tests.Services;
-using chldr_data.Interfaces.DatabaseEntities;
+using chldr_data.DatabaseObjects.Models;
+using chldr_data.DatabaseObjects.DatabaseEntities;
 
 namespace chldr_data.tests
 {

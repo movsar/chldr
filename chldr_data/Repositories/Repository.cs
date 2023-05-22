@@ -1,10 +1,8 @@
-﻿using chldr_data.Dto;
-using chldr_data.Entities;
-using chldr_data.Factories;
+﻿using chldr_data.Factories;
 using chldr_data.Interfaces;
-using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models;
-using chldr_data.Models.Words;
+using chldr_data.DatabaseObjects.Models;
+using chldr_data.DatabaseObjects.RealmEntities;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Realms;
@@ -42,7 +40,7 @@ namespace chldr_data.Repositories
                 
                 foreach (var changeSet in changeSetsToApply)
                 {
-                    var changes = JsonConvert.DeserializeObject<List<ChangeDto>>(changeSet.RecordChanges);
+                    var changes = JsonConvert.DeserializeObject<List<Change>>(changeSet.RecordChanges);
                     if (changes == null || changes.Count == 0)
                     {
                         continue;

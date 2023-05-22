@@ -1,29 +1,22 @@
-﻿using chldr_data.Dto;
-using chldr_data.Entities;
-using chldr_data.Interfaces;
-using chldr_data.Interfaces.DatabaseEntities;
-using chldr_data.Models;
-using chldr_data.Models.Words;
+﻿using chldr_data.Models;
+using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Models;
+using chldr_data.DatabaseObjects.Models.Words;
+using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.ResponseTypes;
-using chldr_data.SqlEntities;
 using chldr_tools;
 using Microsoft.EntityFrameworkCore;
-using Realms;
-using Realms.Sync;
-using Serilog.Configuration;
-using System.Diagnostics;
-using System.Threading.Channels;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace chldr_api.GraphQL.ServiceResolvers
 {
     public class UpdateWordResolver
     {
-        public List<ChangeDto> GetChanges<T>(T updated, T existing, string changeSetId)
+        public List<Change> GetChanges<T>(T updated, T existing, string changeSetId)
         {
             // This method compares the two dto's and returns the changed properties with their names and values
 
-            var changes = new List<ChangeDto>();
+            var changes = new List<Change>();
             var properties = typeof(T).GetProperties();
 
             foreach (var property in properties)
@@ -35,7 +28,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
                 // ! Serialization allows comparision between complex objects, it might slow down the process though and worth reconsidering
                 if (!Equals(JsonConvert.SerializeObject(newValue), JsonConvert.SerializeObject(oldValue)))
                 {
-                    changes.Add(new ChangeDto()
+                    changes.Add(new Change()
                     {
                         Property = property.Name,
                         NewValue = newValue,
@@ -58,7 +51,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
 
         internal async Task<UpdateResponse> ExecuteAsync(SqlContext dbContext, UserDto userDto, WordDto updatedWordDto)
         {
-            var user = new UserModel(userDto);
+            var user = UserModel.FromDto(userDto);
             var response = new UpdateResponse() { Success = true };
 
             // Try retrieving corresponding object from the database with all the related objects

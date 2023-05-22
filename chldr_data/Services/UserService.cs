@@ -1,8 +1,10 @@
 ﻿using chldr_data.Enums;
 using chldr_data.Factories;
 using chldr_data.Interfaces;
-using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models;
+using chldr_data.DatabaseObjects.DatabaseEntities;
+using chldr_data.DatabaseObjects.Models;
+using chldr_data.DatabaseObjects.RealmEntities;
 using chldr_data.ResponseTypes;
 using chldr_utils;
 using chldr_utils.Services;
@@ -79,7 +81,7 @@ namespace chldr_data.Services
         public UserModel GetActiveSession()
         {
             var appUserId = App.CurrentUser.Id;
-            var userEntity = Database.All<Entities.RealmUser>().FirstOrDefault(u => u.UserId == appUserId);
+            var userEntity = Database.All<RealmUser>().FirstOrDefault(u => u.UserId == appUserId);
 
             if (userEntity == null)
             {

@@ -1,5 +1,5 @@
-﻿using chldr_data.Dto;
-using chldr_data.Enums.WordDetails;
+﻿using chldr_data.Enums.WordDetails;
+using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Repositories;
 
 namespace chldr_data.tests.RepositoryTests

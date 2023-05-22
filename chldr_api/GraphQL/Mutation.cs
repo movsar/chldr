@@ -1,6 +1,6 @@
 ﻿using chldr_api.GraphQL.MutationServices;
 using chldr_api.GraphQL.ServiceResolvers;
-using chldr_data.Dto;
+using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Resources.Localizations;
 using chldr_data.ResponseTypes;
 using chldr_tools;

@@ -5,8 +5,10 @@ Dto (Used to transfer objects)
 	FromModel
 
 Model (Used in normal cases)
-	FromDto
-	FromEntity
+	FromDto (When receiving from API)
+	FromEntity (When reading from local db)
 
 Entity (Used to save/change objects in the database)
 	FromDto
+
+Except for the Dto objects, all others (persistent objects) must have closed constructors

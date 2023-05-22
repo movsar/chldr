@@ -1,4 +1,4 @@
-﻿using chldr_data.Models;
+﻿using chldr_data.DatabaseObjects.Models;
 using chldr_utils.Services;
 
 namespace chldr_ui.ViewModels

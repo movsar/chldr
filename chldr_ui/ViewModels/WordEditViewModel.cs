@@ -1,7 +1,7 @@
-﻿using chldr_data.Dto;
-using chldr_data.Enums;
+﻿using chldr_data.Enums;
 using chldr_data.Models;
-using chldr_data.Models.Words;
+using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Models.Words;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
 using Microsoft.AspNetCore.Components;

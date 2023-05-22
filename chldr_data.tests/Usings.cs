@@ -1,4 +1,4 @@
-﻿global using chldr_data.Entities;
+﻿global 
 global using chldr_data.Services;
 global using chldr_utils;
 global using chldr_utils.Services;

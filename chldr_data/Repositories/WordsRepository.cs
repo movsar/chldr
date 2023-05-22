@@ -1,14 +1,13 @@
-﻿
-using chldr_data.Dto;
-using chldr_data.Entities;
-using chldr_data.Enums;
+﻿using chldr_data.Enums;
 using chldr_data.Interfaces;
-using chldr_data.Interfaces.DatabaseEntities;
-using chldr_data.Models;
-using chldr_data.Models.Words;
-using chldr_data.RealmEntities;
+using chldr_data.DatabaseObjects.DatabaseEntities;
+using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Models;
+using chldr_data.DatabaseObjects.Models.Words;
+using chldr_data.DatabaseObjects.RealmEntities;
 using chldr_data.ResponseTypes;
-using chldr_data.SqlEntities;
+using chldr_data.DatabaseObjects.DatabaseEntities;
+using chldr_data.DatabaseObjects.Models;
 using GraphQL;
 using MongoDB.Bson;
 using Realms;
@@ -158,10 +157,10 @@ namespace chldr_data.Repositories
             return response.Data.ChangeSets.Select(c => ChangeSetModel.FromDto(c)).ToList();
         }
 
-        public async Task Update(IUser loggedInUser, WordDto wordDto)
+        public async Task Update(UserModel loggedInUser, WordDto wordDto)
         {
             // Update
-            var userDto = new UserDto(loggedInUser);
+            var userDto = UserDto.FromModel(loggedInUser);
             var changeSets = await UpdateWord(userDto, wordDto);
 
             // Sync offline database

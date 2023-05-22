@@ -1,8 +1,8 @@
 ﻿using chldr_data.Enums;
 using chldr_data.Interfaces;
-using chldr_data.Interfaces.DatabaseEntities;
-using chldr_data.Models;
-using chldr_data.Models.Words;
+
+using chldr_data.DatabaseObjects.DatabaseEntities;
+using chldr_data.DatabaseObjects.Models;
 using chldr_data.Repositories;
 using chldr_utils;
 using chldr_utils.Services;

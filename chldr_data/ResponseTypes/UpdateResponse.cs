@@ -1,5 +1,5 @@
-﻿using chldr_data.Dto;
-using chldr_data.Models;
+﻿using chldr_data.Models;
+using chldr_data.DatabaseObjects.Dtos;
 
 namespace chldr_data.ResponseTypes
 {
