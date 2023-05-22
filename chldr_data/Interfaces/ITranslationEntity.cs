@@ -1,13 +1,14 @@
-﻿using chldr_data.Interfaces.DatabaseEntities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using chldr_data.Entities;
+using chldr_data.Interfaces.DatabaseEntities;
 
 namespace chldr_data.Interfaces
 {
-    public interface ITranslationEntity : IEntity
+    public interface ITranslationEntity : ITranslation
     {
+        string RawContents { get; set; }
+        IEntryEntity Entry { get; set; }
+        ILanguageEntity Language { get; set; }
+        DateTimeOffset CreatedAt { get; set; }
+        DateTimeOffset UpdatedAt { get; set; }
     }
 }

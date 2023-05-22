@@ -1,21 +1,32 @@
-﻿using chldr_data.Models;
+﻿using chldr_data.Enums;
+using chldr_data.Models;
+using chldr_data.Models.Words;
 using MongoDB.Bson;
 
 namespace chldr_data.Dto
 {
     public class PhraseDto : EntryDto
     {
-        public string? PhraseId { get; }
+        public string? PhraseId { get; set; }
         public string Content { get; set; } = string.Empty;
         public string? Notes { get; set; } = string.Empty;
 
-        public PhraseDto(PhraseModel phrase) : base(phrase)
+        public static PhraseDto FromModel(PhraseModel phrase)
         {
-            PhraseId = phrase.PhraseId.ToString();
-            Content = phrase.Content;
-            Notes = phrase.Notes;
-        }
+            var phraseDto = new PhraseDto()
+            {
+                EntryId = phrase.EntryId,
+                SourceId = phrase.Source.SourceId,
+                Rate = phrase.Rate,
+                EntryType = (EntryType)phrase.Type,
 
-        public PhraseDto() { }
+                PhraseId = phrase.PhraseId.ToString(),
+                Content = phrase.Content,
+                Notes = phrase.Notes,
+            };
+
+            phraseDto.Translations.AddRange(phrase.Translations.Select(t => TranslationDto.FromModel(t)).ToList());
+            return phraseDto;
+        }
     }
 }

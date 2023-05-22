@@ -22,38 +22,41 @@ namespace chldr_data.Dto
         {
             LanguageCode = languageCode;
         }
-        public TranslationDto(SqlTranslation translation)
+        public static TranslationDto FromEntity(ITranslationEntity translation)
         {
-            if (translation == null || translation.Language == null)
+            return new TranslationDto()
             {
-                throw new Exception("Language and translation model must not be empty");
-            }
-            UserId = translation.UserId;
-            TranslationId = translation.TranslationId;
-            LanguageId = translation.Language.LanguageId;
-            EntryId = translation.EntryId.ToString();
+                UserId = translation.UserId,
+                TranslationId = translation.TranslationId,
+                LanguageId = translation.Language.LanguageId,
+                EntryId = translation.EntryId.ToString(),
 
-            LanguageCode = translation.Language.Code;
-            Content = translation.Content;
-            Notes = translation.Notes;
-            Rate = translation.Rate;
+                LanguageCode = translation.Language.Code,
+                Content = translation.Content,
+                Notes = translation.Notes,
+                Rate = translation.Rate
+            };
         }
-        public TranslationDto(TranslationModel translation)
+
+        public static TranslationDto FromModel(TranslationModel translation)
         {
             if (translation == null || translation.Language == null)
             {
                 throw new Exception("Language and translation model must not be empty");
             }
-            UserId = translation.UserId;
-            TranslationId = translation.TranslationId;
-            LanguageId = translation.Language.LanguageId;
-            EntryId = translation.EntryId.ToString();
 
-            LanguageCode = translation.Language.Code;
-            Content = translation.Content;
-            Notes = translation.Notes;
-            Rate = translation.Rate;
+            return new TranslationDto()
+            {
+                UserId = translation.UserId,
+                TranslationId = translation.TranslationId,
+                LanguageId = translation.Language.LanguageId,
+                EntryId = translation.EntryId.ToString(),
 
+                LanguageCode = translation.Language.Code,
+                Content = translation.Content,
+                Notes = translation.Notes,
+                Rate = translation.Rate
+            };
         }
     }
 }

@@ -1,12 +1,12 @@
 ﻿using chldr_data.Dto;
 using chldr_data.Interfaces;
-using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.Entities;
 
+
 [Table("Translation")]
-public class SqlTranslation : ITranslation
+public class SqlTranslation : ITranslationEntity
 {
     public string TranslationId { get; set; } = Guid.NewGuid().ToString();
     public string LanguageId { get; set; } = null!;
@@ -26,18 +26,19 @@ public class SqlTranslation : ITranslation
         return Content.ToString();
     }
 
-    public SqlTranslation() { }
-
-    public SqlTranslation(TranslationDto translation)
+    public static ITranslationEntity FromDto(TranslationDto translation)
     {
-        TranslationId = translation.TranslationId;
-        LanguageId = translation.LanguageId;
-        EntryId = translation.EntryId;
-        UserId = translation.UserId;
-        Content = translation.Content;
-        RawContents = translation.Content.ToLower();
-        Notes = translation.Notes;
-        Rate = translation.Rate;
+        return new SqlTranslation()
+        {
+            TranslationId = translation.TranslationId,
+            LanguageId = translation.LanguageId,
+            EntryId = translation.EntryId,
+            UserId = translation.UserId,
+            Content = translation.Content,
+            RawContents = translation.Content.ToLower(),
+            Notes = translation.Notes,
+            Rate = translation.Rate,
+        };
     }
 
 }

@@ -1,13 +1,15 @@
 ﻿using chldr_data.Entities;
+using chldr_data.Enums;
 using chldr_data.Enums.WordDetails;
 using chldr_data.Interfaces.DatabaseEntities;
 using chldr_data.Models.Words;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Utilities;
 
 namespace chldr_data.Dto
 {
     // ! All public properties of this class must have setters, to allow serialization
-    public class WordDto : EntryDto, IWordDto
+    public class WordDto : EntryDto, IWord
     {
         [JsonConstructor]
         public WordDto() { }
@@ -16,14 +18,24 @@ namespace chldr_data.Dto
         {
             Translations = translations;
         }
-        public WordDto(SqlWord sqlWord) : this(new WordModel(sqlWord.Entry)) { }
-        public WordDto(WordModel word) : base(word)
+
+        public static WordDto FromModel(WordModel wordModel)
         {
-            WordId = word.WordId.ToString();
-            Content = word.Content;
-            Notes = word.Notes;
-            PartOfSpeech = word.PartOfSpeech;
-            AdditionalDetails = new WordDetailsModel(word, PartOfSpeech);
+            var wordDto = new WordDto()
+            {
+                EntryId = wordModel.EntryId,
+                SourceId = wordModel.Source.SourceId,
+                Rate = wordModel.Rate,
+                EntryType = (EntryType)wordModel.Type,
+                WordId = wordModel.WordId.ToString(),
+                Content = wordModel.Content,
+                Notes = wordModel.Notes,
+                PartOfSpeech = wordModel.PartOfSpeech,
+                AdditionalDetails = new WordDetailsModel(wordModel, wordModel.PartOfSpeech)
+            };
+
+            wordDto.Translations.AddRange(wordModel.Translations.Select(t => new TranslationDto(t)).ToList());
+            return wordDto;
         }
 
         #region Main Details

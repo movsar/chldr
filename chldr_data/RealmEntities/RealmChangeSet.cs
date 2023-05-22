@@ -1,4 +1,6 @@
-﻿using chldr_data.Interfaces.DatabaseEntities;
+﻿using chldr_data.Dto;
+using chldr_data.Interfaces.DatabaseEntities;
+using chldr_data.SqlEntities;
 using Realms;
 
 namespace chldr_data.RealmEntities
@@ -19,16 +21,19 @@ namespace chldr_data.RealmEntities
 
         public RealmChangeSet() { }
 
-        public RealmChangeSet(IChangeSetEntity changeSet)
+        public static IChangeSetEntity FromDto(ChangeSetDto entity)
         {
-            ChangeSetIndex = changeSet.ChangeSetIndex;
-            ChangeSetId = changeSet.ChangeSetId;
-            UserId = changeSet.UserId;
-            RecordId = changeSet.RecordId;
-            RecordChanges = changeSet.RecordChanges;
-            RecordType = changeSet.RecordType;
-            Operation = changeSet.Operation;
-            CreatedAt = changeSet.CreatedAt;
+            return new SqlChangeSet()
+            {
+                ChangeSetIndex = entity.ChangeSetIndex,
+                ChangeSetId = entity.ChangeSetId,
+                UserId = entity.UserId,
+                Operation = (int)entity.Operation,
+                RecordType = (int)entity.RecordType,
+                RecordId = entity.RecordId,
+                RecordChanges = entity.RecordChanges,
+                CreatedAt = entity.CreatedAt,
+            };
         }
     }
 }

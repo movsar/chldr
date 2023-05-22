@@ -10,7 +10,7 @@ namespace chldr_data.Models
         public SourceModel Source { get; }
         public int Rate { get; }
         public int Type { get; }
-        public string? EntryId { get; internal set; }
+        public string EntryId { get; internal set; }
         public abstract string Content { get; }
         public abstract DateTimeOffset CreatedAt { get; }
         public abstract DateTimeOffset UpdatedAt { get; }
