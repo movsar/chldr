@@ -1,1 +1,4 @@
-Streamline WordChange / Sync
+1. Build entities/models/dtos/interfaces for all database objects
+2. Make Sync process run automatically every 5sec (change to 30 once it works fine)
+3. Add ability to edit translations in different languages on word edit page
+4. Streamline WordChange / Sync
