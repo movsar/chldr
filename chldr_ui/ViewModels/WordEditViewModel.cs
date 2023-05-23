@@ -10,7 +10,7 @@ namespace chldr_ui.ViewModels
     public class WordEditViewModel : EditEntryViewModelBase<WordDto, WordValidator>
     {
         private bool isInitialized = false;
-        public WordDto? Word { get; set; } = new WordDto();
+        public WordDto Word { get; set; } = new WordDto();
         protected override void OnInitialized()
         {
             if (!isInitialized)
@@ -37,15 +37,31 @@ namespace chldr_ui.ViewModels
                 SourceId = Word.SourceId;
             }
         }
-     
+
+        List<string> _newTranslationIds = new List<string>();
         public async Task NewTranslation()
         {
-            Word.Translations.Add(new TranslationDto());
-            await CallStateHasChangedAsync();
+            var translation = new TranslationDto();
+            // Needed to know which translations are new, in case they need to be removed
+            _newTranslationIds.Add(translation.TranslationId);
+
+            Word.Translations.Add(translation);
+
+            await RefreshUi();
         }
         public async Task DeleteTranslation(string translationId)
         {
+            if (!_newTranslationIds.Contains(translationId))
+            {
+                // TODO: Remove from the database
+            }
+            else
+            {
+                _newTranslationIds.Remove(translationId);
+            }
 
+            Word.Translations.Remove(Word.Translations.Find(t => t.TranslationId.Equals(translationId))!);
+            await RefreshUi();
         }
 
         public async Task Save()

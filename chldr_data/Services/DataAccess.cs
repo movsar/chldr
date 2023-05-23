@@ -38,6 +38,9 @@ namespace chldr_data.Services
             _networkService = networkService;
             _environmentService = environmentService;
             _realmDataSource = realmDataSource;
+            _realmDataSource.DatasourceInitialized += DataSource_Initialized;
+            _realmDataSource.InitializeConfiguration();
+
             RequestSender = requestSender;
 
             serviceProvider.Register(new EntriesRepository<EntryModel>(this));

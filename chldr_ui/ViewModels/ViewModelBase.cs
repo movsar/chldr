@@ -17,7 +17,7 @@ namespace chldr_ui.ViewModels
         [Inject] internal EnvironmentService? EnvironmentService { get; set; }
         [Inject] internal ExceptionHandler? ExceptionHandler { get; set; }
         [Inject] internal NavigationManager NavigationManager { get; set; }
-        protected async Task CallStateHasChangedAsync()
+        protected async Task RefreshUi()
         {
             await InvokeAsync(() =>
                 {
@@ -35,13 +35,13 @@ namespace chldr_ui.ViewModels
 
         private async void UserStore_UserStateHasChanged()
         {
-            await CallStateHasChangedAsync();
+            await RefreshUi();
         }
 
         private async void ViewModel_CurrentCultureChanged(string culture)
         {
             Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(culture);
-            await CallStateHasChangedAsync();
+            await RefreshUi();
         }
 
         protected void OnCultureChanged(string culture)

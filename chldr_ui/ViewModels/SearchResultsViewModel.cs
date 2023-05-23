@@ -34,7 +34,7 @@ namespace chldr_ui.ViewModels
 
                 // ! Without this the page doesn't refresh
                 Entries = null;
-                await CallStateHasChangedAsync();
+                await RefreshUi();
                 Entries = new List<EntryModel>();
 
                 logger.StopSpeedTest($"Finished setting up");
@@ -44,7 +44,7 @@ namespace chldr_ui.ViewModels
                 logger.StopSpeedTest($"Finished adding entries to the collection");
 
                 logger.StartSpeedTest();
-                await CallStateHasChangedAsync();
+                await RefreshUi();
                 logger.StopSpeedTest($"Finished rendering");
             }).Start();
         }

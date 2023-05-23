@@ -34,9 +34,6 @@ namespace chldr_data.Services
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
-
-            InitializeConfiguration();
-            DatasourceInitialized?.Invoke();
         }
 
         private string KeyAsString()
@@ -67,6 +64,7 @@ namespace chldr_data.Services
             };
 
             var realm = GetDatabase();
+            DatasourceInitialized?.Invoke();
             //realm.WriteCopy(new RealmConfiguration("whatever.realm"));
         }
 
