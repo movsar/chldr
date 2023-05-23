@@ -65,11 +65,12 @@ namespace chldr_shared.Stores
             _networkService = networkService;
 
             _dataAccess = dataAccess;
+            _dataAccess.DataAccessInitialized += DataAccess_DatasourceInitialized;
+            _dataAccess.InitializeDataSource();
 
             EntriesRepository.GotNewSearchResult += DataAccess_GotNewSearchResults;
             EntriesRepository.EntryUpdated += EntriesRepository_EntryUpdated;
             WordsRepository.WordUpdated += EntriesRepository_WordUpdated;
-            _dataAccess.DatasourceInitialized += DataAccess_DatasourceInitialized;
         }
 
         private async void EntriesRepository_WordUpdated(WordModel updatedWord)

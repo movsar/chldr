@@ -9,10 +9,12 @@ namespace chldr_data.Interfaces
 {
     public interface IDataAccess
     {
-        event Action DatasourceInitialized;
+        event Action DataAccessInitialized;
         Realm GetDatabase();
         void RemoveAllEntries();
         Repository GetRepository<T>() where T : IEntity;
+        void InitializeDataSource();
+
         IGraphQLRequestSender RequestSender { get; set; }
 
     }

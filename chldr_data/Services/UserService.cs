@@ -36,7 +36,7 @@ namespace chldr_data.Services
             _dataSource = realmService;
             _localStorageService = localStorageService;
 
-            _dataSource.DatasourceInitialized += RealmService_DatasourceInitialized;
+            _dataSource.LocalDatabaseInitialized += RealmService_DatasourceInitialized;
         }
         private void RealmService_DatasourceInitialized()
         {

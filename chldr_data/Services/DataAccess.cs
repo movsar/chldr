@@ -14,7 +14,7 @@ namespace chldr_data.Services
 {
     public class DataAccess : IDataAccess
     {
-        public event Action? DatasourceInitialized;
+        public event Action? DataAccessInitialized;
 
         private readonly ServiceLocator _serviceProvider;
         protected readonly ExceptionHandler _exceptionHandler;
@@ -37,9 +37,9 @@ namespace chldr_data.Services
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
             _environmentService = environmentService;
+
             _realmDataSource = realmDataSource;
-            _realmDataSource.DatasourceInitialized += DataSource_Initialized;
-            _realmDataSource.InitializeConfiguration();
+            _realmDataSource.LocalDatabaseInitialized += LocalDatabase_Initialized;
 
             RequestSender = requestSender;
 
@@ -52,9 +52,9 @@ namespace chldr_data.Services
             serviceProvider.Register(new UsersRepository(this));
         }
 
-        private void DataSource_Initialized()
+        private void LocalDatabase_Initialized()
         {
-            DatasourceInitialized?.Invoke();
+            DataAccessInitialized?.Invoke();
         }
 
         public Repository GetRepository<T>() where T : IEntity
@@ -110,6 +110,11 @@ namespace chldr_data.Services
         public Realm GetDatabase()
         {
             return _realmDataSource.GetDatabase();
+        }
+
+        public void InitializeDataSource()
+        {
+            _realmDataSource.InitializeDatabase();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace chldr_data.Services
         private readonly FileService _fileService;
         private RealmConfigurationBase? _config;
 
-        public event Action? DatasourceInitialized;
+        public event Action? LocalDatabaseInitialized;
 
         public Realm GetDatabase()
         {
@@ -56,7 +56,7 @@ namespace chldr_data.Services
 
             return encryptedConfig;
         }
-        public void InitializeConfiguration()
+        public void InitializeDatabase()
         {
             _config = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
             {
@@ -64,7 +64,7 @@ namespace chldr_data.Services
             };
 
             var realm = GetDatabase();
-            DatasourceInitialized?.Invoke();
+            LocalDatabaseInitialized?.Invoke();
             //realm.WriteCopy(new RealmConfiguration("whatever.realm"));
         }
 

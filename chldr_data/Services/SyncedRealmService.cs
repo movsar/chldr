@@ -15,7 +15,7 @@ namespace chldr_data.Services
     {
         private const string myRealmAppId = "dosham-lxwuu";
         private const string myTestRealmAppId = "dosham-test-oaqel";
-        public event Action? DatasourceInitialized;
+        public event Action? LocalDatabaseInitialized;
 
         private App? _app;
         private FlexibleSyncConfiguration? _config;
@@ -74,7 +74,7 @@ namespace chldr_data.Services
         {
             return $"{id.Substring(4, 4)}.dbx";
         }
-        public void InitializeConfiguration()
+        public void InitializeDatabase()
         {
             // Copy original file so that app will be able to access entries immediately
 
@@ -140,7 +140,7 @@ namespace chldr_data.Services
                 return;
             }
 
-            InitializeConfiguration();
+            InitializeDatabase();
 
             var language = GetDatabase().All<RealmLanguage>().FirstOrDefault();
             if (language == null)
@@ -150,7 +150,7 @@ namespace chldr_data.Services
                 synchTask.Wait();
             }
 
-            DatasourceInitialized?.Invoke();
+            LocalDatabaseInitialized?.Invoke();
         }
 
         public void RemoveAllEntries()

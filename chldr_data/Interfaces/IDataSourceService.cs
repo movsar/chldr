@@ -5,9 +5,9 @@ namespace chldr_data.Interfaces
 {
     public interface IDataSourceService
     {
-        event Action? DatasourceInitialized;
+        event Action? LocalDatabaseInitialized;
         Realm GetDatabase();
-        void InitializeConfiguration();
+        void InitializeDatabase();
         void RemoveAllEntries();
     }
 }
