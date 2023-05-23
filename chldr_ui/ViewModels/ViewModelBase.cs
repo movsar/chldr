@@ -16,6 +16,7 @@ namespace chldr_ui.ViewModels
         [Inject] internal IStringLocalizer<AppLocalizations> Localizer { get; set; }
         [Inject] internal EnvironmentService? EnvironmentService { get; set; }
         [Inject] internal ExceptionHandler? ExceptionHandler { get; set; }
+        [Inject] internal NavigationManager NavigationManager { get; set; }
         protected async Task CallStateHasChangedAsync()
         {
             await InvokeAsync(() =>

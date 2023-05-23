@@ -1,12 +1,16 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 
 namespace chldr_ui.ViewModels
 {
-    public class NewEntryViewModel : ViewModelBase
+    public class EditEntryViewModel : ViewModelBase
     {
+        [Parameter]
+        public string? EntryId {get;set;}
         internal EntryDto EntryDto { get; set; } = new WordDto();
         internal EntryType SelectedEntryType { get; set; } = EntryType.Word;
         internal void HandleEntryTypeChange(ChangeEventArgs e)
@@ -25,6 +29,5 @@ namespace chldr_ui.ViewModels
                 };
             }
         }
-
     }
 }

@@ -1,0 +1,30 @@
+﻿@inherits EditEntryViewModel
+@page "/entry/edit/{EntryId?}"
+
+<h3>New Entry</h3>
+
+<div class="form-group">
+    <label for="entryType">Entry Type</label>
+    <select class="form-control" id="entryType" @onchange="@HandleEntryTypeChange">
+        <option value="@(EntryType.Word)">Word</option>
+        <option value="@(EntryType.Phrase)">Phrase</option>
+        <option value="@(EntryType.Text)">Text</option>
+    </select>
+</div>
+
+@switch (SelectedEntryType)
+{
+    case EntryType.Word:
+        <WordEditView EntryId="@EntryId"></WordEditView>
+        break;
+
+    case EntryType.Phrase:
+        break;
+
+    case EntryType.Text:
+        <h1>Text</h1>
+        break;
+
+    default:
+        break;
+}

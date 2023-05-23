@@ -46,7 +46,7 @@
 
                 @if (UserStore?.ActiveSession.Status == SessionStatus.LoggedIn)
                 {
-                    <a href="/word/edit/@Word?.WordId"><i class="bi bi-pencil"></i></a>
+                    <a href="/entry/edit/@Word?.EntryId"><i class="bi bi-pencil"></i></a>
                     <i class="bi bi-recycle" @onclick="@DeleteEntry"></i>
                 }
             </div>

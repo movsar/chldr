@@ -6,7 +6,7 @@ using MongoDB.Bson;
 
 namespace chldr_ui.ViewModels
 {
-    public class PhraseEditViewModel : EntryEditViewModelBase<PhraseDto, PhraseValidator>
+    public class PhraseEditViewModel : EditEntryViewModelBase<PhraseDto, PhraseValidator>
     {
         #region Properties, Fields and Events
         [Parameter]

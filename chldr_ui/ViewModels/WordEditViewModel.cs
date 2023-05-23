@@ -1,25 +1,42 @@
 ﻿using chldr_data.Enums;
-using chldr_data.Models;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models.Words;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
-using Microsoft.AspNetCore.Components;
-using MongoDB.Bson;
 using chldr_data.DatabaseObjects.Models;
 
 namespace chldr_ui.ViewModels
 {
-    public class WordEditViewModel : EntryEditViewModelBase<WordDto, WordValidator>
+    public class WordEditViewModel : EditEntryViewModelBase<WordDto, WordValidator>
     {
         #region Properties
-        [Inject] NavigationManager NavigationManager { get; set; }
-        [Parameter]
-        public string? wordId { get; set; }
+        public string? WordId { get; set; }
         public WordDto? Word { get; set; }
-        public int GrammaticalClass1 { get; set; }
-        public int GrammaticalClass2 { get; set; }
         #endregion
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            if (string.IsNullOrEmpty(EntryId))
+            {
+                return;
+            }
+
+            // Get current word from cached results
+            var existingWord = ContentStore.CachedSearchResult.Entries
+                .Where(e => (EntryType)e.Type == EntryType.Word)
+                .Cast<WordModel>()
+                .FirstOrDefault(w => w.EntryId == this.EntryId);
+
+            if (existingWord == null)
+            {
+                existingWord = (WordModel)ContentStore.GetEntryById(EntryId);
+            }
+
+            Word = WordDto.FromModel(existingWord);
+            InitializeViewModel(Word);
+        }
 
         public async Task Save()
         {
@@ -32,30 +49,6 @@ namespace chldr_ui.ViewModels
 
             await ContentStore.UpdateWord(UserModel.FromDto(UserStore.ActiveSession.User!), Word);
             NavigationManager.NavigateTo("/");
-        }
-
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-
-            if (string.IsNullOrEmpty(this.wordId))
-            {
-                return;
-            }
-
-            // Get current word from cached results
-            var existingWord = ContentStore.CachedSearchResult.Entries
-                .Where(e => (EntryType)e.Type == EntryType.Word)
-                .Cast<WordModel>()
-                .FirstOrDefault(w => w.WordId == this.wordId);
-
-            if (existingWord == null)
-            {
-                existingWord = ContentStore.GetWordById(this.wordId);
-            }
-
-            Word = WordDto.FromModel(existingWord);
-            InitializeViewModel(Word);
         }
     }
 }

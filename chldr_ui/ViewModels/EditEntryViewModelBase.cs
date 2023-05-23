@@ -6,7 +6,7 @@ using MongoDB.Bson;
 
 namespace chldr_ui.ViewModels
 {
-    public abstract class EntryEditViewModelBase<TDto, TValidator> : EditFormViewModelBase<TDto, TValidator>
+    public abstract class EditEntryViewModelBase<TDto, TValidator> : EditFormViewModelBase<TDto, TValidator>
         where TValidator : AbstractValidator<TDto>
     {
         #region Properties, Fields etc
