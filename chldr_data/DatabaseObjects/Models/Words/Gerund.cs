@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace chldr_data.DatabaseObjects.Models.Words
 {
-    public class GerundModel : WordModel
+    public class Gerund : WordModel
     {
     }
 }

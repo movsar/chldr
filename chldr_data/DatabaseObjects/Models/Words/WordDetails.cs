@@ -4,20 +4,20 @@ using chldr_data.Interfaces;
 
 namespace chldr_data.DatabaseObjects.Models.Words
 {
-    public class WordDetailsModel : IWordDetails
+    public class WordDetails : IWordDetails
     {
-        public WordDetailsModel()
+        public WordDetails()
         {
             // Empty constructor
         }
-        public WordDetailsModel(IWord word, PartOfSpeech partOfSpeech)
+        public WordDetails(IWord word, PartOfSpeech partOfSpeech)
         {
             switch (partOfSpeech)
             {
                 case PartOfSpeech.Undefined:
                     break;
                 case PartOfSpeech.Verb:
-                    var verb = word as VerbModel;
+                    var verb = word as Verb;
                     if (verb == null)
                     {
                         return;

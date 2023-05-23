@@ -9,10 +9,7 @@ namespace chldr_ui.ViewModels
 {
     public class WordEditViewModel : EditEntryViewModelBase<WordDto, WordValidator>
     {
-        #region Properties
-        public string? WordId { get; set; }
-        public WordDto? Word { get; set; }
-        #endregion
+        public WordDto? Word { get; set; } = new WordDto();
 
         protected override void OnInitialized()
         {

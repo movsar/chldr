@@ -3,7 +3,7 @@
 namespace chldr_data.DatabaseObjects.Models.Words
 {
     // Прилагательное
-    public class AdjectiveModel : WordModel
+    public class Adjective : WordModel
     {
         // качественные и относительные
         public AdjectiveSemanticType SemanticType { get; set; }

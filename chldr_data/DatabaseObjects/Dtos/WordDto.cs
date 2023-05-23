@@ -10,9 +10,6 @@ namespace chldr_data.DatabaseObjects.Dtos
     // ! All public properties of this class must have setters, to allow serialization
     public class WordDto : EntryDto, IWord
     {
-        [JsonConstructor]
-        public WordDto() { }
-
         public static WordDto FromModel(WordModel wordModel)
         {
             var wordDto = new WordDto()
@@ -25,7 +22,7 @@ namespace chldr_data.DatabaseObjects.Dtos
                 Content = wordModel.Content,
                 Notes = wordModel.Notes,
                 PartOfSpeech = wordModel.PartOfSpeech,
-                AdditionalDetails = new WordDetailsModel(wordModel, wordModel.PartOfSpeech)
+                AdditionalDetails = new WordDetails(wordModel, wordModel.PartOfSpeech)
             };
 
             wordDto.Translations.AddRange(wordModel.Translations.Select(t => TranslationDto.FromModel(t)).ToList());
@@ -34,10 +31,10 @@ namespace chldr_data.DatabaseObjects.Dtos
 
         #region Main Details
         public string WordId { get; set; }
-        public override string Content { get; set; }
+        public override string Content { get; set; } = string.Empty;
         public string Notes { get; set; } = string.Empty;
         public PartOfSpeech PartOfSpeech { get; set; }
         #endregion
-        public WordDetailsModel AdditionalDetails { get; set; }
+        public WordDetails AdditionalDetails { get; set; } = new();
     }
 }

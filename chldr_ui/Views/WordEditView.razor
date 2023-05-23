@@ -1,8 +1,6 @@
 ﻿@inherits WordEditViewModel;
 
 <h3>@Localizer["PageTitle:Edit_word"]</h3>
-@if (!string.IsNullOrEmpty(Word?.Content))
-{
 
     <form class="col-8">
         <div class="form-outline mb-2">
@@ -151,4 +149,3 @@
         <button class="btn btn-primary" @onclick="@Save">Save</button>
         @*<button class="btn btn-primary">Save and add another</button>*@
     </div>
-}

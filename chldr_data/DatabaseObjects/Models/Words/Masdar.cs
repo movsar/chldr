@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace chldr_data.DatabaseObjects.Models.Words
 {
-    public class ConjunctionModel : WordModel
+    public class Masdar : WordModel
     {
     }
 }

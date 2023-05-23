@@ -2,7 +2,7 @@
 
 namespace chldr_data.DatabaseObjects.Models.Words
 {
-    public class VerbModel : WordModel
+    public class Verb : WordModel
     {
         public VerbTense Tense { get; set; }
         public VerbConjugation Conjugation { get; set; }

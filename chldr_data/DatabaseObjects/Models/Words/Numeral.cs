@@ -2,7 +2,7 @@
 
 namespace chldr_data.DatabaseObjects.Models.Words
 {
-    public class NumeralModel : WordModel
+    public class Numeral : WordModel
     {
         public Complexity Complexity { get; set; }
         public NumericalCategory Category { get; set; }
