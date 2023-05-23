@@ -1,5 +1,4 @@
-﻿using chldr_data.Factories;
-using chldr_data.Interfaces;
+﻿using chldr_data.Interfaces;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Repositories;
@@ -32,12 +31,10 @@ namespace chldr_native.Extensions
         {
             // Data
             appBuilder.Services.AddSingleton<ServiceLocator>();
-            appBuilder.Services.AddSingleton<UserService>();
+            appBuilder.Services.AddScoped<UserService>();
             appBuilder.Services.AddSingleton<IGraphQLRequestSender, GraphQLRequestSender>();
             appBuilder.Services.AddSingleton<AuthService>();
-            appBuilder.Services.AddSingleton<IDataSourceService, SyncedRealmService>();
-            appBuilder.Services.AddSingleton<IDataSourceService, OfflineRealmService>();
-            appBuilder.Services.AddSingleton<IRealmServiceFactory, RealmServiceFactory>();
+            appBuilder.Services.AddSingleton<IDataSourceService, RealmDataSource>();
             appBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
 
             // Shared

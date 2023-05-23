@@ -21,7 +21,7 @@ namespace chldr_tools
             _networkService = new NetworkService();
             _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Windows);
 
-            var realmService = new OfflineRealmService(_fileService, _exceptionHandler);
+            var realmService = new RealmDataSource(_fileService, _exceptionHandler);
             realmService.Initialize();
 
         //    var databaseOperations = new DatabaseOperations();

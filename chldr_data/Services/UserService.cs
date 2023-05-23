@@ -1,5 +1,4 @@
 ﻿using chldr_data.Enums;
-using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.DatabaseObjects.Interfaces;
@@ -16,79 +15,32 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Realms;
 using Realms.Sync;
+using MySqlX.XDevAPI;
 
 namespace chldr_data.Services
 {
     public class UserService
     {
-        public event Action<IUser, SessionStatus>? UserStateHasChanged;
+        public event Action<ActiveSession>? UserStateHasChanged;
         private readonly NetworkService _networkService;
-        private readonly IRealmServiceFactory _realmServiceFactory;
         private readonly AuthService _authService;
-        private readonly SyncedRealmService _dataSourceService;
+        private readonly IDataSourceService _dataSource;
+        private readonly LocalStorageService _localStorageService;
+        private ActiveSession _currentSession = new ActiveSession();
 
-        private App App => _dataSourceService.GetApp();
-        private Realm Database => _dataSourceService.GetDatabase();
-        public UserService(NetworkService networkService, IRealmServiceFactory realmServiceFactory, AuthService authService)
+        private Realm Database => _dataSource.GetDatabase();
+        public UserService(NetworkService networkService, IDataSourceService realmService, AuthService authService, LocalStorageService localStorageService)
         {
             _networkService = networkService;
-            _realmServiceFactory = realmServiceFactory;
             _authService = authService;
-            _dataSourceService = (realmServiceFactory.GetInstance(DataSourceType.Synced) as SyncedRealmService)!;
-            _dataSourceService.DatasourceInitialized += RealmService_DatasourceInitialized;
+            _dataSource = realmService;
+            _localStorageService = localStorageService;
+
+            _dataSource.DatasourceInitialized += RealmService_DatasourceInitialized;
         }
-        private async void RealmService_DatasourceInitialized(DataSourceType dataSourceType)
+        private void RealmService_DatasourceInitialized()
         {
-            if (dataSourceType != DataSourceType.Synced)
-            {
-                return;
-            }
-
-            if (App?.CurrentUser?.Provider == Credentials.AuthProvider.Anonymous)
-            {
-                return;
-            }
-
-            await Database.Subscriptions.WaitForSynchronizationAsync();
-            await Database.SyncSession.WaitForDownloadAsync();
-
-            var sessionStatus = GetCurrentUserSessionStatus();
-            var userInfo = GetActiveSession();
-
-            UserStateHasChanged?.Invoke(userInfo, sessionStatus);
-        }
-
-        private SessionStatus GetCurrentUserSessionStatus()
-        {
-            if (!_networkService.IsNetworUp || Database.SyncSession.State == SessionState.Inactive)
-            {
-                return SessionStatus.Offline;
-            }
-
-            if (App?.CurrentUser?.Id == null)
-            {
-                return SessionStatus.Anonymous;
-            }
-
-            if (App.CurrentUser.Provider == Credentials.AuthProvider.Anonymous)
-            {
-                return SessionStatus.Anonymous;
-            }
-
-            return SessionStatus.LoggedIn;
-        }
-
-        public UserModel GetActiveSession()
-        {
-            var appUserId = App.CurrentUser.Id;
-            var userEntity = Database.All<RealmUser>().FirstOrDefault(u => u.UserId == appUserId);
-
-            if (userEntity == null)
-            {
-                throw new Exception(AppConstants.DataErrorMessages.NoUserInfo);
-            }
-
-            return UserModel.FromEntity(userEntity);
+            // If there are things to be done after local database is initialized, do them here
         }
 
         public async Task<string> RegisterNewUserAsync(string email, string password)
@@ -108,29 +60,60 @@ namespace chldr_data.Services
 
         public async Task ConfirmUserAsync(string token)
         {
-             await _authService.ConfirmUserAsync(token);
+            await _authService.ConfirmUserAsync(token);
+        }
+        private async Task SaveActiveSession()
+        {
+            await _localStorageService.SetItem<ActiveSession>("session", _currentSession);
         }
 
-        public async Task<ActiveSession> LogInEmailPasswordAsync(string email, string password)
+        public async Task LogInEmailPasswordAsync(string email, string password)
         {
-            return await _authService.LogInEmailPasswordAsync(email, password);
-        }
-
-        public void LogOutAsync()
-        {
-            var defaultUser = App.AllUsers.FirstOrDefault(u => u.Provider == Credentials.AuthProvider.Anonymous);
-            if (defaultUser != null)
+            try
             {
-                App.SwitchUser(defaultUser);
-            }
+                var _currentSession = await _authService.LogInEmailPasswordAsync(email, password);
+                await SaveActiveSession();
 
-            var offlineRealmService = (_realmServiceFactory.GetInstance(DataSourceType.Offline) as OfflineRealmService)!;
-            offlineRealmService.Initialize();
+                UserStateHasChanged?.Invoke(_currentSession);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task LogOutAsync()
+        {
+            _currentSession.Clear();
+            await SaveActiveSession();
+
+            UserStateHasChanged?.Invoke(_currentSession);
         }
 
         public async Task<ActiveSession> RefreshTokens(string refreshToken)
         {
             return await _authService.RefreshTokens(refreshToken);
         }
+
+        public async Task RestoreLastSession()
+        {
+            // Get last session info from the local storage
+            var session = await _localStorageService.GetItem<ActiveSession>("session");
+            if (session != null)
+            {
+                _currentSession = session;
+                UserStateHasChanged?.Invoke(_currentSession);
+            }
+
+            var expired = DateTimeOffset.UtcNow > _currentSession.AccessTokenExpiresIn;
+            if (expired && !string.IsNullOrWhiteSpace(_currentSession.RefreshToken))
+            {
+                // Try to refresh Access Token
+                _currentSession = await RefreshTokens(_currentSession.RefreshToken);
+                await SaveActiveSession();
+                UserStateHasChanged?.Invoke(_currentSession);
+            }
+        }
+
     }
 }

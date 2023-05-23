@@ -10,34 +10,26 @@ namespace chldr_shared.Stores
     public class UserStore
     {
         #region Properties, Events and Fields
-        public event Action UserStateHasChanged;
 
-        private readonly LocalStorageService _localStorageService;
-        private readonly EnvironmentService _environmentService;
         private readonly UserService _userService;
         private readonly ExceptionHandler _exceptionHandler;
 
         public ActiveSession ActiveSession { get; private set; } = new ActiveSession();
+        public Action UserStateHasChanged { get; set; }
         #endregion
 
-        public UserStore(UserService userService, ExceptionHandler exceptionHandler, EnvironmentService environmentService, NetworkService networkService, LocalStorageService localStorageService)
+        public UserStore(UserService userService, ExceptionHandler exceptionHandler)
         {
             // Let people log in if they want (on prod turn off this for Web)
-            if (/*environmentService.CurrentPlatform != Platforms.Web &&*/ networkService.IsNetworUp)
-            {
-                ActiveSession.Status = SessionStatus.Anonymous;
-            }
-
-            _localStorageService = localStorageService;
-            _environmentService = environmentService;
-            _userService = userService;
             _exceptionHandler = exceptionHandler;
+            _userService = userService;
+            _userService.UserStateHasChanged += UserStore_UserStateHasChanged;
 
             Task.Run(async () =>
             {
                 try
                 {
-                    await RestoreLastSession();
+                    await _userService.RestoreLastSession();
                 }
                 catch (Exception ex)
                 {
@@ -46,30 +38,10 @@ namespace chldr_shared.Stores
             });
         }
 
-        private async Task SaveActiveSession()
+        private void UserStore_UserStateHasChanged(ActiveSession activeSession)
         {
-            await _localStorageService.SetItem<ActiveSession>("session", ActiveSession);
-        }
-
-        private async Task RestoreLastSession()
-        {
-            // Get last session info from the local storage
-            var session = await _localStorageService.GetItem<ActiveSession>("session");
-            if (session != null)
-            {
-                ActiveSession = session;
-                UserStateHasChanged?.Invoke();
-            }
-
-            var expired = DateTimeOffset.UtcNow > ActiveSession.AccessTokenExpiresIn;
-            if (expired && !string.IsNullOrWhiteSpace(ActiveSession.RefreshToken))
-            {
-                // Try to refresh Access Token
-                ActiveSession = await _userService.RefreshTokens(ActiveSession.RefreshToken);
-                await SaveActiveSession();
-                UserStateHasChanged?.Invoke();
-            }
-
+            ActiveSession = activeSession;
+            UserStateHasChanged?.Invoke();
         }
 
         public async Task<string> RegisterNewUser(string email, string password)
@@ -79,18 +51,7 @@ namespace chldr_shared.Stores
 
         public async Task LogInEmailPasswordAsync(string email, string password)
         {
-            try
-            {
-                ActiveSession = await _userService.LogInEmailPasswordAsync(email, password);
-                await SaveActiveSession();
-
-                // TODO: Save somewhere refresh and access tokens with expiresIn value
-                UserStateHasChanged?.Invoke();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            await _userService.LogInEmailPasswordAsync(email, password);
         }
 
         public async Task ConfirmUserAsync(string token)
@@ -110,10 +71,7 @@ namespace chldr_shared.Stores
 
         public async Task LogOutAsync()
         {
-            _userService.LogOutAsync();
-            ActiveSession.Clear();
-            await SaveActiveSession();
-            UserStateHasChanged?.Invoke();
+            await _userService.LogOutAsync();
         }
     }
 }

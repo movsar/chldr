@@ -1,7 +1,6 @@
 
 
 using chldr_data.Enums.WordDetails;
-using chldr_data.Factories;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Repositories;

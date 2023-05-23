@@ -1,5 +1,4 @@
-﻿using chldr_data.Factories;
-using chldr_data.Interfaces;
+﻿using chldr_data.Interfaces;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Repositories;
@@ -23,12 +22,11 @@ namespace chldr_data.tests.Services
             _networkService = new NetworkService();
             _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Windows);
 
-            var realmService = new OfflineRealmService(_fileService, _exceptionHandler);
-            var realmServiceFactory = new RealmServiceFactory(new List<IDataSourceService>() { realmService });
+            var realmService = new RealmDataSource(_fileService, _exceptionHandler);
             var serviceLocator = new ServiceLocator();
             var requestSender = new GraphQLRequestSender(_exceptionHandler);
-            _dataAccess = new DataAccess(serviceLocator, realmServiceFactory, _exceptionHandler, _environmentService, _networkService, requestSender);
-            _dataAccess.SetActiveDataservice(Enums.DataSourceType.Offline);
+            var realmDataSource = new RealmDataSource(_fileService, _exceptionHandler);
+            _dataAccess = new DataAccess(serviceLocator, _exceptionHandler, _environmentService, _networkService, realmDataSource, requestSender);
         }
 
         internal static IDataAccess GetTestDataAccess()

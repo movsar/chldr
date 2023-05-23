@@ -70,8 +70,6 @@ namespace chldr_shared.Stores
             EntriesRepository.EntryUpdated += EntriesRepository_EntryUpdated;
             WordsRepository.WordUpdated += EntriesRepository_WordUpdated;
             _dataAccess.DatasourceInitialized += DataAccess_DatasourceInitialized;
-
-            _dataAccess.SetActiveDataservice(DataSourceType.Offline);
         }
 
         private async void EntriesRepository_WordUpdated(WordModel updatedWord)
@@ -175,7 +173,7 @@ namespace chldr_shared.Stores
         }
         #endregion
 
-        public void DataAccess_DatasourceInitialized(DataSourceType dataSourceType)
+        public void DataAccess_DatasourceInitialized()
         {
             if (Languages.Count == 0)
             {

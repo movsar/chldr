@@ -15,7 +15,7 @@ namespace chldr_data.Services
     {
         private const string myRealmAppId = "dosham-lxwuu";
         private const string myTestRealmAppId = "dosham-test-oaqel";
-        public event Action<DataSourceType>? DatasourceInitialized;
+        public event Action? DatasourceInitialized;
 
         private App? _app;
         private FlexibleSyncConfiguration? _config;
@@ -150,7 +150,12 @@ namespace chldr_data.Services
                 synchTask.Wait();
             }
 
-            DatasourceInitialized?.Invoke(DataSourceType.Synced);
+            DatasourceInitialized?.Invoke();
+        }
+
+        public void RemoveAllEntries()
+        {
+            throw new NotImplementedException();
         }
     }
 }

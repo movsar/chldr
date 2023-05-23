@@ -8,35 +8,36 @@ using chldr_utils;
 using chldr_utils.Services;
 using System;
 using System.Collections.Specialized;
+using Realms;
 
 namespace chldr_data.Services
 {
     public class DataAccess : IDataAccess
     {
-        public event Action<DataSourceType>? DatasourceInitialized;
+        public event Action? DatasourceInitialized;
 
         private readonly ServiceLocator _serviceProvider;
         protected readonly ExceptionHandler _exceptionHandler;
         protected readonly NetworkService _networkService;
-        protected readonly IRealmServiceFactory _realmServiceFactory;
         private readonly EnvironmentService _environmentService;
+        private readonly IDataSourceService _realmDataSource;
+
         public IGraphQLRequestSender RequestSender { get; set; }
 
         public DataAccess(
             ServiceLocator serviceProvider,
-            IRealmServiceFactory realmServiceFactory,
             ExceptionHandler exceptionHandler,
             EnvironmentService environmentService,
             NetworkService networkService,
+            IDataSourceService realmDataSource,
             IGraphQLRequestSender requestSender
             )
         {
             _serviceProvider = serviceProvider;
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
-            _realmServiceFactory = realmServiceFactory;
             _environmentService = environmentService;
-
+            _realmDataSource = realmDataSource;
             RequestSender = requestSender;
 
             serviceProvider.Register(new EntriesRepository<EntryModel>(this));
@@ -48,34 +49,9 @@ namespace chldr_data.Services
             serviceProvider.Register(new UsersRepository(this));
         }
 
-        private void DataSource_Initialized(DataSourceType dataSourceType)
+        private void DataSource_Initialized()
         {
-            _realmServiceFactory.CurrentDataSource = dataSourceType;
-            DatasourceInitialized?.Invoke(dataSourceType);
-
-            // Switch to synced if available
-            Task.Run(async () =>
-            {
-                try
-                {
-                    if (dataSourceType == DataSourceType.Offline && _networkService.IsNetworUp && _environmentService.CurrentPlatform != chldr_shared.Enums.Platforms.Web)
-                    {
-                        await Task.Delay(250);
-                        //SetActiveDataservice(DataSourceType.Synced);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    if (ex.Message.Contains("998"))
-                    {
-                        _exceptionHandler.LogError(new Exception("NETWORK_ERROR"));
-                    }
-                    else
-                    {
-                        _exceptionHandler.LogError(ex);
-                    }
-                }
-            });
+            DatasourceInitialized?.Invoke();
         }
 
         public Repository GetRepository<T>() where T : IEntity
@@ -121,29 +97,16 @@ namespace chldr_data.Services
             return (Repository)repository;
         }
 
-        public IDataSourceService GetActiveDataservice()
-        {
-            var dataSource = _realmServiceFactory.GetActiveInstance();
-            return dataSource;
-        }
-
-        public void SetActiveDataservice(DataSourceType dataSourceType)
-        {
-            var dataSource = _realmServiceFactory.GetInstance(dataSourceType);
-            dataSource.DatasourceInitialized += DataSource_Initialized;
-            dataSource.Initialize();
-        }
-
         public void RemoveAllEntries()
         {
             // This method is only used in test, it should never, ever be called in prod
-            if (_realmServiceFactory.CurrentDataSource == DataSourceType.Synced)
-            {
-                return;
-            }
 
-            var dataSource = _realmServiceFactory.GetInstance(DataSourceType.Offline) as OfflineRealmService;
-            dataSource?.RemoveAllEntries();
+            _realmDataSource?.RemoveAllEntries();
+        }
+
+        public Realm GetDatabase()
+        {
+            return _realmDataSource.GetDatabase();
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using chldr_data.Factories;
-using chldr_data.Interfaces;
+﻿using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.RealmEntities;
@@ -13,7 +12,7 @@ namespace chldr_data.Repositories
     public abstract class Repository
     {
         public IDataAccess DataAccess { get; }
-        public Realm Database => DataAccess.GetActiveDataservice().GetDatabase();
+        public Realm Database => DataAccess.GetDatabase();
         public Repository(IDataAccess dataAccess)
         {
             DataAccess = dataAccess;

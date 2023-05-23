@@ -20,7 +20,7 @@ namespace chldr_ui.ViewModels
         public void SignInWithFacebook() { }
         private async Task SignInWithEmailPassword()
         {
-            await UserStore.LogInEmailPasswordAsync(UserInfo.Email, UserInfo.Password);
+            await UserStore.LogInEmailPasswordAsync(UserInfo.Email!, UserInfo.Password!);
             NavigationManager!.NavigateTo("/");
         }
         private async Task ConfirmEmail(string token)

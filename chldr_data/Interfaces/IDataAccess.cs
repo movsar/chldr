@@ -9,9 +9,8 @@ namespace chldr_data.Interfaces
 {
     public interface IDataAccess
     {
-        event Action<DataSourceType> DatasourceInitialized;
-        void SetActiveDataservice(DataSourceType dataSourceType);
-        IDataSourceService GetActiveDataservice();
+        event Action DatasourceInitialized;
+        Realm GetDatabase();
         void RemoveAllEntries();
         Repository GetRepository<T>() where T : IEntity;
         IGraphQLRequestSender RequestSender { get; set; }

@@ -1,8 +1,6 @@
 ﻿@inherits EditEntryViewModel
 @page "/entry/edit/{EntryId?}"
 
-<h3>New Entry</h3>
-
 <div class="form-group">
     <label for="entryType">Entry Type</label>
     <select class="form-control" id="entryType" @onchange="@HandleEntryTypeChange">

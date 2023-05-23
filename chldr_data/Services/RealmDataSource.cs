@@ -6,17 +6,16 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_utils;
 using chldr_utils.Services;
 using Realms;
-using static Realms.Sync.MongoClient;
 
 namespace chldr_data.Services
 {
-    public class OfflineRealmService : IDataSourceService
+    public class RealmDataSource : IDataSourceService
     {
         private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
         private RealmConfigurationBase? _config;
 
-        public event Action<DataSourceType>? DatasourceInitialized;
+        public event Action? DatasourceInitialized;
 
         public Realm GetDatabase()
         {
@@ -31,10 +30,13 @@ namespace chldr_data.Services
             return Realm.GetInstance(_config);
         }
 
-        public OfflineRealmService(FileService fileService, ExceptionHandler exceptionHandler)
+        public RealmDataSource(FileService fileService, ExceptionHandler exceptionHandler)
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
+
+            InitializeConfiguration();
+            DatasourceInitialized?.Invoke();
         }
 
         private string KeyAsString()
@@ -68,13 +70,7 @@ namespace chldr_data.Services
             //realm.WriteCopy(new RealmConfiguration("whatever.realm"));
         }
 
-        public void Initialize()
-        {
-            InitializeConfiguration();
-            DatasourceInitialized?.Invoke(DataSourceType.Offline);
-        }
-
-        internal void RemoveAllEntries()
+        public void RemoveAllEntries()
         {
             var database = GetDatabase();
             database.Write(() =>
