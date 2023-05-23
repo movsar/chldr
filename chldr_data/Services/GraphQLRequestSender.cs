@@ -4,6 +4,7 @@ using GraphQL.Client.Serializer.Newtonsoft;
 using GraphQL;
 using Newtonsoft.Json.Linq;
 using chldr_utils;
+using System.Net.Sockets;
 
 namespace chldr_data.Services
 {
@@ -36,14 +37,23 @@ namespace chldr_data.Services
                     Errors = response.Errors,
                 };
             }
-            catch (GraphQLHttpRequestException graphQlException){
+            catch (GraphQLHttpRequestException graphQlException)
+            {
                 _exceptionHandler.LogError(graphQlException.Content);
                 throw new Exception("An error occurred while sending the request", graphQlException);
             }
             catch (Exception ex)
-            {                
+            {
                 _exceptionHandler.LogError(ex.Message);
-                throw new Exception("Unexpected error occurred", ex);
+
+                if (ex.Message.Contains("connection"))
+                {
+                    throw new Exception("Network error occurred", ex);
+                }
+                else
+                {
+                    throw new Exception("Unexpected error occurred", ex);
+                }
             }
         }
     }

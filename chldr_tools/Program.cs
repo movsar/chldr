@@ -2,6 +2,7 @@
 using chldr_utils.Services;
 using chldr_utils;
 using chldr_tools.Services;
+using chldr_data.Interfaces;
 
 namespace chldr_tools
 {
@@ -22,7 +23,7 @@ namespace chldr_tools
             _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Windows);
 
             var realmService = new RealmDataSource(_fileService, _exceptionHandler);
-            realmService.Initialize();
+            realmService.InitializeConfiguration();
 
         //    var databaseOperations = new DatabaseOperations();
         //    databaseOperations.CopySqlToRealm();
