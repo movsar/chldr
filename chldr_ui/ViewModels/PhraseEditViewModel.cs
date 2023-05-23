@@ -30,8 +30,7 @@ namespace chldr_ui.ViewModels
 
             var existingPhrase = ContentStore.GetCachedPhraseById(PhraseId);
             Phrase = PhraseDto.FromModel(existingPhrase);
-
-            InitializeViewModel(Phrase);
+            SourceId = Phrase.SourceId;
         }
 
         private void SavePhrase()

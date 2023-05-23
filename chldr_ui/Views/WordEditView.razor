@@ -119,23 +119,28 @@
                 {
                     <div class="form-outline mb-2">
                         @*   <select @bind="@Word.GrammaticalClasses[0]"
-                class="form-select"
-                title="@Localizer["Grammatical_class"]">
-                <option value="1" class="form-control">@Localizer["Class:1_v_b"]</option>
-                <option value="2" class="form-control">@Localizer["Class:2_y_b"]</option>
-                <option value="3" class="form-control">@Localizer["Class:3_y_y"]</option>
-                <option value="4" class="form-control">@Localizer["Class:4_d_d"]</option>
-                <option value="5" class="form-control">@Localizer["Class:5_b_b"]</option>
-                <option value="6" class="form-control">@Localizer["Class:6_b_d"]</option>
-                </select>*@
+                    class="form-select"
+                    title="@Localizer["Grammatical_class"]">
+                    <option value="1" class="form-control">@Localizer["Class:1_v_b"]</option>
+                    <option value="2" class="form-control">@Localizer["Class:2_y_b"]</option>
+                    <option value="3" class="form-control">@Localizer["Class:3_y_y"]</option>
+                    <option value="4" class="form-control">@Localizer["Class:4_d_d"]</option>
+                    <option value="5" class="form-control">@Localizer["Class:5_b_b"]</option>
+                    <option value="6" class="form-control">@Localizer["Class:6_b_d"]</option>
+                    </select>*@
                     </div>
                 }
             </div>
         </div>
     </div>
 
+    <h4 class="mt-2">
+        @Localizer["Translations"]:
+        <button class="btn btn-primary" @onclick="@NewTranslation">@Localizer["Add_new"]</button>
+    </h4>
+
     <div class="mt-2">
-        @foreach (var translation in Translations)
+        @foreach (var translation in Word.Translations)
         {
             <TranslationEditView Translation="@translation"></TranslationEditView>
         }

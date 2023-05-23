@@ -11,6 +11,11 @@ namespace chldr_ui.ViewModels
     {
         public WordDto? Word { get; set; } = new WordDto();
 
+        public void NewTranslation()
+        {
+            Word.Translations.Add(new TranslationDto());
+        }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -32,7 +37,7 @@ namespace chldr_ui.ViewModels
             }
 
             Word = WordDto.FromModel(existingWord);
-            InitializeViewModel(Word);
+            SourceId = Word.SourceId;
         }
 
         public async Task Save()
