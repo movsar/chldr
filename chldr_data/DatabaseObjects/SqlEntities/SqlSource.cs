@@ -7,7 +7,7 @@ namespace chldr_data.DatabaseObjects.SqlEntities;
 [Table("Source")]
 public class SqlSource : ISourceEntity
 {
-    public string SourceId { get; set; } = Guid.NewGuid().ToString();
+    public string SourceId { get; set; } 
     public string? UserId { get; set; }
     public string Name { get; set; } = null!;
     public string? Notes { get; set; }

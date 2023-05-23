@@ -6,7 +6,7 @@ namespace chldr_data.DatabaseObjects.SqlEntities;
 
 public class SqlSound
 {
-    public string SoundId { get; set; } = Guid.NewGuid().ToString();
+    public string SoundId { get; set; }
     public string UserId { get; set; } = null!;
     public string EntryId { get; set; } = null!;
     public string FileName { get; set; } = null!;

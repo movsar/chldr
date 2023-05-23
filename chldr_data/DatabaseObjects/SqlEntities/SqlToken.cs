@@ -6,6 +6,7 @@ namespace chldr_data.DatabaseObjects.SqlEntities;
 [Table("Tokens")]
 public partial class SqlToken
 {
+    // Change when you create a DTO
     public string TokenId { get; set; } = Guid.NewGuid().ToString();
     public string UserId { get; set; } = null!;
     // See, TokenType enum

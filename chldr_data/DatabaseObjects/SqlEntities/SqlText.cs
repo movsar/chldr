@@ -7,7 +7,7 @@ namespace chldr_data.DatabaseObjects.SqlEntities;
 
 public class SqlText : ITextEntity
 {
-    public string TextId { get; set; } = Guid.NewGuid().ToString();
+    public string TextId { get; set; }
     public string EntryId { get; set; } = null!;
     public string Content { get; set; } = null!;
     public string? Notes { get; set; }

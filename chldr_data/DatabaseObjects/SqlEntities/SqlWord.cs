@@ -7,7 +7,7 @@ namespace chldr_data.DatabaseObjects.SqlEntities;
 [Table("Word")]
 public class SqlWord : IWordEntity
 {
-    public string WordId { get; set; } = Guid.NewGuid().ToString();
+    public string WordId { get; set; }
     public string EntryId { get; set; } = null!;
     public string Content { get; set; } = null!;
     public string? Notes { get; set; }

@@ -7,7 +7,7 @@ namespace chldr_data.DatabaseObjects.RealmEntities;
 public class RealmEntry : RealmObject, IEntryEntity
 {
     [PrimaryKey]
-    public string EntryId { get; set; } = Guid.NewGuid().ToString();
+    public string EntryId { get; set; }
     [Ignored]
     public string? SourceId => Source.SourceId;
     public RealmUser User { get; set; } = null!;

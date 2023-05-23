@@ -30,7 +30,7 @@ namespace chldr_data.DatabaseObjects.Dtos
         }
 
         #region Main Details
-        public string WordId { get; set; }
+        public string WordId { get; set; } = Guid.NewGuid().ToString();
         public override string Content { get; set; } = string.Empty;
         public string Notes { get; set; } = string.Empty;
         public PartOfSpeech PartOfSpeech { get; set; }

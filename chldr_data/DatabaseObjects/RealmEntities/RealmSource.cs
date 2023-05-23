@@ -8,7 +8,7 @@ namespace chldr_data.DatabaseObjects.RealmEntities;
 public class RealmSource : RealmObject, ISourceEntity
 {
     [PrimaryKey]
-    public string SourceId { get; set; } = Guid.NewGuid().ToString();
+    public string SourceId { get; set; }
     public RealmUser? User { get; set; }
     public string Name { get; set; } = null!;
     public string? Notes { get; set; }

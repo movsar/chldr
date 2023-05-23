@@ -5,7 +5,7 @@ namespace chldr_data.DatabaseObjects.Dtos
 {
     public abstract class EntryDto : IEntry
     {
-        public string EntryId { get; set; }
+        public string EntryId { get; set; } = Guid.NewGuid().ToString();
         public string? SourceId { get; set; }
         public int Rate { get; set; }
         public abstract string Content { get; set; }

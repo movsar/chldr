@@ -5,12 +5,20 @@
     return;
 }
 
-<select @bind="@Translation.LanguageCode" class="form-select">
-    @foreach (var language in ContentStore.Languages)
-    {
-        <option value="@language.Code" class="form-control">@language.Name</option>
-    }
-</select>
+<div class="row">
+    <div class="col-10">
+        <select @bind="@Translation.LanguageCode" class="form-select">
+            @foreach (var language in ContentStore.Languages)
+            {
+                <option value="@language.Code" class="form-control">@language.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-1">
+        <button class="btn btn-danger" type="button" @onclick="@Delete">@Localizer["Delete"]</button>
+    </div>
+</div>
 
 <input type="text" class="form-control mt-2" autocomplete="off" disabled="@FormDisabled"
        placeholder="@Localizer["Enter_translation_text"]" required @bind="Translation.Content" />

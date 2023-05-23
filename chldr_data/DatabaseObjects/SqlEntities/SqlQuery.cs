@@ -5,7 +5,7 @@ namespace chldr_data.DatabaseObjects.SqlEntities;
 [Table("Query")]
 public class SqlQuery
 {
-    public string QueryId { get; set; } = Guid.NewGuid().ToString();
+    public string QueryId { get; set; } 
     public string UserId { get; set; } = null!;
     public string Content { get; set; } = null!;
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;

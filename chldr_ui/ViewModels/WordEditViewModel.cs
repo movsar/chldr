@@ -9,35 +9,43 @@ namespace chldr_ui.ViewModels
 {
     public class WordEditViewModel : EditEntryViewModelBase<WordDto, WordValidator>
     {
+        private bool isInitialized = false;
         public WordDto? Word { get; set; } = new WordDto();
-
-        public void NewTranslation()
-        {
-            Word.Translations.Add(new TranslationDto());
-        }
-
         protected override void OnInitialized()
         {
-            base.OnInitialized();
-
-            if (string.IsNullOrEmpty(EntryId))
+            if (!isInitialized)
             {
-                return;
+                isInitialized = true;
+
+                if (string.IsNullOrEmpty(EntryId))
+                {
+                    return;
+                }
+
+                // Get current word from cached results
+                var existingWord = ContentStore.CachedSearchResult.Entries
+                    .Where(e => (EntryType)e.Type == EntryType.Word)
+                    .Cast<WordModel>()
+                    .FirstOrDefault(w => w.EntryId == this.EntryId);
+
+                if (existingWord == null)
+                {
+                    existingWord = (WordModel)ContentStore.GetEntryById(EntryId);
+                }
+
+                Word = WordDto.FromModel(existingWord);
+                SourceId = Word.SourceId;
             }
+        }
+     
+        public async Task NewTranslation()
+        {
+            Word.Translations.Add(new TranslationDto());
+            await CallStateHasChangedAsync();
+        }
+        public async Task DeleteTranslation(string translationId)
+        {
 
-            // Get current word from cached results
-            var existingWord = ContentStore.CachedSearchResult.Entries
-                .Where(e => (EntryType)e.Type == EntryType.Word)
-                .Cast<WordModel>()
-                .FirstOrDefault(w => w.EntryId == this.EntryId);
-
-            if (existingWord == null)
-            {
-                existingWord = (WordModel)ContentStore.GetEntryById(EntryId);
-            }
-
-            Word = WordDto.FromModel(existingWord);
-            SourceId = Word.SourceId;
         }
 
         public async Task Save()

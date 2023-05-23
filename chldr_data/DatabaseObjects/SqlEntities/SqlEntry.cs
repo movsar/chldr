@@ -5,7 +5,7 @@ namespace chldr_data.DatabaseObjects.SqlEntities;
 [Table("Entry")]
 public class SqlEntry : IEntryEntity
 {
-    public string EntryId { get; set; } = Guid.NewGuid().ToString();
+    public string EntryId { get; set; }
     public string UserId { get; set; } = null!;
     public string SourceId { get; set; } = null!;
     public int Type { get; set; } = 0;

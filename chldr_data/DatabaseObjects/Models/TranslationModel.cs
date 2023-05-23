@@ -6,7 +6,7 @@ namespace chldr_data.DatabaseObjects.Models
     public class TranslationModel : ITranslation
     {
         private TranslationModel() { }
-        public string? TranslationId { get; internal set; }
+        public string TranslationId { get; internal set; }
         public string EntryId { get; set; }
         public string Content { get; set; }
         public LanguageModel Language { get; set; }

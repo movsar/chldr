@@ -6,7 +6,7 @@ namespace chldr_data.DatabaseObjects.RealmEntities;
 public class RealmWord : RealmObject, IWordEntity
 {
     [PrimaryKey]
-    public string WordId { get; set; } = Guid.NewGuid().ToString();
+    public string WordId { get; set; }
     public RealmEntry Entry { get; set; } = null!;
     public string Content { get; set; } = null!;
     public string? Notes { get; set; }

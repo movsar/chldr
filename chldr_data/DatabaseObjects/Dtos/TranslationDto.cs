@@ -10,7 +10,7 @@ namespace chldr_data.DatabaseObjects.Dtos
         public string LanguageCode { get; set; }
         public string Content { get; set; }
         public int Rate { get; set; } = 1;
-        public string? TranslationId { get; set; }
+        public string TranslationId { get; set; } = Guid.NewGuid().ToString();
         public string? LanguageId { get; set; }
         public string? Notes { get; set; }
         public TranslationDto() { }

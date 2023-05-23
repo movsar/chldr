@@ -7,7 +7,7 @@ namespace chldr_data.DatabaseObjects.SqlEntities;
 [Table("Phrase")]
 public class SqlPhrase : IPhraseEntity
 {
-    public string PhraseId { get; set; } = Guid.NewGuid().ToString();
+    public string PhraseId { get; set; }
     public string EntryId { get; set; } = null!;
     public string Content { get; set; } = null!;
     public string? Notes { get; set; }

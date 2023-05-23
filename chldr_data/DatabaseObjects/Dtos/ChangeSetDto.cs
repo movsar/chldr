@@ -7,7 +7,7 @@ namespace chldr_data.DatabaseObjects.Dtos
     public class ChangeSetDto : IChangeSet
     {
         public long ChangeSetIndex { get; set; }
-        public string ChangeSetId { get; set; }
+        public string ChangeSetId { get; set; } = Guid.NewGuid().ToString();
         public RecordType RecordType { get; set; }
         public string UserId { get; set; }
         public string RecordId { get; set; }

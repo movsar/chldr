@@ -7,7 +7,7 @@ namespace chldr_data.DatabaseObjects.Dtos
 {
     public class UserDto : IUser
     {
-        public string? UserId { get; set; }
+        public string UserId { get; set; } = Guid.NewGuid().ToString();
         public string? Email { get; set; }
         [JsonIgnore]
         public string? Password { get; set; }

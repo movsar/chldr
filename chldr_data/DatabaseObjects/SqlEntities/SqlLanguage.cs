@@ -7,7 +7,7 @@ namespace chldr_data.DatabaseObjects.SqlEntities;
 [Table("Language")]
 public class SqlLanguage : ILanguageEntity
 {
-    public string LanguageId { get; set; } = Guid.NewGuid().ToString();
+    public string LanguageId { get; set; }
     public string? UserId { get; set; }
     public string Name { get; set; } = null!;
     public string Code { get; set; } = null!;

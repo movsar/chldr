@@ -134,15 +134,18 @@
         </div>
     </div>
 
-    <h4 class="mt-2">
+    <h5 class="mt-2">
         @Localizer["Translations"]:
-        <button class="btn btn-primary" @onclick="@NewTranslation">@Localizer["Add_new"]</button>
-    </h4>
+        <button class="btn btn-success" type="button" @onclick="@(() => NewTranslation())">@Localizer["Add_new"]</button>
+    </h5>
 
     <div class="mt-2">
         @foreach (var translation in Word.Translations)
         {
-            <TranslationEditView Translation="@translation"></TranslationEditView>
+            <div class="mb-4">
+                <TranslationEditView Translation="@translation" OnDelete="@(async (translationId) => await DeleteTranslation(translationId))"></TranslationEditView>
+                @*<hr/>*@
+            </div>
         }
     </div>
 </form>

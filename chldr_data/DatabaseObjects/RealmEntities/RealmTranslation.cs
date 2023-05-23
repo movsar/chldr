@@ -6,7 +6,7 @@ namespace chldr_data.DatabaseObjects.RealmEntities;
 public class RealmTranslation : RealmObject, ITranslationEntity
 {
     [PrimaryKey]
-    public string TranslationId { get; set; } = Guid.NewGuid().ToString();
+    public string TranslationId { get; set; } 
     public RealmLanguage Language { get; set; } = null!;
     public RealmEntry Entry { get; set; } = null!;
     public RealmUser User { get; set; } = null!;

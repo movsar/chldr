@@ -8,7 +8,7 @@ namespace chldr_data.DatabaseObjects.RealmEntities;
 public class RealmSound : RealmObject, ISoundEntity
 {
     [PrimaryKey]
-    public string SoundId { get; set; } = Guid.NewGuid().ToString();
+    public string SoundId { get; set; }
     public RealmUser User { get; set; } = null!;
     public RealmEntry Entry { get; set; } = null!;
     public string FileName { get; set; } = null!;

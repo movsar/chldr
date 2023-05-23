@@ -1,9 +1,9 @@
 ﻿@inherits EditEntryViewModel
 @page "/entry/edit/{EntryId?}"
 
-<div class="form-group">
-    <label for="entryType">Entry Type</label>
-    <select class="form-control" id="entryType" @onchange="@HandleEntryTypeChange">
+<div class="form-group mt-2 mb-2">
+    <h5>@Localizer["Select_entry_type"]</h5>
+    <select class="form-control" @onchange="@HandleEntryTypeChange">
         <option value="@(EntryType.Word)">Word</option>
         <option value="@(EntryType.Phrase)">Phrase</option>
         <option value="@(EntryType.Text)">Text</option>

@@ -8,7 +8,7 @@ namespace chldr_data.DatabaseObjects.SqlEntities;
 [Table("Translation")]
 public class SqlTranslation : ITranslationEntity
 {
-    public string TranslationId { get; set; } = Guid.NewGuid().ToString();
+    public string TranslationId { get; set; } 
     public string LanguageId { get; set; } = null!;
     public string EntryId { get; set; } = null!;
     public string UserId { get; set; } = null!;

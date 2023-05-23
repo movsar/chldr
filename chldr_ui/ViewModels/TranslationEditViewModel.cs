@@ -9,15 +9,22 @@ namespace chldr_ui.ViewModels
     {
         #region Fields and Properties
         [Parameter]
-        public TranslationDto? Translation { get; set; }
+        public TranslationDto Translation { get; set; } = new TranslationDto();
         #endregion
 
+        [Parameter]
+        public Action<string> OnDelete { get; set; }
         private TranslationDto CreateTranslationDto(string entryId, string translationId)
         {
             var entry = ContentStore.CachedSearchResult.Entries
                 .First(e => e.EntryId == entryId);
 
             return TranslationDto.FromModel(entry.Translations.First(t => t.TranslationId == translationId));
+        }
+
+        public void Delete()
+        {
+            OnDelete?.Invoke(Translation.TranslationId);
         }
 
         protected override void OnInitialized()
