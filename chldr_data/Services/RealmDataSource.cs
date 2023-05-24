@@ -60,12 +60,11 @@ namespace chldr_data.Services
         {
             _config = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
             {
-                SchemaVersion = 5
+                SchemaVersion = 8
             };
 
             var realm = GetDatabase();
             LocalDatabaseInitialized?.Invoke();
-            //realm.WriteCopy(new RealmConfiguration("whatever.realm"));
         }
 
         public void RemoveAllEntries()

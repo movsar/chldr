@@ -6,7 +6,7 @@ namespace chldr_data.DatabaseObjects.Models
     public class LanguageModel : ILanguage
     {
         private LanguageModel() { } 
-        public string? LanguageId { get; set; }
+        public string LanguageId { get; set; }
         public string Code { get; set; } = string.Empty;
         public string Name { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
@@ -15,6 +15,7 @@ namespace chldr_data.DatabaseObjects.Models
         {
             return new LanguageModel()
             {
+                LanguageId = languageEntity.LanguageId,
                 Code = languageEntity.Code,
                 Name = languageEntity.Name ?? string.Empty
             };

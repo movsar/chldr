@@ -23,7 +23,7 @@ namespace chldr_data.DatabaseObjects.Models
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Patronymic { get; set; }
-        public string? UserId { get; set; }
+        public string UserId { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
         public string? ImagePath { get; set; }

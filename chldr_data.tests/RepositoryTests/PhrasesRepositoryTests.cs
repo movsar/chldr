@@ -1,6 +1,7 @@
 ﻿using chldr_data.Enums.WordDetails;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Repositories;
+using Realms.Sync;
 
 namespace chldr_data.tests.RepositoryTests
 {
@@ -9,6 +10,7 @@ namespace chldr_data.tests.RepositoryTests
         public async Task GetWordById_ExpectedInput_ReturnsWord()
         {
             // 1. Создаем новый объект Слово со всеми необходимыми зависимостями
+            var user= new UserDto();
             WordDto wordToInsert = new WordDto()
             {
                 Content = "Hello",
@@ -16,8 +18,8 @@ namespace chldr_data.tests.RepositoryTests
                 SourceId = SourcesRepository.GetAllNamedSources().First().SourceId,
             };
             wordToInsert.AdditionalDetails.Classes[0] = 1;
-
-            wordToInsert.Translations.Add(new TranslationDto("RUS")
+            
+            wordToInsert.Translations.Add(new TranslationDto(wordToInsert.EntryId, user.UserId)
             {
                 Content = "Привет",
             });

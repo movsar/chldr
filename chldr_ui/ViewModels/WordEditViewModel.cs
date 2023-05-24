@@ -11,6 +11,7 @@ namespace chldr_ui.ViewModels
     {
         private bool isInitialized = false;
         public WordDto Word { get; set; } = new WordDto();
+        
         protected override void OnInitialized()
         {
             if (!isInitialized)
@@ -41,7 +42,9 @@ namespace chldr_ui.ViewModels
         List<string> _newTranslationIds = new List<string>();
         public async Task NewTranslation()
         {
-            var translation = new TranslationDto();
+            var user = UserModel.FromDto(UserStore.ActiveSession.User!);
+            var translation = new TranslationDto(EntryId, user.UserId);
+
             // Needed to know which translations are new, in case they need to be removed
             _newTranslationIds.Add(translation.TranslationId);
 
@@ -63,17 +66,21 @@ namespace chldr_ui.ViewModels
             Word.Translations.Remove(Word.Translations.Find(t => t.TranslationId.Equals(translationId))!);
             await RefreshUi();
         }
-
+        public async Task ValidateAndSubmitAsync()
+        {
+            await ValidateAndSubmitAsync(Word, Save);
+        }
         public async Task Save()
         {
             if (Word == null)
             {
-                var ex = new Exception("Word must not be empty");
+                var ex = new Exception(Localizer["Error:Word_must_not_be_empty"]);
                 //_exceptionHandler.ProcessError(ex);
                 throw ex;
             }
 
-            await ContentStore.UpdateWord(UserModel.FromDto(UserStore.ActiveSession.User!), Word);
+            var user = UserModel.FromDto(UserStore.ActiveSession.User!);
+            await ContentStore.UpdateWord(user, Word);
             NavigationManager.NavigateTo("/");
         }
     }

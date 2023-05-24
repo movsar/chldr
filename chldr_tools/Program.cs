@@ -23,7 +23,7 @@ namespace chldr_tools
             _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Windows);
 
             var realmService = new RealmDataSource(_fileService, _exceptionHandler);
-            realmService.InitializeConfiguration();
+            realmService.InitializeDatabase();
 
         //    var databaseOperations = new DatabaseOperations();
         //    databaseOperations.CopySqlToRealm();

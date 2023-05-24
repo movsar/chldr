@@ -6,7 +6,7 @@ namespace chldr_data.DatabaseObjects.RealmEntities;
 public class RealmLanguage : RealmObject, ILanguageEntity
 {
     [PrimaryKey]
-    public string LanguageId { get; }
+    public string LanguageId { get; set; }
     public RealmUser? User { get; set; }
     [Ignored]
     public string? UserId => User?.UserId;

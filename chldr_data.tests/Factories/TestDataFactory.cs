@@ -42,7 +42,7 @@ namespace chldr_data.tests.Services
             wordDto.Content = content;
             wordDto.Notes = notes;
             wordDto.SourceId = source.SourceId;
-            wordDto.Translations.Add(new TranslationDto(languageCode)
+            wordDto.Translations.Add(new TranslationDto()
             {
                 Content = translation,
                 Rate = 5

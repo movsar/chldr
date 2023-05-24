@@ -16,8 +16,8 @@ namespace chldr_data.Services
         public GraphQLRequestSender(ExceptionHandler exceptionHandler)
         {
             string devAppHost = "https://localhost:7065/graphql/";
-            string appHost = "http://localhost:5000/graphql/";
-            _graphQLClient = new GraphQLHttpClient($"{appHost}/graphql/", new NewtonsoftJsonSerializer());
+            string prodHost = "http://localhost:5000/graphql/";
+            _graphQLClient = new GraphQLHttpClient($"{devAppHost}/graphql/", new NewtonsoftJsonSerializer());
             _exceptionHandler = exceptionHandler;
         }
 
