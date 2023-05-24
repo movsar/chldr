@@ -14,10 +14,12 @@ namespace chldr_data.DatabaseObjects.Dtos
         public string? LanguageId { get; set; }
         public string? Notes { get; set; }
         public TranslationDto() { }
-        public TranslationDto(string entryId, string userId)
+        public TranslationDto(string entryId, string userId, LanguageModel language)
         {
             EntryId = entryId;
             UserId = userId;
+            LanguageCode = language.Code;
+            LanguageId = language.LanguageId;
         }
         public static TranslationDto FromModel(TranslationModel translation)
         {

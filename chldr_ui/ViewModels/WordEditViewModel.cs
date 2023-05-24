@@ -11,7 +11,7 @@ namespace chldr_ui.ViewModels
     {
         private bool isInitialized = false;
         public WordDto Word { get; set; } = new WordDto();
-        
+
         protected override void OnInitialized()
         {
             if (!isInitialized)
@@ -43,7 +43,7 @@ namespace chldr_ui.ViewModels
         public async Task NewTranslation()
         {
             var user = UserModel.FromDto(UserStore.ActiveSession.User!);
-            var translation = new TranslationDto(EntryId, user.UserId);
+            var translation = new TranslationDto(EntryId, user.UserId, ContentStore.Languages.First());
 
             // Needed to know which translations are new, in case they need to be removed
             _newTranslationIds.Add(translation.TranslationId);
@@ -81,6 +81,7 @@ namespace chldr_ui.ViewModels
 
             var user = UserModel.FromDto(UserStore.ActiveSession.User!);
             await ContentStore.UpdateWord(user, Word);
+
             NavigationManager.NavigateTo("/");
         }
     }
