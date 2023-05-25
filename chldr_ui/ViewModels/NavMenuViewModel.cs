@@ -15,7 +15,7 @@ namespace chldr_ui.ViewModels
                 return;
             }
 
-            OnCultureChanged(newCulture);
+            SetUiLanguage(newCulture);
         }
         public void ToggleNavMenu()
         {

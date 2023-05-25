@@ -5,6 +5,7 @@ using chldr_utils.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace chldr_ui.ViewModels
 {
@@ -17,20 +18,26 @@ namespace chldr_ui.ViewModels
         [Inject] internal EnvironmentService? EnvironmentService { get; set; }
         [Inject] internal ExceptionHandler? ExceptionHandler { get; set; }
         [Inject] internal NavigationManager NavigationManager { get; set; }
+
         protected async Task RefreshUi()
         {
-            await InvokeAsync(() =>
-                {
-                    StateHasChanged();
-                });
+            await InvokeAsync(StateHasChanged);
         }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-
-            CultureService.CurrentCultureChanged += ViewModel_CurrentCultureChanged;
             UserStore.UserStateHasChanged += UserStore_UserStateHasChanged;
+            CultureService.CurrentCultureChanged += CultureService_CurrentCultureChanged;
+        }
+
+        private void CultureService_CurrentCultureChanged(string cultureCode)
+        {
+            var culture = CultureInfo.GetCultureInfo(cultureCode);
+
+            Thread.CurrentThread.CurrentUICulture = culture;
+            CultureInfo.CurrentCulture = culture;
+            CultureInfo.CurrentUICulture = culture;
         }
 
         private async void UserStore_UserStateHasChanged()
@@ -38,13 +45,7 @@ namespace chldr_ui.ViewModels
             await RefreshUi();
         }
 
-        private async void ViewModel_CurrentCultureChanged(string culture)
-        {
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(culture);
-            await RefreshUi();
-        }
-
-        protected void OnCultureChanged(string culture)
+        protected void SetUiLanguage(string culture)
         {
             CultureService.CurrentCulture = culture;
         }
