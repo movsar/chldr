@@ -78,7 +78,14 @@ namespace chldr_api.GraphQL.ServiceResolvers
             // Apply changes
             var changesets = translationChangeSets.Union(wordChangeSets);
             dbContext.AddRange(changesets);
-            await dbContext.SaveChangesAsync();
+            try
+            {
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
             // Convert to a word dto
             var wordEntryEntity = dbContext.Entries

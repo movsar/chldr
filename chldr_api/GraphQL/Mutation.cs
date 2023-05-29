@@ -50,11 +50,13 @@ namespace chldr_api
             _emailService = emailService;
         }
 
+        // Word mutations
         public async Task<UpdateResponse> UpdateWord(UserDto userDto, WordDto wordDto)
         {
             return await _updateWordResolver.ExecuteAsync(_dbContext, userDto, wordDto);
         }
 
+        // User mutations
         public async Task<RegistrationResponse> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
             return await _registerUserMutation.ExecuteAsync(_dbContext, _localizer, _emailService, email, password, firstName, lastName, patronymic);
