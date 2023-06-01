@@ -2,20 +2,45 @@
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.RealmEntities;
-using chldr_data.Enums;
-using chldr_data.Interfaces;
-using MongoDB.Bson;
+using chldr_data.Models;
+using Newtonsoft.Json;
 using Realms;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chldr_data.Services
 {
-    internal class SyncService
+    public class SyncService
     {
+        private void SetPropertyValue(object obj, string propertyName, object value)
+        {
+            var propertyInfo = obj.GetType().GetProperty(propertyName);
+            if (propertyInfo != null)
+            {
+                propertyInfo.SetValue(obj, value);
+            }
+        }
+        
+        private Realm Database => Realm.GetInstance(RealmDataSource.OfflineDatabaseConfiguration);
+
+        public string Insert(SourceDto sourceDto)
+        {
+            if (!string.IsNullOrEmpty(sourceDto.SourceId))
+            {
+                throw new InvalidOperationException();
+            }
+
+            var source = new RealmSource()
+            {
+                Name = sourceDto.Name,
+                Notes = sourceDto.Notes
+            };
+
+            Database.Write(() =>
+            {
+                Database.Add(source);
+            });
+
+            return source.SourceId;
+        }
         //public string Insert(WordDto newWord)
         //{
         //    if (!string.IsNullOrEmpty(newWord.EntryId))
@@ -82,112 +107,113 @@ namespace chldr_data.Services
         //    }
         //}
 
-        //protected async Task Sync(List<ChangeSetModel>? changeSets = null)
-        //{
-        //    var changeSetsToApply = changeSets;
-        //    if (changeSetsToApply == null)
-        //    {
-        //        // TODO: Get latest changesets based on...?
-        //    }
+        internal async Task Sync(List<ChangeSetModel>? changeSets = null)
+        {
+            var changeSetsToApply = changeSets;
+            if (changeSetsToApply == null)
+            {
+                // TODO: Get latest changesets based on...?
+            }
 
-        //    Database.Write(() => {
+            Database.Write(() =>
+            {
 
 
-        //        foreach (var changeSet in changeSetsToApply)
-        //        {
-        //            var changes = JsonConvert.DeserializeObject<List<Change>>(changeSet.RecordChanges);
-        //            if (changes == null || changes.Count == 0)
-        //            {
-        //                continue;
-        //            }
+                foreach (var changeSet in changeSetsToApply)
+                {
+                    var changes = JsonConvert.DeserializeObject<List<Change>>(changeSet.RecordChanges);
+                    if (changes == null || changes.Count == 0)
+                    {
+                        continue;
+                    }
 
-        //            // Apply changes to the local database
-        //            if (changeSet.RecordType == Enums.RecordType.Word)
-        //            {
-        //                try
-        //                {
-        //                    var realmWord = Database.Find<RealmWord>(changeSet.RecordId);
-        //                    if (realmWord == null)
-        //                    {
-        //                        throw new NullReferenceException();
-        //                    }
+                    // Apply changes to the local database
+                    if (changeSet.RecordType == Enums.RecordType.Word)
+                    {
+                        try
+                        {
+                            var realmWord = Database.Find<RealmWord>(changeSet.RecordId);
+                            if (realmWord == null)
+                            {
+                                throw new NullReferenceException();
+                            }
 
-        //                    foreach (var change in changes)
-        //                    {
-        //                        SetPropertyValue(realmWord, change.Property, change.NewValue);
-        //                    }
-        //                }
-        //                catch (Exception ex)
-        //                {
+                            foreach (var change in changes)
+                            {
+                                SetPropertyValue(realmWord, change.Property, change.NewValue);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
 
-        //                }
-        //            }
-        //        }
+                        }
+                    }
+                }
 
-        //    });
+            });
 
-        //public void Delete(string Id)
-        //{
-        //    var entry = Database.Find<RealmEntry>(Id);
-        //    if (entry == null)
-        //    {
-        //        return;
-        //    }
+            //public void Delete(string Id)
+            //{
+            //    var entry = Database.Find<RealmEntry>(Id);
+            //    if (entry == null)
+            //    {
+            //        return;
+            //    }
 
-        //    Database.Write(() =>
-        //    {
-        //        foreach (var translation in entry.Translations)
-        //        {
-        //            Database.Remove(translation);
-        //        }
-        //        switch ((EntryType)entry.Type)
-        //        {
-        //            case EntryType.Word:
-        //                Database.Remove(entry.Word!);
-        //                break;
-        //            case EntryType.Phrase:
-        //                Database.Remove(entry.Phrase!);
-        //                break;
-        //            case EntryType.Text:
-        //                Database.Remove(entry.Text!);
-        //                break;
-        //            default:
-        //                break;
-        //        }
-        //        Database.Remove(entry);
-        //    });
-        //}
+            //    Database.Write(() =>
+            //    {
+            //        foreach (var translation in entry.Translations)
+            //        {
+            //            Database.Remove(translation);
+            //        }
+            //        switch ((EntryType)entry.Type)
+            //        {
+            //            case EntryType.Word:
+            //                Database.Remove(entry.Word!);
+            //                break;
+            //            case EntryType.Phrase:
+            //                Database.Remove(entry.Phrase!);
+            //                break;
+            //            case EntryType.Text:
+            //                Database.Remove(entry.Text!);
+            //                break;
+            //            default:
+            //                break;
+            //        }
+            //        Database.Remove(entry);
+            //    });
+            //}
 
-        //        var word = Database.Find<RealmWord>(new ObjectId(wordDto.WordId));
-        //        Database.Write(() =>
-        //            {
-        //                //word.Entry.Rate = loggedInUser.GetRateRange().Lower;
-        //                word.Entry.RawContents = word.Content.ToLower();
-        //                foreach (var translationDto in wordDto.Translations)
-        //                {
-        //                    var translationId = new ObjectId(translationDto.TranslationId);
-        //        RealmTranslation translation = Database.Find<RealmTranslation>(translationId);
-        //                    if (translation == null)
-        //                    {
-        //                        translation = new RealmTranslation()
-        //        {
-        //            Entry = word.Entry,
-        //                            Language = Database.All<RealmLanguage>().First(l => l.Code == translationDto.LanguageCode),
-        //                        };
-        //    }
-        //    //translation.Rate = loggedInUser.GetRateRange().Lower;
-        //    translation.Content = translationDto.Content;
-        //                    translation.Notes = translationDto.Notes;
-        //                    translation.RawContents = translation.GetRawContents();
-        //                }
-        //word.PartOfSpeech = (int)wordDto.PartOfSpeech;
-        //word.Content = wordDto.Content;
-        ////foreach (var grammaticalClass in wordDto.GrammaticalClasses)
-        ////{
-        ////    word.GrammaticalClasses.Add(grammaticalClass);
-        ////}
-        //word.Notes = wordDto.Notes;
-        //            });
-    }
+            //        var word = Database.Find<RealmWord>(new ObjectId(wordDto.WordId));
+            //        Database.Write(() =>
+            //            {
+            //                //word.Entry.Rate = loggedInUser.GetRateRange().Lower;
+            //                word.Entry.RawContents = word.Content.ToLower();
+            //                foreach (var translationDto in wordDto.Translations)
+            //                {
+            //                    var translationId = new ObjectId(translationDto.TranslationId);
+            //        RealmTranslation translation = Database.Find<RealmTranslation>(translationId);
+            //                    if (translation == null)
+            //                    {
+            //                        translation = new RealmTranslation()
+            //        {
+            //            Entry = word.Entry,
+            //                            Language = Database.All<RealmLanguage>().First(l => l.Code == translationDto.LanguageCode),
+            //                        };
+            //    }
+            //    //translation.Rate = loggedInUser.GetRateRange().Lower;
+            //    translation.Content = translationDto.Content;
+            //                    translation.Notes = translationDto.Notes;
+            //                    translation.RawContents = translation.GetRawContents();
+            //                }
+            //word.PartOfSpeech = (int)wordDto.PartOfSpeech;
+            //word.Content = wordDto.Content;
+            ////foreach (var grammaticalClass in wordDto.GrammaticalClasses)
+            ////{
+            ////    word.GrammaticalClasses.Add(grammaticalClass);
+            ////}
+            //word.Notes = wordDto.Notes;
+            //            });
+        }
     }
 }

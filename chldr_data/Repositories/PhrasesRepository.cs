@@ -32,4 +32,3 @@ namespace chldr_data.Repositories
         }
     }
 }
-}

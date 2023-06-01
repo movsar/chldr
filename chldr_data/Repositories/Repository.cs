@@ -48,6 +48,4 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
     }
-
-}
 }

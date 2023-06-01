@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace chldr_data.Services
 {
-    internal class SearchService
+    public class SearchService
     {
         private Realm Database => Realm.GetInstance(RealmDataSource.OfflineDatabaseConfiguration);
         public event Action<SearchResultModel>? GotNewSearchResult;

@@ -11,7 +11,7 @@ using MongoDB.Bson;
 
 namespace chldr_data.Repositories
 {
-    public class WordsRepository : EntriesRepository<WordModel>
+    public class WordsRepository 
     {
     }
 }

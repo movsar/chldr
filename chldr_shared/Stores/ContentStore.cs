@@ -9,6 +9,9 @@ using chldr_data.Repositories;
 using chldr_utils;
 using chldr_utils.Models;
 using chldr_utils.Services;
+using chldr_data.Readers;
+using chldr_data.Services;
+using chldr_data.ChangeRequests;
 
 namespace chldr_shared.Stores
 {
@@ -25,6 +28,11 @@ namespace chldr_shared.Stores
 
         #region Fields and Properties
         private readonly ILocalDbReader _dataAccess;
+        private readonly LanguageQueries _languageQueries;
+        private readonly WordQueries _wordQueries;
+        private readonly SearchService _searchService;
+        private readonly WordChangeRequests _wordChangeRequests;
+
         // This shouldn't be normally used, but only to request models that have already been loaded 
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
         public List<LanguageModel> Languages { get; } = new();
@@ -52,14 +60,15 @@ namespace chldr_shared.Stores
         }
         #endregion
 
-        EntriesRepository<EntryModel> EntriesRepository => (EntriesRepository<EntryModel>)_dataAccess.GetRepository<IEntryEntity>();
-        WordsRepository WordsRepository => (WordsRepository)_dataAccess.GetRepository<IWordEntity>();
-        PhrasesRepository PhrasesRepository => (PhrasesRepository)_dataAccess.GetRepository<IPhraseEntity>();
-        LanguagesRepository LanguagesRepository => (LanguagesRepository)_dataAccess.GetRepository<ILanguageEntity>();
-
-
         #region Constructors
-        public ContentStore(ILocalDbReader dataAccess, ExceptionHandler exceptionHandler, NetworkService networkService)
+        public ContentStore(ILocalDbReader dataAccess, 
+            ExceptionHandler exceptionHandler,
+            NetworkService networkService,
+            SearchService searchService,
+            LanguageQueries languageQueries,
+            WordQueries wordQueries,
+            WordChangeRequests wordChangeRequests
+            )
         {
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
@@ -68,9 +77,14 @@ namespace chldr_shared.Stores
             _dataAccess.DataSourceInitialized += DataAccess_DatasourceInitialized;
             _dataAccess.InitializeDataSource();
 
-            EntriesRepository.GotNewSearchResult += DataAccess_GotNewSearchResults;
-            EntriesRepository.EntryUpdated += EntriesRepository_EntryUpdated;
-            WordsRepository.WordUpdated += EntriesRepository_WordUpdated;
+            _languageQueries = languageQueries;
+            _wordQueries = wordQueries;
+            _searchService = searchService;
+            _wordChangeRequests = wordChangeRequests;
+
+            searchService.GotNewSearchResult += DataAccess_GotNewSearchResults;
+            //EntryUpdated += EntriesRepository_EntryUpdated;
+            _wordChangeRequests.WordUpdated += EntriesRepository_WordUpdated;
         }
 
         private async void EntriesRepository_WordUpdated(WordModel updatedWord)
@@ -178,7 +192,7 @@ namespace chldr_shared.Stores
         {
             if (Languages.Count == 0)
             {
-                Languages.AddRange(LanguagesRepository.GetAllLanguages());
+                Languages.AddRange(_languageQueries.GetAllLanguages());
             }
 
             ContentInitialized?.Invoke();

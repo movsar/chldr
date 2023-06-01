@@ -3,12 +3,22 @@ using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.RealmEntities;
 using chldr_data.ResponseTypes;
+using GraphQL;
+using chldr_data.Services;
 
 namespace chldr_data.ChangeRequests
 {
-    internal class WordChangeRequests
+    public class WordChangeRequests
     {
-        internal async Task<List<ChangeSetModel>> UpdateWord(UserDto userDto, WordDto wordDto)
+        private readonly GraphQLRequestSender _graphQLRequestSender;
+        private readonly SyncService _syncService;
+
+        public WordChangeRequests(GraphQLRequestSender graphQLRequestSender, SyncService syncService)
+        {
+            _graphQLRequestSender = graphQLRequestSender;
+            _syncService = syncService;
+        }
+        public async Task<List<ChangeSetModel>> UpdateWord(UserDto userDto, WordDto wordDto)
         {
             var request = new GraphQLRequest
             {
@@ -32,7 +42,7 @@ namespace chldr_data.ChangeRequests
                 Variables = new { userDto, wordDto }
             };
 
-            var response = await DataAccess.RequestSender.SendRequestAsync<UpdateResponse>(request, "updateWord");
+            var response = await _graphQLRequestSender.SendRequestAsync<UpdateResponse>(request, "updateWord");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);
@@ -48,11 +58,13 @@ namespace chldr_data.ChangeRequests
             var changeSets = await UpdateWord(userDto, wordDto);
 
             // Sync offline database
-            await Sync(changeSets);
+            
+            await _syncService.Sync(changeSets);
 
             // Refresh UI with new object 
-            var entry = Database.Find<RealmEntry>(wordDto.EntryId);
-            OnEntryUpdated(WordModel.FromEntity(entry.Word));
+            // TODO: Fix this!
+            //var entry = Database.Find<RealmEntry>(wordDto.EntryId);
+            //OnEntryUpdated(WordModel.FromEntity(entry.Word));
         }
     }
 }
