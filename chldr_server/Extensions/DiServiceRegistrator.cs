@@ -51,7 +51,6 @@ namespace chldr_blazor.Extensions
             appBuilder.Services.AddSingleton<NetworkService>();
 
             // Repositories
-            appBuilder.Services.AddSingleton<EntriesRepository<EntryModel>>();
             appBuilder.Services.AddSingleton<WordsRepository>();
             appBuilder.Services.AddSingleton<LanguagesRepository>();
             appBuilder.Services.AddSingleton<PhrasesRepository>();

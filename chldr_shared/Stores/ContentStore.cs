@@ -208,8 +208,8 @@ namespace chldr_shared.Stores
 
         public PhraseModel AddNewPhrase(IUser userModel, string content, string notes)
         {
-            PhraseModel phrase = PhrasesRepository.Add(content, notes);
-            return phrase;
+            //PhraseModel phrase = _phraseChangeRequests.Add(content, notes);
+            return null;
         }
 
         public PhraseModel GetCachedPhraseById(string phraseId)
@@ -237,7 +237,7 @@ namespace chldr_shared.Stores
 
         public async Task UpdateWord(UserModel loggedInUser, WordDto word)
         {
-            await WordsRepository.Update(loggedInUser, word);
+            await _wordChangeRequests.Update(loggedInUser, word);
         }
     }
 }

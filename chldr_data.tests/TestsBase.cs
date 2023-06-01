@@ -11,17 +11,10 @@ namespace chldr_data.tests
     {
         public TestsBase()
         {
-            _dataAccess = TestDataFactory.GetTestDataAccess();
-            _dataAccess.RemoveAllEntries();
+            _localDbReader = TestDataFactory.GetTestDataAccess();
+            _localDbReader.RemoveAllEntries();
         }
 
-        protected ILocalDbReader _dataAccess;
-        protected EntriesRepository<EntryModel> EntriesRepository => (EntriesRepository<EntryModel>)_dataAccess.GetRepository<IEntryEntity>();
-        protected WordsRepository WordsRepository => (WordsRepository)_dataAccess.GetRepository<IWordEntity>();
-        protected PhrasesRepository PhrasesRepository => (PhrasesRepository)_dataAccess.GetRepository<IPhraseEntity>();
-        protected LanguagesRepository LanguagesRepository => (LanguagesRepository)_dataAccess.GetRepository<ILanguageEntity>();
-        protected SourcesRepository SourcesRepository => (SourcesRepository)_dataAccess.GetRepository<ISourceEntity>();
-        protected UsersRepository UsersRepository => (UsersRepository)_dataAccess.GetRepository<IUserEntity>();
-
+        protected ILocalDbReader _localDbReader;
     }
 }

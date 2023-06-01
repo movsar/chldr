@@ -5,9 +5,10 @@ namespace chldr_data.Readers
 {
     public class LanguageQueries : DataQueries<RealmLanguage, LanguageModel>
     {
-        public IEnumerable<LanguageModel> GetAllLanguages()
+        public List<LanguageModel> GetAllLanguages()
         {
-            throw new NotImplementedException();
+            var languages = Database.All<RealmLanguage>().AsEnumerable().Select(l => LanguageModel.FromEntity(l));
+            return languages.ToList();
         }
     }
 }
