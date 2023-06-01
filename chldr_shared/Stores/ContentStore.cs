@@ -74,11 +74,6 @@ namespace chldr_shared.Stores
         {
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
-
-            _dataAccess = dataAccess;
-            _dataAccess.DataSourceInitialized += DataAccess_DatasourceInitialized;
-            _dataAccess.InitializeDataSource();
-
             _languageQueries = languageQueries;
             _wordQueries = wordQueries;
             _phraseQueries = phraseQueries;
@@ -88,6 +83,10 @@ namespace chldr_shared.Stores
             searchService.GotNewSearchResult += DataAccess_GotNewSearchResults;
             //EntryUpdated += EntriesRepository_EntryUpdated;
             _wordChangeRequests.WordUpdated += EntriesRepository_WordUpdated;
+
+            _dataAccess = dataAccess;
+            _dataAccess.DataSourceInitialized += DataAccess_DatasourceInitialized;
+            _dataAccess.InitializeDataSource();
         }
 
         private async void EntriesRepository_WordUpdated(WordModel updatedWord)

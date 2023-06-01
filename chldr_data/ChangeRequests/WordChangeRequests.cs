@@ -5,18 +5,19 @@ using chldr_data.DatabaseObjects.RealmEntities;
 using chldr_data.ResponseTypes;
 using GraphQL;
 using chldr_data.Services;
+using chldr_data.Interfaces;
 
 namespace chldr_data.ChangeRequests
 {
     public class WordChangeRequests
     {
-        private readonly GraphQLRequestSender _graphQLRequestSender;
+        private readonly IGraphQLRequestSender _graphQLRequestSender;
         private readonly SyncService _syncService;
 
         public event Action<EntryModel>? EntryUpdated;
         public event Action<WordModel>? WordUpdated;
         public event Action<EntryModel>? EntryInserted;
-        public WordChangeRequests(GraphQLRequestSender graphQLRequestSender, SyncService syncService)
+        public WordChangeRequests(IGraphQLRequestSender graphQLRequestSender, SyncService syncService)
         {
             _graphQLRequestSender = graphQLRequestSender;
             _syncService = syncService;

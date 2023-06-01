@@ -1,10 +1,12 @@
 using chldr_api.GraphQL.MutationServices;
 using chldr_api.GraphQL.ServiceResolvers;
+using chldr_data.Repositories;
 using chldr_tools;
 using chldr_utils.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection.PortableExecutable;
 using System.Text;
 
 namespace chldr_api
@@ -30,6 +32,13 @@ namespace chldr_api
             builder.Services.AddScoped<RegisterUserResolver>();
             builder.Services.AddScoped<ConfirmEmailResolver>();
             builder.Services.AddScoped<LoginResolver>();
+
+            // Repositories
+            //appBuilder.Services.AddSingleton<WordsRepository>();
+            //appBuilder.Services.AddSingleton<LanguagesRepository>();
+            //appBuilder.Services.AddSingleton<PhrasesRepository>();
+            ////appBuilder.Services.AddSingleton<SourcesRepository>();
+            //appBuilder.Services.AddSingleton<UsersRepository>();
 
             builder.Services.AddSingleton<EmailService>();
             builder.Services.AddLocalization();

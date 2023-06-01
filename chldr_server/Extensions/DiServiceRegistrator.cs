@@ -12,6 +12,8 @@ using chldr_ui.ViewModels;
 using chldr_utils;
 using chldr_utils.Services;
 using FluentValidation;
+using chldr_data.Readers;
+using chldr_data.ChangeRequests;
 
 namespace chldr_blazor.Extensions
 {
@@ -35,6 +37,14 @@ namespace chldr_blazor.Extensions
             appBuilder.Services.AddSingleton<AuthService>();
             appBuilder.Services.AddSingleton<IDataSourceService, RealmDataSource>();
             appBuilder.Services.AddSingleton<ILocalDbReader, LocalDbReader>();
+            appBuilder.Services.AddScoped<SyncService>();
+            appBuilder.Services.AddScoped<WordQueries>();
+            appBuilder.Services.AddScoped<LanguageQueries>();
+            appBuilder.Services.AddScoped<PhraseQueries>();
+            appBuilder.Services.AddScoped<SourceQueries>();
+            appBuilder.Services.AddScoped<WordChangeRequests>();
+            appBuilder.Services.AddScoped<SearchService>();
+
 
             // Shared
             appBuilder.Services.AddScoped<ContentStore>();
@@ -49,13 +59,6 @@ namespace chldr_blazor.Extensions
             appBuilder.Services.AddSingleton<ExceptionHandler>();
             appBuilder.Services.AddSingleton<CultureService>();
             appBuilder.Services.AddSingleton<NetworkService>();
-
-            // Repositories
-            appBuilder.Services.AddSingleton<WordsRepository>();
-            appBuilder.Services.AddSingleton<LanguagesRepository>();
-            appBuilder.Services.AddSingleton<PhrasesRepository>();
-            appBuilder.Services.AddSingleton<SourcesRepository>();
-            appBuilder.Services.AddSingleton<UsersRepository>();
 
             return appBuilder;
         }
