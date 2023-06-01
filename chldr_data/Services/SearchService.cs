@@ -1,24 +1,23 @@
-﻿using chldr_data.Enums;
-using chldr_data.Enums.WordDetails;
-using chldr_data.Interfaces;
-using chldr_data.Models;
-using chldr_data.DatabaseObjects.Models;
-using chldr_data.DatabaseObjects.Models.Words;
+﻿using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.RealmEntities;
+using chldr_data.Enums.WordDetails;
+using chldr_data.Models;
 using chldr_utils.Models;
 using chldr_utils.Services;
-using MongoDB.Bson;
+using Realms;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace chldr_data.Repositories
+namespace chldr_data.Services
 {
-    public class EntriesRepository<TEntryModel> : Repository where TEntryModel : EntryModel
+    internal class SearchService
     {
+        private Realm Database => Realm.GetInstance(RealmDataSource.OfflineDatabaseConfiguration);
         public event Action<SearchResultModel>? GotNewSearchResult;
-        public event Action<EntryModel>? EntryUpdated;
-        public event Action<WordModel>? WordUpdated;
-        public event Action<EntryModel>? EntryInserted;
-        public EntriesRepository(IDataAccess dataAccess) : base(dataAccess) { }
         private static IEnumerable<EntryModel> SortDirectSearchEntries(string inputText, IEnumerable<EntryModel> entries)
         {
             // Entry.Content => Equal, StartsWith, Rest
@@ -161,58 +160,7 @@ namespace chldr_data.Repositories
             logger.StopSpeedTest($"FindAsync finished");
         }
 
-        public TEntryModel GetByEntryId(string entryId)
-        {
-            var entry = Database.All<RealmEntry>().FirstOrDefault(e => e.EntryId == entryId);
-            if (entry == null)
-            {
-                throw new NullReferenceException();
-            }
 
-            var entryModel = EntryModelFactory.CreateEntryModel(entry) as TEntryModel;
-            return entryModel!;
-        }
-
-        public List<TEntryModel> Take(int limit, int skip = 0)
-        {
-            var entries = Database.All<RealmEntry>().AsEnumerable()
-                .Skip(skip).Take(limit)
-                .Select(e => EntryModelFactory.CreateEntryModel(e) as TEntryModel)
-                .ToList();
-            return entries;
-        }
-
-        public void Delete(string Id)
-        {
-            var entry = Database.Find<RealmEntry>(Id);
-            if (entry == null)
-            {
-                return;
-            }
-
-            Database.Write(() =>
-            {
-                foreach (var translation in entry.Translations)
-                {
-                    Database.Remove(translation);
-                }
-                switch ((EntryType)entry.Type)
-                {
-                    case EntryType.Word:
-                        Database.Remove(entry.Word!);
-                        break;
-                    case EntryType.Phrase:
-                        Database.Remove(entry.Phrase!);
-                        break;
-                    case EntryType.Text:
-                        Database.Remove(entry.Text!);
-                        break;
-                    default:
-                        break;
-                }
-                Database.Remove(entry);
-            });
-        }
 
         public List<EntryModel> GetRandomEntries()
         {
@@ -252,15 +200,6 @@ namespace chldr_data.Repositories
                 .ToList();
 
             return entries;
-        }
-
-        protected void OnEntryInserted(EntryModel entry)
-        {
-            EntryInserted?.Invoke(entry);
-        }
-        protected void OnEntryUpdated(EntryModel entry)
-        {
-            EntryUpdated?.Invoke(entry);
         }
     }
 }

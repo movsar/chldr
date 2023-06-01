@@ -12,7 +12,7 @@ namespace chldr_data.tests.Services
         private static readonly ExceptionHandler _exceptionHandler;
         private static readonly NetworkService _networkService;
         private static readonly EnvironmentService _environmentService;
-        private static readonly DataAccess _dataAccess;
+        private static readonly LocalDbReader _dataAccess;
         private static SourcesRepository SourcesRepository => (SourcesRepository)_dataAccess.GetRepository<SourceModel>();
 
         static TestDataFactory()
@@ -29,7 +29,7 @@ namespace chldr_data.tests.Services
             _dataAccess = new DataAccess(serviceLocator, _exceptionHandler, _environmentService, _networkService, realmDataSource, requestSender);
         }
 
-        internal static IDataAccess GetTestDataAccess()
+        internal static ILocalDbReader GetTestDataAccess()
         {
             return _dataAccess;
         }

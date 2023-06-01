@@ -8,7 +8,7 @@ namespace chldr_data.Repositories
 {
     public class SourcesRepository : Repository
     {
-        public SourcesRepository(IDataAccess dataAccess) : base(dataAccess) { }
+        public SourcesRepository(ILocalDbReader dataAccess) : base(dataAccess) { }
 
         public List<RealmSource> GetUnverifiedSources()
         {

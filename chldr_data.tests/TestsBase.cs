@@ -15,7 +15,7 @@ namespace chldr_data.tests
             _dataAccess.RemoveAllEntries();
         }
 
-        protected IDataAccess _dataAccess;
+        protected ILocalDbReader _dataAccess;
         protected EntriesRepository<EntryModel> EntriesRepository => (EntriesRepository<EntryModel>)_dataAccess.GetRepository<IEntryEntity>();
         protected WordsRepository WordsRepository => (WordsRepository)_dataAccess.GetRepository<IWordEntity>();
         protected PhrasesRepository PhrasesRepository => (PhrasesRepository)_dataAccess.GetRepository<IPhraseEntity>();

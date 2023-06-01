@@ -24,7 +24,7 @@ namespace chldr_shared.Stores
         #endregion
 
         #region Fields and Properties
-        private readonly IDataAccess _dataAccess;
+        private readonly ILocalDbReader _dataAccess;
         // This shouldn't be normally used, but only to request models that have already been loaded 
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
         public List<LanguageModel> Languages { get; } = new();
@@ -59,13 +59,13 @@ namespace chldr_shared.Stores
 
 
         #region Constructors
-        public ContentStore(IDataAccess dataAccess, ExceptionHandler exceptionHandler, NetworkService networkService)
+        public ContentStore(ILocalDbReader dataAccess, ExceptionHandler exceptionHandler, NetworkService networkService)
         {
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
 
             _dataAccess = dataAccess;
-            _dataAccess.DataAccessInitialized += DataAccess_DatasourceInitialized;
+            _dataAccess.DataSourceInitialized += DataAccess_DatasourceInitialized;
             _dataAccess.InitializeDataSource();
 
             EntriesRepository.GotNewSearchResult += DataAccess_GotNewSearchResults;

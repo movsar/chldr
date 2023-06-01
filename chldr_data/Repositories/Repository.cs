@@ -1,75 +1,53 @@
 ﻿using chldr_data.Interfaces;
-using chldr_data.Models;
-using chldr_data.DatabaseObjects.Models;
-using chldr_data.DatabaseObjects.RealmEntities;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Realms;
-using System.Runtime.CompilerServices;
 
 namespace chldr_data.Repositories
 {
-    public abstract class Repository
+    public abstract class Repository<TEntity, TModel, TDto> : IRepository<TEntity, TModel, TDto> where TEntity : class
     {
-        public IDataAccess DataAccess { get; }
-        public Realm Database => DataAccess.GetDatabase();
-        public Repository(IDataAccess dataAccess)
+        private readonly DbContext _context;
+        private readonly DbSet<TEntity> _dbSet;
+
+        public Repository(DbContext context)
         {
-            DataAccess = dataAccess;
-        }
-        protected void SetPropertyValue(object obj, string propertyName, object value)
-        {
-            var propertyInfo = obj.GetType().GetProperty(propertyName);
-            if (propertyInfo != null)
-            {
-                propertyInfo.SetValue(obj, value);
-            }
+            _context = context;
+            _dbSet = context.Set<TEntity>();
         }
 
-        protected async Task Sync(List<ChangeSetModel>? changeSets = null)
+        public async Task<TModel> GetByIdAsync(string id)
         {
-            var changeSetsToApply = changeSets;
-            if (changeSetsToApply == null)
-            {
-                // TODO: Get latest changesets based on...?
-            }
+            //return await _dbSet.FindAsync(id);
+            throw new NotImplementedException();
+        }
 
-            Database.Write(() => {
-           
-                
-                foreach (var changeSet in changeSetsToApply)
-                {
-                    var changes = JsonConvert.DeserializeObject<List<Change>>(changeSet.RecordChanges);
-                    if (changes == null || changes.Count == 0)
-                    {
-                        continue;
-                    }
+        public async Task<IEnumerable<TModel>> GetAllAsync()
+        {
+            //return await _dbSet.ToListAsync();
+            throw new NotImplementedException();
+        }
 
-                    // Apply changes to the local database
-                    if (changeSet.RecordType == Enums.RecordType.Word)
-                    {
-                        try
-                        {
-                            var realmWord = Database.Find<RealmWord>(changeSet.RecordId);
-                            if (realmWord == null)
-                            {
-                                throw new NullReferenceException();
-                            }
+        public async Task AddAsync(TDto entity)
+        {
+            //await _dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
+            throw new NotImplementedException();
 
-                            foreach (var change in changes)
-                            {
-                                SetPropertyValue(realmWord, change.Property, change.NewValue);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
+        }
 
-                        }
-                    }
-                }
+        public async Task UpdateAsync(TDto entity)
+        {
+            //_dbSet.Update(entity);
+            await _context.SaveChangesAsync();
+            throw new NotImplementedException();
+        }
 
-
-            });
+        public async Task DeleteAsync(TDto entity)
+        {
+            //_dbSet.Remove(entity);
+            await _context.SaveChangesAsync();
+            throw new NotImplementedException();
         }
     }
+
+}
 }

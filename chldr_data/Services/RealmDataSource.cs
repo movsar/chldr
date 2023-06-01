@@ -13,21 +13,21 @@ namespace chldr_data.Services
     {
         private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
-        private RealmConfigurationBase? _config;
+        internal static RealmConfigurationBase? OfflineDatabaseConfiguration;
 
         public event Action? LocalDatabaseInitialized;
 
         public Realm GetDatabase()
         {
-            if (_config == null)
+            if (OfflineDatabaseConfiguration == null)
             {
                 throw new Exception("Config shouldn't be null");
             }
 
             Console.WriteLine("in GetDatabase()");
-            Console.WriteLine(_config.DatabasePath);
+            Console.WriteLine(OfflineDatabaseConfiguration.DatabasePath);
 
-            return Realm.GetInstance(_config);
+            return Realm.GetInstance(OfflineDatabaseConfiguration);
         }
 
         public RealmDataSource(FileService fileService, ExceptionHandler exceptionHandler)
@@ -58,7 +58,7 @@ namespace chldr_data.Services
         }
         public void InitializeDatabase()
         {
-            _config = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
+            OfflineDatabaseConfiguration = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
             {
                 SchemaVersion = 8
             };

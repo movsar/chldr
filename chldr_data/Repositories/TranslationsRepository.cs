@@ -7,7 +7,7 @@ namespace chldr_data.Repositories
 {
     public class TranslationsRepository : Repository
     {
-        public TranslationsRepository(IDataAccess dataAccess) : base(dataAccess) { }
+        public TranslationsRepository(ILocalDbReader dataAccess) : base(dataAccess) { }
 
         internal void SetPropertiesFromDto(RealmTranslation translation, TranslationDto translationDto)
         {

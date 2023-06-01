@@ -1,31 +1,35 @@
 ﻿
 using chldr_data.Interfaces;
 using chldr_data.DatabaseObjects.Models;
-using chldr_data.DatabaseObjects.RealmEntities;
-using MongoDB.Bson;
+using chldr_data.DatabaseObjects.Dtos;
 
 namespace chldr_data.Repositories
 {
-    public class LanguagesRepository : Repository
+    public class LanguagesRepository : ILanguageRepository
     {
-        public LanguagesRepository(IDataAccess dataAccess) : base(dataAccess) { }
-
-        public List<LanguageModel> GetAllLanguages()
+        public Task AddAsync(LanguageDto dto)
         {
-            try
-            {
-                Console.WriteLine("before langs");
-                var languages = Database.All<RealmLanguage>().AsEnumerable().Select(l =>  LanguageModel.FromEntity(l));
-                Console.WriteLine("after langs");
-                return languages.ToList();
-
-            }
-            catch (Exception ex)
-            {
-                //throw new Exception(ex.Message);
-                return new List<LanguageModel>();
-            }
+            throw new NotImplementedException();
         }
 
+        public Task DeleteAsync(LanguageDto dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<LanguageModel>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<LanguageModel> GetByIdAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(LanguageDto dto)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -34,7 +34,7 @@ namespace chldr_blazor.Extensions
             appBuilder.Services.AddSingleton<IGraphQLRequestSender, GraphQLRequestSender>();
             appBuilder.Services.AddSingleton<AuthService>();
             appBuilder.Services.AddSingleton<IDataSourceService, RealmDataSource>();
-            appBuilder.Services.AddSingleton<IDataAccess, DataAccess>();
+            appBuilder.Services.AddSingleton<ILocalDbReader, LocalDbReader>();
 
             // Shared
             appBuilder.Services.AddScoped<ContentStore>();

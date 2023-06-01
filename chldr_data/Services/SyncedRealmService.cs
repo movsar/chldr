@@ -11,6 +11,7 @@ using System.Diagnostics;
 
 namespace chldr_data.Services
 {
+    // ! DEPRECATED
     public class SyncedRealmService : IDataSourceService
     {
         private const string myRealmAppId = "dosham-lxwuu";

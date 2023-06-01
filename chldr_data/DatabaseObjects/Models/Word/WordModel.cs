@@ -38,7 +38,6 @@ namespace chldr_data.DatabaseObjects.Models.Words
 
             return wordModel;
         }
-
         public static WordModel FromEntity(SqlWord wordEntity)
         {
             return FromEntity(wordEntity.Entry,
@@ -48,7 +47,6 @@ namespace chldr_data.DatabaseObjects.Models.Words
                     t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)
                 ));
         }
-
         public static WordModel FromEntity(RealmWord wordEntity)
         {
             return FromEntity(wordEntity.Entry,
@@ -57,6 +55,11 @@ namespace chldr_data.DatabaseObjects.Models.Words
                  wordEntity.Entry.Translations.Select(
                      t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)
                  ));
+        }
+
+        public WordModel FromEntity(IEntryEntity entity)
+        {
+            throw new NotImplementedException();
         }
     }
     /*

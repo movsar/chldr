@@ -1,26 +1,35 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.DatabaseObjects.Models;
-using chldr_data.DatabaseObjects.RealmEntities;
-using MongoDB.Bson;
+using chldr_data.DatabaseObjects.Dtos;
 
 namespace chldr_data.Repositories
 {
-    public class PhrasesRepository : EntriesRepository<PhraseModel>
+    public class PhrasesRepository : IPhraseRepository
     {
-        public PhrasesRepository(IDataAccess dataAccess) : base(dataAccess) { }
-        public PhraseModel Add(string content, string notes)
+        public Task AddAsync(PhraseDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdatePhrase(UserModel loggedInUser, string? phraseId, string? content, string? notes)
+        public Task DeleteAsync(PhraseDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public PhraseModel GetById(string entityId)
+        public Task<IEnumerable<PhraseModel>> GetAllAsync()
         {
-            return  PhraseModel.FromEntity(Database.All<RealmPhrase>().FirstOrDefault(p => p.PhraseId == entityId));
+            throw new NotImplementedException();
+        }
+
+        public Task<PhraseModel> GetByIdAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(PhraseDto dto)
+        {
+            throw new NotImplementedException();
         }
     }
+}
 }
