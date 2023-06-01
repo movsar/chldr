@@ -30,6 +30,7 @@ namespace chldr_shared.Stores
         private readonly ILocalDbReader _dataAccess;
         private readonly LanguageQueries _languageQueries;
         private readonly WordQueries _wordQueries;
+        private readonly PhraseQueries _phraseQueries;
         private readonly SearchService _searchService;
         private readonly WordChangeRequests _wordChangeRequests;
 
@@ -61,12 +62,13 @@ namespace chldr_shared.Stores
         #endregion
 
         #region Constructors
-        public ContentStore(ILocalDbReader dataAccess, 
+        public ContentStore(ILocalDbReader dataAccess,
             ExceptionHandler exceptionHandler,
             NetworkService networkService,
             SearchService searchService,
             LanguageQueries languageQueries,
             WordQueries wordQueries,
+            PhraseQueries phraseQueries,
             WordChangeRequests wordChangeRequests
             )
         {
@@ -79,6 +81,7 @@ namespace chldr_shared.Stores
 
             _languageQueries = languageQueries;
             _wordQueries = wordQueries;
+            _phraseQueries = phraseQueries;
             _searchService = searchService;
             _wordChangeRequests = wordChangeRequests;
 
@@ -114,18 +117,18 @@ namespace chldr_shared.Stores
         #region Methods
         public void Search(string inputText, FiltrationFlags filterationFlags)
         {
-            Task.Run(() => EntriesRepository.FindAsync(inputText, filterationFlags));
+            Task.Run(() => _searchService.FindAsync(inputText, filterationFlags));
         }
         public void DeleteEntry(string entryId)
         {
-            EntriesRepository.Delete(entryId);
+            //EntriesRepository.Delete(entryId);
             CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
             CachedResultsChanged?.Invoke();
         }
         public void LoadRandomEntries()
         {
             CachedSearchResult.Entries.Clear();
-            var entries = EntriesRepository.GetRandomEntries();
+            var entries = _searchService.GetRandomEntries();
 
             CachedSearchResult.Entries.Clear();
             foreach (var entry in entries)
@@ -138,7 +141,7 @@ namespace chldr_shared.Stores
         public void LoadEntriesToFiddleWith()
         {
             CachedSearchResult.Entries.Clear();
-            var entries = EntriesRepository.GetWordsToFiddleWith();
+            var entries = _searchService.GetWordsToFiddleWith();
 
             CachedSearchResult.Entries.Clear();
             foreach (var entry in entries)
@@ -151,7 +154,7 @@ namespace chldr_shared.Stores
         public void LoadEntriesOnModeration()
         {
             CachedSearchResult.Entries.Clear();
-            var entries = EntriesRepository.GetEntriesOnModeration();
+            var entries = _searchService.GetEntriesOnModeration();
 
             CachedSearchResult.Entries.Clear();
             foreach (var entry in entries)
@@ -163,22 +166,22 @@ namespace chldr_shared.Stores
         }
         public WordModel GetWordById(string entryId)
         {
-            return WordsRepository.GetById(entryId);
+            return _wordQueries.GetById(entryId);
         }
         public PhraseModel GetPhraseById(string entryId)
         {
-            return PhrasesRepository.GetById(entryId);
+            return _phraseQueries.GetById(entryId);
         }
 
         public EntryModel GetEntryById(string entryId)
         {
-            var word = WordsRepository.GetByEntryId(entryId);
+            var word = _wordQueries.GetByEntryId(entryId);
             if (word != null)
             {
                 return word;
             }
 
-            var phrase = PhrasesRepository.GetByEntryId(entryId);
+            var phrase = _phraseQueries.GetByEntryId(entryId);
             if (phrase != null)
             {
                 return phrase;

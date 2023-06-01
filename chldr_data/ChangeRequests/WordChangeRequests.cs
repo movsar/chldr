@@ -13,6 +13,9 @@ namespace chldr_data.ChangeRequests
         private readonly GraphQLRequestSender _graphQLRequestSender;
         private readonly SyncService _syncService;
 
+        public event Action<EntryModel>? EntryUpdated;
+        public event Action<WordModel>? WordUpdated;
+        public event Action<EntryModel>? EntryInserted;
         public WordChangeRequests(GraphQLRequestSender graphQLRequestSender, SyncService syncService)
         {
             _graphQLRequestSender = graphQLRequestSender;

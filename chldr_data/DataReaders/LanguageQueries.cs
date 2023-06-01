@@ -5,5 +5,9 @@ namespace chldr_data.Readers
 {
     public class LanguageQueries : DataQueries<RealmLanguage, LanguageModel>
     {
+        public IEnumerable<LanguageModel> GetAllLanguages()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
