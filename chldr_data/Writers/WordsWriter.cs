@@ -9,7 +9,7 @@ using chldr_data.Interfaces;
 
 namespace chldr_data.Writers
 {
-    public class WordWriter
+    public class WordsWriter
     {
         private readonly IGraphQLRequestSender _graphQLRequestSender;
         private readonly SyncService _syncService;
@@ -17,7 +17,7 @@ namespace chldr_data.Writers
         public event Action<EntryModel>? EntryUpdated;
         public event Action<WordModel>? WordUpdated;
         public event Action<EntryModel>? EntryInserted;
-        public WordWriter(IGraphQLRequestSender graphQLRequestSender, SyncService syncService)
+        public WordsWriter(IGraphQLRequestSender graphQLRequestSender, SyncService syncService)
         {
             _graphQLRequestSender = graphQLRequestSender;
             _syncService = syncService;

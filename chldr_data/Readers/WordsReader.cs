@@ -5,7 +5,7 @@ using chldr_data.DatabaseObjects.RealmEntities;
 
 namespace chldr_data.Readers
 {
-    public class WordReader : DataReader<RealmWord, WordModel>
+    public class WordsReader : DataReader<RealmWord, WordModel>
     {
         public EntryModel GetByEntryId(string entryId)
         {

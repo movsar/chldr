@@ -15,7 +15,7 @@ namespace chldr_data.Services
         private readonly IDataSourceService _realmDataSource;
 
         public IGraphQLRequestSender RequestSender { get; set; }
-        public WordReader Words { get; }
+        public WordsReader Words { get; }
         public PhraseReader Phrases { get; }
         public LanguageReader Languages { get; }
         public SourceReader Sources { get; }
@@ -34,7 +34,7 @@ namespace chldr_data.Services
             _realmDataSource = realmDataSource;
             _realmDataSource.LocalDatabaseInitialized += LocalDatabase_Initialized;
 
-            Words = new WordReader();
+            Words = new WordsReader();
             Phrases = new PhraseReader();
             Languages = new LanguageReader();
             Sources = new SourceReader();

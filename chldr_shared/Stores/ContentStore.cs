@@ -28,11 +28,11 @@ namespace chldr_shared.Stores
 
         #region Fields and Properties
         private readonly ILocalDbReader _dataAccess;
-        private readonly LanguageQueries _languageQueries;
-        private readonly WordQueries _wordQueries;
-        private readonly PhraseQueries _phraseQueries;
+        private readonly LanguagesReader _languageQueries;
+        private readonly WordsReader _wordQueries;
+        private readonly PhrasesReader _phraseQueries;
         private readonly SearchService _searchService;
-        private readonly WordChangeRequests _wordChangeRequests;
+        private readonly WordsWriter _wordWriter;
 
         // This shouldn't be normally used, but only to request models that have already been loaded 
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
@@ -66,10 +66,10 @@ namespace chldr_shared.Stores
             ExceptionHandler exceptionHandler,
             NetworkService networkService,
             SearchService searchService,
-            LanguageQueries languageQueries,
-            WordQueries wordQueries,
-            PhraseQueries phraseQueries,
-            WordChangeRequests wordChangeRequests
+            LanguagesReader languageQueries,
+            WordsReader wordQueries,
+            PhrasesReader phraseQueries,
+            WordsWriter wordChangeRequests
             )
         {
             _exceptionHandler = exceptionHandler;
@@ -78,11 +78,11 @@ namespace chldr_shared.Stores
             _wordQueries = wordQueries;
             _phraseQueries = phraseQueries;
             _searchService = searchService;
-            _wordChangeRequests = wordChangeRequests;
+            _wordWriter = wordChangeRequests;
 
             searchService.GotNewSearchResult += DataAccess_GotNewSearchResults;
             //EntryUpdated += EntriesRepository_EntryUpdated;
-            _wordChangeRequests.WordUpdated += EntriesRepository_WordUpdated;
+            _wordWriter.WordUpdated += EntriesRepository_WordUpdated;
 
             _dataAccess = dataAccess;
             _dataAccess.DataSourceInitialized += DataAccess_DatasourceInitialized;
@@ -236,7 +236,7 @@ namespace chldr_shared.Stores
 
         public async Task UpdateWord(UserModel loggedInUser, WordDto word)
         {
-            await _wordChangeRequests.Update(loggedInUser, word);
+            await _wordWriter.Update(loggedInUser, word);
         }
     }
 }
