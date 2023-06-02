@@ -7,7 +7,7 @@ using Realms;
 
 namespace chldr_data.Readers
 {
-    public class DataQueries<TEntity, TModel> where TEntity : IEntity where TModel : class
+    public class DataReader<TEntity, TModel> where TEntity : IEntity where TModel : class
     {
         protected Realm Database => Realm.GetInstance(RealmDataSource.OfflineDatabaseConfiguration);
         

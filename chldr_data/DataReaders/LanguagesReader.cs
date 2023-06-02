@@ -3,7 +3,7 @@ using chldr_data.DatabaseObjects.RealmEntities;
 
 namespace chldr_data.Readers
 {
-    public class LanguageQueries : DataQueries<RealmLanguage, LanguageModel>
+    public class LanguagesReader : DataReader<RealmLanguage, LanguageModel>
     {
         public List<LanguageModel> GetAllLanguages()
         {

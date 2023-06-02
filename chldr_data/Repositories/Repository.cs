@@ -1,14 +1,15 @@
 ﻿using chldr_data.Interfaces;
+using chldr_tools;
 using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.Repositories
 {
     public abstract class Repository<TEntity, TModel, TDto> : IRepository<TEntity, TModel, TDto> where TEntity : class
     {
-        private readonly DbContext _context;
+        private readonly SqlContext _context;
         private readonly DbSet<TEntity> _dbSet;
 
-        public Repository(DbContext context)
+        public Repository(SqlContext context)
         {
             _context = context;
             _dbSet = context.Set<TEntity>();
@@ -16,7 +17,10 @@ namespace chldr_data.Repositories
 
         public async Task<TModel> GetByIdAsync(string id)
         {
-            //return await _dbSet.FindAsync(id);
+            var m = await _dbSet.FindAsync(id);
+           
+
+            //return 
             throw new NotImplementedException();
         }
 

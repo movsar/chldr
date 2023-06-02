@@ -2,12 +2,10 @@
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.DatabaseObjects.RealmEntities;
-using chldr_data.Services;
-using Realms;
 
 namespace chldr_data.Readers
 {
-    public class WordQueries : DataQueries<RealmWord, WordModel>
+    public class WordsReader : DataReader<RealmWord, WordModel>
     {
         public EntryModel GetByEntryId(string entryId)
         {
