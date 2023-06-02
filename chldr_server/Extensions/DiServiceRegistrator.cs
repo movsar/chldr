@@ -38,13 +38,12 @@ namespace chldr_blazor.Extensions
             appBuilder.Services.AddSingleton<IDataSourceService, RealmDataSource>();
             appBuilder.Services.AddSingleton<ILocalDbReader, LocalDbReader>();
             appBuilder.Services.AddScoped<SyncService>();
-            appBuilder.Services.AddScoped<WordQueries>();
-            appBuilder.Services.AddScoped<LanguageQueries>();
-            appBuilder.Services.AddScoped<PhraseQueries>();
-            appBuilder.Services.AddScoped<SourceQueries>();
-            appBuilder.Services.AddScoped<WordChangeRequests>();
             appBuilder.Services.AddScoped<SearchService>();
-
+            appBuilder.Services.AddScoped<LanguagesReader>();
+            appBuilder.Services.AddScoped<PhrasesReader>();
+            appBuilder.Services.AddScoped<SourcesReader>();
+            appBuilder.Services.AddScoped<WordsWriter>();
+            appBuilder.Services.AddScoped<SearchService>();
 
             // Shared
             appBuilder.Services.AddScoped<ContentStore>();

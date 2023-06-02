@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace chldr_data.Readers
 {
-    public class SourceReader : DataReader<RealmSource, SourceModel>
+    public class SourcesReader : DataReader<RealmSource, SourceModel>
     {
         public List<RealmSource> GetUnverifiedSources()
         {

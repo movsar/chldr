@@ -3,7 +3,7 @@ using chldr_data.DatabaseObjects.RealmEntities;
 
 namespace chldr_data.Readers
 {
-    public class PhraseReader : DataReader<RealmPhrase, PhraseModel>
+    public class PhrasesReader : DataReader<RealmPhrase, PhraseModel>
     {
         public PhraseModel GetByEntryId(string entryId)
         {

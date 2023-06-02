@@ -3,7 +3,7 @@ using chldr_data.DatabaseObjects.RealmEntities;
 
 namespace chldr_data.Readers
 {
-    public class UserReader : DataReader<RealmUser, UserModel>
+    public class TranslationsReader : DataReader<RealmTranslation, TranslationModel>
     {
     }
 }

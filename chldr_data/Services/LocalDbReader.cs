@@ -16,11 +16,11 @@ namespace chldr_data.Services
 
         public IGraphQLRequestSender RequestSender { get; set; }
         public WordsReader Words { get; }
-        public PhraseReader Phrases { get; }
-        public LanguageReader Languages { get; }
-        public SourceReader Sources { get; }
-        public TranslationReader Translations { get; }
-        public UserReader Users { get; }
+        public PhrasesReader Phrases { get; }
+        public LanguagesReader Languages { get; }
+        public SourcesReader Sources { get; }
+        public TranslationsReader Translations { get; }
+        public UsersReader Users { get; }
 
         public LocalDbReader(
             ExceptionHandler exceptionHandler,
@@ -35,11 +35,11 @@ namespace chldr_data.Services
             _realmDataSource.LocalDatabaseInitialized += LocalDatabase_Initialized;
 
             Words = new WordsReader();
-            Phrases = new PhraseReader();
-            Languages = new LanguageReader();
-            Sources = new SourceReader();
-            Translations = new TranslationReader();
-            Users = new UserReader();
+            Phrases = new PhrasesReader();
+            Languages = new LanguagesReader();
+            Sources = new SourcesReader();
+            Translations = new TranslationsReader();
+            Users = new UsersReader();
         }
 
         private void LocalDatabase_Initialized()

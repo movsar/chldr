@@ -39,7 +39,7 @@ namespace chldr_native.Extensions
             appBuilder.Services.AddSingleton<IDataSourceService, RealmDataSource>();
             appBuilder.Services.AddSingleton<ILocalDbReader, LocalDbReader>();
             appBuilder.Services.AddScoped<SyncService>();
-            appBuilder.Services.AddScoped<WordsReader>();
+            appBuilder.Services.AddScoped<SearchService>();
             appBuilder.Services.AddScoped<LanguagesReader>();
             appBuilder.Services.AddScoped<PhrasesReader>();
             appBuilder.Services.AddScoped<SourcesReader>();
