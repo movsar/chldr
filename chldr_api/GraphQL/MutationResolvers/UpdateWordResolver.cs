@@ -51,49 +51,36 @@ namespace chldr_api.GraphQL.ServiceResolvers
 
         internal async Task<UpdateResponse> ExecuteAsync(UnitOfWork unitOfWork, UserDto userDto, WordDto updatedWordDto)
         {
-            var user = UserModel.FromDto(userDto);
-            var response = new UpdateResponse() { Success = true };
-
-            // Try retrieving corresponding object from the database with all the related objects
-            var existingSqlWord = unitOfWork.Words
-                .Include(w => w.Entry)
-                .Include(w => w.Entry.Source)
-                .Include(w => w.Entry.User)
-                .Include(w => w.Entry.Translations)
-                .ThenInclude(t => t.Language)
-                .First(w => w.WordId.Equals(updatedWordDto.WordId));
-
-            if (existingSqlWord == null)
-            {
-                throw new ArgumentException($"Word not found WordId: {updatedWordDto.WordId}");
-            }
+            //var user = UserModel.FromDto(userDto);
+            var existingWord = unitOfWork.Words.Get(updatedWordDto.WordId);
 
             // Create a dto based on the existing object
-
-            var existingWordDto = WordDto.FromModel(WordModel.FromEntity(existingSqlWord));
+            var existingWordDto = WordDto.FromModel(existingWord);
 
             var translationChangeSets = UpdateTranslations(unitOfWork, userDto, existingWordDto, updatedWordDto);
             var wordChangeSets = UpdateWordEntry(unitOfWork, userDto, existingWordDto, updatedWordDto);
 
             // Apply changes
             var changesets = translationChangeSets.Union(wordChangeSets);
-            unitOfWork.AddRange(changesets);
+            unitOfWork.ChangeSets.AddRange(changesets);
             await unitOfWork.SaveChangesAsync();
             var wordEntryEntity = unitOfWork.Entries
                 .Include(e => e.Source)
                 .Include(e => e.User)
-                .First(e => e.EntryId.Equals(existingSqlWord.EntryId));
+                .First(e => e.EntryId.Equals(existingWord.EntryId));
 
             var changeSetIds = changesets.Select(c => c.ChangeSetId);
             var allChangeSets = unitOfWork.ChangeSets.ToList();
+
+            // Retrieve back the same changesets so that they'll have indexes
             var updatedChangeSets = unitOfWork.ChangeSets.Where(c => changeSetIds.Contains(c.ChangeSetId));
 
+            var response = new UpdateResponse() { Success = true };
             response.ChangeSets.AddRange(updatedChangeSets.Select(c => ChangeSetDto.FromModel(ChangeSetModel.FromEntity(c))));
-
             return response;
         }
 
-        private List<SqlChangeSet> UpdateWordEntry(SqlContext dbContext, UserDto user, WordDto existingWordDto, WordDto updatedWordDto)
+        private List<SqlChangeSet> UpdateWordEntry(UnitOfWork unitOfWork, UserDto user, WordDto existingWordDto, WordDto updatedWordDto)
         {
             var changeSets = new List<SqlChangeSet>();
 
@@ -109,7 +96,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
             var wordChanges = GetChanges(updatedWordDto, existingWordDto);
             if (wordChanges.Count != 0)
             {
-                var sqlWord = dbContext.Words.Find(updatedWordDto.WordId);
+                var sqlWord = unitOfWork.Words.Find(updatedWordDto.WordId);
                 if (sqlWord == null)
                 {
                     throw new NullReferenceException();
@@ -134,7 +121,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
             var entryChanges = GetChanges<EntryDto>(updatedWordDto, existingWordDto);
             if (entryChanges.Count != 0)
             {
-                var sqlEntry = dbContext.Entries.Find(updatedWordDto.EntryId);
+                var sqlEntry = unitOfWork.Entries.Find(updatedWordDto.EntryId);
                 if (sqlEntry == null)
                 {
                     throw new NullReferenceException();
@@ -151,9 +138,9 @@ namespace chldr_api.GraphQL.ServiceResolvers
 
             return changeSets;
         }
-        private List<SqlChangeSet> UpdateTranslations(SqlContext dbContext, UserDto user, WordDto existingWordDto, WordDto updatedWordDto)
+        private List<ChangeSetDto> UpdateTranslations(UnitOfWork unitOfWork, UserDto user, WordDto existingWordDto, WordDto updatedWordDto)
         {
-            var changeSets = new List<SqlChangeSet>();
+            var changeSets = new List<ChangeSetDto>();
             // Create a changeset with all the differences between existing and updated objects
             // ! There should be a separate ChangeSet for each changed / inserted / deleted object
             var existingTranslationIds = existingWordDto.Translations.Select(t => t.TranslationId).ToHashSet();
@@ -165,50 +152,50 @@ namespace chldr_api.GraphQL.ServiceResolvers
 
             foreach (var insertedTranslation in insertedTranslations)
             {
-                var sqlTranslation = SqlTranslation.FromDto(insertedTranslation);
-                dbContext.Add(sqlTranslation);
-                changeSets.Add(new SqlChangeSet()
+                unitOfWork.Translations.Add(insertedTranslation);
+
+                changeSets.Add(new ChangeSetDto()
                 {
-                    Operation = (int)chldr_data.Enums.Operation.Insert,
+                    Operation = chldr_data.Enums.Operation.Insert,
                     UserId = user.UserId!,
                     RecordId = insertedTranslation.TranslationId!,
-                    RecordType = (int)chldr_data.Enums.RecordType.Translation,
+                    RecordType = chldr_data.Enums.RecordType.Translation,
                 });
             }
 
             foreach (var deletedTranslation in deletedTranslations)
             {
-                var sqlTranslation = dbContext.Translations.Find(deletedTranslation.TranslationId);
-                if (sqlTranslation == null)
+                var translation = unitOfWork.Translations.Get(deletedTranslation.TranslationId);
+                if (translation == null)
                 {
                     throw new NullReferenceException();
                 }
 
-                dbContext.Remove(sqlTranslation);
+                unitOfWork.Translations.Delete(translation.TranslationId);
 
-                changeSets.Add(new SqlChangeSet()
+                changeSets.Add(new ChangeSetDto()
                 {
-                    Operation = (int)chldr_data.Enums.Operation.Delete,
+                    Operation = chldr_data.Enums.Operation.Delete,
                     UserId = user.UserId!,
                     RecordId = deletedTranslation.TranslationId!,
-                    RecordType = (int)chldr_data.Enums.RecordType.Translation,
+                    RecordType = chldr_data.Enums.RecordType.Translation,
                 });
             }
 
             foreach (var updatedTranslation in updatedTranslations)
             {
-                var sqlTranslation = dbContext.Translations.Find(updatedTranslation.TranslationId);
+                var sqlTranslation = unitOfWork.Translations.Get(updatedTranslation.TranslationId);
                 if (sqlTranslation == null)
                 {
                     throw new NullReferenceException();
                 }
 
-                var updateTranslationChangeSet = new SqlChangeSet()
+                var updateTranslationChangeSet = new ChangeSetDto()
                 {
-                    Operation = (int)chldr_data.Enums.Operation.Update,
+                    Operation = chldr_data.Enums.Operation.Update,
                     UserId = user.UserId!,
                     RecordId = updatedTranslation.TranslationId!,
-                    RecordType = (int)chldr_data.Enums.RecordType.Translation,
+                    RecordType = chldr_data.Enums.RecordType.Translation,
                 };
 
                 var changes = GetChanges(updatedTranslation, existingWordDto.Translations.First(t => t.TranslationId!.Equals(updatedTranslation.TranslationId)));

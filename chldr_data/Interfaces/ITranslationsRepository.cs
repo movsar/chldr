@@ -4,8 +4,7 @@ using chldr_data.DatabaseObjects.SqlEntities;
 
 namespace chldr_data.Interfaces
 {
-    public interface IChangeSetsRepository : IRepository<SqlChangeSet, ChangeSetModel, ChangeSetDto>
+    public interface ITranslationsRepository : IRepository<SqlTranslation, TranslationModel, TranslationDto>
     {
-        void AddRange(IEnumerable<ChangeSetDto> dtos);
     }
 }

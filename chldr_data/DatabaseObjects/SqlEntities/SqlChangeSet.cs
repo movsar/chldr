@@ -1,10 +1,6 @@
-﻿using chldr_data.Enums;
-using chldr_data.Models;
-using chldr_data.DatabaseObjects.Interfaces;
+﻿using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Dtos;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Realms.Sync;
 
 namespace chldr_data.DatabaseObjects.SqlEntities
 {

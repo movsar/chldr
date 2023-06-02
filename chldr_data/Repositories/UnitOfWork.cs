@@ -13,6 +13,7 @@ namespace chldr_data.Repositories
 
         private IChangeSetsRepository _changeSetsRepository;
         private IWordsRepository _wordsRepository;
+        private TranslationsRepository _translationsRepository;
 
         public UnitOfWork(SqlContext sqlContext)
         {
@@ -49,6 +50,19 @@ namespace chldr_data.Repositories
             _transaction?.Dispose();
             _sqlContext.Dispose();
         }
+
+        public ITranslationsRepository Translations
+        {
+            get
+            {
+                if (_translationsRepository == null)
+                {
+                    _translationsRepository = new TranslationsRepository(_sqlContext);
+                }
+                return _translationsRepository;
+            }
+        }
+
 
         public IChangeSetsRepository ChangeSets
         {

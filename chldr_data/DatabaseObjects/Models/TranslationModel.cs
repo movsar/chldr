@@ -1,4 +1,5 @@
 ﻿using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.DatabaseObjects.SqlEntities;
 using Newtonsoft.Json;
 
 namespace chldr_data.DatabaseObjects.Models

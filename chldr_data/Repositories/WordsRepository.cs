@@ -36,7 +36,7 @@ namespace chldr_data.Repositories
 
             if (word == null)
             {
-                throw new ArgumentException($"Word not found WordId: {entityId}");
+                throw new ArgumentException($"Entity not found: {entityId}");
             }
 
             return WordModel.FromEntity(word);

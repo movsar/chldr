@@ -22,15 +22,16 @@ namespace chldr_data.Repositories
             return ChangeSetModel.FromEntity(changeSet);
         }
 
-        public override IEnumerable<ChangeSetModel> GetAll()
+        public void AddRange(IEnumerable<ChangeSetDto> dtos)
         {
-            return SqlContext.ChangeSets.Select(c => ChangeSetModel.FromEntity(c));
+            var entities = dtos.Select(d => (SqlChangeSet)SqlChangeSet.FromDto(d));
+            SqlContext.AddRange(entities);
         }
-
         public override void Update(ChangeSetDto dto)
         {
             var changeSet = SqlContext.Find<SqlChangeSet>(dto.ChangeSetId);
-            if (changeSet == null) {
+            if (changeSet == null)
+            {
                 throw new NullReferenceException();
             }
 
