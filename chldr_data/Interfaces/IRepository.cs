@@ -4,8 +4,7 @@
     {
         void Add(TDto dto);
         void Update(TDto dto);
-        TModel Get(string entityId);
         void Delete(string entityId);
-        IEnumerable<TModel> GetAll();
+        TModel Get(string entityId);
     }
 }

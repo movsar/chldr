@@ -15,12 +15,12 @@ namespace chldr_data.Repositories
         }
         public abstract void Add(TDto dto);
         public abstract TModel Get(string entityId);
-        public abstract IEnumerable<TModel> GetAll();
         public abstract void Update(TDto dto);
         public void Delete(string entityId)
         {
             var entity = SqlContext.Find<TEntity>(entityId);
             SqlContext.Remove<TEntity>(entity);
         }
+        
     }
 }

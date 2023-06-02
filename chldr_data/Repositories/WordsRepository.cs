@@ -1,8 +1,10 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Interfaces;
 using chldr_tools;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.Repositories
 {
@@ -12,18 +14,34 @@ namespace chldr_data.Repositories
 
         public override void Add(WordDto dto)
         {
-            throw new NotImplementedException();
+            var entity = SqlWord.FromDto(dto);
+            SqlContext.Add(entity);
+        }
+
+        public void AddRange(IEnumerable<WordDto> dtos)
+        {
+            var entities = dtos.Select(d => SqlWord.FromDto(d));
+            SqlContext.AddRange(entities);
         }
 
         public override WordModel Get(string entityId)
         {
-            throw new NotImplementedException();
+            var word = SqlContext.Words
+                          .Include(w => w.Entry)
+                          .Include(w => w.Entry.Source)
+                          .Include(w => w.Entry.User)
+                          .Include(w => w.Entry.Translations)
+                          .ThenInclude(t => t.Language)
+                          .FirstOrDefault(w => w.WordId.Equals(entityId));
+
+            if (word == null)
+            {
+                throw new ArgumentException($"Word not found WordId: {entityId}");
+            }
+
+            return WordModel.FromEntity(word);
         }
 
-        public override IEnumerable<WordModel> GetAll()
-        {
-            throw new NotImplementedException();
-        }
 
         public override void Update(WordDto dto)
         {

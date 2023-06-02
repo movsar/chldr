@@ -26,4 +26,8 @@ public class SqlWord : IWordEntity
         //AdditionalDetails = wordDto;
     }
 
+    public static SqlWord FromDto(WordDto dto)
+    {
+        throw new NotImplementedException();
+    }
 }

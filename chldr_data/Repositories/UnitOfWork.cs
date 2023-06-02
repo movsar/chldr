@@ -2,6 +2,7 @@
 using chldr_tools;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
+using chldr_data.DatabaseObjects.SqlEntities;
 
 namespace chldr_data.Repositories
 {
@@ -49,7 +50,7 @@ namespace chldr_data.Repositories
             _sqlContext.Dispose();
         }
 
-        public IChangeSetsRepository ChangeSetsRepository
+        public IChangeSetsRepository ChangeSets
         {
             get
             {
@@ -61,7 +62,7 @@ namespace chldr_data.Repositories
             }
         }
 
-        public IWordsRepository WordsRepository
+        public IWordsRepository Words
         {
             get
             {

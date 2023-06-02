@@ -6,5 +6,6 @@ namespace chldr_data.Interfaces
 {
     public interface IWordsRepository : IRepository<SqlWord, WordModel, WordDto>
     {
+        void AddRange(IEnumerable<WordDto> dtos);
     }
 }
