@@ -2,10 +2,10 @@
 {
     public interface IRepository<TEntity, TModel, TDto>
     {
-        Task<TModel> GetByIdAsync(string id);
-        Task<IEnumerable<TModel>> GetAllAsync();
-        Task AddAsync(TDto dto);
-        Task UpdateAsync(TDto dto);
-        Task DeleteAsync(TDto dto);
+        void Add(TDto dto);
+        void Update(TDto dto);
+        TModel Get(string entityId);
+        void Delete(string entityId);
+        IEnumerable<TModel> GetAll();
     }
 }

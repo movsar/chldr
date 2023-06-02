@@ -12,7 +12,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
 {
     public class UpdateWordResolver
     {
-        public List<Change> GetChanges<T>(T updated, T existing, string changeSetId)
+        public List<Change> GetChanges<T>(T updated, T existing)
         {
             // This method compares the two dto's and returns the changed properties with their names and values
 
@@ -31,9 +31,8 @@ namespace chldr_api.GraphQL.ServiceResolvers
                     changes.Add(new Change()
                     {
                         Property = property.Name,
-                        NewValue = newValue,
                         OldValue = oldValue,
-                        ChangeSetId = changeSetId
+                        NewValue = newValue,
                     });
                 }
             }
@@ -72,22 +71,13 @@ namespace chldr_api.GraphQL.ServiceResolvers
 
             var existingWordDto = WordDto.FromModel(WordModel.FromEntity(existingSqlWord));
 
-            var translationChangeSets = SetDbTranslations(dbContext, userDto, existingWordDto, updatedWordDto);
-            var wordChangeSets = SetDbWord(dbContext, userDto, existingWordDto, updatedWordDto);
+            var translationChangeSets = UpdateTranslations(dbContext, userDto, existingWordDto, updatedWordDto);
+            var wordChangeSets = UpdateWordEntry(dbContext, userDto, existingWordDto, updatedWordDto);
 
             // Apply changes
             var changesets = translationChangeSets.Union(wordChangeSets);
             dbContext.AddRange(changesets);
-            try
-            {
-                await dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-
-            // Convert to a word dto
+            await dbContext.SaveChangesAsync();
             var wordEntryEntity = dbContext.Entries
                 .Include(e => e.Source)
                 .Include(e => e.User)
@@ -102,7 +92,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
             return response;
         }
 
-        private List<SqlChangeSet> SetDbWord(SqlContext dbContext, UserDto user, WordDto existingWordDto, WordDto updatedWordDto)
+        private List<SqlChangeSet> UpdateWordEntry(SqlContext dbContext, UserDto user, WordDto existingWordDto, WordDto updatedWordDto)
         {
             var changeSets = new List<SqlChangeSet>();
 
@@ -115,7 +105,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
                 RecordType = (int)chldr_data.Enums.RecordType.Word,
             };
 
-            var wordChanges = GetChanges(updatedWordDto, existingWordDto, updateWordChangeSet.ChangeSetId);
+            var wordChanges = GetChanges(updatedWordDto, existingWordDto);
             if (wordChanges.Count != 0)
             {
                 var sqlWord = dbContext.Words.Find(updatedWordDto.WordId);
@@ -140,7 +130,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
                 RecordId = updatedWordDto.EntryId,
                 RecordType = (int)chldr_data.Enums.RecordType.Entry,
             };
-            var entryChanges = GetChanges<EntryDto>(updatedWordDto, existingWordDto, updateEntryChangeSet.ChangeSetId);
+            var entryChanges = GetChanges<EntryDto>(updatedWordDto, existingWordDto);
             if (entryChanges.Count != 0)
             {
                 var sqlEntry = dbContext.Entries.Find(updatedWordDto.EntryId);
@@ -160,7 +150,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
 
             return changeSets;
         }
-        private List<SqlChangeSet> SetDbTranslations(SqlContext dbContext, UserDto user, WordDto existingWordDto, WordDto updatedWordDto)
+        private List<SqlChangeSet> UpdateTranslations(SqlContext dbContext, UserDto user, WordDto existingWordDto, WordDto updatedWordDto)
         {
             var changeSets = new List<SqlChangeSet>();
             // Create a changeset with all the differences between existing and updated objects
@@ -220,7 +210,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
                     RecordType = (int)chldr_data.Enums.RecordType.Translation,
                 };
 
-                var changes = GetChanges(updatedTranslation, existingWordDto.Translations.First(t => t.TranslationId!.Equals(updatedTranslation.TranslationId)), updateTranslationChangeSet.ChangeSetId);
+                var changes = GetChanges(updatedTranslation, existingWordDto.Translations.First(t => t.TranslationId!.Equals(updatedTranslation.TranslationId)));
                 if (changes.Count != 0)
                 {
                     foreach (var change in changes)
