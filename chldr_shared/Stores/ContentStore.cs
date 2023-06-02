@@ -32,7 +32,7 @@ namespace chldr_shared.Stores
         private readonly WordQueries _wordQueries;
         private readonly PhraseQueries _phraseQueries;
         private readonly SearchService _searchService;
-        private readonly WordChangeRequests _wordChangeRequests;
+        private readonly WordWriter _wordChangeRequests;
 
         // This shouldn't be normally used, but only to request models that have already been loaded 
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
@@ -69,7 +69,7 @@ namespace chldr_shared.Stores
             LanguageQueries languageQueries,
             WordQueries wordQueries,
             PhraseQueries phraseQueries,
-            WordChangeRequests wordChangeRequests
+            WordWriter wordChangeRequests
             )
         {
             _exceptionHandler = exceptionHandler;
