@@ -7,7 +7,7 @@ using GraphQL;
 using chldr_data.Services;
 using chldr_data.Interfaces;
 
-namespace chldr_data.ChangeRequests
+namespace chldr_data.Writers
 {
     public class WordWriter
     {
@@ -30,7 +30,7 @@ namespace chldr_data.ChangeRequests
                         mutation updateWord($userDto: UserDtoInput!, $wordDto: WordDtoInput!) {
                           updateWord(userDto: $userDto, wordDto: $wordDto) {
                             success
-                            errorMessage 
+                            errorMessage
                             changeSets {
                                 changeSetId
                                 recordId

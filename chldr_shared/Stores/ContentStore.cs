@@ -11,7 +11,7 @@ using chldr_utils.Models;
 using chldr_utils.Services;
 using chldr_data.Readers;
 using chldr_data.Services;
-using chldr_data.ChangeRequests;
+using chldr_data.Writers;
 
 namespace chldr_shared.Stores
 {
@@ -32,7 +32,7 @@ namespace chldr_shared.Stores
         private readonly WordQueries _wordQueries;
         private readonly PhraseQueries _phraseQueries;
         private readonly SearchService _searchService;
-        private readonly WordWriter _wordChangeRequests;
+        private readonly WordChangeRequests _wordChangeRequests;
 
         // This shouldn't be normally used, but only to request models that have already been loaded 
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
@@ -69,7 +69,7 @@ namespace chldr_shared.Stores
             LanguageQueries languageQueries,
             WordQueries wordQueries,
             PhraseQueries phraseQueries,
-            WordWriter wordChangeRequests
+            WordChangeRequests wordChangeRequests
             )
         {
             _exceptionHandler = exceptionHandler;
