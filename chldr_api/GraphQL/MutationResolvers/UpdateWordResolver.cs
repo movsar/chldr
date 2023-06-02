@@ -7,6 +7,7 @@ using chldr_data.ResponseTypes;
 using chldr_tools;
 using Microsoft.EntityFrameworkCore;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
+using chldr_data.Repositories;
 
 namespace chldr_api.GraphQL.ServiceResolvers
 {
@@ -48,13 +49,13 @@ namespace chldr_api.GraphQL.ServiceResolvers
             }
         }
 
-        internal async Task<UpdateResponse> ExecuteAsync(SqlContext dbContext, UserDto userDto, WordDto updatedWordDto)
+        internal async Task<UpdateResponse> ExecuteAsync(UnitOfWork unitOfWork, UserDto userDto, WordDto updatedWordDto)
         {
             var user = UserModel.FromDto(userDto);
             var response = new UpdateResponse() { Success = true };
 
             // Try retrieving corresponding object from the database with all the related objects
-            var existingSqlWord = dbContext.Words
+            var existingSqlWord = unitOfWork.Words
                 .Include(w => w.Entry)
                 .Include(w => w.Entry.Source)
                 .Include(w => w.Entry.User)
@@ -71,21 +72,21 @@ namespace chldr_api.GraphQL.ServiceResolvers
 
             var existingWordDto = WordDto.FromModel(WordModel.FromEntity(existingSqlWord));
 
-            var translationChangeSets = UpdateTranslations(dbContext, userDto, existingWordDto, updatedWordDto);
-            var wordChangeSets = UpdateWordEntry(dbContext, userDto, existingWordDto, updatedWordDto);
+            var translationChangeSets = UpdateTranslations(unitOfWork, userDto, existingWordDto, updatedWordDto);
+            var wordChangeSets = UpdateWordEntry(unitOfWork, userDto, existingWordDto, updatedWordDto);
 
             // Apply changes
             var changesets = translationChangeSets.Union(wordChangeSets);
-            dbContext.AddRange(changesets);
-            await dbContext.SaveChangesAsync();
-            var wordEntryEntity = dbContext.Entries
+            unitOfWork.AddRange(changesets);
+            await unitOfWork.SaveChangesAsync();
+            var wordEntryEntity = unitOfWork.Entries
                 .Include(e => e.Source)
                 .Include(e => e.User)
                 .First(e => e.EntryId.Equals(existingSqlWord.EntryId));
 
             var changeSetIds = changesets.Select(c => c.ChangeSetId);
-            var allChangeSets = dbContext.ChangeSets.ToList();
-            var updatedChangeSets = dbContext.ChangeSets.Where(c => changeSetIds.Contains(c.ChangeSetId));
+            var allChangeSets = unitOfWork.ChangeSets.ToList();
+            var updatedChangeSets = unitOfWork.ChangeSets.Where(c => changeSetIds.Contains(c.ChangeSetId));
 
             response.ChangeSets.AddRange(updatedChangeSets.Select(c => ChangeSetDto.FromModel(ChangeSetModel.FromEntity(c))));
 
