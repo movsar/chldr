@@ -13,42 +13,6 @@ namespace chldr_api.GraphQL.ServiceResolvers
 {
     public class UpdateWordResolver
     {
-        public List<Change> GetChanges<T>(T updated, T existing)
-        {
-            // This method compares the two dto's and returns the changed properties with their names and values
-
-            var changes = new List<Change>();
-            var properties = typeof(T).GetProperties();
-
-            foreach (var property in properties)
-            {
-                // Get currenta and old values, use empty string if they're null
-                var newValue = property.GetValue(updated) ?? "";
-                var oldValue = property.GetValue(existing) ?? "";
-
-                // ! Serialization allows comparision between complex objects, it might slow down the process though and worth reconsidering
-                if (!Equals(JsonConvert.SerializeObject(newValue), JsonConvert.SerializeObject(oldValue)))
-                {
-                    changes.Add(new Change()
-                    {
-                        Property = property.Name,
-                        OldValue = oldValue,
-                        NewValue = newValue,
-                    });
-                }
-            }
-
-            return changes;
-        }
-        private void SetPropertyValue(object obj, string propertyName, object value)
-        {
-            var propertyInfo = obj.GetType().GetProperty(propertyName);
-            if (propertyInfo != null)
-            {
-                propertyInfo.SetValue(obj, value);
-            }
-        }
-
         internal async Task<UpdateResponse> ExecuteAsync(UnitOfWork unitOfWork, UserDto userDto, WordDto updatedWordDto)
         {
             //var user = UserModel.FromDto(userDto);
@@ -63,11 +27,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
             // Apply changes
             var changesets = translationChangeSets.Union(wordChangeSets);
             unitOfWork.ChangeSets.AddRange(changesets);
-            await unitOfWork.SaveChangesAsync();
-            var wordEntryEntity = unitOfWork.Entries
-                .Include(e => e.Source)
-                .Include(e => e.User)
-                .First(e => e.EntryId.Equals(existingWord.EntryId));
+            await unitOfWork.SaveChangesAsync();      
 
             var changeSetIds = changesets.Select(c => c.ChangeSetId);
             var allChangeSets = unitOfWork.ChangeSets.ToList();
@@ -80,57 +40,40 @@ namespace chldr_api.GraphQL.ServiceResolvers
             return response;
         }
 
-        private List<SqlChangeSet> UpdateWordEntry(UnitOfWork unitOfWork, UserDto user, WordDto existingWordDto, WordDto updatedWordDto)
+        private List<ChangeSetDto> UpdateWordEntry(UnitOfWork unitOfWork, UserDto user, WordDto existingWordDto, WordDto updatedWordDto)
         {
-            var changeSets = new List<SqlChangeSet>();
+            var changeSets = new List<ChangeSetDto>();
 
             // Update SqlWord
-            var updateWordChangeSet = new SqlChangeSet()
+            var updateWordChangeSet = new ChangeSetDto()
             {
-                Operation = (int)chldr_data.Enums.Operation.Update,
+                Operation = chldr_data.Enums.Operation.Update,
                 UserId = user.UserId!,
                 RecordId = updatedWordDto.WordId,
-                RecordType = (int)chldr_data.Enums.RecordType.Word,
+                RecordType = chldr_data.Enums.RecordType.Word,
             };
 
-            var wordChanges = GetChanges(updatedWordDto, existingWordDto);
+            var wordChanges = unitOfWork.GetChanges(updatedWordDto, existingWordDto);
             if (wordChanges.Count != 0)
             {
-                var sqlWord = unitOfWork.Words.Find(updatedWordDto.WordId);
-                if (sqlWord == null)
-                {
-                    throw new NullReferenceException();
-                }
-
-                foreach (var change in wordChanges)
-                {
-                    SetPropertyValue(sqlWord, change.Property, change.NewValue);
-                }
+                unitOfWork.ApplyChanges<SqlWord>(updatedWordDto.WordId, wordChanges);
 
                 updateWordChangeSet.RecordChanges = JsonConvert.SerializeObject(wordChanges);
                 changeSets.Add(updateWordChangeSet);
             }
 
-            var updateEntryChangeSet = new SqlChangeSet()
+            var updateEntryChangeSet = new ChangeSetDto()
             {
-                Operation = (int)chldr_data.Enums.Operation.Update,
+                Operation = chldr_data.Enums.Operation.Update,
                 UserId = user.UserId!,
                 RecordId = updatedWordDto.EntryId,
-                RecordType = (int)chldr_data.Enums.RecordType.Entry,
+                RecordType = chldr_data.Enums.RecordType.Entry,
             };
-            var entryChanges = GetChanges<EntryDto>(updatedWordDto, existingWordDto);
+
+            var entryChanges = unitOfWork.GetChanges<EntryDto>(updatedWordDto, existingWordDto);
             if (entryChanges.Count != 0)
             {
-                var sqlEntry = unitOfWork.Entries.Find(updatedWordDto.EntryId);
-                if (sqlEntry == null)
-                {
-                    throw new NullReferenceException();
-                }
-
-                foreach (var change in entryChanges)
-                {
-                    SetPropertyValue(sqlEntry, change.Property, change.NewValue);
-                }
+                unitOfWork.ApplyChanges<SqlEntry>(updatedWordDto.EntryId, entryChanges);
 
                 updateEntryChangeSet.RecordChanges = JsonConvert.SerializeObject(entryChanges);
                 changeSets.Add(updateEntryChangeSet);
@@ -198,13 +141,10 @@ namespace chldr_api.GraphQL.ServiceResolvers
                     RecordType = chldr_data.Enums.RecordType.Translation,
                 };
 
-                var changes = GetChanges(updatedTranslation, existingWordDto.Translations.First(t => t.TranslationId!.Equals(updatedTranslation.TranslationId)));
+                var changes = unitOfWork.GetChanges(updatedTranslation, existingWordDto.Translations.First(t => t.TranslationId!.Equals(updatedTranslation.TranslationId)));
                 if (changes.Count != 0)
                 {
-                    foreach (var change in changes)
-                    {
-                        SetPropertyValue(sqlTranslation, change.Property, change.NewValue);
-                    }
+                    unitOfWork.ApplyChanges<SqlTranslation>(sqlTranslation.TranslationId, changes);
 
                     updateTranslationChangeSet.RecordChanges = JsonConvert.SerializeObject(changes);
                     changeSets.Add(updateTranslationChangeSet);
