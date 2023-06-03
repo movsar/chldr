@@ -11,14 +11,13 @@ namespace chldr_data.Repositories
 {
     public abstract class Repository<TEntity, TModel, TDto> : IRepository<TEntity, TModel, TDto> where TEntity : class
     {
+        protected abstract RecordType RecordType { get; }
         protected readonly IEnumerable<ChangeSetModel> EmptyResult = new List<ChangeSetModel>();
-
         protected readonly SqlContext SqlContext;
         public Repository(SqlContext context)
         {
             SqlContext = context;
         }
-        protected abstract RecordType RecordType { get; }
         public abstract TModel Get(string entityId);
         public abstract IEnumerable<ChangeSetModel> Update(string userId, TDto dto);
         public abstract IEnumerable<ChangeSetModel> Add(string userId, TDto dto);
@@ -33,19 +32,20 @@ namespace chldr_data.Repositories
             SqlContext.Remove(entity);
 
             // Insert changeset
-            var changeSetDto = new ChangeSetDto()
+            var changeSet = new SqlChangeSet()
             {
-                Operation = Operation.Delete,
+                Operation = (int)Operation.Delete,
                 UserId = userId!,
                 RecordId = entityId!,
-                RecordType = RecordType,
+                RecordType = (int)RecordType,
             };
-            using var unitOfWork = new UnitOfWork(SqlContext);
-            unitOfWork.ChangeSets.Add(userId, changeSetDto);
+
+            SqlContext.ChangeSets.Add(changeSet);
+            SqlContext.SaveChanges();
 
             // Return changeset with updated index
-            var changeSetModel = unitOfWork.ChangeSets.Get(changeSetDto.ChangeSetId);
-            return new List<ChangeSetModel>() { changeSetModel };
+            changeSet = SqlContext.ChangeSets.Find(changeSet.ChangeSetId);
+            return new List<ChangeSetModel>() { ChangeSetModel.FromEntity(changeSet) };
         }
 
         protected static void SetPropertyValue(object obj, string propertyName, object value)

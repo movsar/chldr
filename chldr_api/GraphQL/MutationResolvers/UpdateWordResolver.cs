@@ -19,8 +19,6 @@ namespace chldr_api.GraphQL.ServiceResolvers
             
             var changesets = translationChangeSets.Union(wordChangeSets);
 
-            await unitOfWork.SaveChangesAsync();
-
             // Retrieve back the same changesets so that they'll have indexes
             var updatedChangeSets = unitOfWork.ChangeSets.Get(changesets.Select(c => c.ChangeSetId).ToArray());
 

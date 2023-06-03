@@ -37,16 +37,6 @@ namespace chldr_data.Repositories
             }
         }
 
-        public async Task SaveChangesAsync()
-        {
-            await _sqlContext.SaveChangesAsync();
-        }
-
-        public void SaveChanges()
-        {
-            _sqlContext.SaveChanges();
-        }
-
         public void Dispose()
         {
             _transaction?.Dispose();

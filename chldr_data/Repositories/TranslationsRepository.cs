@@ -21,18 +21,18 @@ namespace chldr_data.Repositories
             SqlContext.Add(entity);
 
             // Insert changeset
-            var changeSetDto = new ChangeSetDto()
+            var changeSet = new SqlChangeSet()
             {
                 UserId = userId!,
-                Operation = Operation.Insert,
+                Operation = (int)Operation.Insert,
                 RecordId = dto.TranslationId!,
-                RecordType = RecordType,
+                RecordType = (int)RecordType,
             };
-            using var unitOfWork = new UnitOfWork(SqlContext);
-            unitOfWork.ChangeSets.Add(userId, changeSetDto);
+            SqlContext.ChangeSets.Add(changeSet);
+            SqlContext.SaveChanges();
 
             // Return changeset with updated index
-            var changeSetModel = unitOfWork.ChangeSets.Get(changeSetDto.ChangeSetId);
+            var changeSetModel = ChangeSetModel.FromEntity(SqlContext.ChangeSets.Find(changeSet.ChangeSetId)!);
             return new List<ChangeSetModel>() { changeSetModel };
         }
 
@@ -65,19 +65,19 @@ namespace chldr_data.Repositories
             ApplyChanges(translationDto.TranslationId, changes);
 
             // Insert changeset
-            var changeSetDto = new ChangeSetDto()
+            var changeSet = new SqlChangeSet()
             {
                 UserId = userId!,
-                Operation = Operation.Update,
+                Operation = (int)Operation.Update,
                 RecordId = translationDto.TranslationId!,
-                RecordType = RecordType,
+                RecordType = (int)RecordType,
                 RecordChanges = JsonConvert.SerializeObject(changes)
             };
-            using var unitOfWork = new UnitOfWork(SqlContext);
-            unitOfWork.ChangeSets.Add(userId, changeSetDto);
+            SqlContext.ChangeSets.Add(changeSet);
+            SqlContext.SaveChanges();
 
             // Return changeset with updated index
-            var changeSetModel = unitOfWork.ChangeSets.Get(changeSetDto.ChangeSetId);
+            var changeSetModel = ChangeSetModel.FromEntity(SqlContext.ChangeSets.Find(changeSet.ChangeSetId)!);
             return new List<ChangeSetModel>() { changeSetModel };
         }
     }

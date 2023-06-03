@@ -8,6 +8,7 @@ using chldr_data.Interfaces;
 using chldr_tools;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Realms;
 using Realms.Sync;
 
 namespace chldr_data.Repositories
@@ -22,19 +23,21 @@ namespace chldr_data.Repositories
             var entity = SqlWord.FromDto(dto);
             SqlContext.Add(entity);
 
-            var wordChangeSetDto = new ChangeSetDto()
+            // Insert changeset
+            var changeSet = new SqlChangeSet()
             {
-                Operation = Operation.Insert,
+                Operation = (int)Operation.Insert,
                 UserId = userId!,
                 RecordId = dto.WordId,
-                RecordType = RecordType,
+                RecordType = (int)RecordType,
             };
-            using var unitOfWork = new UnitOfWork(SqlContext);
-            unitOfWork.ChangeSets.Add(userId, wordChangeSetDto);
+
+            SqlContext.ChangeSets.Add(changeSet);
+            SqlContext.SaveChanges();
 
             // Return changeset with updated index
-            var entryChangeSetModel = unitOfWork.ChangeSets.Get(wordChangeSetDto.ChangeSetId);
-            return new List<ChangeSetModel>() { entryChangeSetModel };
+            changeSet = SqlContext.ChangeSets.Find(changeSet.ChangeSetId);
+            return new List<ChangeSetModel>() { ChangeSetModel.FromEntity(changeSet) };
         }
 
         public override WordModel Get(string entityId)
@@ -72,20 +75,20 @@ namespace chldr_data.Repositories
             {
                 ApplyChanges(updatedWordDto.EntryId, entryChanges);
 
-                var entryChangeSetDto = new ChangeSetDto()
+                var entryChangeSet = new SqlChangeSet()
                 {
-                    Operation = Operation.Update,
+                    Operation = (int)Operation.Update,
                     UserId = userId!,
                     RecordId = updatedWordDto.EntryId,
-                    RecordType = RecordType.Entry,
+                    RecordType = (int)RecordType.Entry,
                     RecordChanges = JsonConvert.SerializeObject(entryChanges)
                 };
-                using var unitOfWork = new UnitOfWork(SqlContext);
-                unitOfWork.ChangeSets.Add(userId, entryChangeSetDto);
+                SqlContext.ChangeSets.Add(entryChangeSet);
+                SqlContext.SaveChanges();
 
                 // Return changeset with updated index
-                var entryChangeSetModel = unitOfWork.ChangeSets.Get(entryChangeSetDto.ChangeSetId);
-                response.Add(entryChangeSetModel);
+                var entryChangeSetModel = SqlContext.ChangeSets.Find(entryChangeSet.ChangeSetId);
+                response.Add(ChangeSetModel.FromEntity(entryChangeSetModel));
             }
 
             // Apply changes to the word entity
@@ -94,20 +97,20 @@ namespace chldr_data.Repositories
             {
                 ApplyChanges(updatedWordDto.WordId, wordChanges);
 
-                var wordChangeSetDto = new ChangeSetDto()
+                var wordChangeSet = new SqlChangeSet()
                 {
-                    Operation = Operation.Update,
+                    Operation = (int)Operation.Update,
                     UserId = userId!,
                     RecordId = updatedWordDto.WordId,
-                    RecordType = RecordType,
+                    RecordType = (int)RecordType,
                     RecordChanges = JsonConvert.SerializeObject(wordChanges)
                 };
-                using var unitOfWork = new UnitOfWork(SqlContext);
-                unitOfWork.ChangeSets.Add(userId, wordChangeSetDto);
+                SqlContext.ChangeSets.Add(wordChangeSet);
+                SqlContext.SaveChanges();
 
                 // Return changeset with updated index
-                var wordChangeSetModel = unitOfWork.ChangeSets.Get(wordChangeSetDto.ChangeSetId);
-                response.Add(wordChangeSetModel);
+                var entryChangeSetModel = SqlContext.ChangeSets.Find(wordChangeSet.ChangeSetId);
+                response.Add(ChangeSetModel.FromEntity(entryChangeSetModel));
             }
 
             return response;

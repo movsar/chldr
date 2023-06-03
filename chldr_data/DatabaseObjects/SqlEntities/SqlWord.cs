@@ -16,18 +16,16 @@ public class SqlWord : IWordEntity
     public virtual SqlEntry Entry { get; set; } = null!;
     public SqlWord() { }
 
-    public SqlWord(WordDto wordDto)
-    {
-        // Update properties from the WordDto object
-        EntryId = wordDto.EntryId;
-        Content = wordDto.Content;
-        Notes = wordDto.Notes;
-        PartOfSpeech = (int)wordDto.PartOfSpeech;
-        //AdditionalDetails = wordDto;
-    }
-
     public static SqlWord FromDto(WordDto dto)
     {
-        throw new NotImplementedException();
+        return new SqlWord()
+        {
+            // Update properties from the WordDto object
+            EntryId = dto.EntryId,
+            Content = dto.Content,
+            Notes = dto.Notes,
+            PartOfSpeech = (int)dto.PartOfSpeech,
+            //AdditionalDetails = wordDto;
+        };
     }
 }
