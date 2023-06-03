@@ -54,7 +54,7 @@ namespace chldr_data.Repositories
             _transaction?.Dispose();
             _sqlContext.Dispose();
         }
-        public List<Change> GetChanges<T>(T updated, T existing)
+        public static List<Change> GetChanges<T>(T updated, T existing)
         {
             // This method compares the two dto's and returns the changed properties with their names and values
 
@@ -80,31 +80,6 @@ namespace chldr_data.Repositories
             }
 
             return changes;
-        }
-
-        private void SetPropertyValue(object obj, string propertyName, object value)
-        {
-            var propertyInfo = obj.GetType().GetProperty(propertyName);
-            if (propertyInfo != null)
-            {
-                propertyInfo.SetValue(obj, value);
-            }
-        }
-
-        public void ApplyChanges<T>(string entityId, List<Change> changes) where T : class, IEntity
-        {
-            // Using this method, instead of updating the whole database entity, we can just update its particular, changed fields
-            
-            var sqlEntity = _sqlContext.Find<T>(entityId);
-            if (sqlEntity == null)
-            {
-                throw new NullReferenceException();
-            }
-
-            foreach (var change in changes)
-            {
-                SetPropertyValue(sqlEntity, change.Property, change.NewValue);
-            }
         }
 
         public ITranslationsRepository Translations

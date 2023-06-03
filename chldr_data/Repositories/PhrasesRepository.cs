@@ -6,27 +6,22 @@ namespace chldr_data.Repositories
 {
     public class PhrasesRepository : IPhraseRepository
     {
-        public Task AddAsync(PhraseDto dto)
+        public void Add(PhraseDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(PhraseDto dto)
+        public void Delete(string entityId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<PhraseModel>> GetAllAsync()
+        public PhraseModel Get(string entityId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<PhraseModel> GetByIdAsync(string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(PhraseDto dto)
+        public void Update(PhraseDto dto)
         {
             throw new NotImplementedException();
         }

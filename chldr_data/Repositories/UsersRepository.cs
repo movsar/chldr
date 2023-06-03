@@ -10,11 +10,27 @@ namespace chldr_data.Repositories
     public class UsersRepository : Repository<SqlUser, UserModel, UserDto>
     {
         public UsersRepository(SqlContext context) : base(context) { }
+
+        public override void Add(UserDto dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override UserModel Get(string entityId)
+        {
+            throw new NotImplementedException();
+        }
+
         public UserModel GetUserByEmail(string email)
         {
             //var user = Database.All<RealmUser>().Where(u => u.Email == email).FirstOrDefault();
             //return UserModel.FromEntity(user);
             return null;
+        }
+
+        public override void Update(UserDto dto)
+        {
+            throw new NotImplementedException();
         }
     }
 }

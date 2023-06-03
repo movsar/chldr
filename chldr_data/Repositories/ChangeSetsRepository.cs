@@ -44,5 +44,24 @@ namespace chldr_data.Repositories
 
             SqlContext.Update(changeSet);
         }
+
+        public IEnumerable<ChangeSetModel> GetLatest(int limit)
+        {
+            var models = SqlContext.ChangeSets
+                .OrderByDescending(c => c.ChangeSetIndex)
+                .Take(limit)
+                .Select(c => (ChangeSetModel)ChangeSetModel.FromEntity(c));
+
+            return models;
+        }
+
+        public IEnumerable<ChangeSetModel> Get(string[] changeSetIds)
+        {
+            var models = SqlContext.ChangeSets
+                .Where(c => changeSetIds.Contains(c.ChangeSetId))
+                .Select(c => ChangeSetModel.FromEntity(c));
+
+            return models;
+        }
     }
 }

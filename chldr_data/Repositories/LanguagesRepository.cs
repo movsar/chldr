@@ -7,27 +7,22 @@ namespace chldr_data.Repositories
 {
     public class LanguagesRepository : ILanguageRepository
     {
-        public Task AddAsync(LanguageDto dto)
+        public void Add(LanguageDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(LanguageDto dto)
+        public void Delete(string entityId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<LanguageModel>> GetAllAsync()
+        public LanguageModel Get(string entityId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<LanguageModel> GetByIdAsync(string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(LanguageDto dto)
+        public void Update(LanguageDto dto)
         {
             throw new NotImplementedException();
         }

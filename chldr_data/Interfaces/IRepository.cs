@@ -1,10 +1,12 @@
-﻿namespace chldr_data.Interfaces
+﻿using chldr_data.DatabaseObjects.Models;
+
+namespace chldr_data.Interfaces
 {
     public interface IRepository<TEntity, TModel, TDto>
     {
-        void Add(TDto dto);
-        void Update(TDto dto);
-        void Delete(string entityId);
-        TModel Get(string entityId);
+        TModel Get(string entityId); 
+        IEnumerable<ChangeSetModel> Add(string userId, TDto dto);
+        IEnumerable<ChangeSetModel> Update(string userId, TDto dto);
+        IEnumerable<ChangeSetModel> Delete(string userId, string translationId);
     }
 }
