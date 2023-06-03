@@ -1,15 +1,18 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.SqlEntities;
+using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_tools;
 
 namespace chldr_data.Repositories
 {
     public class SourcesRepository : Repository<SqlSource, SourceModel, SourceDto>
     {
+        protected override RecordType RecordType => RecordType.Source;
         public SourcesRepository(SqlContext context) : base(context) { }
 
-        public override void Add(SourceDto dto)
+        public override IEnumerable<ChangeSetModel> Add(string userId, SourceDto dto)
         {
             throw new NotImplementedException();
         }
@@ -19,7 +22,7 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
-        public override void Update(SourceDto dto)
+        public override IEnumerable<ChangeSetModel> Update(string userId, SourceDto dto)
         {
             throw new NotImplementedException();
         }

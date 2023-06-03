@@ -3,27 +3,38 @@ using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.DatabaseObjects.SqlEntities;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_tools;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Realms.Sync;
 
 namespace chldr_data.Repositories
 {
-    public class WordsRepository : Repository<SqlWord, WordModel, WordDto>, IWordsRepository
+    public class WordsRepository : Repository<SqlWord, WordModel, WordDto>
     {
+        protected override RecordType RecordType => RecordType.Word;
         public WordsRepository(SqlContext context) : base(context) { }
 
-        public override void Add(WordDto dto)
+        public override IEnumerable<ChangeSetModel> Add(string userId, WordDto dto)
         {
             var entity = SqlWord.FromDto(dto);
             SqlContext.Add(entity);
-        }
 
-        public void AddRange(IEnumerable<WordDto> dtos)
-        {
-            var entities = dtos.Select(d => SqlWord.FromDto(d));
-            SqlContext.AddRange(entities);
+            var wordChangeSetDto = new ChangeSetDto()
+            {
+                Operation = Operation.Insert,
+                UserId = userId!,
+                RecordId = dto.WordId,
+                RecordType = RecordType,
+            };
+            using var unitOfWork = new UnitOfWork(SqlContext);
+            unitOfWork.ChangeSets.Add(userId, wordChangeSetDto);
+
+            // Return changeset with updated index
+            var entryChangeSetModel = unitOfWork.ChangeSets.Get(wordChangeSetDto.ChangeSetId);
+            return new List<ChangeSetModel>() { entryChangeSetModel };
         }
 
         public override WordModel Get(string entityId)
@@ -44,46 +55,62 @@ namespace chldr_data.Repositories
             return WordModel.FromEntity(word);
         }
 
-
-        public override IEnumerable<ChangeSetModel> Update(WordDto dto)
+        public override IEnumerable<ChangeSetModel> Update(string userId, WordDto updatedWordDto)
         {
-            var changeSets = new List<ChangeSetDto>();
-
-            // Update SqlWord
-            var updateWordChangeSet = new ChangeSetDto()
+            var existingWordEntity = SqlContext.Words.Find(updatedWordDto.WordId);
+            if (existingWordEntity == null)
             {
-                Operation = chldr_data.Enums.Operation.Update,
-                UserId = user.UserId!,
-                RecordId = updatedWordDto.WordId,
-                RecordType = chldr_data.Enums.RecordType.Word,
-            };
-
-            var wordChanges = unitOfWork.GetChanges(updatedWordDto, existingWordDto);
-            if (wordChanges.Count != 0)
-            {
-                unitOfWork.ApplyChanges<SqlWord>(updatedWordDto.WordId, wordChanges);
-
-                updateWordChangeSet.RecordChanges = JsonConvert.SerializeObject(wordChanges);
-                changeSets.Add(updateWordChangeSet);
+                throw new NullReferenceException();
             }
 
-            var updateEntryChangeSet = new ChangeSetDto()
-            {
-                Operation = chldr_data.Enums.Operation.Update,
-                UserId = user.UserId!,
-                RecordId = updatedWordDto.EntryId,
-                RecordType = chldr_data.Enums.RecordType.Entry,
-            };
+            var response = new List<ChangeSetModel>();
+            var existingWordDto = WordDto.FromModel(WordModel.FromEntity(existingWordEntity));
 
-            var entryChanges = unitOfWork.GetChanges<EntryDto>(updatedWordDto, existingWordDto);
+            // Apply changes to the entry entity
+            var entryChanges = UnitOfWork.GetChanges<EntryDto>(updatedWordDto, existingWordDto);
             if (entryChanges.Count != 0)
             {
-                unitOfWork.ApplyChanges<SqlEntry>(updatedWordDto.EntryId, entryChanges);
+                ApplyChanges(updatedWordDto.EntryId, entryChanges);
 
-                updateEntryChangeSet.RecordChanges = JsonConvert.SerializeObject(entryChanges);
-                changeSets.Add(updateEntryChangeSet);
+                var entryChangeSetDto = new ChangeSetDto()
+                {
+                    Operation = Operation.Update,
+                    UserId = userId!,
+                    RecordId = updatedWordDto.EntryId,
+                    RecordType = RecordType.Entry,
+                    RecordChanges = JsonConvert.SerializeObject(entryChanges)
+                };
+                using var unitOfWork = new UnitOfWork(SqlContext);
+                unitOfWork.ChangeSets.Add(userId, entryChangeSetDto);
+
+                // Return changeset with updated index
+                var entryChangeSetModel = unitOfWork.ChangeSets.Get(entryChangeSetDto.ChangeSetId);
+                response.Add(entryChangeSetModel);
             }
 
+            // Apply changes to the word entity
+            var wordChanges = UnitOfWork.GetChanges(updatedWordDto, existingWordDto);
+            if (wordChanges.Count != 0)
+            {
+                ApplyChanges(updatedWordDto.WordId, wordChanges);
+
+                var wordChangeSetDto = new ChangeSetDto()
+                {
+                    Operation = Operation.Update,
+                    UserId = userId!,
+                    RecordId = updatedWordDto.WordId,
+                    RecordType = RecordType,
+                    RecordChanges = JsonConvert.SerializeObject(wordChanges)
+                };
+                using var unitOfWork = new UnitOfWork(SqlContext);
+                unitOfWork.ChangeSets.Add(userId, wordChangeSetDto);
+
+                // Return changeset with updated index
+                var wordChangeSetModel = unitOfWork.ChangeSets.Get(wordChangeSetDto.ChangeSetId);
+                response.Add(wordChangeSetModel);
+            }
+
+            return response;
         }
     }
 }

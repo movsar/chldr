@@ -1,20 +1,17 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.SqlEntities;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_tools;
 
 namespace chldr_data.Repositories
 {
-    public class ChangeSetsRepository : Repository<SqlChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
+    public class ChangeSetsRepository : Repository<SqlChangeSet, ChangeSetModel, ChangeSetDto>
     {
-        public ChangeSetsRepository(SqlContext sqlContext) : base(sqlContext) { }
+        protected override RecordType RecordType => throw new Exception("Shouldn't be used");
 
-        public override void Add(ChangeSetDto dto)
-        {
-            var changeSet = SqlChangeSet.FromDto(dto);
-            SqlContext.Add(changeSet);
-        }
+        public ChangeSetsRepository(SqlContext sqlContext) : base(sqlContext) { }
 
         public override ChangeSetModel Get(string entityId)
         {
@@ -26,23 +23,6 @@ namespace chldr_data.Repositories
         {
             var entities = dtos.Select(d => (SqlChangeSet)SqlChangeSet.FromDto(d));
             SqlContext.AddRange(entities);
-        }
-        public override void Update(ChangeSetDto dto)
-        {
-            var changeSet = SqlContext.Find<SqlChangeSet>(dto.ChangeSetId);
-            if (changeSet == null)
-            {
-                throw new NullReferenceException();
-            }
-
-            changeSet.RecordChanges = dto.RecordChanges;
-            changeSet.RecordId = dto.RecordId;
-            changeSet.CreatedAt = dto.CreatedAt;
-            changeSet.RecordType = (int)dto.RecordType;
-            changeSet.Operation = (int)dto.Operation;
-            changeSet.UserId = dto.UserId;
-
-            SqlContext.Update(changeSet);
         }
 
         public IEnumerable<ChangeSetModel> GetLatest(int limit)
@@ -62,6 +42,19 @@ namespace chldr_data.Repositories
                 .Select(c => ChangeSetModel.FromEntity(c));
 
             return models;
+        }
+
+        public override IEnumerable<ChangeSetModel> Update(string userId, ChangeSetDto dto)
+        {
+            throw new Exception("This method should never be called for ChangeSets, they're immutable");
+        }
+
+        public override IEnumerable<ChangeSetModel> Add(string userId, ChangeSetDto dto)
+        {
+            var changeSet = SqlChangeSet.FromDto(dto);
+            SqlContext.Add(changeSet);
+
+            return EmptyResult;
         }
     }
 }

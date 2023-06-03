@@ -2,27 +2,29 @@
 using chldr_data.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.SqlEntities;
+using chldr_data.Enums;
+using chldr_tools;
 
 namespace chldr_data.Repositories
 {
-    public class LanguagesRepository : ILanguageRepository
+    public class LanguagesRepository : Repository<SqlLanguage, LanguageModel, LanguageDto>
     {
-        public void Add(LanguageDto dto)
+        public LanguagesRepository(SqlContext context) : base(context) { }
+
+        protected override RecordType RecordType => RecordType.Language;
+
+        public override IEnumerable<ChangeSetModel> Add(string userId, LanguageDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(string entityId)
+        public override LanguageModel Get(string entityId)
         {
             throw new NotImplementedException();
         }
 
-        public LanguageModel Get(string entityId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(LanguageDto dto)
+        public override IEnumerable<ChangeSetModel> Update(string userId, LanguageDto dto)
         {
             throw new NotImplementedException();
         }

@@ -15,12 +15,9 @@ namespace chldr_api.GraphQL.ServiceResolvers
             var existingWordDto = WordDto.FromModel(existingWord);
 
             var translationChangeSets = UpdateTranslations(unitOfWork, userDto, existingWordDto, updatedWordDto);
-
-            var wordChangeSets = unitOfWork.Words.Update(updatedWordDto);
-
+            var wordChangeSets = unitOfWork.Words.Update(userDto.UserId, updatedWordDto);
+            
             var changesets = translationChangeSets.Union(wordChangeSets);
-
-            unitOfWork.ChangeSets.AddRange(changesets);
 
             await unitOfWork.SaveChangesAsync();
 
@@ -33,10 +30,10 @@ namespace chldr_api.GraphQL.ServiceResolvers
             return response;
         }
 
-        private List<ChangeSetDto> UpdateTranslations(UnitOfWork unitOfWork, UserDto user, WordDto existingWordDto, WordDto updatedWordDto)
+        private List<ChangeSetModel> UpdateTranslations(UnitOfWork unitOfWork, UserDto user, WordDto existingWordDto, WordDto updatedWordDto)
         {
-            var changeSets = new List<ChangeSetDto>();
             // Create a changeset with all the differences between existing and updated objects
+
             // ! There should be a separate ChangeSet for each changed / inserted / deleted object
             var existingTranslationIds = existingWordDto.Translations.Select(t => t.TranslationId).ToHashSet();
             var updatedTranslationIds = updatedWordDto.Translations.Select(t => t.TranslationId).ToHashSet();
@@ -45,29 +42,21 @@ namespace chldr_api.GraphQL.ServiceResolvers
             var deletedTranslations = existingWordDto.Translations.Where(t => !updatedTranslationIds.Contains(t.TranslationId));
             var updatedTranslations = updatedWordDto.Translations.Where(t => existingTranslationIds.Contains(t.TranslationId) && updatedTranslationIds.Contains(t.TranslationId));
 
+            var changeSets = new List<ChangeSetModel>();
             foreach (var insertedTranslation in insertedTranslations)
             {
-                unitOfWork.Translations.Add(insertedTranslation);
-
-                changeSets.Add(new ChangeSetDto()
-                {
-                    Operation = chldr_data.Enums.Operation.Insert,
-                    UserId = user.UserId!,
-                    RecordId = insertedTranslation.TranslationId!,
-                    RecordType = chldr_data.Enums.RecordType.Translation,
-                });
+                changeSets.AddRange(unitOfWork.Translations.Add(user.UserId, insertedTranslation));
             }
 
             foreach (var deletedTranslation in deletedTranslations)
             {
-                changeSets.AddRange(unitOfWork.Translations.Delete(user.UserId, translationDto).Select(c => ChangeSetDto.FromModel(c)));
+                changeSets.AddRange(unitOfWork.Translations.Delete(user.UserId, deletedTranslation.TranslationId));
             }
 
             foreach (var translationDto in updatedTranslations)
             {
-                changeSets.AddRange(unitOfWork.Translations.Update(user.UserId, translationDto).Select(c => ChangeSetDto.FromModel(c)));
+                changeSets.AddRange(unitOfWork.Translations.Update(user.UserId, translationDto));
             }
-
 
             return changeSets;
         }

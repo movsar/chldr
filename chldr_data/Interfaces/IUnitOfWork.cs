@@ -1,9 +1,11 @@
-﻿namespace chldr_data.Interfaces
+﻿using chldr_data.Repositories;
+
+namespace chldr_data.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IChangeSetsRepository ChangeSetsRepository { get; }
-        IWordsRepository WordsRepository { get; }
+        ChangeSetsRepository ChangeSetsRepository { get; }
+        WordsRepository WordsRepository { get; }
 
         void SaveChanges();
     }

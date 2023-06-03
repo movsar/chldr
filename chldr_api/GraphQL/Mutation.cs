@@ -67,10 +67,10 @@ namespace chldr_api
 
                 return response;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 _unitOfWork.Rollback();
-                throw;
+                throw ex;
             }
             finally
             {

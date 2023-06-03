@@ -1,9 +1,8 @@
-﻿using chldr_data.Interfaces;
-using chldr_data.DatabaseObjects.Models;
-using chldr_data.DatabaseObjects.RealmEntities;
+﻿using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_tools;
+using chldr_data.Enums;
 
 namespace chldr_data.Repositories
 {
@@ -11,7 +10,9 @@ namespace chldr_data.Repositories
     {
         public UsersRepository(SqlContext context) : base(context) { }
 
-        public override void Add(UserDto dto)
+        protected override RecordType RecordType => RecordType.User;
+
+        public override IEnumerable<ChangeSetModel> Add(string userId, UserDto dto)
         {
             throw new NotImplementedException();
         }
@@ -21,14 +22,7 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
-        public UserModel GetUserByEmail(string email)
-        {
-            //var user = Database.All<RealmUser>().Where(u => u.Email == email).FirstOrDefault();
-            //return UserModel.FromEntity(user);
-            return null;
-        }
-
-        public override void Update(UserDto dto)
+        public override IEnumerable<ChangeSetModel> Update(string userId, UserDto dto)
         {
             throw new NotImplementedException();
         }

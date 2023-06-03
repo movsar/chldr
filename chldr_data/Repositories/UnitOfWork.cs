@@ -1,11 +1,6 @@
-﻿using chldr_data.Interfaces;
-using chldr_tools;
+﻿using chldr_tools;
 using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore;
-using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Models;
-using chldr_data.DatabaseObjects.Interfaces;
-using System.Security.Claims;
 using Newtonsoft.Json;
 
 namespace chldr_data.Repositories
@@ -15,8 +10,8 @@ namespace chldr_data.Repositories
         private readonly SqlContext _sqlContext;
         private IDbContextTransaction _transaction;
 
-        private IChangeSetsRepository _changeSetsRepository;
-        private IWordsRepository _wordsRepository;
+        private ChangeSetsRepository _changeSetsRepository;
+        private WordsRepository _wordsRepository;
         private TranslationsRepository _translationsRepository;
 
         public UnitOfWork(SqlContext sqlContext)
@@ -36,7 +31,10 @@ namespace chldr_data.Repositories
 
         public void Rollback()
         {
-            _transaction.Rollback();
+            if (_transaction != null && _transaction.GetDbTransaction().Connection != null)
+            {
+                _transaction.Rollback();
+            }
         }
 
         public async Task SaveChangesAsync()
@@ -54,6 +52,7 @@ namespace chldr_data.Repositories
             _transaction?.Dispose();
             _sqlContext.Dispose();
         }
+
         public static List<Change> GetChanges<T>(T updated, T existing)
         {
             // This method compares the two dto's and returns the changed properties with their names and values
@@ -82,7 +81,7 @@ namespace chldr_data.Repositories
             return changes;
         }
 
-        public ITranslationsRepository Translations
+        public TranslationsRepository Translations
         {
             get
             {
@@ -95,7 +94,7 @@ namespace chldr_data.Repositories
         }
 
 
-        public IChangeSetsRepository ChangeSets
+        public ChangeSetsRepository ChangeSets
         {
             get
             {
@@ -107,7 +106,7 @@ namespace chldr_data.Repositories
             }
         }
 
-        public IWordsRepository Words
+        public WordsRepository Words
         {
             get
             {

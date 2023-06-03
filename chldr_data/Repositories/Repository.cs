@@ -18,7 +18,7 @@ namespace chldr_data.Repositories
         {
             SqlContext = context;
         }
-        protected abstract RecordType RecordType { get; set; }
+        protected abstract RecordType RecordType { get; }
         public abstract TModel Get(string entityId);
         public abstract IEnumerable<ChangeSetModel> Update(string userId, TDto dto);
         public abstract IEnumerable<ChangeSetModel> Add(string userId, TDto dto);

@@ -1,27 +1,29 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.SqlEntities;
+using chldr_data.Enums;
+using chldr_tools;
 
 namespace chldr_data.Repositories
 {
-    public class PhrasesRepository : IPhraseRepository
+    public class PhrasesRepository : Repository<SqlPhrase, PhraseModel, PhraseDto>
     {
-        public void Add(PhraseDto dto)
+        public PhrasesRepository(SqlContext context) : base(context) { }
+
+        protected override RecordType RecordType => RecordType.Phrase;
+
+        public override IEnumerable<ChangeSetModel> Add(string userId, PhraseDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(string entityId)
+        public override PhraseModel Get(string entityId)
         {
             throw new NotImplementedException();
         }
 
-        public PhraseModel Get(string entityId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(PhraseDto dto)
+        public override IEnumerable<ChangeSetModel> Update(string userId, PhraseDto dto)
         {
             throw new NotImplementedException();
         }
