@@ -71,6 +71,8 @@ namespace chldr_data.Repositories
             {
                 SetPropertyValue(sqlEntity, change.Property, change.NewValue);
             }
+
+            SqlContext.SaveChanges();
         }
     }
 }

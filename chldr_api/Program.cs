@@ -22,7 +22,7 @@ namespace chldr_api
             builder.Services.AddControllers();
 
             builder.Services.AddDbContext<SqlContext>(options =>
-                options.UseMySQL("server=165.22.89.128;port=3306;database=u1072762_chldr;user=admin;password=password"),
+                options.UseMySQL("server=165.22.89.128;port=3306;database=xj_chldr;user=admin;password=2398ehh&*H!&*Hhs-="),
                 ServiceLifetime.Singleton);
 
             builder.Services.AddScoped<UpdateWordResolver>();

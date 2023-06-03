@@ -71,7 +71,7 @@ namespace chldr_data.Services
         {
             try
             {
-                var _currentSession = await _authService.LogInEmailPasswordAsync(email, password);
+                _currentSession = await _authService.LogInEmailPasswordAsync(email, password);
                 await SaveActiveSession();
 
                 UserStateHasChanged?.Invoke(_currentSession);
