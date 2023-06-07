@@ -55,13 +55,13 @@ namespace chldr_api
         }
 
         // Word mutations
-        public async Task<UpdateResponse> UpdateWord(UserDto userDto, WordDto wordDto)
+        public async Task<UpdateResponse> UpdateWord(string userId, WordDto wordDto)
         {
             _unitOfWork.BeginTransaction();
 
             try
             {
-                var response = await _updateWordResolver.ExecuteAsync(_unitOfWork, userDto, wordDto);
+                var response = await _updateWordResolver.ExecuteAsync(_unitOfWork, userId, wordDto);
                 
                 _unitOfWork.Commit();
 

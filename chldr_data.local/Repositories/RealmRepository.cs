@@ -1,6 +1,4 @@
-﻿using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Models;
-using chldr_data.DatabaseObjects.SqlEntities;
+﻿using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.local.RealmEntities;
@@ -13,6 +11,10 @@ namespace chldr_data.Repositories
 {
     public abstract class RealmRepository<TEntity, TModel, TDto> : IRepository<TEntity, TModel, TDto> where TEntity : RealmObject
     {
+        public event Action<EntryModel>? EntryUpdated;
+        public event Action<EntryModel>? EntryInserted;
+        public event Action<EntryModel>? EntryDeleted;
+        public event Action<EntryModel>? EntryAdded;
         protected abstract RecordType RecordType { get; }
         protected readonly IEnumerable<ChangeSetModel> EmptyResult = new List<ChangeSetModel>();
         protected readonly Realm DbContext;

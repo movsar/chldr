@@ -1,35 +1,25 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.ResponseTypes;
 using GraphQL;
-using chldr_data.Services;
-using chldr_data.Interfaces;
 using chldr_utils.Interfaces;
-using chldr_data.local.Services;
 
 namespace chldr_data.Writers
 {
-    public class WordsWriter
+    public class WordChangeRequests
     {
         private readonly IGraphQLRequestSender _graphQLRequestSender;
-        private readonly SyncService _syncService;
-
-        public event Action<EntryModel>? EntryUpdated;
-        public event Action<WordModel>? WordUpdated;
-        public event Action<EntryModel>? EntryInserted;
-        public WordsWriter(IGraphQLRequestSender graphQLRequestSender, SyncService syncService)
+        public WordChangeRequests(IGraphQLRequestSender graphQLRequestSender)
         {
             _graphQLRequestSender = graphQLRequestSender;
-            _syncService = syncService;
         }
-        public async Task<List<ChangeSetModel>> UpdateWord(UserDto userDto, WordDto wordDto)
+        public async Task<List<ChangeSetModel>> UpdateWord(string userId, WordDto wordDto)
         {
             var request = new GraphQLRequest
             {
                 Query = @"
-                        mutation updateWord($userDto: UserDtoInput!, $wordDto: WordDtoInput!) {
-                          updateWord(userDto: $userDto, wordDto: $wordDto) {
+                        mutation updateWord(userId: String!, $wordDto: WordDtoInput!) {
+                          updateWord(userId: $userId, wordDto: $wordDto) {
                             success
                             errorMessage
                             changeSets {
@@ -44,7 +34,7 @@ namespace chldr_data.Writers
                         }
                         ",
                 // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new { userDto, wordDto }
+                Variables = new { userId, wordDto }
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<UpdateResponse>(request, "updateWord");
@@ -56,20 +46,20 @@ namespace chldr_data.Writers
             return response.Data.ChangeSets.Select(c => ChangeSetModel.FromDto(c)).ToList();
         }
 
-        public async Task Update(UserModel loggedInUser, WordDto wordDto)
-        {
-            // Update
-            var userDto = UserDto.FromModel(loggedInUser);
-            var changeSets = await UpdateWord(userDto, wordDto);
+        //public async Task Update(UserModel loggedInUser, WordDto wordDto)
+        //{
+        //    // Update
+        //    var userDto = UserDto.FromModel(loggedInUser);
+        //    var changeSets = await UpdateWord(userDto, wordDto);
 
-            // Sync offline database
+        //    // Sync offline database
             
-            await _syncService.Sync(changeSets);
+        //    await _syncService.Sync(changeSets);
 
-            // Refresh UI with new object 
-            // TODO: Fix this!
-            //var entry = Database.Find<RealmEntry>(wordDto.EntryId);
-            //OnEntryUpdated(WordModel.FromEntity(entry.Word));
-        }
+        //    // Refresh UI with new object 
+        //    // TODO: Fix this!
+        //    //var entry = Database.Find<RealmEntry>(wordDto.EntryId);
+        //    //OnEntryUpdated(WordModel.FromEntity(entry.Word));
+        //}
     }
 }

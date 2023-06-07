@@ -9,14 +9,14 @@ namespace chldr_api.GraphQL.ServiceResolvers
 {
     public class UpdateWordResolver
     {
-        internal async Task<UpdateResponse> ExecuteAsync(SqlUnitOfWork unitOfWork, UserDto userDto, WordDto updatedWordDto)
+        internal async Task<UpdateResponse> ExecuteAsync(SqlUnitOfWork unitOfWork, string userId, WordDto updatedWordDto)
         {
             var existingWord = unitOfWork.Words.Get(updatedWordDto.WordId);
             var existingWordDto = WordDto.FromModel(existingWord);
 
-            var translationChangeSets = UpdateTranslations(unitOfWork, userDto, existingWordDto, updatedWordDto);
-            var wordChangeSets = unitOfWork.Words.Update(userDto.UserId, updatedWordDto);
-            
+            var translationChangeSets = UpdateTranslations(unitOfWork, userId, existingWordDto, updatedWordDto);
+            var wordChangeSets = unitOfWork.Words.Update(userId, updatedWordDto);
+
             var changesets = translationChangeSets.Union(wordChangeSets);
 
             // Retrieve back the same changesets so that they'll have indexes
@@ -28,7 +28,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
             return response;
         }
 
-        private List<ChangeSetModel> UpdateTranslations(SqlUnitOfWork unitOfWork, UserDto user, WordDto existingWordDto, WordDto updatedWordDto)
+        private List<ChangeSetModel> UpdateTranslations(SqlUnitOfWork unitOfWork, string userId, WordDto existingWordDto, WordDto updatedWordDto)
         {
             // Create a changeset with all the differences between existing and updated objects
 
@@ -43,17 +43,17 @@ namespace chldr_api.GraphQL.ServiceResolvers
             var changeSets = new List<ChangeSetModel>();
             foreach (var insertedTranslation in insertedTranslations)
             {
-                changeSets.AddRange(unitOfWork.Translations.Add(user.UserId, insertedTranslation));
+                changeSets.AddRange(unitOfWork.Translations.Add(userId, insertedTranslation));
             }
 
             foreach (var deletedTranslation in deletedTranslations)
             {
-                changeSets.AddRange(unitOfWork.Translations.Delete(user.UserId, deletedTranslation.TranslationId));
+                changeSets.AddRange(unitOfWork.Translations.Delete(userId, deletedTranslation.TranslationId));
             }
 
             foreach (var translationDto in updatedTranslations)
             {
-                changeSets.AddRange(unitOfWork.Translations.Update(user.UserId, translationDto));
+                changeSets.AddRange(unitOfWork.Translations.Update(userId, translationDto));
             }
 
             return changeSets;

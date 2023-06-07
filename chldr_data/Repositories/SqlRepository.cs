@@ -14,6 +14,12 @@ namespace chldr_data.Repositories
         protected abstract RecordType RecordType { get; }
         protected readonly IEnumerable<ChangeSetModel> EmptyResult = new List<ChangeSetModel>();
         protected readonly SqlContext SqlContext;
+
+        public event Action<EntryModel>? EntryUpdated;
+        public event Action<EntryModel>? EntryInserted;
+        public event Action<EntryModel>? EntryDeleted;
+        public event Action<EntryModel>? EntryAdded;
+
         public SqlRepository(SqlContext context)
         {
             SqlContext = context;

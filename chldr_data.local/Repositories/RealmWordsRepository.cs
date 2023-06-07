@@ -8,6 +8,7 @@ using chldr_data.Interfaces;
 using chldr_data.local.RealmEntities;
 using chldr_data.Models;
 using chldr_data.Services;
+using chldr_data.Writers;
 using chldr_tools;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -18,8 +19,12 @@ namespace chldr_data.Repositories
 {
     public class RealmWordsRepository : RealmRepository<RealmWord, WordModel, WordDto>, IWordsRepository
     {
-        public RealmWordsRepository(Realm context) : base(context)
-        { }
+        private readonly WordChangeRequests _wordChangeRequests;
+
+        public RealmWordsRepository(Realm context, WordChangeRequests wordChangeRequests) : base(context)
+        {
+            _wordChangeRequests = wordChangeRequests;
+        }
 
         protected override RecordType RecordType => RecordType.Word;
 
@@ -60,11 +65,15 @@ namespace chldr_data.Repositories
 
         public override IEnumerable<ChangeSetModel> Add(string userId, WordDto dto)
         {
+            // Make a remote add request, if successful, add locally
             throw new NotImplementedException();
         }
 
         public override IEnumerable<ChangeSetModel> Update(string userId, WordDto dto)
         {
+            // Make a remote update request, if successful, update locally
+            var response = _wordChangeRequests.UpdateWord(userId, dto);
+            
             throw new NotImplementedException();
         }
     }
