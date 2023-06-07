@@ -9,7 +9,7 @@ namespace chldr_data.Readers
 {
     public class DataReader<TEntity, TModel> where TEntity : IEntity where TModel : class
     {
-        protected Realm Database => Realm.GetInstance(RealmDataSource.OfflineDatabaseConfiguration);
+        protected Realm Database => Realm.GetInstance(IDataProvider.OfflineDatabaseConfiguration);
         
         
         //public TEntryModel GetById(string entityId)

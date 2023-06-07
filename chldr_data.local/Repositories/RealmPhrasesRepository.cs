@@ -4,12 +4,14 @@ using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Enums;
 using chldr_tools;
+using chldr_data.local.RealmEntities;
+using Realms;
 
 namespace chldr_data.Repositories
 {
-    public class RealmPhrasesRepository : RealmRepository<SqlPhrase, PhraseModel, PhraseDto>
+    public class RealmPhrasesRepository : RealmRepository<RealmPhrase, PhraseModel, PhraseDto>
     {
-        public RealmPhrasesRepository(SqlContext context) : base(context) { }
+        public RealmPhrasesRepository(Realm context) : base(context) { }
 
         protected override RecordType RecordType => RecordType.Phrase;
 

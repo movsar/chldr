@@ -20,6 +20,7 @@ namespace chldr_shared.Stores
 
         private readonly ExceptionHandler _exceptionHandler;
         private readonly NetworkService _networkService;
+        private readonly IDataProvider _dataProvider;
         #endregion
 
         #region Fields and Properties
@@ -55,19 +56,20 @@ namespace chldr_shared.Stores
         #region Constructors
         public ContentStore(ILocalDbReader dataAccess,
             ExceptionHandler exceptionHandler,
-            NetworkService networkService
+            NetworkService networkService,
+            IDataProvider dataProvider
             )
         {
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
+            _dataProvider = dataProvider;
 
             //searchService.GotNewSearchResult += DataAccess_GotNewSearchResults;
             //EntryUpdated += EntriesRepository_EntryUpdated;
             //_wordWriter.WordUpdated += EntriesRepository_WordUpdated;
 
-            //_dataAccess = dataAccess;
-            //_dataAccess.DataSourceInitialized += DataAccess_DatasourceInitialized;
-            //_dataAccess.InitializeDataSource();
+            _dataProvider.LocalDatabaseInitialized += DataAccess_DatasourceInitialized;
+            _dataProvider.Initialize();
         }
 
         private async void EntriesRepository_WordUpdated(WordModel updatedWord)

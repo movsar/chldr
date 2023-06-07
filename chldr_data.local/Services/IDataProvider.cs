@@ -6,18 +6,21 @@ using chldr_utils;
 using chldr_utils.Services;
 using Realms;
 using chldr_data.local.RealmEntities;
+using chldr_data.local.Services;
 
 namespace chldr_data.Services
 {
-    public class RealmDataSource : IDataSourceService
+    public class RealmDataProvider : IDataProvider
     {
         private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
         internal static RealmConfigurationBase? OfflineDatabaseConfiguration;
 
+        public bool IsInitialized { get; set; }
+
         public event Action? LocalDatabaseInitialized;
 
-        public Realm GetDatabase()
+        internal Realm GetDatabase()
         {
             if (OfflineDatabaseConfiguration == null)
             {
@@ -30,7 +33,7 @@ namespace chldr_data.Services
             return Realm.GetInstance(OfflineDatabaseConfiguration);
         }
 
-        public RealmDataSource(FileService fileService, ExceptionHandler exceptionHandler)
+        public RealmDataProvider(FileService fileService, ExceptionHandler exceptionHandler)
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
@@ -56,7 +59,7 @@ namespace chldr_data.Services
 
             return encryptedConfig;
         }
-        public void InitializeDatabase()
+        public void Initialize()
         {
             OfflineDatabaseConfiguration = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
             {
@@ -67,7 +70,7 @@ namespace chldr_data.Services
             LocalDatabaseInitialized?.Invoke();
         }
 
-        public void RemoveAllEntries()
+        public void PurgeAllData()
         {
             var database = GetDatabase();
             database.Write(() =>
@@ -78,6 +81,11 @@ namespace chldr_data.Services
                 database.RemoveAll<RealmPhrase>();
                 database.RemoveAll<RealmTranslation>();
             });
+        }
+
+        public IUnitOfWork CreateUnitOfWork()
+        {
+            return new RealmUnitOfWork(GetDatabase());
         }
     }
 }

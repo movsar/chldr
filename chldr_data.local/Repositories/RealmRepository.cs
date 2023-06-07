@@ -15,17 +15,17 @@ namespace chldr_data.Repositories
     {
         protected abstract RecordType RecordType { get; }
         protected readonly IEnumerable<ChangeSetModel> EmptyResult = new List<ChangeSetModel>();
-        protected readonly Realm _context;
+        protected readonly Realm DbContext;
         public RealmRepository(Realm context)
         {
-            _context = context;
+            DbContext = context;
         }
         public abstract TModel Get(string entityId);
         public abstract IEnumerable<ChangeSetModel> Update(string userId, TDto dto);
         public abstract IEnumerable<ChangeSetModel> Add(string userId, TDto dto);
         public IEnumerable<ChangeSetModel> Delete(string userId, string entityId)
         {
-            var entity = _context.Find<TEntity>(entityId);
+            var entity = DbContext.Find<TEntity>(entityId);
             if (entity == null)
             {
                 throw new NullReferenceException();
@@ -33,9 +33,9 @@ namespace chldr_data.Repositories
 
             RealmChangeSet changeSet = null;
 
-            _context.Write(() =>
+            DbContext.Write(() =>
             {
-                _context.Remove(entity);
+                DbContext.Remove(entity);
 
                 // Insert changeset
                 changeSet = new RealmChangeSet()
@@ -46,11 +46,11 @@ namespace chldr_data.Repositories
                     RecordType = (int)RecordType,
                 };
 
-                _context.Add(changeSet);
+                DbContext.Add(changeSet);
             });
 
             // Return changeset with updated index
-            changeSet = _context.Find<RealmChangeSet>(changeSet.ChangeSetId);
+            changeSet = DbContext.Find<RealmChangeSet>(changeSet.ChangeSetId);
             return new List<ChangeSetModel>() { ChangeSetModel.FromEntity(changeSet) };
         }
 
@@ -67,7 +67,7 @@ namespace chldr_data.Repositories
         {
             // Using this method, instead of updating the whole database entity, we can just update its particular, changed fields
 
-            var entity = _context.Find<TEntity>(entityId);
+            var entity = DbContext.Find<TEntity>(entityId);
             if (entity == null)
             {
                 throw new NullReferenceException();

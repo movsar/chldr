@@ -12,7 +12,7 @@ namespace chldr_data.Services
         protected readonly ExceptionHandler _exceptionHandler;
         protected readonly NetworkService _networkService;
         private readonly EnvironmentService _environmentService;
-        private readonly IDataSourceService _realmDataSource;
+        private readonly IDataSource _realmDataSource;
 
         public IGraphQLRequestSender RequestSender { get; set; }
         public WordsReader Words { get; }
@@ -26,7 +26,7 @@ namespace chldr_data.Services
             ExceptionHandler exceptionHandler,
             EnvironmentService environmentService,
             NetworkService networkService,
-            IDataSourceService realmDataSource)
+            IDataSource realmDataSource)
         {
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
@@ -55,7 +55,7 @@ namespace chldr_data.Services
 
         public void InitializeDataSource()
         {
-            _realmDataSource.InitializeDatabase();
+            _realmDataSource.Initialize();
         }
     }
 }

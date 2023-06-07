@@ -17,7 +17,7 @@ namespace chldr_data.Services
 {
     public class SearchService
     {
-        private Realm Database => Realm.GetInstance(RealmDataSource.OfflineDatabaseConfiguration);
+        private Realm Database => Realm.GetInstance(IDataProvider.OfflineDatabaseConfiguration);
         public event Action<SearchResultModel>? GotNewSearchResult;
         public static EntryModel FromEntity(RealmEntry entry)
         {

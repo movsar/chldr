@@ -5,12 +5,14 @@ using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Enums;
 using chldr_tools;
+using Realms;
+using chldr_data.local.RealmEntities;
 
 namespace chldr_data.Repositories
 {
-    public class RealmLanguagesRepository : RealmRepository<SqlLanguage, LanguageModel, LanguageDto>
+    public class RealmLanguagesRepository : RealmRepository<RealmLanguage, LanguageModel, LanguageDto>
     {
-        public RealmLanguagesRepository(SqlContext context) : base(context) { }
+        public RealmLanguagesRepository(Realm context) : base(context) { }
 
         protected override RecordType RecordType => RecordType.Language;
 

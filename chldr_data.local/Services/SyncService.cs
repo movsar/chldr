@@ -19,7 +19,7 @@ namespace chldr_data.Services
             }
         }
         
-        private Realm Database => Realm.GetInstance(RealmDataSource.OfflineDatabaseConfiguration);
+        private Realm Database => Realm.GetInstance(IDataProvider.OfflineDatabaseConfiguration);
 
         public string Insert(SourceDto sourceDto)
         {

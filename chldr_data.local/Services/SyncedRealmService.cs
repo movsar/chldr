@@ -12,7 +12,7 @@ using System.Diagnostics;
 namespace chldr_data.Services
 {
     // ! DEPRECATED
-    public class SyncedRealmService : IDataSourceService
+    public class SyncedRealmService : IDataSource
     {
         private const string myRealmAppId = "dosham-lxwuu";
         private const string myTestRealmAppId = "dosham-test-oaqel";
@@ -75,7 +75,7 @@ namespace chldr_data.Services
         {
             return $"{id.Substring(4, 4)}.dbx";
         }
-        public void InitializeDatabase()
+        public void Initialize()
         {
             // Copy original file so that app will be able to access entries immediately
 
@@ -141,7 +141,7 @@ namespace chldr_data.Services
                 return;
             }
 
-            InitializeDatabase();
+            Initialize();
 
             var language = GetDatabase().All<RealmLanguage>().FirstOrDefault();
             if (language == null)
