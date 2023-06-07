@@ -3,48 +3,54 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
+using chldr_data.local.RealmEntities;
 using chldr_data.Models;
 using chldr_tools;
+using Realms;
 using System.Xml;
 
 namespace chldr_data.Repositories
 {
-    public abstract class Repository<TEntity, TModel, TDto> : IRepository<TEntity, TModel, TDto> where TEntity : class
+    public abstract class RealmRepository<TEntity, TModel, TDto> : IRepository<TEntity, TModel, TDto> where TEntity : RealmObject
     {
         protected abstract RecordType RecordType { get; }
         protected readonly IEnumerable<ChangeSetModel> EmptyResult = new List<ChangeSetModel>();
-        protected readonly SqlContext SqlContext;
-        public Repository(SqlContext context)
+        protected readonly Realm _context;
+        public RealmRepository(Realm context)
         {
-            SqlContext = context;
+            _context = context;
         }
         public abstract TModel Get(string entityId);
         public abstract IEnumerable<ChangeSetModel> Update(string userId, TDto dto);
         public abstract IEnumerable<ChangeSetModel> Add(string userId, TDto dto);
         public IEnumerable<ChangeSetModel> Delete(string userId, string entityId)
         {
-            var entity = SqlContext.Find<TEntity>(entityId);
+            var entity = _context.Find<TEntity>(entityId);
             if (entity == null)
             {
                 throw new NullReferenceException();
             }
 
-            SqlContext.Remove(entity);
+            RealmChangeSet changeSet = null;
 
-            // Insert changeset
-            var changeSet = new SqlChangeSet()
+            _context.Write(() =>
             {
-                Operation = (int)Operation.Delete,
-                UserId = userId!,
-                RecordId = entityId!,
-                RecordType = (int)RecordType,
-            };
+                _context.Remove(entity);
 
-            SqlContext.ChangeSets.Add(changeSet);
-            SqlContext.SaveChanges();
+                // Insert changeset
+                changeSet = new RealmChangeSet()
+                {
+                    Operation = (int)Operation.Delete,
+                    UserId = userId!,
+                    RecordId = entityId!,
+                    RecordType = (int)RecordType,
+                };
+
+                _context.Add(changeSet);
+            });
 
             // Return changeset with updated index
-            changeSet = SqlContext.ChangeSets.Find(changeSet.ChangeSetId);
+            changeSet = _context.Find<RealmChangeSet>(changeSet.ChangeSetId);
             return new List<ChangeSetModel>() { ChangeSetModel.FromEntity(changeSet) };
         }
 
@@ -61,18 +67,16 @@ namespace chldr_data.Repositories
         {
             // Using this method, instead of updating the whole database entity, we can just update its particular, changed fields
 
-            var sqlEntity = SqlContext.Find<TEntity>(entityId);
-            if (sqlEntity == null)
+            var entity = _context.Find<TEntity>(entityId);
+            if (entity == null)
             {
                 throw new NullReferenceException();
             }
 
             foreach (var change in changes)
             {
-                SetPropertyValue(sqlEntity, change.Property, change.NewValue);
+                SetPropertyValue(entity, change.Property, change.NewValue);
             }
-
-            SqlContext.SaveChanges();
         }
     }
 }

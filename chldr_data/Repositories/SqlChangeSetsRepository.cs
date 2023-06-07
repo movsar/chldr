@@ -7,11 +7,11 @@ using chldr_tools;
 
 namespace chldr_data.Repositories
 {
-    public class ChangeSetsRepository : Repository<SqlChangeSet, ChangeSetModel, ChangeSetDto>
+    public class SqlChangeSetsRepository : SqlRepository<SqlChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {
         protected override RecordType RecordType => throw new Exception("Shouldn't be used");
 
-        public ChangeSetsRepository(SqlContext sqlContext) : base(sqlContext) { }
+        public SqlChangeSetsRepository(SqlContext sqlContext) : base(sqlContext) { }
 
         public override ChangeSetModel Get(string entityId)
         {

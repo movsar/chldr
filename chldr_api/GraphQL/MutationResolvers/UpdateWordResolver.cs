@@ -2,14 +2,14 @@
 using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.ResponseTypes;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
-using chldr_data.Repositories;
 using chldr_data.DatabaseObjects.Models;
+using chldr_data.Services;
 
 namespace chldr_api.GraphQL.ServiceResolvers
 {
     public class UpdateWordResolver
     {
-        internal async Task<UpdateResponse> ExecuteAsync(UnitOfWork unitOfWork, UserDto userDto, WordDto updatedWordDto)
+        internal async Task<UpdateResponse> ExecuteAsync(SqlUnitOfWork unitOfWork, UserDto userDto, WordDto updatedWordDto)
         {
             var existingWord = unitOfWork.Words.Get(updatedWordDto.WordId);
             var existingWordDto = WordDto.FromModel(existingWord);
@@ -28,7 +28,7 @@ namespace chldr_api.GraphQL.ServiceResolvers
             return response;
         }
 
-        private List<ChangeSetModel> UpdateTranslations(UnitOfWork unitOfWork, UserDto user, WordDto existingWordDto, WordDto updatedWordDto)
+        private List<ChangeSetModel> UpdateTranslations(SqlUnitOfWork unitOfWork, UserDto user, WordDto existingWordDto, WordDto updatedWordDto)
         {
             // Create a changeset with all the differences between existing and updated objects
 

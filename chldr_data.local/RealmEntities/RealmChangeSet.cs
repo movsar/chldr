@@ -6,7 +6,7 @@ using Realms;
 namespace chldr_data.local.RealmEntities
 {
     [MapTo("ChangeSet")]
-    public class RealmChangeSet : RealmObject, IChangeSetEntity, IEntity
+    public class RealmChangeSet : RealmObject, IChangeSetEntity
     {
         [PrimaryKey]
         public long ChangeSetIndex { get; set; }

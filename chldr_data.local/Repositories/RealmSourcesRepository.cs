@@ -7,10 +7,10 @@ using chldr_tools;
 
 namespace chldr_data.Repositories
 {
-    public class SourcesRepository : Repository<SqlSource, SourceModel, SourceDto>
+    public class RealmSourcesRepository : RealmRepository<SqlSource, SourceModel, SourceDto>
     {
         protected override RecordType RecordType => RecordType.Source;
-        public SourcesRepository(SqlContext context) : base(context) { }
+        public RealmSourcesRepository(SqlContext context) : base(context) { }
 
         public override IEnumerable<ChangeSetModel> Add(string userId, SourceDto dto)
         {

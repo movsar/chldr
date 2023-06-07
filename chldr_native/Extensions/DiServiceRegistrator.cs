@@ -80,7 +80,7 @@ namespace chldr_native.Extensions
             appBuilder.Services.AddScoped<LoginPageViewModel>();
             appBuilder.Services.AddScoped<RegistrationPageViewModel>();
             appBuilder.Services.AddScoped<SearchResultsViewModel>();
-            appBuilder.Services.AddTransient<UsersRepository>();
+            appBuilder.Services.AddTransient<SqlUsersRepository>();
 
             return appBuilder;
         }

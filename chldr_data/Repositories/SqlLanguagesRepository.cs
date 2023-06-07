@@ -8,9 +8,9 @@ using chldr_tools;
 
 namespace chldr_data.Repositories
 {
-    public class LanguagesRepository : Repository<SqlLanguage, LanguageModel, LanguageDto>
+    public class SqlLanguagesRepository : SqlRepository<SqlLanguage, LanguageModel, LanguageDto>
     {
-        public LanguagesRepository(SqlContext context) : base(context) { }
+        public SqlLanguagesRepository(SqlContext context) : base(context) { }
 
         protected override RecordType RecordType => RecordType.Language;
 

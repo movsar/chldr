@@ -6,9 +6,9 @@ using chldr_data.Enums;
 
 namespace chldr_data.Repositories
 {
-    public class UsersRepository : Repository<SqlUser, UserModel, UserDto>
+    public class RealmUsersRepository : RealmRepository<SqlUser, UserModel, UserDto>
     {
-        public UsersRepository(SqlContext context) : base(context) { }
+        public RealmUsersRepository(SqlContext context) : base(context) { }
 
         protected override RecordType RecordType => RecordType.User;
 

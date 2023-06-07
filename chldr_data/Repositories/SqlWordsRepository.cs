@@ -6,6 +6,7 @@ using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
+using chldr_data.Services;
 using chldr_tools;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -14,10 +15,10 @@ using Realms.Sync;
 
 namespace chldr_data.Repositories
 {
-    public class WordsRepository : Repository<SqlWord, WordModel, WordDto>
+    public class SqlWordsRepository : SqlRepository<SqlWord, WordModel, WordDto>, IWordsRepository
     {
         protected override RecordType RecordType => RecordType.Word;
-        public WordsRepository(SqlContext context) : base(context) { }
+        public SqlWordsRepository(SqlContext context) : base(context) { }
         public static WordModel FromEntity(SqlWord word)
         {
             return WordModel.FromEntity(word.Entry,
@@ -79,7 +80,7 @@ namespace chldr_data.Repositories
             var existingWordDto = WordDto.FromModel(FromEntity(existingWordEntity));
 
             // Apply changes to the entry entity
-            var entryChanges = UnitOfWork.GetChanges<EntryDto>(updatedWordDto, existingWordDto);
+            var entryChanges = SqlUnitOfWork.GetChanges<EntryDto>(updatedWordDto, existingWordDto);
             if (entryChanges.Count != 0)
             {
                 ApplyChanges(updatedWordDto.EntryId, entryChanges);
@@ -101,7 +102,7 @@ namespace chldr_data.Repositories
             }
 
             // Apply changes to the word entity
-            var wordChanges = UnitOfWork.GetChanges(updatedWordDto, existingWordDto);
+            var wordChanges = SqlUnitOfWork.GetChanges(updatedWordDto, existingWordDto);
             if (wordChanges.Count != 0)
             {
                 ApplyChanges(updatedWordDto.WordId, wordChanges);

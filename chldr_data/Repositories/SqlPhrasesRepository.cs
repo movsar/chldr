@@ -7,9 +7,9 @@ using chldr_tools;
 
 namespace chldr_data.Repositories
 {
-    public class PhrasesRepository : Repository<SqlPhrase, PhraseModel, PhraseDto>
+    public class SqlPhrasesRepository : SqlRepository<SqlPhrase, PhraseModel, PhraseDto>
     {
-        public PhrasesRepository(SqlContext context) : base(context) { }
+        public SqlPhrasesRepository(SqlContext context) : base(context) { }
 
         protected override RecordType RecordType => RecordType.Phrase;
 

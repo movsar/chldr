@@ -2,19 +2,21 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using chldr_data.Models;
 using Newtonsoft.Json;
+using chldr_data.Interfaces;
+using chldr_data.Repositories;
 
-namespace chldr_data.Repositories
+namespace chldr_data.Services
 {
-    public class UnitOfWork : IDisposable
+    public class SqlUnitOfWork : IUnitOfWork
     {
         private readonly SqlContext _sqlContext;
         private IDbContextTransaction _transaction;
 
-        private ChangeSetsRepository _changeSetsRepository;
-        private WordsRepository _wordsRepository;
-        private TranslationsRepository _translationsRepository;
+        private IChangeSetsRepository _changeSetsRepository;
+        private IWordsRepository _wordsRepository;
+        private ITranslationsRepository _translationsRepository;
 
-        public UnitOfWork(SqlContext sqlContext)
+        public SqlUnitOfWork(SqlContext sqlContext)
         {
             _sqlContext = sqlContext;
         }
@@ -71,38 +73,38 @@ namespace chldr_data.Repositories
             return changes;
         }
 
-        public TranslationsRepository Translations
+        public ITranslationsRepository Translations
         {
             get
             {
                 if (_translationsRepository == null)
                 {
-                    _translationsRepository = new TranslationsRepository(_sqlContext);
+                    _translationsRepository = new SqlTranslationsRepository(_sqlContext);
                 }
                 return _translationsRepository;
             }
         }
 
 
-        public ChangeSetsRepository ChangeSets
+        public IChangeSetsRepository ChangeSets
         {
             get
             {
                 if (_changeSetsRepository == null)
                 {
-                    _changeSetsRepository = new ChangeSetsRepository(_sqlContext);
+                    _changeSetsRepository = new SqlChangeSetsRepository(_sqlContext);
                 }
                 return _changeSetsRepository;
             }
         }
 
-        public WordsRepository Words
+        public IWordsRepository Words
         {
             get
             {
                 if (_wordsRepository == null)
                 {
-                    _wordsRepository = new WordsRepository(_sqlContext);
+                    _wordsRepository = new SqlWordsRepository(_sqlContext);
                 }
                 return _wordsRepository;
             }

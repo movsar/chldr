@@ -6,12 +6,13 @@ using chldr_tools;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using chldr_data.Enums;
+using chldr_data.Services;
 
 namespace chldr_data.Repositories
 {
-    public class TranslationsRepository : Repository<SqlTranslation, TranslationModel, TranslationDto>
+    public class SqlTranslationsRepository : SqlRepository<SqlTranslation, TranslationModel, TranslationDto>, ITranslationsRepository
     {
-        public TranslationsRepository(SqlContext context) : base(context) { }
+        public SqlTranslationsRepository(SqlContext context) : base(context) { }
 
         protected override RecordType RecordType => RecordType.Translation;
 
@@ -56,7 +57,7 @@ namespace chldr_data.Repositories
             // Find out what has been changed
             var existing = Get(translationDto.TranslationId);
             var existingDto = TranslationDto.FromModel(existing);
-            var changes = UnitOfWork.GetChanges(translationDto, existingDto);
+            var changes = SqlUnitOfWork.GetChanges(translationDto, existingDto);
             if (changes.Count == 0)
             {
                 return EmptyResult;

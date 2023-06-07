@@ -1,9 +1,9 @@
 ﻿using chldr_api.GraphQL.MutationServices;
 using chldr_api.GraphQL.ServiceResolvers;
 using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.Repositories;
 using chldr_data.Resources.Localizations;
 using chldr_data.ResponseTypes;
+using chldr_data.Services;
 using chldr_tools;
 using chldr_utils.Services;
 using GraphQL.Validation;
@@ -25,7 +25,7 @@ namespace chldr_api
         protected readonly IConfiguration _configuration;
         protected readonly IStringLocalizer<AppLocalizations> _localizer;
         protected readonly EmailService _emailService;
-        private readonly UnitOfWork _unitOfWork;
+        private readonly SqlUnitOfWork _unitOfWork;
 
         public Mutation(
             UpdateWordResolver updateWordResolver,
@@ -51,7 +51,7 @@ namespace chldr_api
             _localizer = localizer;
             _emailService = emailService;
 
-            _unitOfWork = new UnitOfWork(dbContext);
+            _unitOfWork = new SqlUnitOfWork(dbContext);
         }
 
         // Word mutations
