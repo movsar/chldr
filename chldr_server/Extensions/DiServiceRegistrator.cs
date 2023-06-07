@@ -32,18 +32,21 @@ namespace chldr_blazor.Extensions
         {
             // Data
             appBuilder.Services.AddSingleton<ServiceLocator>();
-            appBuilder.Services.AddScoped<UserService>();
             appBuilder.Services.AddSingleton<IGraphQLRequestSender, GraphQLRequestSender>();
             appBuilder.Services.AddSingleton<AuthService>();
             appBuilder.Services.AddSingleton<IDataSourceService, RealmDataSource>();
             appBuilder.Services.AddSingleton<ILocalDbReader, LocalDbReader>();
+
+            appBuilder.Services.AddScoped<UserService>();
             appBuilder.Services.AddScoped<SyncService>();
             appBuilder.Services.AddScoped<SearchService>();
+
             appBuilder.Services.AddScoped<LanguagesReader>();
             appBuilder.Services.AddScoped<PhrasesReader>();
             appBuilder.Services.AddScoped<SourcesReader>();
+            appBuilder.Services.AddScoped<WordsReader>();
+
             appBuilder.Services.AddScoped<WordsWriter>();
-            appBuilder.Services.AddScoped<SearchService>();
 
             // Shared
             appBuilder.Services.AddScoped<ContentStore>();

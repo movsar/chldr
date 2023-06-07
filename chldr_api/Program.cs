@@ -21,9 +21,13 @@ namespace chldr_api
 
             builder.Services.AddControllers();
 
-            builder.Services.AddDbContext<SqlContext>(options =>
-                options.UseMySQL("server=localhost;port=3306;database=xj_chldr;user=root;password=2398ehh&*H!&*Hhs-="),
-                ServiceLifetime.Singleton);
+            var connectionString = builder.Configuration.GetConnectionString("RemoteDatabase");
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new Exception("Connection string is not set");
+            }
+
+            builder.Services.AddDbContext<SqlContext>(options => options.UseMySQL(connectionString), ServiceLifetime.Singleton);
 
             builder.Services.AddScoped<UpdateWordResolver>();
         
