@@ -22,7 +22,8 @@ namespace chldr_api
             builder.Services.AddControllers();
 
             var connectionString = builder.Configuration.GetConnectionString("RemoteDatabase");
-            if (string.IsNullOrEmpty(connectionString))
+            var signingSecret = builder.Configuration.GetValue<string>("ApiJwtSigningKey");
+            if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(signingSecret))
             {
                 throw new Exception("Connection string is not set");
             }
@@ -30,25 +31,17 @@ namespace chldr_api
             builder.Services.AddDbContext<SqlContext>(options => options.UseMySQL(connectionString), ServiceLifetime.Singleton);
 
             builder.Services.AddScoped<UpdateWordResolver>();
-        
             builder.Services.AddScoped<PasswordResetResolver>();
             builder.Services.AddScoped<UpdatePasswordResolver>();
             builder.Services.AddScoped<RegisterUserResolver>();
             builder.Services.AddScoped<ConfirmEmailResolver>();
             builder.Services.AddScoped<LoginResolver>();
-
-            // Repositories
-            //appBuilder.Services.AddSingleton<WordsRepository>();
-            //appBuilder.Services.AddSingleton<LanguagesRepository>();
-            //appBuilder.Services.AddSingleton<PhrasesRepository>();
-            ////appBuilder.Services.AddSingleton<SourcesRepository>();
-            //appBuilder.Services.AddSingleton<UsersRepository>();
-
+            
             builder.Services.AddSingleton<EmailService>();
+            
             builder.Services.AddLocalization();
 
-            var signingKey = new SymmetricSecurityKey(
-         Encoding.UTF8.GetBytes("MySuperSecretKey"));
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingSecret));
 
             builder.Services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
