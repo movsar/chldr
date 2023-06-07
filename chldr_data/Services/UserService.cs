@@ -23,19 +23,18 @@ namespace chldr_data.Services
         public event Action<ActiveSession>? UserStateHasChanged;
         private readonly NetworkService _networkService;
         private readonly AuthService _authService;
-        private readonly IDataSource _dataSource;
+        private readonly IDataProvider _dataProvider;
         private readonly LocalStorageService _localStorageService;
         private ActiveSession _currentSession = new ActiveSession();
 
-        private Realm Database => _dataSource.GetDatabase();
-        public UserService(NetworkService networkService, IDataSource realmService, AuthService authService, LocalStorageService localStorageService)
+        public UserService(NetworkService networkService, IDataProvider dataProvider, AuthService authService, LocalStorageService localStorageService)
         {
             _networkService = networkService;
             _authService = authService;
-            _dataSource = realmService;
+            _dataProvider = dataProvider;
             _localStorageService = localStorageService;
 
-            _dataSource.LocalDatabaseInitialized += RealmService_DatasourceInitialized;
+            _dataProvider.LocalDatabaseInitialized += RealmService_DatasourceInitialized;
         }
         private void RealmService_DatasourceInitialized()
         {

@@ -18,6 +18,16 @@ namespace chldr_data.Repositories
         {
             throw new NotImplementedException();
         }
+        public List<RealmSource> GetUnverifiedSources()
+        {
+            var sources = DbContext.All<RealmSource>().Where(s => s.Notes == "Imported from legacy database" || s.Name == "User");
+            return sources.ToList();
+        }
+
+        public List<SourceModel> GetAllNamedSources()
+        {
+            return DbContext.All<RealmSource>().AsEnumerable().Select(s => SourceModel.FromEntity(s)).ToList();
+        }
 
         public override SourceModel Get(string entityId)
         {

@@ -8,7 +8,7 @@ using Realms;
 using chldr_data.local.RealmEntities;
 using chldr_data.local.Services;
 
-namespace chldr_data.Services
+namespace chldr_data.local.Services
 {
     public class RealmDataProvider : IDataProvider
     {

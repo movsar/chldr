@@ -6,7 +6,7 @@ using chldr_data.Models;
 using Newtonsoft.Json;
 using Realms;
 
-namespace chldr_data.Services
+namespace chldr_data.local.Services
 {
     public class SyncService
     {
@@ -19,7 +19,7 @@ namespace chldr_data.Services
             }
         }
         
-        private Realm Database => Realm.GetInstance(IDataProvider.OfflineDatabaseConfiguration);
+        private Realm Database => Realm.GetInstance(RealmDataProvider.OfflineDatabaseConfiguration);
 
         public string Insert(SourceDto sourceDto)
         {

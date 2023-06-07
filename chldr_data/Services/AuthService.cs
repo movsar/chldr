@@ -1,13 +1,10 @@
 ﻿using chldr_data.Enums;
-using chldr_data.Interfaces;
 using chldr_data.Models;
-using chldr_data.DatabaseObjects.Models;
 using chldr_data.ResponseTypes;
-using chldr_utils;
+using chldr_utils.Interfaces;
 using GraphQL;
-using chldr_data.DatabaseObjects.Dtos;
 
-namespace chldr_data.Services
+namespace chldr_utils.Services
 {
     public class AuthService
     {

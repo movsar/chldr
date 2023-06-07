@@ -8,5 +8,6 @@ namespace chldr_data.Interfaces
         IEnumerable<ChangeSetModel> Add(string userId, TranslationDto dto);
         TranslationModel Get(string entityId);
         IEnumerable<ChangeSetModel> Update(string userId, TranslationDto translationDto);
+        IEnumerable<ChangeSetModel> Delete(string userId, string translationId);
     }
 }

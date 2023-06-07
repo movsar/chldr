@@ -12,6 +12,7 @@ using chldr_ui.ViewModels;
 using chldr_utils;
 using chldr_utils.Services;
 using FluentValidation;
+using chldr_utils.Interfaces;
 
 namespace chldr_blazor.Extensions
 {

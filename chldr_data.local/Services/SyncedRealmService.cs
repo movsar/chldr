@@ -9,10 +9,10 @@ using Realms.Sync;
 using Realms.Sync.Exceptions;
 using System.Diagnostics;
 
-namespace chldr_data.Services
+namespace chldr_data.local.Services
 {
     // ! DEPRECATED
-    public class SyncedRealmService : IDataSource
+    public class SyncedRealmService
     {
         private const string myRealmAppId = "dosham-lxwuu";
         private const string myTestRealmAppId = "dosham-test-oaqel";
@@ -75,7 +75,7 @@ namespace chldr_data.Services
         {
             return $"{id.Substring(4, 4)}.dbx";
         }
-        public void Initialize()
+        public void InitializeConfiguration()
         {
             // Copy original file so that app will be able to access entries immediately
 
@@ -140,8 +140,6 @@ namespace chldr_data.Services
             {
                 return;
             }
-
-            Initialize();
 
             var language = GetDatabase().All<RealmLanguage>().FirstOrDefault();
             if (language == null)

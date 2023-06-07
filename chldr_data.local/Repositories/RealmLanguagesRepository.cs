@@ -20,6 +20,11 @@ namespace chldr_data.Repositories
         {
             throw new NotImplementedException();
         }
+        public List<LanguageModel> GetAllLanguages()
+        {
+            var languages = DbContext.All<RealmLanguage>().AsEnumerable().Select(l => LanguageModel.FromEntity(l));
+            return languages.ToList();
+        }
 
         public override LanguageModel Get(string entityId)
         {

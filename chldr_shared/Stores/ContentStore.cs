@@ -54,17 +54,16 @@ namespace chldr_shared.Stores
         #endregion
 
         #region Constructors
-        public ContentStore(ILocalDbReader dataAccess,
-            ExceptionHandler exceptionHandler,
-            NetworkService networkService,
-            IDataProvider dataProvider
-            )
+        public ContentStore(ExceptionHandler exceptionHandler,
+                            NetworkService networkService,
+                            IDataProvider dataProvider,
+                            ISearchService searchService)
         {
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
             _dataProvider = dataProvider;
 
-            //searchService.GotNewSearchResult += DataAccess_GotNewSearchResults;
+            searchService.GotNewSearchResult += DataAccess_GotNewSearchResults;
             //EntryUpdated += EntriesRepository_EntryUpdated;
             //_wordWriter.WordUpdated += EntriesRepository_WordUpdated;
 

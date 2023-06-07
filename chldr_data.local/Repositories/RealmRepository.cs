@@ -21,6 +21,26 @@ namespace chldr_data.Repositories
             DbContext = context;
         }
         public abstract TModel Get(string entityId);
+        //public TEntryModel GetById(string entityId)
+        //{
+        //    var entry = Database.All<RealmEntry>().FirstOrDefault(e => e.EntryId == entryId);
+        //    if (entry == null)
+        //    {
+        //        throw new NullReferenceException();
+        //    }
+
+        //    var entryModel = EntryModelFactory.CreateEntryModel(entry) as TEntryModel;
+        //    return entryModel!;
+        //}
+
+        //public List<TModel> Take(int limit, int skip = 0)
+        //{
+        //    var entries = Database.All<RealmEntry>().AsEnumerable()
+        //        .Skip(skip).Take(limit)
+        //        .Select(e => EntryModelFactory.CreateEntryModel(e) as TModel)
+        //        .ToList();
+        //    return entries;
+        //}
         public abstract IEnumerable<ChangeSetModel> Update(string userId, TDto dto);
         public abstract IEnumerable<ChangeSetModel> Add(string userId, TDto dto);
         public IEnumerable<ChangeSetModel> Delete(string userId, string entityId)

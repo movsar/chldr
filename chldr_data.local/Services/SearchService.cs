@@ -12,12 +12,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using chldr_data.Interfaces;
 
-namespace chldr_data.Services
+namespace chldr_data.local.Services
 {
-    public class SearchService
+    public class SearchService : ISearchService
     {
-        private Realm Database => Realm.GetInstance(IDataProvider.OfflineDatabaseConfiguration);
+        private Realm Database => Realm.GetInstance(RealmDataProvider.OfflineDatabaseConfiguration);
         public event Action<SearchResultModel>? GotNewSearchResult;
         public static EntryModel FromEntity(RealmEntry entry)
         {

@@ -1,12 +1,12 @@
-﻿using chldr_data.Interfaces;
-using GraphQL.Client.Http;
+﻿using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
 using GraphQL;
 using Newtonsoft.Json.Linq;
 using chldr_utils;
 using System.Net.Sockets;
+using chldr_utils.Interfaces;
 
-namespace chldr_data.Services
+namespace chldr_utils.Services
 {
     public class GraphQLRequestSender : IGraphQLRequestSender
     {
