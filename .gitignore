@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /chldr_data/Data/offline.datx.lock
+/chldr_api/appsettings.json
