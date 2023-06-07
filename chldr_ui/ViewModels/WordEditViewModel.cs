@@ -31,7 +31,7 @@ namespace chldr_ui.ViewModels
 
                 if (existingWord == null)
                 {
-                    existingWord = (WordModel)ContentStore.GetEntryById(EntryId);
+                    // ! existingWord = (WordModel)ContentStore.GetEntryById(EntryId);
                 }
 
                 Word = WordDto.FromModel(existingWord);

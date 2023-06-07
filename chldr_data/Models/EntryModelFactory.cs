@@ -5,7 +5,7 @@ using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_data.Models
 {
-    internal class EntryModelFactory
+    public class EntryModelFactory
     {
         public static EntryModel CreateEntryModel(
             IEntryEntity entry, 

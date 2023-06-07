@@ -5,6 +5,7 @@ using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
+using chldr_data.Models;
 using chldr_tools;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -17,6 +18,14 @@ namespace chldr_data.Repositories
     {
         protected override RecordType RecordType => RecordType.Word;
         public WordsRepository(SqlContext context) : base(context) { }
+        public static WordModel FromEntity(SqlWord word)
+        {
+            return WordModel.FromEntity(word.Entry,
+                                    word.Entry.Word,
+                                    word.Entry.Source,
+                                    word.Entry.Translations
+                                        .Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)));
+        }
 
         public override IEnumerable<ChangeSetModel> Add(string userId, WordDto dto)
         {
@@ -55,7 +64,7 @@ namespace chldr_data.Repositories
                 throw new ArgumentException($"Entity not found: {entityId}");
             }
 
-            return WordModel.FromEntity(word);
+            return FromEntity(word);
         }
 
         public override IEnumerable<ChangeSetModel> Update(string userId, WordDto updatedWordDto)
@@ -67,7 +76,7 @@ namespace chldr_data.Repositories
             }
 
             var response = new List<ChangeSetModel>();
-            var existingWordDto = WordDto.FromModel(WordModel.FromEntity(existingWordEntity));
+            var existingWordDto = WordDto.FromModel(FromEntity(existingWordEntity));
 
             // Apply changes to the entry entity
             var entryChanges = UnitOfWork.GetChanges<EntryDto>(updatedWordDto, existingWordDto);

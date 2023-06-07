@@ -1,7 +1,7 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
-using chldr_data.DatabaseObjects.RealmEntities;
+using chldr_data.local.RealmEntities;
 using chldr_data.Models;
 using Newtonsoft.Json;
 using Realms;

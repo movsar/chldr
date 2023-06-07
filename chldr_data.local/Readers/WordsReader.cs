@@ -1,12 +1,22 @@
 ﻿using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Models.Words;
-using chldr_data.DatabaseObjects.RealmEntities;
+using chldr_data.DatabaseObjects.SqlEntities;
+using chldr_data.local.RealmEntities;
+using chldr_data.Repositories;
 
 namespace chldr_data.Readers
 {
     public class WordsReader : DataReader<RealmWord, WordModel>
     {
+        public static WordModel FromEntity(RealmWord word)
+        {
+            return WordModel.FromEntity(word.Entry,
+                                    word.Entry.Word,
+                                    word.Entry.Source,
+                                    word.Entry.Translations
+                                        .Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)));
+        }
         public EntryModel GetByEntryId(string entryId)
         {
             var word = Database.Find<RealmEntry>(entryId)!.Word;
@@ -15,7 +25,7 @@ namespace chldr_data.Readers
                 throw new Exception("There is no such word in the database");
             }
 
-            return WordModel.FromEntity(word);
+            return FromEntity(word);
         }
 
         public WordModel GetById(string entityId)
@@ -26,13 +36,13 @@ namespace chldr_data.Readers
                 throw new Exception("There is no such word in the database");
             }
 
-            return WordModel.FromEntity(word);
+            return FromEntity(word);
         }
 
         public List<WordModel> GetRandomWords(int limit)
         {
             var words = Database.All<RealmWord>().AsEnumerable().Take(limit);
-            return words.Select(w => WordModel.FromEntity(w)).ToList();
+            return words.Select(w => FromEntity(w)).ToList();
         }
 
     }

@@ -5,6 +5,7 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_utils;
 using chldr_utils.Services;
 using Realms;
+using chldr_data.local.RealmEntities;
 
 namespace chldr_data.Services
 {

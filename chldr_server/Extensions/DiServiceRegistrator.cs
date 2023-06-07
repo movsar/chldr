@@ -12,8 +12,6 @@ using chldr_ui.ViewModels;
 using chldr_utils;
 using chldr_utils.Services;
 using FluentValidation;
-using chldr_data.Readers;
-using chldr_data.Writers;
 
 namespace chldr_blazor.Extensions
 {
@@ -34,19 +32,19 @@ namespace chldr_blazor.Extensions
             appBuilder.Services.AddSingleton<ServiceLocator>();
             appBuilder.Services.AddSingleton<IGraphQLRequestSender, GraphQLRequestSender>();
             appBuilder.Services.AddSingleton<AuthService>();
-            appBuilder.Services.AddSingleton<IDataSourceService, RealmDataSource>();
-            appBuilder.Services.AddSingleton<ILocalDbReader, LocalDbReader>();
+            //appBuilder.Services.AddSingleton<IDataSourceService, RealmDataSource>();
+            //appBuilder.Services.AddSingleton<ILocalDbReader, LocalDbReader>();
 
             appBuilder.Services.AddScoped<UserService>();
-            appBuilder.Services.AddScoped<SyncService>();
-            appBuilder.Services.AddScoped<SearchService>();
+            //appBuilder.Services.AddScoped<SyncService>();
+            //appBuilder.Services.AddScoped<SearchService>();
 
-            appBuilder.Services.AddScoped<LanguagesReader>();
-            appBuilder.Services.AddScoped<PhrasesReader>();
-            appBuilder.Services.AddScoped<SourcesReader>();
-            appBuilder.Services.AddScoped<WordsReader>();
+            //appBuilder.Services.AddScoped<LanguagesReader>();
+            //appBuilder.Services.AddScoped<PhrasesReader>();
+            //appBuilder.Services.AddScoped<SourcesReader>();
+            //appBuilder.Services.AddScoped<WordsReader>();
 
-            appBuilder.Services.AddScoped<WordsWriter>();
+            //appBuilder.Services.AddScoped<WordsWriter>();
 
             // Shared
             appBuilder.Services.AddScoped<ContentStore>();

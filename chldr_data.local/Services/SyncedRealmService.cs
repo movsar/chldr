@@ -1,6 +1,6 @@
 ﻿using chldr_data.Enums;
 using chldr_data.Interfaces;
-using chldr_data.DatabaseObjects.RealmEntities;
+using chldr_data.local.RealmEntities;
 using chldr_utils;
 using chldr_utils.Services;
 using Realms;

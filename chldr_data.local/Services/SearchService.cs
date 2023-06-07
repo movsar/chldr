@@ -1,6 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
-using chldr_data.DatabaseObjects.RealmEntities;
+using chldr_data.local.RealmEntities;
 using chldr_data.Enums.WordDetails;
 using chldr_data.Models;
 using chldr_utils.Models;
@@ -19,6 +19,16 @@ namespace chldr_data.Services
     {
         private Realm Database => Realm.GetInstance(RealmDataSource.OfflineDatabaseConfiguration);
         public event Action<SearchResultModel>? GotNewSearchResult;
+        public static EntryModel FromEntity(RealmEntry entry)
+        {
+            return EntryModelFactory.CreateEntryModel(entry,
+                            entry?.Word,
+                            entry?.Phrase,
+                            entry?.Text,
+                            entry.Source,
+                            entry.Translations.Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t))
+                        );
+        }
         private static IEnumerable<EntryModel> SortDirectSearchEntries(string inputText, IEnumerable<EntryModel> entries)
         {
             // Entry.Content => Equal, StartsWith, Rest
@@ -104,16 +114,10 @@ namespace chldr_data.Services
 
                 foreach (var entry in entries)
                 {
-                    resultingEntries.Add(
-                        EntryModelFactory.CreateEntryModel(entry.Entry,
-                            entry.Entry.Phrase,
-                            entry.Entry.Source,
-                            entry.Entry.Translations.Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t))
-                        )
-                    );
+                    resultingEntries.Add(FromEntity(entry));
                 }
-            });
 
+            });
 
             var args = new SearchResultModel(inputText, SortDirectSearchEntries(inputText, resultingEntries).ToList(), SearchResultModel.Mode.Direct);
             GotNewSearchResult?.Invoke(args);
@@ -136,7 +140,7 @@ namespace chldr_data.Services
                                                                    .ToList();
                 foreach (var translation in translations)
                 {
-                    resultingEntries.Add(EntryModelFactory.CreateEntryModel(translation.Entry));
+                    resultingEntries.Add(FromEntity(translation.Entry));
                 }
             });
 
@@ -179,7 +183,7 @@ namespace chldr_data.Services
               .OrderBy(x => randomizer.Next(0, 70000))
               .Take(50)
               .OrderBy(entry => entry.GetHashCode())
-              .Select(entry => EntryModelFactory.CreateEntryModel(entry))
+              .Select(entry => FromEntity(entry))
               .ToList();
 
             return entries;
@@ -193,7 +197,7 @@ namespace chldr_data.Services
 
             var entriesToReturn = entries
               .Take(5)
-              .Select(entry => EntryModelFactory.CreateEntryModel(entry));
+              .Select(entry => FromEntity(entry));
 
             return entriesToReturn.ToList();
         }
@@ -203,7 +207,7 @@ namespace chldr_data.Services
             var entries = Database.All<RealmEntry>().AsEnumerable()
                 .Where(entry => entry.Rate < UserModel.EnthusiastRateRange.Lower)
                 .Take(50)
-                .Select(entry => EntryModelFactory.CreateEntryModel(entry))
+                .Select(entry => FromEntity(entry))
                 .ToList();
 
             return entries;

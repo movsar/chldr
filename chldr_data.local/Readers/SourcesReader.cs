@@ -1,5 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
+using chldr_data.local.RealmEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
