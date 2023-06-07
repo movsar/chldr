@@ -1,6 +1,5 @@
 ﻿using chldr_data.Enums.WordDetails;
 using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.DatabaseObjects.RealmEntities;
 using chldr_data.DatabaseObjects.SqlEntities;
 
 namespace chldr_data.DatabaseObjects.Models.Words
@@ -14,7 +13,7 @@ namespace chldr_data.DatabaseObjects.Models.Words
         public override DateTimeOffset CreatedAt { get; set; }
         public override DateTimeOffset UpdatedAt { get; set; }
         protected WordModel() { }
-        private static WordModel FromEntity(IEntryEntity entry, IWordEntity word, ISourceEntity source, IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translationEntityInfos)
+        public static WordModel FromEntity(IEntryEntity entry, IWordEntity word, ISourceEntity source, IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translationEntityInfos)
         {
             var wordModel = new WordModel()
             {
@@ -37,29 +36,6 @@ namespace chldr_data.DatabaseObjects.Models.Words
             }
 
             return wordModel;
-        }
-        public static WordModel FromEntity(SqlWord wordEntity)
-        {
-            return FromEntity(wordEntity.Entry,
-                wordEntity.Entry.Word,
-                wordEntity.Entry.Source,
-                wordEntity.Entry.Translations.Select(
-                    t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)
-                ));
-        }
-        public static WordModel FromEntity(RealmWord wordEntity)
-        {
-            return FromEntity(wordEntity.Entry,
-                 wordEntity.Entry.Word,
-                 wordEntity.Entry.Source,
-                 wordEntity.Entry.Translations.Select(
-                     t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)
-                 ));
-        }
-
-        public WordModel FromEntity(IEntryEntity entity)
-        {
-            throw new NotImplementedException();
         }
     }
     /*

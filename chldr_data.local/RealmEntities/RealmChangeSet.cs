@@ -3,7 +3,7 @@ using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.SqlEntities;
 using Realms;
 
-namespace chldr_data.DatabaseObjects.RealmEntities
+namespace chldr_data.local.RealmEntities
 {
     [MapTo("ChangeSet")]
     public class RealmChangeSet : RealmObject, IChangeSetEntity, IEntity

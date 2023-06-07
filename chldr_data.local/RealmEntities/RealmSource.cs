@@ -3,7 +3,7 @@ using Realms;
 using System;
 using System.Collections.Generic;
 
-namespace chldr_data.DatabaseObjects.RealmEntities;
+namespace chldr_data.local.RealmEntities;
 [MapTo("Source")]
 public class RealmSource : RealmObject, ISourceEntity
 {

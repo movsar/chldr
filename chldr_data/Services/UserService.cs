@@ -3,7 +3,6 @@ using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
-using chldr_data.DatabaseObjects.RealmEntities;
 using chldr_data.ResponseTypes;
 using chldr_utils;
 using chldr_utils.Services;

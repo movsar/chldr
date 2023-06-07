@@ -1,4 +1,5 @@
-﻿using chldr_data.DatabaseObjects.Models;
+﻿using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.RealmEntities;
 using chldr_data.Enums.WordDetails;
 using chldr_data.Models;
@@ -103,7 +104,13 @@ namespace chldr_data.Services
 
                 foreach (var entry in entries)
                 {
-                    resultingEntries.Add(EntryModelFactory.CreateEntryModel(entry));
+                    resultingEntries.Add(
+                        EntryModelFactory.CreateEntryModel(entry.Entry,
+                            entry.Entry.Phrase,
+                            entry.Entry.Source,
+                            entry.Entry.Translations.Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t))
+                        )
+                    );
                 }
             });
 

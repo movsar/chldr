@@ -1,7 +1,7 @@
 ﻿using chldr_data.DatabaseObjects.Interfaces;
 using Realms;
 
-namespace chldr_data.DatabaseObjects.RealmEntities;
+namespace chldr_data.local.RealmEntities;
 [MapTo("User")]
 public class RealmUser : RealmObject, IUserEntity
 {

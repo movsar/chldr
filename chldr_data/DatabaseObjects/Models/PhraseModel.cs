@@ -1,5 +1,4 @@
 ﻿using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.DatabaseObjects.RealmEntities;
 using chldr_data.DatabaseObjects.SqlEntities;
 
 namespace chldr_data.DatabaseObjects.Models
@@ -13,7 +12,7 @@ namespace chldr_data.DatabaseObjects.Models
         public override DateTimeOffset CreatedAt { get; set; }
         public override DateTimeOffset UpdatedAt { get; set; }
 
-        private static PhraseModel FromEntity(IEntryEntity entryEntity, IPhraseEntity phraseEntity, ISourceEntity sourceEntity, IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translationEntityInfos)
+        public static PhraseModel FromEntity(IEntryEntity entryEntity, IPhraseEntity phraseEntity, ISourceEntity sourceEntity, IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translationEntityInfos)
         {
             var phraseModel = new PhraseModel()
             {
@@ -37,24 +36,5 @@ namespace chldr_data.DatabaseObjects.Models
             return phraseModel;
         }
 
-        public static PhraseModel FromEntity(SqlPhrase wordEntity)
-        {
-            return FromEntity(wordEntity.Entry,
-                wordEntity.Entry.Phrase,
-                wordEntity.Entry.Source,
-                wordEntity.Entry.Translations.Select(
-                    t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)
-                ));
-        }
-
-        public static PhraseModel FromEntity(RealmPhrase wordEntity)
-        {
-            return FromEntity(wordEntity.Entry,
-                 wordEntity.Entry.Phrase,
-                 wordEntity.Entry.Source,
-                 wordEntity.Entry.Translations.Select(
-                     t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)
-                 ));
-        }
     }
 }

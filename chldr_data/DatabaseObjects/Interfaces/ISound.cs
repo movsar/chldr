@@ -1,5 +1,4 @@
-﻿using chldr_data.DatabaseObjects.RealmEntities;
-namespace chldr_data.DatabaseObjects.Interfaces
+﻿namespace chldr_data.DatabaseObjects.Interfaces
 {
     public interface ISound
     {

@@ -2,7 +2,7 @@
 using Realms;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace chldr_data.DatabaseObjects.RealmEntities;
+namespace chldr_data.local.RealmEntities;
 
 [MapTo("Query")]
 public class RealmQuery : RealmObject, IQueryEntity

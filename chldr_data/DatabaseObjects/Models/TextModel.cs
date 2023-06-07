@@ -1,5 +1,4 @@
 ﻿using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.DatabaseObjects.RealmEntities;
 using chldr_data.DatabaseObjects.SqlEntities;
 
 namespace chldr_data.DatabaseObjects.Models
@@ -12,7 +11,7 @@ namespace chldr_data.DatabaseObjects.Models
         public override DateTimeOffset CreatedAt { get; set; }
         public override DateTimeOffset UpdatedAt { get; set; }
 
-        private static TextModel FromEntity(IEntryEntity entry, ITextEntity text, ISourceEntity source, IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translationEntityInfos)
+        public static TextModel FromEntity(IEntryEntity entry, ITextEntity text, ISourceEntity source, IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translationEntityInfos)
         {
             var wordModel = new TextModel()
             {
@@ -33,26 +32,6 @@ namespace chldr_data.DatabaseObjects.Models
             }
 
             return wordModel;
-        }
-
-        public static TextModel FromEntity(SqlText entity)
-        {
-            return FromEntity(entity.Entry,
-                entity.Entry.Text!,
-                entity.Entry.Source,
-                entity.Entry.Translations.Select(
-                    t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)
-                ));
-        }
-
-        public static TextModel FromEntity(RealmText entity)
-        {
-            return FromEntity(entity.Entry,
-                 entity.Entry.Text!,
-                 entity.Entry.Source,
-                 entity.Entry.Translations.Select(
-                     t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)
-                 ));
         }
     }
 }

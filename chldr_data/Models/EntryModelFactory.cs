@@ -1,22 +1,28 @@
 ﻿using chldr_data.Enums;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Models.Words;
-using chldr_data.DatabaseObjects.RealmEntities;
+using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_data.Models
 {
     internal class EntryModelFactory
     {
-        public static EntryModel CreateEntryModel(RealmEntry entryEntity)
+        public static EntryModel CreateEntryModel(
+            IEntryEntity entry, 
+            IWordEntity word,
+            IPhraseEntity phrase,
+            ITextEntity text,
+            ISourceEntity source,
+            IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translations)
         {
-            switch ((EntryType)entryEntity?.Type)
+            switch ((EntryType)entry?.Type)
             {
                 case EntryType.Word:
-                    return WordModel.FromEntity(entryEntity.Word);
+                    return WordModel.FromEntity(entry, word, source, translations);
                 case EntryType.Phrase:
-                    return PhraseModel.FromEntity(entryEntity.Phrase);
+                    return PhraseModel.FromEntity(entry, phrase, source, translations);
                 case EntryType.Text:
-                    return TextModel.FromEntity(entryEntity.Text);
+                    return TextModel.FromEntity(entry, text, source, translations);
                 default:
                     return null;
             }
