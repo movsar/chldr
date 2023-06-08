@@ -207,7 +207,7 @@ namespace chldr_shared.Stores
 
         public async Task UpdateWord(UserModel loggedInUser, WordDto wordDto)
         {
-            await _unitOfWork.Words.Update(loggedInUser.UserId, wordDto);
+            await _unitOfWork.Words.Update(loggedInUser.UserId, wordDto, _unitOfWork.Translations);
         }
     }
 }

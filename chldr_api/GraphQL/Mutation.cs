@@ -55,15 +55,15 @@ namespace chldr_api
             
             try
             {
-                await unitOfWork.Words.Update(userId, wordDto);
+                await unitOfWork.Words.Update(userId, wordDto, unitOfWork.Translations);
                 unitOfWork.Commit();
 
                 return new MutationResponse() { Success = true };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 unitOfWork.Rollback();
-                throw;
+                throw ex;
             }
             finally
             {

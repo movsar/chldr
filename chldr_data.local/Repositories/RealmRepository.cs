@@ -1,4 +1,5 @@
-﻿using chldr_data.DatabaseObjects.Models;
+﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.local.RealmEntities;
@@ -48,7 +49,12 @@ namespace chldr_data.Repositories
         //    return entries;
         //}
         public abstract Task Insert(string userId, TDto dto);
-        public abstract Task Update(string userId, TDto dto);
+
+        public virtual async Task Update(string userId, TDto wordDto)
+        {
+            throw new NotImplementedException();
+        }
+
         public abstract Task Delete(string userId, string entityId);
 
         protected static void SetPropertyValue(object obj, string propertyName, object value)

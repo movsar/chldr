@@ -70,7 +70,16 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
-        public override async Task Update(string userId, WordDto wordDto)
+        public override Task Delete(string userId, string entityId)
+        {
+            //var response = _wordChangeRequests.Delete(userId, entityId);
+
+            // TODO: Delete from local database
+
+            throw new NotImplementedException();
+        }
+
+        public async Task Update(string userId, WordDto wordDto, ITranslationsRepository translationsRepository)
         {
             // Make a remote update request, if successful, update locally
             var request = new GraphQLRequest
@@ -96,24 +105,10 @@ namespace chldr_data.Repositories
             // TODO: Update in local database
             //    await _syncService.Sync(changeSets);
             // Refresh UI with new object 
-            
+
             //    // TODO: Fix this!
             //    //var entry = Database.Find<RealmEntry>(wordDto.EntryId);
             //    //OnEntryUpdated(WordModel.FromEntity(entry.Word));
-        }
-
-        public override Task Delete(string userId, string entityId)
-        {
-            //var response = _wordChangeRequests.Delete(userId, entityId);
-
-            // TODO: Delete from local database
-
-            throw new NotImplementedException();
-        }
-
-        public Task Update(string userId, WordDto updatedWordDto, ITranslationsRepository translationsRepository)
-        {
-            throw new NotImplementedException();
         }
     }
 }
