@@ -7,9 +7,12 @@ using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.local.RealmEntities;
 using chldr_data.Models;
+using chldr_data.ResponseTypes;
 using chldr_data.Services;
-using chldr_data.Writers;
 using chldr_tools;
+using chldr_utils.Interfaces;
+using chldr_utils;
+using GraphQL;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Realms;
@@ -19,12 +22,7 @@ namespace chldr_data.Repositories
 {
     public class RealmWordsRepository : RealmRepository<RealmWord, WordModel, WordDto>, IWordsRepository
     {
-        private readonly WordChangeRequests _wordChangeRequests;
-
-        public RealmWordsRepository(Realm context, WordChangeRequests wordChangeRequests) : base(context)
-        {
-            _wordChangeRequests = wordChangeRequests;
-        }
+        public RealmWordsRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
 
         protected override RecordType RecordType => RecordType.Word;
 
@@ -38,7 +36,7 @@ namespace chldr_data.Repositories
         }
         public EntryModel GetByEntryId(string entryId)
         {
-            var word = DbContext.Find<RealmEntry>(entryId)!.Word;
+            var word = _dbContext.Find<RealmEntry>(entryId)!.Word;
             if (word == null)
             {
                 throw new Exception("There is no such word in the database");
@@ -49,12 +47,12 @@ namespace chldr_data.Repositories
 
         public List<WordModel> GetRandomWords(int limit)
         {
-            var words = DbContext.All<RealmWord>().AsEnumerable().Take(limit);
+            var words = _dbContext.All<RealmWord>().AsEnumerable().Take(limit);
             return words.Select(w => FromEntity(w)).ToList();
         }
         public override WordModel Get(string entityId)
         {
-            var word = DbContext.All<RealmWord>().FirstOrDefault(w => w.WordId == entityId);
+            var word = _dbContext.All<RealmWord>().FirstOrDefault(w => w.WordId == entityId);
             if (word == null)
             {
                 throw new Exception("There is no such word in the database");
@@ -66,41 +64,49 @@ namespace chldr_data.Repositories
         public override async Task Add(string userId, WordDto dto)
         {
             // Make a remote add request, if successful, add locally
-            var response = _wordChangeRequests.Add(userId, dto);
+            //var response = _wordChangeRequests.Add(userId, dto);
 
             // TODO: Add to local database
 
             throw new NotImplementedException();
         }
 
-        public override async Task Update(string userId, WordDto dto)
+        public override async Task Update(string userId, WordDto wordDto)
         {
             // Make a remote update request, if successful, update locally
-            var response = _wordChangeRequests.Update(userId, dto);
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                        mutation updateWord($userId: String!, $wordDto: WordDtoInput!) {
+                          updateWord(userId: $userId, wordDto: $wordDto) {
+                            success
+                            errorMessage
+                          }
+                        }
+                        ",
+                // ! The names here must exactly match the names defined in the graphql schema
+                Variables = new { userId, wordDto }
+            };
+
+            var response = await _graphQLRequestSender.SendRequestAsync<MutationResponse>(request, "updateWord");
+            if (!response.Data.Success)
+            {
+                throw new Exception(response.Data.ErrorMessage);
+            }
 
             // TODO: Update in local database
-
-            //    // Update
-            //    var userDto = UserDto.FromModel(loggedInUser);
-            //    var changeSets = await UpdateWord(userDto, wordDto);
-
-            //    // Sync offline database
-
             //    await _syncService.Sync(changeSets);
-
-            //    // Refresh UI with new object 
+            // Refresh UI with new object 
+            
             //    // TODO: Fix this!
             //    //var entry = Database.Find<RealmEntry>(wordDto.EntryId);
             //    //OnEntryUpdated(WordModel.FromEntity(entry.Word));
-
-            throw new NotImplementedException();
-
         }
 
         public override Task Delete(string userId, string entityId)
         {
-            var response = _wordChangeRequests.Delete(userId, entityId);
-            
+            //var response = _wordChangeRequests.Delete(userId, entityId);
+
             // TODO: Delete from local database
 
             throw new NotImplementedException();

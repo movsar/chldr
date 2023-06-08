@@ -5,6 +5,8 @@ using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.local.RealmEntities;
 using chldr_tools;
+using chldr_utils.Interfaces;
+using chldr_utils;
 using Realms;
 
 namespace chldr_data.Repositories
@@ -13,11 +15,11 @@ namespace chldr_data.Repositories
     {
         protected override RecordType RecordType => throw new Exception("Shouldn't be used");
 
-        public RealmChangeSetsRepository(Realm context) : base(context) { }
+        public RealmChangeSetsRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
 
         public override ChangeSetModel Get(string entityId)
         {
-            var changeSet = DbContext.Find<RealmChangeSet>(entityId);
+            var changeSet = _dbContext.Find<RealmChangeSet>(entityId);
             return ChangeSetModel.FromEntity(changeSet);
         }
 
@@ -26,13 +28,13 @@ namespace chldr_data.Repositories
             var entities = dtos.Select(d => (RealmChangeSet)RealmChangeSet.FromDto(d));
             foreach (var entity in entities)
             {
-                DbContext.Add(entity);
+                _dbContext.Add(entity);
             }
         }
 
         public IEnumerable<ChangeSetModel> GetLatest(int limit)
         {
-            var models = DbContext.All<RealmChangeSet>()
+            var models = _dbContext.All<RealmChangeSet>()
                 .OrderByDescending(c => c.ChangeSetIndex)
                 .Take(limit)
                 .Select(c => (ChangeSetModel)ChangeSetModel.FromEntity(c));
@@ -42,7 +44,7 @@ namespace chldr_data.Repositories
 
         public IEnumerable<ChangeSetModel> Get(string[] changeSetIds)
         {
-            var models = DbContext.All<RealmChangeSet>()
+            var models = _dbContext.All<RealmChangeSet>()
                 .Where(c => changeSetIds.Contains(c.ChangeSetId))
                 .Select(c => ChangeSetModel.FromEntity(c));
 
@@ -57,7 +59,7 @@ namespace chldr_data.Repositories
         public override async Task Add(string userId, ChangeSetDto dto)
         {
             var changeSet = (RealmChangeSet)RealmChangeSet.FromDto(dto);
-            DbContext.Add(changeSet);
+            _dbContext.Add(changeSet);
 
             //return EmptyResult;
         }

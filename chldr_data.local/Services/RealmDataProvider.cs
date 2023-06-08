@@ -7,7 +7,7 @@ using chldr_utils.Services;
 using Realms;
 using chldr_data.local.RealmEntities;
 using chldr_data.local.Services;
-using chldr_data.Writers;
+using chldr_utils.Interfaces;
 
 namespace chldr_data.local.Services
 {
@@ -15,7 +15,8 @@ namespace chldr_data.local.Services
     {
         private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
-        private readonly WordChangeRequests _wordChangeRequests;
+        private readonly IGraphQLRequestSender _graphQLRequestSender;
+
         internal static RealmConfigurationBase? OfflineDatabaseConfiguration;
 
         
@@ -43,11 +44,11 @@ namespace chldr_data.local.Services
         public RealmDataProvider(
             FileService fileService, 
             ExceptionHandler exceptionHandler,
-            WordChangeRequests wordChangeRequests)
+            IGraphQLRequestSender graphQLRequestSender)
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
-            _wordChangeRequests = wordChangeRequests;
+            _graphQLRequestSender = graphQLRequestSender;
         }
 
         private string KeyAsString()
@@ -96,7 +97,7 @@ namespace chldr_data.local.Services
 
         public IUnitOfWork CreateUnitOfWork()
         {
-            return new RealmUnitOfWork(GetDatabase(), _wordChangeRequests);
+            return new RealmUnitOfWork(GetDatabase(), _exceptionHandler, _graphQLRequestSender);
         }
     }
 }

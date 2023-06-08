@@ -4,6 +4,9 @@ using chldr_data.Interfaces.Repositories;
 using chldr_data.local.RealmEntities;
 using chldr_data.Models;
 using chldr_tools;
+using chldr_utils;
+using chldr_utils.Interfaces;
+using chldr_utils.Services;
 using Realms;
 using System.Xml;
 
@@ -13,10 +16,15 @@ namespace chldr_data.Repositories
     {
         protected abstract RecordType RecordType { get; }
         protected readonly IEnumerable<ChangeSetModel> EmptyResult = new List<ChangeSetModel>();
-        protected readonly Realm DbContext;
-        public RealmRepository(Realm context)
+
+        protected readonly Realm _dbContext;
+        protected readonly ExceptionHandler _exceptionHandler;
+        protected readonly IGraphQLRequestSender _graphQLRequestSender;
+        public RealmRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender)
         {
-            DbContext = context;
+            _dbContext = context;
+            _exceptionHandler = exceptionHandler;
+            _graphQLRequestSender = graphQLRequestSender;
         }
         public abstract TModel Get(string entityId);
         //public TEntryModel GetById(string entityId)
@@ -56,7 +64,7 @@ namespace chldr_data.Repositories
         {
             // Using this method, instead of updating the whole database entity, we can just update its particular, changed fields
 
-            var entity = DbContext.Find<TEntity>(entityId);
+            var entity = _dbContext.Find<TEntity>(entityId);
             if (entity == null)
             {
                 throw new NullReferenceException();

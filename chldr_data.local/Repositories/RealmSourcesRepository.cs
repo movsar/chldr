@@ -6,6 +6,8 @@ using chldr_data.Interfaces;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.local.RealmEntities;
 using chldr_tools;
+using chldr_utils.Interfaces;
+using chldr_utils;
 using Realms;
 
 namespace chldr_data.Repositories
@@ -13,7 +15,7 @@ namespace chldr_data.Repositories
     public class RealmSourcesRepository : RealmRepository<RealmSource, SourceModel, SourceDto>, ISourcesRepository
     {
         protected override RecordType RecordType => RecordType.Source;
-        public RealmSourcesRepository(Realm context) : base(context) { }
+        public RealmSourcesRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
 
         public override async Task Add(string userId, SourceDto dto)
         {
@@ -21,13 +23,13 @@ namespace chldr_data.Repositories
         }
         public List<RealmSource> GetUnverifiedSources()
         {
-            var sources = DbContext.All<RealmSource>().Where(s => s.Notes == "Imported from legacy database" || s.Name == "User");
+            var sources = _dbContext.All<RealmSource>().Where(s => s.Notes == "Imported from legacy database" || s.Name == "User");
             return sources.ToList();
         }
 
         public List<SourceModel> GetAllNamedSources()
         {
-            return DbContext.All<RealmSource>().AsEnumerable().Select(s => SourceModel.FromEntity(s)).ToList();
+            return _dbContext.All<RealmSource>().AsEnumerable().Select(s => SourceModel.FromEntity(s)).ToList();
         }
 
         public override SourceModel Get(string entityId)

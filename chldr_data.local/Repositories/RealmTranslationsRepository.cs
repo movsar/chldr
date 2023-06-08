@@ -9,12 +9,14 @@ using chldr_data.Services;
 using chldr_data.local.RealmEntities;
 using Realms;
 using chldr_data.Interfaces.Repositories;
+using chldr_utils.Interfaces;
+using chldr_utils;
 
 namespace chldr_data.Repositories
 {
     public class RealmTranslationsRepository : RealmRepository<RealmTranslation, TranslationModel, TranslationDto>, ITranslationsRepository
     {
-        public RealmTranslationsRepository(Realm context) : base(context) { }
+        public RealmTranslationsRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
 
         protected override RecordType RecordType => RecordType.Translation;
 
