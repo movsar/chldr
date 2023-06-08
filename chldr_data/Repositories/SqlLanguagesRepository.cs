@@ -14,7 +14,7 @@ namespace chldr_data.Repositories
 
         protected override RecordType RecordType => RecordType.Language;
 
-        public override async Task Add(string userId, LanguageDto dto)
+        public override async Task Insert(string userId, LanguageDto dto)
         {
             throw new NotImplementedException();
         }

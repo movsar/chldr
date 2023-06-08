@@ -17,7 +17,7 @@ namespace chldr_data.Repositories
         protected override RecordType RecordType => RecordType.Source;
         public RealmSourcesRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
 
-        public override async Task Add(string userId, SourceDto dto)
+        public override async Task Insert(string userId, SourceDto dto)
         {
             throw new NotImplementedException();
         }

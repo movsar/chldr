@@ -12,7 +12,7 @@ namespace chldr_data.Repositories
 
         protected override RecordType RecordType => RecordType.User;
 
-        public override async Task Add(string userId, UserDto dto)
+        public override async Task Insert(string userId, UserDto dto)
         {
             throw new NotImplementedException();
         }

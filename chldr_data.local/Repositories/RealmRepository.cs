@@ -47,7 +47,7 @@ namespace chldr_data.Repositories
         //        .ToList();
         //    return entries;
         //}
-        public abstract Task Add(string userId, TDto dto);
+        public abstract Task Insert(string userId, TDto dto);
         public abstract Task Update(string userId, TDto dto);
         public abstract Task Delete(string userId, string entityId);
 

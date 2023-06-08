@@ -33,7 +33,7 @@ namespace chldr_data.Repositories
 
             return FromEntity(word);
         }
-        public override async Task Add(string userId, PhraseDto dto)
+        public override async Task Insert(string userId, PhraseDto dto)
         {
             throw new NotImplementedException();
         }

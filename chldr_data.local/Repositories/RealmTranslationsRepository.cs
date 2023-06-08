@@ -20,7 +20,7 @@ namespace chldr_data.Repositories
 
         protected override RecordType RecordType => RecordType.Translation;
 
-        public override async Task Add(string userId, TranslationDto dto)
+        public override async Task Insert(string userId, TranslationDto dto)
         {
             throw new NotImplementedException();
         }

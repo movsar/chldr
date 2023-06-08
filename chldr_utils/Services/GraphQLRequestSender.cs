@@ -39,8 +39,16 @@ namespace chldr_utils.Services
             }
             catch (GraphQLHttpRequestException graphQlException)
             {
-                _exceptionHandler.LogError(graphQlException.Content);
-                throw new Exception("An error occurred while sending the request", graphQlException);
+                _exceptionHandler.LogError(graphQlException.Content!);
+             
+                if (graphQlException.Content!.Contains("Could not save changes"))
+                {
+                    throw new Exception("Could not save changes", graphQlException);
+                }
+                else
+                {
+                    throw new Exception("An error occurred while sending the request", graphQlException);
+                }
             }
             catch (Exception ex)
             {

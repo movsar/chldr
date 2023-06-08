@@ -12,7 +12,7 @@ namespace chldr_data.Repositories
         protected override RecordType RecordType => RecordType.Source;
         public SqlSourcesRepository(SqlContext context) : base(context) { }
 
-        public override async Task Add(string userId, SourceDto dto)
+        public override async Task Insert(string userId, SourceDto dto)
         {
             throw new NotImplementedException();
         }

@@ -13,26 +13,7 @@ namespace chldr_data.Repositories
     public class SqlTranslationsRepository : SqlRepository<SqlTranslation, TranslationModel, TranslationDto>, ITranslationsRepository
     {
         public SqlTranslationsRepository(SqlContext context) : base(context) { }
-
         protected override RecordType RecordType => RecordType.Translation;
-
-        public override async Task Add(string userId, TranslationDto dto)
-        {
-            var entity = SqlTranslation.FromDto(dto);
-            SqlContext.Add(entity);
-
-            // Insert changeset
-            var changeSet = new SqlChangeSet()
-            {
-                UserId = userId!,
-                Operation = (int)Operation.Insert,
-                RecordId = dto.TranslationId!,
-                RecordType = (int)RecordType,
-            };
-            SqlContext.ChangeSets.Add(changeSet);
-            SqlContext.SaveChanges();
-        }
-
 
         public override TranslationModel Get(string entityId)
         {
@@ -48,6 +29,15 @@ namespace chldr_data.Repositories
             return TranslationModel.FromEntity(translation, translation.Language);
         }
 
+        public override async Task Insert(string userId, TranslationDto dto)
+        {
+            var entity = SqlTranslation.FromDto(dto);
+            SqlContext.Add(entity);
+
+            InsertChangeSet(Operation.Insert, userId, dto.TranslationId);
+        }
+
+       
         public override async Task Update(string userId, TranslationDto translationDto)
         {
             // Find out what has been changed
@@ -60,18 +50,7 @@ namespace chldr_data.Repositories
             }
 
             ApplyChanges<SqlTranslation>(translationDto.TranslationId, changes);
-
-            // Insert changeset
-            var changeSet = new SqlChangeSet()
-            {
-                UserId = userId!,
-                Operation = (int)Operation.Update,
-                RecordId = translationDto.TranslationId!,
-                RecordType = (int)RecordType,
-                RecordChanges = JsonConvert.SerializeObject(changes)
-            };
-            SqlContext.ChangeSets.Add(changeSet);
-            SqlContext.SaveChanges();
+            InsertChangeSet(Operation.Update, userId, translationDto.TranslationId, changes);
         }
     }
 }

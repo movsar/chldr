@@ -13,7 +13,7 @@ namespace chldr_data.Repositories
 
         protected override RecordType RecordType => RecordType.Phrase;
 
-        public override async Task Add(string userId, PhraseDto dto)
+        public override async Task Insert(string userId, PhraseDto dto)
         {
             throw new NotImplementedException();
         }

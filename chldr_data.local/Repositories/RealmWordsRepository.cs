@@ -61,7 +61,7 @@ namespace chldr_data.Repositories
             return FromEntity(word);
         }
 
-        public override async Task Add(string userId, WordDto dto)
+        public override async Task Insert(string userId, WordDto dto)
         {
             // Make a remote add request, if successful, add locally
             //var response = _wordChangeRequests.Add(userId, dto);
@@ -109,6 +109,11 @@ namespace chldr_data.Repositories
 
             // TODO: Delete from local database
 
+            throw new NotImplementedException();
+        }
+
+        public Task Update(string userId, WordDto updatedWordDto, ITranslationsRepository translationsRepository)
+        {
             throw new NotImplementedException();
         }
     }

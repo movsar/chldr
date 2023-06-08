@@ -49,7 +49,7 @@ namespace chldr_data.Repositories
             throw new Exception("This method should never be called for ChangeSets, they're immutable");
         }
 
-        public override async Task Add(string userId, ChangeSetDto dto)
+        public override async Task Insert(string userId, ChangeSetDto dto)
         {
             var changeSet = SqlChangeSet.FromDto(dto);
             SqlContext.Add(changeSet);

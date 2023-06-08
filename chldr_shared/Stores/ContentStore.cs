@@ -179,7 +179,7 @@ namespace chldr_shared.Stores
 
         public async Task AddNewPhrase(IUser userModel, PhraseDto phraseDto)
         {
-            await _unitOfWork.Phrases.Add(userModel.UserId, phraseDto);
+            await _unitOfWork.Phrases.Insert(userModel.UserId, phraseDto);
         }
 
         public PhraseModel GetCachedPhraseById(string phraseId)
