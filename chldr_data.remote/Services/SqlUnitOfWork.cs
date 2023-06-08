@@ -46,33 +46,6 @@ namespace chldr_data.Services
             _sqlContext.Dispose();
         }
 
-        public static List<Change> GetChanges<T>(T updated, T existing)
-        {
-            // This method compares the two dto's and returns the changed properties with their names and values
-
-            var changes = new List<Change>();
-            var properties = typeof(T).GetProperties();
-
-            foreach (var property in properties)
-            {
-                // Get currenta and old values, use empty string if they're null
-                var newValue = property.GetValue(updated) ?? "";
-                var oldValue = property.GetValue(existing) ?? "";
-
-                // ! Serialization allows comparision between complex objects, it might slow down the process though and worth reconsidering
-                if (!Equals(JsonConvert.SerializeObject(newValue), JsonConvert.SerializeObject(oldValue)))
-                {
-                    changes.Add(new Change()
-                    {
-                        Property = property.Name,
-                        OldValue = oldValue,
-                        NewValue = newValue,
-                    });
-                }
-            }
-
-            return changes;
-        }
 
         public ITranslationsRepository Translations
         {

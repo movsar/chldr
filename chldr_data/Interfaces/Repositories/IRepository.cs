@@ -1,4 +1,6 @@
-﻿namespace chldr_data.Interfaces.Repositories
+﻿using chldr_data.Models;
+
+namespace chldr_data.Interfaces.Repositories
 {
     public interface IRepository<TModel, TDto>
     {
@@ -7,5 +9,6 @@
         Task Insert(string userId, TDto dto);
         Task Update(string userId, TDto dto);
         Task Delete(string userId, string entityId);
+
     }
 }
