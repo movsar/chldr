@@ -4,7 +4,7 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Enums;
-using chldr_data.Interfaces;
+using chldr_data.Interfaces.Repositories;
 using chldr_data.local.RealmEntities;
 using chldr_data.Models;
 using chldr_data.Services;
@@ -63,17 +63,46 @@ namespace chldr_data.Repositories
             return FromEntity(word);
         }
 
-        public override IEnumerable<ChangeSetModel> Add(string userId, WordDto dto)
+        public override async Task Add(string userId, WordDto dto)
         {
             // Make a remote add request, if successful, add locally
+            var response = _wordChangeRequests.Add(userId, dto);
+
+            // TODO: Add to local database
+
             throw new NotImplementedException();
         }
 
-        public override IEnumerable<ChangeSetModel> Update(string userId, WordDto dto)
+        public override async Task Update(string userId, WordDto dto)
         {
             // Make a remote update request, if successful, update locally
-            var response = _wordChangeRequests.UpdateWord(userId, dto);
+            var response = _wordChangeRequests.Update(userId, dto);
+
+            // TODO: Update in local database
+
+            //    // Update
+            //    var userDto = UserDto.FromModel(loggedInUser);
+            //    var changeSets = await UpdateWord(userDto, wordDto);
+
+            //    // Sync offline database
+
+            //    await _syncService.Sync(changeSets);
+
+            //    // Refresh UI with new object 
+            //    // TODO: Fix this!
+            //    //var entry = Database.Find<RealmEntry>(wordDto.EntryId);
+            //    //OnEntryUpdated(WordModel.FromEntity(entry.Word));
+
+            throw new NotImplementedException();
+
+        }
+
+        public override Task Delete(string userId, string entityId)
+        {
+            var response = _wordChangeRequests.Delete(userId, entityId);
             
+            // TODO: Delete from local database
+
             throw new NotImplementedException();
         }
     }

@@ -1,5 +1,4 @@
-﻿using chldr_data.Interfaces;
-using chldr_data.DatabaseObjects.Dtos;
+﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.DatabaseObjects.Models;
 using chldr_tools;
@@ -9,6 +8,7 @@ using chldr_data.Enums;
 using chldr_data.Services;
 using chldr_data.local.RealmEntities;
 using Realms;
+using chldr_data.Interfaces.Repositories;
 
 namespace chldr_data.Repositories
 {
@@ -18,7 +18,12 @@ namespace chldr_data.Repositories
 
         protected override RecordType RecordType => RecordType.Translation;
 
-        public override IEnumerable<ChangeSetModel> Add(string userId, TranslationDto dto)
+        public override async Task Add(string userId, TranslationDto dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task Delete(string userId, string entityId)
         {
             throw new NotImplementedException();
         }
@@ -28,7 +33,7 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
-        public override IEnumerable<ChangeSetModel> Update(string userId, TranslationDto dto)
+        public override async Task Update(string userId, TranslationDto dto)
         {
             throw new NotImplementedException();
         }

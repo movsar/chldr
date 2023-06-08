@@ -18,7 +18,7 @@ namespace chldr_data.local.Services
 
         public bool IsInitialized { get; set; }
 
-        public event Action? LocalDatabaseInitialized;
+        public event Action? DatabaseInitialized;
 
         internal Realm GetDatabase()
         {
@@ -67,7 +67,7 @@ namespace chldr_data.local.Services
             };
 
             var realm = GetDatabase();
-            LocalDatabaseInitialized?.Invoke();
+            DatabaseInitialized?.Invoke();
         }
 
         public void PurgeAllData()

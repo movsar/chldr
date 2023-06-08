@@ -1,6 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
-using chldr_data.Interfaces;
+using chldr_data.Interfaces.Repositories;
 using chldr_data.local.RealmEntities;
 using chldr_data.Models;
 using chldr_tools;
@@ -9,12 +9,8 @@ using System.Xml;
 
 namespace chldr_data.Repositories
 {
-    public abstract class RealmRepository<TEntity, TModel, TDto> : IRepository<TEntity, TModel, TDto> where TEntity : RealmObject
+    public abstract class RealmRepository<TEntity, TModel, TDto> : IRepository<TModel, TDto> where TEntity : RealmObject
     {
-        public event Action<EntryModel>? EntryUpdated;
-        public event Action<EntryModel>? EntryInserted;
-        public event Action<EntryModel>? EntryDeleted;
-        public event Action<EntryModel>? EntryAdded;
         protected abstract RecordType RecordType { get; }
         protected readonly IEnumerable<ChangeSetModel> EmptyResult = new List<ChangeSetModel>();
         protected readonly Realm DbContext;
@@ -43,38 +39,9 @@ namespace chldr_data.Repositories
         //        .ToList();
         //    return entries;
         //}
-        public abstract IEnumerable<ChangeSetModel> Update(string userId, TDto dto);
-        public abstract IEnumerable<ChangeSetModel> Add(string userId, TDto dto);
-        public IEnumerable<ChangeSetModel> Delete(string userId, string entityId)
-        {
-            var entity = DbContext.Find<TEntity>(entityId);
-            if (entity == null)
-            {
-                throw new NullReferenceException();
-            }
-
-            RealmChangeSet changeSet = null;
-
-            DbContext.Write(() =>
-            {
-                DbContext.Remove(entity);
-
-                // Insert changeset
-                changeSet = new RealmChangeSet()
-                {
-                    Operation = (int)Operation.Delete,
-                    UserId = userId!,
-                    RecordId = entityId!,
-                    RecordType = (int)RecordType,
-                };
-
-                DbContext.Add(changeSet);
-            });
-
-            // Return changeset with updated index
-            changeSet = DbContext.Find<RealmChangeSet>(changeSet.ChangeSetId);
-            return new List<ChangeSetModel>() { ChangeSetModel.FromEntity(changeSet) };
-        }
+        public abstract Task Add(string userId, TDto dto);
+        public abstract Task Update(string userId, TDto dto);
+        public abstract Task Delete(string userId, string entityId);
 
         protected static void SetPropertyValue(object obj, string propertyName, object value)
         {

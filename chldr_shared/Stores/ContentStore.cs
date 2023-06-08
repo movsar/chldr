@@ -21,10 +21,11 @@ namespace chldr_shared.Stores
         private readonly ExceptionHandler _exceptionHandler;
         private readonly NetworkService _networkService;
         private readonly IDataProvider _dataProvider;
+        private readonly ISearchService _searchService;
         #endregion
 
         #region Fields and Properties
-        private readonly IUnitOfWork _unitOfWork;
+        private IUnitOfWork? _unitOfWork;
 
         // This shouldn't be normally used, but only to request models that have already been loaded 
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
@@ -62,25 +63,12 @@ namespace chldr_shared.Stores
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
             _dataProvider = dataProvider;
+            _searchService = searchService;
+            _searchService.GotNewSearchResult += DataAccess_GotNewSearchResults;
 
-            searchService.GotNewSearchResult += DataAccess_GotNewSearchResults;
-            //EntryUpdated += EntriesRepository_EntryUpdated;
-            //_wordWriter.WordUpdated += EntriesRepository_WordUpdated;
-
-            _dataProvider.LocalDatabaseInitialized += DataAccess_DatasourceInitialized;
+            _dataProvider.EntryUpdated += EntriesRepository_EntryUpdated;            
+            _dataProvider.DatabaseInitialized += DataAccess_DatasourceInitialized;
             _dataProvider.Initialize();
-        }
-
-        private async void EntriesRepository_WordUpdated(WordModel updatedWord)
-        {
-            if (!CachedSearchResult.Entries.Any(e => e.EntryId == updatedWord.EntryId))
-            {
-                return;
-            }
-
-            var updatedWordIndex = CachedSearchResult.Entries.IndexOf(CachedSearchResult.Entries.First(e => e.EntryId == updatedWord.EntryId));
-
-            CachedSearchResult.Entries[updatedWordIndex] = updatedWord;
         }
 
         private void EntriesRepository_EntryUpdated(EntryModel entry)
@@ -98,86 +86,87 @@ namespace chldr_shared.Stores
         #region Methods
         public void Search(string inputText, FiltrationFlags filterationFlags)
         {
-            //Task.Run(() => _searchService.FindAsync(inputText, filterationFlags));
+            Task.Run(() => _searchService.FindAsync(inputText, filterationFlags));
         }
         public void DeleteEntry(string entryId)
         {
             //EntriesRepository.Delete(entryId);
-            CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
-            CachedResultsChanged?.Invoke();
+            //CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
+            //CachedResultsChanged?.Invoke();
         }
         public void LoadRandomEntries()
         {
             CachedSearchResult.Entries.Clear();
-            //var entries = _searchService.GetRandomEntries();
+            var entries = _searchService.GetRandomEntries();
 
-            //CachedSearchResult.Entries.Clear();
-            //foreach (var entry in entries)
-            //{
-            //    CachedSearchResult.Entries.Add(entry);
-            //}
+            CachedSearchResult.Entries.Clear();
+            foreach (var entry in entries)
+            {
+                CachedSearchResult.Entries.Add(entry);
+            }
 
-            //CachedResultsChanged?.Invoke();
+            CachedResultsChanged?.Invoke();
         }
         public void LoadEntriesToFiddleWith()
         {
-            //CachedSearchResult.Entries.Clear();
-            //var entries = _searchService.GetWordsToFiddleWith();
+            CachedSearchResult.Entries.Clear();
+            var entries = _searchService.GetWordsToFiddleWith();
 
-            //CachedSearchResult.Entries.Clear();
-            //foreach (var entry in entries)
-            //{
-            //    CachedSearchResult.Entries.Add(entry);
-            //}
+            CachedSearchResult.Entries.Clear();
+            foreach (var entry in entries)
+            {
+                CachedSearchResult.Entries.Add(entry);
+            }
 
-            //CachedResultsChanged?.Invoke();
+            CachedResultsChanged?.Invoke();
         }
         public void LoadEntriesOnModeration()
         {
-            //CachedSearchResult.Entries.Clear();
-            //var entries = _searchService.GetEntriesOnModeration();
+            CachedSearchResult.Entries.Clear();
+            var entries = _searchService.GetEntriesOnModeration();
 
-            //CachedSearchResult.Entries.Clear();
-            //foreach (var entry in entries)
-            //{
-            //    CachedSearchResult.Entries.Add(entry);
-            //}
+            CachedSearchResult.Entries.Clear();
+            foreach (var entry in entries)
+            {
+                CachedSearchResult.Entries.Add(entry);
+            }
 
-            //CachedResultsChanged?.Invoke();
+            CachedResultsChanged?.Invoke();
         }
-        //public WordModel GetWordById(string entryId)
-        //{
-        //    return _wordQueries.GetById(entryId);
-        //}
-        //public PhraseModel GetPhraseById(string entryId)
-        //{
-        //    return _phraseQueries.GetById(entryId);
-        //}
+        public WordModel GetWordById(string entryId)
+        {
+            return _unitOfWork?.Words.Get(entryId);
+        }
+        public PhraseModel GetPhraseById(string entryId)
+        {
+            return _unitOfWork?.Phrases.Get(entryId);
+        }
 
-        //public EntryModel GetEntryById(string entryId)
-        //{
-        //    var word = _wordQueries.GetByEntryId(entryId);
-        //    if (word != null)
-        //    {
-        //        return word;
-        //    }
+        public EntryModel GetEntryById(string entryId)
+        {
+            var word = _unitOfWork?.Words.GetByEntryId(entryId);
+            if (word != null)
+            {
+                return word;
+            }
 
-        //    var phrase = _phraseQueries.GetByEntryId(entryId);
-        //    if (phrase != null)
-        //    {
-        //        return phrase;
-        //    }
+            var phrase = _unitOfWork?.Phrases.GetByEntryId(entryId);
+            if (phrase != null)
+            {
+                return phrase;
+            }
 
-        //    return null;
-        //}
+            return null;
+        }
         #endregion
-
         public void DataAccess_DatasourceInitialized()
         {
             if (Languages.Count == 0)
             {
-                //Languages.AddRange(_unitOfWork.GetAllLanguages());
+                Languages.AddRange(_unitOfWork?.Languages.GetAllLanguages());
             }
+
+            _unitOfWork = _dataProvider.CreateUnitOfWork();
 
             ContentInitialized?.Invoke();
         }
@@ -211,14 +200,14 @@ namespace chldr_shared.Stores
             return phrase;
         }
 
-        public void UpdatePhrase(UserModel loggedInUser, string? phraseId, string? content, string? notes)
+        public async Task UpdatePhrase(UserModel loggedInUser, PhraseDto phraseDto)
         {
-            // _dataAccess.UpdatePhrase(loggedInUser, phraseId, content, notes);
+            await _unitOfWork?.Phrases.Update(loggedInUser.UserId, phraseDto);
         }
 
-        public async Task UpdateWord(UserModel loggedInUser, WordDto word)
+        public async Task UpdateWord(UserModel loggedInUser, WordDto wordDto)
         {
-            //await _wordWriter.Update(loggedInUser, word);
+            await _unitOfWork?.Words.Update(loggedInUser.UserId, wordDto);
         }
     }
 }

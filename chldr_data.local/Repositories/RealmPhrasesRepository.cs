@@ -1,17 +1,14 @@
-﻿using chldr_data.Interfaces;
-using chldr_data.DatabaseObjects.Models;
+﻿using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Enums;
-using chldr_tools;
 using chldr_data.local.RealmEntities;
 using Realms;
 using chldr_data.DatabaseObjects.Interfaces;
-using System.Linq;
+using chldr_data.Interfaces.Repositories;
 
 namespace chldr_data.Repositories
 {
-    public class RealmPhrasesRepository : RealmRepository<RealmPhrase, PhraseModel, PhraseDto>
+    public class RealmPhrasesRepository : RealmRepository<RealmPhrase, PhraseModel, PhraseDto>, IPhrasesRepository
     {
         public RealmPhrasesRepository(Realm context) : base(context) { }
 
@@ -24,7 +21,7 @@ namespace chldr_data.Repositories
                                     phrase.Entry.Translations
                                         .Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)));
         }
-        public PhraseModel GetByEntryId(string entryId)
+        public EntryModel GetByEntryId(string entryId)
         {
             var word = DbContext.Find<RealmEntry>(entryId)!.Phrase;
             if (word == null)
@@ -34,7 +31,7 @@ namespace chldr_data.Repositories
 
             return FromEntity(word);
         }
-        public override IEnumerable<ChangeSetModel> Add(string userId, PhraseDto dto)
+        public override async Task Add(string userId, PhraseDto dto)
         {
             throw new NotImplementedException();
         }
@@ -50,7 +47,12 @@ namespace chldr_data.Repositories
             return FromEntity(word);
         }
 
-        public override IEnumerable<ChangeSetModel> Update(string userId, PhraseDto dto)
+        public override async Task Update(string userId, PhraseDto dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task Delete(string userId, string entityId)
         {
             throw new NotImplementedException();
         }

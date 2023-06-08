@@ -2,14 +2,14 @@
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Enums;
-using chldr_data.Interfaces;
+using chldr_data.Interfaces.Repositories;
 using chldr_data.Models;
 using chldr_tools;
 using System.Xml;
 
 namespace chldr_data.Repositories
 {
-    public abstract class SqlRepository<TEntity, TModel, TDto> : IRepository<TEntity, TModel, TDto> where TEntity : class
+    public abstract class SqlRepository<TEntity, TModel, TDto> : IRepository<TModel, TDto> where TEntity : class
     {
         protected abstract RecordType RecordType { get; }
         protected readonly IEnumerable<ChangeSetModel> EmptyResult = new List<ChangeSetModel>();
@@ -25,9 +25,9 @@ namespace chldr_data.Repositories
             SqlContext = context;
         }
         public abstract TModel Get(string entityId);
-        public abstract IEnumerable<ChangeSetModel> Update(string userId, TDto dto);
-        public abstract IEnumerable<ChangeSetModel> Add(string userId, TDto dto);
-        public IEnumerable<ChangeSetModel> Delete(string userId, string entityId)
+        public abstract Task Update(string userId, TDto dto);
+        public abstract Task Add(string userId, TDto dto);
+        public async Task Delete(string userId, string entityId)
         {
             var entity = SqlContext.Find<TEntity>(entityId);
             if (entity == null)
@@ -37,21 +37,22 @@ namespace chldr_data.Repositories
 
             SqlContext.Remove(entity);
 
-            // Insert changeset
-            var changeSet = new SqlChangeSet()
-            {
-                Operation = (int)Operation.Delete,
-                UserId = userId!,
-                RecordId = entityId!,
-                RecordType = (int)RecordType,
-            };
 
-            SqlContext.ChangeSets.Add(changeSet);
-            SqlContext.SaveChanges();
+            //// Insert changeset
+            //var changeSet = new SqlChangeSet()
+            //{
+            //    Operation = (int)Operation.Delete,
+            //    UserId = userId!,
+            //    RecordId = entityId!,
+            //    RecordType = (int)RecordType,
+            //};
 
-            // Return changeset with updated index
-            changeSet = SqlContext.ChangeSets.Find(changeSet.ChangeSetId);
-            return new List<ChangeSetModel>() { ChangeSetModel.FromEntity(changeSet) };
+            //SqlContext.ChangeSets.Add(changeSet);
+            //SqlContext.SaveChanges();
+
+            //// Return changeset with updated index
+            //changeSet = SqlContext.ChangeSets.Find(changeSet.ChangeSetId);
+            //return new List<ChangeSetModel>() { ChangeSetModel.FromEntity(changeSet) };
         }
 
         protected static void SetPropertyValue(object obj, string propertyName, object value)

@@ -2,7 +2,7 @@
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Enums;
-using chldr_data.Interfaces;
+using chldr_data.Interfaces.Repositories;
 using chldr_data.local.RealmEntities;
 using chldr_tools;
 using Realms;
@@ -13,7 +13,7 @@ namespace chldr_data.Repositories
     {
         protected override RecordType RecordType => throw new Exception("Shouldn't be used");
 
-        public RealmChangeSetsRepository(Realm sqlContext) : base(sqlContext) { }
+        public RealmChangeSetsRepository(Realm context) : base(context) { }
 
         public override ChangeSetModel Get(string entityId)
         {
@@ -49,17 +49,22 @@ namespace chldr_data.Repositories
             return models;
         }
 
-        public override IEnumerable<ChangeSetModel> Update(string userId, ChangeSetDto dto)
+        public override async Task Update(string userId, ChangeSetDto dto)
         {
             throw new Exception("This method should never be called for ChangeSets, they're immutable");
         }
 
-        public override IEnumerable<ChangeSetModel> Add(string userId, ChangeSetDto dto)
+        public override async Task Add(string userId, ChangeSetDto dto)
         {
             var changeSet = (RealmChangeSet)RealmChangeSet.FromDto(dto);
             DbContext.Add(changeSet);
 
-            return EmptyResult;
+            //return EmptyResult;
+        }
+
+        public override Task Delete(string userId, string entityId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

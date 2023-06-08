@@ -3,17 +3,18 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_data.ResponseTypes;
 using GraphQL;
 using chldr_utils.Interfaces;
+using chldr_data.Interfaces;
 
 namespace chldr_data.Writers
 {
-    public class WordChangeRequests
+    public class WordChangeRequests : IChangeRequest
     {
         private readonly IGraphQLRequestSender _graphQLRequestSender;
         public WordChangeRequests(IGraphQLRequestSender graphQLRequestSender)
         {
             _graphQLRequestSender = graphQLRequestSender;
         }
-        public async Task<List<ChangeSetModel>> UpdateWord(string userId, WordDto wordDto)
+        public async Task<IEnumerable<ChangeSetModel>> Update(string userId, WordDto wordDto)
         {
             var request = new GraphQLRequest
             {
@@ -46,20 +47,14 @@ namespace chldr_data.Writers
             return response.Data.ChangeSets.Select(c => ChangeSetModel.FromDto(c)).ToList();
         }
 
-        //public async Task Update(UserModel loggedInUser, WordDto wordDto)
-        //{
-        //    // Update
-        //    var userDto = UserDto.FromModel(loggedInUser);
-        //    var changeSets = await UpdateWord(userDto, wordDto);
+        public async Task<IEnumerable<ChangeSetModel>> Add(string userId, WordDto dto)
+        {
+            throw new NotImplementedException();
+        }
 
-        //    // Sync offline database
-            
-        //    await _syncService.Sync(changeSets);
-
-        //    // Refresh UI with new object 
-        //    // TODO: Fix this!
-        //    //var entry = Database.Find<RealmEntry>(wordDto.EntryId);
-        //    //OnEntryUpdated(WordModel.FromEntity(entry.Word));
-        //}
+        public async Task<IEnumerable<ChangeSetModel>> Delete(string userId, string entityId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

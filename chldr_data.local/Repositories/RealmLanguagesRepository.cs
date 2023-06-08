@@ -1,22 +1,20 @@
 ﻿
-using chldr_data.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Enums;
-using chldr_tools;
 using Realms;
 using chldr_data.local.RealmEntities;
+using chldr_data.Interfaces.Repositories;
 
 namespace chldr_data.Repositories
 {
-    public class RealmLanguagesRepository : RealmRepository<RealmLanguage, LanguageModel, LanguageDto>
+    public class RealmLanguagesRepository : RealmRepository<RealmLanguage, LanguageModel, LanguageDto>, ILanguagesRepository
     {
         public RealmLanguagesRepository(Realm context) : base(context) { }
 
         protected override RecordType RecordType => RecordType.Language;
 
-        public override IEnumerable<ChangeSetModel> Add(string userId, LanguageDto dto)
+        public override async Task Add(string userId, LanguageDto dto)
         {
             throw new NotImplementedException();
         }
@@ -31,7 +29,12 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
-        public override IEnumerable<ChangeSetModel> Update(string userId, LanguageDto dto)
+        public override async Task Update(string userId, LanguageDto dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task Delete(string userId, string entityId)
         {
             throw new NotImplementedException();
         }

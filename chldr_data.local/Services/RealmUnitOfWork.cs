@@ -1,6 +1,8 @@
 ﻿using chldr_data.Interfaces;
+using chldr_data.Interfaces.Repositories;
 using chldr_data.Models;
 using chldr_data.Repositories;
+using chldr_data.Writers;
 using chldr_tools;
 using Microsoft.EntityFrameworkCore.Storage;
 using Newtonsoft.Json;
@@ -13,12 +15,20 @@ namespace chldr_data.local.Services
         private IChangeSetsRepository _changeSetsRepository;
         private IWordsRepository _wordsRepository;
         private ITranslationsRepository _translationsRepository;
-        private Transaction _transaction;
-        private readonly Realm _context;
+        private IPhrasesRepository _phrasesRepository;
+        private ILanguagesRepository _languagesRepository;
+        private ISourcesRepository _sourcesRepository;
+        private IUsersRepository _usersRepository;
 
-        public RealmUnitOfWork(Realm context)
+        private Transaction _transaction;
+
+        private readonly Realm _context;
+        private readonly WordChangeRequests _wordChangeRequests;
+
+        public RealmUnitOfWork(Realm context, WordChangeRequests wordChangeRequests)
         {
             _context = context;
+            _wordChangeRequests = wordChangeRequests;
         }
 
         public void BeginTransaction()
@@ -104,9 +114,57 @@ namespace chldr_data.local.Services
             {
                 if (_wordsRepository == null)
                 {
-                    _wordsRepository = new RealmWordsRepository(_context);
+                    _wordsRepository = new RealmWordsRepository(_context, _wordChangeRequests);
                 }
                 return _wordsRepository;
+            }
+        }
+
+        public IPhrasesRepository Phrases
+        {
+            get
+            {
+                if (_phrasesRepository == null)
+                {
+                    _phrasesRepository = new RealmPhrasesRepository(_context);
+                }
+                return _phrasesRepository;
+            }
+        }
+
+        public ILanguagesRepository Languages
+        {
+            get
+            {
+                if (_languagesRepository == null)
+                {
+                    _languagesRepository = new RealmLanguagesRepository(_context);
+                }
+                return _languagesRepository;
+            }
+        }
+
+        public ISourcesRepository Sources
+        {
+            get
+            {
+                if (_sourcesRepository == null)
+                {
+                    _sourcesRepository = new RealmSourcesRepository(_context);
+                }
+                return _sourcesRepository;
+            }
+        }
+
+        public IUsersRepository Users
+        {
+            get
+            {
+                if (_usersRepository == null)
+                {
+                    _usersRepository = new RealmUsersRepository(_context);
+                }
+                return _usersRepository;
             }
         }
     }
