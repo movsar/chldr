@@ -8,12 +8,14 @@ using chldr_utils.Interfaces;
 using chldr_data.remote.Services;
 using chldr_data.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace chldr_data.local.Services
 {
     public class SqlDataProvider : IDataProvider
     {
         private readonly ExceptionHandler _exceptionHandler;
+        private readonly IConfiguration _configuration;
 
         public bool IsInitialized { get; set; }
 
@@ -24,9 +26,12 @@ namespace chldr_data.local.Services
         public event Action<EntryModel>? EntryAdded;
 
         public SqlDataProvider(
-            ExceptionHandler exceptionHandler)
+            ExceptionHandler exceptionHandler,
+            IConfiguration configuration
+            )
         {
             _exceptionHandler = exceptionHandler;
+            _configuration = configuration;
         }
 
         private string KeyAsString()
@@ -57,7 +62,7 @@ namespace chldr_data.local.Services
         }
         public SqlContext GetDatabaseContext()
         {
-            var connectionString = "server=104.248.40.142;port=3306;database=xj_chldr;user=xj_admin;password=2398ehh&*H!&*Hhs-=";
+            var connectionString = _configuration.GetConnectionString("RemoteDatabase");
             var options = new DbContextOptionsBuilder<SqlContext>()
                                .UseMySQL(connectionString)
                                .Options;
