@@ -14,7 +14,7 @@ namespace chldr_data.Writers
         {
             _graphQLRequestSender = graphQLRequestSender;
         }
-        public async Task<IEnumerable<ChangeSetModel>> Update(string userId, WordDto wordDto)
+        public async Task Update(string userId, WordDto wordDto)
         {
             var request = new GraphQLRequest
             {
@@ -38,21 +38,19 @@ namespace chldr_data.Writers
                 Variables = new { userId, wordDto }
             };
 
-            var response = await _graphQLRequestSender.SendRequestAsync<UpdateResponse>(request, "updateWord");
+            var response = await _graphQLRequestSender.SendRequestAsync<MutationResponse>(request, "updateWord");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);
             }
-
-            return response.Data.ChangeSets.Select(c => ChangeSetModel.FromDto(c)).ToList();
         }
 
-        public async Task<IEnumerable<ChangeSetModel>> Add(string userId, WordDto dto)
+        public async Task Add(string userId, WordDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<ChangeSetModel>> Delete(string userId, string entityId)
+        public async Task Delete(string userId, string entityId)
         {
             throw new NotImplementedException();
         }

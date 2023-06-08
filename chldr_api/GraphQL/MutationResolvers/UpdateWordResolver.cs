@@ -9,26 +9,21 @@ namespace chldr_api.GraphQL.ServiceResolvers
 {
     public class UpdateWordResolver
     {
-        internal async Task<UpdateResponse> ExecuteAsync(SqlUnitOfWork unitOfWork, string userId, WordDto updatedWordDto)
+        internal async Task<MutationResponse> ExecuteAsync(SqlUnitOfWork unitOfWork, string userId, WordDto updatedWordDto)
         {
             var existingWord = unitOfWork.Words.Get(updatedWordDto.WordId);
             var existingWordDto = WordDto.FromModel(existingWord);
 
-            var translationChangeSets = UpdateTranslations(unitOfWork, userId, existingWordDto, updatedWordDto);
-            var wordChangeSets = unitOfWork.Words.Update(userId, updatedWordDto);
-
-            var changesets = translationChangeSets.Union(wordChangeSets);
+            await UpdateTranslations(unitOfWork, userId, existingWordDto, updatedWordDto);
+            await unitOfWork.Words.Update(userId, updatedWordDto);
 
             // Retrieve back the same changesets so that they'll have indexes
-            var updatedChangeSets = unitOfWork.ChangeSets.Get(changesets.Select(c => c.ChangeSetId).ToArray());
 
             // Return a list of changesets with all the changes made
-            var response = new UpdateResponse() { Success = true };
-            response.ChangeSets.AddRange(updatedChangeSets.Select(c => ChangeSetDto.FromModel(c)));
-            return response;
+            return new MutationResponse() { Success = true };
         }
 
-        private List<ChangeSetModel> UpdateTranslations(SqlUnitOfWork unitOfWork, string userId, WordDto existingWordDto, WordDto updatedWordDto)
+        private async Task UpdateTranslations(SqlUnitOfWork unitOfWork, string userId, WordDto existingWordDto, WordDto updatedWordDto)
         {
             // Create a changeset with all the differences between existing and updated objects
 
@@ -40,23 +35,20 @@ namespace chldr_api.GraphQL.ServiceResolvers
             var deletedTranslations = existingWordDto.Translations.Where(t => !updatedTranslationIds.Contains(t.TranslationId));
             var updatedTranslations = updatedWordDto.Translations.Where(t => existingTranslationIds.Contains(t.TranslationId) && updatedTranslationIds.Contains(t.TranslationId));
 
-            var changeSets = new List<ChangeSetModel>();
             foreach (var insertedTranslation in insertedTranslations)
             {
-                changeSets.AddRange(unitOfWork.Translations.Add(userId, insertedTranslation));
+                await unitOfWork.Translations.Add(userId, insertedTranslation);
             }
 
             foreach (var deletedTranslation in deletedTranslations)
             {
-                changeSets.AddRange(unitOfWork.Translations.Delete(userId, deletedTranslation.TranslationId));
+                await unitOfWork.Translations.Delete(userId, deletedTranslation.TranslationId);
             }
 
             foreach (var translationDto in updatedTranslations)
             {
-                changeSets.AddRange(unitOfWork.Translations.Update(userId, translationDto));
+                await unitOfWork.Translations.Update(userId, translationDto);
             }
-
-            return changeSets;
         }
     }
 }

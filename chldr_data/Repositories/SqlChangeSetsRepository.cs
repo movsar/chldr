@@ -2,6 +2,7 @@
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Enums;
+using chldr_data.Interfaces.Repositories;
 using chldr_tools;
 
 namespace chldr_data.Repositories
@@ -43,17 +44,15 @@ namespace chldr_data.Repositories
             return models;
         }
 
-        public override IEnumerable<ChangeSetModel> Update(string userId, ChangeSetDto dto)
+        public override async Task Update(string userId, ChangeSetDto dto)
         {
             throw new Exception("This method should never be called for ChangeSets, they're immutable");
         }
 
-        public override IEnumerable<ChangeSetModel> Add(string userId, ChangeSetDto dto)
+        public override async Task Add(string userId, ChangeSetDto dto)
         {
             var changeSet = SqlChangeSet.FromDto(dto);
             SqlContext.Add(changeSet);
-
-            return EmptyResult;
         }
     }
 }

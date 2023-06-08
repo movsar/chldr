@@ -14,6 +14,7 @@ using chldr_utils.Services;
 using FluentValidation;
 using chldr_utils.Interfaces;
 using chldr_data.local.Services;
+using chldr_data.Writers;
 
 namespace chldr_native.Extensions
 {
@@ -37,16 +38,10 @@ namespace chldr_native.Extensions
             appBuilder.Services.AddSingleton<IDataProvider, RealmDataProvider>();
             
             appBuilder.Services.AddScoped<UserService>();
+            appBuilder.Services.AddScoped<WordChangeRequests>();
+            appBuilder.Services.AddScoped<ISearchService, SearchService>();
             //appBuilder.Services.AddScoped<SyncService>();
-            //appBuilder.Services.AddScoped<SearchService>();
             
-            //appBuilder.Services.AddScoped<LanguagesReader>();
-            //appBuilder.Services.AddScoped<PhrasesReader>();
-            //appBuilder.Services.AddScoped<SourcesReader>();
-            //appBuilder.Services.AddScoped<WordsReader>();
-
-            //appBuilder.Services.AddScoped<WordsWriter>();
-
             // Shared
             appBuilder.Services.AddScoped<ContentStore>();
             appBuilder.Services.AddScoped<UserStore>();

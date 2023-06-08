@@ -12,7 +12,7 @@ namespace chldr_data.Repositories
 
         protected override RecordType RecordType => RecordType.User;
 
-        public override IEnumerable<ChangeSetModel> Add(string userId, UserDto dto)
+        public override async Task Add(string userId, UserDto dto)
         {
             throw new NotImplementedException();
         }
@@ -22,7 +22,7 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
-        public override IEnumerable<ChangeSetModel> Update(string userId, UserDto dto)
+        public override async Task Update(string userId, UserDto dto)
         {
             throw new NotImplementedException();
         }

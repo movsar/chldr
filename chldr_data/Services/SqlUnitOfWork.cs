@@ -4,6 +4,7 @@ using chldr_data.Models;
 using Newtonsoft.Json;
 using chldr_data.Interfaces;
 using chldr_data.Repositories;
+using chldr_data.Interfaces.Repositories;
 
 namespace chldr_data.Services
 {
@@ -109,5 +110,13 @@ namespace chldr_data.Services
                 return _wordsRepository;
             }
         }
+
+        public IPhrasesRepository Phrases => throw new NotImplementedException();
+
+        public ILanguagesRepository Languages => throw new NotImplementedException();
+
+        public ISourcesRepository Sources => throw new NotImplementedException();
+
+        public IUsersRepository Users => throw new NotImplementedException();
     }
 }

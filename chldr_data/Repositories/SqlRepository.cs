@@ -34,25 +34,19 @@ namespace chldr_data.Repositories
             {
                 throw new NullReferenceException();
             }
-
             SqlContext.Remove(entity);
 
+            // Insert changeset
+            var changeSet = new SqlChangeSet()
+            {
+                Operation = (int)Operation.Delete,
+                UserId = userId!,
+                RecordId = entityId!,
+                RecordType = (int)RecordType,
+            };
 
-            //// Insert changeset
-            //var changeSet = new SqlChangeSet()
-            //{
-            //    Operation = (int)Operation.Delete,
-            //    UserId = userId!,
-            //    RecordId = entityId!,
-            //    RecordType = (int)RecordType,
-            //};
-
-            //SqlContext.ChangeSets.Add(changeSet);
-            //SqlContext.SaveChanges();
-
-            //// Return changeset with updated index
-            //changeSet = SqlContext.ChangeSets.Find(changeSet.ChangeSetId);
-            //return new List<ChangeSetModel>() { ChangeSetModel.FromEntity(changeSet) };
+            SqlContext.ChangeSets.Add(changeSet);
+            SqlContext.SaveChanges();
         }
 
         protected static void SetPropertyValue(object obj, string propertyName, object value)

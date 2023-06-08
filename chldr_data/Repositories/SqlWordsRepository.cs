@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Realms;
 using Realms.Sync;
+using System.Runtime.CompilerServices;
 
 namespace chldr_data.Repositories
 {
@@ -28,7 +29,7 @@ namespace chldr_data.Repositories
                                         .Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)));
         }
 
-        public override IEnumerable<ChangeSetModel> Add(string userId, WordDto dto)
+        public override async Task Add(string userId, WordDto dto)
         {
             var entity = SqlWord.FromDto(dto);
             SqlContext.Add(entity);
@@ -44,10 +45,6 @@ namespace chldr_data.Repositories
 
             SqlContext.ChangeSets.Add(changeSet);
             SqlContext.SaveChanges();
-
-            // Return changeset with updated index
-            changeSet = SqlContext.ChangeSets.Find(changeSet.ChangeSetId);
-            return new List<ChangeSetModel>() { ChangeSetModel.FromEntity(changeSet) };
         }
 
         public override WordModel Get(string entityId)
@@ -68,7 +65,7 @@ namespace chldr_data.Repositories
             return FromEntity(word);
         }
 
-        public override IEnumerable<ChangeSetModel> Update(string userId, WordDto updatedWordDto)
+        public override async Task Update(string userId, WordDto updatedWordDto)
         {
             var existingWordEntity = SqlContext.Words.Find(updatedWordDto.WordId);
             if (existingWordEntity == null)
@@ -76,7 +73,6 @@ namespace chldr_data.Repositories
                 throw new NullReferenceException();
             }
 
-            var response = new List<ChangeSetModel>();
             var existingWordDto = WordDto.FromModel(FromEntity(existingWordEntity));
 
             // Apply changes to the entry entity
@@ -95,10 +91,6 @@ namespace chldr_data.Repositories
                 };
                 SqlContext.ChangeSets.Add(entryChangeSet);
                 SqlContext.SaveChanges();
-
-                // Return changeset with updated index
-                var entryChangeSetModel = SqlContext.ChangeSets.Find(entryChangeSet.ChangeSetId);
-                response.Add(ChangeSetModel.FromEntity(entryChangeSetModel));
             }
 
             // Apply changes to the word entity
@@ -117,13 +109,12 @@ namespace chldr_data.Repositories
                 };
                 SqlContext.ChangeSets.Add(wordChangeSet);
                 SqlContext.SaveChanges();
-
-                // Return changeset with updated index
-                var entryChangeSetModel = SqlContext.ChangeSets.Find(wordChangeSet.ChangeSetId);
-                response.Add(ChangeSetModel.FromEntity(entryChangeSetModel));
             }
+        }
 
-            return response;
+        public EntryModel GetByEntryId(string entryId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

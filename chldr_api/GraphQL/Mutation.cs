@@ -55,7 +55,7 @@ namespace chldr_api
         }
 
         // Word mutations
-        public async Task<UpdateResponse> UpdateWord(string userId, WordDto wordDto)
+        public async Task<MutationResponse> UpdateWord(string userId, WordDto wordDto)
         {
             _unitOfWork.BeginTransaction();
 

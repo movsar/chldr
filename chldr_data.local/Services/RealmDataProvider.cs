@@ -7,6 +7,7 @@ using chldr_utils.Services;
 using Realms;
 using chldr_data.local.RealmEntities;
 using chldr_data.local.Services;
+using chldr_data.Writers;
 
 namespace chldr_data.local.Services
 {
@@ -14,11 +15,17 @@ namespace chldr_data.local.Services
     {
         private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
+        private readonly WordChangeRequests _wordChangeRequests;
         internal static RealmConfigurationBase? OfflineDatabaseConfiguration;
 
+        
         public bool IsInitialized { get; set; }
 
         public event Action? DatabaseInitialized;
+        public event Action<EntryModel>? EntryUpdated;
+        public event Action<EntryModel>? EntryInserted;
+        public event Action<EntryModel>? EntryDeleted;
+        public event Action<EntryModel>? EntryAdded;
 
         internal Realm GetDatabase()
         {
@@ -33,10 +40,14 @@ namespace chldr_data.local.Services
             return Realm.GetInstance(OfflineDatabaseConfiguration);
         }
 
-        public RealmDataProvider(FileService fileService, ExceptionHandler exceptionHandler)
+        public RealmDataProvider(
+            FileService fileService, 
+            ExceptionHandler exceptionHandler,
+            WordChangeRequests wordChangeRequests)
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
+            _wordChangeRequests = wordChangeRequests;
         }
 
         private string KeyAsString()
@@ -85,7 +96,7 @@ namespace chldr_data.local.Services
 
         public IUnitOfWork CreateUnitOfWork()
         {
-            return new RealmUnitOfWork(GetDatabase());
+            return new RealmUnitOfWork(GetDatabase(), _wordChangeRequests);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace chldr_data.Repositories
 
         protected override RecordType RecordType => RecordType.Phrase;
 
-        public override IEnumerable<ChangeSetModel> Add(string userId, PhraseDto dto)
+        public override async Task Add(string userId, PhraseDto dto)
         {
             throw new NotImplementedException();
         }
@@ -23,7 +23,7 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
-        public override IEnumerable<ChangeSetModel> Update(string userId, PhraseDto dto)
+        public override async Task Update(string userId, PhraseDto dto)
         {
             throw new NotImplementedException();
         }

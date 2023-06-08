@@ -14,7 +14,7 @@ namespace chldr_data.Repositories
 
         protected override RecordType RecordType => RecordType.Language;
 
-        public override IEnumerable<ChangeSetModel> Add(string userId, LanguageDto dto)
+        public override async Task Add(string userId, LanguageDto dto)
         {
             throw new NotImplementedException();
         }
@@ -24,7 +24,7 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
-        public override IEnumerable<ChangeSetModel> Update(string userId, LanguageDto dto)
+        public override async Task Update(string userId, LanguageDto dto)
         {
             throw new NotImplementedException();
         }

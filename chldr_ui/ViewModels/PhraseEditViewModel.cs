@@ -35,12 +35,12 @@ namespace chldr_ui.ViewModels
 
         private void SavePhrase()
         {
-            ContentStore.UpdatePhrase(UserModel.FromDto(UserStore.ActiveSession.User!), PhraseId, Phrase?.Content, Phrase?.Notes);
+            ContentStore.UpdatePhrase(UserModel.FromDto(UserStore.ActiveSession.User!), Phrase);
         }
 
         private void AddPhrase()
         {
-            ContentStore.AddNewPhrase(UserModel.FromDto(UserStore.ActiveSession.User!), Phrase?.Content!, Phrase?.Notes!);
+            ContentStore.AddNewPhrase(UserModel.FromDto(UserStore.ActiveSession.User!), Phrase);
         }
 
         public void Submit()

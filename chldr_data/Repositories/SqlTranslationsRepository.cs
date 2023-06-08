@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using chldr_data.Enums;
 using chldr_data.Services;
+using chldr_data.Interfaces.Repositories;
 
 namespace chldr_data.Repositories
 {
@@ -15,7 +16,7 @@ namespace chldr_data.Repositories
 
         protected override RecordType RecordType => RecordType.Translation;
 
-        public override IEnumerable<ChangeSetModel> Add(string userId, TranslationDto dto)
+        public override async Task Add(string userId, TranslationDto dto)
         {
             var entity = SqlTranslation.FromDto(dto);
             SqlContext.Add(entity);
@@ -30,10 +31,6 @@ namespace chldr_data.Repositories
             };
             SqlContext.ChangeSets.Add(changeSet);
             SqlContext.SaveChanges();
-
-            // Return changeset with updated index
-            var changeSetModel = ChangeSetModel.FromEntity(SqlContext.ChangeSets.Find(changeSet.ChangeSetId)!);
-            return new List<ChangeSetModel>() { changeSetModel };
         }
 
 
@@ -51,7 +48,7 @@ namespace chldr_data.Repositories
             return TranslationModel.FromEntity(translation, translation.Language);
         }
 
-        public override IEnumerable<ChangeSetModel> Update(string userId, TranslationDto translationDto)
+        public override async Task Update(string userId, TranslationDto translationDto)
         {
             // Find out what has been changed
             var existing = Get(translationDto.TranslationId);
@@ -59,7 +56,7 @@ namespace chldr_data.Repositories
             var changes = SqlUnitOfWork.GetChanges(translationDto, existingDto);
             if (changes.Count == 0)
             {
-                return EmptyResult;
+                return ;
             }
 
             ApplyChanges(translationDto.TranslationId, changes);
@@ -75,10 +72,6 @@ namespace chldr_data.Repositories
             };
             SqlContext.ChangeSets.Add(changeSet);
             SqlContext.SaveChanges();
-
-            // Return changeset with updated index
-            var changeSetModel = ChangeSetModel.FromEntity(SqlContext.ChangeSets.Find(changeSet.ChangeSetId)!);
-            return new List<ChangeSetModel>() { changeSetModel };
         }
     }
 }

@@ -8,6 +8,7 @@ using chldr_data.DatabaseObjects.Models.Words;
 using chldr_utils;
 using chldr_utils.Models;
 using chldr_utils.Services;
+using System.Runtime.CompilerServices;
 
 namespace chldr_shared.Stores
 {
@@ -25,7 +26,7 @@ namespace chldr_shared.Stores
         #endregion
 
         #region Fields and Properties
-        private IUnitOfWork? _unitOfWork;
+        private IUnitOfWork _unitOfWork;
 
         // This shouldn't be normally used, but only to request models that have already been loaded 
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
@@ -66,7 +67,7 @@ namespace chldr_shared.Stores
             _searchService = searchService;
             _searchService.GotNewSearchResult += DataAccess_GotNewSearchResults;
 
-            _dataProvider.EntryUpdated += EntriesRepository_EntryUpdated;            
+            _dataProvider.EntryUpdated += EntriesRepository_EntryUpdated;
             _dataProvider.DatabaseInitialized += DataAccess_DatasourceInitialized;
             _dataProvider.Initialize();
         }
@@ -135,11 +136,11 @@ namespace chldr_shared.Stores
         }
         public WordModel GetWordById(string entryId)
         {
-            return _unitOfWork?.Words.Get(entryId);
+            return _unitOfWork.Words.Get(entryId);
         }
         public PhraseModel GetPhraseById(string entryId)
         {
-            return _unitOfWork?.Phrases.Get(entryId);
+            return _unitOfWork.Phrases.Get(entryId);
         }
 
         public EntryModel GetEntryById(string entryId)
@@ -161,12 +162,12 @@ namespace chldr_shared.Stores
         #endregion
         public void DataAccess_DatasourceInitialized()
         {
+            _unitOfWork = _dataProvider.CreateUnitOfWork();
+
             if (Languages.Count == 0)
             {
-                Languages.AddRange(_unitOfWork?.Languages.GetAllLanguages());
+                Languages.AddRange(_unitOfWork.Languages.GetAllLanguages());
             }
-
-            _unitOfWork = _dataProvider.CreateUnitOfWork();
 
             ContentInitialized?.Invoke();
         }
@@ -176,10 +177,9 @@ namespace chldr_shared.Stores
             Search(query, new FiltrationFlags());
         }
 
-        public PhraseModel AddNewPhrase(IUser userModel, string content, string notes)
+        public async Task AddNewPhrase(IUser userModel, PhraseDto phraseDto)
         {
-            //PhraseModel phrase = _phraseChangeRequests.Add(content, notes);
-            return null;
+            await _unitOfWork.Phrases.Add(userModel.UserId, phraseDto);
         }
 
         public PhraseModel GetCachedPhraseById(string phraseId)
@@ -202,12 +202,12 @@ namespace chldr_shared.Stores
 
         public async Task UpdatePhrase(UserModel loggedInUser, PhraseDto phraseDto)
         {
-            await _unitOfWork?.Phrases.Update(loggedInUser.UserId, phraseDto);
+            await _unitOfWork.Phrases.Update(loggedInUser.UserId, phraseDto);
         }
 
         public async Task UpdateWord(UserModel loggedInUser, WordDto wordDto)
         {
-            await _unitOfWork?.Words.Update(loggedInUser.UserId, wordDto);
+            await _unitOfWork.Words.Update(loggedInUser.UserId, wordDto);
         }
     }
 }
