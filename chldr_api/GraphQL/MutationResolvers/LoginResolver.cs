@@ -57,7 +57,7 @@ namespace chldr_api.GraphQL.MutationServices
 
         internal async Task<LoginResponse> ExecuteAsync(SqlDataProvider dataProvider, string refreshToken)
         {
-            var dbContext = (SqlContext)dataProvider.GetDatabaseContext();
+            var dbContext = dataProvider.GetDatabaseContext();
 
             // Check if a user with this email exists
             var token = await dbContext.Tokens.SingleOrDefaultAsync(t => t.Type == (int)TokenType.Refresh && t.Value == refreshToken);
@@ -88,7 +88,7 @@ namespace chldr_api.GraphQL.MutationServices
 
         internal async Task<LoginResponse> ExecuteAsync(SqlDataProvider dataProvider, string email, string password)
         {
-            var dbContext = (SqlContext)dataProvider.GetDatabaseContext();
+            var dbContext = dataProvider.GetDatabaseContext();
          
             // Check if a user with this email exists
             var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);

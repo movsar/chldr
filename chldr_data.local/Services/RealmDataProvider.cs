@@ -16,7 +16,7 @@ namespace chldr_data.local.Services
         private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
         private readonly IGraphQLRequestSender _graphQLRequestSender;
-
+        private readonly SyncService _syncService;
         internal static RealmConfigurationBase? OfflineDatabaseConfiguration;
 
 
@@ -44,11 +44,14 @@ namespace chldr_data.local.Services
         public RealmDataProvider(
             FileService fileService,
             ExceptionHandler exceptionHandler,
-            IGraphQLRequestSender graphQLRequestSender)
+            IGraphQLRequestSender graphQLRequestSender,
+            SyncService syncService
+            )
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
             _graphQLRequestSender = graphQLRequestSender;
+            _syncService = syncService;
         }
 
         private string KeyAsString()
@@ -80,6 +83,8 @@ namespace chldr_data.local.Services
 
             var realm = GetDatabase();
             DatabaseInitialized?.Invoke();
+
+            _syncService.BeginListening();
         }
 
         public void PurgeAllData()

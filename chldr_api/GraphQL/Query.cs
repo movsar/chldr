@@ -27,12 +27,12 @@ namespace chldr_api
             return words.Select(w => WordDto.FromModel(w)).AsQueryable();
         }
 
-        //public IQueryable<ChangeSetDto> RetrieveLatestChangeSets(int index)
-        //{
-        //    var unitOfWork = _dataProvider.CreateUnitOfWork();
-        //    var changeSets = unitOfWork.ChangeSets.GetLatest(index);
-        //    return changeSets.Select(c => ChangeSetDto.FromModel(c)).AsQueryable();
-        //}
+        public IQueryable<ChangeSetDto> RetrieveLatestChangeSets(int minIndex)
+        {
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var changeSets = unitOfWork.ChangeSets.GetLatest(minIndex);
+            return changeSets.Select(c => ChangeSetDto.FromModel(c)).AsQueryable();
+        }
 
     }
 }
