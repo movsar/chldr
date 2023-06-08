@@ -2,6 +2,7 @@
 {
     public interface IRepository<TModel, TDto>
     {
+        IEnumerable<TModel> Take(int limit);
         TModel Get(string entityId);
         Task Insert(string userId, TDto dto);
         Task Update(string userId, TDto dto);

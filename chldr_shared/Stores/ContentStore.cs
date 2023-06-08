@@ -59,7 +59,8 @@ namespace chldr_shared.Stores
         public ContentStore(ExceptionHandler exceptionHandler,
                             NetworkService networkService,
                             IDataProvider dataProvider,
-                            ISearchService searchService)
+                            ISearchService searchService
+            )
         {
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;

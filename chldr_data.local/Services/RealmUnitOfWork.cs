@@ -25,7 +25,10 @@ namespace chldr_data.local.Services
         private readonly ExceptionHandler _exceptionHandler;
         private readonly IGraphQLRequestSender _graphQLRequestSender;
 
-        public RealmUnitOfWork(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender)
+        public RealmUnitOfWork(
+            Realm context, 
+            ExceptionHandler exceptionHandler, 
+            IGraphQLRequestSender graphQLRequestSender)
         {
             _context = context;
             _exceptionHandler = exceptionHandler;

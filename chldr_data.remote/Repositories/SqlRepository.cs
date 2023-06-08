@@ -8,7 +8,10 @@ using Newtonsoft.Json;
 
 namespace chldr_data.remote.Repositories
 {
-    public abstract class SqlRepository<TEntity, TModel, TDto> : IRepository<TModel, TDto> where TEntity : class, new()
+    public abstract class SqlRepository<TEntity, TModel, TDto> : IRepository<TModel, TDto> 
+        where TEntity : class, new()
+        where TDto : class, new()
+        where TModel : class
     {
         protected abstract RecordType RecordType { get; }
         protected readonly IEnumerable<ChangeSetModel> EmptyResult = new List<ChangeSetModel>();
@@ -62,7 +65,7 @@ namespace chldr_data.remote.Repositories
             {
                 var msg = ex.Message;
             }
-           
+
         }
 
         protected static void SetPropertyValue(object obj, string propertyName, object value)
@@ -90,6 +93,13 @@ namespace chldr_data.remote.Repositories
             }
 
             _dbContext.SaveChanges();
+        }
+
+        public IEnumerable<TModel> Take(int limit)
+        {
+            var entities = _dbContext.Set<TEntity>().Take(limit);
+            //return entities.Select(e => TModel.FromEntity(e));
+            return new List<TModel>();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace chldr_data.local.Services
 
         internal static RealmConfigurationBase? OfflineDatabaseConfiguration;
 
-        
+
         public bool IsInitialized { get; set; }
 
         public event Action? DatabaseInitialized;
@@ -42,7 +42,7 @@ namespace chldr_data.local.Services
         }
 
         public RealmDataProvider(
-            FileService fileService, 
+            FileService fileService,
             ExceptionHandler exceptionHandler,
             IGraphQLRequestSender graphQLRequestSender)
         {

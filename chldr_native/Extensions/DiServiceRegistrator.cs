@@ -38,7 +38,7 @@ namespace chldr_native.Extensions
             
             appBuilder.Services.AddScoped<UserService>();
             appBuilder.Services.AddScoped<ISearchService, SearchService>();
-            //appBuilder.Services.AddScoped<SyncService>();
+            appBuilder.Services.AddScoped<SyncService>();
             
             // Shared
             appBuilder.Services.AddScoped<ContentStore>();

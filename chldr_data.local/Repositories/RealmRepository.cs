@@ -10,6 +10,7 @@ namespace chldr_data.Repositories
 {
     public abstract class RealmRepository<TEntity, TModel, TDto> : IRepository<TModel, TDto> where TEntity : RealmObject
     {
+
         protected abstract RecordType RecordType { get; }
         protected readonly IEnumerable<ChangeSetModel> EmptyResult = new List<ChangeSetModel>();
 
@@ -50,6 +51,12 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
+        public IEnumerable<TModel> Take(int limit)
+        {
+            var entities = _dbContext.All<TEntity>().Take(limit);
+            //return entities.Select(e => TModel.FromEntity(e));
+            return new List<TModel>();
+        }
         public abstract Task Delete(string userId, string entityId);
 
         protected static void SetPropertyValue(object obj, string propertyName, object value)
