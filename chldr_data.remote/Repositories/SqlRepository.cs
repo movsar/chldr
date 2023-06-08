@@ -12,7 +12,7 @@ namespace chldr_data.remote.Repositories
     {
         protected abstract RecordType RecordType { get; }
         protected readonly IEnumerable<ChangeSetModel> EmptyResult = new List<ChangeSetModel>();
-        protected readonly SqlContext SqlContext;
+        protected readonly SqlContext _dbContext;
 
         public event Action<EntryModel>? EntryUpdated;
         public event Action<EntryModel>? EntryInserted;
@@ -21,19 +21,19 @@ namespace chldr_data.remote.Repositories
 
         public SqlRepository(SqlContext context)
         {
-            SqlContext = context;
+            _dbContext = context;
         }
         public abstract TModel Get(string entityId);
         public abstract Task Update(string userId, TDto dto);
         public abstract Task Insert(string userId, TDto dto);
         public async Task Delete(string userId, string entityId)
         {
-            var entity = SqlContext.Find<TEntity>(entityId);
+            var entity = _dbContext.Find<TEntity>(entityId);
             if (entity == null)
             {
                 throw new NullReferenceException();
             }
-            SqlContext.Remove(entity);
+            _dbContext.Remove(entity);
 
             InsertChangeSet(Operation.Delete, userId, entityId);
         }
@@ -53,8 +53,16 @@ namespace chldr_data.remote.Repositories
                 wordChangeSet.RecordChanges = JsonConvert.SerializeObject(wordChanges);
             }
 
-            SqlContext.ChangeSets.Add(wordChangeSet);
-            SqlContext.SaveChanges();
+            try
+            {
+                _dbContext.ChangeSets.Add(wordChangeSet);
+                _dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                var msg = ex.Message;
+            }
+           
         }
 
         protected static void SetPropertyValue(object obj, string propertyName, object value)
@@ -70,7 +78,7 @@ namespace chldr_data.remote.Repositories
         {
             // Using this method, instead of updating the whole database entity, we can just update its particular, changed fields
 
-            var sqlEntity = SqlContext.Find<T>(entityId);
+            var sqlEntity = _dbContext.Find<T>(entityId);
             if (sqlEntity == null)
             {
                 throw new NullReferenceException();
@@ -81,7 +89,7 @@ namespace chldr_data.remote.Repositories
                 SetPropertyValue(sqlEntity, change.Property, change.NewValue);
             }
 
-            SqlContext.SaveChanges();
+            _dbContext.SaveChanges();
         }
     }
 }

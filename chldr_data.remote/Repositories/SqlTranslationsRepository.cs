@@ -17,7 +17,7 @@ namespace chldr_data.remote.Repositories
 
         public override TranslationModel Get(string entityId)
         {
-            var translation = SqlContext.Translations
+            var translation = _dbContext.Translations
                 .Include(translation => translation.Language)
                 .FirstOrDefault(t => t.TranslationId.Equals(entityId));
 
@@ -32,7 +32,7 @@ namespace chldr_data.remote.Repositories
         public override async Task Insert(string userId, TranslationDto dto)
         {
             var entity = SqlTranslation.FromDto(dto);
-            SqlContext.Add(entity);
+            _dbContext.Add(entity);
 
             InsertChangeSet(Operation.Insert, userId, dto.TranslationId);
         }

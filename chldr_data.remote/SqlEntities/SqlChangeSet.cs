@@ -9,7 +9,7 @@ namespace chldr_data.remote.SqlEntities
     public class SqlChangeSet : IChangeSetEntity
     {
         public long ChangeSetIndex { get; set; }
-        public string ChangeSetId { get; set; }
+        public string ChangeSetId { get; set; } = Guid.NewGuid().ToString();
         public string UserId { get; set; } = null!;
         public int Operation { get; set; }
         public string RecordId { get; set; } = null!;

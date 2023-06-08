@@ -26,7 +26,7 @@ namespace chldr_data.remote.Repositories
         }
         public override WordModel Get(string entityId)
         {
-            var word = SqlContext.Words
+            var word = _dbContext.Words
                           .Include(w => w.Entry)
                           .Include(w => w.Entry.Source)
                           .Include(w => w.Entry.User)
@@ -44,19 +44,19 @@ namespace chldr_data.remote.Repositories
         public override async Task Insert(string userId, WordDto dto)
         {
             var entity = SqlWord.FromDto(dto);
-            SqlContext.Add(entity);
+            _dbContext.Add(entity);
 
             InsertChangeSet(Operation.Insert, userId, dto.WordId);
         }
         public async Task Update(string userId, WordDto updatedWordDto, ITranslationsRepository translationsRepository)
         {
-            var existingWordEntity = SqlContext.Words.Find(updatedWordDto.WordId);
+            var existingWordEntity = Get(updatedWordDto.WordId);
             if (existingWordEntity == null)
             {
                 throw new NullReferenceException();
             }
 
-            var existingWordDto = WordDto.FromModel(FromEntity(existingWordEntity));
+            var existingWordDto = WordDto.FromModel(existingWordEntity);
 
             // Apply changes to the entry entity
             var entryChanges = SqlUnitOfWork.GetChanges<EntryDto>(updatedWordDto, existingWordDto);

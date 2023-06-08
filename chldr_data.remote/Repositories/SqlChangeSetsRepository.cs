@@ -16,19 +16,19 @@ namespace chldr_data.remote.Repositories
 
         public override ChangeSetModel Get(string entityId)
         {
-            var changeSet = SqlContext.Find<SqlChangeSet>(entityId);
+            var changeSet = _dbContext.Find<SqlChangeSet>(entityId);
             return ChangeSetModel.FromEntity(changeSet);
         }
 
         public void AddRange(IEnumerable<ChangeSetDto> dtos)
         {
             var entities = dtos.Select(d => (SqlChangeSet)SqlChangeSet.FromDto(d));
-            SqlContext.AddRange(entities);
+            _dbContext.AddRange(entities);
         }
 
         public IEnumerable<ChangeSetModel> GetLatest(int limit)
         {
-            var models = SqlContext.ChangeSets
+            var models = _dbContext.ChangeSets
                 .OrderByDescending(c => c.ChangeSetIndex)
                 .Take(limit)
                 .Select(c => (ChangeSetModel)ChangeSetModel.FromEntity(c));
@@ -38,7 +38,7 @@ namespace chldr_data.remote.Repositories
 
         public IEnumerable<ChangeSetModel> Get(string[] changeSetIds)
         {
-            var models = SqlContext.ChangeSets
+            var models = _dbContext.ChangeSets
                 .Where(c => changeSetIds.Contains(c.ChangeSetId))
                 .Select(c => ChangeSetModel.FromEntity(c));
 
@@ -53,7 +53,7 @@ namespace chldr_data.remote.Repositories
         public override async Task Insert(string userId, ChangeSetDto dto)
         {
             var changeSet = SqlChangeSet.FromDto(dto);
-            SqlContext.Add(changeSet);
+            _dbContext.Add(changeSet);
         }
     }
 }
