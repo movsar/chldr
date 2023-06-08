@@ -79,7 +79,7 @@ namespace chldr_data.Repositories
             var entryChanges = SqlUnitOfWork.GetChanges<EntryDto>(updatedWordDto, existingWordDto);
             if (entryChanges.Count != 0)
             {
-                ApplyChanges(updatedWordDto.EntryId, entryChanges);
+                ApplyChanges<SqlEntry>(updatedWordDto.EntryId, entryChanges);
 
                 var entryChangeSet = new SqlChangeSet()
                 {
@@ -97,7 +97,7 @@ namespace chldr_data.Repositories
             var wordChanges = SqlUnitOfWork.GetChanges(updatedWordDto, existingWordDto);
             if (wordChanges.Count != 0)
             {
-                ApplyChanges(updatedWordDto.WordId, wordChanges);
+                ApplyChanges<SqlWord>(updatedWordDto.WordId, wordChanges);
 
                 var wordChangeSet = new SqlChangeSet()
                 {

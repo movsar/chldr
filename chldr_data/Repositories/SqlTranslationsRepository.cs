@@ -59,7 +59,7 @@ namespace chldr_data.Repositories
                 return ;
             }
 
-            ApplyChanges(translationDto.TranslationId, changes);
+            ApplyChanges<SqlTranslation>(translationDto.TranslationId, changes);
 
             // Insert changeset
             var changeSet = new SqlChangeSet()

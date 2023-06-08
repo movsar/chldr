@@ -9,7 +9,7 @@ using System.Xml;
 
 namespace chldr_data.Repositories
 {
-    public abstract class SqlRepository<TEntity, TModel, TDto> : IRepository<TModel, TDto> where TEntity : class
+    public abstract class SqlRepository<TEntity, TModel, TDto> : IRepository<TModel, TDto> where TEntity : class, new()
     {
         protected abstract RecordType RecordType { get; }
         protected readonly IEnumerable<ChangeSetModel> EmptyResult = new List<ChangeSetModel>();
@@ -58,11 +58,11 @@ namespace chldr_data.Repositories
             }
         }
 
-        protected void ApplyChanges(string entityId, List<Change> changes)
+        protected void ApplyChanges<T>(string entityId, List<Change> changes) where T : class
         {
             // Using this method, instead of updating the whole database entity, we can just update its particular, changed fields
 
-            var sqlEntity = SqlContext.Find<TEntity>(entityId);
+            var sqlEntity = SqlContext.Find<T>(entityId);
             if (sqlEntity == null)
             {
                 throw new NullReferenceException();
