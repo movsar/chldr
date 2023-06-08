@@ -1,10 +1,7 @@
 ﻿using chldr_data.Enums;
-using chldr_data.Resources.Localizations;
+using chldr_data.remote.Services;
 using chldr_data.ResponseTypes;
-using chldr_tools;
-using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 
 namespace chldr_api.GraphQL.MutationServices
 {

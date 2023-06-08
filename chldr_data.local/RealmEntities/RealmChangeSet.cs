@@ -1,6 +1,5 @@
 ﻿using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.SqlEntities;
 using Realms;
 
 namespace chldr_data.local.RealmEntities
@@ -23,7 +22,7 @@ namespace chldr_data.local.RealmEntities
 
         public static IChangeSetEntity FromDto(ChangeSetDto entity)
         {
-            return new SqlChangeSet()
+            return new RealmChangeSet()
             {
                 ChangeSetIndex = entity.ChangeSetIndex,
                 ChangeSetId = entity.ChangeSetId,

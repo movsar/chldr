@@ -1,4 +1,5 @@
-﻿using chldr_data.DatabaseObjects.SqlEntities;
+﻿using chldr_data.remote.Services;
+using chldr_data.remote.SqlEntities;
 using chldr_tools;
 using HotChocolate.Authorization;
 

@@ -1,14 +1,14 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.DatabaseObjects.Models;
 using chldr_tools;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using chldr_data.Enums;
 using chldr_data.Services;
 using chldr_data.Interfaces.Repositories;
+using chldr_data.remote.SqlEntities;
+using chldr_data.remote.Services;
 
-namespace chldr_data.Repositories
+namespace chldr_data.remote.Repositories
 {
     public class SqlTranslationsRepository : SqlRepository<SqlTranslation, TranslationModel, TranslationDto>, ITranslationsRepository
     {

@@ -2,7 +2,7 @@
 using chldr_data.DatabaseObjects.Dtos;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace chldr_data.DatabaseObjects.SqlEntities;
+namespace chldr_data.remote.SqlEntities;
 
 [Table("Source")]
 public class SqlSource : ISourceEntity

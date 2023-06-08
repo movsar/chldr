@@ -2,20 +2,15 @@
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Models.Words;
-using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Enums;
-using chldr_data.Interfaces;
 using chldr_data.Interfaces.Repositories;
-using chldr_data.Models;
+using chldr_data.remote.Services;
+using chldr_data.remote.SqlEntities;
 using chldr_data.Services;
 using chldr_tools;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Realms;
-using Realms.Sync;
-using System.Runtime.CompilerServices;
 
-namespace chldr_data.Repositories
+namespace chldr_data.remote.Repositories
 {
     public class SqlWordsRepository : SqlRepository<SqlWord, WordModel, WordDto>, IWordsRepository
     {

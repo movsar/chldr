@@ -2,7 +2,7 @@
 using Realms.Sync;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace chldr_data.DatabaseObjects.SqlEntities;
+namespace chldr_data.remote.SqlEntities;
 [Table("Tokens")]
 public partial class SqlToken
 {

@@ -1,11 +1,12 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
-using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
+using chldr_data.remote.Services;
+using chldr_data.remote.SqlEntities;
 using chldr_tools;
 
-namespace chldr_data.Repositories
+namespace chldr_data.remote.Repositories
 {
     public class SqlChangeSetsRepository : SqlRepository<SqlChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {

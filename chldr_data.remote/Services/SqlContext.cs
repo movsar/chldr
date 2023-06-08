@@ -1,8 +1,8 @@
-﻿using chldr_data.DatabaseObjects.SqlEntities;
+﻿using chldr_data.remote.SqlEntities;
 using Microsoft.EntityFrameworkCore;
 using MySql.EntityFrameworkCore.Extensions;
 
-namespace chldr_tools;
+namespace chldr_data.remote.Services;
 
 public class SqlContext : DbContext
 {

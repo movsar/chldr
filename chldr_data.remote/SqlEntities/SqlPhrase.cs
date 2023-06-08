@@ -2,14 +2,15 @@
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace chldr_data.DatabaseObjects.SqlEntities;
-[Table("Text")]
+namespace chldr_data.remote.SqlEntities;
 
-public class SqlText : ITextEntity
+[Table("Phrase")]
+public class SqlPhrase : IPhraseEntity
 {
-    public string TextId { get; set; }
+    public string PhraseId { get; set; }
     public string EntryId { get; set; } = null!;
     public string Content { get; set; } = null!;
     public string? Notes { get; set; }
+    [JsonIgnore]
     public virtual SqlEntry Entry { get; set; } = null!;
 }

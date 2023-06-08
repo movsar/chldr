@@ -1,6 +1,6 @@
-﻿
-using chldr_data.DatabaseObjects.SqlEntities;
-using chldr_data.Enums;
+﻿using chldr_data.Enums;
+using chldr_data.remote.Services;
+using chldr_data.remote.SqlEntities;
 using chldr_data.Resources.Localizations;
 using chldr_data.ResponseTypes;
 using chldr_shared.Models;

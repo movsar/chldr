@@ -1,11 +1,12 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.SqlEntities;
 using chldr_data.Enums;
 using chldr_tools;
+using chldr_data.remote.Services;
+using chldr_data.remote.SqlEntities;
 
-namespace chldr_data.Repositories
+namespace chldr_data.remote.Repositories
 {
     public class SqlPhrasesRepository : SqlRepository<SqlPhrase, PhraseModel, PhraseDto>
     {

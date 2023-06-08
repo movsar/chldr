@@ -1,6 +1,8 @@
 ﻿using chldr_api.GraphQL.MutationServices;
 using chldr_api.GraphQL.ServiceResolvers;
 using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.Interfaces;
+using chldr_data.remote.Services;
 using chldr_data.Resources.Localizations;
 using chldr_data.ResponseTypes;
 using chldr_data.Services;
@@ -25,7 +27,7 @@ namespace chldr_api
         protected readonly IConfiguration _configuration;
         protected readonly IStringLocalizer<AppLocalizations> _localizer;
         protected readonly EmailService _emailService;
-        private readonly SqlUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         public Mutation(
             UpdateWordResolver updateWordResolver,
@@ -35,6 +37,7 @@ namespace chldr_api
             ConfirmEmailResolver confirmEmailResolver,
             LoginResolver loginUserResolver,
             SqlContext dbContext,
+            IDataProvider dataProvider,
             IConfiguration configuration,
             IStringLocalizer<AppLocalizations> localizer,
             EmailService emailService)
@@ -45,20 +48,20 @@ namespace chldr_api
             _confirmEmailResolver = confirmEmailResolver;
             _loginUserMutation = loginUserResolver;
             _updateWordResolver = updateWordResolver;
-
+        
             _dbContext = dbContext;
             _configuration = configuration;
             _localizer = localizer;
             _emailService = emailService;
 
-            _unitOfWork = new SqlUnitOfWork(dbContext);
+            _unitOfWork = dataProvider.CreateUnitOfWork();
         }
 
         // Word mutations
         public async Task<MutationResponse> UpdateWord(string userId, WordDto wordDto)
         {
             _unitOfWork.BeginTransaction();
-
+            
             try
             {
                 var response = await _updateWordResolver.ExecuteAsync(_unitOfWork, userId, wordDto);

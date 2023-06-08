@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\chldr_data.remote\chldr_data.remote.csproj" />
     <ProjectReference Include="..\chldr_data\chldr_data.csproj" />
   </ItemGroup>
 

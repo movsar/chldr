@@ -1,5 +1,5 @@
 ﻿using chldr_data.Interfaces.Repositories;
-using chldr_data.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.Interfaces
 {
@@ -12,6 +12,8 @@ namespace chldr_data.Interfaces
         ILanguagesRepository Languages { get; }
         ISourcesRepository Sources { get; }
         IUsersRepository Users { get; }
+        void BeginTransaction();
+        void Rollback();
         void Commit();
     }
 }
