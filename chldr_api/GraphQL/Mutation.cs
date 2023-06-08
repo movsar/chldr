@@ -1,16 +1,12 @@
 ﻿using chldr_api.GraphQL.MutationServices;
-using chldr_api.GraphQL.ServiceResolvers;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Interfaces;
+using chldr_data.local.Services;
 using chldr_data.remote.Services;
 using chldr_data.Resources.Localizations;
 using chldr_data.ResponseTypes;
-using chldr_data.Services;
-using chldr_tools;
 using chldr_utils.Services;
-using GraphQL.Validation;
 using Microsoft.Extensions.Localization;
-using System.Configuration;
 
 namespace chldr_api
 {
@@ -20,23 +16,19 @@ namespace chldr_api
         private readonly UpdatePasswordResolver _updatePasswordMutation;
         private readonly RegisterUserResolver _registerUserMutation;
         private readonly ConfirmEmailResolver _confirmEmailResolver;
-        private readonly LoginResolver _loginUserMutation;
-        private readonly UpdateWordResolver _updateWordResolver;
-
+        private readonly LoginResolver _loginUserMutation;        
+        private readonly IDataProvider _dataProvider;
         protected readonly SqlContext _dbContext;
         protected readonly IConfiguration _configuration;
         protected readonly IStringLocalizer<AppLocalizations> _localizer;
         protected readonly EmailService _emailService;
-        private readonly IUnitOfWork _unitOfWork;
 
         public Mutation(
-            UpdateWordResolver updateWordResolver,
             PasswordResetResolver passwordResetResolver,
             UpdatePasswordResolver updatePasswordResolver,
             RegisterUserResolver registerUserResolver,
             ConfirmEmailResolver confirmEmailResolver,
             LoginResolver loginUserResolver,
-            SqlContext dbContext,
             IDataProvider dataProvider,
             IConfiguration configuration,
             IStringLocalizer<AppLocalizations> localizer,
@@ -47,69 +39,67 @@ namespace chldr_api
             _registerUserMutation = registerUserResolver;
             _confirmEmailResolver = confirmEmailResolver;
             _loginUserMutation = loginUserResolver;
-            _updateWordResolver = updateWordResolver;
-        
-            _dbContext = dbContext;
+
+            _dataProvider = dataProvider;
             _configuration = configuration;
             _localizer = localizer;
             _emailService = emailService;
 
-            _unitOfWork = dataProvider.CreateUnitOfWork();
         }
 
         // Word mutations
         public async Task<MutationResponse> UpdateWord(string userId, WordDto wordDto)
         {
-            _unitOfWork.BeginTransaction();
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            unitOfWork.BeginTransaction();
             
             try
             {
-                var response = await _updateWordResolver.ExecuteAsync(_unitOfWork, userId, wordDto);
-                
-                _unitOfWork.Commit();
+                await unitOfWork.Words.Update(userId, wordDto);
+                unitOfWork.Commit();
 
-                return response;
+                return new MutationResponse() { Success = true };
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _unitOfWork.Rollback();
-                throw ex;
+                unitOfWork.Rollback();
+                throw;
             }
             finally
             {
-                _unitOfWork.Dispose();
+                unitOfWork.Dispose();
             }
         }
 
         // User mutations
         public async Task<RegistrationResponse> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
-            return await _registerUserMutation.ExecuteAsync(_dbContext, _localizer, _emailService, email, password, firstName, lastName, patronymic);
+            return await _registerUserMutation.ExecuteAsync(_dataProvider as SqlDataProvider, _localizer, _emailService, email, password, firstName, lastName, patronymic);
         }
 
         public async Task<MutationResponse> ConfirmEmailAsync(string token)
         {
-            return await _confirmEmailResolver.ExecuteAsync(_dbContext, token);
+            return await _confirmEmailResolver.ExecuteAsync(_dataProvider as SqlDataProvider, token);
         }
 
         public async Task<PasswordResetResponse> PasswordReset(string email)
         {
-            return await _passwordResetMutation.ExecuteAsync(_dbContext, _configuration, _localizer, _emailService, email);
+            return await _passwordResetMutation.ExecuteAsync(_dataProvider as SqlDataProvider, _configuration, _localizer, _emailService, email);
         }
 
         public async Task<MutationResponse> UpdatePasswordAsync(string token, string newPassword)
         {
-            return await _updatePasswordMutation.ExecuteAsync(_dbContext, token, newPassword);
+            return await _updatePasswordMutation.ExecuteAsync(_dataProvider as SqlDataProvider, token, newPassword);
         }
 
         public async Task<LoginResponse> LogInRefreshTokenAsync(string refreshToken)
         {
-            return await _loginUserMutation.ExecuteAsync(_dbContext, refreshToken);
+            return await _loginUserMutation.ExecuteAsync(_dataProvider as SqlDataProvider, refreshToken);
         }
 
         public async Task<LoginResponse> LoginEmailPasswordAsync(string email, string password)
         {
-            return await _loginUserMutation.ExecuteAsync(_dbContext, email, password);
+            return await _loginUserMutation.ExecuteAsync(_dataProvider as SqlDataProvider, email, password);
         }
     }
 

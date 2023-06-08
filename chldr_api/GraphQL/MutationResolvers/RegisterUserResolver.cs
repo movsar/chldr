@@ -1,4 +1,5 @@
 ﻿using chldr_data.Enums;
+using chldr_data.local.Services;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_data.Resources.Localizations;
@@ -16,11 +17,13 @@ namespace chldr_api.GraphQL.MutationServices
     public class RegisterUserResolver
     {
         internal async Task<RegistrationResponse> ExecuteAsync(
-            SqlContext dbContext, 
+            SqlDataProvider dataProvider, 
             IStringLocalizer<AppLocalizations> _localizer, 
             EmailService _emailService,
             string email, string password, string? firstName, string? lastName, string? patronymic)
         {
+            var dbContext = dataProvider.GetDatabaseContext();
+
             // Check if a user with this email already exists
             var existingUser = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
             if (existingUser != null)

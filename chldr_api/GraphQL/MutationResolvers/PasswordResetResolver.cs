@@ -1,4 +1,6 @@
 ﻿using chldr_data.Enums;
+using chldr_data.Interfaces;
+using chldr_data.local.Services;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_data.Resources.Localizations;
@@ -16,12 +18,14 @@ namespace chldr_api.GraphQL.MutationServices
     public class PasswordResetResolver
     {
         internal async Task<PasswordResetResponse> ExecuteAsync(
-            SqlContext dbContext, 
+            SqlDataProvider dataProvider, 
             IConfiguration _configuration, 
             IStringLocalizer<AppLocalizations> _localizer, 
             EmailService _emailService,
             string email)
         {
+            var dbContext = dataProvider.GetDatabaseContext();
+
             var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (user == null)
             {

@@ -7,14 +7,14 @@ using chldr_utils.Services;
 using chldr_utils.Interfaces;
 using chldr_data.remote.Services;
 using chldr_data.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.local.Services
 {
     public class SqlDataProvider : IDataProvider
     {
         private readonly ExceptionHandler _exceptionHandler;
-        private readonly SqlContext _sqlContext;
-        
+
         public bool IsInitialized { get; set; }
 
         public event Action? DatabaseInitialized;
@@ -22,13 +22,11 @@ namespace chldr_data.local.Services
         public event Action<EntryModel>? EntryInserted;
         public event Action<EntryModel>? EntryDeleted;
         public event Action<EntryModel>? EntryAdded;
-        
+
         public SqlDataProvider(
-            ExceptionHandler exceptionHandler,
-            SqlContext sqlContext)
+            ExceptionHandler exceptionHandler)
         {
             _exceptionHandler = exceptionHandler;
-            _sqlContext = sqlContext;
         }
 
         private string KeyAsString()
@@ -39,7 +37,7 @@ namespace chldr_data.local.Services
             var stringified = string.Join(":", key);
             return stringified;
         }
- 
+
         public void Initialize()
         {
             DatabaseInitialized?.Invoke();
@@ -57,10 +55,19 @@ namespace chldr_data.local.Services
             //    database.RemoveAll<RealmTranslation>();
             //});
         }
+        public SqlContext GetDatabaseContext()
+        {
+            var connectionString = "server=104.248.40.142;port=3306;database=xj_chldr;user=xj_admin;password=2398ehh&*H!&*Hhs-=";
+            var options = new DbContextOptionsBuilder<SqlContext>()
+                               .UseMySQL(connectionString)
+                               .Options;
 
+            return new SqlContext(options);
+        }
         public IUnitOfWork CreateUnitOfWork()
-        {            
-            return new SqlUnitOfWork(_sqlContext);
+        {
+            var context = GetDatabaseContext();
+            return new SqlUnitOfWork(context);
         }
     }
 }

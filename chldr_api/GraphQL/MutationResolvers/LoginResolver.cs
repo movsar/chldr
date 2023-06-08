@@ -10,6 +10,8 @@ using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
+using chldr_data.Interfaces;
+using chldr_data.local.Services;
 
 namespace chldr_api.GraphQL.MutationServices
 {
@@ -53,8 +55,9 @@ namespace chldr_api.GraphQL.MutationServices
             };
         }
 
-        internal async Task<LoginResponse> ExecuteAsync(SqlContext dbContext, string refreshToken)
+        internal async Task<LoginResponse> ExecuteAsync(SqlDataProvider dataProvider, string refreshToken)
         {
+            var dbContext = (SqlContext)dataProvider.GetDatabaseContext();
 
             // Check if a user with this email exists
             var token = await dbContext.Tokens.SingleOrDefaultAsync(t => t.Type == (int)TokenType.Refresh && t.Value == refreshToken);
@@ -83,8 +86,10 @@ namespace chldr_api.GraphQL.MutationServices
             return await SignInAsync(dbContext, user);
         }
 
-        internal async Task<LoginResponse> ExecuteAsync(SqlContext dbContext, string email, string password)
+        internal async Task<LoginResponse> ExecuteAsync(SqlDataProvider dataProvider, string email, string password)
         {
+            var dbContext = (SqlContext)dataProvider.GetDatabaseContext();
+         
             // Check if a user with this email exists
             var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
             if (user == null)

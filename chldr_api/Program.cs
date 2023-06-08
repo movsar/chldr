@@ -1,14 +1,11 @@
 using chldr_api.GraphQL.MutationServices;
-using chldr_api.GraphQL.ServiceResolvers;
 using chldr_data.Interfaces;
 using chldr_data.local.Services;
-using chldr_data.remote.Services;
-using chldr_tools;
+using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Reflection.PortableExecutable;
 using System.Text;
 
 namespace chldr_api
@@ -30,11 +27,10 @@ namespace chldr_api
                 throw new Exception("Connection string is not set");
             }
 
-            builder.Services.AddDbContext<SqlContext>(options => options.UseMySQL(connectionString), ServiceLifetime.Singleton);
-
             builder.Services.AddScoped<IDataProvider, SqlDataProvider>();
+            
+            builder.Services.AddScoped<ExceptionHandler>();
 
-            builder.Services.AddScoped<UpdateWordResolver>();
             builder.Services.AddScoped<PasswordResetResolver>();
             builder.Services.AddScoped<UpdatePasswordResolver>();
             builder.Services.AddScoped<RegisterUserResolver>();

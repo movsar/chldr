@@ -1,4 +1,5 @@
 ﻿using chldr_data.Enums;
+using chldr_data.local.Services;
 using chldr_data.remote.Services;
 using chldr_data.ResponseTypes;
 using Microsoft.EntityFrameworkCore;
@@ -7,8 +8,10 @@ namespace chldr_api.GraphQL.MutationServices
 {
     public class UpdatePasswordResolver
     {
-        internal async Task<MutationResponse> ExecuteAsync(SqlContext dbContext, string token, string newPassword)
+        internal async Task<MutationResponse> ExecuteAsync(SqlDataProvider dataProvider, string token, string newPassword)
         {
+            var dbContext = dataProvider.GetDatabaseContext();
+
             var tokenInDatabase = await dbContext.Tokens.FirstOrDefaultAsync(t => t.Type == (int)TokenType.PasswordReset && t.Value == token && t.ExpiresIn > DateTimeOffset.UtcNow);
 
             if (tokenInDatabase == null)

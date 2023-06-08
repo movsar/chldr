@@ -26,6 +26,10 @@ namespace chldr_utils
                          .CreateLogger();
         }
 
+        public ExceptionHandler()
+        {
+        }
+
         public void LogAndThrow(Exception ex)
         {
             string message = Regex.Replace($"{ex.Message} {ex.StackTrace}\r\n", @"\s\s+", "\r\n\t");

@@ -1,4 +1,5 @@
 ﻿using chldr_data.Enums;
+using chldr_data.local.Services;
 using chldr_data.remote.Services;
 using chldr_data.ResponseTypes;
 using chldr_tools;
@@ -8,8 +9,10 @@ namespace chldr_api.GraphQL.MutationServices
 {
     public class ConfirmEmailResolver
     {
-        internal async Task<MutationResponse> ExecuteAsync(SqlContext dbContext, string tokenValue)
+        internal async Task<MutationResponse> ExecuteAsync(SqlDataProvider dataProvider, string tokenValue)
         {
+            var dbContext = dataProvider.GetDatabaseContext();
+
             // Check if a user with this email already exists
             var token = await dbContext.Tokens.SingleOrDefaultAsync(t => t.Value.Equals(tokenValue));
             if (token == null)
