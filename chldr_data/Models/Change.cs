@@ -14,7 +14,10 @@ namespace chldr_data.Models
             // This method compares the two dto's and returns the changed properties with their names and values
 
             var changes = new List<Change>();
-            var properties = typeof(T).GetProperties();
+
+            // Get all properties except for the class typed fields, i.e. references to other objects
+            var properties = typeof(T).GetProperties()
+                                      .Where(p => !p.PropertyType.IsClass || p.PropertyType == typeof(string));
 
             foreach (var property in properties)
             {

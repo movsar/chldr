@@ -84,7 +84,7 @@ namespace chldr_data.remote.Repositories
             }
 
             // Apply changes to the word entity
-            var wordChanges = Change.GetChanges(updatedWordDto, existingWordDto);
+            var wordChanges = Change.GetChanges(updatedWordDto, existingWordDto);            
             if (wordChanges.Count != 0)
             {
                 ApplyChanges<SqlWord>(updatedWordDto.WordId, wordChanges);

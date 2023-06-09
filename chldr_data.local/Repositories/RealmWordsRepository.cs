@@ -74,7 +74,7 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
-        private void UpdateRealmEntities(string userId, WordDto updatedWordDto, ITranslationsRepository translationsRepository)
+        private void UpdateRealmEntities(string userId, WordDto updatedWordDto, RealmTranslationsRepository translationsRepository)
         {
             var existingWordDto = WordDto.FromModel(Get(updatedWordDto.WordId));
 
@@ -90,21 +90,21 @@ namespace chldr_data.Repositories
 
             foreach (var translationDto in insertedTranslations)
             {
-                translationsRepository.Insert(userId, translationDto);
+                translationsRepository.Insert(translationDto);
             }
 
             foreach (var translationDto in deletedTranslations)
             {
-                translationsRepository.Delete(userId, translationDto.TranslationId);
+                translationsRepository.Delete(translationDto.TranslationId);
             }
 
             foreach (var translationDto in updatedTranslations)
             {
-                translationsRepository.Update(userId, translationDto);
+                translationsRepository.Update(translationDto);
             }
 
             // Apply changes to the word entity
-            var wordChanges = Change.GetChanges(updatedWordDto, existingWordDto);
+            var wordChanges = Change.GetChanges<WordDto>(updatedWordDto, existingWordDto);
             if (wordChanges.Count != 0)
             {
                 ApplyChanges<RealmWord>(updatedWordDto.WordId, wordChanges);
@@ -140,7 +140,7 @@ namespace chldr_data.Repositories
                 throw new Exception(response.Data.ErrorMessage);
             }
 
-            UpdateRealmEntities(userId, wordDto, translationsRepository);
+            UpdateRealmEntities(userId, wordDto, (RealmTranslationsRepository)translationsRepository);
 
             //    // TODO: Fix this!
             //    //var entry = Database.Find<RealmEntry>(wordDto.EntryId);

@@ -62,7 +62,7 @@ public class SqlContext : DbContext
                 .HasColumnName("source_id");
             entity.Property(e => e.Type).HasColumnName("type");
             entity.Property(e => e.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
             entity.Property(e => e.UserId)
@@ -102,7 +102,7 @@ public class SqlContext : DbContext
                 .HasMaxLength(40)
                 .HasColumnName("name");
             entity.Property(e => e.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
             entity.Property(e => e.UserId)
@@ -160,7 +160,7 @@ public class SqlContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
             entity.Property(e => e.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
             entity.Property(e => e.UserId)
@@ -197,7 +197,7 @@ public class SqlContext : DbContext
                 .HasMaxLength(250)
                 .HasColumnName("file_name");
             entity.Property(e => e.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
             entity.Property(e => e.UserId)
@@ -237,7 +237,7 @@ public class SqlContext : DbContext
                 .HasMaxLength(500)
                 .HasColumnName("notes");
             entity.Property(e => e.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
             entity.Property(e => e.UserId)
@@ -282,42 +282,46 @@ public class SqlContext : DbContext
 
             entity.ToTable("translation");
 
-            entity.HasIndex(e => e.EntryId, "fk_translation_entry_id");
-
-            entity.HasIndex(e => e.LanguageId, "fk_translation_language_id");
-
-            entity.HasIndex(e => e.UserId, "fk_translation_user_id");
-
             entity.Property(e => e.TranslationId)
                 .HasMaxLength(40)
                 .HasColumnName("translation_id");
+            entity.Property(e => e.LanguageId)
+                .HasMaxLength(40)
+                .HasColumnName("language_id");
+            entity.Property(e => e.EntryId)
+                .HasMaxLength(40)
+                .HasColumnName("entry_id");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(40)
+                .HasColumnName("user_id");
+                
             entity.Property(e => e.Content)
                 .HasMaxLength(10000)
                 .HasColumnName("content");
+            entity.Property(e => e.RawContents)
+                .HasMaxLength(10000)
+                .HasColumnName("raw_contents");
+            entity.Property(e => e.Notes)
+                .HasMaxLength(1000)
+                .HasColumnName("notes");
+
+            entity.Property(e => e.Rate)
+                .HasColumnName("rate");
+
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
-            entity.Property(e => e.EntryId)
-                .HasMaxLength(40)
-                .HasColumnName("entry_id");
-            entity.Property(e => e.LanguageId)
-                .HasMaxLength(40)
-                .HasColumnName("language_id");
-            entity.Property(e => e.Notes)
-                .HasMaxLength(1000)
-                .HasColumnName("notes");
-            entity.Property(e => e.Rate).HasColumnName("rate");
-            entity.Property(e => e.RawContents)
-                .HasMaxLength(10000)
-                .HasColumnName("raw_contents");
+          
             entity.Property(e => e.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
-            entity.Property(e => e.UserId)
-                .HasMaxLength(40)
-                .HasColumnName("user_id");
+
+
+            entity.HasIndex(e => e.EntryId, "fk_translation_entry_id");
+            entity.HasIndex(e => e.LanguageId, "fk_translation_language_id");
+            entity.HasIndex(e => e.UserId, "fk_translation_user_id");
 
             entity.HasOne(d => d.Entry).WithMany(p => p.Translations)
                 .HasForeignKey(d => d.EntryId)

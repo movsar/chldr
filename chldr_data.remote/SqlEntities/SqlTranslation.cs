@@ -3,9 +3,6 @@ using chldr_data.DatabaseObjects.Dtos;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.remote.SqlEntities;
-
-
-[Table("Translation")]
 public class SqlTranslation : ITranslationEntity
 {
     public string TranslationId { get; set; } 
@@ -19,8 +16,8 @@ public class SqlTranslation : ITranslationEntity
     public virtual SqlEntry Entry { get; set; } = null!;
     public virtual SqlLanguage Language { get; set; } = null!;
     public virtual SqlUser User { get; set; } = null!;
-    public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
-    public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
     internal string GetRawContents()
     {
         return Content.ToString();
