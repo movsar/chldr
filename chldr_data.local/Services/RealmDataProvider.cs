@@ -82,7 +82,7 @@ namespace chldr_data.local.Services
             };
 
             var realm = GetDatabase();
-            realm.WriteCopy(new RealmConfiguration("whatever.realm"));
+            //realm.WriteCopy(new RealmConfiguration("whatever.realm"));
             DatabaseInitialized?.Invoke();
 
             _syncService.BeginListening();

@@ -5,11 +5,11 @@
 
         #region Fields
         private const string DataDirName = "data";
-        private const string OfflineDatabaseFileName = "offline.datx";
+        private const string OfflineDatabaseFileName = "local.datx";
 
         public static string AppBaseDirectory;
         public static string AppDataDirectory => Path.Combine(AppBaseDirectory, DataDirName);
-        public string OfflineDatabaseFilePath => Path.Combine(AppDataDirectory, OfflineDatabaseFileName);
+        public string OfflineDatabaseFilePath => Path.Combine(AppBaseDirectory, OfflineDatabaseFileName);
         #endregion
 
         public FileService(string basePath)
