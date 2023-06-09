@@ -53,5 +53,20 @@ namespace chldr_data.remote.Repositories
             ApplyChanges<SqlTranslation>(translationDto.TranslationId, changes);
             InsertChangeSet(Operation.Update, userId, translationDto.TranslationId, changes);
         }
+
+        internal Task Delete(string translationId)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal Task Insert(TranslationDto translationDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal Task Update(TranslationDto translationDto)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

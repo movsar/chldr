@@ -73,20 +73,14 @@ namespace chldr_data.Repositories
 
             throw new NotImplementedException();
         }
-
-        private void UpdateRealmEntities(string userId, WordDto updatedWordDto, RealmTranslationsRepository translationsRepository)
+        private void ApplyEntryTranslationChanges(EntryDto existingEntryDto, EntryDto updatedEntryDto, RealmTranslationsRepository translationsRepository)
         {
-            var existingWordDto = WordDto.FromModel(Get(updatedWordDto.WordId));
+            var existingTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
+            var updatedTranslationIds = updatedEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
 
-
-
-            // Update translations
-            var existingTranslationIds = existingWordDto.Translations.Select(t => t.TranslationId).ToHashSet();
-            var updatedTranslationIds = updatedWordDto.Translations.Select(t => t.TranslationId).ToHashSet();
-
-            var insertedTranslations = updatedWordDto.Translations.Where(t => !existingTranslationIds.Contains(t.TranslationId));
-            var deletedTranslations = existingWordDto.Translations.Where(t => !updatedTranslationIds.Contains(t.TranslationId));
-            var updatedTranslations = updatedWordDto.Translations.Where(t => existingTranslationIds.Contains(t.TranslationId) && updatedTranslationIds.Contains(t.TranslationId));
+            var insertedTranslations = updatedEntryDto.Translations.Where(t => !existingTranslationIds.Contains(t.TranslationId));
+            var deletedTranslations = existingEntryDto.Translations.Where(t => !updatedTranslationIds.Contains(t.TranslationId));
+            var updatedTranslations = updatedEntryDto.Translations.Where(t => existingTranslationIds.Contains(t.TranslationId) && updatedTranslationIds.Contains(t.TranslationId));
 
             foreach (var translationDto in insertedTranslations)
             {
@@ -102,6 +96,14 @@ namespace chldr_data.Repositories
             {
                 translationsRepository.Update(translationDto);
             }
+        }
+
+        private void UpdateRealmEntities(string userId, WordDto updatedWordDto, RealmTranslationsRepository translationsRepository)
+        {
+            var existingWordDto = WordDto.FromModel(Get(updatedWordDto.WordId));
+
+            // Update translations
+            ApplyEntryTranslationChanges(existingWordDto, updatedWordDto, translationsRepository);
 
             // Apply changes to the word entity
             var wordChanges = Change.GetChanges<WordDto>(updatedWordDto, existingWordDto);
@@ -117,6 +119,7 @@ namespace chldr_data.Repositories
                 ApplyChanges<RealmEntry>(updatedWordDto.EntryId, entryChanges);
             }
         }
+
         public async Task Update(string userId, WordDto wordDto, ITranslationsRepository translationsRepository)
         {
             // Make a remote update request, if successful, update locally

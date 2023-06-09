@@ -10,6 +10,7 @@ using chldr_data.remote.SqlEntities;
 using chldr_data.Services;
 using chldr_tools;
 using Microsoft.EntityFrameworkCore;
+using Realms.Sync;
 
 namespace chldr_data.remote.Repositories
 {
@@ -49,6 +50,30 @@ namespace chldr_data.remote.Repositories
 
             InsertChangeSet(Operation.Insert, userId, dto.WordId);
         }
+        private async Task ApplyEntryTranslationChanges(EntryDto existingEntryDto, EntryDto updatedEntryDto, SqlTranslationsRepository translationsRepository)
+        {
+            var existingTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
+            var updatedTranslationIds = updatedEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
+
+            var insertedTranslations = updatedEntryDto.Translations.Where(t => !existingTranslationIds.Contains(t.TranslationId));
+            var deletedTranslations = existingEntryDto.Translations.Where(t => !updatedTranslationIds.Contains(t.TranslationId));
+            var updatedTranslations = updatedEntryDto.Translations.Where(t => existingTranslationIds.Contains(t.TranslationId) && updatedTranslationIds.Contains(t.TranslationId));
+
+            foreach (var translationDto in insertedTranslations)
+            {
+                await translationsRepository.Insert(translationDto);
+            }
+
+            foreach (var translationDto in deletedTranslations)
+            {
+                await translationsRepository.Delete(translationDto.TranslationId);
+            }
+
+            foreach (var translationDto in updatedTranslations)
+            {
+                await translationsRepository.Update(translationDto);
+            }
+        }
         public async Task Update(string userId, WordDto updatedWordDto, ITranslationsRepository translationsRepository)
         {
             var existingWordEntity = Get(updatedWordDto.WordId);
@@ -59,38 +84,16 @@ namespace chldr_data.remote.Repositories
 
             var existingWordDto = WordDto.FromModel(existingWordEntity);
 
-       
             // Update translations
-            var existingTranslationIds = existingWordDto.Translations.Select(t => t.TranslationId).ToHashSet();
-            var updatedTranslationIds = updatedWordDto.Translations.Select(t => t.TranslationId).ToHashSet();
-
-            var insertedTranslations = updatedWordDto.Translations.Where(t => !existingTranslationIds.Contains(t.TranslationId));
-            var deletedTranslations = existingWordDto.Translations.Where(t => !updatedTranslationIds.Contains(t.TranslationId));
-            var updatedTranslations = updatedWordDto.Translations.Where(t => existingTranslationIds.Contains(t.TranslationId) && updatedTranslationIds.Contains(t.TranslationId));
-
-            foreach (var translationDto in insertedTranslations)
-            {
-                await translationsRepository.Insert(userId, translationDto);
-            }
-
-            foreach (var translationDto in deletedTranslations)
-            {
-                await translationsRepository.Delete(userId, translationDto.TranslationId);
-            }
-
-            foreach (var translationDto in updatedTranslations)
-            {
-                await translationsRepository.Update(userId, translationDto);
-            }
+            await ApplyEntryTranslationChanges(existingWordDto, updatedWordDto, translationsRepository as SqlTranslationsRepository);
 
             // Apply changes to the word entity
-            var wordChanges = Change.GetChanges(updatedWordDto, existingWordDto);            
+            var wordChanges = Change.GetChanges(updatedWordDto, existingWordDto);
             if (wordChanges.Count != 0)
             {
                 ApplyChanges<SqlWord>(updatedWordDto.WordId, wordChanges);
                 InsertChangeSet(Operation.Update, userId, updatedWordDto.WordId, wordChanges);
             }
-            _dbContext.SaveChanges();
 
             // Apply changes to the entry entity
             var entryChanges = Change.GetChanges<EntryDto>(updatedWordDto, existingWordDto);
@@ -99,7 +102,6 @@ namespace chldr_data.remote.Repositories
                 ApplyChanges<SqlEntry>(updatedWordDto.EntryId, entryChanges);
                 InsertChangeSet(Operation.Update, userId, updatedWordDto.EntryId, entryChanges);
             }
-            _dbContext.SaveChanges();
         }
 
         public EntryModel GetByEntryId(string entryId)
