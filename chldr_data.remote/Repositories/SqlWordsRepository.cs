@@ -59,22 +59,7 @@ namespace chldr_data.remote.Repositories
 
             var existingWordDto = WordDto.FromModel(existingWordEntity);
 
-            // Apply changes to the entry entity
-            var entryChanges = Change.GetChanges<EntryDto>(updatedWordDto, existingWordDto);
-            if (entryChanges.Count != 0)
-            {
-                ApplyChanges<SqlEntry>(updatedWordDto.EntryId, entryChanges);
-                InsertChangeSet(Operation.Update, userId, updatedWordDto.EntryId, entryChanges);
-            }
-
-            // Apply changes to the word entity
-            var wordChanges = Change.GetChanges(updatedWordDto, existingWordDto);
-            if (wordChanges.Count != 0)
-            {
-                ApplyChanges<SqlWord>(updatedWordDto.WordId, wordChanges);
-                InsertChangeSet(Operation.Update, userId, updatedWordDto.WordId, wordChanges);
-            }
-
+       
             // Update translations
             var existingTranslationIds = existingWordDto.Translations.Select(t => t.TranslationId).ToHashSet();
             var updatedTranslationIds = updatedWordDto.Translations.Select(t => t.TranslationId).ToHashSet();
@@ -97,6 +82,24 @@ namespace chldr_data.remote.Repositories
             {
                 await translationsRepository.Update(userId, translationDto);
             }
+
+            // Apply changes to the word entity
+            var wordChanges = Change.GetChanges(updatedWordDto, existingWordDto);
+            if (wordChanges.Count != 0)
+            {
+                ApplyChanges<SqlWord>(updatedWordDto.WordId, wordChanges);
+                InsertChangeSet(Operation.Update, userId, updatedWordDto.WordId, wordChanges);
+            }
+            _dbContext.SaveChanges();
+
+            // Apply changes to the entry entity
+            var entryChanges = Change.GetChanges<EntryDto>(updatedWordDto, existingWordDto);
+            if (entryChanges.Count != 0)
+            {
+                ApplyChanges<SqlEntry>(updatedWordDto.EntryId, entryChanges);
+                InsertChangeSet(Operation.Update, userId, updatedWordDto.EntryId, entryChanges);
+            }
+            _dbContext.SaveChanges();
         }
 
         public EntryModel GetByEntryId(string entryId)
