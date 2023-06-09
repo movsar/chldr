@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Realms;
 using Realms.Sync;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace chldr_data.Repositories
 {
@@ -79,6 +80,47 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
+        private void UpdateRealmEntities(string userId, WordDto updatedWordDto, ITranslationsRepository translationsRepository)
+        {
+            var existingWordDto = WordDto.FromModel(Get(updatedWordDto.WordId));
+
+            // Apply changes to the entry entity
+            var entryChanges = Change.GetChanges<EntryDto>(updatedWordDto, existingWordDto);
+            if (entryChanges.Count != 0)
+            {
+                ApplyChanges<RealmEntry>(updatedWordDto.EntryId, entryChanges);
+            }
+
+            // Apply changes to the word entity
+            var wordChanges = Change.GetChanges(updatedWordDto, existingWordDto);
+            if (wordChanges.Count != 0)
+            {
+                ApplyChanges<RealmWord>(updatedWordDto.WordId, wordChanges);
+            }
+
+            // Update translations
+            var existingTranslationIds = existingWordDto.Translations.Select(t => t.TranslationId).ToHashSet();
+            var updatedTranslationIds = updatedWordDto.Translations.Select(t => t.TranslationId).ToHashSet();
+
+            var insertedTranslations = updatedWordDto.Translations.Where(t => !existingTranslationIds.Contains(t.TranslationId));
+            var deletedTranslations = existingWordDto.Translations.Where(t => !updatedTranslationIds.Contains(t.TranslationId));
+            var updatedTranslations = updatedWordDto.Translations.Where(t => existingTranslationIds.Contains(t.TranslationId) && updatedTranslationIds.Contains(t.TranslationId));
+
+            foreach (var translationDto in insertedTranslations)
+            {
+                translationsRepository.Insert(userId, translationDto);
+            }
+
+            foreach (var translationDto in deletedTranslations)
+            {
+                translationsRepository.Delete(userId, translationDto.TranslationId);
+            }
+
+            foreach (var translationDto in updatedTranslations)
+            {
+                translationsRepository.Update(userId, translationDto);
+            }
+        }
         public async Task Update(string userId, WordDto wordDto, ITranslationsRepository translationsRepository)
         {
             // Make a remote update request, if successful, update locally
@@ -102,9 +144,7 @@ namespace chldr_data.Repositories
                 throw new Exception(response.Data.ErrorMessage);
             }
 
-            // TODO: Update in local database
-            //    await _syncService.Sync(changeSets);
-            // Refresh UI with new object 
+            UpdateRealmEntities(userId, wordDto, translationsRepository);
 
             //    // TODO: Fix this!
             //    //var entry = Database.Find<RealmEntry>(wordDto.EntryId);

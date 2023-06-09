@@ -7,6 +7,7 @@ using chldr_data.Services;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.remote.SqlEntities;
 using chldr_data.remote.Services;
+using chldr_data.Models;
 
 namespace chldr_data.remote.Repositories
 {
@@ -43,7 +44,7 @@ namespace chldr_data.remote.Repositories
             // Find out what has been changed
             var existing = Get(translationDto.TranslationId);
             var existingDto = TranslationDto.FromModel(existing);
-            var changes = SqlUnitOfWork.GetChanges(translationDto, existingDto);
+            var changes = Change.GetChanges(translationDto, existingDto);
             if (changes.Count == 0)
             {
                 return ;

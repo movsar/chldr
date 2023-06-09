@@ -4,6 +4,7 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
+using chldr_data.Models;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_data.Services;
@@ -59,7 +60,7 @@ namespace chldr_data.remote.Repositories
             var existingWordDto = WordDto.FromModel(existingWordEntity);
 
             // Apply changes to the entry entity
-            var entryChanges = SqlUnitOfWork.GetChanges<EntryDto>(updatedWordDto, existingWordDto);
+            var entryChanges = Change.GetChanges<EntryDto>(updatedWordDto, existingWordDto);
             if (entryChanges.Count != 0)
             {
                 ApplyChanges<SqlEntry>(updatedWordDto.EntryId, entryChanges);
@@ -67,7 +68,7 @@ namespace chldr_data.remote.Repositories
             }
 
             // Apply changes to the word entity
-            var wordChanges = SqlUnitOfWork.GetChanges(updatedWordDto, existingWordDto);
+            var wordChanges = Change.GetChanges(updatedWordDto, existingWordDto);
             if (wordChanges.Count != 0)
             {
                 ApplyChanges<SqlWord>(updatedWordDto.WordId, wordChanges);
