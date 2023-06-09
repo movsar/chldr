@@ -6,5 +6,7 @@
         string? Notes { get; set; }
         string? UserId { get; }
         string SourceId { get; set; }
+        DateTimeOffset CreatedAt { get; set; }
+        DateTimeOffset UpdatedAt { get; set; }
     }
 }

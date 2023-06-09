@@ -11,19 +11,21 @@ namespace chldr_data.DatabaseObjects.Models
         public override DateTimeOffset CreatedAt { get; set; }
         public override DateTimeOffset UpdatedAt { get; set; }
 
-        public static PhraseModel FromEntity(IEntryEntity entryEntity, IPhraseEntity phraseEntity, ISourceEntity sourceEntity, IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translationEntityInfos)
+        public static PhraseModel FromEntity(IEntryEntity entry, IPhraseEntity phrase, ISourceEntity source, IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translationEntityInfos)
         {
             var phraseModel = new PhraseModel()
             {
-                EntryId = entryEntity.EntryId,
-                Rate = entryEntity.Rate,
-                Type = entryEntity.Type,
-                Source = SourceModel.FromEntity(sourceEntity),
-                CreatedAt = entryEntity.CreatedAt,
-                UpdatedAt = entryEntity.UpdatedAt,
+                EntryId = entry.EntryId,
+                UserId = entry.UserId,
+                ParentEntryId = entry.ParentEntryId,
+                Rate = entry.Rate,
+                Type = entry.Type,
+                Source = SourceModel.FromEntity(source),
+                CreatedAt = entry.CreatedAt,
+                UpdatedAt = entry.UpdatedAt,
 
-                PhraseId = phraseEntity.PhraseId,
-                Content = phraseEntity.Content,
+                PhraseId = phrase.PhraseId,
+                Content = phrase.Content,
             };
 
             foreach (var translationEntityToLanguage in translationEntityInfos)

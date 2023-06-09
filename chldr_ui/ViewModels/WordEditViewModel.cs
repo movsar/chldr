@@ -31,10 +31,10 @@ namespace chldr_ui.ViewModels
 
                 if (existingWord == null)
                 {
-                    // ! existingWord = (WordModel)ContentStore.GetEntryById(EntryId);
+                    existingWord = (WordModel)ContentStore.GetEntryById(EntryId);
                 }
 
-                Word = WordDto.FromModel(existingWord);
+                Word = (WordDto)EntryDto.FromModel(existingWord);
                 SourceId = Word.SourceId;
             }
         }
@@ -80,7 +80,14 @@ namespace chldr_ui.ViewModels
             }
 
             var user = UserModel.FromDto(UserStore.ActiveSession.User!);
-            await ContentStore.UpdateWord(user, Word);
+            if (Word.CreatedAt != DateTimeOffset.MinValue)
+            {
+                await ContentStore.UpdateWord(user, Word);
+            }
+            else
+            {
+                await ContentStore.AddWord(user, Word);
+            }
 
             NavigationManager.NavigateTo("/");
         }

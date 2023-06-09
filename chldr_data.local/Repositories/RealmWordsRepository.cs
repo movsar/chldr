@@ -94,7 +94,7 @@ namespace chldr_data.Repositories
             var existingWordDto = WordDto.FromModel(Get(updatedWordDto.WordId));
         
             // Apply changes to the word entity
-            var wordChanges = Change.GetChanges<WordDto>(updatedWordDto, existingWordDto);
+            var wordChanges = Change.GetChanges<WordDto>(updatedWordDto, (WordDto)existingWordDto);
             if (wordChanges.Count != 0)
             {
                 ApplyChanges<RealmWord>(updatedWordDto.WordId, wordChanges);
@@ -117,7 +117,7 @@ namespace chldr_data.Repositories
             ApplyEntryTranslationChanges(existingWordDto, updatedWordDto, (RealmTranslationsRepository)translationsRepository);
 
             // Update word
-            Update(existingWordDto);
+            Update((WordDto)existingWordDto);
         }
     }
 }

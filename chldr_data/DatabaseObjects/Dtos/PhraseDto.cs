@@ -15,11 +15,11 @@ namespace chldr_data.DatabaseObjects.Dtos
             {
                 EntryId = phrase.EntryId,
                 SourceId = phrase.Source.SourceId,
-                Rate = phrase.Rate,
-                EntryType = (EntryType)phrase.Type,
                 CreatedAt = phrase.CreatedAt,
                 UpdatedAt = phrase.UpdatedAt,
+                EntryType = (EntryType)phrase.Type,
 
+                Rate = phrase.Rate,
                 PhraseId = phrase.PhraseId,
                 Content = phrase.Content,
             };

@@ -46,13 +46,32 @@ namespace chldr_api
             _emailService = emailService;
 
         }
+        public async Task<MutationResponse> AddWord(string userId, WordDto wordDto)
+        {
+            var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
+            unitOfWork.BeginTransaction();
+            try
+            {
+                unitOfWork.Words.Insert(wordDto);
+                unitOfWork.Commit();
 
-        // Word mutations
+                return new MutationResponse() { Success = true };
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                throw ex;
+            }
+            finally
+            {
+                unitOfWork.Dispose();
+            }
+        }
+
         public async Task<MutationResponse> UpdateWord(string userId, WordDto wordDto)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
-
             try
             {
                 unitOfWork.Words.Update(wordDto, unitOfWork.Translations);

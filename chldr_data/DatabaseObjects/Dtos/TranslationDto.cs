@@ -13,6 +13,8 @@ namespace chldr_data.DatabaseObjects.Dtos
         public string TranslationId { get; set; } = Guid.NewGuid().ToString();
         public string? LanguageId { get; set; }
         public string? Notes { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
         public TranslationDto() { }
         public TranslationDto(string entryId, string userId, LanguageModel language)
         {

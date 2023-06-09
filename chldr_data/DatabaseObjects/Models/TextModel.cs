@@ -15,6 +15,8 @@ namespace chldr_data.DatabaseObjects.Models
             var wordModel = new TextModel()
             {
                 EntryId = entry.EntryId,
+                UserId = entry.UserId,
+                ParentEntryId = entry.ParentEntryId,
                 Rate = entry.Rate,
                 Type = entry.Type,
                 Source = SourceModel.FromEntity(source),

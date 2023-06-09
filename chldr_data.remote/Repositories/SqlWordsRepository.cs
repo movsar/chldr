@@ -49,13 +49,7 @@ namespace chldr_data.remote.Repositories
 
             return FromEntity(word);
         }
-        public override void Insert(WordDto dto)
-        {
-            var entity = SqlWord.FromDto(dto);
-            _dbContext.Add(entity);
 
-            InsertChangeSet(Operation.Insert, _userId, dto.WordId);
-        }
         private void ApplyEntryTranslationChanges(EntryDto existingEntryDto, EntryDto updatedEntryDto, SqlTranslationsRepository translationsRepository)
         {
             var existingTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
@@ -104,17 +98,26 @@ namespace chldr_data.remote.Repositories
         public void Update(EntryDto updatedEntryDto, ITranslationsRepository translationsRepository)
         {
             var updatedWordDto = (WordDto)updatedEntryDto;
-            var existingWordDto = WordDto.FromModel(Get(updatedWordDto.WordId));
+            var existingWordDto = EntryDto.FromModel(Get(updatedWordDto.WordId));
 
             // Update translations
             ApplyEntryTranslationChanges(existingWordDto, updatedWordDto, (SqlTranslationsRepository)translationsRepository);
 
             // Update word
-            Update(existingWordDto);
+            Update((WordDto)existingWordDto);
         }
         public override void Delete(string entityId)
         {
             throw new NotImplementedException();
+        }
+
+        public override void Insert(WordDto newEntryDto)
+        {
+            // Insert Entry entity
+            var entry = SqlEntry.FromDto(newEntryDto);
+
+            _dbContext.Add(entry);
+            InsertChangeSet(Operation.Insert, _userId, newEntryDto.EntryId);
         }
     }
 }

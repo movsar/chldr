@@ -19,7 +19,7 @@ public class SqlWord : IWordEntity
     {
         return new SqlWord()
         {
-            // Update properties from the WordDto object
+            WordId = dto.WordId,
             EntryId = dto.EntryId,
             Content = dto.Content,
             PartOfSpeech = (int)dto.PartOfSpeech,

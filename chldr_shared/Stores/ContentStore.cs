@@ -214,6 +214,7 @@ namespace chldr_shared.Stores
         }
         public async Task UpdateWord(UserModel loggedInUser, WordDto wordDto)
         {
+            string userId = loggedInUser.UserId;
             // Update remote entity
             var request = new GraphQLRequest
             {
@@ -226,7 +227,7 @@ namespace chldr_shared.Stores
                         }
                         ",
                 // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new { loggedInUser.UserId, wordDto }
+                Variables = new { userId, wordDto }
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<MutationResponse>(request, "updateWord");
@@ -237,6 +238,33 @@ namespace chldr_shared.Stores
 
             // Update local entity
              _unitOfWork.Words.Update(wordDto, _unitOfWork.Translations);
+        }
+
+        public async Task AddWord(UserModel loggedInUser, WordDto wordDto)
+        {
+            // Add remote entity
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                        mutation addWord($userId: String!, $wordDto: WordDtoInput!) {
+                          updateWord(userId: $userId, wordDto: $wordDto) {
+                            success
+                            errorMessage
+                          }
+                        }
+                        ",
+                // ! The names here must exactly match the names defined in the graphql schema
+                Variables = new { userId = loggedInUser.UserId, wordDto }
+            };
+
+            var response = await _graphQLRequestSender.SendRequestAsync<MutationResponse>(request, "addWord");
+            if (!response.Data.Success)
+            {
+                throw new Exception(response.Data.ErrorMessage);
+            }
+
+            // Update local entity
+            _unitOfWork.Words.Insert(wordDto);
         }
     }
 }

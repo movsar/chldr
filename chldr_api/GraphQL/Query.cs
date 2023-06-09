@@ -24,7 +24,7 @@ namespace chldr_api
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork();
             var words = unitOfWork.Words.Take(limit);
-            return words.Select(w => WordDto.FromModel(w)).AsQueryable();
+            return words.Select(w => (WordDto)EntryDto.FromModel(w)).AsQueryable();
         }
 
         public IQueryable<ChangeSetDto> RetrieveLatestChangeSets(int minIndex)

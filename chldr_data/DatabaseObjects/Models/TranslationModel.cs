@@ -14,6 +14,10 @@ namespace chldr_data.DatabaseObjects.Models
         public string UserId { get; set; }
         public string LanguageId { get; set; }
         public string? Notes { get; set; }
+
+        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
+
         public static TranslationModel FromEntity(ITranslationEntity translation, ILanguageEntity language)
         {
             return new TranslationModel()

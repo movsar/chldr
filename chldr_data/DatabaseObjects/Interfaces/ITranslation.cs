@@ -9,5 +9,7 @@
         string Content { get; }
         int Rate { get; }
         string? Notes { get; }
+        DateTimeOffset CreatedAt { get; }
+        DateTimeOffset UpdatedAt { get; }
     }
 }

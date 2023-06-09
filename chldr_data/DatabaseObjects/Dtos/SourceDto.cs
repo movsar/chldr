@@ -9,6 +9,8 @@ namespace chldr_data.DatabaseObjects.Dtos
         public string Name { get; set; }
         public string Notes { get; set; }
         public string? UserId { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
         public static SourceDto FromModel(SourceModel source)
         {
             return new SourceDto()

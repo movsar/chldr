@@ -6,10 +6,9 @@ namespace chldr_data.local.RealmEntities;
 [MapTo("Entry")]
 public class RealmEntry : RealmObject, IEntryEntity
 {
-    [PrimaryKey]
-    public string EntryId { get; set; }
-    [Ignored]
-    public string? SourceId => Source.SourceId;
+    [PrimaryKey] public string EntryId { get; set; }
+    [Ignored] public string? SourceId => Source.SourceId;
+    [Ignored] public string? UserId => User.UserId;
     public string? ParentEntryId { get; set; }
     public RealmUser User { get; set; } = null!;
     public RealmSource Source { get; set; } = null!;

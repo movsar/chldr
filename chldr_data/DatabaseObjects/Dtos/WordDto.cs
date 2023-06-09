@@ -10,28 +10,10 @@ namespace chldr_data.DatabaseObjects.Dtos
     // ! All public properties of this class must have setters, to allow serialization
     public class WordDto : EntryDto, IWord
     {
-        public static WordDto FromModel(WordModel wordModel)
-        {
-            var wordDto = new WordDto()
-            {
-                EntryId = wordModel.EntryId,
-                SourceId = wordModel.Source.SourceId,
-                Rate = wordModel.Rate,
-                EntryType = (EntryType)wordModel.Type,
-                WordId = wordModel.WordId.ToString(),
-                Content = wordModel.Content,
-                PartOfSpeech = wordModel.PartOfSpeech,
-                AdditionalDetails = new WordDetails(wordModel, wordModel.PartOfSpeech)
-            };
-
-            wordDto.Translations.AddRange(wordModel.Translations.Select(t => TranslationDto.FromModel(t)).ToList());
-            return wordDto;
-        }
-
+     
         #region Main Details
         public string WordId { get; set; } = Guid.NewGuid().ToString();
         public override string Content { get; set; } = string.Empty;
-        public string Notes { get; set; } = string.Empty;
         public PartOfSpeech PartOfSpeech { get; set; }
         #endregion
         public WordDetails AdditionalDetails { get; set; } = new();
