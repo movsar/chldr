@@ -33,7 +33,7 @@ namespace chldr_data.Repositories
 
             return FromEntity(word);
         }
-        public override async Task Insert(string userId, PhraseDto dto)
+        public override void Insert( PhraseDto dto)
         {
             throw new NotImplementedException();
         }
@@ -49,12 +49,17 @@ namespace chldr_data.Repositories
             return FromEntity(word);
         }
 
-        public override async Task Update(string userId, PhraseDto dto)
+        public override void Update(PhraseDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public override Task Delete(string userId, string entityId)
+        public override void Delete( string entityId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(EntryDto updatedEntryDto, ITranslationsRepository translationsRepository)
         {
             throw new NotImplementedException();
         }

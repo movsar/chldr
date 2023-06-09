@@ -55,25 +55,18 @@ namespace chldr_data.Repositories
             return FromEntity(word);
         }
 
-        public override async Task Insert(string userId, WordDto dto)
+       
+
+        public override void Insert(WordDto dto)
         {
-            // Make a remote add request, if successful, add locally
-            //var response = _wordChangeRequests.Add(userId, dto);
-
-            // TODO: Add to local database
-
             throw new NotImplementedException();
         }
 
-        public override Task Delete(string userId, string entityId)
+        public override void Delete(string entityId)
         {
-            //var response = _wordChangeRequests.Delete(userId, entityId);
-
-            // TODO: Delete from local database
-
             throw new NotImplementedException();
         }
-        private void ApplyEntryTranslationChanges(EntryDto existingEntryDto, EntryDto updatedEntryDto, RealmTranslationsRepository translationsRepository)
+        private void ApplyEntryTranslationChanges(EntryDto existingEntryDto, EntryDto updatedEntryDto, ITranslationsRepository translationsRepository)
         {
             var existingTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
             var updatedTranslationIds = updatedEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
@@ -98,13 +91,10 @@ namespace chldr_data.Repositories
             }
         }
 
-        private void UpdateRealmEntities(string userId, WordDto updatedWordDto, RealmTranslationsRepository translationsRepository)
+        public override void Update(WordDto updatedWordDto)
         {
             var existingWordDto = WordDto.FromModel(Get(updatedWordDto.WordId));
-
-            // Update translations
-            ApplyEntryTranslationChanges(existingWordDto, updatedWordDto, translationsRepository);
-
+        
             // Apply changes to the word entity
             var wordChanges = Change.GetChanges<WordDto>(updatedWordDto, existingWordDto);
             if (wordChanges.Count != 0)
@@ -120,34 +110,16 @@ namespace chldr_data.Repositories
             }
         }
 
-        public async Task Update(string userId, WordDto wordDto, ITranslationsRepository translationsRepository)
+        public void Update(EntryDto updatedEntryDto, ITranslationsRepository translationsRepository)
         {
-            // Make a remote update request, if successful, update locally
-            var request = new GraphQLRequest
-            {
-                Query = @"
-                        mutation updateWord($userId: String!, $wordDto: WordDtoInput!) {
-                          updateWord(userId: $userId, wordDto: $wordDto) {
-                            success
-                            errorMessage
-                          }
-                        }
-                        ",
-                // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new { userId, wordDto }
-            };
+            var updatedWordDto = (WordDto)updatedEntryDto;
+            var existingWordDto = WordDto.FromModel(Get(updatedWordDto.WordId));
 
-            var response = await _graphQLRequestSender.SendRequestAsync<MutationResponse>(request, "updateWord");
-            if (!response.Data.Success)
-            {
-                throw new Exception(response.Data.ErrorMessage);
-            }
+            // Update translations
+            ApplyEntryTranslationChanges(existingWordDto, updatedWordDto, (RealmTranslationsRepository)translationsRepository);
 
-            UpdateRealmEntities(userId, wordDto, (RealmTranslationsRepository)translationsRepository);
-
-            //    // TODO: Fix this!
-            //    //var entry = Database.Find<RealmEntry>(wordDto.EntryId);
-            //    //OnEntryUpdated(WordModel.FromEntity(entry.Word));
+            // Update word
+            Update(existingWordDto);
         }
     }
 }

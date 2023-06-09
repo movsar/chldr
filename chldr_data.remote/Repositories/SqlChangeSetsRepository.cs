@@ -8,11 +8,11 @@ using chldr_tools;
 
 namespace chldr_data.remote.Repositories
 {
-    public class SqlChangeSetsRepository : SqlRepository<SqlChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
+    public class SqlChangeSetsRepository : SqlRepository<ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {
         protected override RecordType RecordType => throw new Exception("Shouldn't be used");
 
-        public SqlChangeSetsRepository(SqlContext sqlContext) : base(sqlContext) { }
+        public SqlChangeSetsRepository(SqlContext sqlContext, string _userId) : base(sqlContext, _userId) { }
 
         public override ChangeSetModel Get(string entityId)
         {
@@ -45,15 +45,20 @@ namespace chldr_data.remote.Repositories
             return models;
         }
 
-        public override async Task Update(string userId, ChangeSetDto dto)
+        public override void Update(ChangeSetDto dto)
         {
             throw new Exception("This method should never be called for ChangeSets, they're immutable");
         }
 
-        public override async Task Insert(string userId, ChangeSetDto dto)
+        public override void Insert( ChangeSetDto dto)
         {
             var changeSet = SqlChangeSet.FromDto(dto);
             _dbContext.Add(changeSet);
+        }
+
+        public override void Delete(string entityId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

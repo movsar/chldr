@@ -12,7 +12,7 @@ namespace chldr_data.Interfaces
         event Action<EntryModel>? EntryAdded;
         bool IsInitialized { get; set; }
         void Initialize();
-        IUnitOfWork CreateUnitOfWork();
+        IUnitOfWork CreateUnitOfWork(string? userId = null);
         void PurgeAllData();
     }
 }

@@ -16,12 +16,12 @@ namespace chldr_data.Repositories
 
         protected override RecordType RecordType => RecordType.User;
 
-        public override async Task Insert(string userId, UserDto dto)
+        public override void Insert(UserDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public override Task Delete(string userId, string entityId)
+        public override void Delete(string entityId)
         {
             throw new NotImplementedException();
         }
@@ -31,7 +31,7 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
-        public override async Task Update(string userId, UserDto dto)
+        public override void Update(UserDto dto)
         {
             throw new NotImplementedException();
         }

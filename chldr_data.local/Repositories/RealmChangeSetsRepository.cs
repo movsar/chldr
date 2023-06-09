@@ -50,12 +50,12 @@ namespace chldr_data.Repositories
             return models;
         }
 
-        public override async Task Update(string userId, ChangeSetDto dto)
+        public override void Update(ChangeSetDto dto)
         {
             throw new Exception("This method should never be called for ChangeSets, they're immutable");
         }
 
-        public override async Task Insert(string userId, ChangeSetDto dto)
+        public override void Insert(ChangeSetDto dto)
         {
             var changeSet = (RealmChangeSet)RealmChangeSet.FromDto(dto);
             _dbContext.Add(changeSet);
@@ -63,7 +63,7 @@ namespace chldr_data.Repositories
             //return EmptyResult;
         }
 
-        public override Task Delete(string userId, string entityId)
+        public override void Delete(string entityId)
         {
             throw new NotImplementedException();
         }

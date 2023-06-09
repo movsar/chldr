@@ -99,10 +99,10 @@ namespace chldr_data.local.Services
                 database.RemoveAll<RealmTranslation>();
             });
         }
-
-        public IUnitOfWork CreateUnitOfWork()
+        public IUnitOfWork CreateUnitOfWork(string? userId = null)
         {
             return new RealmUnitOfWork(GetDatabase(), _exceptionHandler, _graphQLRequestSender);
+
         }
     }
 }

@@ -26,12 +26,9 @@ namespace chldr_data.Repositories
             _graphQLRequestSender = graphQLRequestSender;
         }
         public abstract TModel Get(string entityId);
-        public abstract Task Insert(string userId, TDto dto);
-        public abstract Task Delete(string userId, string entityId);
-        public virtual async Task Update(string userId, TDto wordDto)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void Insert(TDto dto);
+        public abstract void Delete(string entityId);
+        public abstract void Update(TDto wordDto);
         public IEnumerable<TModel> Take(int limit)
         {
             var entities = _dbContext.All<TEntity>().Take(limit);

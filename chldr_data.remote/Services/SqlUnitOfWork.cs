@@ -5,26 +5,34 @@ using chldr_data.Interfaces;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.remote.Services;
 using chldr_data.remote.Repositories;
+using chldr_utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.Services
 {
     public class SqlUnitOfWork : IUnitOfWork
     {
-        private readonly SqlContext _sqlContext;
+        private readonly SqlContext _context;
+        private readonly string _userId;
         private IDbContextTransaction _transaction;
 
         private IChangeSetsRepository _changeSetsRepository;
         private IWordsRepository _wordsRepository;
         private ITranslationsRepository _translationsRepository;
+        private SqlPhrasesRepository _phrasesRepository;
+        private SqlLanguagesRepository _languagesRepository;
+        private SqlSourcesRepository _sourcesRepository;
+        private SqlUsersRepository _usersRepository;
 
-        public SqlUnitOfWork(SqlContext sqlContext)
+        public SqlUnitOfWork(SqlContext sqlContext, string userId)
         {
-            _sqlContext = sqlContext;
+            _context = sqlContext;
+            _userId = userId;
         }
 
         public void BeginTransaction()
         {
-            _transaction = _sqlContext.Database.BeginTransaction();
+            _transaction = _context.Database.BeginTransaction();
         }
 
         public void Commit()
@@ -43,53 +51,16 @@ namespace chldr_data.Services
         public void Dispose()
         {
             _transaction?.Dispose();
-            _sqlContext.Dispose();
+            _context.Dispose();
         }
 
+        public ITranslationsRepository Translations => _translationsRepository ??= new SqlTranslationsRepository(_context, _userId);
+        public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new SqlChangeSetsRepository(_context, _userId);
+        public IWordsRepository Words => _wordsRepository ??= new SqlWordsRepository(_context, _userId);
+        public IPhrasesRepository Phrases => _phrasesRepository ??= new SqlPhrasesRepository(_context, _userId);
+        public ILanguagesRepository Languages => _languagesRepository ??= new SqlLanguagesRepository(_context, _userId);
+        public ISourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_context, _userId);
+        public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_context, _userId);
 
-        public ITranslationsRepository Translations
-        {
-            get
-            {
-                if (_translationsRepository == null)
-                {
-                    _translationsRepository = new SqlTranslationsRepository(_sqlContext);
-                }
-                return _translationsRepository;
-            }
-        }
-
-
-        public IChangeSetsRepository ChangeSets
-        {
-            get
-            {
-                if (_changeSetsRepository == null)
-                {
-                    _changeSetsRepository = new SqlChangeSetsRepository(_sqlContext);
-                }
-                return _changeSetsRepository;
-            }
-        }
-
-        public IWordsRepository Words
-        {
-            get
-            {
-                if (_wordsRepository == null)
-                {
-                    _wordsRepository = new SqlWordsRepository(_sqlContext);
-                }
-                return _wordsRepository;
-            }
-        }
-
-        public IPhrasesRepository Phrases => throw new NotImplementedException();
-
-        public ILanguagesRepository Languages => throw new NotImplementedException();
-
-        public ISourcesRepository Sources => throw new NotImplementedException();
-
-        public IUsersRepository Users => throw new NotImplementedException();
     }
 }

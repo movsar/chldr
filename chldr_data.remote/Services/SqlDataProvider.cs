@@ -69,10 +69,16 @@ namespace chldr_data.local.Services
 
             return new SqlContext(options);
         }
-        public IUnitOfWork CreateUnitOfWork()
+
+        public IUnitOfWork CreateUnitOfWork(string? userId = null)
         {
+            if (userId == null)
+            {
+                throw new Exception("The active user must be set");
+            }
+
             var context = GetDatabaseContext();
-            return new SqlUnitOfWork(context);
+            return new SqlUnitOfWork(context, userId);
         }
     }
 }

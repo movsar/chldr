@@ -11,10 +11,15 @@ using chldr_data.Models;
 
 namespace chldr_data.remote.Repositories
 {
-    public class SqlTranslationsRepository : SqlRepository<SqlTranslation, TranslationModel, TranslationDto>, ITranslationsRepository
+    public class SqlTranslationsRepository : SqlRepository<TranslationModel, TranslationDto>, ITranslationsRepository
     {
-        public SqlTranslationsRepository(SqlContext context) : base(context) { }
+        public SqlTranslationsRepository(SqlContext context, string _userId) : base(context, _userId) { }
         protected override RecordType RecordType => RecordType.Translation;
+
+        public override void Delete(string entityId)
+        {
+            throw new NotImplementedException();
+        }
 
         public override TranslationModel Get(string entityId)
         {
@@ -29,44 +34,28 @@ namespace chldr_data.remote.Repositories
 
             return TranslationModel.FromEntity(translation, translation.Language);
         }
-
-        public override async Task Insert(string userId, TranslationDto dto)
+        public override void Insert(TranslationDto dto)
         {
             var entity = SqlTranslation.FromDto(dto);
             _dbContext.Add(entity);
 
-            InsertChangeSet(Operation.Insert, userId, dto.TranslationId);
+            InsertChangeSet(Operation.Insert, _userId, dto.TranslationId);
         }
 
-       
-        public override async Task Update(string userId, TranslationDto translationDto)
+        public override void Update(TranslationDto dto)
         {
             // Find out what has been changed
-            var existing = Get(translationDto.TranslationId);
+            var existing = Get(dto.TranslationId);
             var existingDto = TranslationDto.FromModel(existing);
-            var changes = Change.GetChanges(translationDto, existingDto);
+            var changes = Change.GetChanges(dto, existingDto);
             if (changes.Count == 0)
             {
-                return ;
+                return;
             }
 
-            ApplyChanges<SqlTranslation>(translationDto.TranslationId, changes);
-            InsertChangeSet(Operation.Update, userId, translationDto.TranslationId, changes);
-        }
+            ApplyChanges<SqlTranslation>(dto.TranslationId, changes);
 
-        internal Task Delete(string translationId)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal Task Insert(TranslationDto translationDto)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal Task Update(TranslationDto translationDto)
-        {
-            throw new NotImplementedException();
+            InsertChangeSet(Operation.Update, _userId, dto.TranslationId, changes);
         }
     }
 }

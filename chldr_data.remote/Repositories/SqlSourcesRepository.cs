@@ -1,28 +1,39 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
+using chldr_data.Interfaces.Repositories;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_tools;
 
 namespace chldr_data.remote.Repositories
 {
-    public class SqlSourcesRepository : SqlRepository<SqlSource, SourceModel, SourceDto>
+    public class SqlSourcesRepository : SqlRepository<SourceModel, SourceDto>, ISourcesRepository
     {
         protected override RecordType RecordType => RecordType.Source;
-        public SqlSourcesRepository(SqlContext context) : base(context) { }
-
-        public override async Task Insert(string userId, SourceDto dto)
-        {
-            throw new NotImplementedException();
-        }
+        public SqlSourcesRepository(SqlContext context, string _userId) : base(context, _userId) { }
 
         public override SourceModel Get(string entityId)
         {
             throw new NotImplementedException();
         }
 
-        public override async Task Update(string userId, SourceDto dto)
+        public IEnumerable<SourceModel> Take(int limit)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Update(SourceDto dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Insert(SourceDto dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Delete(string entityId)
         {
             throw new NotImplementedException();
         }

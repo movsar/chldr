@@ -8,38 +8,29 @@ using Newtonsoft.Json;
 
 namespace chldr_data.remote.Repositories
 {
-    public abstract class SqlRepository<TEntity, TModel, TDto> : IRepository<TModel, TDto> 
-        where TEntity : class, new()
+    public abstract class SqlRepository<TModel, TDto> : IRepository<TModel, TDto>
         where TDto : class, new()
         where TModel : class
     {
         protected abstract RecordType RecordType { get; }
         protected readonly IEnumerable<ChangeSetModel> EmptyResult = new List<ChangeSetModel>();
         protected readonly SqlContext _dbContext;
+        protected readonly string _userId;
 
         public event Action<EntryModel>? EntryUpdated;
         public event Action<EntryModel>? EntryInserted;
         public event Action<EntryModel>? EntryDeleted;
         public event Action<EntryModel>? EntryAdded;
 
-        public SqlRepository(SqlContext context)
+        public SqlRepository(SqlContext context, string userId)
         {
             _dbContext = context;
+            _userId = userId;
         }
         public abstract TModel Get(string entityId);
-        public abstract Task Update(string userId, TDto dto);
-        public abstract Task Insert(string userId, TDto dto);
-        public async Task Delete(string userId, string entityId)
-        {
-            var entity = await _dbContext.FindAsync<TEntity>(entityId);
-            if (entity == null)
-            {
-                throw new NullReferenceException();
-            }
-            _dbContext.Remove(entity);
-
-            InsertChangeSet(Operation.Delete, userId, entityId);
-        }
+        public abstract void Update(TDto dto);
+        public abstract void Insert(TDto dto);
+        public abstract void Delete(string entityId);
 
         protected void InsertChangeSet(Operation operation, string userId, string wordId, List<Change>? wordChanges = null)
         {
@@ -94,9 +85,10 @@ namespace chldr_data.remote.Repositories
             _dbContext.SaveChanges();
         }
 
+
         public IEnumerable<TModel> Take(int limit)
         {
-            var entities = _dbContext.Set<TEntity>().Take(limit);
+            //var entities = _dbContext.Set<TEntity>().Take(limit);
             //return entities.Select(e => TModel.FromEntity(e));
             return new List<TModel>();
         }

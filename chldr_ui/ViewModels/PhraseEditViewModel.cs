@@ -33,25 +33,25 @@ namespace chldr_ui.ViewModels
             SourceId = Phrase.SourceId;
         }
 
-        private void SavePhrase()
+        private void UpdatePhrase()
         {
             ContentStore.UpdatePhrase(UserModel.FromDto(UserStore.ActiveSession.User!), Phrase);
         }
 
-        private void AddPhrase()
+        private void InsertPhrase()
         {
-            ContentStore.AddNewPhrase(UserModel.FromDto(UserStore.ActiveSession.User!), Phrase);
+            ContentStore.AddPhrase(UserModel.FromDto(UserStore.ActiveSession.User!), Phrase);
         }
 
         public void Submit()
         {
             if (IsEditMode)
             {
-                ValidateAndSubmit(Phrase, SavePhrase);
+                ValidateAndSubmit(Phrase, UpdatePhrase);
             }
             else
             {
-                ValidateAndSubmit(Phrase, AddPhrase);
+                ValidateAndSubmit(Phrase, InsertPhrase);
             }
         }
     }

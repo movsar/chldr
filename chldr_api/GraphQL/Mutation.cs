@@ -16,7 +16,7 @@ namespace chldr_api
         private readonly UpdatePasswordResolver _updatePasswordMutation;
         private readonly RegisterUserResolver _registerUserMutation;
         private readonly ConfirmEmailResolver _confirmEmailResolver;
-        private readonly LoginResolver _loginUserMutation;        
+        private readonly LoginResolver _loginUserMutation;
         private readonly IDataProvider _dataProvider;
         protected readonly SqlContext _dbContext;
         protected readonly IConfiguration _configuration;
@@ -50,12 +50,12 @@ namespace chldr_api
         // Word mutations
         public async Task<MutationResponse> UpdateWord(string userId, WordDto wordDto)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
-            
+
             try
             {
-                await unitOfWork.Words.Update(userId, wordDto, unitOfWork.Translations);
+                unitOfWork.Words.Update(wordDto, unitOfWork.Translations);
                 unitOfWork.Commit();
 
                 return new MutationResponse() { Success = true };
