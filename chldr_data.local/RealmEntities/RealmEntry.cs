@@ -10,6 +10,7 @@ public class RealmEntry : RealmObject, IEntryEntity
     public string EntryId { get; set; }
     [Ignored]
     public string? SourceId => Source.SourceId;
+    public string? ParentEntryId { get; set; }
     public RealmUser User { get; set; } = null!;
     public RealmSource Source { get; set; } = null!;
     public int Type { get; set; } = 0;

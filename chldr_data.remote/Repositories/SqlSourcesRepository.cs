@@ -8,7 +8,7 @@ using chldr_tools;
 
 namespace chldr_data.remote.Repositories
 {
-    public class SqlSourcesRepository : SqlRepository<SourceModel, SourceDto>, ISourcesRepository
+    internal class SqlSourcesRepository : SqlRepository<SourceModel, SourceDto>, ISourcesRepository
     {
         protected override RecordType RecordType => RecordType.Source;
         public SqlSourcesRepository(SqlContext context, string _userId) : base(context, _userId) { }

@@ -8,7 +8,7 @@ using chldr_tools;
 
 namespace chldr_data.remote.Repositories
 {
-    public class SqlChangeSetsRepository : SqlRepository<ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
+    internal class SqlChangeSetsRepository : SqlRepository<ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {
         protected override RecordType RecordType => throw new Exception("Shouldn't be used");
 

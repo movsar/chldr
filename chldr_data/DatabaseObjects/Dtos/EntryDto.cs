@@ -6,6 +6,7 @@ namespace chldr_data.DatabaseObjects.Dtos
     public abstract class EntryDto : IEntry
     {
         public string EntryId { get; set; } = Guid.NewGuid().ToString();
+        public string? ParentEntryId { get; set; }
         public string? SourceId { get; set; }
         public int Rate { get; set; }
         public abstract string Content { get; set; }
@@ -13,5 +14,6 @@ namespace chldr_data.DatabaseObjects.Dtos
         public EntryType EntryType { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
+
     }
 }

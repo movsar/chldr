@@ -8,7 +8,7 @@ using chldr_data.Interfaces.Repositories;
 
 namespace chldr_data.remote.Repositories
 {
-    public class SqlUsersRepository : SqlRepository<UserModel, UserDto>, IUsersRepository
+    internal class SqlUsersRepository : SqlRepository<UserModel, UserDto>, IUsersRepository
     {
         public SqlUsersRepository(SqlContext context, string _userId) : base(context, _userId) { }
 

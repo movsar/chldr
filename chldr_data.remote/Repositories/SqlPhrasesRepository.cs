@@ -9,7 +9,7 @@ using chldr_data.Interfaces.Repositories;
 
 namespace chldr_data.remote.Repositories
 {
-    public class SqlPhrasesRepository : SqlRepository<PhraseModel, PhraseDto>, IPhrasesRepository
+    internal class SqlPhrasesRepository : SqlEntriesRepository<PhraseModel, PhraseDto>, IPhrasesRepository
     {
         public SqlPhrasesRepository(SqlContext context, string _userId) : base(context, _userId) { }
 

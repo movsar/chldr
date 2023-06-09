@@ -46,9 +46,16 @@ public class SqlContext : DbContext
 
             entity.HasIndex(e => e.UserId, "fk_entry_user_id");
 
+            entity.HasIndex(e => e.ParentEntryId, "entry_parent_id_idx");
+         
             entity.Property(e => e.EntryId)
                 .HasMaxLength(40)
                 .HasColumnName("entry_id");
+
+            entity.Property(e => e.ParentEntryId)
+               .HasMaxLength(40)
+               .HasColumnName("parent_id");
+
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")

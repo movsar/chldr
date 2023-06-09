@@ -11,7 +11,7 @@ using chldr_data.Models;
 
 namespace chldr_data.remote.Repositories
 {
-    public class SqlTranslationsRepository : SqlRepository<TranslationModel, TranslationDto>, ITranslationsRepository
+    internal class SqlTranslationsRepository : SqlRepository<TranslationModel, TranslationDto>, ITranslationsRepository
     {
         public SqlTranslationsRepository(SqlContext context, string _userId) : base(context, _userId) { }
         protected override RecordType RecordType => RecordType.Translation;

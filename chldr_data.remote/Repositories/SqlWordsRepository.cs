@@ -14,7 +14,7 @@ using Realms.Sync;
 
 namespace chldr_data.remote.Repositories
 {
-    public class SqlWordsRepository : SqlRepository<WordModel, WordDto>, IWordsRepository
+    internal class SqlWordsRepository : SqlEntriesRepository<WordModel, WordDto>, IWordsRepository
     {
         public SqlWordsRepository(SqlContext context, string _userId) : base(context, _userId) { }
         public EntryModel GetByEntryId(string entryId)
@@ -22,7 +22,7 @@ namespace chldr_data.remote.Repositories
             throw new NotImplementedException();
         }
 
-   
+
         protected override RecordType RecordType => RecordType.Word;
         public static WordModel FromEntity(SqlWord word)
         {
@@ -80,7 +80,7 @@ namespace chldr_data.remote.Repositories
                 translationsRepository.Update(translationDto);
             }
         }
-      
+
         public override void Update(WordDto updatedWordDto)
         {
             var existingWordDto = WordDto.FromModel(Get(updatedWordDto.WordId));

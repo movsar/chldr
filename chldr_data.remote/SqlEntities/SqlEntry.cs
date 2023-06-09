@@ -8,6 +8,7 @@ public class SqlEntry : IEntryEntity
     public string EntryId { get; set; }
     public string UserId { get; set; } = null!;
     public string SourceId { get; set; } = null!;
+    public string? ParentEntryId { get; set; }
     public int Type { get; set; } = 0;
     public int Rate { get; set; } = 0;
     public string RawContents { get; set; }

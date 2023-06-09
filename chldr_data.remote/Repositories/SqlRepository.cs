@@ -8,19 +8,13 @@ using Newtonsoft.Json;
 
 namespace chldr_data.remote.Repositories
 {
-    public abstract class SqlRepository<TModel, TDto> : IRepository<TModel, TDto>
+    internal abstract class SqlRepository<TModel, TDto> : IRepository<TModel, TDto>
         where TDto : class, new()
         where TModel : class
     {
         protected abstract RecordType RecordType { get; }
-        protected readonly IEnumerable<ChangeSetModel> EmptyResult = new List<ChangeSetModel>();
         protected readonly SqlContext _dbContext;
         protected readonly string _userId;
-
-        public event Action<EntryModel>? EntryUpdated;
-        public event Action<EntryModel>? EntryInserted;
-        public event Action<EntryModel>? EntryDeleted;
-        public event Action<EntryModel>? EntryAdded;
 
         public SqlRepository(SqlContext context, string userId)
         {

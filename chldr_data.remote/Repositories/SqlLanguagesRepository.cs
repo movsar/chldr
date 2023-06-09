@@ -10,7 +10,7 @@ using chldr_data.Interfaces.Repositories;
 
 namespace chldr_data.remote.Repositories
 {
-    public class SqlLanguagesRepository : SqlRepository<LanguageModel, LanguageDto>, ILanguagesRepository
+    internal class SqlLanguagesRepository : SqlRepository<LanguageModel, LanguageDto>, ILanguagesRepository
     {
         public SqlLanguagesRepository(SqlContext context, string _userId) : base(context, _userId) { }
 
