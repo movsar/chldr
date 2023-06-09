@@ -9,8 +9,6 @@ namespace chldr_data.DatabaseObjects.Dtos
     {
         public string PhraseId { get; set; } = Guid.NewGuid().ToString();
         public override string Content { get; set; } = string.Empty;
-        public string? Notes { get; set; } = string.Empty;
-
         public static PhraseDto FromModel(PhraseModel phrase)
         {
             var phraseDto = new PhraseDto()
@@ -24,7 +22,6 @@ namespace chldr_data.DatabaseObjects.Dtos
 
                 PhraseId = phrase.PhraseId,
                 Content = phrase.Content,
-                Notes = phrase.Notes,
             };
 
             phraseDto.Translations.AddRange(phrase.Translations.Select(t => TranslationDto.FromModel(t)));

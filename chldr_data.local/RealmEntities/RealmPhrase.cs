@@ -9,7 +9,6 @@ public class RealmPhrase : RealmObject, IPhraseEntity
     public string PhraseId { get; set; }
     public RealmEntry Entry { get; set; } = null!;
     public string Content { get; set; } = null!;
-    public string? Notes { get; set; }
     [Ignored]
     public string EntryId => Entry.EntryId;
 }

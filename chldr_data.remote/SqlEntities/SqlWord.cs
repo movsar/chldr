@@ -10,7 +10,6 @@ public class SqlWord : IWordEntity
     public string WordId { get; set; }
     public string EntryId { get; set; } = null!;
     public string Content { get; set; } = null!;
-    public string? Notes { get; set; }
     public int? PartOfSpeech { get; set; }
     public string? AdditionalDetails { get; set; }
     public virtual SqlEntry Entry { get; set; } = null!;
@@ -23,7 +22,6 @@ public class SqlWord : IWordEntity
             // Update properties from the WordDto object
             EntryId = dto.EntryId,
             Content = dto.Content,
-            Notes = dto.Notes,
             PartOfSpeech = (int)dto.PartOfSpeech,
             //AdditionalDetails = wordDto;
         };

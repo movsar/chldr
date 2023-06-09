@@ -24,7 +24,6 @@ namespace chldr_data.DatabaseObjects.Models
 
                 PhraseId = phraseEntity.PhraseId,
                 Content = phraseEntity.Content,
-                Notes = phraseEntity.Notes,
             };
 
             foreach (var translationEntityToLanguage in translationEntityInfos)

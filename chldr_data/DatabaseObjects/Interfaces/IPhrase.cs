@@ -4,6 +4,5 @@
     {
         string PhraseId { get; set; }
         string Content { get; set; }
-        string? Notes { get; set; }
     }
 }

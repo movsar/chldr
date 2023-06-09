@@ -138,9 +138,6 @@ public class SqlContext : DbContext
             entity.Property(e => e.EntryId)
                 .HasMaxLength(40)
                 .HasColumnName("entry_id");
-            entity.Property(e => e.Notes)
-                .HasMaxLength(1500)
-                .HasColumnName("notes");
 
             entity.HasOne(d => d.Entry).WithOne(p => p.Phrase)
                 .HasForeignKey<SqlPhrase>(d => d.EntryId)
@@ -273,9 +270,6 @@ public class SqlContext : DbContext
             entity.Property(e => e.EntryId)
                 .HasMaxLength(40)
                 .HasColumnName("entry_id");
-            entity.Property(e => e.Notes)
-                .HasMaxLength(1500)
-                .HasColumnName("notes");
 
             entity.HasOne(d => d.Entry).WithOne(p => p.Text)
                 .HasForeignKey<SqlText>(d => d.EntryId)
@@ -405,9 +399,6 @@ public class SqlContext : DbContext
             entity.Property(e => e.EntryId)
                 .HasMaxLength(40)
                 .HasColumnName("entry_id");
-            entity.Property(e => e.Notes)
-                .HasMaxLength(1500)
-                .HasColumnName("notes");
             entity.Property(e => e.PartOfSpeech).HasColumnName("part_of_speech");
 
             entity.HasOne(d => d.Entry).WithOne(p => p.Word)

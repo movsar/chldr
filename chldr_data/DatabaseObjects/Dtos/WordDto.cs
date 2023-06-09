@@ -20,7 +20,6 @@ namespace chldr_data.DatabaseObjects.Dtos
                 EntryType = (EntryType)wordModel.Type,
                 WordId = wordModel.WordId.ToString(),
                 Content = wordModel.Content,
-                Notes = wordModel.Notes,
                 PartOfSpeech = wordModel.PartOfSpeech,
                 AdditionalDetails = new WordDetails(wordModel, wordModel.PartOfSpeech)
             };

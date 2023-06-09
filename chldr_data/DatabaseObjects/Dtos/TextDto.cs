@@ -18,7 +18,6 @@ namespace chldr_data.DatabaseObjects.Dtos
                 EntryType = (EntryType)model.Type,
                 CreatedAt = model.CreatedAt,    
                 UpdatedAt   = model.UpdatedAt,
-
                 TextId = model.TextId,
                 Content = model.Content,
             };

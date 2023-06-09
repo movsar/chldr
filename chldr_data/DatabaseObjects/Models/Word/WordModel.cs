@@ -25,7 +25,6 @@ namespace chldr_data.DatabaseObjects.Models.Words
 
                 WordId = word.WordId,
                 Content = word.Content,
-                Notes = word.Notes,
                 PartOfSpeech = (PartOfSpeech)word.PartOfSpeech
             };
 
