@@ -15,7 +15,7 @@ namespace chldr_data.DatabaseObjects.Dtos
             {
                 EntryId = model.EntryId,
                 SourceId = model.SourceId!,
-                EntryType = (EntryType)model.Type,
+                EntryType = model.Type,
                 CreatedAt = model.CreatedAt,
                 UpdatedAt = model.UpdatedAt,
 

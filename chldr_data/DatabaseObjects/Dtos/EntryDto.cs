@@ -15,17 +15,17 @@ namespace chldr_data.DatabaseObjects.Dtos
         public int Rate { get; set; }
         public abstract string Content { get; set; }
         public List<TranslationDto> Translations { get; set; } = new List<TranslationDto>();
-        public EntryType EntryType { get; set; }
+        public int EntryType { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
         public static EntryDto FromModel(EntryModel entryModel)
         {
             EntryDto entryDto = null!;
-            
+
             // Word / Phrase / Text
             switch ((EntryType)entryModel.Type)
             {
-                case EntryType.Word:
+                case Enums.EntryType.Word:
                     entryDto = new WordDto()
                     {
                         WordId = ((WordModel)entryModel).WordId,
@@ -34,14 +34,14 @@ namespace chldr_data.DatabaseObjects.Dtos
                     };
                     break;
 
-                case EntryType.Phrase:
+                case Enums.EntryType.Phrase:
                     entryDto = new PhraseDto()
                     {
                         PhraseId = ((PhraseModel)entryModel).PhraseId,
                     };
                     break;
 
-                case EntryType.Text:
+                case Enums.EntryType.Text:
                     entryDto = new TextDto()
                     {
                         TextId = ((TextModel)entryModel).TextId,
@@ -58,7 +58,7 @@ namespace chldr_data.DatabaseObjects.Dtos
             entryDto.UserId = entryModel.UserId;
             entryDto.SourceId = entryModel.SourceId!;
             entryDto.ParentEntryId = entryModel.ParentEntryId;
-            entryDto.EntryType = (EntryType)entryModel.Type;
+            entryDto.EntryType = entryModel.Type;
             entryDto.Rate = entryModel.Rate;
             entryDto.CreatedAt = entryModel.CreatedAt;
             entryDto.UpdatedAt = entryModel.UpdatedAt;

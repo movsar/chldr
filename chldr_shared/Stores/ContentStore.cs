@@ -214,7 +214,6 @@ namespace chldr_shared.Stores
         }
         public async Task UpdateWord(UserModel loggedInUser, WordDto wordDto)
         {
-            string userId = loggedInUser.UserId;
             // Update remote entity
             var request = new GraphQLRequest
             {
@@ -227,7 +226,7 @@ namespace chldr_shared.Stores
                         }
                         ",
                 // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new { userId, wordDto }
+                Variables = new { userId = loggedInUser.UserId, wordDto }
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<MutationResponse>(request, "updateWord");
@@ -247,7 +246,7 @@ namespace chldr_shared.Stores
             {
                 Query = @"
                         mutation addWord($userId: String!, $wordDto: WordDtoInput!) {
-                          updateWord(userId: $userId, wordDto: $wordDto) {
+                          addWord(userId: $userId, wordDto: $wordDto) {
                             success
                             errorMessage
                           }

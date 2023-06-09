@@ -17,7 +17,7 @@ namespace chldr_data.DatabaseObjects.Dtos
                 SourceId = phrase.Source.SourceId,
                 CreatedAt = phrase.CreatedAt,
                 UpdatedAt = phrase.UpdatedAt,
-                EntryType = (EntryType)phrase.Type,
+                EntryType = phrase.Type,
 
                 Rate = phrase.Rate,
                 PhraseId = phrase.PhraseId,

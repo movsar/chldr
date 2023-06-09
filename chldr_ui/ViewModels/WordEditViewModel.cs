@@ -18,6 +18,10 @@ namespace chldr_ui.ViewModels
             {
                 isInitialized = true;
 
+                Word.UserId = UserStore.ActiveSession.User.UserId;
+                Word.SourceId = Word.UserId;
+                SourceId = Word.UserId;
+
                 if (string.IsNullOrEmpty(EntryId))
                 {
                     return;
@@ -32,18 +36,16 @@ namespace chldr_ui.ViewModels
                 if (existingWord == null)
                 {
                     existingWord = (WordModel)ContentStore.GetEntryById(EntryId);
-                }
+                }                
 
                 Word = (WordDto)EntryDto.FromModel(existingWord);
-                SourceId = Word.SourceId;
             }
         }
 
         List<string> _newTranslationIds = new List<string>();
         public async Task NewTranslation()
         {
-            var user = UserModel.FromDto(UserStore.ActiveSession.User!);
-            var translation = new TranslationDto(EntryId, user.UserId, ContentStore.Languages.First());
+            var translation = new TranslationDto(Word.EntryId, UserStore.ActiveSession.User!.UserId, ContentStore.Languages.First());
 
             // Needed to know which translations are new, in case they need to be removed
             _newTranslationIds.Add(translation.TranslationId);
@@ -79,7 +81,7 @@ namespace chldr_ui.ViewModels
                 throw ex;
             }
 
-            var user = UserModel.FromDto(UserStore.ActiveSession.User!);
+            var user = UserModel.FromDto(UserStore.ActiveSession.User);
             if (Word.CreatedAt != DateTimeOffset.MinValue)
             {
                 await ContentStore.UpdateWord(user, Word);

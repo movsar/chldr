@@ -42,13 +42,13 @@ public class SqlEntry : IEntryEntity
 
         // Word / phrase / text
         switch (newEntryDto.EntryType) {
-            case EntryType.Word:
+            case (int)EntryType.Word:
                 entry.Word = SqlWord.FromDto((WordDto)newEntryDto);
                 break;
-            case EntryType.Phrase:
+            case (int)EntryType.Phrase:
                 entry.Phrase = SqlPhrase.FromDto((PhraseDto)newEntryDto);
                 break;
-            case EntryType.Text:
+            case (int)EntryType.Text:
                 entry.Text = SqlText.FromDto((TextDto)newEntryDto);
                 break;
         }
