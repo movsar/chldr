@@ -78,19 +78,7 @@ namespace chldr_data.Repositories
         {
             var existingWordDto = WordDto.FromModel(Get(updatedWordDto.WordId));
 
-            // Apply changes to the entry entity
-            var entryChanges = Change.GetChanges<EntryDto>(updatedWordDto, existingWordDto);
-            if (entryChanges.Count != 0)
-            {
-                ApplyChanges<RealmEntry>(updatedWordDto.EntryId, entryChanges);
-            }
 
-            // Apply changes to the word entity
-            var wordChanges = Change.GetChanges(updatedWordDto, existingWordDto);
-            if (wordChanges.Count != 0)
-            {
-                ApplyChanges<RealmWord>(updatedWordDto.WordId, wordChanges);
-            }
 
             // Update translations
             var existingTranslationIds = existingWordDto.Translations.Select(t => t.TranslationId).ToHashSet();
@@ -113,6 +101,20 @@ namespace chldr_data.Repositories
             foreach (var translationDto in updatedTranslations)
             {
                 translationsRepository.Update(userId, translationDto);
+            }
+
+            // Apply changes to the word entity
+            var wordChanges = Change.GetChanges(updatedWordDto, existingWordDto);
+            if (wordChanges.Count != 0)
+            {
+                ApplyChanges<RealmWord>(updatedWordDto.WordId, wordChanges);
+            }
+
+            // Apply changes to the entry entity
+            var entryChanges = Change.GetChanges<EntryDto>(updatedWordDto, existingWordDto);
+            if (entryChanges.Count != 0)
+            {
+                ApplyChanges<RealmEntry>(updatedWordDto.EntryId, entryChanges);
             }
         }
         public async Task Update(string userId, WordDto wordDto, ITranslationsRepository translationsRepository)
