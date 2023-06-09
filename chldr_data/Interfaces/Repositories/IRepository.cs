@@ -9,6 +9,5 @@ namespace chldr_data.Interfaces.Repositories
         Task Insert(string userId, TDto dto);
         Task Update(string userId, TDto dto);
         Task Delete(string userId, string entityId);
-
     }
 }

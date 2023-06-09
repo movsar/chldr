@@ -31,7 +31,7 @@ namespace chldr_data.remote.Repositories
         public abstract Task Insert(string userId, TDto dto);
         public async Task Delete(string userId, string entityId)
         {
-            var entity = _dbContext.Find<TEntity>(entityId);
+            var entity = await _dbContext.FindAsync<TEntity>(entityId);
             if (entity == null)
             {
                 throw new NullReferenceException();
@@ -65,7 +65,6 @@ namespace chldr_data.remote.Repositories
             {
                 var msg = ex.Message;
             }
-
         }
 
         protected static void SetPropertyValue(object obj, string propertyName, object value)

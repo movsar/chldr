@@ -7,16 +7,10 @@ using chldr_data.Interfaces.Repositories;
 using chldr_data.local.RealmEntities;
 using chldr_data.Models;
 using chldr_data.ResponseTypes;
-using chldr_data.Services;
-using chldr_tools;
 using chldr_utils.Interfaces;
 using chldr_utils;
 using GraphQL;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Realms;
-using Realms.Sync;
-using Org.BouncyCastle.Asn1.X509;
 
 namespace chldr_data.Repositories
 {

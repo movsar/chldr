@@ -8,7 +8,10 @@ using Realms;
 
 namespace chldr_data.Repositories
 {
-    public abstract class RealmRepository<TEntity, TModel, TDto> : IRepository<TModel, TDto> where TEntity : RealmObject
+    public abstract class RealmRepository<TEntity, TModel, TDto> : IRepository<TModel, TDto>
+        where TEntity : RealmObject, new()
+        where TDto : class, new()
+        where TModel : class
     {
         protected abstract RecordType RecordType { get; }
         protected readonly IEnumerable<ChangeSetModel> EmptyResult = new List<ChangeSetModel>();
@@ -23,6 +26,18 @@ namespace chldr_data.Repositories
             _graphQLRequestSender = graphQLRequestSender;
         }
         public abstract TModel Get(string entityId);
+        public abstract Task Insert(string userId, TDto dto);
+        public abstract Task Delete(string userId, string entityId);
+        public virtual async Task Update(string userId, TDto wordDto)
+        {
+            throw new NotImplementedException();
+        }
+        public IEnumerable<TModel> Take(int limit)
+        {
+            var entities = _dbContext.All<TEntity>().Take(limit);
+            //return entities.Select(e => TModel.FromEntity(e));
+            return new List<TModel>();
+        }
 
         protected static void SetPropertyValue(object obj, string propertyName, object value)
         {
@@ -51,39 +66,5 @@ namespace chldr_data.Repositories
                 }
             });
         }
-        //public TEntryModel GetById(string entityId)
-        //{
-        //    var entry = Database.All<RealmEntry>().FirstOrDefault(e => e.EntryId == entryId);
-        //    if (entry == null)
-        //    {
-        //        throw new NullReferenceException();
-        //    }
-
-        //    var entryModel = EntryModelFactory.CreateEntryModel(entry) as TEntryModel;
-        //    return entryModel!;
-        //}
-
-        //public List<TModel> Take(int limit, int skip = 0)
-        //{
-        //    var entries = Database.All<RealmEntry>().AsEnumerable()
-        //        .Skip(skip).Take(limit)
-        //        .Select(e => EntryModelFactory.CreateEntryModel(e) as TModel)
-        //        .ToList();
-        //    return entries;
-        //}
-        public abstract Task Insert(string userId, TDto dto);
-
-        public virtual async Task Update(string userId, TDto wordDto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<TModel> Take(int limit)
-        {
-            var entities = _dbContext.All<TEntity>().Take(limit);
-            //return entities.Select(e => TModel.FromEntity(e));
-            return new List<TModel>();
-        }
-        public abstract Task Delete(string userId, string entityId);
     }
 }
