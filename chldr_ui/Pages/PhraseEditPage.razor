@@ -11,10 +11,6 @@
             <input type="text" class="form-control" placeholder="@Localizer["Phrase_text"]" @bind="Phrase.Content" />
         </div>
 
-        <div class="form-outline mb-4">
-            <input type="text" class="form-control" placeholder="@Localizer["Notes"]" @bind="Phrase.Notes" />
-        </div>
-
         @foreach (var translation in Phrase.Translations)
         {
             <TranslationEditView WordId="@PhraseId" TranslationId="@translation.TranslationId.ToString()"></TranslationEditView>

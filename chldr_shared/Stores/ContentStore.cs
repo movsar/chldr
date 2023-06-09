@@ -237,9 +237,6 @@ namespace chldr_shared.Stores
 
             // Update local entity
              _unitOfWork.Words.Update(wordDto, _unitOfWork.Translations);
-            
-            // Entry updated
-
         }
     }
 }
