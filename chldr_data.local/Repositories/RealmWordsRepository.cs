@@ -55,8 +55,6 @@ namespace chldr_data.Repositories
             return FromEntity(word);
         }
 
-       
-
         public override void Insert(WordDto dto)
         {
             throw new NotImplementedException();

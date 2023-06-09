@@ -24,7 +24,14 @@ namespace chldr_data.remote.Repositories
 
         public void Update(EntryDto updatedEntryDto, ITranslationsRepository translationsRepository)
         {
-            throw new NotImplementedException();
+            var updatedWordDto = (WordDto)updatedEntryDto;
+            var existingWordDto = WordDto.FromModel(Get(updatedWordDto.WordId));
+
+            // Update translations
+            ApplyEntryTranslationChanges(existingWordDto, updatedWordDto, (SqlTranslationsRepository)translationsRepository);
+
+            // Update word
+            Update(existingWordDto);
         }
         protected override RecordType RecordType => RecordType.Word;
         public static WordModel FromEntity(SqlWord word)
@@ -82,17 +89,6 @@ namespace chldr_data.remote.Repositories
             {
                 translationsRepository.Update(translationDto);
             }
-        }
-
-        public void Update(WordDto updatedWordDto, ITranslationsRepository translationsRepository)
-        {
-            var existingWordDto = WordDto.FromModel(Get(updatedWordDto.WordId));
-
-            // Update translations
-            ApplyEntryTranslationChanges(existingWordDto, updatedWordDto, (SqlTranslationsRepository)translationsRepository);
-
-            // Update word
-            Update(existingWordDto);
         }
 
         public override void Update(WordDto updatedWordDto)
