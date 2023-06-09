@@ -272,7 +272,7 @@ namespace chldr_data.local.Services
         internal void BeginListening()
         {
             //_timer = new Timer(async state => await Sync(), null, TimeSpan.Zero, TimeSpan.FromSeconds(60));
-            Task.Run(Sync);
+            //Task.Run(Sync);
         }
     }
 }

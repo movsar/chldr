@@ -62,7 +62,7 @@ namespace chldr_data.local.Services
         }
         public SqlContext GetDatabaseContext()
         {
-            var connectionString = _configuration.GetConnectionString("RemoteDatabase");
+            var connectionString = _configuration.GetConnectionString("RemoteDatabase")!;
             var options = new DbContextOptionsBuilder<SqlContext>()
                                .UseMySQL(connectionString)
                                .Options;
