@@ -88,14 +88,14 @@ namespace chldr_data.Repositories
             var entryChanges = Change.GetChanges<EntryDto>(updatedWordDto, existingWordDto);
             if (entryChanges.Count != 0)
             {
-                ApplyChanges(updatedWordDto.EntryId, entryChanges);
+                ApplyChanges<RealmEntry>(updatedWordDto.EntryId, entryChanges);
             }
 
             // Apply changes to the word entity
             var wordChanges = Change.GetChanges(updatedWordDto, existingWordDto);
             if (wordChanges.Count != 0)
             {
-                ApplyChanges(updatedWordDto.WordId, wordChanges);
+                ApplyChanges<RealmWord>(updatedWordDto.WordId, wordChanges);
             }
 
             // Update translations
