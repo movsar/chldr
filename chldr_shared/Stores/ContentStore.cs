@@ -236,7 +236,7 @@ namespace chldr_shared.Stores
             }
 
             // Update local entity
-             _unitOfWork.Words.Update(wordDto, _unitOfWork.Translations);
+            _unitOfWork.Words.Update(wordDto, _unitOfWork.Translations);
         }
 
         public async Task AddWord(UserModel loggedInUser, WordDto wordDto)
@@ -249,6 +249,7 @@ namespace chldr_shared.Stores
                           addWord(userId: $userId, wordDto: $wordDto) {
                             success
                             errorMessage
+                            createdAt
                           }
                         }
                         ",
@@ -256,13 +257,14 @@ namespace chldr_shared.Stores
                 Variables = new { userId = loggedInUser.UserId, wordDto }
             };
 
-            var response = await _graphQLRequestSender.SendRequestAsync<MutationResponse>(request, "addWord");
+            var response = await _graphQLRequestSender.SendRequestAsync<InsertResponse>(request, "addWord");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);
             }
 
             // Update local entity
+            wordDto.CreatedAt = response.Data.CreatedAt;
             _unitOfWork.Words.Insert(wordDto);
         }
     }

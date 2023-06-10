@@ -11,7 +11,6 @@ namespace chldr_ui.ViewModels
     {
         private bool isInitialized = false;
         public WordDto Word { get; set; } = new WordDto();
-
         protected override void OnInitialized()
         {
             if (!isInitialized)
@@ -19,8 +18,7 @@ namespace chldr_ui.ViewModels
                 isInitialized = true;
 
                 Word.UserId = UserStore.ActiveSession.User.UserId;
-                Word.SourceId = Word.UserId;
-                SourceId = Word.UserId;
+                Word.SourceId = SourceId;
 
                 if (string.IsNullOrEmpty(EntryId))
                 {

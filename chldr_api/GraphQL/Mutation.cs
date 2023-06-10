@@ -46,7 +46,7 @@ namespace chldr_api
             _emailService = emailService;
 
         }
-        public async Task<MutationResponse> AddWord(string userId, WordDto wordDto)
+        public async Task<InsertResponse> AddWord(string userId, WordDto wordDto)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
@@ -55,7 +55,7 @@ namespace chldr_api
                 unitOfWork.Words.Insert(wordDto);
                 unitOfWork.Commit();
 
-                return new MutationResponse() { Success = true };
+                return new InsertResponse() { Success = true, CreatedAt = wordDto.CreatedAt  };
             }
             catch (Exception ex)
             {

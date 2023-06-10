@@ -113,15 +113,20 @@ namespace chldr_data.remote.Repositories
 
         public override void Insert(WordDto newEntryDto)
         {
-            if (newEntryDto.Translations.Any())
+            if (!newEntryDto.Translations.Any())
             {
                 throw new Exception("Empty translations");
             }
 
             // Insert Entry entity
             var entry = SqlEntry.FromDto(newEntryDto);
-
             _dbContext.Add(entry);
+            _dbContext.SaveChanges();
+            
+            // Set CreatedAt to update it on local entry
+            newEntryDto.CreatedAt = entry.CreatedAt;
+
+            // Insert a change set
             InsertChangeSet(Operation.Insert, _userId, newEntryDto.EntryId);
         }
     }

@@ -15,7 +15,7 @@ namespace chldr_data.DatabaseObjects.Dtos
         public int Rate { get; set; }
         public abstract string Content { get; set; }
         public List<TranslationDto> Translations { get; set; } = new List<TranslationDto>();
-        public int EntryType { get; set; }
+        public int EntryType { get; set; } = 1;
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
         public static EntryDto FromModel(EntryModel entryModel)
