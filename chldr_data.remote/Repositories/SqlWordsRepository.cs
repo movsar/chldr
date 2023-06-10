@@ -97,14 +97,18 @@ namespace chldr_data.remote.Repositories
         }
         public void Update(EntryDto updatedEntryDto, ITranslationsRepository translationsRepository)
         {
-            var updatedWordDto = (WordDto)updatedEntryDto;
-            var existingWordDto = EntryDto.FromModel(Get(updatedWordDto.WordId));
+            var entry = SqlEntry.FromDto(updatedEntryDto);
+            _dbContext.Update(entry);
+            _dbContext.SaveChanges();
 
-            // Update translations
-            ApplyEntryTranslationChanges(existingWordDto, updatedWordDto, (SqlTranslationsRepository)translationsRepository);
+            //var updatedWordDto = (WordDto)updatedEntryDto;
+            //var existingWordDto = EntryDto.FromModel(Get(updatedWordDto.WordId));
 
-            // Update word
-            Update((WordDto)existingWordDto);
+            //// Update translations
+            //ApplyEntryTranslationChanges(existingWordDto, updatedWordDto, (SqlTranslationsRepository)translationsRepository);
+
+            //// Update word
+            //Update((WordDto)existingWordDto);
         }
         public override void Delete(string entityId)
         {
