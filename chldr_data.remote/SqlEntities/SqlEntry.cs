@@ -44,12 +44,16 @@ public class SqlEntry : IEntryEntity
         entry.UserId = newEntryDto.UserId;
         entry.SourceId = newEntryDto.SourceId!;
         entry.ParentEntryId = newEntryDto.ParentEntryId;
+        
         entry.Type = newEntryDto.EntryType;
         entry.Subtype = newEntryDto.EntrySubtype;
+        
         entry.Content = newEntryDto.Content;
         entry.RawContents = newEntryDto.RawContents;
+
         entry.Details = newEntryDto.Details;
         entry.Rate = newEntryDto.Rate;
+
         entry.CreatedAt = newEntryDto.CreatedAt;
         entry.UpdatedAt = newEntryDto.UpdatedAt;
 

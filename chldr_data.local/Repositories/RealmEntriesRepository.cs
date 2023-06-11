@@ -14,52 +14,45 @@ using Realms;
 
 namespace chldr_data.Repositories
 {
-    public class RealmEntriesRepository : RealmRepository<RealmEntry,EntryModel, EntryDto>, IEntriesRepository
+    public class RealmEntriesRepository : RealmRepository<RealmEntry, EntryModel, EntryDto>, IEntriesRepository
     {
         public RealmEntriesRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
 
         protected override RecordType RecordType => RecordType.Entry;
 
-        //public static WordModel FromEntity(RealmEntry word)
-        //{
-        //    return WordModel.FromEntity(
-        //                            word.Entry.Word,
-        //                            word.Entry,
-        //                            word.Entry.Source,
-        //                            word.Entry.Translations
-        //                                .Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)));
-        //}
+        public static EntryModel FromEntity(RealmEntry word)
+        {
+            return EntryModel.FromEntity(
+                                    word,
+                                    word.Source,
+                                    word.Translations
+                                        .Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)));
+        }
         public EntryModel GetByEntryId(string entryId)
         {
-            throw new NotImplementedException();
+            var entry = _dbContext.Find<RealmEntry>(entryId);
+            if (entry == null)
+            {
+                throw new Exception("There is no such entry in the database");
+            }
 
-            //var word = _dbContext.Find<RealmEntry>(entryId)!.Word;
-            //if (word == null)
-            //{
-            //    throw new Exception("There is no such word in the database");
-            //}
-
-            //return FromEntity(word);
+            return FromEntity(entry);
         }
 
         public List<EntryModel> GetRandomWords(int limit)
         {
-            //var words = _dbContext.All<RealmEntry>().AsEnumerable().Take(limit);
-            //return words.Select(w => FromEntity(w)).ToList();
-            throw new NotImplementedException();
-
+            var entries = _dbContext.All<RealmEntry>().AsEnumerable().Take(limit);
+            return entries.Select(w => FromEntity(w)).ToList();
         }
         public override EntryModel Get(string entityId)
         {
-            throw new NotImplementedException();
+            var entry = _dbContext.All<RealmEntry>().FirstOrDefault(w => w.EntryId == entityId);
+            if (entry == null)
+            {
+                throw new Exception("There is no such word in the database");
+            }
 
-            //var word = _dbContext.All<RealmWord>().FirstOrDefault(w => w.WordId == entityId);
-            //if (word == null)
-            //{
-            //    throw new Exception("There is no such word in the database");
-            //}
-
-            //return FromEntity(word);
+            return FromEntity(entry);
         }
 
         public override void Insert(EntryDto dto)
@@ -99,7 +92,7 @@ namespace chldr_data.Repositories
         public override void Update(EntryDto updatedEntryDto)
         {
             var existingEntryDto = EntryDto.FromModel(Get(updatedEntryDto.EntryId));
-         
+
             // Apply changes to the entry entity
             var entryChanges = Change.GetChanges<EntryDto>(updatedEntryDto, existingEntryDto);
             if (entryChanges.Count != 0)

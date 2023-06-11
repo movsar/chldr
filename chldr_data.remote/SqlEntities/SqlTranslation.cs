@@ -26,7 +26,7 @@ public class SqlTranslation : ITranslationEntity
 
     public static ITranslationEntity FromDto(TranslationDto translationDto, SqlContext context)
     {
-        var translationEntity = context.Find<SqlTranslation>(translationDto.EntryId);
+        var translationEntity = context.Find<SqlTranslation>(translationDto.TranslationId);
         if (translationEntity == null)
         {
             translationEntity = new SqlTranslation();
