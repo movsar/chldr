@@ -78,15 +78,13 @@ namespace chldr_data.local.Services
         {
             OfflineDatabaseConfiguration = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
             {
-                SchemaVersion = 11
+                SchemaVersion = 12
             };
 
             var realm = GetDatabase();
             DatabaseInitialized?.Invoke();
 
             _syncService.BeginListening();
-
-            realm.WriteCopy(new RealmConfiguration("new.realm"));
         }
 
         public void PurgeAllData()
