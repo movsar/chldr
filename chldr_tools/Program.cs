@@ -58,7 +58,7 @@ namespace chldr_tools
                 sqlEntry.Content = entry.Content;
                 sqlEntry.RawContents = entry.RawContents;
                 sqlEntry.Subtype = entry.Subtype;
-                if (count % 50 == 0 || count > entries.Count() - 50)
+                if (count % 200 == 0 || count > entries.Count() - 50)
                 {
                     Console.WriteLine($"Saving {count}");
                     sqlDatabase.SaveChanges();
