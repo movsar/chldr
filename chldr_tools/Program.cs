@@ -1,11 +1,7 @@
 ﻿using chldr_data.Services;
 using chldr_utils.Services;
 using chldr_utils;
-using chldr_tools.Services;
-using chldr_data.Interfaces;
 using chldr_data.local.Services;
-using Microsoft.Extensions.Configuration;
-using chldr_data.Repositories;
 using chldr_data.local.RealmEntities;
 
 namespace chldr_tools
@@ -36,7 +32,7 @@ namespace chldr_tools
             localRealmContext.Initialize();
             var realmDatabase = localRealmContext.GetContext();
 
-            var connectionString = "server=104.248.40.142;port=3306;database=xj_chldr;user=xj_admin;password=2398ehh&*H!&*Hhs-=";
+            var connectionString = "server=104.248.40.142;port=3306;database=xj_chldr;user=;password=";
             var remoteSqlContext = new SqlDataProvider(connectionString);
             remoteSqlContext.Initialize();
             var sqlDatabase = remoteSqlContext.GetContext();
@@ -58,7 +54,7 @@ namespace chldr_tools
                 sqlEntry.Content = entry.Content;
                 sqlEntry.RawContents = entry.RawContents;
                 sqlEntry.Subtype = entry.Subtype;
-                if (count % 200 == 0 || count > entries.Count() - 50)
+                if (count % 100 == 0 || count > entries.Count() - 50)
                 {
                     Console.WriteLine($"Saving {count}");
                     sqlDatabase.SaveChanges();
