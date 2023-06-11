@@ -100,16 +100,5 @@ namespace chldr_data.Repositories
                 ApplyChanges<RealmEntry>(updatedEntryDto.EntryId, entryChanges);
             }
         }
-
-        public void Update(EntryDto updatedEntryDto, ITranslationsRepository translationsRepository)
-        {
-            var existingEntryDto = EntryDto.FromModel(Get(updatedEntryDto.EntryId));
-
-            // Update translations
-            ApplyEntryTranslationChanges(existingEntryDto, updatedEntryDto, (RealmTranslationsRepository)translationsRepository);
-
-            // Update word
-            Update((EntryDto)existingEntryDto);
-        }
     }
 }
