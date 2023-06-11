@@ -1,6 +1,7 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using System.ComponentModel.DataAnnotations.Schema;
 using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.remote.Services;
 
 namespace chldr_data.remote.SqlEntities;
 public class SqlTranslation : ITranslationEntity
@@ -23,21 +24,26 @@ public class SqlTranslation : ITranslationEntity
         return Content.ToString();
     }
 
-    public static ITranslationEntity FromDto(TranslationDto translation)
+    public static ITranslationEntity FromDto(TranslationDto translationDto, SqlContext context)
     {
-        return new SqlTranslation()
+        var translationEntity = context.Find<SqlTranslation>(translationDto.EntryId);
+        if (translationEntity == null)
         {
-            TranslationId = translation.TranslationId,
-            LanguageId = translation.LanguageId,
-            EntryId = translation.EntryId,
-            UserId = translation.UserId,
-            Content = translation.Content,
-            RawContents = translation.Content.ToLower(),
-            Notes = translation.Notes,
-            Rate = translation.Rate,
-            CreatedAt = translation.CreatedAt,
-            UpdatedAt = translation.UpdatedAt,
-        };
+            translationEntity = new SqlTranslation();
+        }
+
+        translationEntity.TranslationId = translationDto.TranslationId;
+        translationEntity.LanguageId = translationDto.LanguageId;
+        translationEntity.EntryId = translationDto.EntryId;
+        translationEntity.UserId = translationDto.UserId;
+        translationEntity.Content = translationDto.Content;
+        translationEntity.RawContents = translationDto.Content.ToLower();
+        translationEntity.Notes = translationDto.Notes;
+        translationEntity.Rate = translationDto.Rate;
+        translationEntity.CreatedAt = translationDto.CreatedAt;
+        translationEntity.UpdatedAt = translationDto.UpdatedAt;
+
+        return translationEntity;
     }
 
 }

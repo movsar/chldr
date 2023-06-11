@@ -57,7 +57,7 @@ public class SqlEntry : IEntryEntity
         entry.Translations.Clear();
         foreach (var translationDto in newEntryDto.Translations)
         {
-            var translation = (SqlTranslation)SqlTranslation.FromDto(translationDto);
+            var translation = (SqlTranslation)SqlTranslation.FromDto(translationDto, context);
             entry.Translations.Add(translation);
         }
 
