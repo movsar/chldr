@@ -41,20 +41,32 @@ namespace chldr_tools
             remoteSqlContext.Initialize();
             var sqlDatabase = remoteSqlContext.GetContext();
 
-            Thread.Sleep(1000);
-
             var entries = realmDatabase.All<RealmEntry>();
+            int count = 0;
+            Console.WriteLine("Starting the update ...");
+
             foreach (var entry in entries)
             {
-                var sqlEntry = sqlDatabase.Entries.Find(entry.EntryId);
+                var sqlEntry = sqlDatabase.Entries.FirstOrDefault(e => e.EntryId.Equals(entry.EntryId));
+                if (sqlEntry == null)
+                {
+                    Console.Write("failed updating: ");
+                    Console.WriteLine(entry.EntryId);
+                    continue;
+                }
+
                 sqlEntry.Content = entry.Content;
                 sqlEntry.RawContents = entry.RawContents;
                 sqlEntry.Subtype = entry.Subtype;
-
+                if (count % 50 == 0 || count > entries.Count() - 50)
+                {
+                    Console.WriteLine($"Saving {count}");
+                    sqlDatabase.SaveChanges();
+                }
+                count++;
             }
-
-            //    var databaseOperations = new DatabaseOperations();
-            //    databaseOperations.CopySqlToRealm();
+            Console.WriteLine("Saving ...");
+            Console.WriteLine($"Successfully saved {count} entries");
         }
     }
 }

@@ -15,13 +15,13 @@ public class SqlEntry : IEntryEntity
     public string EntryId { get; set; }
     public string UserId { get; set; } = null!;
     public string SourceId { get; set; } = null!;
+    public string? Content { get; set; }
     public string? RawContents { get; set; }
-    public string Content { get; set; }
     public string? ParentEntryId { get; set; }
     public int Type { get; set; } = 0;
-    public int Subtype { get; set; }
+    public int Subtype { get; set; } = 0;
     public int Rate { get; set; } = 0;
-    public string Details { get; set; }
+    public string? Details { get; set; }
 
     public virtual ICollection<SqlSound> Sounds { get; set; } = new List<SqlSound>();
     public virtual SqlSource Source { get; set; } = null!;

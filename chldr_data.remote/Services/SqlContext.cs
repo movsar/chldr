@@ -44,7 +44,7 @@ public class SqlContext : DbContext
             entity.HasIndex(e => e.UserId, "fk_entry_user_id");
 
             entity.HasIndex(e => e.ParentEntryId, "entry_parent_id_idx");
-         
+
             entity.Property(e => e.EntryId)
                 .HasMaxLength(40)
                 .HasColumnName("entry_id");
@@ -56,7 +56,7 @@ public class SqlContext : DbContext
             entity.Property(e => e.ParentEntryId)
                .HasMaxLength(40)
                .HasColumnName("parent_id");
-     
+
             entity.Property(e => e.Rate)
                 .HasColumnName("rate");
 
@@ -78,7 +78,7 @@ public class SqlContext : DbContext
 
             entity.Property(e => e.Type).HasColumnName("type");
             entity.Property(e => e.Subtype).HasColumnName("subtype");
-       
+
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
@@ -260,7 +260,7 @@ public class SqlContext : DbContext
             entity.Property(e => e.UserId)
                 .HasMaxLength(40)
                 .HasColumnName("user_id");
-                
+
             entity.Property(e => e.Content)
                 .HasMaxLength(10000)
                 .HasColumnName("content");
@@ -278,7 +278,7 @@ public class SqlContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
-          
+
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
@@ -382,10 +382,10 @@ public class SqlContext : DbContext
             entity.HasKey(e => e.ChangeSetIndex).HasName("PRIMARY");
 
             entity.ToTable("changesets");
-            
+
             entity.HasIndex(e => e.UserId, "fk_changesets_user_id_idx");
             entity.HasIndex(e => e.ChangeSetId, "fk_changesets_id_idx");
-            
+
             entity.Property(e => e.ChangeSetIndex)
                 .HasColumnName("changeset_index");
 
