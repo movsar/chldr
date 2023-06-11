@@ -174,7 +174,7 @@ namespace chldr_data.local.Services
                             {
                                 try
                                 {
-                                    var realmWord = Database.Find<RealmWord>(changeSet.RecordId);
+                                    var realmWord = Database.Find<RealmEntry>(changeSet.RecordId);
                                     if (realmWord == null)
                                     {
                                         throw new NullReferenceException();

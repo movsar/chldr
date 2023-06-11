@@ -93,11 +93,9 @@ namespace chldr_data.local.Services
 
                     realm.Subscriptions.Add(realm.All<RealmEntry>());
                     realm.Subscriptions.Add(realm.All<RealmLanguage>());
-                    realm.Subscriptions.Add(realm.All<RealmPhrase>());
                     realm.Subscriptions.Add(realm.All<RealmSource>());
                     realm.Subscriptions.Add(realm.All<RealmTranslation>());
                     realm.Subscriptions.Add(realm.All<RealmUser>());
-                    realm.Subscriptions.Add(realm.All<RealmWord>());
                 },
                 OnSessionError = (session, sessionException) =>
                 {

@@ -22,13 +22,15 @@ namespace chldr_data.local.Services
         public event Action<SearchResultModel>? GotNewSearchResult;
         public static EntryModel FromEntity(RealmEntry entry)
         {
-            return EntryModelFactory.CreateEntryModel(entry,
-                            entry?.Word,
-                            entry?.Phrase,
-                            entry?.Text,
-                            entry.Source,
-                            entry.Translations.Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t))
-                        );
+            throw new NotImplementedException();
+
+            //return EntryModelFactory.CreateEntryModel(entry,
+            //                entry?.Word,
+            //                entry?.Phrase,
+            //                entry?.Text,
+            //                entry.Source,
+            //                entry.Translations.Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t))
+            //            );
         }
         private static IEnumerable<EntryModel> SortDirectSearchEntries(string inputText, IEnumerable<EntryModel> entries)
         {
@@ -192,9 +194,9 @@ namespace chldr_data.local.Services
 
         public List<EntryModel> GetWordsToFiddleWith()
         {
-            var words = Database.All<RealmWord>().Where(w => w.PartOfSpeech == (int)PartOfSpeech.Verb);
+            var words = Database.All<RealmEntry>().Where(w => w.Subtype == (int)PartOfSpeech.Verb);
 
-            var entries = words.AsEnumerable().Select(w => w.Entry);
+            var entries = words.AsEnumerable();
 
             var entriesToReturn = entries
               .Take(5)

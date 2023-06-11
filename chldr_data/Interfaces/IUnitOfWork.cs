@@ -7,7 +7,6 @@ namespace chldr_data.Interfaces
     {
         IChangeSetsRepository ChangeSets { get; }
         IWordsRepository Words { get; }
-        IPhrasesRepository Phrases { get; }
         ITranslationsRepository Translations { get; }
         ILanguagesRepository Languages { get; }
         ISourcesRepository Sources { get; }

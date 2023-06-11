@@ -15,11 +15,11 @@ public class RealmEntry : RealmObject, IEntryEntity
     public RealmUser User { get; set; } = null!;
     public RealmSource Source { get; set; } = null!;
     public int Type { get; set; } = 0;
+    public int Subtype { get; set; } = 0;
     public int Rate { get; set; } = 0;
     public string RawContents { get; set; } = string.Empty;
-    public RealmText? Text { get; set; }
-    public RealmPhrase? Phrase { get; set; }
-    public RealmWord? Word { get; set; }
+    public string Content { get; set; } = string.Empty;
+    public string? Details { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
     public IList<RealmSound> Sounds { get; }
@@ -48,33 +48,33 @@ public class RealmEntry : RealmObject, IEntryEntity
         {
             case (int)EntryType.Word:
                 var wordDto = entryDto as WordDto;
-                entry.Word = new RealmWord()
-                {
-                    Entry = entry,
-                    WordId = wordDto.WordId,
-                    Content = wordDto.Content,
-                    PartOfSpeech = (int)wordDto.PartOfSpeech,
-                };
+                //entry.Word = new RealmWord()
+                //{
+                //    Entry = entry,
+                //    WordId = wordDto.WordId,
+                //    Content = wordDto.Content,
+                //    PartOfSpeech = (int)wordDto.PartOfSpeech,
+                //};
                 break;
 
             case (int)EntryType.Phrase:
                 var phraseDto = entryDto as PhraseDto;
-                entry.Phrase = new RealmPhrase()
-                {
-                    Entry = entry,
-                    PhraseId = phraseDto.PhraseId,
-                    Content = phraseDto.Content,
-                };
+                //entry.Phrase = new RealmPhrase()
+                //{
+                //    Entry = entry,
+                //    PhraseId = phraseDto.PhraseId,
+                //    Content = phraseDto.Content,
+                //};
                 break;
 
             case (int)EntryType.Text:
                 var textDto = entryDto as TextDto;
-                entry.Text = new RealmText()
-                {
-                    Entry = entry,
-                    TextId = textDto.TextId,
-                    Content = textDto.Content,
-                };
+                //entry.Text = new RealmText()
+                //{
+                //    Entry = entry,
+                //    TextId = textDto.TextId,
+                //    Content = textDto.Content,
+                //};
                 break;
 
         }

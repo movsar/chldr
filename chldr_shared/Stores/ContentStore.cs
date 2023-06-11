@@ -146,10 +146,6 @@ namespace chldr_shared.Stores
         {
             return _unitOfWork.Words.Get(entryId);
         }
-        public PhraseModel GetPhraseById(string entryId)
-        {
-            return _unitOfWork.Phrases.Get(entryId);
-        }
 
         public EntryModel GetEntryById(string entryId)
         {
@@ -158,13 +154,7 @@ namespace chldr_shared.Stores
             {
                 return word;
             }
-
-            var phrase = _unitOfWork?.Phrases.GetByEntryId(entryId);
-            if (phrase != null)
-            {
-                return phrase;
-            }
-
+     
             return null;
         }
         #endregion
