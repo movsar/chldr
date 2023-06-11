@@ -1,9 +1,9 @@
 ﻿using chldr_data.Enums;
-using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_shared.Models;
 using Realms.Sync;
 using Newtonsoft.Json;
+using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_data.DatabaseObjects.Models
 {

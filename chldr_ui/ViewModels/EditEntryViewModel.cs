@@ -10,8 +10,8 @@ namespace chldr_ui.ViewModels
     public class EditEntryViewModel : ViewModelBase
     {
         [Parameter]
-        public string? EntryId {get;set;}
-        internal EntryDto EntryDto { get; set; } = new WordDto();
+        public string? EntryId { get; set; }
+        internal EntryDto EntryDto { get; set; } = new EntryDto();
         internal EntryType SelectedEntryType { get; set; } = EntryType.Word;
         internal void HandleEntryTypeChange(ChangeEventArgs e)
         {
@@ -20,13 +20,7 @@ namespace chldr_ui.ViewModels
                 SelectedEntryType = selectedEntryType;
 
                 // Initialize the corresponding DTO based on the selected entry type
-                EntryDto = SelectedEntryType switch
-                {
-                    EntryType.Word => new WordDto(),
-                    EntryType.Phrase => new PhraseDto(),
-                    EntryType.Text => new TextDto(),
-                    _ => null
-                };
+                EntryDto = new EntryDto();
             }
         }
     }

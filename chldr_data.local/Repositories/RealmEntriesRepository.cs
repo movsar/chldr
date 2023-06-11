@@ -14,11 +14,11 @@ using Realms;
 
 namespace chldr_data.Repositories
 {
-    public class RealmWordsRepository : RealmRepository<RealmEntry, WordModel, WordDto>, IWordsRepository
+    public class RealmEntriesRepository : RealmRepository<RealmEntry,EntryModel, EntryDto>, IEntriesRepository
     {
-        public RealmWordsRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
+        public RealmEntriesRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
 
-        protected override RecordType RecordType => RecordType.Word;
+        protected override RecordType RecordType => RecordType.Entry;
 
         //public static WordModel FromEntity(RealmEntry word)
         //{
@@ -42,14 +42,14 @@ namespace chldr_data.Repositories
             //return FromEntity(word);
         }
 
-        public List<WordModel> GetRandomWords(int limit)
+        public List<EntryModel> GetRandomWords(int limit)
         {
             //var words = _dbContext.All<RealmEntry>().AsEnumerable().Take(limit);
             //return words.Select(w => FromEntity(w)).ToList();
             throw new NotImplementedException();
 
         }
-        public override WordModel Get(string entityId)
+        public override EntryModel Get(string entityId)
         {
             throw new NotImplementedException();
 
@@ -62,7 +62,7 @@ namespace chldr_data.Repositories
             //return FromEntity(word);
         }
 
-        public override void Insert(WordDto dto)
+        public override void Insert(EntryDto dto)
         {
             throw new NotImplementedException();
         }
@@ -96,28 +96,27 @@ namespace chldr_data.Repositories
             }
         }
 
-        public override void Update(WordDto updatedWordDto)
+        public override void Update(EntryDto updatedEntryDto)
         {
-            var existingWordDto = WordDto.FromModel(Get(updatedWordDto.WordId));
+            var existingEntryDto = EntryDto.FromModel(Get(updatedEntryDto.EntryId));
          
             // Apply changes to the entry entity
-            var entryChanges = Change.GetChanges<EntryDto>(updatedWordDto, existingWordDto);
+            var entryChanges = Change.GetChanges<EntryDto>(updatedEntryDto, existingEntryDto);
             if (entryChanges.Count != 0)
             {
-                ApplyChanges<RealmEntry>(updatedWordDto.EntryId, entryChanges);
+                ApplyChanges<RealmEntry>(updatedEntryDto.EntryId, entryChanges);
             }
         }
 
         public void Update(EntryDto updatedEntryDto, ITranslationsRepository translationsRepository)
         {
-            var updatedWordDto = (WordDto)updatedEntryDto;
-            var existingWordDto = WordDto.FromModel(Get(updatedWordDto.WordId));
+            var existingEntryDto = EntryDto.FromModel(Get(updatedEntryDto.EntryId));
 
             // Update translations
-            ApplyEntryTranslationChanges(existingWordDto, updatedWordDto, (RealmTranslationsRepository)translationsRepository);
+            ApplyEntryTranslationChanges(existingEntryDto, updatedEntryDto, (RealmTranslationsRepository)translationsRepository);
 
             // Update word
-            Update((WordDto)existingWordDto);
+            Update((EntryDto)existingEntryDto);
         }
     }
 }

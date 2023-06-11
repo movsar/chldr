@@ -2,8 +2,8 @@
 {
     public interface IEntryEntity : IEntry, IEntity
     {
-        string RawContents { get; }
         int Type { get; }
+        int Subtype { get; }
 
         //RealmPhrase? Phrase { get; set; }
         //RealmSource Source { get; set; }

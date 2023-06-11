@@ -28,7 +28,7 @@ namespace chldr_data.Repositories
         public abstract TModel Get(string entityId);
         public abstract void Insert(TDto dto);
         public abstract void Delete(string entityId);
-        public abstract void Update(TDto wordDto);
+        public abstract void Update(TDto EntryDto);
         public IEnumerable<TModel> Take(int limit)
         {
             var entities = _dbContext.All<TEntity>().Take(limit);

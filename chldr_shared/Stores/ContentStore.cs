@@ -1,7 +1,6 @@
 ﻿using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
-using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Models.Words;
@@ -13,6 +12,7 @@ using chldr_data.ResponseTypes;
 using chldr_utils.Interfaces;
 using Realms.Sync;
 using GraphQL;
+using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_shared.Stores
 {
@@ -142,14 +142,14 @@ namespace chldr_shared.Stores
 
             CachedResultsChanged?.Invoke();
         }
-        public WordModel GetWordById(string entryId)
+        public EntryModel GetWordById(string entryId)
         {
-            return _unitOfWork.Words.Get(entryId);
+            return _unitOfWork.Entries.Get(entryId);
         }
 
         public EntryModel GetEntryById(string entryId)
         {
-            var word = _unitOfWork?.Words.GetByEntryId(entryId);
+            var word = _unitOfWork?.Entries.GetByEntryId(entryId);
             if (word != null)
             {
                 return word;
@@ -174,13 +174,13 @@ namespace chldr_shared.Stores
         {
             Search(query, new FiltrationFlags());
         }
-        public PhraseModel GetCachedPhraseById(string phraseId)
+        public EntryModel GetCachedPhraseById(string phraseId)
         {
             // Get current Phrase from cached results
             var phrase = CachedSearchResult.Entries
                 .Where(e => (EntryType)e.Type == EntryType.Phrase)
-                .Cast<PhraseModel>()
-                .FirstOrDefault(w => w.PhraseId == phraseId);
+                .Cast<EntryModel>()
+                .FirstOrDefault(w => w.EntryId == phraseId);
 
             if (phrase == null)
             {
@@ -192,31 +192,31 @@ namespace chldr_shared.Stores
             return phrase;
         }
 
-        public async Task AddPhrase(IUser userModel, PhraseDto phraseDto)
+        public async Task AddPhrase(IUser userModel, EntryDto EntryDto)
         {
             // TODO: Send request to insert a new remote phrase
-            // _unitOfWork.Phrases.Insert(phraseDto);
+            // _unitOfWork.Phrases.Insert(EntryDto);
         }
-        public async Task UpdatePhrase(UserModel loggedInUser, PhraseDto phraseDto)
+        public async Task UpdatePhrase(UserModel loggedInUser, EntryDto EntryDto)
         {
             // TODO: Send request to update the remote entity
-            // _unitOfWork.Phrases.Update(loggedInUser.UserId, phraseDto);
+            // _unitOfWork.Phrases.Update(loggedInUser.UserId, EntryDto);
         }
-        public async Task UpdateWord(UserModel loggedInUser, WordDto wordDto)
+        public async Task UpdateWord(UserModel loggedInUser, EntryDto EntryDto)
         {
             // Update remote entity
             var request = new GraphQLRequest
             {
                 Query = @"
-                        mutation updateWord($userId: String!, $wordDto: WordDtoInput!) {
-                          updateWord(userId: $userId, wordDto: $wordDto) {
+                        mutation updateWord($userId: String!, $EntryDto: EntryDtoInput!) {
+                          updateWord(userId: $userId, EntryDto: $EntryDto) {
                             success
                             errorMessage
                           }
                         }
                         ",
                 // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new { userId = loggedInUser.UserId, wordDto }
+                Variables = new { userId = loggedInUser.UserId, EntryDto }
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<MutationResponse>(request, "updateWord");
@@ -226,17 +226,17 @@ namespace chldr_shared.Stores
             }
 
             // Update local entity
-            _unitOfWork.Words.Update(wordDto);
+            _unitOfWork.Entries.Update(EntryDto);
         }
 
-        public async Task AddWord(UserModel loggedInUser, WordDto wordDto)
+        public async Task AddWord(UserModel loggedInUser, EntryDto EntryDto)
         {
             // Add remote entity
             var request = new GraphQLRequest
             {
                 Query = @"
-                        mutation addWord($userId: String!, $wordDto: WordDtoInput!) {
-                          addWord(userId: $userId, wordDto: $wordDto) {
+                        mutation addWord($userId: String!, $EntryDto: EntryDtoInput!) {
+                          addWord(userId: $userId, EntryDto: $EntryDto) {
                             success
                             errorMessage
                             createdAt
@@ -244,7 +244,7 @@ namespace chldr_shared.Stores
                         }
                         ",
                 // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new { userId = loggedInUser.UserId, wordDto }
+                Variables = new { userId = loggedInUser.UserId, EntryDto }
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<InsertResponse>(request, "addWord");
@@ -254,8 +254,8 @@ namespace chldr_shared.Stores
             }
 
             // Update local entity
-            wordDto.CreatedAt = response.Data.CreatedAt;
-            _unitOfWork.Words.Insert(wordDto);
+            EntryDto.CreatedAt = response.Data.CreatedAt;
+            _unitOfWork.Entries.Insert(EntryDto);
         }
     }
 }

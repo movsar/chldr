@@ -7,10 +7,10 @@ using chldr_data.DatabaseObjects.Models;
 
 namespace chldr_ui.ViewModels
 {
-    public class WordEditViewModel : EditEntryViewModelBase<WordDto, WordValidator>
+    public class EntryEditViewModel : EditEntryViewModelBase<EntryDto, WordValidator>
     {
         private bool isInitialized = false;
-        public WordDto Word { get; set; } = new WordDto();
+        public EntryDto Word { get; set; } = new EntryDto();
         protected override void OnInitialized()
         {
             if (!isInitialized)
@@ -28,15 +28,15 @@ namespace chldr_ui.ViewModels
                 // Get current word from cached results
                 var existingWord = ContentStore.CachedSearchResult.Entries
                     .Where(e => (EntryType)e.Type == EntryType.Word)
-                    .Cast<WordModel>()
+                    .Cast<EntryModel>()
                     .FirstOrDefault(w => w.EntryId == this.EntryId);
 
                 if (existingWord == null)
                 {
-                    existingWord = (WordModel)ContentStore.GetEntryById(EntryId);
+                    existingWord = ContentStore.GetEntryById(EntryId);
                 }                
 
-                Word = WordDto.FromModel(existingWord);
+                Word = EntryDto.FromModel(existingWord);
             }
         }
 

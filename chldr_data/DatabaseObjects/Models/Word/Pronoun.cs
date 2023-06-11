@@ -1,6 +1,6 @@
 ﻿namespace chldr_data.DatabaseObjects.Models.Words
 {
-    public class Pronoun : WordModel
+    public class Pronoun : EntryModel
     {
 
         // Class can be 1,2,3,4,5 or 6

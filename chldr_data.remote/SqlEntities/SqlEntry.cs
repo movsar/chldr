@@ -5,6 +5,8 @@ using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Enums.WordDetails;
+using chldr_data.remote.Services;
+using Realms;
 
 namespace chldr_data.remote.SqlEntities;
 [Table("Entry")]
@@ -14,76 +16,42 @@ public class SqlEntry : IEntryEntity
     public string UserId { get; set; } = null!;
     public string SourceId { get; set; } = null!;
     public string? RawContents { get; set; }
+    public string Content { get; set; }
     public string? ParentEntryId { get; set; }
     public int Type { get; set; } = 0;
+    public int Subtype { get; set; }
     public int Rate { get; set; } = 0;
+    public string Details { get; set; }
 
     public virtual ICollection<SqlSound> Sounds { get; set; } = new List<SqlSound>();
     public virtual SqlSource Source { get; set; } = null!;
     public virtual SqlUser User { get; set; } = null!;
-
-    public virtual SqlText? Text { get; set; }
-    public virtual SqlPhrase? Phrase { get; set; }
-    public virtual SqlWord? Word { get; set; }
-
     public virtual ICollection<SqlTranslation> Translations { get; set; } = new List<SqlTranslation>();
 
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
 
-    internal static SqlEntry FromDto(EntryDto newEntryDto)
+    internal static SqlEntry FromDto(EntryDto newEntryDto, SqlContext context)
     {
         // Entry
-        var entry = new SqlEntry()
+        SqlEntry? entry = context.Find<SqlEntry>(newEntryDto.EntryId);
+        if (entry == null)
         {
-            EntryId = newEntryDto.EntryId,
-            UserId = newEntryDto.UserId,
-            SourceId = newEntryDto.SourceId!,
-            ParentEntryId = newEntryDto.ParentEntryId,
-            Type = newEntryDto.EntryType,
-            Rate = newEntryDto.Rate,
-            CreatedAt = newEntryDto.CreatedAt,
-            UpdatedAt = newEntryDto.UpdatedAt,
-        };
-
-        // Word / phrase / text
-        switch (newEntryDto.EntryType)
-        {
-            case (int)EntryType.Word:
-                var wordDto = newEntryDto as WordDto;
-                entry.Word = new SqlWord()
-                {
-                    Entry = entry,
-                    EntryId = wordDto.EntryId,
-                    WordId = wordDto.WordId,
-                    Content = wordDto.Content,
-                    PartOfSpeech = (int)wordDto.PartOfSpeech,
-                };
-                break;
-
-            case (int)EntryType.Phrase:
-                var phraseDto = newEntryDto as PhraseDto;
-                entry.Phrase = new SqlPhrase()
-                {
-                    Entry = entry,
-                    EntryId = phraseDto.EntryId,
-                    PhraseId = phraseDto.PhraseId,
-                    Content = phraseDto.Content,
-                };
-                break;
-
-            case (int)EntryType.Text:
-                var textDto = newEntryDto as TextDto;
-                entry.Text = new SqlText()
-                {
-                    Entry = entry,
-                    EntryId = textDto.EntryId,
-                    TextId = textDto.TextId,
-                    Content = textDto.Content,
-                };
-                break;
-
+            entry = new SqlEntry();
         }
+
+        entry.EntryId = newEntryDto.EntryId;
+        entry.UserId = newEntryDto.UserId;
+        entry.SourceId = newEntryDto.SourceId!;
+        entry.ParentEntryId = newEntryDto.ParentEntryId;
+        entry.Type = newEntryDto.EntryType;
+        entry.Subtype = newEntryDto.EntrySubtype;
+        entry.Content = newEntryDto.Content;
+        entry.RawContents = newEntryDto.RawContents;
+        entry.Details = newEntryDto.Details;
+        entry.Rate = newEntryDto.Rate;
+        entry.CreatedAt = newEntryDto.CreatedAt;
+        entry.UpdatedAt = newEntryDto.UpdatedAt;
 
         // Translations
         entry.Translations.Clear();

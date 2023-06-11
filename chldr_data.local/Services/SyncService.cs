@@ -55,7 +55,7 @@ namespace chldr_data.local.Services
 
             return source.SourceId;
         }
-        //public string Insert(WordDto newWord)
+        //public string Insert(EntryDto newWord)
         //{
         //    if (!string.IsNullOrEmpty(newWord.EntryId))
         //    {
@@ -170,7 +170,7 @@ namespace chldr_data.local.Services
                             }
 
                             // Apply changes to the local database
-                            if (changeSet.RecordType == Enums.RecordType.Word)
+                            if (changeSet.RecordType == Enums.RecordType.Entry)
                             {
                                 try
                                 {
@@ -226,12 +226,12 @@ namespace chldr_data.local.Services
                     //    });
                     //}
 
-                    //        var word = Database.Find<RealmWord>(new ObjectId(wordDto.WordId));
+                    //        var word = Database.Find<RealmWord>(new ObjectId(EntryDto.WordId));
                     //        Database.Write(() =>
                     //            {
                     //                //word.Entry.Rate = loggedInUser.GetRateRange().Lower;
                     //                word.Entry.RawContents = word.Content.ToLower();
-                    //                foreach (var translationDto in wordDto.Translations)
+                    //                foreach (var translationDto in EntryDto.Translations)
                     //                {
                     //                    var translationId = new ObjectId(translationDto.TranslationId);
                     //        RealmTranslation translation = Database.Find<RealmTranslation>(translationId);
@@ -248,13 +248,13 @@ namespace chldr_data.local.Services
                     //                    translation.Notes = translationDto.Notes;
                     //                    translation.RawContents = translation.GetRawContents();
                     //                }
-                    //word.PartOfSpeech = (int)wordDto.PartOfSpeech;
-                    //word.Content = wordDto.Content;
-                    ////foreach (var grammaticalClass in wordDto.GrammaticalClasses)
+                    //word.PartOfSpeech = (int)EntryDto.PartOfSpeech;
+                    //word.Content = EntryDto.Content;
+                    ////foreach (var grammaticalClass in EntryDto.GrammaticalClasses)
                     ////{
                     ////    word.GrammaticalClasses.Add(grammaticalClass);
                     ////}
-                    //word.Notes = wordDto.Notes;
+                    //word.Notes = EntryDto.Notes;
                     //            });
                 }
                 finally

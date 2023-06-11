@@ -1,13 +1,14 @@
-﻿using chldr_data.DatabaseObjects.Models.Words;
+﻿using chldr_data.DatabaseObjects.Models;
+using chldr_data.DatabaseObjects.Models.Words;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 
 namespace chldr_ui.ViewModels
 {
-    public class WordViewModel : EntryViewModelBase
+    public class EntryViewModel : EntryViewModelBase
     {
 
-        public WordModel? Word { get; set; }
+        public EntryModel? Word { get; set; }
 
         public string? Header => Word?.Content;
         public string? Subheader => CreateSubheader();
@@ -20,7 +21,7 @@ namespace chldr_ui.ViewModels
             base.OnParametersSet();
             if (Word == null && Entry != null)
             {
-                Word = Entry as WordModel;
+                Word = Entry as EntryModel;
 
                 Translations = Entry.Translations;
                 Source = ParseSource(Entry.Source.Name);

@@ -10,6 +10,6 @@
         string? Patronymic { get; set; }
         int Rate { get; set; }
         DateTimeOffset CreatedAt { get; }
-        DateTimeOffset UpdatedAt { get;  }
+        DateTimeOffset UpdatedAt { get; }
     }
 }

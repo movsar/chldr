@@ -1,7 +1,7 @@
-﻿using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.DatabaseObjects.Dtos;
+﻿using chldr_data.DatabaseObjects.Dtos;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
+using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_data.remote.SqlEntities;
 

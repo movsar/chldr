@@ -6,7 +6,7 @@ namespace chldr_data.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         IChangeSetsRepository ChangeSets { get; }
-        IWordsRepository Words { get; }
+        IEntriesRepository Entries { get; }
         ITranslationsRepository Translations { get; }
         ILanguagesRepository Languages { get; }
         ISourcesRepository Sources { get; }

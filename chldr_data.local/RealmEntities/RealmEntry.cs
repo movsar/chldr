@@ -38,46 +38,19 @@ public class RealmEntry : RealmObject, IEntryEntity
         entry.User = realm.Find<RealmUser>(entryDto.UserId)!;
         entry.Source = realm.Find<RealmSource>(entryDto.UserId)!;
         entry.ParentEntryId = entryDto.ParentEntryId;
+
+        entry.Content = entryDto.Content;
+        entry.RawContents = entryDto.RawContents;
+
         entry.Type = entryDto.EntryType;
+        entry.Subtype = entryDto.EntrySubtype;
+
         entry.Rate = entryDto.Rate;
+
+        entry.Details = entryDto.Details;   
+
         entry.CreatedAt = entryDto.CreatedAt;
         entry.UpdatedAt = entryDto.UpdatedAt;
-
-        // Word / phrase / text
-        switch (entryDto.EntryType)
-        {
-            case (int)EntryType.Word:
-                var wordDto = entryDto as WordDto;
-                //entry.Word = new RealmWord()
-                //{
-                //    Entry = entry,
-                //    WordId = wordDto.WordId,
-                //    Content = wordDto.Content,
-                //    PartOfSpeech = (int)wordDto.PartOfSpeech,
-                //};
-                break;
-
-            case (int)EntryType.Phrase:
-                var phraseDto = entryDto as PhraseDto;
-                //entry.Phrase = new RealmPhrase()
-                //{
-                //    Entry = entry,
-                //    PhraseId = phraseDto.PhraseId,
-                //    Content = phraseDto.Content,
-                //};
-                break;
-
-            case (int)EntryType.Text:
-                var textDto = entryDto as TextDto;
-                //entry.Text = new RealmText()
-                //{
-                //    Entry = entry,
-                //    TextId = textDto.TextId,
-                //    Content = textDto.Content,
-                //};
-                break;
-
-        }
 
         // Translations
         entry.Translations.Clear();

@@ -14,14 +14,11 @@ public class SqlContext : DbContext
     public virtual DbSet<SqlChangeSet> ChangeSets { get; set; }
     public virtual DbSet<SqlEntry> Entries { get; set; }
     public virtual DbSet<SqlLanguage> Languages { get; set; }
-    public virtual DbSet<SqlPhrase> Phrases { get; set; }
     public virtual DbSet<SqlQuery> Queries { get; set; }
     public virtual DbSet<SqlSound> Sounds { get; set; }
     public virtual DbSet<SqlSource> Sources { get; set; }
-    public virtual DbSet<SqlText> Texts { get; set; }
     public virtual DbSet<SqlTranslation> Translations { get; set; }
     public virtual DbSet<SqlUser> Users { get; set; }
-    public virtual DbSet<SqlWord> Words { get; set; }
     public virtual DbSet<SqlToken> Tokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -52,29 +49,45 @@ public class SqlContext : DbContext
                 .HasMaxLength(40)
                 .HasColumnName("entry_id");
 
+            entity.Property(e => e.UserId)
+                .HasMaxLength(40)
+                .HasColumnName("user_id");
+
             entity.Property(e => e.ParentEntryId)
                .HasMaxLength(40)
                .HasColumnName("parent_id");
+     
+            entity.Property(e => e.Rate)
+                .HasColumnName("rate");
 
+            entity.Property(e => e.RawContents)
+                .HasMaxLength(1500)
+                .HasColumnName("raw_contents");
+
+            entity.Property(e => e.Content)
+                .HasColumnType("text")
+                .HasColumnName("content");
+
+            entity.Property(e => e.Details)
+                .HasColumnType("text")
+                .HasColumnName("details");
+
+            entity.Property(e => e.SourceId)
+                .HasMaxLength(40)
+                .HasColumnName("source_id");
+
+            entity.Property(e => e.Type).HasColumnName("type");
+            entity.Property(e => e.Subtype).HasColumnName("subtype");
+       
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
-            entity.Property(e => e.Rate).HasColumnName("rate");
-            entity.Property(e => e.RawContents)
-                .HasMaxLength(1500)
-                .HasColumnName("raw_contents");
-            entity.Property(e => e.SourceId)
-                .HasMaxLength(40)
-                .HasColumnName("source_id");
-            entity.Property(e => e.Type).HasColumnName("type");
+
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
-            entity.Property(e => e.UserId)
-                .HasMaxLength(40)
-                .HasColumnName("user_id");
 
             entity.HasOne(d => d.Source).WithMany(p => p.Entries)
                 .HasForeignKey(d => d.SourceId)
@@ -119,30 +132,6 @@ public class SqlContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Languages)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("fk_language_user_id");
-        });
-
-        modelBuilder.Entity<SqlPhrase>(entity =>
-        {
-            entity.HasKey(e => e.PhraseId).HasName("PRIMARY");
-
-            entity.ToTable("phrase");
-
-            entity.HasIndex(e => e.EntryId, "entry_id_UNIQUE").IsUnique();
-
-            entity.Property(e => e.PhraseId)
-                .HasMaxLength(40)
-                .HasColumnName("phrase_id");
-            entity.Property(e => e.Content)
-                .HasColumnType("varchar(20000)")
-                .HasColumnName("content");
-            entity.Property(e => e.EntryId)
-                .HasMaxLength(40)
-                .HasColumnName("entry_id");
-
-            entity.HasOne(d => d.Entry).WithOne(p => p.Phrase)
-                .HasForeignKey<SqlPhrase>(d => d.EntryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_phrase_user_id");
         });
 
         modelBuilder.Entity<SqlQuery>(entity =>
@@ -253,30 +242,6 @@ public class SqlContext : DbContext
                 .HasConstraintName("fk_source_user_id");
         });
 
-        modelBuilder.Entity<SqlText>(entity =>
-        {
-            entity.HasKey(e => e.TextId).HasName("PRIMARY");
-
-            entity.ToTable("text");
-
-            entity.HasIndex(e => e.EntryId, "entry_id_UNIQUE").IsUnique();
-
-            entity.Property(e => e.TextId)
-                .HasMaxLength(40)
-                .HasColumnName("text_id");
-            entity.Property(e => e.Content)
-                .HasColumnType("varchar(20000)")
-                .HasColumnName("content");
-            entity.Property(e => e.EntryId)
-                .HasMaxLength(40)
-                .HasColumnName("entry_id");
-
-            entity.HasOne(d => d.Entry).WithOne(p => p.Text)
-                .HasForeignKey<SqlText>(d => d.EntryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_text_entry_id");
-        });
-
         modelBuilder.Entity<SqlTranslation>(entity =>
         {
             entity.HasKey(e => e.TranslationId).HasName("PRIMARY");
@@ -377,34 +342,6 @@ public class SqlContext : DbContext
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
-        });
-
-        modelBuilder.Entity<SqlWord>(entity =>
-        {
-            entity.HasKey(e => e.WordId).HasName("PRIMARY");
-
-            entity.ToTable("word");
-
-            entity.HasIndex(e => e.EntryId, "entry_id_UNIQUE").IsUnique();
-
-            entity.Property(e => e.WordId)
-                .HasMaxLength(40)
-                .HasColumnName("word_id");
-            entity.Property(e => e.AdditionalDetails)
-                .HasColumnType("json")
-                .HasColumnName("additional_details");
-            entity.Property(e => e.Content)
-                .HasMaxLength(10000)
-                .HasColumnName("content");
-            entity.Property(e => e.EntryId)
-                .HasMaxLength(40)
-                .HasColumnName("entry_id");
-            entity.Property(e => e.PartOfSpeech).HasColumnName("part_of_speech");
-
-            entity.HasOne(d => d.Entry).WithOne(p => p.Word)
-                .HasForeignKey<SqlWord>(d => d.EntryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_word_entry_id");
         });
 
         modelBuilder.Entity<SqlToken>(entity =>

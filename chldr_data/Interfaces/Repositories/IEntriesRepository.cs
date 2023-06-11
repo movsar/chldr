@@ -3,7 +3,7 @@ using chldr_data.DatabaseObjects.Models;
 
 namespace chldr_data.Interfaces.Repositories
 {
-    public interface IEntriesRepository
+    public interface IEntriesRepository : IRepository<EntryModel, EntryDto>
     {
         public EntryModel GetByEntryId(string entryId);
     }

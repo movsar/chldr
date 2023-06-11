@@ -6,7 +6,7 @@ using Microsoft.Extensions.Localization;
 
 namespace chldr_shared.Validators
 {
-    public class WordValidator : AbstractValidator<WordDto>
+    public class WordValidator : AbstractValidator<EntryDto>
     {
         private readonly TranslationValidator _translationValidator;
 

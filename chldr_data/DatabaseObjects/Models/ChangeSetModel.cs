@@ -1,6 +1,6 @@
 ﻿using chldr_data.Enums;
-using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_data.DatabaseObjects.Models
 {

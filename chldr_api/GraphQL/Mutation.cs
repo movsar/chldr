@@ -46,16 +46,16 @@ namespace chldr_api
             _emailService = emailService;
 
         }
-        public async Task<InsertResponse> AddWord(string userId, WordDto wordDto)
+        public async Task<InsertResponse> AddWord(string userId, EntryDto EntryDto)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             try
             {
-                unitOfWork.Words.Insert(wordDto);
+                unitOfWork.Entries.Insert(EntryDto);
                 unitOfWork.Commit();
 
-                return new InsertResponse() { Success = true, CreatedAt = wordDto.CreatedAt  };
+                return new InsertResponse() { Success = true, CreatedAt = EntryDto.CreatedAt  };
             }
             catch (Exception ex)
             {
@@ -68,13 +68,13 @@ namespace chldr_api
             }
         }
 
-        public async Task<MutationResponse> UpdateWord(string userId, WordDto wordDto)
+        public async Task<MutationResponse> UpdateWord(string userId, EntryDto EntryDto)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             try
             {
-                unitOfWork.Words.Update(wordDto);
+                unitOfWork.Entries.Update(EntryDto);
                 unitOfWork.Commit();
 
                 return new MutationResponse() { Success = true };

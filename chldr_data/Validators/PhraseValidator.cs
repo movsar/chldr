@@ -5,7 +5,7 @@ using Microsoft.Extensions.Localization;
 
 namespace chldr_shared.Validators
 {
-    public class PhraseValidator : AbstractValidator<PhraseDto>
+    public class PhraseValidator : AbstractValidator<EntryDto>
     {
         public PhraseValidator(IStringLocalizer<AppLocalizations> stringLocalizer)
         {

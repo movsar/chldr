@@ -6,22 +6,87 @@ using chldr_data.Interfaces.Repositories;
 using chldr_data.Models;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.remote.Repositories
 {
-    internal abstract class SqlEntriesRepository<TModel, TDto> : SqlRepository<TModel, TDto>
-        where TDto : class, new()
-        where TModel : class
+    internal class SqlEntriesRepository : SqlRepository<EntryModel, EntryDto>, IEntriesRepository
     {
+        public SqlEntriesRepository(SqlContext context, string userId) : base(context, userId)
+        {
+        }
+
+        protected override RecordType RecordType => RecordType.Entry;
 
         public event Action<EntryModel>? EntryUpdated;
         public event Action<EntryModel>? EntryInserted;
         public event Action<EntryModel>? EntryDeleted;
         public event Action<EntryModel>? EntryAdded;
 
-        protected SqlEntriesRepository(SqlContext context, string userId) : base(context, userId)
-        { }
 
+        public static EntryModel FromEntity(SqlEntry word)
+        {
+            //return WordModel.FromEntity(
+            //                        word.Entry.Word,
+            //                        word.Entry,
+            //                        word.Entry.Source,
+            //                        word.Entry.Translations
+            //                            .Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)));
+            throw new NotSupportedException();
+        }
+        public override EntryModel Get(string entityId)
+        {
+            var word = _dbContext.Entries
+                          .Include(w => w.User)
+                          .Include(w => w.Source)
+                          .Include(w => w.Translations)
+                          .ThenInclude(t => t.Language)
+                          .FirstOrDefault(w => w.EntryId.Equals(entityId));
+
+            if (word == null)
+            {
+                throw new ArgumentException($"Entity not found: {entityId}");
+            }
+
+            return FromEntity(word);
+        }
+
+        public override void Delete(string entityId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Insert(EntryDto newEntryDto)
+        {
+            if (!newEntryDto.Translations.Any())
+            {
+                throw new Exception("Empty translations");
+            }
+
+            // Insert Entry entity
+            var entry = SqlEntry.FromDto(newEntryDto, _dbContext);
+            _dbContext.Add(entry);
+            _dbContext.SaveChanges();
+
+            // Set CreatedAt to update it on local entry
+            newEntryDto.CreatedAt = entry.CreatedAt;
+
+            // Insert a change set
+            InsertChangeSet(Operation.Insert, _userId, newEntryDto.EntryId);
+            // Insert new translation changesets? - not necessary, but could be used for audit
+        }
+
+        public override void Update(EntryDto updatedEntryDto)
+        {
+            var existingEntry = Get(updatedEntryDto.EntryId);
+            var existingEntryDto = EntryDto.FromModel(existingEntry);
+
+            var updatedEntryEntity = SqlEntry.FromDto(updatedEntryDto, _dbContext);
+            _dbContext.Update(updatedEntryEntity);
+            _dbContext.SaveChanges();
+
+            InsertEntryUpdateChangeSets(existingEntryDto, updatedEntryDto);
+        }
         protected void InsertEntryUpdateChangeSets(EntryDto existingEntryDto, EntryDto updatedEntryDto)
         {
             var entryChanges = Change.GetChanges(existingEntryDto, existingEntryDto);
@@ -53,8 +118,6 @@ namespace chldr_data.remote.Repositories
                 InsertChangeSet(Operation.Update, _userId, translation.TranslationId, changes);
             }
         }
-        protected override abstract RecordType RecordType { get; }
-
         public async Task<bool> CanCreateOrUpdateEntry(SqlEntry entry)
         {
             if (entry.ParentEntryId == entry.EntryId)
@@ -88,6 +151,11 @@ namespace chldr_data.remote.Repositories
             }
 
             return false;
+        }
+
+        public EntryModel GetByEntryId(string entryId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

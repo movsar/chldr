@@ -2,6 +2,6 @@
 {
     public interface IQueryEntity : IQuery, IEntity
     {
-     
+
     }
 }

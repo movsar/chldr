@@ -20,11 +20,11 @@ namespace chldr_api
         [UseProjection]
         [UseFiltering]
         [UseSorting]
-        public IQueryable<WordDto> GetEntries(int limit)
+        public IQueryable<EntryDto> GetEntries(int limit)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork();
-            var words = unitOfWork.Words.Take(limit);
-            return words.Select(w => WordDto.FromModel(w)).AsQueryable();
+            var words = unitOfWork.Entries.Take(limit);
+            return words.Select(w => EntryDto.FromModel(w)).AsQueryable();
         }
 
         public IQueryable<ChangeSetDto> RetrieveLatestChangeSets(int minIndex)

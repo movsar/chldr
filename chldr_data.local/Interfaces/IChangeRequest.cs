@@ -5,8 +5,8 @@ namespace chldr_data.Interfaces
 {
     internal interface IChangeRequest
     {
-        Task Add(string userId, WordDto dto);
-        Task Update(string userId, WordDto dto);
+        Task Add(string userId, EntryDto dto);
+        Task Update(string userId, EntryDto dto);
         Task Delete(string userId, string entityId);
     }
 }
