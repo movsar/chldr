@@ -19,7 +19,7 @@ namespace chldr_blazor.Extensions
     {
         public static WebApplicationBuilder RegisterValidators(this WebApplicationBuilder appBuilder)
         {
-            appBuilder.Services.AddSingleton<WordValidator>();
+            appBuilder.Services.AddSingleton<EntryValidator>();
             appBuilder.Services.AddSingleton<TranslationValidator>();
             appBuilder.Services.AddSingleton<UserInfoValidator>();
             appBuilder.Services.AddSingleton<IValidator<UserDto>, UserInfoValidator>();

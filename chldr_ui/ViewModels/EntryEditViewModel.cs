@@ -4,12 +4,17 @@ using chldr_data.DatabaseObjects.Models.Words;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
 using chldr_data.DatabaseObjects.Models;
+using Microsoft.AspNetCore.Components;
 
 namespace chldr_ui.ViewModels
 {
-    public class EntryEditViewModel : EditEntryViewModelBase<EntryDto, WordValidator>
+    public class EntryEditViewModel : EditFormViewModelBase<EntryDto, EntryValidator>
     {
         private bool isInitialized = false;
+        [Parameter] public string? EntryId { get; set; }
+        // Set "User" source id by default
+        protected string SourceId { get; set; } = "63a816205d1af0e432fba6de";
+        protected bool IsEditMode = false;
         public EntryDto Word { get; set; } = new EntryDto();
         protected override void OnInitialized()
         {
@@ -34,7 +39,7 @@ namespace chldr_ui.ViewModels
                 if (existingWord == null)
                 {
                     existingWord = ContentStore.GetEntryById(EntryId);
-                }                
+                }
 
                 Word = EntryDto.FromModel(existingWord);
             }

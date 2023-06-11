@@ -21,7 +21,7 @@ namespace chldr_native.Extensions
     {
         public static MauiAppBuilder RegisterValidators(this MauiAppBuilder mauiAppBuilder)
         {
-            mauiAppBuilder.Services.AddScoped<WordValidator>();
+            mauiAppBuilder.Services.AddScoped<EntryValidator>();
             mauiAppBuilder.Services.AddScoped<TranslationValidator>();
             mauiAppBuilder.Services.AddScoped<UserInfoValidator>();
             mauiAppBuilder.Services.AddScoped<IValidator<UserDto>, UserInfoValidator>();

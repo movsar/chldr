@@ -6,17 +6,17 @@ using Microsoft.Extensions.Localization;
 
 namespace chldr_shared.Validators
 {
-    public class WordValidator : AbstractValidator<EntryDto>
+    public class EntryValidator : AbstractValidator<EntryDto>
     {
         private readonly TranslationValidator _translationValidator;
 
-        public WordValidator(IStringLocalizer<AppLocalizations> stringLocalizer, TranslationValidator translationValidator)
+        public EntryValidator(IStringLocalizer<AppLocalizations> stringLocalizer, TranslationValidator translationValidator)
         {
             _translationValidator = translationValidator;
 
             RuleFor(x => x.Content)
             .NotEmpty()
-            .WithMessage(stringLocalizer["Error:Word_content_must_be_set"]);
+            .WithMessage(stringLocalizer["Error:Content_must_be_set"]);
 
             RuleFor(x => x.Translations)
                  .Cascade(CascadeMode.Stop)
