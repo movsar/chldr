@@ -13,18 +13,11 @@ namespace chldr_data.DatabaseObjects.Dtos
         {
             var textDto = new TextDto()
             {
-                EntryId = model.EntryId,
-                SourceId = model.SourceId!,
-                EntryType = model.Type,
-                CreatedAt = model.CreatedAt,
-                UpdatedAt = model.UpdatedAt,
-
                 TextId = model.TextId,
-                Content = model.Content,
-                Rate = model.Rate,
+                Content = model.Content,                
             };
 
-            textDto.Translations.AddRange(model.Translations.Select(t => TranslationDto.FromModel(t)));
+            textDto.SetEntryFields(model);
             return textDto;
         }
     }

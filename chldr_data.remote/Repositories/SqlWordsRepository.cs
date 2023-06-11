@@ -73,18 +73,19 @@ namespace chldr_data.remote.Repositories
 
             // Insert a change set
             InsertChangeSet(Operation.Insert, _userId, newEntryDto.EntryId);
+            // Insert new translation changesets? - not necessary, but could be used for audit
         }
 
-        public override void Update(WordDto updatedEntryDto)
+        public override void Update(WordDto updatedWordDto)
         {
-            var existingEntry = Get(updatedEntryDto.EntryId);
-            var existingEntryDto = EntryDto.FromModel(existingEntry);
+            var existingEntry = Get(updatedWordDto.WordId);
+            var existingEntryDto = WordDto.FromModel(existingEntry);
 
-            var updatedEntryEntity = SqlEntry.FromDto(updatedEntryDto);
+            var updatedEntryEntity = SqlEntry.FromDto(updatedWordDto);
             _dbContext.Update(updatedEntryEntity);
             _dbContext.SaveChanges();
 
-            InsertEntryUpdateChangeSets(existingEntryDto, updatedEntryDto);
+            InsertEntryUpdateChangeSets(existingEntryDto, updatedWordDto);
         }
     }
 }

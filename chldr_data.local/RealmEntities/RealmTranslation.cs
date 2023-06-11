@@ -7,7 +7,7 @@ namespace chldr_data.local.RealmEntities;
 public class RealmTranslation : RealmObject, ITranslationEntity
 {
     [PrimaryKey]
-    public string TranslationId { get; set; } 
+    public string TranslationId { get; set; }
     public RealmLanguage Language { get; set; } = null!;
     public RealmEntry Entry { get; set; } = null!;
     public RealmUser User { get; set; } = null!;
@@ -25,18 +25,29 @@ public class RealmTranslation : RealmObject, ITranslationEntity
     [Ignored]
     public string LanguageId => Language.LanguageId;
 
-    public static ITranslationEntity FromDto(TranslationDto translation, IEntryEntity entry, IUserEntity user, ILanguageEntity language)
+    internal static RealmTranslation FromDto(TranslationDto translationDto, Realm realm)
     {
+        var language = realm.Find<RealmLanguage>(translationDto.LanguageId);
+        var user = realm.Find<RealmUser>(translationDto.UserId);
+        var entry = realm.Find<RealmEntry>(translationDto.EntryId);
+
+        if (language == null || user == null || entry == null)
+        {
+            throw new NullReferenceException();
+        }
+
         return new RealmTranslation()
         {
-            TranslationId = translation.TranslationId,
-            Language = language as RealmLanguage,
-            Entry = entry as RealmEntry,
-            User = user as RealmUser,
-            Content = translation.Content,
-            RawContents = translation.Content.ToLower(),
-            Notes = translation.Notes,
-            Rate = translation.Rate,
+            TranslationId = translationDto.TranslationId,
+            Language = language,
+            Entry = entry,
+            User = user,
+            Content = translationDto.Content,
+            RawContents = translationDto.Content.ToLower(),
+            Notes = translationDto.Notes,
+            Rate = translationDto.Rate,
+            CreatedAt = translationDto.CreatedAt,
+            UpdatedAt = translationDto.UpdatedAt,
         };
     }
 

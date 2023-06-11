@@ -8,20 +8,6 @@
             @*<span class="oi oi-volume-high" @onclick="ListenToPronunciation"></span>*@
         </div>
 
-        @if (!String.IsNullOrWhiteSpace(@Subheader))
-        {
-            <div class="chldr_entry_sub-header">
-                @Subheader
-            </div>
-        }
-
-        @if (!String.IsNullOrWhiteSpace(@Phrase?.Notes))
-        {
-            <div class="chldr_translation_notes">
-                Notes: (@Phrase?.Notes)
-            </div>
-        }
-
         @if (!String.IsNullOrWhiteSpace(@Source))
         {
             <div class="chldr_entry_source">

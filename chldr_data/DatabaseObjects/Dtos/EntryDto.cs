@@ -18,54 +18,19 @@ namespace chldr_data.DatabaseObjects.Dtos
         public int EntryType { get; set; } = 1;
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
-        public static EntryDto FromModel(EntryModel entryModel)
+        protected void SetEntryFields(EntryModel entry)
         {
-            EntryDto entryDto = null!;
+            EntryId = entry.EntryId;
+            UserId = entry.UserId;
+            SourceId = entry.SourceId!;
+            ParentEntryId = entry.ParentEntryId;
+            EntryType = entry.Type;
+            Rate = entry.Rate;
+            CreatedAt = entry.CreatedAt;
+            UpdatedAt = entry.UpdatedAt;
 
-            // Word / Phrase / Text
-            switch ((EntryType)entryModel.Type)
-            {
-                case Enums.EntryType.Word:
-                    entryDto = new WordDto()
-                    {
-                        WordId = ((WordModel)entryModel).WordId,
-                        PartOfSpeech = ((WordModel)entryModel).PartOfSpeech,
-                        //AdditionalDetails =
-                    };
-                    break;
-
-                case Enums.EntryType.Phrase:
-                    entryDto = new PhraseDto()
-                    {
-                        PhraseId = ((PhraseModel)entryModel).PhraseId,
-                    };
-                    break;
-
-                case Enums.EntryType.Text:
-                    entryDto = new TextDto()
-                    {
-                        TextId = ((TextModel)entryModel).TextId,
-                    };
-                    break;
-
-            }
-
-            // Shared fields
-            entryDto.Content = entryModel.Content;
-
-            // Entry
-            entryDto.EntryId = entryModel.EntryId;
-            entryDto.UserId = entryModel.UserId;
-            entryDto.SourceId = entryModel.SourceId!;
-            entryDto.ParentEntryId = entryModel.ParentEntryId;
-            entryDto.EntryType = entryModel.Type;
-            entryDto.Rate = entryModel.Rate;
-            entryDto.CreatedAt = entryModel.CreatedAt;
-            entryDto.UpdatedAt = entryModel.UpdatedAt;
-
-            // Translations
-            entryDto.Translations.AddRange(entryModel.Translations.Select(t => TranslationDto.FromModel(t)));
-            return entryDto;
+            Translations.Clear();
+            Translations.AddRange(entry.Translations.Select(t => TranslationDto.FromModel(t)));
         }
     }
 }

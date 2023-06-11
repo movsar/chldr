@@ -20,31 +20,34 @@ public class RealmEntry : RealmObject, IEntryEntity
     public RealmText? Text { get; set; }
     public RealmPhrase? Phrase { get; set; }
     public RealmWord? Word { get; set; }
-    public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
-    public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
     public IList<RealmSound> Sounds { get; }
     public IList<RealmTranslation> Translations { get; }
 
-    internal static RealmEntry FromDto(EntryDto newEntryDto, IUserEntity user, ISourceEntity source)
+    internal static RealmEntry FromDto(EntryDto entryDto, Realm realm)
     {
         // Entry
-        var entry = new RealmEntry()
+        RealmEntry? entry = realm.All<RealmEntry>().SingleOrDefault(e => e.EntryId.Equals(e.EntryId));
+        if (entry == null)
         {
-            EntryId = newEntryDto.EntryId,
-            User = (RealmUser)user,
-            Source =(RealmSource)source,
-            ParentEntryId = newEntryDto.ParentEntryId,
-            Type = newEntryDto.EntryType,
-            Rate = newEntryDto.Rate,
-            CreatedAt = newEntryDto.CreatedAt,
-            UpdatedAt = newEntryDto.UpdatedAt,
-        };
+            entry = new RealmEntry();
+        }
+
+        entry.EntryId = entryDto.EntryId;
+        entry.User = realm.Find<RealmUser>(entryDto.UserId)!;
+        entry.Source = realm.Find<RealmSource>(entryDto.UserId)!;
+        entry.ParentEntryId = entryDto.ParentEntryId;
+        entry.Type = entryDto.EntryType;
+        entry.Rate = entryDto.Rate;
+        entry.CreatedAt = entryDto.CreatedAt;
+        entry.UpdatedAt = entryDto.UpdatedAt;
 
         // Word / phrase / text
-        switch (newEntryDto.EntryType)
+        switch (entryDto.EntryType)
         {
             case (int)EntryType.Word:
-                var wordDto = newEntryDto as WordDto;
+                var wordDto = entryDto as WordDto;
                 entry.Word = new RealmWord()
                 {
                     Entry = entry,
@@ -55,7 +58,7 @@ public class RealmEntry : RealmObject, IEntryEntity
                 break;
 
             case (int)EntryType.Phrase:
-                var phraseDto = newEntryDto as PhraseDto;
+                var phraseDto = entryDto as PhraseDto;
                 entry.Phrase = new RealmPhrase()
                 {
                     Entry = entry,
@@ -65,7 +68,7 @@ public class RealmEntry : RealmObject, IEntryEntity
                 break;
 
             case (int)EntryType.Text:
-                var textDto = newEntryDto as TextDto;
+                var textDto = entryDto as TextDto;
                 entry.Text = new RealmText()
                 {
                     Entry = entry,
@@ -78,9 +81,9 @@ public class RealmEntry : RealmObject, IEntryEntity
 
         // Translations
         entry.Translations.Clear();
-        foreach (var translationDto in newEntryDto.Translations)
+        foreach (var translationDto in entryDto.Translations)
         {
-            var translation = (RealmTranslation)RealmTranslation.FromDto(translationDto, entry, user, translationDto.Language);
+            var translation = RealmTranslation.FromDto(translationDto, realm);
             entry.Translations.Add(translation);
         }
 

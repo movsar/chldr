@@ -6,7 +6,6 @@ namespace chldr_ui.ViewModels
     {
         public PhraseModel? Phrase { get; set; }
         public string? Header => Phrase?.Content;
-        public string? Subheader => Phrase?.Notes;
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
