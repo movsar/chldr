@@ -154,7 +154,7 @@ namespace chldr_shared.Stores
             {
                 return word;
             }
-     
+
             return null;
         }
         #endregion
@@ -174,7 +174,7 @@ namespace chldr_shared.Stores
         {
             Search(query, new FiltrationFlags());
         }
-        public EntryModel GetCachedPhraseById(string phraseId)
+        public EntryModel GetCachedEntryById(string phraseId)
         {
             // Get current Phrase from cached results
             var phrase = CachedSearchResult.Entries
@@ -192,17 +192,7 @@ namespace chldr_shared.Stores
             return phrase;
         }
 
-        public async Task AddPhrase(IUser userModel, EntryDto EntryDto)
-        {
-            // TODO: Send request to insert a new remote phrase
-            // _unitOfWork.Phrases.Insert(EntryDto);
-        }
-        public async Task UpdatePhrase(UserModel loggedInUser, EntryDto EntryDto)
-        {
-            // TODO: Send request to update the remote entity
-            // _unitOfWork.Phrases.Update(loggedInUser.UserId, EntryDto);
-        }
-        public async Task UpdateWord(UserModel loggedInUser, EntryDto EntryDto)
+        public async Task UpdateEntry(UserModel loggedInUser, EntryDto EntryDto)
         {
             // Update remote entity
             var request = new GraphQLRequest
@@ -229,7 +219,7 @@ namespace chldr_shared.Stores
             _unitOfWork.Entries.Update(EntryDto);
         }
 
-        public async Task AddWord(UserModel loggedInUser, EntryDto EntryDto)
+        public async Task AddEntry(UserModel loggedInUser, EntryDto EntryDto)
         {
             // Add remote entity
             var request = new GraphQLRequest

@@ -6,12 +6,7 @@ using chldr_data.Models;
 using chldr_utils.Models;
 using chldr_utils.Services;
 using Realms;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using chldr_data.Interfaces;
 
 namespace chldr_data.local.Services
@@ -22,15 +17,11 @@ namespace chldr_data.local.Services
         public event Action<SearchResultModel>? GotNewSearchResult;
         public static EntryModel FromEntity(RealmEntry entry)
         {
-            throw new NotImplementedException();
-
-            //return EntryModelFactory.CreateEntryModel(entry,
-            //                entry?.Word,
-            //                entry?.Phrase,
-            //                entry?.Text,
-            //                entry.Source,
-            //                entry.Translations.Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t))
-            //            );
+            return EntryModel.FromEntity(
+                entry,
+                entry.Source,
+                entry.Translations.Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t))
+            );
         }
         private static IEnumerable<EntryModel> SortDirectSearchEntries(string inputText, IEnumerable<EntryModel> entries)
         {

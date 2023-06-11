@@ -82,11 +82,11 @@ namespace chldr_ui.ViewModels
             var user = UserModel.FromDto(UserStore.ActiveSession.User);
             if (Word.CreatedAt != DateTimeOffset.MinValue)
             {
-                await ContentStore.UpdateWord(user, Word);
+                await ContentStore.UpdateEntry(user, Word);
             }
             else
             {
-                await ContentStore.AddWord(user, Word);
+                await ContentStore.AddEntry(user, Word);
             }
 
             NavigationManager.NavigateTo("/");
