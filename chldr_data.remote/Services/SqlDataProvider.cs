@@ -14,9 +14,6 @@ namespace chldr_data.local.Services
 {
     public class SqlDataProvider : IDataProvider
     {
-        private readonly ExceptionHandler _exceptionHandler;
-        private readonly IConfiguration _configuration;
-
         public bool IsInitialized { get; set; }
 
         public event Action? DatabaseInitialized;
@@ -24,14 +21,12 @@ namespace chldr_data.local.Services
         public event Action<EntryModel>? EntryInserted;
         public event Action<EntryModel>? EntryDeleted;
         public event Action<EntryModel>? EntryAdded;
-
+        string _connectionString;
         public SqlDataProvider(
-            ExceptionHandler exceptionHandler,
-            IConfiguration configuration
+            string connectionString
             )
         {
-            _exceptionHandler = exceptionHandler;
-            _configuration = configuration;
+            _connectionString = connectionString;
         }
 
         private string KeyAsString()
@@ -60,11 +55,10 @@ namespace chldr_data.local.Services
             //    database.RemoveAll<RealmTranslation>();
             //});
         }
-        public SqlContext GetDatabaseContext()
+        public SqlContext GetContext()
         {
-            var connectionString = _configuration.GetConnectionString("RemoteDatabase")!;
             var options = new DbContextOptionsBuilder<SqlContext>()
-                               .UseMySQL(connectionString)
+                               .UseMySQL(_connectionString)
                                .Options;
 
             return new SqlContext(options);
@@ -77,7 +71,7 @@ namespace chldr_data.local.Services
                 throw new Exception("The active user must be set");
             }
 
-            var context = GetDatabaseContext();
+            var context = GetContext();
             return new SqlUnitOfWork(context, userId);
         }
     }

@@ -27,8 +27,11 @@ namespace chldr_api
                 throw new Exception("Connection string is not set");
             }
 
-            builder.Services.AddScoped<IDataProvider, SqlDataProvider>();
-            
+            builder.Services.AddScoped<IDataProvider>(serviceProvider =>
+            {
+                return new SqlDataProvider(connectionString);
+            });
+
             builder.Services.AddScoped<ExceptionHandler>();
 
             builder.Services.AddScoped<PasswordResetResolver>();
@@ -36,9 +39,9 @@ namespace chldr_api
             builder.Services.AddScoped<RegisterUserResolver>();
             builder.Services.AddScoped<ConfirmEmailResolver>();
             builder.Services.AddScoped<LoginResolver>();
-            
+
             builder.Services.AddSingleton<EmailService>();
-            
+
             builder.Services.AddLocalization();
 
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingSecret));

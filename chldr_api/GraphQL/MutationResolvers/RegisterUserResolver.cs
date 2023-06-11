@@ -22,7 +22,7 @@ namespace chldr_api.GraphQL.MutationServices
             EmailService _emailService,
             string email, string password, string? firstName, string? lastName, string? patronymic)
         {
-            var dbContext = dataProvider.GetDatabaseContext();
+            var dbContext = dataProvider.GetContext();
 
             // Check if a user with this email already exists
             var existingUser = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);

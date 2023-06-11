@@ -11,7 +11,7 @@ namespace chldr_api.GraphQL.MutationServices
     {
         internal async Task<MutationResponse> ExecuteAsync(SqlDataProvider dataProvider, string tokenValue)
         {
-            var dbContext = dataProvider.GetDatabaseContext();
+            var dbContext = dataProvider.GetContext();
 
             // Check if a user with this email already exists
             var token = await dbContext.Tokens.SingleOrDefaultAsync(t => t.Value.Equals(tokenValue));

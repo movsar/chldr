@@ -101,5 +101,10 @@ namespace chldr_data.local.Services
             return new RealmUnitOfWork(GetDatabase(), _exceptionHandler, _graphQLRequestSender);
 
         }
+
+        public Realm GetContext()
+        {
+            return GetDatabase();
+        }
     }
 }

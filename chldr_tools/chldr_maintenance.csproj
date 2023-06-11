@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Compile Remove="Models\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <None Remove="Models\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\chldr_data.local\chldr_data.local.csproj" />
+    <ProjectReference Include="..\chldr_data.remote\chldr_data.remote.csproj" />
     <ProjectReference Include="..\chldr_data\chldr_data.csproj" />
   </ItemGroup>
 

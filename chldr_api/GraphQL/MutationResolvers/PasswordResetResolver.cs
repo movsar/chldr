@@ -24,7 +24,7 @@ namespace chldr_api.GraphQL.MutationServices
             EmailService _emailService,
             string email)
         {
-            var dbContext = dataProvider.GetDatabaseContext();
+            var dbContext = dataProvider.GetContext();
 
             var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (user == null)
