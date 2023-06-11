@@ -12,7 +12,7 @@ namespace chldr_data.DatabaseObjects.Dtos
         public int Rate { get; set; }
         public string Content { get; set; }
         public string RawContents { get; set; }
-        public string Details { get; set; }
+        public string? Details { get; set; }
         public int EntryType { get; set; } = 1;
         public int EntrySubtype { get; set; } = 0;
         public DateTimeOffset CreatedAt { get; set; }
@@ -39,7 +39,7 @@ namespace chldr_data.DatabaseObjects.Dtos
 
             entryDto.Translations.Clear();
             entryDto.Translations.AddRange(entryModel.Translations.Select(t => TranslationDto.FromModel(t)));
-            
+
             return entryDto;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums;
@@ -24,15 +25,13 @@ namespace chldr_data.remote.Repositories
         public event Action<EntryModel>? EntryAdded;
 
 
-        public static EntryModel FromEntity(SqlEntry word)
+        public static EntryModel FromEntity(SqlEntry entry)
         {
-            //return WordModel.FromEntity(
-            //                        word.Entry.Word,
-            //                        word.Entry,
-            //                        word.Entry.Source,
-            //                        word.Entry.Translations
-            //                            .Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)));
-            throw new NotSupportedException();
+            return EntryModel.FromEntity(
+                entry,
+                entry.Source,
+                entry.Translations.Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t))
+            );
         }
         public override EntryModel Get(string entityId)
         {

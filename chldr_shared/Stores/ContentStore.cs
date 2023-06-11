@@ -198,8 +198,8 @@ namespace chldr_shared.Stores
             var request = new GraphQLRequest
             {
                 Query = @"
-                        mutation updateWord($userId: String!, $EntryDto: EntryDtoInput!) {
-                          updateWord(userId: $userId, EntryDto: $EntryDto) {
+                        mutation updateWord($userId: String!, $entryDto: EntryDtoInput!) {
+                          updateWord(userId: $userId, entryDto: $entryDto) {
                             success
                             errorMessage
                           }
@@ -225,8 +225,8 @@ namespace chldr_shared.Stores
             var request = new GraphQLRequest
             {
                 Query = @"
-                        mutation addWord($userId: String!, $EntryDto: EntryDtoInput!) {
-                          addWord(userId: $userId, EntryDto: $EntryDto) {
+                        mutation addWord($userId: String!, $entryDto: EntryDtoInput!) {
+                          addWord(userId: $userId, entryDto: $entryDto) {
                             success
                             errorMessage
                             createdAt
