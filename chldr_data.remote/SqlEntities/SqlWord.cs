@@ -14,16 +14,4 @@ public class SqlWord : IWordEntity
     public string? AdditionalDetails { get; set; }
     public virtual SqlEntry Entry { get; set; } = null!;
     public SqlWord() { }
-
-    public static SqlWord FromDto(WordDto dto)
-    {
-        return new SqlWord()
-        {
-            WordId = dto.WordId,
-            EntryId = dto.EntryId,
-            Content = dto.Content,
-            PartOfSpeech = (int)dto.PartOfSpeech,
-            //AdditionalDetails = wordDto;
-        };
-    }
 }

@@ -5,36 +5,22 @@ namespace chldr_data.DatabaseObjects.Models.Words
 {
     public class WordModel : EntryModel, IWord
     {
+        protected WordModel() { }
         public string WordId { get; set; }
-        public string Notes { get; set; }
         public PartOfSpeech PartOfSpeech { get; set; }
         public override string Content { get; set; }
         public override DateTimeOffset CreatedAt { get; set; }
         public override DateTimeOffset UpdatedAt { get; set; }
-        protected WordModel() { }
-        public static WordModel FromEntity(IEntryEntity entry, IWordEntity word, ISourceEntity source, IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translationEntityInfos)
+        public static WordModel FromEntity(IWordEntity word, IEntryEntity entry, ISourceEntity source, IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translationEntityInfos)
         {
             var wordModel = new WordModel()
             {
-                EntryId = entry.EntryId,
-                UserId = entry.UserId,
-                ParentEntryId = entry.ParentEntryId,
-                Rate = entry.Rate,
-                Type = entry.Type,
-                Source = SourceModel.FromEntity(source),
-                CreatedAt = entry.CreatedAt,
-                UpdatedAt = entry.UpdatedAt,
-
                 WordId = word.WordId,
                 Content = word.Content,
                 PartOfSpeech = (PartOfSpeech)word.PartOfSpeech
             };
 
-            foreach (var translationEntityToLanguage in translationEntityInfos)
-            {
-                wordModel.Translations.Add(TranslationModel.FromEntity(translationEntityToLanguage.Value, translationEntityToLanguage.Key));
-            }
-
+            wordModel.SetEntryFields(entry, source, translationEntityInfos);
             return wordModel;
         }
     }

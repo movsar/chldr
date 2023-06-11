@@ -236,7 +236,7 @@ namespace chldr_shared.Stores
             }
 
             // Update local entity
-            _unitOfWork.Words.Update(wordDto, _unitOfWork.Translations);
+            _unitOfWork.Words.Update(wordDto);
         }
 
         public async Task AddWord(UserModel loggedInUser, WordDto wordDto)

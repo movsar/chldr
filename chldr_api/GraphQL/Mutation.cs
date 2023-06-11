@@ -74,7 +74,7 @@ namespace chldr_api
             unitOfWork.BeginTransaction();
             try
             {
-                unitOfWork.Words.Update(wordDto, unitOfWork.Translations);
+                unitOfWork.Words.Update(wordDto);
                 unitOfWork.Commit();
 
                 return new MutationResponse() { Success = true };

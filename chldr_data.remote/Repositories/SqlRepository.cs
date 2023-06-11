@@ -26,19 +26,19 @@ namespace chldr_data.remote.Repositories
         public abstract void Insert(TDto dto);
         public abstract void Delete(string entityId);
 
-        protected void InsertChangeSet(Operation operation, string userId, string wordId, List<Change>? wordChanges = null)
+        protected void InsertChangeSet(Operation operation, string userId, string recordId, List<Change>? changes = null)
         {
             var wordChangeSet = new SqlChangeSet()
             {
                 Operation = (int)operation,
                 UserId = userId!,
-                RecordId = wordId,
+                RecordId = recordId,
                 RecordType = (int)RecordType,
             };
 
-            if (wordChanges != null)
+            if (changes != null)
             {
-                wordChangeSet.RecordChanges = JsonConvert.SerializeObject(wordChanges);
+                wordChangeSet.RecordChanges = JsonConvert.SerializeObject(changes);
             }
 
             try

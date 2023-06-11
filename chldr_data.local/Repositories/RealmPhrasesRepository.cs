@@ -17,8 +17,9 @@ namespace chldr_data.Repositories
         protected override RecordType RecordType => RecordType.Phrase;
         public static PhraseModel FromEntity(RealmPhrase phrase)
         {
-            return PhraseModel.FromEntity(phrase.Entry,
+            return PhraseModel.FromEntity(
                                     phrase.Entry.Phrase,
+                                    phrase.Entry,
                                     phrase.Entry.Source,
                                     phrase.Entry.Translations
                                         .Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)));

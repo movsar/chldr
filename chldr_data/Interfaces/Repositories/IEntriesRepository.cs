@@ -6,6 +6,5 @@ namespace chldr_data.Interfaces.Repositories
     public interface IEntriesRepository
     {
         public EntryModel GetByEntryId(string entryId);
-        void Update(EntryDto updatedEntryDto, ITranslationsRepository translationsRepository);
     }
 }

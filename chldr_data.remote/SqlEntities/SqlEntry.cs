@@ -4,6 +4,7 @@ using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
+using chldr_data.Enums.WordDetails;
 
 namespace chldr_data.remote.SqlEntities;
 [Table("Entry")]
@@ -16,7 +17,7 @@ public class SqlEntry : IEntryEntity
     public string? ParentEntryId { get; set; }
     public int Type { get; set; } = 0;
     public int Rate { get; set; } = 0;
-    
+
     public virtual ICollection<SqlSound> Sounds { get; set; } = new List<SqlSound>();
     public virtual SqlSource Source { get; set; } = null!;
     public virtual SqlUser User { get; set; } = null!;
@@ -26,7 +27,7 @@ public class SqlEntry : IEntryEntity
     public virtual SqlWord? Word { get; set; }
 
     public virtual ICollection<SqlTranslation> Translations { get; set; } = new List<SqlTranslation>();
-    
+
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
 
@@ -46,16 +47,42 @@ public class SqlEntry : IEntryEntity
         };
 
         // Word / phrase / text
-        switch (newEntryDto.EntryType) {
+        switch (newEntryDto.EntryType)
+        {
             case (int)EntryType.Word:
-                entry.Word = SqlWord.FromDto((WordDto)newEntryDto);
+                var wordDto = newEntryDto as WordDto;
+                entry.Word = new SqlWord()
+                {
+                    Entry = entry,
+                    EntryId = wordDto.EntryId,
+                    WordId = wordDto.WordId,
+                    Content = wordDto.Content,
+                    PartOfSpeech = (int)wordDto.PartOfSpeech,
+                };
                 break;
+
             case (int)EntryType.Phrase:
-                entry.Phrase = SqlPhrase.FromDto((PhraseDto)newEntryDto);
+                var phraseDto = newEntryDto as PhraseDto;
+                entry.Phrase = new SqlPhrase()
+                {
+                    Entry = entry,
+                    EntryId = phraseDto.EntryId,
+                    PhraseId = phraseDto.PhraseId,
+                    Content = phraseDto.Content,
+                };
                 break;
+
             case (int)EntryType.Text:
-                entry.Text = SqlText.FromDto((TextDto)newEntryDto);
+                var textDto = newEntryDto as TextDto;
+                entry.Text = new SqlText()
+                {
+                    Entry = entry,
+                    EntryId = textDto.EntryId,
+                    TextId = textDto.TextId,
+                    Content = textDto.Content,
+                };
                 break;
+
         }
 
         // Translations

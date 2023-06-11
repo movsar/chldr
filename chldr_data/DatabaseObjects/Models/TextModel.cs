@@ -1,4 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.DatabaseObjects.Models.Words;
+using chldr_data.Enums.WordDetails;
 
 namespace chldr_data.DatabaseObjects.Models
 {
@@ -9,30 +11,16 @@ namespace chldr_data.DatabaseObjects.Models
         public override string Content { get; set; }
         public override DateTimeOffset CreatedAt { get; set; }
         public override DateTimeOffset UpdatedAt { get; set; }
-
-        public static TextModel FromEntity(IEntryEntity entry, ITextEntity text, ISourceEntity source, IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translationEntityInfos)
+        public static TextModel FromEntity(ITextEntity text, IEntryEntity entry, ISourceEntity source, IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translationEntityInfos)
         {
-            var wordModel = new TextModel()
+            var textModel = new TextModel()
             {
-                EntryId = entry.EntryId,
-                UserId = entry.UserId,
-                ParentEntryId = entry.ParentEntryId,
-                Rate = entry.Rate,
-                Type = entry.Type,
-                Source = SourceModel.FromEntity(source),
-                CreatedAt = entry.CreatedAt,
-                UpdatedAt = entry.UpdatedAt,
-
                 TextId = text.TextId,
                 Content = text.Content,
             };
 
-            foreach (var translationEntityToLanguage in translationEntityInfos)
-            {
-                wordModel.Translations.Add(TranslationModel.FromEntity(translationEntityToLanguage.Value, translationEntityToLanguage.Key));
-            }
-
-            return wordModel;
+            textModel.SetEntryFields(entry, source, translationEntityInfos);
+            return textModel;
         }
     }
 }

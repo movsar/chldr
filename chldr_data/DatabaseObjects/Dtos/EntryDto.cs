@@ -63,7 +63,6 @@ namespace chldr_data.DatabaseObjects.Dtos
             entryDto.CreatedAt = entryModel.CreatedAt;
             entryDto.UpdatedAt = entryModel.UpdatedAt;
 
-
             // Translations
             entryDto.Translations.AddRange(entryModel.Translations.Select(t => TranslationDto.FromModel(t)));
             return entryDto;

@@ -22,8 +22,9 @@ namespace chldr_data.Repositories
 
         public static WordModel FromEntity(RealmWord word)
         {
-            return WordModel.FromEntity(word.Entry,
+            return WordModel.FromEntity(
                                     word.Entry.Word,
+                                    word.Entry,
                                     word.Entry.Source,
                                     word.Entry.Translations
                                         .Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)));
