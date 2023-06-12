@@ -14,7 +14,7 @@ namespace chldr_data.remote.SqlEntities
         public int Operation { get; set; }
         public string RecordId { get; set; } = null!;
         public int RecordType { get; set; }
-        public string RecordChanges { get; set; } = null!;
+        public string? RecordChanges { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public virtual SqlUser User { get; set; } = null!;
 

@@ -123,12 +123,12 @@ namespace chldr_data.remote.Repositories
 
             foreach (var translation in insertedTranslations)
             {
-                InsertChangeSet(Operation.Insert, _userId, translation.EntryId);
+                InsertChangeSet(Operation.Insert, _userId, translation.TranslationId);
             }
 
             foreach (var translation in deletedTranslations)
             {
-                InsertChangeSet(Operation.Delete, _userId, translation.EntryId);
+                InsertChangeSet(Operation.Delete, _userId, translation.TranslationId);
             }
 
             foreach (var translation in updatedTranslations)
@@ -136,6 +136,8 @@ namespace chldr_data.remote.Repositories
                 var changes = Change.GetChanges(translation, existingEntryDto.Translations.First(t => t.TranslationId.Equals(translation.TranslationId)));
                 InsertChangeSet(Operation.Update, _userId, translation.TranslationId, changes);
             }
+
+            _dbContext.SaveChanges();
         }
         public async Task<bool> CanCreateOrUpdateEntry(SqlEntry entry)
         {
