@@ -83,7 +83,6 @@ namespace chldr_data.local.Services
 
             var realm = GetDatabase();
             DatabaseInitialized?.Invoke();
-
             _syncService.BeginListening();
         }
 
