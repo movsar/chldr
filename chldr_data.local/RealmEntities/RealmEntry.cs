@@ -62,7 +62,7 @@ public class RealmEntry : RealmObject, IEntryEntity
             entry.CreatedAt = entryDto.CreatedAt;
             entry.UpdatedAt = entryDto.UpdatedAt;
 
-            // ! This removes all translations and adds them a new, needs improvement
+            // Translations
             entry.Translations.Clear();
             foreach (var translationDto in entryDto.Translations)
             {
