@@ -198,8 +198,8 @@ namespace chldr_shared.Stores
             var request = new GraphQLRequest
             {
                 Query = @"
-                        mutation updateWord($userId: String!, $entryDto: EntryDtoInput!) {
-                          updateWord(userId: $userId, entryDto: $entryDto) {
+                        mutation updateEntry($userId: String!, $entryDto: EntryDtoInput!) {
+                          updateEntry(userId: $userId, entryDto: $entryDto) {
                             success
                             errorMessage
                           }
@@ -209,7 +209,7 @@ namespace chldr_shared.Stores
                 Variables = new { userId = loggedInUser.UserId, EntryDto }
             };
 
-            var response = await _graphQLRequestSender.SendRequestAsync<MutationResponse>(request, "updateWord");
+            var response = await _graphQLRequestSender.SendRequestAsync<MutationResponse>(request, "updateEntry");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);
@@ -225,8 +225,8 @@ namespace chldr_shared.Stores
             var request = new GraphQLRequest
             {
                 Query = @"
-                        mutation addWord($userId: String!, $entryDto: EntryDtoInput!) {
-                          addWord(userId: $userId, entryDto: $entryDto) {
+                        mutation addEntry($userId: String!, $entryDto: EntryDtoInput!) {
+                          addEntry(userId: $userId, entryDto: $entryDto) {
                             success
                             errorMessage
                             createdAt
@@ -237,7 +237,7 @@ namespace chldr_shared.Stores
                 Variables = new { userId = loggedInUser.UserId, EntryDto }
             };
 
-            var response = await _graphQLRequestSender.SendRequestAsync<InsertResponse>(request, "addWord");
+            var response = await _graphQLRequestSender.SendRequestAsync<InsertResponse>(request, "addEntry");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);

@@ -8,6 +8,7 @@ using chldr_data.Models;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace chldr_data.remote.Repositories
 {
@@ -33,21 +34,27 @@ namespace chldr_data.remote.Repositories
                 entry.Translations.Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t))
             );
         }
+
+        private SqlEntry GetEntity(string entityId)
+        {
+            var entry = _dbContext.Entries
+                        .Include(w => w.User)
+                        .Include(w => w.Source)
+                        .Include(w => w.Translations)
+                        .ThenInclude(t => t.Language)
+                        .FirstOrDefault(w => w.EntryId.Equals(entityId));
+
+            return entry;
+        }
         public override EntryModel Get(string entityId)
         {
-            var word = _dbContext.Entries
-                          .Include(w => w.User)
-                          .Include(w => w.Source)
-                          .Include(w => w.Translations)
-                          .ThenInclude(t => t.Language)
-                          .FirstOrDefault(w => w.EntryId.Equals(entityId));
-
-            if (word == null)
+            var entry = GetEntity(entityId);
+            if (entry == null)
             {
                 throw new ArgumentException($"Entity not found: {entityId}");
             }
 
-            return FromEntity(word);
+            return FromEntity(entry);
         }
 
         public override void Delete(string entityId)
@@ -79,13 +86,24 @@ namespace chldr_data.remote.Repositories
         {
             var existingEntry = Get(updatedEntryDto.EntryId);
             var existingEntryDto = EntryDto.FromModel(existingEntry);
-
+           
             var updatedEntryEntity = SqlEntry.FromDto(updatedEntryDto, _dbContext);
+            var existingEntryEntity = GetEntity(updatedEntryDto.EntryId);
+
+            // Remove translations that are no longer associated with updatedEntryEntity
+            var removedTranslations = existingEntryEntity.Translations.Except(updatedEntryEntity.Translations);
+            foreach (var translation in removedTranslations)
+            {
+                _dbContext.Translations.Remove(translation);
+            }
+
             _dbContext.Update(updatedEntryEntity);
             _dbContext.SaveChanges();
 
             InsertEntryUpdateChangeSets(existingEntryDto, updatedEntryDto);
         }
+
+
         protected void InsertEntryUpdateChangeSets(EntryDto existingEntryDto, EntryDto updatedEntryDto)
         {
             var entryChanges = Change.GetChanges(existingEntryDto, existingEntryDto);

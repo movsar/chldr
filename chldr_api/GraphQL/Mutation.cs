@@ -46,7 +46,7 @@ namespace chldr_api
             _emailService = emailService;
 
         }
-        public async Task<InsertResponse> AddWord(string userId, EntryDto entryDto)
+        public async Task<InsertResponse> AddEntry(string userId, EntryDto entryDto)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
@@ -68,7 +68,7 @@ namespace chldr_api
             }
         }
 
-        public async Task<MutationResponse> UpdateWord(string userId, EntryDto entryDto)
+        public async Task<MutationResponse> UpdateEntry(string userId, EntryDto entryDto)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
