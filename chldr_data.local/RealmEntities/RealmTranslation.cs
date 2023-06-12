@@ -6,13 +6,24 @@ namespace chldr_data.local.RealmEntities;
 [MapTo("Translation")]
 public class RealmTranslation : RealmObject, ITranslationEntity
 {
+    [MapTo("Content")]
+    private string? _content { get; set; }
+
     [PrimaryKey]
     public string TranslationId { get; set; }
     public RealmLanguage Language { get; set; } = null!;
     public RealmEntry Entry { get; set; } = null!;
     public RealmUser User { get; set; } = null!;
-    public string Content { get; set; } = null!;
-    public string RawContents { get; set; } = null!;
+    public string Content
+    {
+        get => _content;
+        set
+        {
+            _content = value;
+            RawContents = string.IsNullOrEmpty(value) ? null : value.ToLower();
+        }
+    }
+    public string? RawContents { get; private set; }
     public string? Notes { get; set; }
     public int Rate { get; set; } = 0;
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;

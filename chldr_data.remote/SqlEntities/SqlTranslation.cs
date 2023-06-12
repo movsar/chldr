@@ -6,12 +6,22 @@ using chldr_data.remote.Services;
 namespace chldr_data.remote.SqlEntities;
 public class SqlTranslation : ITranslationEntity
 {
+    private string? content;
     public string TranslationId { get; set; }
     public string LanguageId { get; set; } = null!;
     public string EntryId { get; set; } = null!;
     public string UserId { get; set; } = null!;
-    public string Content { get; set; } = null!;
-    public string RawContents { get; set; } = null!;
+    public string? Content
+    {
+        get => content;
+        set
+        {
+            content = value;
+            RawContents = string.IsNullOrEmpty(value) ? null : value.ToLower();
+        }
+    }
+
+    public string? RawContents { get; private set; }
     public string? Notes { get; set; }
     public int Rate { get; set; } = 0;
     public virtual SqlEntry Entry { get; set; } = null!;
@@ -19,10 +29,6 @@ public class SqlTranslation : ITranslationEntity
     public virtual SqlUser User { get; set; } = null!;
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
-    internal string GetRawContents()
-    {
-        return Content.ToString();
-    }
 
     public static ITranslationEntity FromDto(TranslationDto translationDto, SqlContext context)
     {

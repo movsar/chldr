@@ -8,7 +8,8 @@ namespace chldr_data.local.RealmEntities;
 [MapTo("Entry")]
 public class RealmEntry : RealmObject, IEntryEntity
 {
-    private string? _content;
+    [MapTo("Content")]
+    private string? _content { get; set; }
 
     [PrimaryKey] public string EntryId { get; set; }
     [Ignored] public string? SourceId => Source.SourceId;
@@ -21,21 +22,11 @@ public class RealmEntry : RealmObject, IEntryEntity
     public int Rate { get; set; } = 0;
     public string Content
     {
-        get
-        {
-            return _content;
-        }
+        get => _content;
         set
         {
             _content = value;
-            if (string.IsNullOrEmpty(value))
-            {
-                RawContents = null;
-            }
-            else
-            {
-                RawContents = value?.ToLower();
-            }
+            RawContents = string.IsNullOrEmpty(value) ? null : value.ToLower();
         }
     }
     public string? RawContents { get; private set; }

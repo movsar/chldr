@@ -18,14 +18,7 @@ public class SqlEntry : IEntryEntity
         set
         {
             content = value;
-            if (string.IsNullOrEmpty(value))
-            {
-                RawContents = null;
-            }
-            else
-            {
-                RawContents = value?.ToLower();
-            }
+            RawContents = string.IsNullOrEmpty(value) ? null : value.ToLower();
         }
     }
     public string? RawContents { get; private set; }
