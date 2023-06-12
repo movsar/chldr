@@ -86,20 +86,22 @@ namespace chldr_data.remote.Repositories
         {
             var existingEntry = Get(updatedEntryDto.EntryId);
             var existingEntryDto = EntryDto.FromModel(existingEntry);
-           
-            var updatedEntryEntity = SqlEntry.FromDto(updatedEntryDto, _dbContext);
-            var existingEntryEntity = GetEntity(updatedEntryDto.EntryId);
 
-            // Remove translations that are no longer associated with updatedEntryEntity
-            var removedTranslations = existingEntryEntity.Translations.Except(updatedEntryEntity.Translations);
-            foreach (var translation in removedTranslations)
+            // Remove translations that are no longer associated with the entry
+            var existingTranslationIds = existingEntry.Translations.Select(t => t.TranslationId);
+            var removedTranslationIds = existingTranslationIds.Except(updatedEntryDto.Translations.Select(t => t.TranslationId));
+            foreach (var translationId in removedTranslationIds)
             {
+                var translation = _dbContext.Translations.Find(translationId)!;
                 _dbContext.Translations.Remove(translation);
             }
 
+            // Save the changes
+            var updatedEntryEntity = SqlEntry.FromDto(updatedEntryDto, _dbContext);
             _dbContext.Update(updatedEntryEntity);
             _dbContext.SaveChanges();
 
+            // Insert changesets
             InsertEntryUpdateChangeSets(existingEntryDto, updatedEntryDto);
         }
 
