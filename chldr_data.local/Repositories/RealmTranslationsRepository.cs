@@ -60,8 +60,8 @@ namespace chldr_data.Repositories
         // Inserts local entity
         public override void Insert(TranslationDto translationDto)
         {
-            var translation = RealmTranslation.FromDto(translationDto, _dbContext);
-            _dbContext.Add(translation);
+            //var translation = RealmTranslation.FromDto(translationDto,  _dbContext);
+            //_dbContext.Add(translation);
         }
     }
 }

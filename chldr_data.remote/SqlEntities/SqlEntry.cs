@@ -1,22 +1,34 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.CompilerServices;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.DatabaseObjects.Models;
-using chldr_data.Enums;
-using chldr_data.Enums.WordDetails;
 using chldr_data.remote.Services;
-using Realms;
 
 namespace chldr_data.remote.SqlEntities;
 [Table("Entry")]
 public class SqlEntry : IEntryEntity
 {
+    private string? content;
+
     public string EntryId { get; set; }
     public string UserId { get; set; } = null!;
     public string SourceId { get; set; } = null!;
-    public string? Content { get; set; }
-    public string? RawContents { get; set; }
+    public string? Content
+    {
+        get => content;
+        set
+        {
+            content = value;
+            if (string.IsNullOrEmpty(value))
+            {
+                RawContents = null;
+            }
+            else
+            {
+                RawContents = value?.ToLower();
+            }
+        }
+    }
+    public string? RawContents { get; private set; }
     public string? ParentEntryId { get; set; }
     public int Type { get; set; } = 0;
     public int Subtype { get; set; } = 0;
@@ -44,12 +56,11 @@ public class SqlEntry : IEntryEntity
         entry.UserId = newEntryDto.UserId;
         entry.SourceId = newEntryDto.SourceId!;
         entry.ParentEntryId = newEntryDto.ParentEntryId;
-        
+
         entry.Type = newEntryDto.EntryType;
         entry.Subtype = newEntryDto.EntrySubtype;
-        
+
         entry.Content = newEntryDto.Content;
-        entry.RawContents = newEntryDto.RawContents;
 
         entry.Details = newEntryDto.Details;
         entry.Rate = newEntryDto.Rate;

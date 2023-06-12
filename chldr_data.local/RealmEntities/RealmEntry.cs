@@ -8,6 +8,8 @@ namespace chldr_data.local.RealmEntities;
 [MapTo("Entry")]
 public class RealmEntry : RealmObject, IEntryEntity
 {
+    private string? _content;
+
     [PrimaryKey] public string EntryId { get; set; }
     [Ignored] public string? SourceId => Source.SourceId;
     [Ignored] public string? UserId => User.UserId;
@@ -17,8 +19,26 @@ public class RealmEntry : RealmObject, IEntryEntity
     public int Type { get; set; } = 0;
     public int Subtype { get; set; } = 0;
     public int Rate { get; set; } = 0;
-    public string RawContents { get; set; } = string.Empty;
-    public string Content { get; set; } = string.Empty;
+    public string Content
+    {
+        get
+        {
+            return _content;
+        }
+        set
+        {
+            _content = value;
+            if (string.IsNullOrEmpty(value))
+            {
+                RawContents = null;
+            }
+            else
+            {
+                RawContents = value?.ToLower();
+            }
+        }
+    }
+    public string? RawContents { get; private set; }
     public string? Details { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
@@ -50,7 +70,6 @@ public class RealmEntry : RealmObject, IEntryEntity
             entry.ParentEntryId = entryDto.ParentEntryId;
 
             entry.Content = entryDto.Content;
-            entry.RawContents = entryDto.RawContents;
 
             entry.Type = entryDto.EntryType;
             entry.Subtype = entryDto.EntrySubtype;
@@ -66,7 +85,10 @@ public class RealmEntry : RealmObject, IEntryEntity
             entry.Translations.Clear();
             foreach (var translationDto in entryDto.Translations)
             {
-                var translation = RealmTranslation.FromDto(translationDto, realm);
+                // If entry didn't exist, this will map its Id to translations
+                translationDto.EntryId = entry.EntryId;
+
+                var translation = RealmTranslation.FromDto(translationDto, entry, realm);
                 entry.Translations.Add(translation);
             }
         });

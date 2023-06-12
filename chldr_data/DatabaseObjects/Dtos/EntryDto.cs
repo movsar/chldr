@@ -11,7 +11,6 @@ namespace chldr_data.DatabaseObjects.Dtos
         public string? ParentEntryId { get; set; }
         public int Rate { get; set; }
         public string Content { get; set; }
-        public string RawContents { get; set; }
         public string? Details { get; set; }
         public int EntryType { get; set; } = 1;
         public int EntrySubtype { get; set; } = 0;
@@ -31,7 +30,6 @@ namespace chldr_data.DatabaseObjects.Dtos
                 EntrySubtype = entryModel.Subtype,
                 Rate = entryModel.Rate,
                 Content = entryModel.Content,
-                RawContents = entryModel.RawContents,
                 Details = entryModel.Details,
                 CreatedAt = entryModel.CreatedAt,
                 UpdatedAt = entryModel.UpdatedAt,

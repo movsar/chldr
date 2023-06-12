@@ -52,7 +52,6 @@ namespace chldr_tools
                 }
 
                 sqlEntry.Content = entry.Content;
-                sqlEntry.RawContents = entry.RawContents;
                 sqlEntry.Subtype = entry.Subtype;
                 if (count % 100 == 0 || count > entries.Count() - 50)
                 {

@@ -25,11 +25,10 @@ public class RealmTranslation : RealmObject, ITranslationEntity
     [Ignored]
     public string LanguageId => Language.LanguageId;
 
-    internal static RealmTranslation FromDto(TranslationDto translationDto, Realm realm)
+    internal static RealmTranslation FromDto(TranslationDto translationDto, RealmEntry entry, Realm realm)
     {
         var language = realm.Find<RealmLanguage>(translationDto.LanguageId);
         var user = realm.Find<RealmUser>(translationDto.UserId);
-        var entry = realm.Find<RealmEntry>(translationDto.EntryId);
 
         if (language == null || user == null || entry == null)
         {

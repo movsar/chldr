@@ -14,8 +14,11 @@ namespace chldr_data.remote.Repositories
 {
     internal class SqlEntriesRepository : SqlRepository<EntryModel, EntryDto>, IEntriesRepository
     {
-        public SqlEntriesRepository(SqlContext context, string userId) : base(context, userId)
+        private readonly ITranslationsRepository _translationsRepository;
+
+        public SqlEntriesRepository(SqlContext context, string userId, ITranslationsRepository translationsRepository) : base(context, userId)
         {
+            _translationsRepository = translationsRepository;
         }
 
         protected override RecordType RecordType => RecordType.Entry;
