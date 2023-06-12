@@ -28,7 +28,7 @@ namespace chldr_data.remote.Repositories
 
         protected void InsertChangeSet(Operation operation, string userId, string recordId, List<Change>? changes = null)
         {
-            var wordChangeSet = new SqlChangeSet()
+            var changeSet = new SqlChangeSet()
             {
                 Operation = (int)operation,
                 UserId = userId!,
@@ -36,14 +36,14 @@ namespace chldr_data.remote.Repositories
                 RecordType = (int)RecordType,
             };
 
-            if (changes != null)
+            if (changeSet.Operation == (int)Operation.Update && changes != null)
             {
-                wordChangeSet.RecordChanges = JsonConvert.SerializeObject(changes);
+                changeSet.RecordChanges = JsonConvert.SerializeObject(changes);
             }
 
             try
             {
-                _dbContext.ChangeSets.Add(wordChangeSet);
+                _dbContext.ChangeSets.Add(changeSet);
                 _dbContext.SaveChanges();
             }
             catch (Exception ex)
