@@ -35,20 +35,28 @@ public class RealmTranslation : RealmObject, ITranslationEntity
         {
             throw new NullReferenceException();
         }
+        
+        // Translation
+        var translation = realm.Find<RealmTranslation>(translationDto.EntryId);
+        translation = realm.All<RealmTranslation>().SingleOrDefault(t => t.TranslationId.Equals(translationDto.TranslationId));
 
-        return new RealmTranslation()
+        if (translation == null)
         {
-            TranslationId = translationDto.TranslationId,
-            Language = language,
-            Entry = entry,
-            User = user,
-            Content = translationDto.Content,
-            RawContents = translationDto.Content.ToLower(),
-            Notes = translationDto.Notes,
-            Rate = translationDto.Rate,
-            CreatedAt = translationDto.CreatedAt,
-            UpdatedAt = translationDto.UpdatedAt,
-        };
+            translation = new RealmTranslation();
+        }
+
+        translation.TranslationId = translationDto.TranslationId;
+        translation.Language = language;
+        translation.Entry = entry;
+        translation.User = user;
+        translation.Content = translationDto.Content;
+        translation.RawContents = translationDto.Content.ToLower();
+        translation.Notes = translationDto.Notes;
+        translation.Rate = translationDto.Rate;
+        translation.CreatedAt = translationDto.CreatedAt;
+        translation.UpdatedAt = translationDto.UpdatedAt;
+
+        return translation;
     }
 
     internal string GetRawContents()

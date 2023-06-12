@@ -64,41 +64,11 @@ namespace chldr_data.Repositories
         {
             throw new NotImplementedException();
         }
-        private void ApplyEntryTranslationChanges(EntryDto existingEntryDto, EntryDto updatedEntryDto, ITranslationsRepository translationsRepository)
-        {
-            var existingTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
-            var updatedTranslationIds = updatedEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
-
-            var insertedTranslations = updatedEntryDto.Translations.Where(t => !existingTranslationIds.Contains(t.TranslationId));
-            var deletedTranslations = existingEntryDto.Translations.Where(t => !updatedTranslationIds.Contains(t.TranslationId));
-            var updatedTranslations = updatedEntryDto.Translations.Where(t => existingTranslationIds.Contains(t.TranslationId) && updatedTranslationIds.Contains(t.TranslationId));
-
-            foreach (var translationDto in insertedTranslations)
-            {
-                translationsRepository.Insert(translationDto);
-            }
-
-            foreach (var translationDto in deletedTranslations)
-            {
-                translationsRepository.Delete(translationDto.TranslationId);
-            }
-
-            foreach (var translationDto in updatedTranslations)
-            {
-                translationsRepository.Update(translationDto);
-            }
-        }
 
         public override void Update(EntryDto updatedEntryDto)
         {
-            var existingEntryDto = EntryDto.FromModel(Get(updatedEntryDto.EntryId));
+            var updatedRealmEntry = RealmEntry.FromDto(updatedEntryDto, _dbContext);
 
-            // Apply changes to the entry entity
-            var entryChanges = Change.GetChanges<EntryDto>(updatedEntryDto, existingEntryDto);
-            if (entryChanges.Count != 0)
-            {
-                ApplyChanges<RealmEntry>(updatedEntryDto.EntryId, entryChanges);
-            }
         }
     }
 }
