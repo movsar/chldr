@@ -16,7 +16,7 @@ namespace chldr_data.Repositories
         protected override RecordType RecordType => RecordType.Source;
         public RealmSourcesRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
 
-        public override void Insert(SourceDto dto)
+        public override void Add(SourceDto dto)
         {
             throw new NotImplementedException();
         }
@@ -41,9 +41,5 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
-        public override void Delete(string entityId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

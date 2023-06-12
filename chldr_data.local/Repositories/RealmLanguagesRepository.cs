@@ -16,7 +16,7 @@ namespace chldr_data.Repositories
 
         protected override RecordType RecordType => RecordType.Language;
 
-        public override void Insert(LanguageDto dto)
+        public override void Add(LanguageDto dto)
         {
             throw new NotImplementedException();
         }
@@ -36,9 +36,5 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
-        public override void Delete(string entityId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

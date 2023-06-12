@@ -16,12 +16,7 @@ namespace chldr_data.Repositories
 
         protected override RecordType RecordType => RecordType.User;
 
-        public override void Insert(UserDto dto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Delete(string entityId)
+        public override void Add(UserDto dto)
         {
             throw new NotImplementedException();
         }

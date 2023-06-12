@@ -55,7 +55,7 @@ namespace chldr_data.Repositories
             throw new Exception("This method should never be called for ChangeSets, they're immutable");
         }
 
-        public override void Insert(ChangeSetDto dto)
+        public override void Add(ChangeSetDto dto)
         {
             var changeSet = (RealmChangeSet)RealmChangeSet.FromDto(dto);
             _dbContext.Add(changeSet);
@@ -63,9 +63,5 @@ namespace chldr_data.Repositories
             //return EmptyResult;
         }
 
-        public override void Delete(string entityId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -97,12 +97,7 @@ namespace chldr_shared.Stores
         {
             Task.Run(() => _searchService.FindAsync(inputText, filterationFlags));
         }
-        public void DeleteEntry(string entryId)
-        {
-            //EntriesRepository.Delete(entryId);
-            //CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
-            //CachedResultsChanged?.Invoke();
-        }
+       
         public void LoadRandomEntries()
         {
             CachedSearchResult.Entries.Clear();
@@ -191,6 +186,36 @@ namespace chldr_shared.Stores
 
             return phrase;
         }
+    
+        public async Task DeleteEntry(UserModel loggedInUser, string entryId)
+        {
+            // Remove remote entity
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                        mutation removeEntry($userId: String!, $entryId: String!) {
+                          removeEntry(userId: $userId, entryId: $entryId) {
+                            success
+                            errorMessage
+                          }
+                        }
+                        ",
+                // ! The names here must exactly match the names defined in the graphql schema
+                Variables = new { userId = loggedInUser.UserId, entryId }
+            };
+
+            var response = await _graphQLRequestSender.SendRequestAsync<MutationResponse>(request, "removeEntry");
+            if (!response.Data.Success)
+            {
+                throw new Exception(response.Data.ErrorMessage);
+            }
+
+            // Remove local entity
+            _unitOfWork.Entries.Remove(entryId);
+
+            //CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
+            //CachedResultsChanged?.Invoke();
+        }
 
         public async Task UpdateEntry(UserModel loggedInUser, EntryDto EntryDto)
         {
@@ -245,7 +270,7 @@ namespace chldr_shared.Stores
 
             // Update local entity
             EntryDto.CreatedAt = response.Data.CreatedAt;
-            _unitOfWork.Entries.Insert(EntryDto);
+            _unitOfWork.Entries.Add(EntryDto);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.remote.Services;
+using Realms;
 
 namespace chldr_data.remote.SqlEntities;
 public class SqlTranslation : ITranslationEntity
@@ -30,17 +31,25 @@ public class SqlTranslation : ITranslationEntity
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 
-    public static ITranslationEntity FromDto(TranslationDto translationDto, SqlContext context)
+    public static SqlTranslation FromDto(TranslationDto translationDto, SqlContext context)
     {
+        var language = context.Find<SqlLanguage>(translationDto.LanguageId);
+        var user = context.Find<SqlUser>(translationDto.UserId);
+
+        if (language == null || user == null || string.IsNullOrEmpty(translationDto.EntryId))
+        {
+            throw new NullReferenceException();
+        }
+
         var translationEntity = context.Find<SqlTranslation>(translationDto.TranslationId);
         if (translationEntity == null)
         {
             translationEntity = new SqlTranslation();
         }
 
-        translationEntity.TranslationId = translationDto.TranslationId;
-        translationEntity.LanguageId = translationDto.LanguageId;
         translationEntity.EntryId = translationDto.EntryId;
+        translationEntity.TranslationId = translationDto.TranslationId;
+        translationEntity.LanguageId = translationDto.LanguageId!;
         translationEntity.UserId = translationDto.UserId;
         translationEntity.Content = translationDto.Content;
         translationEntity.RawContents = translationDto.Content.ToLower();

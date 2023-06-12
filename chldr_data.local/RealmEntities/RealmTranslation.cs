@@ -36,20 +36,18 @@ public class RealmTranslation : RealmObject, ITranslationEntity
     [Ignored]
     public string LanguageId => Language.LanguageId;
 
-    internal static RealmTranslation FromDto(TranslationDto translationDto, RealmEntry entry, Realm realm)
+    internal static RealmTranslation FromDto(TranslationDto translationDto, RealmEntry entry, Realm context)
     {
-        var language = realm.Find<RealmLanguage>(translationDto.LanguageId);
-        var user = realm.Find<RealmUser>(translationDto.UserId);
+        var language = context.Find<RealmLanguage>(translationDto.LanguageId);
+        var user = context.Find<RealmUser>(translationDto.UserId);
 
-        if (language == null || user == null || entry == null)
+        if (language == null || user == null || string.IsNullOrEmpty(translationDto.EntryId))
         {
             throw new NullReferenceException();
         }
-        
-        // Translation
-        var translation = realm.Find<RealmTranslation>(translationDto.EntryId);
-        translation = realm.All<RealmTranslation>().SingleOrDefault(t => t.TranslationId.Equals(translationDto.TranslationId));
 
+        // Translation
+        var translation = context.Find<RealmTranslation>(translationDto.TranslationId);
         if (translation == null)
         {
             translation = new RealmTranslation();

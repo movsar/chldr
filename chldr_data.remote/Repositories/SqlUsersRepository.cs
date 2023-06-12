@@ -8,11 +8,16 @@ using chldr_data.Interfaces.Repositories;
 
 namespace chldr_data.remote.Repositories
 {
-    internal class SqlUsersRepository : SqlRepository<UserModel, UserDto>, IUsersRepository
+    internal class SqlUsersRepository : SqlRepository<SqlUser, UserModel, UserDto>, IUsersRepository
     {
         public SqlUsersRepository(SqlContext context, string _userId) : base(context, _userId) { }
 
         protected override RecordType RecordType => RecordType.User;
+
+        public override void Add(UserDto dto)
+        {
+            throw new NotImplementedException();
+        }
 
         public override UserModel Get(string entityId)
         {
@@ -24,16 +29,6 @@ namespace chldr_data.remote.Repositories
         }
 
         public override void Update(UserDto dto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Insert(UserDto dto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Delete(string entityId)
         {
             throw new NotImplementedException();
         }

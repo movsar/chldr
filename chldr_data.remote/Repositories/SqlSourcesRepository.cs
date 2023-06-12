@@ -8,7 +8,7 @@ using chldr_tools;
 
 namespace chldr_data.remote.Repositories
 {
-    internal class SqlSourcesRepository : SqlRepository<SourceModel, SourceDto>, ISourcesRepository
+    internal class SqlSourcesRepository : SqlRepository<SqlSource, SourceModel, SourceDto>, ISourcesRepository
     {
         protected override RecordType RecordType => RecordType.Source;
         public SqlSourcesRepository(SqlContext context, string _userId) : base(context, _userId) { }
@@ -28,12 +28,7 @@ namespace chldr_data.remote.Repositories
             throw new NotImplementedException();
         }
 
-        public override void Insert(SourceDto dto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Delete(string entityId)
+        public override void Add(SourceDto dto)
         {
             throw new NotImplementedException();
         }

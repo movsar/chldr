@@ -17,6 +17,11 @@ namespace chldr_ui.ViewModels
         public void ListenToPronunciation() { }
         public void NewTranslation() { }
         public void AddToFavorites() { }
+        public async Task Remove()
+        {
+            var user = UserModel.FromDto(UserStore.ActiveSession.User);
+            await ContentStore.DeleteEntry(user, Entry!.EntryId);
+        }
         public void Share() { }
         public void Flag() { }
         #endregion

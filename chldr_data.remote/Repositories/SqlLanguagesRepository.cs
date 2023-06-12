@@ -10,16 +10,11 @@ using chldr_data.Interfaces.Repositories;
 
 namespace chldr_data.remote.Repositories
 {
-    internal class SqlLanguagesRepository : SqlRepository<LanguageModel, LanguageDto>, ILanguagesRepository
+    internal class SqlLanguagesRepository : SqlRepository<SqlLanguage, LanguageModel, LanguageDto>, ILanguagesRepository
     {
         public SqlLanguagesRepository(SqlContext context, string _userId) : base(context, _userId) { }
 
         protected override RecordType RecordType => RecordType.Language;
-
-        public override void Delete(string entityId)
-        {
-            throw new NotImplementedException();
-        }
 
         public override LanguageModel Get(string entityId)
         {
@@ -32,7 +27,7 @@ namespace chldr_data.remote.Repositories
             throw new NotImplementedException();
         }
 
-        public override void Insert(LanguageDto dto)
+        public override void Add(LanguageDto dto)
         {
             throw new NotImplementedException();
         }

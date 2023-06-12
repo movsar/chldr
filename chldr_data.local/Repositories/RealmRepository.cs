@@ -5,6 +5,7 @@ using chldr_data.Models;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Interfaces.Repositories;
 using Realms;
+using chldr_data.DatabaseObjects.Dtos;
 
 namespace chldr_data.Repositories
 {
@@ -26,8 +27,16 @@ namespace chldr_data.Repositories
             _graphQLRequestSender = graphQLRequestSender;
         }
         public abstract TModel Get(string entityId);
-        public abstract void Insert(TDto dto);
-        public abstract void Delete(string entityId);
+        public abstract void Add(TDto dto);
+        public void Remove(string entityId)
+        {
+            var entity = _dbContext.Find<TEntity>(entityId);
+            if (entity == null)
+            {
+                throw new ArgumentException("Entity doesn't exist");
+            }
+            _dbContext.Remove(entity);
+        }
         public abstract void Update(TDto EntryDto);
         public IEnumerable<TModel> Take(int limit)
         {
@@ -62,6 +71,29 @@ namespace chldr_data.Repositories
                     SetPropertyValue(sqlEntity, change.Property, change.NewValue);
                 }
             });
+        }
+
+        public void AddRange(IEnumerable<TDto> added)
+        {
+            foreach (var dto in added)
+            {
+                Add(dto);
+            }
+        }
+
+        public void UpdateRange(IEnumerable<TDto> updated)
+        {
+            foreach (var dto in updated)
+            {
+                Update(dto);
+            }
+        }
+        public void RemoveRange(IEnumerable<string> removed)
+        {
+            foreach (var id in removed)
+            {
+                Remove(id);
+            }
         }
     }
 }

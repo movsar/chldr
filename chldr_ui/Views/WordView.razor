@@ -36,6 +36,7 @@
                 <i class="bi bi-share" @onclick="Share"></i>
                 <i class="bi bi-flag" @onclick="Flag"></i>
                 <i class="bi bi-star" @onclick="AddToFavorites"></i>
+                <i class="bi bi-trash" @onclick="Remove"></i>
 
                 @if (UserStore?.ActiveSession.Status == SessionStatus.LoggedIn)
                 {

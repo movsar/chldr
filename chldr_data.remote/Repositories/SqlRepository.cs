@@ -1,4 +1,5 @@
-﻿using chldr_data.DatabaseObjects.Models;
+﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.Models;
@@ -8,9 +9,10 @@ using Newtonsoft.Json;
 
 namespace chldr_data.remote.Repositories
 {
-    internal abstract class SqlRepository<TModel, TDto> : IRepository<TModel, TDto>
+    internal abstract class SqlRepository<TEntity, TModel, TDto> : IRepository<TModel, TDto>
         where TDto : class, new()
         where TModel : class
+        where TEntity : class
     {
         protected abstract RecordType RecordType { get; }
         protected readonly SqlContext _dbContext;
@@ -23,9 +25,19 @@ namespace chldr_data.remote.Repositories
         }
         public abstract TModel Get(string entityId);
         public abstract void Update(TDto dto);
-        public abstract void Insert(TDto dto);
-        public abstract void Delete(string entityId);
+        public abstract void Add(TDto dto);
+        public void Remove(string entityId)
+        {
+            var entity = _dbContext.Set<TEntity>().Find(entityId);
+            if (entity == null)
+            {
+                throw new ArgumentException("Entity doesn't exist");
+            }
+            _dbContext.Set<TEntity>().Remove(entity);
 
+            InsertChangeSet(Operation.Delete, _userId, entityId);
+        }
+        
         protected void InsertChangeSet(Operation operation, string userId, string recordId, List<Change>? changes = null)
         {
             var changeSet = new SqlChangeSet()
@@ -85,6 +97,29 @@ namespace chldr_data.remote.Repositories
             //var entities = _dbContext.Set<TEntity>().Take(limit);
             //return entities.Select(e => TModel.FromEntity(e));
             return new List<TModel>();
+        }
+
+        public void AddRange(IEnumerable<TDto> added)
+        {
+            foreach (var dto in added)
+            {
+                Add(dto);
+            }
+        }
+
+        public void UpdateRange(IEnumerable<TDto> updated)
+        {
+            foreach (var dto in updated)
+            {
+                Update(dto);
+            }
+        }
+        public void RemoveRange(IEnumerable<string> removed)
+        {
+            foreach (var id in removed)
+            {
+                Remove(id);
+            }
         }
     }
 }

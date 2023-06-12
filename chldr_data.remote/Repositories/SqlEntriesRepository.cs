@@ -1,24 +1,22 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
-using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.Models;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace chldr_data.remote.Repositories
 {
-    internal class SqlEntriesRepository : SqlRepository<EntryModel, EntryDto>, IEntriesRepository
+    internal class SqlEntriesRepository : SqlRepository<SqlEntry, EntryModel, EntryDto>, IEntriesRepository
     {
-        private readonly ITranslationsRepository _translationsRepository;
+        private readonly ITranslationsRepository _translations;
 
         public SqlEntriesRepository(SqlContext context, string userId, ITranslationsRepository translationsRepository) : base(context, userId)
         {
-            _translationsRepository = translationsRepository;
+            _translations = translationsRepository;
         }
 
         protected override RecordType RecordType => RecordType.Entry;
@@ -60,12 +58,7 @@ namespace chldr_data.remote.Repositories
             return FromEntity(entry);
         }
 
-        public override void Delete(string entityId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Insert(EntryDto newEntryDto)
+        public override void Add(EntryDto newEntryDto)
         {
             if (!newEntryDto.Translations.Any())
             {
@@ -90,56 +83,28 @@ namespace chldr_data.remote.Repositories
             var existingEntry = Get(updatedEntryDto.EntryId);
             var existingEntryDto = EntryDto.FromModel(existingEntry);
 
-            // Remove translations that are no longer associated with the entry
-            var existingTranslationIds = existingEntry.Translations.Select(t => t.TranslationId);
-            var removedTranslationIds = existingTranslationIds.Except(updatedEntryDto.Translations.Select(t => t.TranslationId));
-            foreach (var translationId in removedTranslationIds)
-            {
-                var translation = _dbContext.Translations.Find(translationId)!;
-                _dbContext.Translations.Remove(translation);
-            }
+            // Handle associated translation changes
+            var existingTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
+            var updatedTranslationIds = updatedEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
 
-            // Save the changes
-            var updatedEntryEntity = SqlEntry.FromDto(updatedEntryDto, _dbContext);
-            _dbContext.Update(updatedEntryEntity);
-            _dbContext.SaveChanges();
+            var addedTranslations = updatedEntryDto.Translations.Where(t => !existingTranslationIds.Contains(t.TranslationId));
+            var deletedTranslations = existingEntryDto.Translations.Where(t => !updatedTranslationIds.Contains(t.TranslationId));
+            var updatedTranslations = updatedEntryDto.Translations.Where(t => existingTranslationIds.Contains(t.TranslationId) && updatedTranslationIds.Contains(t.TranslationId));
 
-            // Insert changesets
-            InsertEntryUpdateChangeSets(existingEntryDto, updatedEntryDto);
-        }
+            _translations.AddRange(addedTranslations);
+            _translations.RemoveRange(deletedTranslations.Select(t => t.TranslationId));
+            _translations.UpdateRange(updatedTranslations);
 
-
-        protected void InsertEntryUpdateChangeSets(EntryDto existingEntryDto, EntryDto updatedEntryDto)
-        {
+            // Add changeset if applicable
             var entryChanges = Change.GetChanges(existingEntryDto, existingEntryDto);
             if (entryChanges.Count != 0)
             {
                 InsertChangeSet(Operation.Update, _userId, existingEntryDto.EntryId, entryChanges);
             }
 
-            var existingTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
-            var updatedTranslationIds = updatedEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
-
-            var insertedTranslations = updatedEntryDto.Translations.Where(t => !existingTranslationIds.Contains(t.TranslationId));
-            var deletedTranslations = existingEntryDto.Translations.Where(t => !updatedTranslationIds.Contains(t.TranslationId));
-            var updatedTranslations = updatedEntryDto.Translations.Where(t => existingTranslationIds.Contains(t.TranslationId) && updatedTranslationIds.Contains(t.TranslationId));
-
-            foreach (var translation in insertedTranslations)
-            {
-                InsertChangeSet(Operation.Insert, _userId, translation.TranslationId);
-            }
-
-            foreach (var translation in deletedTranslations)
-            {
-                InsertChangeSet(Operation.Delete, _userId, translation.TranslationId);
-            }
-
-            foreach (var translation in updatedTranslations)
-            {
-                var changes = Change.GetChanges(translation, existingEntryDto.Translations.First(t => t.TranslationId.Equals(translation.TranslationId)));
-                InsertChangeSet(Operation.Update, _userId, translation.TranslationId, changes);
-            }
-
+            // Save the changes
+            var updatedEntryEntity = SqlEntry.FromDto(updatedEntryDto, _dbContext);
+            _dbContext.Update(updatedEntryEntity);
             _dbContext.SaveChanges();
         }
         public async Task<bool> CanCreateOrUpdateEntry(SqlEntry entry)

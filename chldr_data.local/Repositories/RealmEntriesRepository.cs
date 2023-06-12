@@ -55,20 +55,19 @@ namespace chldr_data.Repositories
             return FromEntity(entry);
         }
 
-        public override void Insert(EntryDto dto)
+        public override void Add(EntryDto newEntryDto)
         {
-            throw new NotImplementedException();
-        }
+            if (!newEntryDto.Translations.Any())
+            {
+                throw new Exception("Empty translations");
+            }
 
-        public override void Delete(string entityId)
-        {
-            throw new NotImplementedException();
+            var insertedEntry = RealmEntry.FromDto(newEntryDto, _dbContext);
         }
 
         public override void Update(EntryDto updatedEntryDto)
         {
-            var updatedRealmEntry = RealmEntry.FromDto(updatedEntryDto, _dbContext);
-
+            var updatedEntry = RealmEntry.FromDto(updatedEntryDto, _dbContext);
         }
     }
 }

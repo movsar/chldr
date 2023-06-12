@@ -2,6 +2,7 @@
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.remote.Services;
+using Realms;
 
 namespace chldr_data.remote.SqlEntities;
 [Table("Entry")]
@@ -36,36 +37,39 @@ public class SqlEntry : IEntryEntity
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
 
-    internal static SqlEntry FromDto(EntryDto newEntryDto, SqlContext context)
+    internal static SqlEntry FromDto(EntryDto entryDto, SqlContext context)
     {
         // Entry
-        SqlEntry? entry = context.Find<SqlEntry>(newEntryDto.EntryId);
+        SqlEntry? entry = context.Find<SqlEntry>(entryDto.EntryId);
         if (entry == null)
         {
             entry = new SqlEntry();
         }
 
-        entry.EntryId = newEntryDto.EntryId;
-        entry.UserId = newEntryDto.UserId;
-        entry.SourceId = newEntryDto.SourceId!;
-        entry.ParentEntryId = newEntryDto.ParentEntryId;
+        entry.EntryId = entryDto.EntryId;
+        entry.UserId = entryDto.UserId;
+        entry.SourceId = entryDto.SourceId!;
+        entry.ParentEntryId = entryDto.ParentEntryId;
 
-        entry.Type = newEntryDto.EntryType;
-        entry.Subtype = newEntryDto.EntrySubtype;
+        entry.Type = entryDto.EntryType;
+        entry.Subtype = entryDto.EntrySubtype;
 
-        entry.Content = newEntryDto.Content;
+        entry.Content = entryDto.Content;
 
-        entry.Details = newEntryDto.Details;
-        entry.Rate = newEntryDto.Rate;
+        entry.Details = entryDto.Details;
+        entry.Rate = entryDto.Rate;
 
-        entry.CreatedAt = newEntryDto.CreatedAt;
-        entry.UpdatedAt = newEntryDto.UpdatedAt;
+        entry.CreatedAt = entryDto.CreatedAt;
+        entry.UpdatedAt = entryDto.UpdatedAt;
 
         // Translations
         entry.Translations.Clear();
-        foreach (var translationDto in newEntryDto.Translations)
+        foreach (var translationDto in entryDto.Translations)
         {
-            var translation = (SqlTranslation)SqlTranslation.FromDto(translationDto, context);
+            // If entry didn't exist, this will map its Id to translations
+            translationDto.EntryId = entry.EntryId;
+
+            var translation = SqlTranslation.FromDto(translationDto, context);
             entry.Translations.Add(translation);
         }
 

@@ -59,11 +59,7 @@ namespace chldr_ui.ViewModels
         }
         public async Task DeleteTranslation(string translationId)
         {
-            if (!_newTranslationIds.Contains(translationId))
-            {
-                // TODO: Remove from the database
-            }
-            else
+            if (_newTranslationIds.Contains(translationId))
             {
                 _newTranslationIds.Remove(translationId);
             }

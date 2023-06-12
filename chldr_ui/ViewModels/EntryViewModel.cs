@@ -14,7 +14,8 @@ namespace chldr_ui.ViewModels
         public string? Subheader => CreateSubheader();
         public void DeleteEntry()
         {
-            ContentStore.DeleteEntry(Entry!.EntryId);
+            var user = UserModel.FromDto(UserStore.ActiveSession.User!);
+            ContentStore.DeleteEntry(user!, Entry!.EntryId);
         }
         protected override void OnParametersSet()
         {
@@ -27,7 +28,7 @@ namespace chldr_ui.ViewModels
                 Source = ParseSource(Entry.Source.Name);
             }
         }
-        
+
         private string CreateSubheader()
         {
             return $"";

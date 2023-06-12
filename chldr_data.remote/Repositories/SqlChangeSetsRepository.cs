@@ -8,7 +8,7 @@ using chldr_tools;
 
 namespace chldr_data.remote.Repositories
 {
-    internal class SqlChangeSetsRepository : SqlRepository<ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
+    internal class SqlChangeSetsRepository : SqlRepository<SqlChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {
         protected override RecordType RecordType => throw new Exception("Shouldn't be used");
 
@@ -50,15 +50,11 @@ namespace chldr_data.remote.Repositories
             throw new Exception("This method should never be called for ChangeSets, they're immutable");
         }
 
-        public override void Insert( ChangeSetDto dto)
+        public override void Add( ChangeSetDto dto)
         {
             var changeSet = SqlChangeSet.FromDto(dto);
             _dbContext.Add(changeSet);
         }
 
-        public override void Delete(string entityId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

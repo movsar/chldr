@@ -52,7 +52,7 @@ namespace chldr_api
             unitOfWork.BeginTransaction();
             try
             {
-                unitOfWork.Entries.Insert(entryDto);
+                unitOfWork.Entries.Add(entryDto);
                 unitOfWork.Commit();
 
                 return new InsertResponse() { Success = true, CreatedAt = entryDto.CreatedAt  };

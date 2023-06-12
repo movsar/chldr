@@ -19,7 +19,7 @@ namespace chldr_data.Repositories
     {
         public RealmTranslationsRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
 
-        protected override RecordType RecordType => RecordType.Translation;      
+        protected override RecordType RecordType => RecordType.Translation;
 
         public override TranslationModel Get(string entityId)
         {
@@ -33,7 +33,7 @@ namespace chldr_data.Repositories
 
             return TranslationModel.FromEntity(translation, translation.Language);
         }
-     
+
 
         // Updates local entity
         public override void Update(TranslationDto translationDto)
@@ -41,6 +41,7 @@ namespace chldr_data.Repositories
             // Find out what has been changed
             var existing = Get(translationDto.TranslationId);
             var existingDto = TranslationDto.FromModel(existing);
+
             var changes = Change.GetChanges(translationDto, existingDto);
             if (changes.Count == 0)
             {
@@ -50,15 +51,8 @@ namespace chldr_data.Repositories
             ApplyChanges<RealmTranslation>(translationDto.TranslationId, changes);
         }
 
-        // Deletes local entity
-        public override void Delete(string translationId)
-        {
-            var translation = _dbContext.Find<RealmTranslation>(translationId);
-            _dbContext.Remove(translation);
-        }
-
         // Inserts local entity
-        public override void Insert(TranslationDto translationDto)
+        public override void Add(TranslationDto translationDto)
         {
             //var translation = RealmTranslation.FromDto(translationDto,  _dbContext);
             //_dbContext.Add(translation);
