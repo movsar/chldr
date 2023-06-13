@@ -1,8 +1,9 @@
 ﻿namespace chldr_data.Enums.WordDetails
 {
-    public enum PartOfSpeech
+    public enum WordType
     {
         Undefined = 0,
+
         Verb = 1,
         Noun = 2,
         Adverb = 3,

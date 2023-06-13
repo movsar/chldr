@@ -7,7 +7,6 @@
         string SourceId { get; }
         string? ParentEntryId { get; }
         string Content { get; }
-        string? Details { get; }
         int Rate { get; }
         DateTimeOffset CreatedAt { get; }
         DateTimeOffset UpdatedAt { get; }

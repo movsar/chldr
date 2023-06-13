@@ -4,19 +4,19 @@ using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_data.DatabaseObjects.Models.Words
 {
-    public class WordDetails : IWordDetails
+    public class WordDetails : IDetails
     {
         public WordDetails()
         {
             // Empty constructor
         }
-        public WordDetails(IEntry word, PartOfSpeech partOfSpeech)
+        public WordDetails(IEntry word, WordType partOfSpeech)
         {
             switch (partOfSpeech)
             {
-                case PartOfSpeech.Undefined:
+                case WordType.Undefined:
                     break;
-                case PartOfSpeech.Verb:
+                case WordType.Verb:
                     var verb = word as Verb;
                     if (verb == null)
                     {
@@ -29,25 +29,25 @@ namespace chldr_data.DatabaseObjects.Models.Words
                     Transitiveness = verb.Transitiveness;
                     Classes[0] = verb.Class;
                     break;
-                case PartOfSpeech.Noun:
+                case WordType.Noun:
                     break;
-                case PartOfSpeech.Adverb:
+                case WordType.Adverb:
                     break;
-                case PartOfSpeech.Adjective:
+                case WordType.Adjective:
                     break;
-                case PartOfSpeech.Numeral:
+                case WordType.Numeral:
                     break;
-                case PartOfSpeech.Pronoun:
+                case WordType.Pronoun:
                     break;
-                case PartOfSpeech.Conjunction:
+                case WordType.Conjunction:
                     break;
-                case PartOfSpeech.Particle:
+                case WordType.Particle:
                     break;
-                case PartOfSpeech.Interjection:
+                case WordType.Interjection:
                     break;
-                case PartOfSpeech.Masdar:
+                case WordType.Masdar:
                     break;
-                case PartOfSpeech.Gerund:
+                case WordType.Gerund:
                     break;
                 default:
                     break;

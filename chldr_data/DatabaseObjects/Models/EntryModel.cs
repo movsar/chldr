@@ -1,4 +1,8 @@
 ﻿using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.DatabaseObjects.Models.Words;
+using chldr_data.Enums;
+using chldr_data.Interfaces;
+using Newtonsoft.Json;
 
 namespace chldr_data.DatabaseObjects.Models
 {
@@ -8,11 +12,11 @@ namespace chldr_data.DatabaseObjects.Models
         public string UserId { get; set; }
         public string? ParentEntryId { get; set; }
         public int Rate { get; set; }
-        public int Type { get; set; }
+        public EntryType Type { get; set; }
         public int Subtype { get; set; }
         public string Content { get; set; }
         public string RawContents { get; set; }
-        public string Details { get; set; }
+        public IDetails? Details { get; set; }
         public SourceModel Source { get; set; }
         public string? SourceId => Source.SourceId;
         public List<TranslationModel> Translations { get; set; } = new List<TranslationModel>();
@@ -27,15 +31,24 @@ namespace chldr_data.DatabaseObjects.Models
                 UserId = entry.UserId,
                 ParentEntryId = entry.ParentEntryId,
                 Rate = entry.Rate,
-                Type = entry.Type,
+                Type = (EntryType)entry.Type,
                 Subtype = entry.Subtype,
                 Source = SourceModel.FromEntity(source),
                 Content = entry.Content,
                 RawContents = entry.RawContents,
-                Details = entry.Details,
                 CreatedAt = entry.CreatedAt,
                 UpdatedAt = entry.UpdatedAt
             };
+
+            if (!string.IsNullOrEmpty(entry.Details))
+            {
+                switch (entryModel.Type)
+                {
+                    case EntryType.Word:
+                        entryModel.Details = JsonConvert.DeserializeObject<WordDetails>(entry.Details)!;
+                        break;
+                }
+            }
 
             foreach (var translation in translations)
             {

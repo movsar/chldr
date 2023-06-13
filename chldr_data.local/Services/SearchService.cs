@@ -194,7 +194,7 @@ namespace chldr_data.local.Services
 
         public List<EntryModel> GetWordsToFiddleWith()
         {
-            var words = Database.All<RealmEntry>().Where(w => w.Subtype == (int)PartOfSpeech.Verb);
+            var words = Database.All<RealmEntry>().Where(w => w.Subtype == (int)WordType.Verb);
 
             var entries = words.AsEnumerable();
 

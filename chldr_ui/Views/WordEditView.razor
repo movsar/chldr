@@ -9,7 +9,7 @@
         <div class="col-8">
             <div class="form-group">
                 <select @bind="@Word.EntrySubtype" class="form-select">
-                    @foreach (PartOfSpeech partOfSpeech in (PartOfSpeech[])Enum.GetValues(typeof(PartOfSpeech)))
+                    @foreach (WordType partOfSpeech in (WordType[])Enum.GetValues(typeof(WordType)))
                     {
                         <option value="@partOfSpeech">@Localizer[partOfSpeech.ToString()]</option>
                     }

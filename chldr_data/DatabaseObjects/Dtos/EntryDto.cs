@@ -1,5 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
+using Newtonsoft.Json;
 
 namespace chldr_data.DatabaseObjects.Dtos
 {
@@ -26,11 +27,11 @@ namespace chldr_data.DatabaseObjects.Dtos
                 UserId = entryModel.UserId,
                 SourceId = entryModel.SourceId!,
                 ParentEntryId = entryModel.ParentEntryId,
-                EntryType = entryModel.Type,
+                EntryType = (int)entryModel.Type,
                 EntrySubtype = entryModel.Subtype,
                 Rate = entryModel.Rate,
                 Content = entryModel.Content,
-                Details = entryModel.Details,
+                Details = (entryModel.Details == null) ? null : JsonConvert.SerializeObject(entryModel.Details),
                 CreatedAt = entryModel.CreatedAt,
                 UpdatedAt = entryModel.UpdatedAt,
             };

@@ -4,6 +4,7 @@
     {
         int Type { get; }
         int Subtype { get; }
+        string? Details { get; }
         string? RawContents { get; }
 
         //RealmPhrase? Phrase { get; set; }
