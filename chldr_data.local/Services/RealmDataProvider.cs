@@ -85,7 +85,15 @@ namespace chldr_data.local.Services
             DatabaseInitialized?.Invoke();
             _syncService.BeginListening();
 
-            //realm.WriteCopy(new RealmConfiguration("m.realm"));
+
+            var trans = realm.Find<RealmTranslation>("63a816205d1af0e432fba6ea");
+            realm.Write(() =>
+            {
+                trans.CreatedAt = DateTimeOffset.UtcNow;
+            });
+
+
+            realm.WriteCopy(new RealmConfiguration("m.realm"));
         }
 
         public void PurgeAllData()
