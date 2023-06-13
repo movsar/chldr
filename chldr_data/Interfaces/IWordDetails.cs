@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chldr_data.DatabaseObjects.Models.Words
+namespace chldr_data.Interfaces
 {
-    public class Conjunction : EntryModel
+    public interface IWordDetails
     {
     }
 }

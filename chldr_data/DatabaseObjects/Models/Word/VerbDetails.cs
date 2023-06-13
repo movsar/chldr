@@ -1,8 +1,9 @@
 ﻿using chldr_data.Enums.WordDetails;
+using chldr_data.Interfaces;
 
 namespace chldr_data.DatabaseObjects.Models.Words
 {
-    public class Verb 
+    public class VerbDetails : IWordDetails
     {
         public VerbTense Tense { get; set; }
         public VerbConjugation Conjugation { get; set; }

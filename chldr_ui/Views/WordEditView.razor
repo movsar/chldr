@@ -2,16 +2,16 @@
 
 <form class="col-8">
     <div class="form-outline mb-2">
-        <input type="text" class="form-control" placeholder="@Localizer["Word"]" @bind="Word.Content" />
+        <input type="text" class="form-control" placeholder="@Localizer["Word"]" @bind="EntryDto.Content" />
     </div>
 
     <div class="row form-outline form-group mt-2">
         <div class="col-8">
             <div class="form-group">
-                <select @bind="Word.EntrySubtype" class="form-select">
+                <select @bind="EntryDto.EntrySubtype" class="form-select">
                     @foreach (WordType WordType in (WordType[])Enum.GetValues(typeof(WordType)))
                     {
-                        <option value="@((int)WordType)" selected="@((int)WordType == Word.EntrySubtype)">@Localizer[WordType.ToString()]</option>
+                        <option value="@((int)WordType)" selected="@((int)WordType == EntryDto.EntrySubtype)">@Localizer[WordType.ToString()]</option>
                     }
                 </select>
             </div>
@@ -27,7 +27,7 @@
         <div class="collapse word-details mt-2">
             <div class="card card-body">
 
-                @if (Word.EntrySubtype == (int)WordType.Verb)
+                @if (EntryDto.EntrySubtype == (int)WordType.Verb)
                 {
                     <b>@Localizer["Tense"]:</b>
                     <div class="form-outline mb-2">
@@ -112,7 +112,7 @@
                 }
 
 
-                @if (Word.EntrySubtype == (int)WordType.Noun)
+                @if (EntryDto.EntrySubtype == (int)WordType.Noun)
                 {
                     <div class="form-outline mb-2">
                         <select @bind="@WordDetails.Classes[0]" class="form-select" title="@Localizer["Grammatical_class"]">
@@ -136,7 +136,7 @@
     </h5>
 
     <div class="mt-2">
-        @foreach (var translation in Word.Translations)
+        @foreach (var translation in EntryDto.Translations)
         {
             <div class="mb-4">
                 <TranslationEditView Translation="@translation" OnDelete="@(async (translationId) => await DeleteTranslation(translationId))"></TranslationEditView>

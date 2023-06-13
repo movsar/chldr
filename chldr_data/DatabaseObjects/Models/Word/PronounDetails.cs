@@ -1,6 +1,8 @@
-﻿namespace chldr_data.DatabaseObjects.Models.Words
+﻿using chldr_data.Interfaces;
+
+namespace chldr_data.DatabaseObjects.Models.Words
 {
-    public class Pronoun : EntryModel
+    public class PronounDetails : IWordDetails
     {
 
         // Class can be 1,2,3,4,5 or 6

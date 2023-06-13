@@ -1,9 +1,10 @@
 ﻿using chldr_data.Enums.WordDetails;
+using chldr_data.Interfaces;
 
 namespace chldr_data.DatabaseObjects.Models.Words
 {
     // Прилагательное
-    public class Adjective : EntryModel
+    public class AdjectiveDetails : IWordDetails
     {
         // качественные и относительные
         public AdjectiveSemanticType SemanticType { get; set; }

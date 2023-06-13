@@ -1,11 +1,11 @@
 ﻿using chldr_data.Enums;
 using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Models.Words;
 using chldr_shared.Stores;
 using chldr_shared.Validators;
 using chldr_data.DatabaseObjects.Models;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
+using chldr_data.Interfaces;
 
 namespace chldr_ui.ViewModels
 {
@@ -16,16 +16,17 @@ namespace chldr_ui.ViewModels
         // Set "User" source id by default
         protected string SourceId { get; set; } = "63a816205d1af0e432fba6de";
         protected bool IsEditMode = false;
-        public WordDetails WordDetails { get; set; } = new WordDetails();
-        public EntryDto Word { get; set; } = new EntryDto();
+        private int _originalSubtype;
+        public IWordDetails WordDetails { get; set; }
+        public EntryDto EntryDto { get; set; } = new EntryDto();
         protected override void OnInitialized()
         {
             if (!isInitialized)
             {
                 isInitialized = true;
 
-                Word.UserId = UserStore.ActiveSession.User!.UserId;
-                Word.SourceId = SourceId;
+                EntryDto.UserId = UserStore.ActiveSession.User!.UserId;
+                EntryDto.SourceId = SourceId;
 
                 if (string.IsNullOrEmpty(EntryId))
                 {
@@ -33,20 +34,21 @@ namespace chldr_ui.ViewModels
                 }
 
                 // Get current word from cached results
-                var existingWord = ContentStore.CachedSearchResult.Entries
-                    .Where(e => (EntryType)e.Type == EntryType.Word)
+                var existingEntry = ContentStore.CachedSearchResult.Entries
+                    .Where(e => e.Type == EntryType.Word)
                     .Cast<EntryModel>()
-                    .FirstOrDefault(w => w.EntryId == this.EntryId);
+                    .FirstOrDefault(w => w.EntryId == EntryId);
 
-                if (existingWord == null)
+                if (existingEntry == null)
                 {
-                    existingWord = ContentStore.GetByEntryId(EntryId);
+                    existingEntry = ContentStore.GetByEntryId(EntryId);
+                    _originalSubtype = existingEntry.Subtype;
                 }
 
-                Word = EntryDto.FromModel(existingWord);
-                if (!string.IsNullOrEmpty(Word.Details))
+                EntryDto = EntryDto.FromModel(existingEntry);
+                if (!string.IsNullOrEmpty(EntryDto.Details))
                 {
-                    WordDetails = JsonConvert.DeserializeObject<WordDetails>(Word.Details);
+                    //WordDetails = JsonConvert.DeserializeObject<WordDetailsDto>(EntryDto.Details);
                 }
             }
         }
@@ -54,12 +56,12 @@ namespace chldr_ui.ViewModels
         List<string> _newTranslationIds = new List<string>();
         public async Task NewTranslation()
         {
-            var translation = new TranslationDto(Word.EntryId, UserStore.ActiveSession.User!.UserId, ContentStore.Languages.First());
+            var translation = new TranslationDto(EntryDto.EntryId, UserStore.ActiveSession.User!.UserId, ContentStore.Languages.First());
 
             // Needed to know which translations are new, in case they need to be removed
             _newTranslationIds.Add(translation.TranslationId);
 
-            Word.Translations.Add(translation);
+            EntryDto.Translations.Add(translation);
 
             await RefreshUi();
         }
@@ -70,32 +72,25 @@ namespace chldr_ui.ViewModels
                 _newTranslationIds.Remove(translationId);
             }
 
-            Word.Translations.Remove(Word.Translations.Find(t => t.TranslationId.Equals(translationId))!);
+            EntryDto.Translations.Remove(EntryDto.Translations.Find(t => t.TranslationId.Equals(translationId))!);
             await RefreshUi();
         }
         public async Task ValidateAndSubmitAsync()
         {
-            await ValidateAndSubmitAsync(Word, Save);
+            await ValidateAndSubmitAsync(EntryDto, Save);
         }
         public async Task Save()
         {
-            if (Word == null)
-            {
-                var ex = new Exception(Localizer["Error:Word_must_not_be_empty"]);
-                //_exceptionHandler.ProcessError(ex);
-                throw ex;
-            }
-
-            Word.Details = JsonConvert.SerializeObject(WordDetails);
+            EntryDto.Details = JsonConvert.SerializeObject(WordDetails);
 
             var user = UserModel.FromDto(UserStore.ActiveSession.User);
-            if (Word.CreatedAt != DateTimeOffset.MinValue)
+            if (EntryDto.CreatedAt != DateTimeOffset.MinValue)
             {
-                await ContentStore.UpdateEntry(user, Word);
+                await ContentStore.UpdateEntry(user, EntryDto);
             }
             else
             {
-                await ContentStore.AddEntry(user, Word);
+                await ContentStore.AddEntry(user, EntryDto);
             }
 
             NavigationManager.NavigateTo("/");

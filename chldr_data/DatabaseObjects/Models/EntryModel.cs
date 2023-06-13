@@ -43,7 +43,7 @@ namespace chldr_data.DatabaseObjects.Models
                 switch (entryModel.Type)
                 {
                     case EntryType.Word:
-                        entryModel.Details = JsonConvert.DeserializeObject<WordDetails>(entry.Details)!;
+                        entryModel.Details = JsonConvert.DeserializeObject<WordDetailsDto>(entry.Details)!;
                         break;
                 }
             }
