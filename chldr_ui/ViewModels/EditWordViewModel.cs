@@ -5,10 +5,11 @@ using chldr_shared.Stores;
 using chldr_shared.Validators;
 using chldr_data.DatabaseObjects.Models;
 using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json;
 
 namespace chldr_ui.ViewModels
 {
-    public class EntryEditViewModel : EditFormViewModelBase<EntryDto, EntryValidator>
+    public class EditWordViewModel : EditFormViewModelBase<EntryDto, EntryValidator>
     {
         private bool isInitialized = false;
         [Parameter] public string? EntryId { get; set; }
@@ -43,6 +44,10 @@ namespace chldr_ui.ViewModels
                 }
 
                 Word = EntryDto.FromModel(existingWord);
+                if (!string.IsNullOrEmpty(Word.Details))
+                {
+                    WordDetails = JsonConvert.DeserializeObject<WordDetails>(Word.Details);
+                }
             }
         }
 
@@ -80,6 +85,8 @@ namespace chldr_ui.ViewModels
                 //_exceptionHandler.ProcessError(ex);
                 throw ex;
             }
+
+            Word.Details = JsonConvert.SerializeObject(WordDetails);
 
             var user = UserModel.FromDto(UserStore.ActiveSession.User);
             if (Word.CreatedAt != DateTimeOffset.MinValue)
