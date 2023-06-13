@@ -6,6 +6,8 @@ using chldr_data.DatabaseObjects.Models;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 using chldr_data.Interfaces;
+using chldr_data.DatabaseObjects.Models.Words;
+using chldr_data.Enums.WordDetails;
 
 namespace chldr_ui.ViewModels
 {
@@ -17,7 +19,8 @@ namespace chldr_ui.ViewModels
         protected string SourceId { get; set; } = "63a816205d1af0e432fba6de";
         protected bool IsEditMode = false;
         private int _originalSubtype;
-        public IWordDetails WordDetails { get; set; }
+        public VerbDetails VerbDetails { get; set; } = new VerbDetails();
+        public NounDetails NounDetails { get; set; } = new NounDetails();
         public EntryDto EntryDto { get; set; } = new EntryDto();
         protected override void OnInitialized()
         {
@@ -81,7 +84,18 @@ namespace chldr_ui.ViewModels
         }
         public async Task Save()
         {
-            EntryDto.Details = JsonConvert.SerializeObject(WordDetails);
+            switch ((WordType)EntryDto.EntrySubtype)
+            {
+                case WordType.Noun:
+                    EntryDto.Details = JsonConvert.SerializeObject(NounDetails);
+                    break;
+                case WordType.Verb:
+                    EntryDto.Details = JsonConvert.SerializeObject(VerbDetails);
+                    break;
+                // TODO
+                default:
+                    break;
+            }
 
             var user = UserModel.FromDto(UserStore.ActiveSession.User);
             if (EntryDto.CreatedAt != DateTimeOffset.MinValue)

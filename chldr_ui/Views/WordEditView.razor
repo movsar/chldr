@@ -31,7 +31,7 @@
                 {
                     <b>@Localizer["Tense"]:</b>
                     <div class="form-outline mb-2">
-                        <select @bind="WordDetails.Tense"
+                        <select @bind="VerbDetails.Tense"
                                 class="form-select"
                                 title="@Localizer["Word:Tense"]">
 
@@ -44,7 +44,7 @@
 
                     <b>@Localizer["Transitiveness"]:</b>
                     <div class="form-outline mb-2">
-                        <select @bind="WordDetails.Transitiveness"
+                        <select @bind="VerbDetails.Transitiveness"
                                 class="form-select"
                                 title="@Localizer["Word:Transitiveness"]">
 
@@ -57,7 +57,7 @@
 
                     <b>@Localizer["NumericalType"]:</b>
                     <div class="form-outline mb-2">
-                        <select @bind="WordDetails.NumericalType"
+                        <select @bind="VerbDetails.NumericalType"
                                 class="form-select"
                                 title="@Localizer["NumericalType"]">
 
@@ -70,7 +70,7 @@
 
                     <b>@Localizer["Conjugation"]:</b>
                     <div class="form-outline mb-2">
-                        <select @bind="WordDetails.Conjugation"
+                        <select @bind="VerbDetails.Conjugation"
                                 class="form-select"
                                 title="@Localizer["Conjugation"]">
 
@@ -83,7 +83,7 @@
 
                     <b>@Localizer["Mood"]:</b>
                     <div class="form-outline mb-2">
-                        <select @bind="WordDetails.Mood"
+                        <select @bind="VerbDetails.Mood"
                                 class="form-select"
                                 title="@Localizer["Mood"]">
 
@@ -96,7 +96,7 @@
 
                     <b>@Localizer["Grammatical_class"]:</b>
                     <div class="form-outline mb-2">
-                        <select @bind="WordDetails.Classes[0]"
+                        <select @bind="VerbDetails.Class"
                                 class="form-select"
                                 title="@Localizer["Grammatical_class"]">
 
@@ -115,7 +115,7 @@
                 @if (EntryDto.EntrySubtype == (int)WordType.Noun)
                 {
                     <div class="form-outline mb-2">
-                        <select @bind="@WordDetails.Classes[0]" class="form-select" title="@Localizer["Grammatical_class"]">
+                        <select @bind="@NounDetails.Class" class="form-select" title="@Localizer["Grammatical_class"]">
                             <option value="1" class="form-control">@Localizer["Class:1_v_b"]</option>
                             <option value="2" class="form-control">@Localizer["Class:2_y_b"]</option>
                             <option value="3" class="form-control">@Localizer["Class:3_y_y"]</option>
