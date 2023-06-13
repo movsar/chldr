@@ -13,7 +13,6 @@ namespace chldr_data.local.Services
     {
         private IChangeSetsRepository _changeSetsRepository;
         private ITranslationsRepository _translationsRepository;
-        private ILanguagesRepository _languagesRepository;
         private ISourcesRepository _sourcesRepository;
         private IUsersRepository _usersRepository;
         private IEntriesRepository _entriesRepository;
@@ -59,7 +58,6 @@ namespace chldr_data.local.Services
         public ITranslationsRepository Translations => _translationsRepository ??= new RealmTranslationsRepository(_context, _exceptionHandler, _graphQLRequestSender);
         public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new RealmChangeSetsRepository(_context, _exceptionHandler, _graphQLRequestSender);
         public IEntriesRepository Entries => _entriesRepository ??= new RealmEntriesRepository(_context, _exceptionHandler, _graphQLRequestSender);
-        public ILanguagesRepository Languages => _languagesRepository ??= new RealmLanguagesRepository(_context, _exceptionHandler, _graphQLRequestSender);
         public ISourcesRepository Sources => _sourcesRepository ??= new RealmSourcesRepository(_context, _exceptionHandler, _graphQLRequestSender);
         public IUsersRepository Users => _usersRepository ??= new RealmUsersRepository(_context, _exceptionHandler, _graphQLRequestSender);
 

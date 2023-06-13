@@ -18,16 +18,14 @@ namespace chldr_data.remote.Repositories
 
         public override TranslationModel Get(string entityId)
         {
-            var translation = _dbContext.Translations
-                .Include(translation => translation.Language)
-                .FirstOrDefault(t => t.TranslationId.Equals(entityId));
+            var translation = _dbContext.Translations.FirstOrDefault(t => t.TranslationId.Equals(entityId));
 
             if (translation == null)
             {
                 throw new ArgumentException($"Entity not found: {entityId}");
             }
 
-            return TranslationModel.FromEntity(translation, translation.Language);
+            return TranslationModel.FromEntity(translation);
         }
         public override void Add(TranslationDto dto)
         {

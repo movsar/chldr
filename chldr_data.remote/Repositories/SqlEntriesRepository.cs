@@ -32,7 +32,7 @@ namespace chldr_data.remote.Repositories
             return EntryModel.FromEntity(
                 entry,
                 entry.Source,
-                entry.Translations.Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t))
+                entry.Translations
             );
         }
 
@@ -42,7 +42,6 @@ namespace chldr_data.remote.Repositories
                         .Include(w => w.User)
                         .Include(w => w.Source)
                         .Include(w => w.Translations)
-                        .ThenInclude(t => t.Language)
                         .FirstOrDefault(w => w.EntryId.Equals(entityId));
 
             return entry;

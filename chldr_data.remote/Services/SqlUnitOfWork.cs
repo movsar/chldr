@@ -19,7 +19,6 @@ namespace chldr_data.Services
         private IChangeSetsRepository _changeSetsRepository;
         private ITranslationsRepository _translationsRepository;
         private SqlEntriesRepository _entriesRepository;
-        private SqlLanguagesRepository _languagesRepository;
         private SqlSourcesRepository _sourcesRepository;
         private SqlUsersRepository _usersRepository;
 
@@ -56,7 +55,6 @@ namespace chldr_data.Services
         public ITranslationsRepository Translations => _translationsRepository ??= new SqlTranslationsRepository(_context, _userId);
         public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new SqlChangeSetsRepository(_context, _userId);
         public IEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_context, _userId, Translations);
-        public ILanguagesRepository Languages => _languagesRepository ??= new SqlLanguagesRepository(_context, _userId);
         public ISourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_context, _userId);
         public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_context, _userId);
 

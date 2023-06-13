@@ -9,7 +9,7 @@ public class SqlTranslation : ITranslationEntity
 {
     private string? content;
     public string TranslationId { get; set; }
-    public string LanguageId { get; set; } = null!;
+    public string LanguageCode { get; set; } = null!;
     public string EntryId { get; set; } = null!;
     public string UserId { get; set; } = null!;
     public string? Content
@@ -26,17 +26,15 @@ public class SqlTranslation : ITranslationEntity
     public string? Notes { get; set; }
     public int Rate { get; set; } = 0;
     public virtual SqlEntry Entry { get; set; } = null!;
-    public virtual SqlLanguage Language { get; set; } = null!;
     public virtual SqlUser User { get; set; } = null!;
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 
     public static SqlTranslation FromDto(TranslationDto translationDto, SqlContext context)
     {
-        var language = context.Find<SqlLanguage>(translationDto.LanguageId);
         var user = context.Find<SqlUser>(translationDto.UserId);
 
-        if (language == null || user == null || string.IsNullOrEmpty(translationDto.EntryId))
+        if (string.IsNullOrEmpty(translationDto.LanguageCode) || user == null || string.IsNullOrEmpty(translationDto.EntryId))
         {
             throw new NullReferenceException();
         }
@@ -49,7 +47,7 @@ public class SqlTranslation : ITranslationEntity
 
         translationEntity.EntryId = translationDto.EntryId;
         translationEntity.TranslationId = translationDto.TranslationId;
-        translationEntity.LanguageId = translationDto.LanguageId!;
+        translationEntity.LanguageCode = translationDto.LanguageCode!;
         translationEntity.UserId = translationDto.UserId;
         translationEntity.Content = translationDto.Content;
         translationEntity.RawContents = translationDto.Content.ToLower();

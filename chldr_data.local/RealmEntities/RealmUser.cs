@@ -19,7 +19,6 @@ public class RealmUser : RealmObject, IUserEntity
     public DateTimeOffset CreatedAt { get; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; } = DateTime.Now;
     public IList<RealmEntry> Entries { get; }
-    public IList<RealmLanguage> Languages { get; }
     public IList<RealmQuery> Queries { get; }
     public IList<RealmSound> Sounds { get; }
     public IList<RealmSource> Sources { get; }

@@ -11,7 +11,6 @@ public class RealmTranslation : RealmObject, ITranslationEntity
 
     [PrimaryKey]
     public string TranslationId { get; set; }
-    public RealmLanguage Language { get; set; } = null!;
     public RealmEntry Entry { get; set; } = null!;
     public RealmUser User { get; set; } = null!;
     public string Content
@@ -26,22 +25,18 @@ public class RealmTranslation : RealmObject, ITranslationEntity
     public string? RawContents { get; private set; }
     public string? Notes { get; set; }
     public int Rate { get; set; } = 0;
+    public string LanguageCode { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
 
-    [Ignored]
-    public string EntryId => Entry.EntryId;
-    [Ignored]
-    public string UserId => User.UserId;
-    [Ignored]
-    public string LanguageId => Language.LanguageId;
+    [Ignored] public string EntryId => Entry.EntryId;
+    [Ignored] public string UserId => User.UserId;
 
     internal static RealmTranslation FromDto(TranslationDto translationDto, RealmEntry entry, Realm context)
     {
-        var language = context.Find<RealmLanguage>(translationDto.LanguageId);
         var user = context.Find<RealmUser>(translationDto.UserId);
 
-        if (language == null || user == null || string.IsNullOrEmpty(translationDto.EntryId))
+        if (string.IsNullOrEmpty(translationDto.LanguageCode) || user == null || string.IsNullOrEmpty(translationDto.EntryId))
         {
             throw new NullReferenceException();
         }
@@ -54,7 +49,7 @@ public class RealmTranslation : RealmObject, ITranslationEntity
         }
 
         translation.TranslationId = translationDto.TranslationId;
-        translation.Language = language;
+        translation.LanguageCode = translationDto.LanguageCode;
         translation.Entry = entry;
         translation.User = user;
         translation.Content = translationDto.Content;
@@ -65,10 +60,5 @@ public class RealmTranslation : RealmObject, ITranslationEntity
         translation.UpdatedAt = translationDto.UpdatedAt;
 
         return translation;
-    }
-
-    internal string GetRawContents()
-    {
-        return Content.ToString();
     }
 }

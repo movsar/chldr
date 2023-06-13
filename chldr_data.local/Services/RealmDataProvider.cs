@@ -78,7 +78,7 @@ namespace chldr_data.local.Services
         {
             OfflineDatabaseConfiguration = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
             {
-                SchemaVersion = 12
+                SchemaVersion = 13
             };
 
             var realm = GetDatabase();

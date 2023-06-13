@@ -31,7 +31,7 @@ namespace chldr_data.Repositories
                 throw new ArgumentException($"Entity not found: {entityId}");
             }
 
-            return TranslationModel.FromEntity(translation, translation.Language);
+            return TranslationModel.FromEntity(translation);
         }
 
 

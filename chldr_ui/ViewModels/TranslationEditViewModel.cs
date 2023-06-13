@@ -10,17 +10,7 @@ namespace chldr_ui.ViewModels
         #region Fields and Properties
         [Parameter]
         public TranslationDto Translation { get; set; } = new TranslationDto();
-        // !! Code smell, refactor it
-        public string LanguageCode
-        {
-            get => Translation.LanguageCode;
-            set
-            {
-                Translation.LanguageCode = value;
-                var language = ContentStore.Languages.Find(l => l.Code.Equals(value));
-                Translation.LanguageId = language!.LanguageId;
-            }
-        }
+        public string LanguageCode { get; set; }
         #endregion
 
         [Parameter]

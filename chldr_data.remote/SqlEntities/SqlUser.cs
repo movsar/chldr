@@ -35,7 +35,6 @@ public class SqlUser : IUserEntity
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
     public virtual ICollection<SqlEntry> Entries { get; set; } = new List<SqlEntry>();
-    public virtual ICollection<SqlLanguage> Languages { get; set; } = new List<SqlLanguage>();
     public virtual ICollection<SqlQuery> Queries { get; set; } = new List<SqlQuery>();
     public virtual ICollection<SqlSound> Sounds { get; set; } = new List<SqlSound>();
     public virtual ICollection<SqlSource> Sources { get; set; } = new List<SqlSource>();

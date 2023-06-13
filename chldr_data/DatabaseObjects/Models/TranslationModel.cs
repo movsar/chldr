@@ -1,4 +1,5 @@
 ﻿using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.Models;
 using Newtonsoft.Json;
 
 namespace chldr_data.DatabaseObjects.Models
@@ -9,16 +10,15 @@ namespace chldr_data.DatabaseObjects.Models
         public string TranslationId { get; internal set; }
         public string EntryId { get; set; }
         public string Content { get; set; }
-        public LanguageModel Language { get; set; }
         public int Rate { get; set; } = 1;
         public string UserId { get; set; }
-        public string LanguageId { get; set; }
+        public string LanguageCode { get; set; }
         public string? Notes { get; set; }
 
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
 
-        public static TranslationModel FromEntity(ITranslationEntity translation, ILanguageEntity language)
+        public static TranslationModel FromEntity(ITranslationEntity translation)
         {
             return new TranslationModel()
             {
@@ -28,8 +28,7 @@ namespace chldr_data.DatabaseObjects.Models
                 UserId = translation.UserId,
                 Notes = translation.Notes,
                 Rate = translation.Rate,
-                Language = LanguageModel.FromEntity(language),
-                LanguageId = language.LanguageId,
+                LanguageCode = translation.LanguageCode,
             };
         }
     }

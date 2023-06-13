@@ -19,7 +19,7 @@ namespace chldr_data.DatabaseObjects.Models
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
 
-        public static EntryModel FromEntity(IEntryEntity entry, ISourceEntity source, IEnumerable<KeyValuePair<ILanguageEntity, ITranslationEntity>> translationEntityInfos)
+        public static EntryModel FromEntity(IEntryEntity entry, ISourceEntity source, IEnumerable<ITranslationEntity> translations)
         {
             var entryModel = new EntryModel()
             {
@@ -37,9 +37,9 @@ namespace chldr_data.DatabaseObjects.Models
                 UpdatedAt = entry.UpdatedAt
             };
 
-            foreach (var translationEntityToLanguage in translationEntityInfos)
+            foreach (var translation in translations)
             {
-                entryModel.Translations.Add(TranslationModel.FromEntity(translationEntityToLanguage.Value, translationEntityToLanguage.Key));
+                entryModel.Translations.Add(TranslationModel.FromEntity(translation));
             }
 
             return entryModel;

@@ -8,7 +8,6 @@ namespace chldr_data.Interfaces
         IChangeSetsRepository ChangeSets { get; }
         IEntriesRepository Entries { get; }
         ITranslationsRepository Translations { get; }
-        ILanguagesRepository Languages { get; }
         ISourcesRepository Sources { get; }
         IUsersRepository Users { get; }
         void BeginTransaction();

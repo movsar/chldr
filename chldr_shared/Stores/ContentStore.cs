@@ -35,8 +35,7 @@ namespace chldr_shared.Stores
 
         // This shouldn't be normally used, but only to request models that have already been loaded 
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
-        public List<LanguageModel> Languages { get; } = new();
-        // These are the sources excluding userIds
+        public readonly List<LanguageModel> Languages = LanguageModel.GetAvailableLanguages();
         #endregion
 
         #region EventHandlers
@@ -97,7 +96,7 @@ namespace chldr_shared.Stores
         {
             Task.Run(() => _searchService.FindAsync(inputText, filterationFlags));
         }
-       
+
         public void LoadRandomEntries()
         {
             CachedSearchResult.Entries.Clear();
@@ -157,11 +156,6 @@ namespace chldr_shared.Stores
         {
             _unitOfWork = _dataProvider.CreateUnitOfWork();
 
-            if (Languages.Count == 0)
-            {
-                Languages.AddRange(_unitOfWork.Languages.GetAllLanguages());
-            }
-
             ContentInitialized?.Invoke();
         }
 
@@ -186,7 +180,7 @@ namespace chldr_shared.Stores
 
             return phrase;
         }
-    
+
         public async Task DeleteEntry(UserModel loggedInUser, string entryId)
         {
             // Remove remote entity

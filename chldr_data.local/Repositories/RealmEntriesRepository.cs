@@ -25,8 +25,7 @@ namespace chldr_data.Repositories
             return EntryModel.FromEntity(
                                     word,
                                     word.Source,
-                                    word.Translations
-                                        .Select(t => new KeyValuePair<ILanguageEntity, ITranslationEntity>(t.Language, t)));
+                                    word.Translations);
         }
         public EntryModel GetByEntryId(string entryId)
         {

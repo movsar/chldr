@@ -5,7 +5,7 @@
         string TranslationId { get; }
         string EntryId { get; }
         string UserId { get; }
-        string LanguageId { get; }
+        string LanguageCode { get; }
         string Content { get; }
         int Rate { get; }
         string? Notes { get; }

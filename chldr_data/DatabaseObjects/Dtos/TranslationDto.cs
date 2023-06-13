@@ -1,5 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
+using chldr_data.Models;
 
 namespace chldr_data.DatabaseObjects.Dtos
 {
@@ -11,7 +12,6 @@ namespace chldr_data.DatabaseObjects.Dtos
         public string Content { get; set; }
         public int Rate { get; set; } = 1;
         public string TranslationId { get; set; } = Guid.NewGuid().ToString();
-        public string? LanguageId { get; set; }
         public string? Notes { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
@@ -21,11 +21,10 @@ namespace chldr_data.DatabaseObjects.Dtos
             EntryId = entryId;
             UserId = userId;
             LanguageCode = language.Code;
-            LanguageId = language.LanguageId;
         }
         public static TranslationDto FromModel(TranslationModel translation)
         {
-            if (translation == null || translation.Language == null)
+            if (translation == null || string.IsNullOrEmpty(translation.LanguageCode))
             {
                 throw new Exception("Language and translation model must not be empty");
             }
@@ -34,10 +33,8 @@ namespace chldr_data.DatabaseObjects.Dtos
             {
                 UserId = translation.UserId,
                 TranslationId = translation.TranslationId,
-                LanguageId = translation.Language.LanguageId,
                 EntryId = translation.EntryId.ToString(),
-
-                LanguageCode = translation.Language.Code,
+                LanguageCode = translation.LanguageCode,                
                 Content = translation.Content,
                 Notes = translation.Notes,
                 Rate = translation.Rate

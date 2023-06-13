@@ -3,6 +3,8 @@ using chldr_utils.Services;
 using chldr_utils;
 using chldr_data.local.Services;
 using chldr_data.local.RealmEntities;
+using Realms;
+using chldr_data.remote.Services;
 
 namespace chldr_tools
 {
@@ -15,27 +17,8 @@ namespace chldr_tools
         private static GraphQLRequestSender _requestSender;
         private static SyncService _syncService;
 
-        static void Main(string[] args)
+        static void ContentUpdater(Realm realmDatabase, SqlContext sqlDatabase)
         {
-            Console.WriteLine("Hello, World!");
-
-            _fileService = new FileService(AppContext.BaseDirectory);
-            _exceptionHandler = new ExceptionHandler(_fileService);
-            _networkService = new NetworkService();
-            _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Windows);
-            _requestSender = new GraphQLRequestSender(_exceptionHandler);
-            _syncService = new SyncService(_requestSender);
-
-            var serviceLocator = new ServiceLocator();
-
-            var localRealmContext = new RealmDataProvider(_fileService, _exceptionHandler, _requestSender, _syncService);
-            localRealmContext.Initialize();
-            var realmDatabase = localRealmContext.GetContext();
-
-            var connectionString = "server=104.248.40.142;port=3306;database=xj_chldr;user=;password=";
-            var remoteSqlContext = new SqlDataProvider(connectionString);
-            remoteSqlContext.Initialize();
-            var sqlDatabase = remoteSqlContext.GetContext();
 
             var entries = realmDatabase.All<RealmEntry>();
             int count = 0;
@@ -62,6 +45,57 @@ namespace chldr_tools
             }
             Console.WriteLine("Saving ...");
             Console.WriteLine($"Successfully saved {count} entries");
+        }
+
+        static void LanguageCodeLocal(Realm realmDatabase)
+        {
+            var translations = realmDatabase.All<RealmTranslation>();
+            int count = 0;
+            Console.WriteLine("Starting the update ...");
+            var total = translations.Count();
+            realmDatabase.Write(() =>
+            {
+
+                foreach (var translation in translations)
+                {
+                    //translation.LanguageCode = translation.Language.Code;
+                    if (count % 100 == 0 || count > total - 50)
+                    {
+                        Console.WriteLine($"Processed {count}");
+                    }
+                    count++;
+                }
+            });
+
+            Console.WriteLine("Saving ...");
+            Console.WriteLine($"Successfully saved {count} entries");
+
+            realmDatabase.WriteCopy(new RealmConfiguration("new.realm"));
+        }
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello, World!");
+
+            _fileService = new FileService(AppContext.BaseDirectory);
+            _exceptionHandler = new ExceptionHandler(_fileService);
+            _networkService = new NetworkService();
+            _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Windows);
+            _requestSender = new GraphQLRequestSender(_exceptionHandler);
+            _syncService = new SyncService(_requestSender);
+
+            var serviceLocator = new ServiceLocator();
+
+            var localRealmContext = new RealmDataProvider(_fileService, _exceptionHandler, _requestSender, _syncService);
+            localRealmContext.Initialize();
+            var realmDatabase = localRealmContext.GetContext();
+
+            var connectionString = "asfsdfsadf";
+            var remoteSqlContext = new SqlDataProvider(connectionString);
+            remoteSqlContext.Initialize();
+            var sqlDatabase = remoteSqlContext.GetContext();
+
+            LanguageCodeLocal(realmDatabase);
         }
     }
 }

@@ -13,7 +13,6 @@ public class SqlContext : DbContext
     public virtual DbSet<SqlEfmigrationshistory> Efmigrationshistories { get; set; }
     public virtual DbSet<SqlChangeSet> ChangeSets { get; set; }
     public virtual DbSet<SqlEntry> Entries { get; set; }
-    public virtual DbSet<SqlLanguage> Languages { get; set; }
     public virtual DbSet<SqlQuery> Queries { get; set; }
     public virtual DbSet<SqlSound> Sounds { get; set; }
     public virtual DbSet<SqlSource> Sources { get; set; }
@@ -98,40 +97,6 @@ public class SqlContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_entry_user_id");
-        });
-
-        modelBuilder.Entity<SqlLanguage>(entity =>
-        {
-            entity.HasKey(e => e.LanguageId).HasName("PRIMARY");
-
-            entity.ToTable("language");
-
-            entity.HasIndex(e => e.UserId, "fk_language_user_id");
-
-            entity.Property(e => e.LanguageId)
-                .HasMaxLength(40)
-                .HasColumnName("language_id");
-            entity.Property(e => e.Code)
-                .HasMaxLength(40)
-                .HasColumnName("code");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.Name)
-                .HasMaxLength(40)
-                .HasColumnName("name");
-            entity.Property(e => e.UpdatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
-            entity.Property(e => e.UserId)
-                .HasMaxLength(40)
-                .HasColumnName("user_id");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Languages)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("fk_language_user_id");
         });
 
         modelBuilder.Entity<SqlQuery>(entity =>
@@ -251,12 +216,15 @@ public class SqlContext : DbContext
             entity.Property(e => e.TranslationId)
                 .HasMaxLength(40)
                 .HasColumnName("translation_id");
-            entity.Property(e => e.LanguageId)
+
+            entity.Property(e => e.LanguageCode)
                 .HasMaxLength(40)
-                .HasColumnName("language_id");
+                .HasColumnName("language_code");
+
             entity.Property(e => e.EntryId)
                 .HasMaxLength(40)
                 .HasColumnName("entry_id");
+
             entity.Property(e => e.UserId)
                 .HasMaxLength(40)
                 .HasColumnName("user_id");
@@ -286,18 +254,13 @@ public class SqlContext : DbContext
 
 
             entity.HasIndex(e => e.EntryId, "fk_translation_entry_id");
-            entity.HasIndex(e => e.LanguageId, "fk_translation_language_id");
+            entity.HasIndex(e => e.LanguageCode, "fk_translation_language_id");
             entity.HasIndex(e => e.UserId, "fk_translation_user_id");
 
             entity.HasOne(d => d.Entry).WithMany(p => p.Translations)
                 .HasForeignKey(d => d.EntryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_translation_entry_id");
-
-            entity.HasOne(d => d.Language).WithMany(p => p.Translations)
-                .HasForeignKey(d => d.LanguageId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_translation_language_id");
 
             entity.HasOne(d => d.User).WithMany(p => p.Translations)
                 .HasForeignKey(d => d.UserId)

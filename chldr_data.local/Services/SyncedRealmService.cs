@@ -92,7 +92,6 @@ namespace chldr_data.local.Services
                     Debug.WriteLine($"APP: Realm : PopulateInitialSubscriptions");
 
                     realm.Subscriptions.Add(realm.All<RealmEntry>());
-                    realm.Subscriptions.Add(realm.All<RealmLanguage>());
                     realm.Subscriptions.Add(realm.All<RealmSource>());
                     realm.Subscriptions.Add(realm.All<RealmTranslation>());
                     realm.Subscriptions.Add(realm.All<RealmUser>());
@@ -137,14 +136,6 @@ namespace chldr_data.local.Services
             if (GetApp()?.CurrentUser == null || GetApp()?.CurrentUser?.Provider == Credentials.AuthProvider.Anonymous)
             {
                 return;
-            }
-
-            var language = GetDatabase().All<RealmLanguage>().FirstOrDefault();
-            if (language == null)
-            {
-                var synchTask = new Task(async () => await SynchronizeDatabase());
-                synchTask.Start();
-                synchTask.Wait();
             }
 
             LocalDatabaseInitialized?.Invoke();
