@@ -32,11 +32,21 @@ public class RealmTranslation : RealmObject, ITranslationEntity
     [Ignored] public string EntryId => Entry.EntryId;
     [Ignored] public string UserId => User.UserId;
 
-    internal static RealmTranslation FromDto(TranslationDto translationDto, RealmEntry entry, Realm context)
+    internal static RealmTranslation FromDto(TranslationDto translationDto, Realm context, RealmEntry? entry = null)
     {
         var user = context.Find<RealmUser>(translationDto.UserId);
 
         if (string.IsNullOrEmpty(translationDto.LanguageCode) || user == null || string.IsNullOrEmpty(translationDto.EntryId))
+        {
+            throw new NullReferenceException();
+        }
+
+        if (entry == null)
+        {
+            entry = context.Find<RealmEntry>(translationDto.EntryId);
+        }
+
+        if (entry == null)
         {
             throw new NullReferenceException();
         }

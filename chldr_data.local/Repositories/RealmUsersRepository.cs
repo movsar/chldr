@@ -15,20 +15,26 @@ namespace chldr_data.Repositories
         public RealmUsersRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
 
         protected override RecordType RecordType => RecordType.User;
-
+        protected override UserModel FromEntityShortcut(RealmUser entity)
+        {
+            return UserModel.FromEntity(entity);
+        }
         public override void Add(UserDto dto)
         {
-            throw new NotImplementedException();
-        }
-
-        public override UserModel Get(string entityId)
-        {
-            throw new NotImplementedException();
+            _dbContext.Write(() =>
+            {
+                var entity = RealmUser.FromDto(dto, _dbContext);
+                _dbContext.Add(entity);
+            });
         }
 
         public override void Update(UserDto dto)
         {
-            throw new NotImplementedException();
+            _dbContext.Write(() =>
+            {
+                var entity = RealmUser.FromDto(dto, _dbContext);
+            });
         }
+
     }
 }

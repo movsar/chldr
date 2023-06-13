@@ -14,12 +14,10 @@ namespace chldr_data.remote.Repositories
 
         public SqlChangeSetsRepository(SqlContext sqlContext, string _userId) : base(sqlContext, _userId) { }
 
-        public override ChangeSetModel Get(string entityId)
+        protected override ChangeSetModel FromEntityShortcut(SqlChangeSet entity)
         {
-            var changeSet = _dbContext.Find<SqlChangeSet>(entityId);
-            return ChangeSetModel.FromEntity(changeSet);
+            return ChangeSetModel.FromEntity(entity);
         }
-
         public void AddRange(IEnumerable<ChangeSetDto> dtos)
         {
             var entities = dtos.Select(d => (SqlChangeSet)SqlChangeSet.FromDto(d));
@@ -50,7 +48,7 @@ namespace chldr_data.remote.Repositories
             throw new Exception("This method should never be called for ChangeSets, they're immutable");
         }
 
-        public override void Add( ChangeSetDto dto)
+        public override void Add(ChangeSetDto dto)
         {
             var changeSet = SqlChangeSet.FromDto(dto);
             _dbContext.Add(changeSet);

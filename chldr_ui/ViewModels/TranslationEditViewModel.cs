@@ -10,18 +10,10 @@ namespace chldr_ui.ViewModels
         #region Fields and Properties
         [Parameter]
         public TranslationDto Translation { get; set; } = new TranslationDto();
-        public string LanguageCode { get; set; }
         #endregion
 
         [Parameter]
         public Action<string> OnDelete { get; set; }
-        private TranslationDto CreateTranslationDto(string entryId, string translationId)
-        {
-            var entry = ContentStore.CachedSearchResult.Entries
-                .First(e => e.EntryId == entryId);
-
-            return TranslationDto.FromModel(entry.Translations.First(t => t.TranslationId == translationId));
-        }
 
         public void Delete()
         {
@@ -38,11 +30,6 @@ namespace chldr_ui.ViewModels
             }
 
             // Init code
-        }
-
-        internal void Submit()
-        {
-
         }
     }
 }

@@ -165,22 +165,21 @@ namespace chldr_data.local.Services
             logger.StopSpeedTest($"FindAsync finished");
         }
 
-
-
-        public List<EntryModel> GetRandomEntries()
+        public List<EntryModel> GetRandomEntries(int limit = 50)
         {
             var randomizer = new Random();
             var realm = Database.All<RealmEntry>();
 
-            var entries = Database.All<RealmEntry>().AsEnumerable()
+            var entries = Database.All<RealmEntry>().AsEnumerable();
+            var count = entries.Count();
+
+            return entries
               .Where(entry => entry.Rate > 0)
               .OrderBy(x => randomizer.Next(0, 70000))
-              .Take(50)
+              .Take(limit)
               .OrderBy(entry => entry.GetHashCode())
               .Select(entry => FromEntity(entry))
               .ToList();
-
-            return entries;
         }
 
         public List<EntryModel> GetLatestEntries()

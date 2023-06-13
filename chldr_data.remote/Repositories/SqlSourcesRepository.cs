@@ -13,22 +13,17 @@ namespace chldr_data.remote.Repositories
         protected override RecordType RecordType => RecordType.Source;
         public SqlSourcesRepository(SqlContext context, string _userId) : base(context, _userId) { }
 
-        public override SourceModel Get(string entityId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<SourceModel> Take(int limit)
-        {
-            throw new NotImplementedException();
-        }
-
         public override void Update(SourceDto dto)
         {
             throw new NotImplementedException();
         }
 
         public override void Add(SourceDto dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override SourceModel FromEntityShortcut(SqlSource entity)
         {
             throw new NotImplementedException();
         }

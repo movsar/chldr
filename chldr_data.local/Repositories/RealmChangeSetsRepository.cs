@@ -12,23 +12,11 @@ namespace chldr_data.Repositories
 {
     public class RealmChangeSetsRepository : RealmRepository<RealmChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {
-        protected override RecordType RecordType => throw new Exception("Shouldn't be used");
-
         public RealmChangeSetsRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
-
-        public override ChangeSetModel Get(string entityId)
+        protected override RecordType RecordType => throw new Exception("Shouldn't be used");
+        protected override ChangeSetModel FromEntityShortcut(RealmChangeSet entity)
         {
-            var changeSet = _dbContext.Find<RealmChangeSet>(entityId);
-            return ChangeSetModel.FromEntity(changeSet);
-        }
-
-        public void AddRange(IEnumerable<ChangeSetDto> dtos)
-        {
-            var entities = dtos.Select(d => (RealmChangeSet)RealmChangeSet.FromDto(d));
-            foreach (var entity in entities)
-            {
-                _dbContext.Add(entity);
-            }
+            return ChangeSetModel.FromEntity(entity);
         }
 
         public IEnumerable<ChangeSetModel> GetLatest(int limit)
@@ -36,7 +24,7 @@ namespace chldr_data.Repositories
             var models = _dbContext.All<RealmChangeSet>()
                 .OrderByDescending(c => c.ChangeSetIndex)
                 .Take(limit)
-                .Select(c => (ChangeSetModel)ChangeSetModel.FromEntity(c));
+                .Select(c => ChangeSetModel.FromEntity(c));
 
             return models;
         }
@@ -57,11 +45,12 @@ namespace chldr_data.Repositories
 
         public override void Add(ChangeSetDto dto)
         {
-            var changeSet = (RealmChangeSet)RealmChangeSet.FromDto(dto);
-            _dbContext.Add(changeSet);
-
-            //return EmptyResult;
+            // Store max 500 changesets
+            _dbContext.Write(() =>
+            {
+                var changeSet = (RealmChangeSet)RealmChangeSet.FromDto(dto);
+                _dbContext.Add(changeSet);
+            });
         }
-
     }
 }

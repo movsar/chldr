@@ -13,13 +13,13 @@ namespace chldr_data.Repositories
 {
     public class RealmSourcesRepository : RealmRepository<RealmSource, SourceModel, SourceDto>, ISourcesRepository
     {
-        protected override RecordType RecordType => RecordType.Source;
         public RealmSourcesRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
-
-        public override void Add(SourceDto dto)
+        protected override RecordType RecordType => RecordType.Source;
+        protected override SourceModel FromEntityShortcut(RealmSource entry)
         {
-            throw new NotImplementedException();
+            return SourceModel.FromEntity(entry);
         }
+
         public List<RealmSource> GetUnverifiedSources()
         {
             var sources = _dbContext.All<RealmSource>().Where(s => s.Notes == "Imported from legacy database" || s.Name == "User");
@@ -30,16 +30,20 @@ namespace chldr_data.Repositories
         {
             return _dbContext.All<RealmSource>().AsEnumerable().Select(s => SourceModel.FromEntity(s)).ToList();
         }
-
-        public override SourceModel Get(string entityId)
+        public override void Add(SourceDto dto)
         {
-            throw new NotImplementedException();
+            _dbContext.Write(() =>
+            {
+                var entity = RealmSource.FromDto(dto, _dbContext);
+                _dbContext.Add(entity);
+            });
         }
-
         public override void Update(SourceDto dto)
         {
-            throw new NotImplementedException();
+            _dbContext.Write(() =>
+            {
+                var entity = RealmSource.FromDto(dto, _dbContext);
+            });
         }
-
     }
 }

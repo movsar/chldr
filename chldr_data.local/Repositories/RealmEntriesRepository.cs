@@ -17,41 +17,13 @@ namespace chldr_data.Repositories
     public class RealmEntriesRepository : RealmRepository<RealmEntry, EntryModel, EntryDto>, IEntriesRepository
     {
         public RealmEntriesRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
-
         protected override RecordType RecordType => RecordType.Entry;
-
-        public static EntryModel FromEntity(RealmEntry word)
+        protected override EntryModel FromEntityShortcut(RealmEntry entry)
         {
             return EntryModel.FromEntity(
-                                    word,
-                                    word.Source,
-                                    word.Translations);
-        }
-        public EntryModel GetByEntryId(string entryId)
-        {
-            var entry = _dbContext.Find<RealmEntry>(entryId);
-            if (entry == null)
-            {
-                throw new Exception("There is no such entry in the database");
-            }
-
-            return FromEntity(entry);
-        }
-
-        public List<EntryModel> GetRandomWords(int limit)
-        {
-            var entries = _dbContext.All<RealmEntry>().AsEnumerable().Take(limit);
-            return entries.Select(w => FromEntity(w)).ToList();
-        }
-        public override EntryModel Get(string entityId)
-        {
-            var entry = _dbContext.All<RealmEntry>().FirstOrDefault(w => w.EntryId == entityId);
-            if (entry == null)
-            {
-                throw new Exception("There is no such word in the database");
-            }
-
-            return FromEntity(entry);
+                                    entry,
+                                    entry.Source,
+                                    entry.Translations);
         }
 
         public override void Add(EntryDto newEntryDto)
@@ -61,12 +33,19 @@ namespace chldr_data.Repositories
                 throw new Exception("Empty translations");
             }
 
-            var insertedEntry = RealmEntry.FromDto(newEntryDto, _dbContext);
+            _dbContext.Write(() =>
+            {
+                var newEntry = RealmEntry.FromDto(newEntryDto, _dbContext);
+                _dbContext.Add(newEntry);
+            });
         }
 
         public override void Update(EntryDto updatedEntryDto)
         {
-            var updatedEntry = RealmEntry.FromDto(updatedEntryDto, _dbContext);
+            _dbContext.Write(() =>
+            {
+                var updatedEntry = RealmEntry.FromDto(updatedEntryDto, _dbContext);
+            });
         }
     }
 }

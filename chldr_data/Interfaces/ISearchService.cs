@@ -9,7 +9,7 @@ namespace chldr_data.Interfaces
         event Action<SearchResultModel>? GotNewSearchResult;
         Task FindAsync(string inputText, FiltrationFlags filtrationFlags);
         List<EntryModel> GetEntriesOnModeration();
-        List<EntryModel> GetRandomEntries();
+        List<EntryModel> GetRandomEntries(int limit = 100);
         List<EntryModel> GetLatestEntries();
         List<EntryModel> GetWordsToFiddleWith();
     }

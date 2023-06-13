@@ -19,16 +19,12 @@ namespace chldr_data.remote.Repositories
             throw new NotImplementedException();
         }
 
-        public override UserModel Get(string entityId)
-        {
-            throw new NotImplementedException();
-        }
-        public IEnumerable<UserModel> Take(int limit)
+        public override void Update(UserDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public override void Update(UserDto dto)
+        protected override UserModel FromEntityShortcut(SqlUser entity)
         {
             throw new NotImplementedException();
         }

@@ -10,9 +10,9 @@
 
     <input class="form-control shadow-none"
            placeholder="@Localizer["Start_typing"]"
-           @ref="SearchInputReference"
-           @bind="@SearchQuery"
-           @oninput="(e)=> Search(e)" />
+    @ref="SearchInputReference"
+    @bind="@SearchQuery"
+    @oninput="(e)=> Search(e)" />
 
     <div class="ms-2">
         <button type="button" class="chldr_btn_show-randoms btn btn-secondary" @onclick="LoadRandomEntries">
@@ -26,5 +26,8 @@
     <button class="btn btn-outline-primary" @onclick="ToggleOnModerationFlag">@Localizer["# on moderation"]</button>
     <button class="btn btn-outline-primary" @onclick="LoadLatestEntries">@Localizer["# latest"]</button>
     <button class="btn btn-outline-primary" @onclick="LoadEntriesToFiddleWith">@Localizer["# experimental"]</button>
-    <a class="btn btn-success" href="/entry/edit">@Localizer["+ add / ask"]</a>
+    @if (UserStore.ActiveSession.Status == SessionStatus.LoggedIn)
+    {
+        <a class="btn btn-success" href="/entry/edit">@Localizer["+ add / ask"]</a>
+    }
 </div>

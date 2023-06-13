@@ -149,21 +149,11 @@ namespace chldr_shared.Stores
 
             CachedResultsChanged?.Invoke();
         }
-        public EntryModel GetWordById(string entryId)
+        public EntryModel GetByEntryId(string entryId)
         {
             return _unitOfWork.Entries.Get(entryId);
         }
 
-        public EntryModel GetEntryById(string entryId)
-        {
-            var word = _unitOfWork?.Entries.GetByEntryId(entryId);
-            if (word != null)
-            {
-                return word;
-            }
-
-            return null;
-        }
         #endregion
         public void DataAccess_DatasourceInitialized()
         {

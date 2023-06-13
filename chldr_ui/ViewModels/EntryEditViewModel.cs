@@ -22,7 +22,7 @@ namespace chldr_ui.ViewModels
             {
                 isInitialized = true;
 
-                Word.UserId = UserStore.ActiveSession.User.UserId;
+                Word.UserId = UserStore.ActiveSession.User!.UserId;
                 Word.SourceId = SourceId;
 
                 if (string.IsNullOrEmpty(EntryId))
@@ -38,7 +38,7 @@ namespace chldr_ui.ViewModels
 
                 if (existingWord == null)
                 {
-                    existingWord = ContentStore.GetEntryById(EntryId);
+                    existingWord = ContentStore.GetByEntryId(EntryId);
                 }
 
                 Word = EntryDto.FromModel(existingWord);

@@ -27,15 +27,16 @@ namespace chldr_data.remote.Repositories
         public event Action<EntryModel>? EntryAdded;
 
 
-        public static EntryModel FromEntity(SqlEntry entry)
+        protected override EntryModel FromEntityShortcut(SqlEntry entry)
         {
             return EntryModel.FromEntity(
-                entry,
-                entry.Source,
-                entry.Translations
-            );
+               entry,
+               entry.Source,
+               entry.Translations
+           );
         }
 
+   
         private SqlEntry GetEntity(string entityId)
         {
             var entry = _dbContext.Entries
@@ -45,16 +46,6 @@ namespace chldr_data.remote.Repositories
                         .FirstOrDefault(w => w.EntryId.Equals(entityId));
 
             return entry;
-        }
-        public override EntryModel Get(string entityId)
-        {
-            var entry = GetEntity(entityId);
-            if (entry == null)
-            {
-                throw new ArgumentException($"Entity not found: {entityId}");
-            }
-
-            return FromEntity(entry);
         }
 
         public override void Add(EntryDto newEntryDto)
@@ -139,11 +130,6 @@ namespace chldr_data.remote.Repositories
             }
 
             return false;
-        }
-
-        public EntryModel GetByEntryId(string entryId)
-        {
-            throw new NotImplementedException();
         }
     }
 }

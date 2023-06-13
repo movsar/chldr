@@ -1,6 +1,4 @@
-﻿using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Models;
-using chldr_data.Enums;
+﻿using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.Models;
 using chldr_data.remote.Services;
@@ -14,16 +12,27 @@ namespace chldr_data.remote.Repositories
         where TModel : class
         where TEntity : class
     {
-        protected abstract RecordType RecordType { get; }
-        protected readonly SqlContext _dbContext;
-        protected readonly string _userId;
-
         public SqlRepository(SqlContext context, string userId)
         {
             _dbContext = context;
             _userId = userId;
         }
-        public abstract TModel Get(string entityId);
+        protected readonly SqlContext _dbContext;
+        protected readonly string _userId;
+        protected abstract RecordType RecordType { get; }
+        protected abstract TModel FromEntityShortcut(TEntity entity);
+
+        public TModel Get(string entityId)
+        {
+            var entry = _dbContext.Find<TEntity>(entityId);
+            if (entry == null)
+            {
+                throw new Exception("There is no such word in the database");
+            }
+
+            return FromEntityShortcut(entry);
+        }
+
         public abstract void Update(TDto dto);
         public abstract void Add(TDto dto);
         public void Remove(string entityId)
@@ -72,7 +81,6 @@ namespace chldr_data.remote.Repositories
                 propertyInfo.SetValue(obj, value);
             }
         }
-
         protected void ApplyChanges<T>(string entityId, List<Change> changes) where T : class
         {
             // Using this method, instead of updating the whole database entity, we can just update its particular, changed fields
@@ -90,13 +98,22 @@ namespace chldr_data.remote.Repositories
 
             _dbContext.SaveChanges();
         }
-
-
         public IEnumerable<TModel> Take(int limit)
         {
-            //var entities = _dbContext.Set<TEntity>().Take(limit);
-            //return entities.Select(e => TModel.FromEntity(e));
-            return new List<TModel>();
+            var entities = _dbContext.Set<TEntity>().Take(limit);
+            return entities.Select(e => FromEntityShortcut(e));
+        }
+        public IEnumerable<TModel> GetRandoms(int limit)
+        {
+            var randomizer = new Random();
+
+            var entries = _dbContext.Set<TEntity>()
+              .OrderBy(x => randomizer.Next(0, 75000))
+              .OrderBy(entry => entry.GetHashCode())
+              .Take(limit)
+              .Select(entry => FromEntityShortcut(entry));
+
+            return entries;
         }
 
         public void AddRange(IEnumerable<TDto> added)
@@ -106,7 +123,6 @@ namespace chldr_data.remote.Repositories
                 Add(dto);
             }
         }
-
         public void UpdateRange(IEnumerable<TDto> updated)
         {
             foreach (var dto in updated)

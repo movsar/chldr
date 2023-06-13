@@ -90,6 +90,28 @@ namespace chldr_api
             }
         }
 
+        public async Task<MutationResponse> RemoveEntry(string userId, string entryId)
+        {
+            var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
+            unitOfWork.BeginTransaction();
+            try
+            {
+                unitOfWork.Entries.Remove(entryId);
+                unitOfWork.Commit();
+
+                return new MutationResponse() { Success = true };
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                throw ex;
+            }
+            finally
+            {
+                unitOfWork.Dispose();
+            }
+        }
+
         // User mutations
         public async Task<RegistrationResponse> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {

@@ -15,18 +15,11 @@ namespace chldr_data.remote.Repositories
     {
         public SqlTranslationsRepository(SqlContext context, string _userId) : base(context, _userId) { }
         protected override RecordType RecordType => RecordType.Translation;
-
-        public override TranslationModel Get(string entityId)
+        protected override TranslationModel FromEntityShortcut(SqlTranslation translation)
         {
-            var translation = _dbContext.Translations.FirstOrDefault(t => t.TranslationId.Equals(entityId));
-
-            if (translation == null)
-            {
-                throw new ArgumentException($"Entity not found: {entityId}");
-            }
-
             return TranslationModel.FromEntity(translation);
         }
+     
         public override void Add(TranslationDto dto)
         {
             var entity = SqlTranslation.FromDto(dto, _dbContext);
