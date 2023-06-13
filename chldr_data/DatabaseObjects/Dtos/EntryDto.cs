@@ -6,8 +6,6 @@ namespace chldr_data.DatabaseObjects.Dtos
 {
     public class EntryDto : IEntry
     {
-        private int subtype;
-
         public string EntryId { get; set; } = Guid.NewGuid().ToString();
         public string? UserId { get; set; }
         public string SourceId { get; set; }
@@ -20,7 +18,6 @@ namespace chldr_data.DatabaseObjects.Dtos
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
         public List<TranslationDto> Translations { get; set; } = new List<TranslationDto>();
-
         public static EntryDto FromModel(EntryModel entryModel)
         {
             var entryDto = new EntryDto()

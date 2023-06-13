@@ -1,6 +1,5 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Models;
 using chldr_data.Services;
 using chldr_data.Validators;
 using chldr_shared.Enums;
@@ -12,6 +11,7 @@ using chldr_utils;
 using chldr_utils.Services;
 using FluentValidation;
 using chldr_utils.Interfaces;
+using chldr_data.local.Services;
 
 namespace chldr_blazor.Extensions
 {
@@ -19,38 +19,30 @@ namespace chldr_blazor.Extensions
     {
         public static WebApplicationBuilder RegisterValidators(this WebApplicationBuilder appBuilder)
         {
-            appBuilder.Services.AddSingleton<EntryValidator>();
-            appBuilder.Services.AddSingleton<TranslationValidator>();
-            appBuilder.Services.AddSingleton<UserInfoValidator>();
-            appBuilder.Services.AddSingleton<IValidator<UserDto>, UserInfoValidator>();
+            appBuilder.Services.AddScoped<EntryValidator>();
+            appBuilder.Services.AddScoped<TranslationValidator>();
+            appBuilder.Services.AddScoped<UserInfoValidator>();
+            appBuilder.Services.AddScoped<IValidator<UserDto>, UserInfoValidator>();
 
             return appBuilder;
         }
         public static WebApplicationBuilder RegisterAppServices(this WebApplicationBuilder appBuilder)
         {
             // Data
-            appBuilder.Services.AddSingleton<ServiceLocator>();
             appBuilder.Services.AddSingleton<IGraphQLRequestSender, GraphQLRequestSender>();
-            appBuilder.Services.AddSingleton<AuthService>();
-            //appBuilder.Services.AddSingleton<IDataSourceService, RealmDataSource>();
-            //appBuilder.Services.AddSingleton<ILocalDbReader, LocalDbReader>();
+            appBuilder.Services.AddScoped<AuthService>();
+            appBuilder.Services.AddScoped<IDataProvider, RealmDataProvider>();
 
             appBuilder.Services.AddScoped<UserService>();
-            //appBuilder.Services.AddScoped<SyncService>();
-            //appBuilder.Services.AddScoped<SearchService>();
-
-            //appBuilder.Services.AddScoped<LanguagesReader>();
-            //appBuilder.Services.AddScoped<PhrasesReader>();
-            //appBuilder.Services.AddScoped<SourcesReader>();
-            //appBuilder.Services.AddScoped<WordsReader>();
-
-            //appBuilder.Services.AddScoped<WordsWriter>();
+            appBuilder.Services.AddScoped<ISearchService, SearchService>();
+            appBuilder.Services.AddScoped<SyncService>();
 
             // Shared
             appBuilder.Services.AddScoped<ContentStore>();
             appBuilder.Services.AddScoped<UserStore>();
             appBuilder.Services.AddScoped<JsInterop>();
             appBuilder.Services.AddScoped<LocalStorageService>();
+
             appBuilder.Services.AddSingleton<EmailService>();
             appBuilder.Services.AddSingleton(x => new EnvironmentService(Platforms.Web));
             appBuilder.Services.AddSingleton(x => new FileService(AppContext.BaseDirectory));
@@ -67,6 +59,7 @@ namespace chldr_blazor.Extensions
             appBuilder.Services.AddScoped<MainPageViewModel>();
             appBuilder.Services.AddScoped<LoginPageViewModel>();
             appBuilder.Services.AddScoped<RegistrationPageViewModel>();
+            appBuilder.Services.AddScoped<SearchResultsViewModel>();
 
             return appBuilder;
         }

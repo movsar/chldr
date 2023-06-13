@@ -1,7 +1,5 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Models;
-using chldr_data.Repositories;
 using chldr_data.Services;
 using chldr_data.Validators;
 using chldr_shared.Enums;
@@ -19,22 +17,22 @@ namespace chldr_native.Extensions
 {
     internal static class DiServiceRegistrator
     {
-        public static MauiAppBuilder RegisterValidators(this MauiAppBuilder mauiAppBuilder)
+        public static MauiAppBuilder RegisterValidators(this MauiAppBuilder appBuilder)
         {
-            mauiAppBuilder.Services.AddScoped<EntryValidator>();
-            mauiAppBuilder.Services.AddScoped<TranslationValidator>();
-            mauiAppBuilder.Services.AddScoped<UserInfoValidator>();
-            mauiAppBuilder.Services.AddScoped<IValidator<UserDto>, UserInfoValidator>();
+            appBuilder.Services.AddScoped<EntryValidator>();
+            appBuilder.Services.AddScoped<TranslationValidator>();
+            appBuilder.Services.AddScoped<UserInfoValidator>();
+            appBuilder.Services.AddScoped<IValidator<UserDto>, UserInfoValidator>();
 
-            return mauiAppBuilder;
+            return appBuilder;
         }
         public static MauiAppBuilder RegisterAppServices(this MauiAppBuilder appBuilder)
         {
             // Data
             appBuilder.Services.AddSingleton<ServiceLocator>();
             appBuilder.Services.AddSingleton<IGraphQLRequestSender, GraphQLRequestSender>();
-            appBuilder.Services.AddSingleton<AuthService>();
-            appBuilder.Services.AddSingleton<IDataProvider, RealmDataProvider>();
+            appBuilder.Services.AddScoped<AuthService>();
+            appBuilder.Services.AddScoped<IDataProvider, RealmDataProvider>();
             
             appBuilder.Services.AddScoped<UserService>();
             appBuilder.Services.AddScoped<ISearchService, SearchService>();

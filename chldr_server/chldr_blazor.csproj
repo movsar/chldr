@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\chldr_data.local\chldr_data.local.csproj" />
     <ProjectReference Include="..\chldr_ui\chldr_ui.csproj" />
   </ItemGroup>
 </Project>
