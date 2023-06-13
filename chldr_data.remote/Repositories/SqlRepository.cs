@@ -22,7 +22,7 @@ namespace chldr_data.remote.Repositories
         protected abstract RecordType RecordType { get; }
         protected abstract TModel FromEntityShortcut(TEntity entity);
 
-        public TModel Get(string entityId)
+        public virtual TModel Get(string entityId)
         {
             var entry = _dbContext.Find<TEntity>(entityId);
             if (entry == null)
@@ -32,7 +32,6 @@ namespace chldr_data.remote.Repositories
 
             return FromEntityShortcut(entry);
         }
-
         public abstract void Update(TDto dto);
         public abstract void Add(TDto dto);
         public void Remove(string entityId)
@@ -98,12 +97,12 @@ namespace chldr_data.remote.Repositories
 
             _dbContext.SaveChanges();
         }
-        public IEnumerable<TModel> Take(int limit)
+        public virtual IEnumerable<TModel> Take(int limit)
         {
             var entities = _dbContext.Set<TEntity>().Take(limit);
             return entities.Select(e => FromEntityShortcut(e));
         }
-        public IEnumerable<TModel> GetRandoms(int limit)
+        public virtual IEnumerable<TModel> GetRandoms(int limit)
         {
             var randomizer = new Random();
 

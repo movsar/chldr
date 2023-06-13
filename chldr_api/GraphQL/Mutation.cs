@@ -55,7 +55,7 @@ namespace chldr_api
                 unitOfWork.Entries.Add(entryDto);
                 unitOfWork.Commit();
 
-                return new InsertResponse() { Success = true, CreatedAt = entryDto.CreatedAt  };
+                return new InsertResponse() { Success = true, CreatedAt = entryDto.CreatedAt };
             }
             catch (Exception ex)
             {

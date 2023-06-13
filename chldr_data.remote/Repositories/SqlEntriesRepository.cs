@@ -7,6 +7,7 @@ using chldr_data.Models;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace chldr_data.remote.Repositories
 {
@@ -26,7 +27,43 @@ namespace chldr_data.remote.Repositories
         public event Action<EntryModel>? EntryDeleted;
         public event Action<EntryModel>? EntryAdded;
 
+        public override EntryModel Get(string entityId)
+        {
+            var entry = _dbContext.Entries
+                .Include(e => e.Source)
+                .Include(e => e.User)
+                .FirstOrDefault(e => e.EntryId.Equals(entityId));
 
+            if (entry == null)
+            {
+                throw new Exception("There is no such word in the database");
+            }
+
+            return FromEntityShortcut(entry);
+        }
+        public override IEnumerable<EntryModel> Take(int limit)
+        {
+            var entities = _dbContext.Set<SqlEntry>()
+                .Include(e => e.Source)
+                .Include(e => e.User)
+                .Take(limit);
+
+            return entities.Select(e => FromEntityShortcut(e));
+        }
+        public override IEnumerable<EntryModel> GetRandoms(int limit)
+        {
+            var randomizer = new Random();
+
+            var entries = _dbContext.Set<SqlEntry>()
+                .Include(e => e.Source)
+                .Include(e => e.User)
+                .OrderBy(x => randomizer.Next(0, 75000))
+                .OrderBy(entry => entry.GetHashCode())
+                .Take(limit)
+                .Select(entry => FromEntityShortcut(entry));
+
+            return entries;
+        }
         protected override EntryModel FromEntityShortcut(SqlEntry entry)
         {
             return EntryModel.FromEntity(
@@ -34,18 +71,6 @@ namespace chldr_data.remote.Repositories
                entry.Source,
                entry.Translations
            );
-        }
-
-   
-        private SqlEntry GetEntity(string entityId)
-        {
-            var entry = _dbContext.Entries
-                        .Include(w => w.User)
-                        .Include(w => w.Source)
-                        .Include(w => w.Translations)
-                        .FirstOrDefault(w => w.EntryId.Equals(entityId));
-
-            return entry;
         }
 
         public override void Add(EntryDto newEntryDto)
