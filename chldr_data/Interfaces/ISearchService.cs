@@ -10,6 +10,7 @@ namespace chldr_data.Interfaces
         Task FindAsync(string inputText, FiltrationFlags filtrationFlags);
         List<EntryModel> GetEntriesOnModeration();
         List<EntryModel> GetRandomEntries();
+        List<EntryModel> GetLatestEntries();
         List<EntryModel> GetWordsToFiddleWith();
     }
 }

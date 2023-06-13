@@ -183,6 +183,16 @@ namespace chldr_data.local.Services
             return entries;
         }
 
+        public List<EntryModel> GetLatestEntries()
+        {
+            var entries = Database.All<RealmEntry>().AsEnumerable().OrderByDescending(e => e.CreatedAt).Take(100);
+
+            var entriesToReturn = entries
+              .Select(entry => FromEntity(entry));
+
+            return entriesToReturn.ToList();
+        }
+
         public List<EntryModel> GetWordsToFiddleWith()
         {
             var words = Database.All<RealmEntry>().Where(w => w.Subtype == (int)PartOfSpeech.Verb);

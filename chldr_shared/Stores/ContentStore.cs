@@ -110,6 +110,19 @@ namespace chldr_shared.Stores
 
             CachedResultsChanged?.Invoke();
         }
+        public void LoadLatestEntries()
+        {
+            CachedSearchResult.Entries.Clear();
+            var entries = _searchService.GetLatestEntries();
+
+            CachedSearchResult.Entries.Clear();
+            foreach (var entry in entries)
+            {
+                CachedSearchResult.Entries.Add(entry);
+            }
+
+            CachedResultsChanged?.Invoke();
+        }
         public void LoadEntriesToFiddleWith()
         {
             CachedSearchResult.Entries.Clear();

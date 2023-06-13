@@ -16,6 +16,10 @@ namespace chldr_ui.ViewModels
             //FiltrationFlags.OnModeration = !FiltrationFlags.OnModeration;
         }
 
+        internal void LoadLatestEntries()
+        {
+            ContentStore.LoadLatestEntries();
+        }
         internal void LoadEntriesToFiddleWith()
         {
             ContentStore.LoadEntriesToFiddleWith();
