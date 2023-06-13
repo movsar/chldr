@@ -15,6 +15,7 @@ namespace chldr_ui.ViewModels
         // Set "User" source id by default
         protected string SourceId { get; set; } = "63a816205d1af0e432fba6de";
         protected bool IsEditMode = false;
+        public WordDetails WordDetails { get; set; } = new WordDetails();
         public EntryDto Word { get; set; } = new EntryDto();
         protected override void OnInitialized()
         {

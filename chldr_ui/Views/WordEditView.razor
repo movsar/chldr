@@ -8,10 +8,10 @@
     <div class="row form-outline form-group mt-2">
         <div class="col-8">
             <div class="form-group">
-                <select @bind="@Word.EntrySubtype" class="form-select">
-                    @foreach (WordType partOfSpeech in (WordType[])Enum.GetValues(typeof(WordType)))
+                <select @bind="Word.EntrySubtype" class="form-select">
+                    @foreach (WordType WordType in (WordType[])Enum.GetValues(typeof(WordType)))
                     {
-                        <option value="@partOfSpeech">@Localizer[partOfSpeech.ToString()]</option>
+                        <option value="@((int)WordType)" selected="@((int)WordType == Word.EntrySubtype)">@Localizer[WordType.ToString()]</option>
                     }
                 </select>
             </div>
@@ -27,105 +27,105 @@
         <div class="collapse word-details mt-2">
             <div class="card card-body">
 
-                @*   @if (Word.EntrySubtype == PartOfSpeech.Verb)
+                @if (Word.EntrySubtype == (int)WordType.Verb)
                 {
-                <b>@Localizer["Tense"]:</b>
-                <div class="form-outline mb-2">
-                <select @bind="Word.AdditionalDetails.Tense"
-                class="form-select"
-                title="@Localizer["Word:Tense"]">
+                    <b>@Localizer["Tense"]:</b>
+                    <div class="form-outline mb-2">
+                        <select @bind="WordDetails.Tense"
+                                class="form-select"
+                                title="@Localizer["Word:Tense"]">
 
-                @foreach (VerbTense tense in (VerbTense[])Enum.GetValues(typeof(VerbTense)))
-                {
-                <option value="@tense" class="form-control">@Localizer[tense.ToString()]</option>
+                            @foreach (VerbTense tense in (VerbTense[])Enum.GetValues(typeof(VerbTense)))
+                            {
+                                <option value="@tense" class="form-control">@Localizer[tense.ToString()]</option>
+                            }
+                        </select>
+                    </div>
+
+                    <b>@Localizer["Transitiveness"]:</b>
+                    <div class="form-outline mb-2">
+                        <select @bind="WordDetails.Transitiveness"
+                                class="form-select"
+                                title="@Localizer["Word:Transitiveness"]">
+
+                            @foreach (Transitiveness transitiveness in (Transitiveness[])Enum.GetValues(typeof(Transitiveness)))
+                            {
+                                <option value="@transitiveness" class="form-control">@Localizer[$"Word:{transitiveness}"]</option>
+                            }
+                        </select>
+                    </div>
+
+                    <b>@Localizer["NumericalType"]:</b>
+                    <div class="form-outline mb-2">
+                        <select @bind="WordDetails.NumericalType"
+                                class="form-select"
+                                title="@Localizer["NumericalType"]">
+
+                            @foreach (NumericalType numericalType in (NumericalType[])Enum.GetValues(typeof(NumericalType)))
+                            {
+                                <option value="@numericalType" class="form-control">@Localizer[$"Word:{numericalType}"]</option>
+                            }
+                        </select>
+                    </div>
+
+                    <b>@Localizer["Conjugation"]:</b>
+                    <div class="form-outline mb-2">
+                        <select @bind="WordDetails.Conjugation"
+                                class="form-select"
+                                title="@Localizer["Conjugation"]">
+
+                            @foreach (VerbConjugation conjugation in (VerbConjugation[])Enum.GetValues(typeof(VerbConjugation)))
+                            {
+                                <option value="@conjugation" class="form-control">@Localizer[$"Word:{conjugation}"]</option>
+                            }
+                        </select>
+                    </div>
+
+                    <b>@Localizer["Mood"]:</b>
+                    <div class="form-outline mb-2">
+                        <select @bind="WordDetails.Mood"
+                                class="form-select"
+                                title="@Localizer["Mood"]">
+
+                            @foreach (VerbMood mood in (VerbMood[])Enum.GetValues(typeof(VerbMood)))
+                            {
+                                <option value="@mood" class="form-control">@Localizer[$"Word:{mood}"]</option>
+                            }
+                        </select>
+                    </div>
+
+                    <b>@Localizer["Grammatical_class"]:</b>
+                    <div class="form-outline mb-2">
+                        <select @bind="WordDetails.Classes[0]"
+                                class="form-select"
+                                title="@Localizer["Grammatical_class"]">
+
+                            <option value="0" class="form-control">@Localizer["Word:Undefined"]</option>
+                            <option value="1" class="form-control">@Localizer["Class:1_v_b"]</option>
+                            <option value="2" class="form-control">@Localizer["Class:2_y_b"]</option>
+                            <option value="3" class="form-control">@Localizer["Class:3_y_y"]</option>
+                            <option value="4" class="form-control">@Localizer["Class:4_d_d"]</option>
+                            <option value="5" class="form-control">@Localizer["Class:5_b_b"]</option>
+                            <option value="6" class="form-control">@Localizer["Class:6_b_d"]</option>
+                        </select>
+                    </div>
                 }
-                </select>
-                </div>
 
-                <b>@Localizer["Transitiveness"]:</b>
-                <div class="form-outline mb-2">
-                <select @bind="Word.AdditionalDetails.Transitiveness"
-                class="form-select"
-                title="@Localizer["Word:Transitiveness"]">
 
-                @foreach (Transitiveness transitiveness in (Transitiveness[])Enum.GetValues(typeof(Transitiveness)))
+                @if (Word.EntrySubtype == (int)WordType.Noun)
                 {
-                <option value="@transitiveness" class="form-control">@Localizer[$"Word:{transitiveness}"]</option>
-                }
-                </select>
-                </div>
-
-                <b>@Localizer["NumericalType"]:</b>
-                <div class="form-outline mb-2">
-                <select @bind="Word.AdditionalDetails.NumericalType"
-                class="form-select"
-                title="@Localizer["NumericalType"]">
-
-                @foreach (NumericalType numericalType in (NumericalType[])Enum.GetValues(typeof(NumericalType)))
-                {
-                <option value="@numericalType" class="form-control">@Localizer[$"Word:{numericalType}"]</option>
-                }
-                </select>
-                </div>
-
-                <b>@Localizer["Conjugation"]:</b>
-                <div class="form-outline mb-2">
-                <select @bind="Word.AdditionalDetails.Conjugation"
-                class="form-select"
-                title="@Localizer["Conjugation"]">
-
-                @foreach (VerbConjugation conjugation in (VerbConjugation[])Enum.GetValues(typeof(VerbConjugation)))
-                {
-                <option value="@conjugation" class="form-control">@Localizer[$"Word:{conjugation}"]</option>
-                }
-                </select>
-                </div>
-
-                <b>@Localizer["Mood"]:</b>
-                <div class="form-outline mb-2">
-                <select @bind="Word.AdditionalDetails.Mood"
-                class="form-select"
-                title="@Localizer["Mood"]">
-
-                @foreach (VerbMood mood in (VerbMood[])Enum.GetValues(typeof(VerbMood)))
-                {
-                <option value="@mood" class="form-control">@Localizer[$"Word:{mood}"]</option>
-                }
-                </select>
-                </div>
-
-                <b>@Localizer["Grammatical_class"]:</b>
-                <div class="form-outline mb-2">
-                <select @bind="Word.AdditionalDetails.Classes[0]"
-                class="form-select"
-                title="@Localizer["Grammatical_class"]">
-
-                <option value="0" class="form-control">@Localizer["Word:Undefined"]</option>
-                <option value="1" class="form-control">@Localizer["Class:1_v_b"]</option>
-                <option value="2" class="form-control">@Localizer["Class:2_y_b"]</option>
-                <option value="3" class="form-control">@Localizer["Class:3_y_y"]</option>
-                <option value="4" class="form-control">@Localizer["Class:4_d_d"]</option>
-                <option value="5" class="form-control">@Localizer["Class:5_b_b"]</option>
-                <option value="6" class="form-control">@Localizer["Class:6_b_d"]</option>
-                </select>
-                </div>
+                    <div class="form-outline mb-2">
+                        <select @bind="@WordDetails.Classes[0]" class="form-select" title="@Localizer["Grammatical_class"]">
+                            <option value="1" class="form-control">@Localizer["Class:1_v_b"]</option>
+                            <option value="2" class="form-control">@Localizer["Class:2_y_b"]</option>
+                            <option value="3" class="form-control">@Localizer["Class:3_y_y"]</option>
+                            <option value="4" class="form-control">@Localizer["Class:4_d_d"]</option>
+                            <option value="5" class="form-control">@Localizer["Class:5_b_b"]</option>
+                            <option value="6" class="form-control">@Localizer["Class:6_b_d"]</option>
+                        </select>
+                    </div>
                 }
 
-                @if (Word.PartOfSpeech == PartOfSpeech.Noun)
-                {
-                <div class="form-outline mb-2">
-                <select @bind="@Word.GrammaticalClasses[0]"
-                class="form-select"
-                title="@Localizer["Grammatical_class"]">
-                <option value="1" class="form-control">@Localizer["Class:1_v_b"]</option>
-                <option value="2" class="form-control">@Localizer["Class:2_y_b"]</option>
-                <option value="3" class="form-control">@Localizer["Class:3_y_y"]</option>
-                <option value="4" class="form-control">@Localizer["Class:4_d_d"]</option>
-                <option value="5" class="form-control">@Localizer["Class:5_b_b"]</option>
-                <option value="6" class="form-control">@Localizer["Class:6_b_d"]</option>
-                </select>
-                </div>
-                *@
             </div>
         </div>
     </div>

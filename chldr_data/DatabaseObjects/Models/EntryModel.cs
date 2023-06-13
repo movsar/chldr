@@ -15,7 +15,6 @@ namespace chldr_data.DatabaseObjects.Models
         public EntryType Type { get; set; }
         public int Subtype { get; set; }
         public string Content { get; set; }
-        public string RawContents { get; set; }
         public IDetails? Details { get; set; }
         public SourceModel Source { get; set; }
         public string? SourceId => Source.SourceId;
@@ -35,7 +34,6 @@ namespace chldr_data.DatabaseObjects.Models
                 Subtype = entry.Subtype,
                 Source = SourceModel.FromEntity(source),
                 Content = entry.Content,
-                RawContents = entry.RawContents,
                 CreatedAt = entry.CreatedAt,
                 UpdatedAt = entry.UpdatedAt
             };
