@@ -1,6 +1,6 @@
 ﻿namespace chldr_data.Enums.WordDetails
 {
-    public enum AdjectiveCharacteristic
+    public enum AdjectiveCharacteristics
     {
         Undefined = 0,
         Dependent = 1,

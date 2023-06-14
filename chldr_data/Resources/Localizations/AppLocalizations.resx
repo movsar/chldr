@@ -117,12 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Adjective" xml:space="preserve">
-    <value>Adjective</value>
-  </data>
-  <data name="Adverb" xml:space="preserve">
-    <value>Adverb</value>
-  </data>
   <data name="App_title" xml:space="preserve">
     <value>Chechen Language Dictionary</value>
   </data>
@@ -251,9 +245,6 @@
   <data name="Notes" xml:space="preserve">
     <value>Notes</value>
   </data>
-  <data name="Noun" xml:space="preserve">
-    <value>Noun</value>
-  </data>
   <data name="Or_sign_up_with:" xml:space="preserve">
     <value>or sign up with:</value>
   </data>
@@ -299,9 +290,6 @@
   <data name="Username" xml:space="preserve">
     <value>Username</value>
   </data>
-  <data name="Verb" xml:space="preserve">
-    <value>Verb</value>
-  </data>
   <data name="Word" xml:space="preserve">
     <value>Word</value>
   </data>
@@ -314,13 +302,13 @@
   <data name="Error:Phrase_shouldn't_be_null" xml:space="preserve">
     <value>Phrase shouldn't be null</value>
   </data>
-  <data name="Enter_translation_notes" xml:space="preserve">
+  <data name="EnterTranslationNotes" xml:space="preserve">
     <value>Enter translation notes</value>
   </data>
-  <data name="Enter_translation_text" xml:space="preserve">
+  <data name="EnterTranslationText" xml:space="preserve">
     <value>Enter translation text</value>
   </data>
-  <data name="PageTitle:Edit_word" xml:space="preserve">
+  <data name="PageTitle:EditWord" xml:space="preserve">
     <value>Edit word</value>
   </data>
   <data name="Authorized" xml:space="preserve">
@@ -350,8 +338,8 @@
   <data name="Unauthorized" xml:space="preserve">
     <value>Unauthorized</value>
   </data>
-  <data name="Undefined" xml:space="preserve">
-    <value>Undefined</value>
+  <data name="Word:Undefined" xml:space="preserve">
+    <value> - </value>
   </data>
   <data name="Word:Absolutive" xml:space="preserve">
     <value>AbsolutiveSingular</value>
@@ -365,19 +353,19 @@
   <data name="Word:Allative" xml:space="preserve">
     <value>Allative</value>
   </data>
-  <data name="Word:Causative" xml:space="preserve">
+  <data name="Word:Conjugation:Causative" xml:space="preserve">
     <value>Causative</value>
   </data>
-  <data name="Word:Common" xml:space="preserve">
+  <data name="Word:Name:Common" xml:space="preserve">
     <value>Common</value>
   </data>
-  <data name="Word:Complex" xml:space="preserve">
+  <data name="Word:Complexity:Complex" xml:space="preserve">
     <value>Complex</value>
   </data>
-  <data name="Word:Composite" xml:space="preserve">
+  <data name="Word:Complexity:Composite" xml:space="preserve">
     <value>Composite</value>
   </data>
-  <data name="Word:Concessive" xml:space="preserve">
+  <data name="Word:Degree:Concessive" xml:space="preserve">
     <value>Concessive</value>
   </data>
   <data name="Word:Conjunction" xml:space="preserve">
@@ -389,22 +377,22 @@
   <data name="Word:Dependent" xml:space="preserve">
     <value>Dependent</value>
   </data>
-  <data name="Word:Derivative" xml:space="preserve">
+  <data name="Word:NumericalCategory:Derivative" xml:space="preserve">
     <value>Derivative</value>
   </data>
   <data name="Word:Ergative" xml:space="preserve">
     <value>Ergative</value>
   </data>
-  <data name="Word:First" xml:space="preserve">
+  <data name="Word:Declension:First" xml:space="preserve">
     <value>First</value>
   </data>
-  <data name="Word:Fourth" xml:space="preserve">
+  <data name="Word:Declension:Fourth" xml:space="preserve">
     <value>Fourth</value>
   </data>
-  <data name="Word:Future_possible" xml:space="preserve">
+  <data name="Word:Tense:Future_possible" xml:space="preserve">
     <value>Future possible</value>
   </data>
-  <data name="Word:Future_real" xml:space="preserve">
+  <data name="Word:Tense:Future_real" xml:space="preserve">
     <value>FutureReal</value>
   </data>
   <data name="Word:Genitive" xml:space="preserve">
@@ -413,16 +401,16 @@
   <data name="Word:Gerund" xml:space="preserve">
     <value>Gerund</value>
   </data>
-  <data name="Word:Imperative" xml:space="preserve">
+  <data name="Word:Mood:Imperative" xml:space="preserve">
     <value>Imperative</value>
   </data>
-  <data name="Word:Inceptive" xml:space="preserve">
+  <data name="Word:Conjugation:Inceptive" xml:space="preserve">
     <value>Inceptive</value>
   </data>
   <data name="Word:Independent" xml:space="preserve">
     <value>Independent</value>
   </data>
-  <data name="Word:Indicative" xml:space="preserve">
+  <data name="Word:Mood:Indicative" xml:space="preserve">
     <value>Indicative</value>
   </data>
   <data name="Word:Instrumental" xml:space="preserve">
@@ -431,7 +419,7 @@
   <data name="Word:Interjection" xml:space="preserve">
     <value>Interjection</value>
   </data>
-  <data name="Word:Interrogative_indicative" xml:space="preserve">
+  <data name="Word:Mood:Interrogative_indicative" xml:space="preserve">
     <value>InterrogativeIndicative</value>
   </data>
   <data name="Word:Intransitive" xml:space="preserve">
@@ -443,7 +431,7 @@
   <data name="Word:Masdar" xml:space="preserve">
     <value>Masdar</value>
   </data>
-  <data name="Word:Multiplicative" xml:space="preserve">
+  <data name="Word:NumericalCategory:Multiplicative" xml:space="preserve">
     <value>Multiplicative</value>
   </data>
   <data name="Word:Noun" xml:space="preserve">
@@ -452,97 +440,145 @@
   <data name="Word:Numeral" xml:space="preserve">
     <value>Numeral</value>
   </data>
-  <data name="Word:Ordinal" xml:space="preserve">
+  <data name="Word:NumericalCategory:Ordinal" xml:space="preserve">
     <value>Ordinal</value>
   </data>
   <data name="Word:Particle" xml:space="preserve">
     <value>Particle</value>
   </data>
-  <data name="Word:PastImperfect" xml:space="preserve">
+  <data name="Word:Tense:PastImperfect" xml:space="preserve">
     <value>PastImperfect</value>
   </data>
-  <data name="Word:PastPerfect" xml:space="preserve">
+  <data name="Word:Tense:PastPerfect" xml:space="preserve">
     <value>PastPerfect</value>
   </data>
-  <data name="Word:PastRecent" xml:space="preserve">
+  <data name="Word:Tense:PastRecent" xml:space="preserve">
     <value>PastRecent</value>
   </data>
-  <data name="Word:PastRemote" xml:space="preserve">
+  <data name="Word:Tense:PastRemote" xml:space="preserve">
     <value>PastRemote</value>
   </data>
-  <data name="Word:PastWitnessed" xml:space="preserve">
+  <data name="Word:Tense:PastWitnessed" xml:space="preserve">
     <value>PastWitnessed</value>
   </data>
-  <data name="Word:Permissive" xml:space="preserve">
+  <data name="Word:Conjugation:Permissive" xml:space="preserve">
     <value>Permissive</value>
   </data>
-  <data name="Word:PermissiveCausative" xml:space="preserve">
+  <data name="Word:Conjugation:PermissiveCausative" xml:space="preserve">
     <value>PermissiveCausative</value>
   </data>
-  <data name="Word:Plural" xml:space="preserve">
+  <data name="Word:NumericalType:Plural" xml:space="preserve">
     <value>Plural</value>
   </data>
-  <data name="Word:Potential" xml:space="preserve">
+  <data name="Word:Conjugation:Potential" xml:space="preserve">
     <value>Potential</value>
   </data>
-  <data name="Word:PresentContinuous" xml:space="preserve">
+  <data name="Word:Tense:PresentContinuous" xml:space="preserve">
     <value>PresentContinuous</value>
   </data>
-  <data name="Word:PresentSimple" xml:space="preserve">
+  <data name="Word:Tense:PresentSimple" xml:space="preserve">
     <value>PresentSimple</value>
   </data>
   <data name="Word:Pronoun" xml:space="preserve">
     <value>Pronoun</value>
   </data>
-  <data name="Word:Proper" xml:space="preserve">
+  <data name="Word:Name:Proper" xml:space="preserve">
     <value>Proper</value>
   </data>
-  <data name="Word:Qualitive" xml:space="preserve">
+  <data name="Word:SemanticType" xml:space="preserve">
+    <value>SemanticType</value>
+  </data>
+  <data name="Word:NumericalCategory:Quantitative" xml:space="preserve">
     <value>Qualitive</value>
   </data>
-  <data name="Word:Quantitative" xml:space="preserve">
-    <value>Qualitive</value>
-  </data>
-  <data name="Word:RealConditional" xml:space="preserve">
+  <data name="Word:Mood:RealConditional" xml:space="preserve">
     <value>RealConditional</value>
   </data>
-  <data name="Word:RealDesiderative" xml:space="preserve">
+  <data name="Word:Mood:RealDesiderative" xml:space="preserve">
     <value>RealDesiderative</value>
   </data>
-  <data name="Word:Second" xml:space="preserve">
+  <data name="Word:DeclensionSecond" xml:space="preserve">
     <value>Second</value>
   </data>
-  <data name="Word:Simple" xml:space="preserve">
+  <data name="Word:Complexity:Simple" xml:space="preserve">
     <value>Simple</value>
   </data>
-  <data name="Word:Singular" xml:space="preserve">
+  <data name="Word:NumericalType:Singular" xml:space="preserve">
     <value>Singular</value>
   </data>
-  <data name="Word:Superlative" xml:space="preserve">
+  <data name="Word:Degree:Superlative" xml:space="preserve">
     <value>Superlative</value>
   </data>
-  <data name="Word:Third" xml:space="preserve">
+  <data name="Word:Declension:Third" xml:space="preserve">
     <value>Third</value>
   </data>
-  <data name="Word:Transitive" xml:space="preserve">
+  <data name="Word:Transitiveness:Transitive" xml:space="preserve">
     <value>Transitive</value>
   </data>
-  <data name="Word:UnrealConditional" xml:space="preserve">
+  <data name="Word:Mood:UnrealConditional" xml:space="preserve">
     <value>UnrealConditional</value>
   </data>
-  <data name="Word:UnrealDesiderative" xml:space="preserve">
+  <data name="Word:Mood:UnrealDesiderative" xml:space="preserve">
     <value>UnrealDesiderative</value>
   </data>
   <data name="Word:Verb" xml:space="preserve">
     <value>Verb</value>
   </data>
-  <data name="Word:Comparative" xml:space="preserve">
+  <data name="Word:Degree:Comparative" xml:space="preserve">
     <value>Comparative</value>
   </data>
   <data name="Word:Characteristics" xml:space="preserve">
     <value>Characteristics</value>
   </data>
-  <data name="Word:Undefined" xml:space="preserve">
+  <data name="Word:Transitiveness:Undefined" xml:space="preserve">
     <value>Undefined</value>
+  </data>
+  <data name="Word:Degree" xml:space="preserve">
+    <value>Degree</value>
+  </data>
+  <data name="Word:Person" xml:space="preserve">
+    <value>Person</value>
+  </data>
+  <data name="Word:Class" xml:space="preserve">
+    <value>Class</value>
+  </data>
+  <data name="Word:Classes" xml:space="preserve">
+    <value>Classes</value>
+  </data>
+  <data name="Word:Conjugation" xml:space="preserve">
+    <value>Conjugation</value>
+  </data>
+  <data name="Word:Mood" xml:space="preserve">
+    <value>Mood</value>
+  </data>
+  <data name="Word:Declension" xml:space="preserve">
+    <value>Declension</value>
+  </data>
+  <data name="Word:Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="EnterWord" xml:space="preserve">
+    <value>Enter word</value>
+  </data>
+  <data name="Entry_type" xml:space="preserve">
+    <value>Entry type</value>
+  </data>
+  <data name="Translations" xml:space="preserve">
+    <value>Translations</value>
+  </data>
+  <data name="Word:NumericalType" xml:space="preserve">
+    <value>Numerical type</value>
+  </data>
+  <data name="Word:Transitiveness" xml:space="preserve">
+    <value>Transitiveness</value>
+  </data>
+  <data name="Word:SemanticType:Qualitive" xml:space="preserve">
+    <value>Qualitive</value>
+  </data>
+  <data name="Word:SemanticType:Relative" xml:space="preserve">
+    <value>Relative</value>
   </data>
 </root>

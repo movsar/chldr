@@ -1,8 +1,8 @@
 ﻿namespace chldr_data.Enums.WordDetails
 {
+    // Спряжение
     public enum VerbConjugation
     {
-        // Спряжение
         Undefined = 0,
         Causative = 1,
         Inceptive = 2,

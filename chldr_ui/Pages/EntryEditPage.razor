@@ -2,11 +2,11 @@
 @page "/entry/edit/{EntryId?}"
 
 <div class="form-group mt-2 mb-2">
-    <h5>@Localizer["Select_entry_type"]</h5>
+    <h5>@Localizer["Entry_type"]</h5>
     <select class="form-control" @onchange="@HandleEntryTypeChange">
-        <option value="@(EntryType.Word)">Word</option>
-        <option value="@(EntryType.Phrase)">Phrase</option>
-        <option value="@(EntryType.Text)">Text</option>
+        <option value="@(EntryType.Word)">@Localizer["Word"]</option>
+        <option value="@(EntryType.Phrase)">@Localizer["Phrase"]</option>
+        <option value="@(EntryType.Text)">@Localizer["Text"]</option>
     </select>
 </div>
 

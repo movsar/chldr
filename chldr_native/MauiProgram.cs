@@ -1,5 +1,6 @@
 ﻿using chldr_native.Extensions;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 
 namespace chldr_native
 {
@@ -26,6 +27,12 @@ namespace chldr_native
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();
 #endif
+
+            var culture = CultureInfo.GetCultureInfo("ru_RU");
+
+            Thread.CurrentThread.CurrentUICulture = culture;
+            CultureInfo.CurrentCulture = culture;
+            CultureInfo.CurrentUICulture = culture;
 
             return builder.Build();
         }
