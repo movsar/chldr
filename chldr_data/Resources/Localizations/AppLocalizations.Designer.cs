@@ -269,18 +269,18 @@ namespace chldr_data.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Enter translation notes.
         /// </summary>
-        public static string EnterTranslationNotes {
+        public static string Enter_translation_notes {
             get {
-                return ResourceManager.GetString("EnterTranslationNotes", resourceCulture);
+                return ResourceManager.GetString("Enter_translation_notes", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Enter translation text.
         /// </summary>
-        public static string EnterTranslationText {
+        public static string Enter_translation_text {
             get {
-                return ResourceManager.GetString("EnterTranslationText", resourceCulture);
+                return ResourceManager.GetString("Enter_translation_text", resourceCulture);
             }
         }
         
@@ -308,6 +308,15 @@ namespace chldr_data.Resources.Localizations {
         public static string Entry_type {
             get {
                 return ResourceManager.GetString("Entry_type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Content must be set.
+        /// </summary>
+        public static string Error_Content_must_be_set {
+            get {
+                return ResourceManager.GetString("Error:Content_must_be_set", resourceCulture);
             }
         }
         

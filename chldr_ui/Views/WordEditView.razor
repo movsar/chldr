@@ -19,7 +19,7 @@
 
         <div class="col-4">
             <div class="form-group">
-                <button class="btn btn-secondary form-control" type="button" data-bs-toggle="collapse" data-bs-target=".word-details" aria-expanded="false">
+                <button class="btn btn-secondary form-control" type="button" data-bs-toggle="collapse" data-bs-target=".word-details" aria-expanded="false" disabled="@(EntryDto.EntrySubtype == 0)">
                     @Localizer["Word:Characteristics"]
                 </button>
             </div>
@@ -111,11 +111,12 @@
                     </div>
                 }
 
-
                 @if (EntryDto.EntrySubtype == (int)WordType.Noun)
                 {
                     <div class="form-outline mb-2">
+                        <b>@Localizer["Word:Class"]:</b>
                         <select @bind="@NounDetails.Class" class="form-select" title="@Localizer["Word:Class"]">
+                            <option value="0" class="form-control">@Localizer["Word:Undefined"]</option>
                             <option value="1" class="form-control">@Localizer["Class:1_v_b"]</option>
                             <option value="2" class="form-control">@Localizer["Class:2_y_b"]</option>
                             <option value="3" class="form-control">@Localizer["Class:3_y_y"]</option>

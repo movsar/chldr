@@ -491,10 +491,10 @@
   <data name="Editor" xml:space="preserve">
     <value>Редактор</value>
   </data>
-  <data name="EnterTranslationNotes" xml:space="preserve">
+  <data name="Enter_translation_notes" xml:space="preserve">
     <value>Введите примечание к переводу</value>
   </data>
-  <data name="EnterTranslationText" xml:space="preserve">
+  <data name="Enter_translation_text" xml:space="preserve">
     <value>Введите текст перевода</value>
   </data>
   <data name="Enthusiast" xml:space="preserve">
@@ -516,22 +516,22 @@
     <value>Совершается вход</value>
   </data>
   <data name="Class:1_v_b" xml:space="preserve">
-    <value>1 Класс. Ву. Бу / Ду</value>
+    <value>1 Класс. Ву, Бу / Ду</value>
   </data>
   <data name="Class:2_y_b" xml:space="preserve">
-    <value>2. Класс Йу. Бу / Ду</value>
+    <value>2.Класс Йу, Бу / Ду</value>
   </data>
   <data name="Class:3_y_y" xml:space="preserve">
-    <value>3 Класс Йу. Ду</value>
+    <value>3 Класс Йу, Ду</value>
   </data>
   <data name="Class:4_d_d" xml:space="preserve">
-    <value>4 Класс Ду. Ду</value>
+    <value>4 Класс Ду, Ду</value>
   </data>
   <data name="Class:5_b_b" xml:space="preserve">
-    <value>5 Класс Бу. Бу / Йу</value>
+    <value>5 Класс Бу, Бу / Йу</value>
   </data>
   <data name="Class:6_b_d" xml:space="preserve">
-    <value>6 Класс Бу. Ду</value>
+    <value>6 Класс Бу, Ду</value>
   </data>
   <data name="Word:Declension" xml:space="preserve">
     <value>Склонение</value>
@@ -568,5 +568,8 @@
   </data>
   <data name="Word:SemanticType:Qualitive" xml:space="preserve">
     <value>Качественный</value>
+  </data>
+  <data name="Error:Content_must_be_set" xml:space="preserve">
+    <value>Нужно заполнить форму</value>
   </data>
 </root>
