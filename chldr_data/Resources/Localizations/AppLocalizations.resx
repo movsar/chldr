@@ -419,7 +419,7 @@
   <data name="Word:Interjection" xml:space="preserve">
     <value>Interjection</value>
   </data>
-  <data name="Word:Mood:Interrogative_indicative" xml:space="preserve">
+  <data name="Word:Mood:InterrogativeIndicative" xml:space="preserve">
     <value>InterrogativeIndicative</value>
   </data>
   <data name="Word:Intransitive" xml:space="preserve">
@@ -530,8 +530,8 @@
   <data name="Word:Characteristics" xml:space="preserve">
     <value>Characteristics</value>
   </data>
-  <data name="Word:Transitiveness:Undefined" xml:space="preserve">
-    <value>Undefined</value>
+  <data name="Word:Transitiveness:Intransitive" xml:space="preserve">
+    <value>Intransitive</value>
   </data>
   <data name="Word:Degree" xml:space="preserve">
     <value>Degree</value>
@@ -583,5 +583,8 @@
   </data>
   <data name="Error:Content_must_be_set" xml:space="preserve">
     <value>Content must be set</value>
+  </data>
+  <data name="Word:Tense" xml:space="preserve">
+    <value>Tense</value>
   </data>
 </root>

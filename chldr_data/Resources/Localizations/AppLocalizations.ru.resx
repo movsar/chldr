@@ -395,7 +395,7 @@
   <data name="Word:Mood:Imperative" xml:space="preserve">
     <value>Повелительное</value>
   </data>
-  <data name="Word:Mood:Interrogative_indicative" xml:space="preserve">
+  <data name="Word:Mood:InterrogativeIndicative" xml:space="preserve">
     <value>Вопросительная форма изъявительного наклонения</value>
   </data>
   <data name="Word:Mood:RealConditional" xml:space="preserve">
@@ -452,8 +452,8 @@
   <data name="Word:Name:Common" xml:space="preserve">
     <value>Нарицательное</value>
   </data>
-  <data name="Word:Transitiveness:Undefined" xml:space="preserve">
-    <value>Неопределено</value>
+  <data name="Word:Transitiveness:Intransitive" xml:space="preserve">
+    <value>Непереходный</value>
   </data>
   <data name="Word:Degree" xml:space="preserve">
     <value>Степень</value>
@@ -516,7 +516,7 @@
     <value>Совершается вход</value>
   </data>
   <data name="Class:1_v_b" xml:space="preserve">
-    <value>1 Класс. Ву, Бу / Ду</value>
+    <value>1 Класс Ву, Бу / Ду</value>
   </data>
   <data name="Class:2_y_b" xml:space="preserve">
     <value>2.Класс Йу, Бу / Ду</value>
@@ -571,5 +571,8 @@
   </data>
   <data name="Error:Content_must_be_set" xml:space="preserve">
     <value>Нужно заполнить форму</value>
+  </data>
+  <data name="Word:Tense" xml:space="preserve">
+    <value>Время</value>
   </data>
 </root>

@@ -1097,9 +1097,9 @@ namespace chldr_data.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to InterrogativeIndicative.
         /// </summary>
-        public static string Word_Mood_Interrogative_indicative {
+        public static string Word_Mood_InterrogativeIndicative {
             get {
-                return ResourceManager.GetString("Word:Mood:Interrogative_indicative", resourceCulture);
+                return ResourceManager.GetString("Word:Mood:InterrogativeIndicative", resourceCulture);
             }
         }
         
@@ -1302,6 +1302,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tense.
+        /// </summary>
+        public static string Word_Tense {
+            get {
+                return ResourceManager.GetString("Word:Tense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Future possible.
         /// </summary>
         public static string Word_Tense_Future_possible {
@@ -1392,20 +1401,20 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Intransitive.
+        /// </summary>
+        public static string Word_Transitiveness_Intransitive {
+            get {
+                return ResourceManager.GetString("Word:Transitiveness:Intransitive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Transitive.
         /// </summary>
         public static string Word_Transitiveness_Transitive {
             get {
                 return ResourceManager.GetString("Word:Transitiveness:Transitive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Undefined.
-        /// </summary>
-        public static string Word_Transitiveness_Undefined {
-            get {
-                return ResourceManager.GetString("Word:Transitiveness:Undefined", resourceCulture);
             }
         }
         
