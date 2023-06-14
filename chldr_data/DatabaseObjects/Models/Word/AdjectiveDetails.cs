@@ -10,7 +10,8 @@ namespace chldr_data.DatabaseObjects.Models.Words
         public AdjectiveSemanticType SemanticType { get; set; }
         // зависимые и независимые
         public AdjectiveCharacteristics Characteristic { get; set; }
-        public Case Case { get; set; }
+        public Case SingularCase { get; set; }
+        public Case PluralCase { get; set; }
         // Степень - только у качественных
         public Degree? Degree { get; set; }
         // Грамматический класс - только у качественных и то, некоторых 

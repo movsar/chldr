@@ -14,15 +14,6 @@ namespace chldr_data.Enums.WordDetails
         InstrumentalSingular = 6,
         LocativeSingular = 7,
         ComparativeSingular = 8,
-
-        AbsolutivePlural = 9,
-        GenitivePlural = 10,
-        DativePlural = 11,
-        ErgativePlural = 12,
-        AllativePlural = 13,
-        InstrumentalPlural = 14,
-        LocativePlural = 15,
-        ComparativePlural = 16,
     }
 }
 /*

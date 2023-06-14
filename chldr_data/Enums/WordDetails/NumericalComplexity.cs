@@ -1,6 +1,6 @@
 ﻿namespace chldr_data.Enums.WordDetails
 {
-    public enum Complexity
+    public enum NumericalComplexity
     {
         Undefined = 0,
         // Простые

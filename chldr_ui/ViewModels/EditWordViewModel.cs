@@ -18,9 +18,17 @@ namespace chldr_ui.ViewModels
         // Set "User" source id by default
         protected string SourceId { get; set; } = "63a816205d1af0e432fba6de";
         protected bool IsEditMode = false;
-        private int _originalSubtype;
         public VerbDetails VerbDetails { get; set; } = new VerbDetails();
         public NounDetails NounDetails { get; set; } = new NounDetails();
+        public ConjunctionDetails ConjunctionDetails { get; set; } = new ConjunctionDetails();
+        public PronounDetails PronounDetails { get; set; } = new PronounDetails();
+        public AdverbDetails AdverbDetails { get; set; } = new AdverbDetails();
+        public AdjectiveDetails AdjectiveDetails { get; set; } = new AdjectiveDetails();
+        public NumeralDetails NumeralDetails { get; set; } = new NumeralDetails();
+        public ParticleDetails ParticleDetails { get; set; } = new ParticleDetails();
+        public MasdarDetails MasdarDetails { get; set; } = new MasdarDetails();
+        public InterjectionDetails InterjectionDetails { get; set; } = new InterjectionDetails();
+        public GerundDetails GerundDetails { get; set; } = new GerundDetails();
         public EntryDto EntryDto { get; set; } = new EntryDto();
         protected override void OnInitialized()
         {
@@ -45,7 +53,6 @@ namespace chldr_ui.ViewModels
                 if (existingEntry == null)
                 {
                     existingEntry = ContentStore.GetByEntryId(EntryId);
-                    _originalSubtype = existingEntry.Subtype;
                 }
 
                 EntryDto = EntryDto.FromModel(existingEntry);
@@ -56,10 +63,47 @@ namespace chldr_ui.ViewModels
                         case WordType.Noun:
                             NounDetails = JsonConvert.DeserializeObject<NounDetails>(EntryDto.Details);
                             break;
+
                         case WordType.Verb:
                             VerbDetails = JsonConvert.DeserializeObject<VerbDetails>(EntryDto.Details);
                             break;
-                        // TODO
+
+                        case WordType.Adjective:
+                            AdjectiveDetails = JsonConvert.DeserializeObject<AdjectiveDetails>(EntryDto.Details);
+                            break;
+
+                        case WordType.Interjection:
+                            InterjectionDetails = JsonConvert.DeserializeObject<InterjectionDetails>(EntryDto.Details);
+                            break;
+
+                        case WordType.Conjunction:
+                            ConjunctionDetails = JsonConvert.DeserializeObject<ConjunctionDetails>(EntryDto.Details);
+                            break;
+
+                        case WordType.Adverb:
+                            AdverbDetails = JsonConvert.DeserializeObject<AdverbDetails>(EntryDto.Details);
+                            break;
+
+                        case WordType.Gerund:
+                            GerundDetails = JsonConvert.DeserializeObject<GerundDetails>(EntryDto.Details);
+                            break;
+
+                        case WordType.Masdar:
+                            MasdarDetails = JsonConvert.DeserializeObject<MasdarDetails>(EntryDto.Details);
+                            break;
+
+                        case WordType.Numeral:
+                            NumeralDetails = JsonConvert.DeserializeObject<NumeralDetails>(EntryDto.Details);
+                            break;
+
+                        case WordType.Pronoun:
+                            PronounDetails = JsonConvert.DeserializeObject<PronounDetails>(EntryDto.Details);
+                            break;
+
+                        case WordType.Particle:
+                            ParticleDetails= JsonConvert.DeserializeObject<ParticleDetails>(EntryDto.Details);
+                            break;
+
                         default:
                             break;
                     }

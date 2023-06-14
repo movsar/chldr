@@ -281,7 +281,7 @@
   <data name="Word:Undefined" xml:space="preserve">
     <value> - </value>
   </data>
-  <data name="Word:Absolutive" xml:space="preserve">
+  <data name="Word:Case:Absolutive" xml:space="preserve">
     <value>Именительный</value>
   </data>
   <data name="Word:Adjective" xml:space="preserve">
@@ -290,28 +290,28 @@
   <data name="Word:Adverb" xml:space="preserve">
     <value>Наречие</value>
   </data>
-  <data name="Word:Allative" xml:space="preserve">
+  <data name="Word:Case:Allative" xml:space="preserve">
     <value>Местный</value>
   </data>
   <data name="Word:Degree:Comparative" xml:space="preserve">
     <value>Сравнительная</value>
   </data>
-  <data name="Word:Complexity:Composite" xml:space="preserve">
+  <data name="Word:NumericalComplexity:Composite" xml:space="preserve">
     <value>Составное</value>
   </data>
-  <data name="Word:Complexity:Complex" xml:space="preserve">
+  <data name="Word:NumericalComplexity:Complex" xml:space="preserve">
     <value>Сложное</value>
   </data>
   <data name="Word:Degree:Concessive" xml:space="preserve">
     <value>Уступительная</value>
   </data>
-  <data name="Word:Dative" xml:space="preserve">
+  <data name="Word:Case:Dative" xml:space="preserve">
     <value>Дательный</value>
   </data>
   <data name="Word:Dependent" xml:space="preserve">
     <value>Зависимое</value>
   </data>
-  <data name="Word:Ergative" xml:space="preserve">
+  <data name="Word:Case:Ergative" xml:space="preserve">
     <value>Эргативный</value>
   </data>
   <data name="Word:Declension:First" xml:space="preserve">
@@ -320,19 +320,19 @@
   <data name="Word:Declension:Fourth" xml:space="preserve">
     <value>Чертвертый</value>
   </data>
-  <data name="Word:Genitive" xml:space="preserve">
+  <data name="Word:Case:Genitive" xml:space="preserve">
     <value>Родительный</value>
   </data>
   <data name="Word:Independent" xml:space="preserve">
     <value>Независимое</value>
   </data>
-  <data name="Word:Instrumental" xml:space="preserve">
+  <data name="Word:Case:Instrumental" xml:space="preserve">
     <value>Творительный</value>
   </data>
   <data name="Word:Interjection" xml:space="preserve">
     <value>Междометие</value>
   </data>
-  <data name="Word:Locative" xml:space="preserve">
+  <data name="Word:Case:Locative" xml:space="preserve">
     <value>Вещественный</value>
   </data>
   <data name="Word:Masdar" xml:space="preserve">
@@ -350,10 +350,10 @@
   <data name="Word:Verb" xml:space="preserve">
     <value>Глагол</value>
   </data>
-  <data name="Word:Complexity:Simple" xml:space="preserve">
+  <data name="Word:NumericalComplexity:Simple" xml:space="preserve">
     <value>Простое</value>
   </data>
-  <data name="Word:NumericalType:Singular" xml:space="preserve">
+  <data name="Word:NumeralType:Singular" xml:space="preserve">
     <value>Единственное</value>
   </data>
   <data name="Word:Degree:Superlative" xml:space="preserve">
@@ -365,7 +365,7 @@
   <data name="Word:Transitiveness:Transitive" xml:space="preserve">
     <value>Переходный</value>
   </data>
-  <data name="Word:DeclensionSecond" xml:space="preserve">
+  <data name="Word:Declension:Second" xml:space="preserve">
     <value>Второй</value>
   </data>
   <data name="Word:Pronoun" xml:space="preserve">
@@ -380,7 +380,7 @@
   <data name="Word:Conjugation:Potential" xml:space="preserve">
     <value>Потенциальное</value>
   </data>
-  <data name="Word:NumericalType:Plural" xml:space="preserve">
+  <data name="Word:NumeralType:Plural" xml:space="preserve">
     <value>Множественное</value>
   </data>
   <data name="Word:Numeral" xml:space="preserve">
@@ -592,5 +592,26 @@
   </data>
   <data name="Error:Phrase_shouldn't_be_null" xml:space="preserve">
     <value>Выражение не может быть пустым</value>
+  </data>
+  <data name="Word:NounDeclension" xml:space="preserve">
+    <value>Склонение</value>
+  </data>
+  <data name="Word:Case:Comparative" xml:space="preserve">
+    <value>Сравнительный</value>
+  </data>
+  <data name="Word:Singular" xml:space="preserve">
+    <value>Ед. число</value>
+  </data>
+  <data name="Word:Plural" xml:space="preserve">
+    <value>Мн. число</value>
+  </data>
+  <data name="Word:NumericalComplexity" xml:space="preserve">
+    <value>Сложность</value>
+  </data>
+  <data name="Word:Case" xml:space="preserve">
+    <value>Падеж</value>
+  </data>
+  <data name="Word:NumericalCategory" xml:space="preserve">
+    <value>Категория</value>
   </data>
 </root>

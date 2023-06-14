@@ -341,7 +341,7 @@
   <data name="Word:Undefined" xml:space="preserve">
     <value> - </value>
   </data>
-  <data name="Word:Absolutive" xml:space="preserve">
+  <data name="Word:Case:Absolutive" xml:space="preserve">
     <value>AbsolutiveSingular</value>
   </data>
   <data name="Word:Adjective" xml:space="preserve">
@@ -350,7 +350,7 @@
   <data name="Word:Adverb" xml:space="preserve">
     <value>Adverb</value>
   </data>
-  <data name="Word:Allative" xml:space="preserve">
+  <data name="Word:Case:Allative" xml:space="preserve">
     <value>Allative</value>
   </data>
   <data name="Word:Conjugation:Causative" xml:space="preserve">
@@ -359,10 +359,10 @@
   <data name="Word:Name:Common" xml:space="preserve">
     <value>Common</value>
   </data>
-  <data name="Word:Complexity:Complex" xml:space="preserve">
+  <data name="Word:NumericalComplexity:Complex" xml:space="preserve">
     <value>Complex</value>
   </data>
-  <data name="Word:Complexity:Composite" xml:space="preserve">
+  <data name="Word:NumericalComplexity:Composite" xml:space="preserve">
     <value>Composite</value>
   </data>
   <data name="Word:Degree:Concessive" xml:space="preserve">
@@ -371,7 +371,7 @@
   <data name="Word:Conjunction" xml:space="preserve">
     <value>Conjunction</value>
   </data>
-  <data name="Word:Dative" xml:space="preserve">
+  <data name="Word:Case:Dative" xml:space="preserve">
     <value>Dative</value>
   </data>
   <data name="Word:Dependent" xml:space="preserve">
@@ -380,7 +380,7 @@
   <data name="Word:NumericalCategory:Derivative" xml:space="preserve">
     <value>Derivative</value>
   </data>
-  <data name="Word:Ergative" xml:space="preserve">
+  <data name="Word:Case:Ergative" xml:space="preserve">
     <value>Ergative</value>
   </data>
   <data name="Word:Declension:First" xml:space="preserve">
@@ -395,8 +395,8 @@
   <data name="Word:Tense:FutureReal" xml:space="preserve">
     <value>FutureReal</value>
   </data>
-  <data name="Word:Genitive" xml:space="preserve">
-    <value>GenitiveSingular</value>
+  <data name="Word:Case:Genitive" xml:space="preserve">
+    <value>Genitive</value>
   </data>
   <data name="Word:Gerund" xml:space="preserve">
     <value>Gerund</value>
@@ -413,8 +413,8 @@
   <data name="Word:Mood:Indicative" xml:space="preserve">
     <value>Indicative</value>
   </data>
-  <data name="Word:Instrumental" xml:space="preserve">
-    <value>InstrumentalSingular</value>
+  <data name="Word:Case:Instrumental" xml:space="preserve">
+    <value>Instrumental</value>
   </data>
   <data name="Word:Interjection" xml:space="preserve">
     <value>Interjection</value>
@@ -425,8 +425,8 @@
   <data name="Word:Intransitive" xml:space="preserve">
     <value>Intransitive</value>
   </data>
-  <data name="Word:Locative" xml:space="preserve">
-    <value>LocativeSingular</value>
+  <data name="Word:Case:Locative" xml:space="preserve">
+    <value>Locative</value>
   </data>
   <data name="Word:Masdar" xml:space="preserve">
     <value>Masdar</value>
@@ -467,7 +467,7 @@
   <data name="Word:Conjugation:PermissiveCausative" xml:space="preserve">
     <value>PermissiveCausative</value>
   </data>
-  <data name="Word:NumericalType:Plural" xml:space="preserve">
+  <data name="Word:NumeralType:Plural" xml:space="preserve">
     <value>Plural</value>
   </data>
   <data name="Word:Conjugation:Potential" xml:space="preserve">
@@ -497,13 +497,13 @@
   <data name="Word:Mood:RealDesiderative" xml:space="preserve">
     <value>RealDesiderative</value>
   </data>
-  <data name="Word:DeclensionSecond" xml:space="preserve">
+  <data name="Word:Declension:Second" xml:space="preserve">
     <value>Second</value>
   </data>
-  <data name="Word:Complexity:Simple" xml:space="preserve">
+  <data name="Word:NumericalComplexity:Simple" xml:space="preserve">
     <value>Simple</value>
   </data>
-  <data name="Word:NumericalType:Singular" xml:space="preserve">
+  <data name="Word:NumeralType:Singular" xml:space="preserve">
     <value>Singular</value>
   </data>
   <data name="Word:Degree:Superlative" xml:space="preserve">
@@ -592,5 +592,26 @@
   </data>
   <data name="Error:There_must_be_at_least_one_translation" xml:space="preserve">
     <value>There must be at least one translation for the entry</value>
+  </data>
+  <data name="Word:NounDeclension" xml:space="preserve">
+    <value>Склонение</value>
+  </data>
+  <data name="Word:Case:Comparative" xml:space="preserve">
+    <value>Comparative</value>
+  </data>
+  <data name="Word:Singular" xml:space="preserve">
+    <value>Singular</value>
+  </data>
+  <data name="Word:Plural" xml:space="preserve">
+    <value>Plural</value>
+  </data>
+  <data name="Word:NumericalComplexity" xml:space="preserve">
+    <value>Complexity</value>
+  </data>
+  <data name="Word:NumericalCategory" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Word:Case" xml:space="preserve">
+    <value>Case</value>
   </data>
 </root>

@@ -68,7 +68,7 @@ namespace chldr_data.DatabaseObjects.Models.Words
         public VerbTense Tense { get; set; }
         public VerbConjugation Conjugation { get; set; }
         public VerbMood Mood { get; set; } = new();
-        public NumericalType NumericalType { get; set; }
+        public NumeralType NumericalType { get; set; }
         public Transitiveness Transitiveness { get; set; }
         #endregion
 
@@ -84,7 +84,7 @@ namespace chldr_data.DatabaseObjects.Models.Words
         #endregion
 
         #region Numeral Details
-        public Complexity Complexity { get; set; }
+        public NumericalComplexity Complexity { get; set; }
         public NumericalCategory Category { get; set; }
         #endregion
 

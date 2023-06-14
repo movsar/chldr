@@ -753,15 +753,6 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to AbsolutiveSingular.
-        /// </summary>
-        public static string Word_Absolutive {
-            get {
-                return ResourceManager.GetString("Word:Absolutive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Adjective.
         /// </summary>
         public static string Word_Adjective {
@@ -780,11 +771,83 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Case.
+        /// </summary>
+        public static string Word_Case {
+            get {
+                return ResourceManager.GetString("Word:Case", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AbsolutiveSingular.
+        /// </summary>
+        public static string Word_Case_Absolutive {
+            get {
+                return ResourceManager.GetString("Word:Case:Absolutive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allative.
         /// </summary>
-        public static string Word_Allative {
+        public static string Word_Case_Allative {
             get {
-                return ResourceManager.GetString("Word:Allative", resourceCulture);
+                return ResourceManager.GetString("Word:Case:Allative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Comparative.
+        /// </summary>
+        public static string Word_Case_Comparative {
+            get {
+                return ResourceManager.GetString("Word:Case:Comparative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dative.
+        /// </summary>
+        public static string Word_Case_Dative {
+            get {
+                return ResourceManager.GetString("Word:Case:Dative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ergative.
+        /// </summary>
+        public static string Word_Case_Ergative {
+            get {
+                return ResourceManager.GetString("Word:Case:Ergative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Genitive.
+        /// </summary>
+        public static string Word_Case_Genitive {
+            get {
+                return ResourceManager.GetString("Word:Case:Genitive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Instrumental.
+        /// </summary>
+        public static string Word_Case_Instrumental {
+            get {
+                return ResourceManager.GetString("Word:Case:Instrumental", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locative.
+        /// </summary>
+        public static string Word_Case_Locative {
+            get {
+                return ResourceManager.GetString("Word:Case:Locative", resourceCulture);
             }
         }
         
@@ -812,33 +875,6 @@ namespace chldr_data.Resources.Localizations {
         public static string Word_Classes {
             get {
                 return ResourceManager.GetString("Word:Classes", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Complex.
-        /// </summary>
-        public static string Word_Complexity_Complex {
-            get {
-                return ResourceManager.GetString("Word:Complexity:Complex", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Composite.
-        /// </summary>
-        public static string Word_Complexity_Composite {
-            get {
-                return ResourceManager.GetString("Word:Complexity:Composite", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Simple.
-        /// </summary>
-        public static string Word_Complexity_Simple {
-            get {
-                return ResourceManager.GetString("Word:Complexity:Simple", resourceCulture);
             }
         }
         
@@ -906,15 +942,6 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dative.
-        /// </summary>
-        public static string Word_Dative {
-            get {
-                return ResourceManager.GetString("Word:Dative", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Declension.
         /// </summary>
         public static string Word_Declension {
@@ -942,20 +969,20 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Second.
+        /// </summary>
+        public static string Word_Declension_Second {
+            get {
+                return ResourceManager.GetString("Word:Declension:Second", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Third.
         /// </summary>
         public static string Word_Declension_Third {
             get {
                 return ResourceManager.GetString("Word:Declension:Third", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Second.
-        /// </summary>
-        public static string Word_DeclensionSecond {
-            get {
-                return ResourceManager.GetString("Word:DeclensionSecond", resourceCulture);
             }
         }
         
@@ -1005,24 +1032,6 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ergative.
-        /// </summary>
-        public static string Word_Ergative {
-            get {
-                return ResourceManager.GetString("Word:Ergative", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to GenitiveSingular.
-        /// </summary>
-        public static string Word_Genitive {
-            get {
-                return ResourceManager.GetString("Word:Genitive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Gerund.
         /// </summary>
         public static string Word_Gerund {
@@ -1041,15 +1050,6 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to InstrumentalSingular.
-        /// </summary>
-        public static string Word_Instrumental {
-            get {
-                return ResourceManager.GetString("Word:Instrumental", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Interjection.
         /// </summary>
         public static string Word_Interjection {
@@ -1064,15 +1064,6 @@ namespace chldr_data.Resources.Localizations {
         public static string Word_Intransitive {
             get {
                 return ResourceManager.GetString("Word:Intransitive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to LocativeSingular.
-        /// </summary>
-        public static string Word_Locative {
-            get {
-                return ResourceManager.GetString("Word:Locative", resourceCulture);
             }
         }
         
@@ -1194,11 +1185,47 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Склонение.
+        /// </summary>
+        public static string Word_NounDeclension {
+            get {
+                return ResourceManager.GetString("Word:NounDeclension", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Numeral.
         /// </summary>
         public static string Word_Numeral {
             get {
                 return ResourceManager.GetString("Word:Numeral", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plural.
+        /// </summary>
+        public static string Word_NumeralType_Plural {
+            get {
+                return ResourceManager.GetString("Word:NumeralType:Plural", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Singular.
+        /// </summary>
+        public static string Word_NumeralType_Singular {
+            get {
+                return ResourceManager.GetString("Word:NumeralType:Singular", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Category.
+        /// </summary>
+        public static string Word_NumericalCategory {
+            get {
+                return ResourceManager.GetString("Word:NumericalCategory", resourceCulture);
             }
         }
         
@@ -1239,29 +1266,47 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Complexity.
+        /// </summary>
+        public static string Word_NumericalComplexity {
+            get {
+                return ResourceManager.GetString("Word:NumericalComplexity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Complex.
+        /// </summary>
+        public static string Word_NumericalComplexity_Complex {
+            get {
+                return ResourceManager.GetString("Word:NumericalComplexity:Complex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Composite.
+        /// </summary>
+        public static string Word_NumericalComplexity_Composite {
+            get {
+                return ResourceManager.GetString("Word:NumericalComplexity:Composite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Simple.
+        /// </summary>
+        public static string Word_NumericalComplexity_Simple {
+            get {
+                return ResourceManager.GetString("Word:NumericalComplexity:Simple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Numerical type.
         /// </summary>
         public static string Word_NumericalType {
             get {
                 return ResourceManager.GetString("Word:NumericalType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Plural.
-        /// </summary>
-        public static string Word_NumericalType_Plural {
-            get {
-                return ResourceManager.GetString("Word:NumericalType:Plural", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Singular.
-        /// </summary>
-        public static string Word_NumericalType_Singular {
-            get {
-                return ResourceManager.GetString("Word:NumericalType:Singular", resourceCulture);
             }
         }
         
@@ -1280,6 +1325,15 @@ namespace chldr_data.Resources.Localizations {
         public static string Word_Person {
             get {
                 return ResourceManager.GetString("Word:Person", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plural.
+        /// </summary>
+        public static string Word_Plural {
+            get {
+                return ResourceManager.GetString("Word:Plural", resourceCulture);
             }
         }
         
@@ -1316,6 +1370,15 @@ namespace chldr_data.Resources.Localizations {
         public static string Word_SemanticType_Relative {
             get {
                 return ResourceManager.GetString("Word:SemanticType:Relative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Singular.
+        /// </summary>
+        public static string Word_Singular {
+            get {
+                return ResourceManager.GetString("Word:Singular", resourceCulture);
             }
         }
         
