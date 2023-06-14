@@ -144,10 +144,47 @@ namespace chldr_ui.ViewModels
                 case WordType.Noun:
                     EntryDto.Details = JsonConvert.SerializeObject(NounDetails);
                     break;
+
                 case WordType.Verb:
                     EntryDto.Details = JsonConvert.SerializeObject(VerbDetails);
                     break;
-                // TODO
+
+                case WordType.Adjective:
+                    EntryDto.Details = JsonConvert.SerializeObject(AdjectiveDetails);
+                    break;
+
+                case WordType.Interjection:
+                    EntryDto.Details = JsonConvert.SerializeObject(InterjectionDetails);
+                    break;
+
+                case WordType.Conjunction:
+                    EntryDto.Details = JsonConvert.SerializeObject(ConjunctionDetails);
+                    break;
+
+                case WordType.Adverb:
+                    EntryDto.Details = JsonConvert.SerializeObject(AdverbDetails);
+                    break;
+
+                case WordType.Gerund:
+                    EntryDto.Details = JsonConvert.SerializeObject(GerundDetails);
+                    break;
+
+                case WordType.Masdar:
+                    EntryDto.Details = JsonConvert.SerializeObject(MasdarDetails);
+                    break;
+
+                case WordType.Numeral:
+                    EntryDto.Details = JsonConvert.SerializeObject(NumeralDetails);
+                    break;
+
+                case WordType.Pronoun:
+                    EntryDto.Details = JsonConvert.SerializeObject(PronounDetails);
+                    break;
+
+                case WordType.Particle:
+                    EntryDto.Details = JsonConvert.SerializeObject(ParticleDetails);
+                    break;
+
                 default:
                     break;
             }
