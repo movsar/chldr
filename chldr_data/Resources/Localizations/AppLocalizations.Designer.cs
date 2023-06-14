@@ -97,6 +97,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please check your email and follow the instructions.
         /// </summary>
         public static string Check_your_email_and_follow_instructions {
@@ -681,6 +690,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search.
         /// </summary>
         public static string Search {
@@ -1204,6 +1222,15 @@ namespace chldr_data.Resources.Localizations {
         
         /// <summary>
         ///   Looks up a localized string similar to Numeral.
+        /// </summary>
+        public static string Word_Numeral {
+            get {
+                return ResourceManager.GetString("Word:Numeral", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Numeral type.
         /// </summary>
         public static string Word_NumeralType {
             get {

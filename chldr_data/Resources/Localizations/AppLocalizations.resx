@@ -438,7 +438,7 @@
     <value>Noun</value>
   </data>
   <data name="Word:NumeralType" xml:space="preserve">
-    <value>Numeral</value>
+    <value>Numeral type</value>
   </data>
   <data name="Word:NumericalCategory:Ordinal" xml:space="preserve">
     <value>Ordinal</value>
@@ -613,5 +613,14 @@
   </data>
   <data name="Number" xml:space="preserve">
     <value>Number</value>
+  </data>
+  <data name="Word:Numeral" xml:space="preserve">
+    <value>Numeral</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
   </data>
 </root>

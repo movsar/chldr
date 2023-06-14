@@ -384,7 +384,7 @@
     <value>Множественное</value>
   </data>
   <data name="Word:NumeralType" xml:space="preserve">
-    <value>Числительное</value>
+    <value>Тип числа</value>
   </data>
   <data name="Word:Intransitive" xml:space="preserve">
     <value>Непереходный</value>
@@ -613,5 +613,14 @@
   </data>
   <data name="Number" xml:space="preserve">
     <value>Число</value>
+  </data>
+  <data name="Word:Numeral" xml:space="preserve">
+    <value>Числительное</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Ok</value>
   </data>
 </root>
