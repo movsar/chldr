@@ -389,10 +389,10 @@
   <data name="Word:Declension:Fourth" xml:space="preserve">
     <value>Fourth</value>
   </data>
-  <data name="Word:Tense:Future_possible" xml:space="preserve">
+  <data name="Word:Tense:FuturePossible" xml:space="preserve">
     <value>Future possible</value>
   </data>
-  <data name="Word:Tense:Future_real" xml:space="preserve">
+  <data name="Word:Tense:FutureReal" xml:space="preserve">
     <value>FutureReal</value>
   </data>
   <data name="Word:Genitive" xml:space="preserve">
@@ -586,5 +586,11 @@
   </data>
   <data name="Word:Tense" xml:space="preserve">
     <value>Tense</value>
+  </data>
+  <data name="Error:Only_one_translation_per_language_is_allowed" xml:space="preserve">
+    <value>Only one translation per language is allowed</value>
+  </data>
+  <data name="Error:There_must_be_at_least_one_translation" xml:space="preserve">
+    <value>There must be at least one translation for the entry</value>
   </data>
 </root>

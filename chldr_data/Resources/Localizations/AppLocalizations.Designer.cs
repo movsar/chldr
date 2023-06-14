@@ -348,6 +348,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Only one translation per language is allowed.
+        /// </summary>
+        public static string Error_Only_one_translation_per_language_is_allowed {
+            get {
+                return ResourceManager.GetString("Error:Only_one_translation_per_language_is_allowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password is too long.
         /// </summary>
         public static string Error_Password_too_long {
@@ -380,6 +389,15 @@ namespace chldr_data.Resources.Localizations {
         public static string Error_Phrase_shouldn_t_be_null {
             get {
                 return ResourceManager.GetString("Error:Phrase_shouldn\'t_be_null", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There must be at least one translation for the entry.
+        /// </summary>
+        public static string Error_There_must_be_at_least_one_translation {
+            get {
+                return ResourceManager.GetString("Error:There_must_be_at_least_one_translation", resourceCulture);
             }
         }
         
@@ -1313,18 +1331,18 @@ namespace chldr_data.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Future possible.
         /// </summary>
-        public static string Word_Tense_Future_possible {
+        public static string Word_Tense_FuturePossible {
             get {
-                return ResourceManager.GetString("Word:Tense:Future_possible", resourceCulture);
+                return ResourceManager.GetString("Word:Tense:FuturePossible", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to FutureReal.
         /// </summary>
-        public static string Word_Tense_Future_real {
+        public static string Word_Tense_FutureReal {
             get {
-                return ResourceManager.GetString("Word:Tense:Future_real", resourceCulture);
+                return ResourceManager.GetString("Word:Tense:FutureReal", resourceCulture);
             }
         }
         

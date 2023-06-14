@@ -410,10 +410,10 @@
   <data name="Word:Mood:UnrealDesiderative" xml:space="preserve">
     <value>Нереально-желательное наклонение</value>
   </data>
-  <data name="Word:Tense:Future_possible" xml:space="preserve">
+  <data name="Word:Tense:FuturePossible" xml:space="preserve">
     <value>Будущее возможное</value>
   </data>
-  <data name="Word:Tense:Future_real" xml:space="preserve">
+  <data name="Word:Tense:FutureReal" xml:space="preserve">
     <value>Будущее реальное</value>
   </data>
   <data name="Word:Conjunction" xml:space="preserve">
@@ -570,9 +570,27 @@
     <value>Качественный</value>
   </data>
   <data name="Error:Content_must_be_set" xml:space="preserve">
-    <value>Нужно заполнить форму</value>
+    <value>Нужно заполнить содержание</value>
   </data>
   <data name="Word:Tense" xml:space="preserve">
     <value>Время</value>
+  </data>
+  <data name="Error:There_must_be_at_least_one_translation" xml:space="preserve">
+    <value>Нужно добавить хотя бы один перевод</value>
+  </data>
+  <data name="Error:Translation_language_must_be_set" xml:space="preserve">
+    <value>Нужно указать язык перевода</value>
+  </data>
+  <data name="Error:Translation_text_must_be_set" xml:space="preserve">
+    <value>Нужно указать текст перевода</value>
+  </data>
+  <data name="Error:Word_content_must_be_set" xml:space="preserve">
+    <value>Нужно указать слово</value>
+  </data>
+  <data name="Error:Only_one_translation_per_language_is_allowed" xml:space="preserve">
+    <value>Только один перевод может быть добавлен для одного языка</value>
+  </data>
+  <data name="Error:Phrase_shouldn't_be_null" xml:space="preserve">
+    <value>Выражение не может быть пустым</value>
   </data>
 </root>

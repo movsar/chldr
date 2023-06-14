@@ -23,7 +23,9 @@ namespace chldr_shared.Validators
                  .NotNull()
                  .WithMessage(stringLocalizer["Error:There_must_be_at_least_one_translation"])
                  .Must(translations => translations.All(IsValidTranslation))
-                 .WithMessage((dto, translations) => GetTranslationsErrorMessage(translations, stringLocalizer));
+                 .WithMessage((dto, translations) => GetTranslationsErrorMessage(translations, stringLocalizer))
+                 .Must(translations => translations.Where(t => t.Rate > 0).GroupBy(t => t.LanguageCode).Where(group => group.Count() > 1).Count() == 0)
+                 .WithMessage(stringLocalizer["Error:Only_one_translation_per_language_is_allowed"]);
         }
 
         private bool IsValidTranslation(TranslationDto translation)
