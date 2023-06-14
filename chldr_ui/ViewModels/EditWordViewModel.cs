@@ -51,7 +51,18 @@ namespace chldr_ui.ViewModels
                 EntryDto = EntryDto.FromModel(existingEntry);
                 if (!string.IsNullOrEmpty(EntryDto.Details))
                 {
-                    //WordDetails = JsonConvert.DeserializeObject<WordDetailsDto>(EntryDto.Details);
+                    switch ((WordType)EntryDto.EntrySubtype)
+                    {
+                        case WordType.Noun:
+                            NounDetails = JsonConvert.DeserializeObject<NounDetails>(EntryDto.Details);
+                            break;
+                        case WordType.Verb:
+                            VerbDetails = JsonConvert.DeserializeObject<VerbDetails>(EntryDto.Details);
+                            break;
+                        // TODO
+                        default:
+                            break;
+                    }
                 }
             }
         }

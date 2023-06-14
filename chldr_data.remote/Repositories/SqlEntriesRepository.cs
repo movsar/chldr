@@ -32,6 +32,7 @@ namespace chldr_data.remote.Repositories
             var entry = _dbContext.Entries
                 .Include(e => e.Source)
                 .Include(e => e.User)
+                .Include(e => e.Translations)
                 .FirstOrDefault(e => e.EntryId.Equals(entityId));
 
             if (entry == null)
@@ -46,6 +47,7 @@ namespace chldr_data.remote.Repositories
             var entities = _dbContext.Set<SqlEntry>()
                 .Include(e => e.Source)
                 .Include(e => e.User)
+                .Include(e => e.Translations)
                 .Take(limit);
 
             return entities.Select(e => FromEntityShortcut(e));
@@ -57,6 +59,7 @@ namespace chldr_data.remote.Repositories
             var entries = _dbContext.Set<SqlEntry>()
                 .Include(e => e.Source)
                 .Include(e => e.User)
+                .Include(e => e.Translations)
                 .OrderBy(x => randomizer.Next(0, 75000))
                 .OrderBy(entry => entry.GetHashCode())
                 .Take(limit)
@@ -99,12 +102,12 @@ namespace chldr_data.remote.Repositories
             var existingEntryDto = EntryDto.FromModel(existingEntry);
 
             // Handle associated translation changes
-            var existingTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
-            var updatedTranslationIds = updatedEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
+            var existingEntryTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
+            var updatedEntryTranslationIds = updatedEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
 
-            var addedTranslations = updatedEntryDto.Translations.Where(t => !existingTranslationIds.Contains(t.TranslationId));
-            var deletedTranslations = existingEntryDto.Translations.Where(t => !updatedTranslationIds.Contains(t.TranslationId));
-            var updatedTranslations = updatedEntryDto.Translations.Where(t => existingTranslationIds.Contains(t.TranslationId) && updatedTranslationIds.Contains(t.TranslationId));
+            var addedTranslations = updatedEntryDto.Translations.Where(t => !existingEntryTranslationIds.Contains(t.TranslationId));
+            var deletedTranslations = existingEntryDto.Translations.Where(t => !updatedEntryTranslationIds.Contains(t.TranslationId));
+            var updatedTranslations = updatedEntryDto.Translations.Where(t => existingEntryTranslationIds.Contains(t.TranslationId) && updatedEntryTranslationIds.Contains(t.TranslationId));
 
             _translations.AddRange(addedTranslations);
             _translations.RemoveRange(deletedTranslations.Select(t => t.TranslationId));
