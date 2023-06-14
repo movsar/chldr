@@ -315,10 +315,10 @@
     <value>Эргативный</value>
   </data>
   <data name="Word:Declension:First" xml:space="preserve">
-    <value>Первый</value>
+    <value>Первое</value>
   </data>
   <data name="Word:Declension:Fourth" xml:space="preserve">
-    <value>Чертвертый</value>
+    <value>Чертвертое</value>
   </data>
   <data name="Word:Case:Genitive" xml:space="preserve">
     <value>Родительный</value>
@@ -360,13 +360,13 @@
     <value>Превосходная</value>
   </data>
   <data name="Word:Declension:Third" xml:space="preserve">
-    <value>Третий</value>
+    <value>Третье</value>
   </data>
   <data name="Word:Transitiveness:Transitive" xml:space="preserve">
     <value>Переходный</value>
   </data>
   <data name="Word:Declension:Second" xml:space="preserve">
-    <value>Второй</value>
+    <value>Второе</value>
   </data>
   <data name="Word:Pronoun" xml:space="preserve">
     <value>Меcтоимение</value>
@@ -383,7 +383,7 @@
   <data name="Word:NumeralType:Plural" xml:space="preserve">
     <value>Множественное</value>
   </data>
-  <data name="Word:Numeral" xml:space="preserve">
+  <data name="Word:NumeralType" xml:space="preserve">
     <value>Числительное</value>
   </data>
   <data name="Word:Intransitive" xml:space="preserve">
@@ -557,9 +557,6 @@
   <data name="Translations" xml:space="preserve">
     <value>Переводы</value>
   </data>
-  <data name="Word:NumericalType" xml:space="preserve">
-    <value>Тип числительного</value>
-  </data>
   <data name="Word:Transitiveness" xml:space="preserve">
     <value>Переходность</value>
   </data>
@@ -600,10 +597,10 @@
     <value>Сравнительный</value>
   </data>
   <data name="Word:Singular" xml:space="preserve">
-    <value>Ед. число</value>
+    <value>ед. ч.</value>
   </data>
   <data name="Word:Plural" xml:space="preserve">
-    <value>Мн. число</value>
+    <value>мн. ч.</value>
   </data>
   <data name="Word:NumericalComplexity" xml:space="preserve">
     <value>Сложность</value>
@@ -613,5 +610,8 @@
   </data>
   <data name="Word:NumericalCategory" xml:space="preserve">
     <value>Категория</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Число</value>
   </data>
 </root>

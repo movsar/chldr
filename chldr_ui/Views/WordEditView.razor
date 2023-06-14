@@ -57,16 +57,16 @@
                         </select>
                     </div>
 
-                    <b>@Localizer["Word:NumericalType"]:</b>
+                    <b>@Localizer["Number"]:</b>
                     <div class="form-outline mb-2">
-                        <select @bind="VerbDetails.NumericalType"
+                        <select @bind="VerbDetails.NumeralType"
                                 class="form-select"
-                                title="@Localizer["Word:NumericalType"]">
+                                title="@Localizer["Number"]">
 
                             <option value="0" class="form-control">@Localizer[$"Word:Undefined"]</option>
                             @foreach (NumeralType numericalType in ((NumeralType[])Enum.GetValues(typeof(NumeralType))).Skip(1))
                             {
-                                <option value="@numericalType" class="form-control">@Localizer[$"Word:NumericalType:{numericalType}"]</option>
+                                <option value="@numericalType" class="form-control">@Localizer[$"Word:NumeralType:{numericalType}"]</option>
                             }
                         </select>
                     </div>
@@ -145,7 +145,7 @@
                         </select>
                     </div>
 
-                    <b>@Localizer["Word:Case"]:@Localizer["Word:Singular"]</b>
+                    <b>@Localizer["Word:Case"] @Localizer["Word:Singular"]</b>
                     <div class="form-outline mb-2">
                         <select @bind="NounDetails.SingularCase"
                                 class="form-select"
@@ -159,7 +159,7 @@
                         </select>
                     </div>
 
-                    <b>@Localizer["Word:Case"]:@Localizer["Word:Plural"]</b>
+                    <b>@Localizer["Word:Case"] @Localizer["Word:Plural"]</b>
                     <div class="form-outline mb-2">
                         <select @bind="NounDetails.PluralCase"
                                 class="form-select"
@@ -187,14 +187,14 @@
                         </select>
                     </div>
 
-                    <b>@Localizer["Word:NumericalType"]</b>
+                    <b>@Localizer["Word:NumeralType"]</b>
                     <div class="form-outline mb-2">
                         <select @bind="NounDetails.NumeralType"
                                 class="form-select"
-                                title="@Localizer["Word:NumericalType"]">
+                                title="@Localizer["Word:NumeralType"]">
 
                             <option value="0" class="form-control">@Localizer[$"Word:Undefined"]</option>
-                            @foreach (NameType val in ((NameType[])Enum.GetValues(typeof(NameType))).Skip(1))
+                            @foreach (NumeralType val in ((NumeralType[])Enum.GetValues(typeof(NumeralType))).Skip(1))
                             {
                                 <option value="@val" class="form-control">@Localizer[$"Word:NumeralType:{val.ToString()}"]</option>
                             }
@@ -233,7 +233,7 @@
 
                     <div class="form-outline mb-2">
                         <b>@Localizer["Word:Class"]:</b>
-                        <select @bind="@PronounDetails.Classes[0]" class="form-select" title="@Localizer["Word:Class"]">
+                        <select @bind="@PronounDetails.Classes[1]" class="form-select" title="@Localizer["Word:Class"]">
                             <option value="0" class="form-control">@Localizer["Word:Undefined"]</option>
                             <option value="1" class="form-control">@Localizer["Class:1_v_b"]</option>
                             <option value="2" class="form-control">@Localizer["Class:2_y_b"]</option>
@@ -246,7 +246,7 @@
 
                     <div class="form-outline mb-2">
                         <b>@Localizer["Word:Class"]:</b>
-                        <select @bind="@PronounDetails.Classes[0]" class="form-select" title="@Localizer["Word:Class"]">
+                        <select @bind="@PronounDetails.Classes[2]" class="form-select" title="@Localizer["Word:Class"]">
                             <option value="0" class="form-control">@Localizer["Word:Undefined"]</option>
                             <option value="1" class="form-control">@Localizer["Class:1_v_b"]</option>
                             <option value="2" class="form-control">@Localizer["Class:2_y_b"]</option>
@@ -293,7 +293,7 @@
                     </div>
 
                     <div class="form-outline mb-2">
-                        <b>@Localizer["Word:Case"]:@Localizer["Word:Singular"]</b>
+                        <b>@Localizer["Word:Case"] @Localizer["Word:Singular"]</b>
                         <select @bind="NumeralDetails.CaseSingular"
                                 class="form-select"
                                 title="@Localizer["Word:Person"]">
@@ -307,7 +307,7 @@
                     </div>
 
                     <div class="form-outline mb-2">
-                        <b>@Localizer["Word:Case"]:@Localizer["Word:Plural"]</b>
+                        <b>@Localizer["Word:Case"] @Localizer["Word:Plural"]</b>
                         <select @bind="NumeralDetails.CasePlural"
                                 class="form-select"
                                 title="@Localizer["Word:Person"]">
@@ -387,7 +387,7 @@
                     }
 
                     <div class="form-outline mb-2">
-                        <b>@Localizer["Word:Case"]:@Localizer["Word:Singular"]</b>
+                        <b>@Localizer["Word:Case"] @Localizer["Word:Singular"]</b>
                         <select @bind="NumeralDetails.CaseSingular"
                                 class="form-select"
                                 title="@Localizer["Word:Person"]">
@@ -401,7 +401,7 @@
                     </div>
 
                     <div class="form-outline mb-2">
-                        <b>@Localizer["Word:Case"]:@Localizer["Word:Plural"]</b>
+                        <b>@Localizer["Word:Case"] @Localizer["Word:Plural"]</b>
                         <select @bind="NumeralDetails.CasePlural"
                                 class="form-select"
                                 title="@Localizer["Word:Person"]">

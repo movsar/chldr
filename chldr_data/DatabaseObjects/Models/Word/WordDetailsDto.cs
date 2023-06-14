@@ -25,7 +25,7 @@ namespace chldr_data.DatabaseObjects.Models.Words
                     Tense = verb.Tense;
                     Conjugation = verb.Conjugation;
                     Mood = verb.Mood;
-                    NumericalType = verb.NumericalType;
+                    NumericalType = verb.NumeralType;
                     Transitiveness = verb.Transitiveness;
                     Classes[0] = verb.Class;
                     break;

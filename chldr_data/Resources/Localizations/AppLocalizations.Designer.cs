@@ -582,6 +582,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Number.
+        /// </summary>
+        public static string Number {
+            get {
+                return ResourceManager.GetString("Number", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to or sign up with:.
         /// </summary>
         public static string Or_sign_up_with_ {
@@ -1196,9 +1205,9 @@ namespace chldr_data.Resources.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Numeral.
         /// </summary>
-        public static string Word_Numeral {
+        public static string Word_NumeralType {
             get {
-                return ResourceManager.GetString("Word:Numeral", resourceCulture);
+                return ResourceManager.GetString("Word:NumeralType", resourceCulture);
             }
         }
         
@@ -1302,15 +1311,6 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Numerical type.
-        /// </summary>
-        public static string Word_NumericalType {
-            get {
-                return ResourceManager.GetString("Word:NumericalType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Particle.
         /// </summary>
         public static string Word_Particle {
@@ -1329,7 +1329,7 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plural.
+        ///   Looks up a localized string similar to plur..
         /// </summary>
         public static string Word_Plural {
             get {
@@ -1374,7 +1374,7 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Singular.
+        ///   Looks up a localized string similar to sing..
         /// </summary>
         public static string Word_Singular {
             get {

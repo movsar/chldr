@@ -437,7 +437,7 @@
   <data name="Word:Noun" xml:space="preserve">
     <value>Noun</value>
   </data>
-  <data name="Word:Numeral" xml:space="preserve">
+  <data name="Word:NumeralType" xml:space="preserve">
     <value>Numeral</value>
   </data>
   <data name="Word:NumericalCategory:Ordinal" xml:space="preserve">
@@ -569,9 +569,6 @@
   <data name="Translations" xml:space="preserve">
     <value>Translations</value>
   </data>
-  <data name="Word:NumericalType" xml:space="preserve">
-    <value>Numerical type</value>
-  </data>
   <data name="Word:Transitiveness" xml:space="preserve">
     <value>Transitiveness</value>
   </data>
@@ -600,10 +597,10 @@
     <value>Comparative</value>
   </data>
   <data name="Word:Singular" xml:space="preserve">
-    <value>Singular</value>
+    <value>sing.</value>
   </data>
   <data name="Word:Plural" xml:space="preserve">
-    <value>Plural</value>
+    <value>plur.</value>
   </data>
   <data name="Word:NumericalComplexity" xml:space="preserve">
     <value>Complexity</value>
@@ -613,5 +610,8 @@
   </data>
   <data name="Word:Case" xml:space="preserve">
     <value>Case</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Number</value>
   </data>
 </root>

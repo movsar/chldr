@@ -6,14 +6,14 @@ namespace chldr_data.Enums.WordDetails
     {
         Undefined = 0,
 
-        AbsolutiveSingular = 1,
-        GenitiveSingular = 2,
-        DativeSingular = 3,
-        ErgativeSingular = 4,
-        AllativeSingular = 5,
-        InstrumentalSingular = 6,
-        LocativeSingular = 7,
-        ComparativeSingular = 8,
+        Absolutive = 1,
+        Genitive = 2,
+        Dative = 3,
+        Ergative = 4,
+        Allative = 5,
+        Instrumental = 6,
+        Locative = 7,
+        Comparative = 8,
     }
 }
 /*
