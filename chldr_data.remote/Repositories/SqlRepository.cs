@@ -42,6 +42,7 @@ namespace chldr_data.remote.Repositories
                 throw new ArgumentException("Entity doesn't exist");
             }
             _dbContext.Set<TEntity>().Remove(entity);
+            _dbContext.SaveChanges();
 
             InsertChangeSet(Operation.Delete, _userId, entityId);
         }
