@@ -26,7 +26,22 @@ namespace chldr_data.remote.Repositories
         public event Action<EntryModel>? EntryInserted;
         public event Action<EntryModel>? EntryDeleted;
         public event Action<EntryModel>? EntryAdded;
+        public override void Remove(string entityId)
+        {
+            var entity = _dbContext.Entries.Include(e => e.Translations).FirstOrDefault(e => e.EntryId.Equals(entityId));
+            if (entity == null)
+            {
+                throw new ArgumentException("Entity doesn't exist");
+            }
 
+            foreach (var translation in entity.Translations)
+            {
+                _dbContext.Remove(translation);
+            }
+            _dbContext.Remove(entity);
+
+            InsertChangeSet(Operation.Delete, _userId, entityId);
+        }
         public override EntryModel Get(string entityId)
         {
             var entry = _dbContext.Entries

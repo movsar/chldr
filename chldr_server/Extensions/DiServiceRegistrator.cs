@@ -44,7 +44,7 @@ namespace chldr_blazor.Extensions
             appBuilder.Services.AddScoped<LocalStorageService>();
 
             appBuilder.Services.AddSingleton<EmailService>();
-            appBuilder.Services.AddSingleton(x => new EnvironmentService(Platforms.Web));
+            appBuilder.Services.AddSingleton(x => new EnvironmentService(Platforms.Web, appBuilder.Environment.IsDevelopment()));
             appBuilder.Services.AddSingleton(x => new FileService(AppContext.BaseDirectory));
 
             // Utils

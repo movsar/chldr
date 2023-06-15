@@ -2,8 +2,6 @@
 using GraphQL.Client.Serializer.Newtonsoft;
 using GraphQL;
 using Newtonsoft.Json.Linq;
-using chldr_utils;
-using System.Net.Sockets;
 using chldr_utils.Interfaces;
 
 namespace chldr_utils.Services
@@ -13,10 +11,13 @@ namespace chldr_utils.Services
         private readonly GraphQLHttpClient _graphQLClient;
         private readonly ExceptionHandler _exceptionHandler;
 
-        public GraphQLRequestSender(ExceptionHandler exceptionHandler)
+        public GraphQLRequestSender(ExceptionHandler exceptionHandler, EnvironmentService environmentService)
         {
-            string devAppHost = "https://api.nohchiyn-mott.com/graphql";
-            _graphQLClient = new GraphQLHttpClient($"{devAppHost}", new NewtonsoftJsonSerializer());
+            string devAppHost = "https://localhost:7065/graphql";
+            string prodAppHost = "https://api.nohchiyn-mott.com/graphql";
+            var apiHost = environmentService.IsDevelopment ? devAppHost : prodAppHost;
+
+            _graphQLClient = new GraphQLHttpClient($"{apiHost}", new NewtonsoftJsonSerializer());
             _exceptionHandler = exceptionHandler;
         }
 
@@ -39,7 +40,7 @@ namespace chldr_utils.Services
             catch (GraphQLHttpRequestException graphQlException)
             {
                 _exceptionHandler.LogError(graphQlException.Content!);
-             
+
                 if (graphQlException.Content!.Contains("Could not save changes"))
                 {
                     throw new Exception("Could not save changes", graphQlException);

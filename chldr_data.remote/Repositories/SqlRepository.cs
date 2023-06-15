@@ -34,19 +34,19 @@ namespace chldr_data.remote.Repositories
         }
         public abstract void Update(TDto dto);
         public abstract void Add(TDto dto);
-        public void Remove(string entityId)
+        public virtual void Remove(string entityId)
         {
             var entity = _dbContext.Set<TEntity>().Find(entityId);
             if (entity == null)
             {
                 throw new ArgumentException("Entity doesn't exist");
             }
-            _dbContext.Set<TEntity>().Remove(entity);
+            _dbContext.Remove(entity);
             _dbContext.SaveChanges();
 
             InsertChangeSet(Operation.Delete, _userId, entityId);
         }
-        
+
         protected void InsertChangeSet(Operation operation, string userId, string recordId, List<Change>? changes = null)
         {
             var changeSet = new SqlChangeSet()

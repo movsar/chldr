@@ -33,11 +33,11 @@ namespace chldr_native.Extensions
             appBuilder.Services.AddSingleton<IGraphQLRequestSender, GraphQLRequestSender>();
             appBuilder.Services.AddScoped<AuthService>();
             appBuilder.Services.AddScoped<IDataProvider, RealmDataProvider>();
-            
+
             appBuilder.Services.AddScoped<UserService>();
             appBuilder.Services.AddScoped<ISearchService, SearchService>();
             appBuilder.Services.AddScoped<SyncService>();
-            
+
             // Shared
             appBuilder.Services.AddScoped<ContentStore>();
             appBuilder.Services.AddScoped<UserStore>();
@@ -56,7 +56,13 @@ namespace chldr_native.Extensions
 #elif MACCATALYST
             platform = Platforms.MacCatalyst;
 #endif
-            appBuilder.Services.AddSingleton(x => new EnvironmentService(platform));
+
+            var isDevelopment = true;
+#if RELEASE
+            isDevelopment = false;
+#endif
+
+            appBuilder.Services.AddSingleton(x => new EnvironmentService(platform, isDevelopment));
             appBuilder.Services.AddSingleton(x => new FileService(AppContext.BaseDirectory));
 
             // Utils
