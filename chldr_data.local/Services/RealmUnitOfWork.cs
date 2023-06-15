@@ -33,6 +33,7 @@ namespace chldr_data.local.Services
             _graphQLRequestSender = graphQLRequestSender;
         }
 
+        #region Not Used for Realm
         public void BeginTransaction()
         {
             _transaction = _context.BeginWrite();
@@ -54,7 +55,8 @@ namespace chldr_data.local.Services
             _context.Dispose();
         }
 
-     
+        #endregion
+
         public ITranslationsRepository Translations => _translationsRepository ??= new RealmTranslationsRepository(_context, _exceptionHandler, _graphQLRequestSender);
         public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new RealmChangeSetsRepository(_context, _exceptionHandler, _graphQLRequestSender);
         public IEntriesRepository Entries => _entriesRepository ??= new RealmEntriesRepository(_context, _exceptionHandler, _graphQLRequestSender);

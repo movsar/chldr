@@ -93,11 +93,6 @@ namespace chldr_data.remote.Repositories
 
         public override void Add(EntryDto newEntryDto)
         {
-            if (!newEntryDto.Translations.Any())
-            {
-                throw new Exception("Empty translations");
-            }
-
             // Insert Entry entity
             var entry = SqlEntry.FromDto(newEntryDto, _dbContext);
             _dbContext.Add(entry);
