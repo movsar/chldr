@@ -13,11 +13,11 @@ namespace chldr_utils.Services
 
         public GraphQLRequestSender(ExceptionHandler exceptionHandler, EnvironmentService environmentService)
         {
-            string devAppHost = "https://localhost:7065/graphql";
-            string prodAppHost = "https://api.nohchiyn-mott.com/graphql";
-            var apiHost = environmentService.IsDevelopment ? devAppHost : prodAppHost;
+            string devApiHost = "https://localhost:7065/graphql";
+            string prodApiHost = "https://api.nohchiyn-mott.com/graphql";
+            var apiHost = environmentService.IsDevelopment ? devApiHost : prodApiHost;
 
-            _graphQLClient = new GraphQLHttpClient($"{apiHost}", new NewtonsoftJsonSerializer());
+            _graphQLClient = new GraphQLHttpClient($"{prodApiHost}", new NewtonsoftJsonSerializer());
             _exceptionHandler = exceptionHandler;
         }
 
