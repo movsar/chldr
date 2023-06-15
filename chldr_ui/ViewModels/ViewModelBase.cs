@@ -1,4 +1,5 @@
-﻿using chldr_data.Resources.Localizations;
+﻿using Blazored.Modal.Services;
+using chldr_data.Resources.Localizations;
 using chldr_shared.Stores;
 using chldr_utils;
 using chldr_utils.Services;
@@ -18,7 +19,7 @@ namespace chldr_ui.ViewModels
         [Inject] internal EnvironmentService? EnvironmentService { get; set; }
         [Inject] internal ExceptionHandler? ExceptionHandler { get; set; }
         [Inject] internal NavigationManager NavigationManager { get; set; }
-
+        [CascadingParameter] public IModalService Modal { get; set; } = default!;
         protected async Task RefreshUi()
         {
             await InvokeAsync(StateHasChanged);

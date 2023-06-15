@@ -11,7 +11,9 @@
             <ErrorBoundary>
                 @if (!Error)
                 {
-                    @Body
+                    <CascadingBlazoredModal>
+                        @Body
+                    </CascadingBlazoredModal>
                 }
                 else
                 {

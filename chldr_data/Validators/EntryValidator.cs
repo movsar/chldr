@@ -21,7 +21,6 @@ namespace chldr_shared.Validators
             RuleFor(x => x.Translations)
                  .Cascade(CascadeMode.Stop)
                  .NotNull()
-                 .WithMessage(stringLocalizer["Error:There_must_be_at_least_one_translation"])
                  .Must(translations => translations.All(IsValidTranslation))
                  .WithMessage((dto, translations) => GetTranslationsErrorMessage(translations, stringLocalizer))
                  .Must(translations => translations.Where(t => t.Rate > 0).GroupBy(t => t.LanguageCode).Where(group => group.Count() > 1).Count() == 0)

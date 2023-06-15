@@ -70,6 +70,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add / Ask.
+        /// </summary>
+        public static string AddAsk {
+            get {
+                return ResourceManager.GetString("AddAsk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chechen Language Dictionary.
         /// </summary>
         public static string App_title {
@@ -192,6 +201,15 @@ namespace chldr_data.Resources.Localizations {
         public static string Contributor {
             get {
                 return ResourceManager.GetString("Contributor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
             }
         }
         
@@ -537,6 +555,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to latest.
+        /// </summary>
+        public static string Latest {
+            get {
+                return ResourceManager.GetString("Latest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Log In.
         /// </summary>
         public static string Log_in {
@@ -600,6 +627,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to on moderation.
+        /// </summary>
+        public static string OnModeration {
+            get {
+                return ResourceManager.GetString("OnModeration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to or sign up with:.
         /// </summary>
         public static string Or_sign_up_with_ {
@@ -650,6 +686,15 @@ namespace chldr_data.Resources.Localizations {
         public static string Profile {
             get {
                 return ResourceManager.GetString("Profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you really want to add new entry without a translation?.
+        /// </summary>
+        public static string Question_Do_you_really_want_to_add_new_entry_without_a_translation_ {
+            get {
+                return ResourceManager.GetString("Question:Do_you_really_want_to_add_new_entry_without_a_translation?", resourceCulture);
             }
         }
         

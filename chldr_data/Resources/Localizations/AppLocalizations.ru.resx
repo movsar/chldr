@@ -623,4 +623,19 @@
   <data name="Save" xml:space="preserve">
     <value>Ok</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="AddAsk" xml:space="preserve">
+    <value>Добавить / Спросить</value>
+  </data>
+  <data name="Latest" xml:space="preserve">
+    <value>последние</value>
+  </data>
+  <data name="OnModeration" xml:space="preserve">
+    <value>на модерации</value>
+  </data>
+  <data name="Question:Do_you_really_want_to_add_new_entry_without_a_translation?" xml:space="preserve">
+    <value>Вы действительно хотите добавить новую запись без перевода?</value>
+  </data>
 </root>

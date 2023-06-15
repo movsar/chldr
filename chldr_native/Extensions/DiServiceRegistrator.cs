@@ -12,6 +12,7 @@ using chldr_utils.Services;
 using FluentValidation;
 using chldr_utils.Interfaces;
 using chldr_data.local.Services;
+using Blazored.Modal;
 
 namespace chldr_native.Extensions
 {
@@ -44,6 +45,7 @@ namespace chldr_native.Extensions
             appBuilder.Services.AddScoped<JsInterop>();
             appBuilder.Services.AddScoped<LocalStorageService>();
 
+            appBuilder.Services.AddBlazoredModal();
             appBuilder.Services.AddSingleton<EmailService>();
 
             var platform = Platforms.Web;

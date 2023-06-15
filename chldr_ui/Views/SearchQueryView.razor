@@ -23,11 +23,12 @@
 </div>
 
 <div class="list-group-horizontal">
-    <button class="btn btn-outline-primary" @onclick="ToggleOnModerationFlag">@Localizer["# on moderation"]</button>
-    <button class="btn btn-outline-primary" @onclick="LoadLatestEntries">@Localizer["# latest"]</button>
+    <button class="btn btn-outline-primary" @onclick="ToggleOnModerationFlag"># @Localizer["OnModeration"]</button>
+    <button class="btn btn-outline-primary" @onclick="LoadLatestEntries"># @Localizer["Latest"]</button>
     <button class="btn btn-outline-primary" @onclick="LoadEntriesToFiddleWith">@Localizer["# experimental"]</button>
+
     @if (UserStore.ActiveSession.Status == SessionStatus.LoggedIn)
     {
-        <a class="btn btn-success" href="/entry/edit">@Localizer["+ add / ask"]</a>
+        <a class="btn btn-success ms-1" href="/entry/edit">+ @Localizer["AddAsk"]</a>
     }
 </div>

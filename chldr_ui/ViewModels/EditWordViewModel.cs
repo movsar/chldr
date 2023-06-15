@@ -8,12 +8,17 @@ using Newtonsoft.Json;
 using chldr_data.Interfaces;
 using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums.WordDetails;
+using static System.Net.Mime.MediaTypeNames;
+using chldr_ui.Components;
+using Blazored.Modal.Services;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace chldr_ui.ViewModels
 {
     public class EditWordViewModel : EditFormViewModelBase<EntryDto, EntryValidator>
     {
         private bool isInitialized = false;
+        [Inject] JsInterop JsInterop { get; set; }
         [Parameter] public string? EntryId { get; set; }
         // Set "User" source id by default
         protected string SourceId { get; set; } = "63a816205d1af0e432fba6de";
@@ -30,13 +35,14 @@ namespace chldr_ui.ViewModels
         public InterjectionDetails InterjectionDetails { get; set; } = new InterjectionDetails();
         public GerundDetails GerundDetails { get; set; } = new GerundDetails();
         public EntryDto EntryDto { get; set; } = new EntryDto();
+        internal ConfirmationModal confirmationModal;
+
         protected override void OnInitialized()
         {
             if (!isInitialized)
             {
                 isInitialized = true;
 
-                EntryDto.UserId = UserStore.ActiveSession.User!.UserId;
                 EntryDto.SourceId = SourceId;
 
                 if (string.IsNullOrEmpty(EntryId))
@@ -101,7 +107,7 @@ namespace chldr_ui.ViewModels
                             break;
 
                         case WordType.Particle:
-                            ParticleDetails= JsonConvert.DeserializeObject<ParticleDetails>(EntryDto.Details);
+                            ParticleDetails = JsonConvert.DeserializeObject<ParticleDetails>(EntryDto.Details);
                             break;
 
                         default:
@@ -132,13 +138,30 @@ namespace chldr_ui.ViewModels
 
             EntryDto.Translations.Remove(EntryDto.Translations.Find(t => t.TranslationId.Equals(translationId))!);
             await RefreshUi();
+
+
         }
-        public async Task ValidateAndSubmitAsync()
+
+            [CascadingParameter] public IModalService Modal { get; set; }
+        public async Task SaveClickHandler()
+        {
+            if (EntryDto.Translations.Count() == 0)
+            {
+                await JsInterop.ShowConfirmationDialog();
+            }
+            else
+            {
+                await SubmitAsync();
+            }
+        }
+
+        public async Task SubmitAsync()
         {
             await ValidateAndSubmitAsync(EntryDto, Save);
         }
         public async Task Save()
         {
+
             switch ((WordType)EntryDto.EntrySubtype)
             {
                 case WordType.Noun:
@@ -190,6 +213,8 @@ namespace chldr_ui.ViewModels
             }
 
             var user = UserModel.FromDto(UserStore.ActiveSession.User);
+            EntryDto.UserId = user.UserId;
+
             if (EntryDto.CreatedAt != DateTimeOffset.MinValue)
             {
                 await ContentStore.UpdateEntry(user, EntryDto);

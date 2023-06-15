@@ -623,4 +623,19 @@
   <data name="Save" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="AddAsk" xml:space="preserve">
+    <value>Add / Ask</value>
+  </data>
+  <data name="OnModeration" xml:space="preserve">
+    <value>on moderation</value>
+  </data>
+  <data name="Latest" xml:space="preserve">
+    <value>latest</value>
+  </data>
+  <data name="Question:Do_you_really_want_to_add_new_entry_without_a_translation?" xml:space="preserve">
+    <value>Do you really want to add new entry without a translation?</value>
+  </data>
 </root>
