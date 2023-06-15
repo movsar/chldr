@@ -217,7 +217,7 @@
                                 title="@Localizer["Word:Person"]">
 
                             <option value="0" class="form-control">@Localizer[$"Word:Undefined"]</option>
-                            @foreach (VerbTense val in ((VerbTense[])Enum.GetValues(typeof(VerbTense))).Skip(1))
+                            @foreach (Person val in ((Person[])Enum.GetValues(typeof(Person))).Skip(1))
                             {
                                 <option value="@val" class="form-control">@Localizer[$"Word:Person:{val.ToString()}"]</option>
                             }
@@ -284,7 +284,7 @@
 
                     <b>@Localizer["Word:NumericalCategory"]:</b>
                     <div class="form-outline mb-2">
-                        <select @bind="NumeralDetails.Complexity"
+                        <select @bind="NumeralDetails.Category"
                                 class="form-select"
                                 title="@Localizer["Word:NumericalCategory"]">
 
