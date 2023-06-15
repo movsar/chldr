@@ -134,34 +134,19 @@ namespace chldr_ui.ViewModels
 
             EntryDto.Translations.Remove(EntryDto.Translations.Find(t => t.TranslationId.Equals(translationId))!);
             await RefreshUi();
-
-
         }
 
         public async Task SaveClickHandler()
         {
             if (EntryDto.Translations.Count() == 0)
             {
-                var parameters = new ModalParameters()
-                      .Add(nameof(ConfirmationDialog.Message), Localizer["Question:Do_you_really_want_to_add_new_entry_without_a_translation?"].ToString());
-
-                var confirmationResult = Modal.Show<ConfirmationDialog>("", parameters, new ModalOptions()
-                {
-                    HideHeader = true,
-                    Size = ModalSize.Automatic,
-                    HideCloseButton = true
-                });
-
-                var result = await confirmationResult.Result;
-                if (!result.Confirmed)
+                if (await AskForConfirmation("Question:Do_you_really_want_to_add_new_entry_without_a_translation?") != true)
                 {
                     return;
                 }
             }
-            else
-            {
-                await SubmitAsync();
-            }
+
+            await SubmitAsync();
         }
 
         public async Task SubmitAsync()

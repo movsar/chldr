@@ -1,6 +1,8 @@
-﻿using Blazored.Modal.Services;
+﻿using Blazored.Modal;
+using Blazored.Modal.Services;
 using chldr_data.Resources.Localizations;
 using chldr_shared.Stores;
+using chldr_ui.Components;
 using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.AspNetCore.Components;
@@ -20,6 +22,22 @@ namespace chldr_ui.ViewModels
         [Inject] internal ExceptionHandler? ExceptionHandler { get; set; }
         [Inject] internal NavigationManager NavigationManager { get; set; }
         [CascadingParameter] protected IModalService Modal { get; set; } = default!;
+        protected async Task<bool> AskForConfirmation(string message)
+        {
+            var parameters = new ModalParameters()
+                   .Add(nameof(ConfirmationDialog.Message), Localizer[message].ToString());
+
+            var confirmationResult = Modal.Show<ConfirmationDialog>("", parameters, new ModalOptions()
+            {
+                HideHeader = true,
+                Size = ModalSize.Automatic,
+                HideCloseButton = true
+            });
+
+            var result = await confirmationResult.Result;
+
+            return result.Confirmed;
+        }
         protected async Task RefreshUi()
         {
             await InvokeAsync(StateHasChanged);
