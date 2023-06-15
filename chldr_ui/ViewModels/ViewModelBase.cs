@@ -19,7 +19,7 @@ namespace chldr_ui.ViewModels
         [Inject] internal EnvironmentService? EnvironmentService { get; set; }
         [Inject] internal ExceptionHandler? ExceptionHandler { get; set; }
         [Inject] internal NavigationManager NavigationManager { get; set; }
-        [CascadingParameter] public IModalService Modal { get; set; } = default!;
+        [CascadingParameter] protected IModalService Modal { get; set; } = default!;
         protected async Task RefreshUi()
         {
             await InvokeAsync(StateHasChanged);

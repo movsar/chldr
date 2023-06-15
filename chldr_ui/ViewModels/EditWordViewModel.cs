@@ -5,20 +5,17 @@ using chldr_shared.Validators;
 using chldr_data.DatabaseObjects.Models;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
-using chldr_data.Interfaces;
 using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums.WordDetails;
-using static System.Net.Mime.MediaTypeNames;
-using chldr_ui.Components;
 using Blazored.Modal.Services;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using chldr_ui.Components;
+using Blazored.Modal;
 
 namespace chldr_ui.ViewModels
 {
     public class EditWordViewModel : EditFormViewModelBase<EntryDto, EntryValidator>
     {
         private bool isInitialized = false;
-        [Inject] JsInterop JsInterop { get; set; }
         [Parameter] public string? EntryId { get; set; }
         // Set "User" source id by default
         protected string SourceId { get; set; } = "63a816205d1af0e432fba6de";
@@ -35,7 +32,6 @@ namespace chldr_ui.ViewModels
         public InterjectionDetails InterjectionDetails { get; set; } = new InterjectionDetails();
         public GerundDetails GerundDetails { get; set; } = new GerundDetails();
         public EntryDto EntryDto { get; set; } = new EntryDto();
-        internal ConfirmationModal confirmationModal;
 
         protected override void OnInitialized()
         {
@@ -142,12 +138,25 @@ namespace chldr_ui.ViewModels
 
         }
 
-            [CascadingParameter] public IModalService Modal { get; set; }
         public async Task SaveClickHandler()
         {
             if (EntryDto.Translations.Count() == 0)
             {
-                await JsInterop.ShowConfirmationDialog();
+                var parameters = new ModalParameters()
+                      .Add(nameof(ConfirmationDialog.Message), Localizer["Question:Do_you_really_want_to_add_new_entry_without_a_translation?"].ToString());
+
+                var confirmationResult = Modal.Show<ConfirmationDialog>("", parameters, new ModalOptions()
+                {
+                    HideHeader = true,
+                    Size = ModalSize.Automatic,
+                    HideCloseButton = true
+                });
+
+                var result = await confirmationResult.Result;
+                if (!result.Confirmed)
+                {
+                    return;
+                }
             }
             else
             {

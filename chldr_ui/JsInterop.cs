@@ -26,12 +26,6 @@ namespace chldr_ui
             return await module.InvokeAsync<string>("showPrompt", message);
         }
 
-        public async ValueTask ShowConfirmationDialog()
-        {
-            var module = await moduleTask.Value;
-            await module.InvokeVoidAsync("showConfirmationDialog");
-        }
-
         public async ValueTask ClickShowRandoms()
         {
             try
