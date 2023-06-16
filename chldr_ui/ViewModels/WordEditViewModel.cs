@@ -1,16 +1,9 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums.WordDetails;
 using chldr_data.Helpers;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chldr_ui.ViewModels
 {
@@ -45,6 +38,7 @@ namespace chldr_ui.ViewModels
         public MasdarDetails MasdarDetails { get; set; } = new MasdarDetails();
         public InterjectionDetails InterjectionDetails { get; set; } = new InterjectionDetails();
         public GerundDetails GerundDetails { get; set; } = new GerundDetails();
+        #endregion
         private void DeserializeWordDetails()
         {
             if (string.IsNullOrEmpty(EntryDto.Details))
@@ -104,8 +98,6 @@ namespace chldr_ui.ViewModels
                     break;
             }
         }
-
-
         private string SerializeWordDetails(WordType wordType)
         {
             switch (wordType)
@@ -147,7 +139,5 @@ namespace chldr_ui.ViewModels
                     return "";
             }
         }
-        #endregion
-
     }
 }

@@ -96,7 +96,6 @@ namespace chldr_ui.ViewModels
 
         public async Task Save()
         {
-
             var user = UserModel.FromDto(UserStore.ActiveSession.User);
             EntryDto.UserId = user.UserId;
             EntryDto.SourceId = SourceId;
@@ -110,7 +109,7 @@ namespace chldr_ui.ViewModels
                 await ContentStore.AddEntry(user, EntryDto);
             }
 
-            //NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/");
         }
         #endregion
     }

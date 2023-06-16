@@ -8,6 +8,7 @@ namespace chldr_data.Helpers
 {
     public static class WordHelper
     {
+
         public static IDetails? DeserializeWordDetails(WordType wordType, string details)
         {
             if (string.IsNullOrEmpty(details))
