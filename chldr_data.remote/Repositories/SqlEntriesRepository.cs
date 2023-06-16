@@ -22,10 +22,6 @@ namespace chldr_data.remote.Repositories
 
         protected override RecordType RecordType => RecordType.Entry;
 
-        public event Action<EntryModel>? EntryUpdated;
-        public event Action<EntryModel>? EntryInserted;
-        public event Action<EntryModel>? EntryDeleted;
-        public event Action<EntryModel>? EntryAdded;
         public override void Remove(string entityId)
         {
             var entity = _dbContext.Entries.Include(e => e.Translations).FirstOrDefault(e => e.EntryId.Equals(entityId));

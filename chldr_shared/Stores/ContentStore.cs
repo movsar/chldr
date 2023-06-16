@@ -12,20 +12,23 @@ namespace chldr_shared.Stores
 {
     public class ContentStore
     {
-
         #region Events
         public event Action? ContentInitialized;
         public event Action? CachedResultsChanged;
 
-        private readonly ExceptionHandler _exceptionHandler;
-        private readonly IDataProvider _dataProvider;
-        private readonly ISearchService _searchService;
-        private readonly RequestService _requestService;
+        // ! Are these needed?
+        public event Action<EntryModel>? EntryUpdated;
+        public event Action<EntryModel>? EntryInserted;
+        public event Action<EntryModel>? EntryDeleted;
+        public event Action<EntryModel>? EntryAdded;
         #endregion
 
         #region Fields and Properties
         private IUnitOfWork _unitOfWork;
-
+        private readonly ExceptionHandler _exceptionHandler;
+        private readonly IDataProvider _dataProvider;
+        private readonly ISearchService _searchService;
+        private readonly RequestService _requestService;
         // This shouldn't be normally used, but only to request models that have already been loaded 
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
         public readonly List<LanguageModel> Languages = LanguageModel.GetAvailableLanguages();
@@ -66,7 +69,6 @@ namespace chldr_shared.Stores
             _requestService = requestService;
             _searchService.GotNewSearchResult += DataAccess_GotNewSearchResults;
 
-            _dataProvider.EntryUpdated += EntriesRepository_EntryUpdated;
             _dataProvider.DatabaseInitialized += DataAccess_DatasourceInitialized;
             _dataProvider.Initialize();
         }
@@ -162,7 +164,7 @@ namespace chldr_shared.Stores
         {
             // Get current Phrase from cached results
             var phrase = CachedSearchResult.Entries
-                .Where(e => (EntryType)e.Type == EntryType.Phrase)
+                .Where(e => e.Type == EntryType.Phrase)
                 .Cast<EntryModel>()
                 .FirstOrDefault(w => w.EntryId == phraseId);
 
@@ -214,6 +216,9 @@ namespace chldr_shared.Stores
             // Update local entity
             entryDto.CreatedAt = request.CreatedAt;
             _unitOfWork.Entries.Add(entryDto);
+
+            CachedSearchResult.Entries.Add(_unitOfWork.Entries.Get(entryDto.EntryId));
+            CachedResultsChanged?.Invoke();
         }
     }
 }

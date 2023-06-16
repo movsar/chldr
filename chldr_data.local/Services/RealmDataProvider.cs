@@ -23,10 +23,6 @@ namespace chldr_data.local.Services
         public bool IsInitialized { get; set; }
 
         public event Action? DatabaseInitialized;
-        public event Action<EntryModel>? EntryUpdated;
-        public event Action<EntryModel>? EntryInserted;
-        public event Action<EntryModel>? EntryDeleted;
-        public event Action<EntryModel>? EntryAdded;
 
         internal Realm GetDatabase()
         {
