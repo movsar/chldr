@@ -5,7 +5,6 @@ using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_utils;
 using chldr_utils.Models;
-using chldr_utils.Services;
 using chldr_shared.Services;
 
 namespace chldr_shared.Stores
@@ -55,12 +54,10 @@ namespace chldr_shared.Stores
         }
         #endregion
 
-        #region Constructors
         public ContentStore(ExceptionHandler exceptionHandler,
                             IDataProvider dataProvider,
                             ISearchService searchService,
                             RequestService requestService
-
             )
         {
             _exceptionHandler = exceptionHandler;
@@ -73,19 +70,6 @@ namespace chldr_shared.Stores
             _dataProvider.Initialize();
         }
 
-        private void EntriesRepository_EntryUpdated(EntryModel entry)
-        {
-            var entryInCachedResults = CachedSearchResult.Entries.First(e => e.EntryId == entry.EntryId);
-            if (entryInCachedResults == null)
-            {
-                return;
-            }
-
-            entryInCachedResults = entry;
-        }
-        #endregion
-
-        #region Methods
         public void Search(string inputText, FiltrationFlags filterationFlags)
         {
             Task.Run(() => _searchService.FindAsync(inputText, filterationFlags));
@@ -147,8 +131,6 @@ namespace chldr_shared.Stores
         {
             return _unitOfWork.Entries.Get(entryId);
         }
-
-        #endregion
         public void DataAccess_DatasourceInitialized()
         {
             _unitOfWork = _dataProvider.CreateUnitOfWork();
@@ -188,20 +170,29 @@ namespace chldr_shared.Stores
             // Remove local entity
             _unitOfWork.Entries.Remove(entryId);
 
-            //CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
-            //CachedResultsChanged?.Invoke();
+            // Update on UI
+            CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
+            CachedResultsChanged?.Invoke();
         }
 
-        public async Task UpdateEntry(UserModel loggedInUser, EntryDto EntryDto)
+        public async Task UpdateEntry(UserModel loggedInUser, EntryDto entryDto)
         {
-            var request = await _requestService.UpdateEntry(loggedInUser.UserId, EntryDto);
+            var request = await _requestService.UpdateEntry(loggedInUser.UserId, entryDto);
             if (!request.Success)
             {
                 throw _exceptionHandler.Error("Error:Request_failed");
             }
 
             // Update local entity
-            _unitOfWork.Entries.Update(EntryDto);
+            _unitOfWork.Entries.Update(entryDto);
+
+            // Update on UI
+            var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId);
+            
+            var entryIndex = CachedSearchResult.Entries.IndexOf(existingEntry);
+            CachedSearchResult.Entries[entryIndex] = _unitOfWork.Entries.Get(entryDto.EntryId);
+
+            CachedResultsChanged?.Invoke();
         }
 
         public async Task AddEntry(UserModel loggedInUser, EntryDto entryDto)

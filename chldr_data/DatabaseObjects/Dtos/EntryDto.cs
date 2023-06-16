@@ -11,7 +11,7 @@ namespace chldr_data.DatabaseObjects.Dtos
         public string SourceId { get; set; }
         public string? ParentEntryId { get; set; }
         public int Rate { get; set; }
-        public string Content { get; set; }
+        public string Content { get; set; } = string.Empty;
         public string? Details { get; set; }
         public int EntryType { get; set; } = 1;
         public int EntrySubtype { get; set; } = 0;
