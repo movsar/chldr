@@ -1,8 +1,5 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
-using FluentValidation;
 using Microsoft.AspNetCore.Components;
 
 namespace chldr_ui.ViewModels

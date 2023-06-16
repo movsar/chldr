@@ -17,7 +17,7 @@ namespace chldr_utils.Services
             string prodApiHost = "https://api.nohchiyn-mott.com/graphql";
             var apiHost = environmentService.IsDevelopment ? devApiHost : prodApiHost;
 
-            _graphQLClient = new GraphQLHttpClient($"{devApiHost}", new NewtonsoftJsonSerializer());
+            _graphQLClient = new GraphQLHttpClient($"{prodApiHost}", new NewtonsoftJsonSerializer());
             _exceptionHandler = exceptionHandler;
         }
 

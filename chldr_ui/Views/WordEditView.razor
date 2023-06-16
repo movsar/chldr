@@ -1,16 +1,14 @@
-﻿@using chldr_ui.Components
+﻿@inherits EditWordViewModel;
 
-@inherits EditWordViewModel;
-
-<form class="col-8">
+<form class="col-8" disabled="@FormDisabled">
     <div class="form-outline mb-2">
         <input type="text" class="form-control" placeholder="@Localizer["EnterWord"]" @bind="EntryDto.Content" />
     </div>
 
-    <div class="row form-outline form-group mt-2">
+    <div class="row form-outline form-group mt-2" disabled="@FormDisabled">
         <div class="col-8">
             <div class="form-group">
-                <select @bind="EntryDto.EntrySubtype" class="form-select">
+                <select @bind="EntryDto.EntrySubtype" class="form-select" disabled="@FormDisabled">
                     @foreach (WordType WordType in (WordType[])Enum.GetValues(typeof(WordType)))
                     {
                         <option value="@((int)WordType)" selected="@((int)WordType == EntryDto.EntrySubtype)">@Localizer[$"Word:{WordType.ToString()}"]</option>
