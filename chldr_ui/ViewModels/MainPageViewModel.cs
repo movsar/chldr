@@ -1,4 +1,5 @@
-﻿using chldr_shared.Enums;
+﻿using chldr_shared;
+using chldr_shared.Enums;
 using chldr_shared.Stores;
 using Microsoft.AspNetCore.Components;
 

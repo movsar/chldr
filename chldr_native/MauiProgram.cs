@@ -1,4 +1,5 @@
-﻿using chldr_native.Extensions;
+﻿using Blazored.Modal;
+using chldr_native.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
 
@@ -9,19 +10,19 @@ namespace chldr_native
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
-            builder
-                .UseMauiApp<App>()
-                .RegisterValidators()
-                .RegisterAppServices()
-                .RegisterViewModels()
 
+            builder.UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
-            builder.Services.AddLocalization();
             builder.Services.AddMauiBlazorWebView();
+
+            builder.Services.AddLocalization();
+            builder.Services.AddBlazoredModal();
+
+            builder.RegisterNativeAppServices();
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();

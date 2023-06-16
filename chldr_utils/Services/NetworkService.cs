@@ -2,7 +2,7 @@
 
 namespace chldr_utils.Services
 {
-    public class NetworkService
+    internal class NetworkService
     {
         public event Action NetworkStateHasChanged;
         public bool IsNetworUp => PingHost("8.8.8.8") || PingHost("168.63.129.16");

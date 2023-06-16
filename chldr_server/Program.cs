@@ -1,4 +1,7 @@
-﻿using chldr_blazor.Extensions;
+﻿using Blazored.Modal;
+using chldr_blazor.Extensions;
+using chldr_shared.Enums;
+using chldr_utils.Services;
 using System.Reflection.PortableExecutable;
 
 namespace chldr_blazor
@@ -16,10 +19,10 @@ namespace chldr_blazor
             builder.Services.AddServerSideBlazor().AddCircuitOptions(option => { option.DetailedErrors = true; });
 
             builder.Services.AddLocalization();
-            builder.RegisterValidators();
-            builder.RegisterAppServices();
-            builder.RegisterViewModels();
+            builder.Services.AddBlazoredModal();
 
+            builder.RegisterWebAppServices();
+           
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

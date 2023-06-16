@@ -21,15 +21,13 @@ namespace chldr_data.Services
     public class UserService
     {
         public event Action<ActiveSession>? UserStateHasChanged;
-        private readonly NetworkService _networkService;
         private readonly AuthService _authService;
         private readonly IDataProvider _dataProvider;
         private readonly LocalStorageService _localStorageService;
         private ActiveSession _currentSession = new ActiveSession();
 
-        public UserService(NetworkService networkService, IDataProvider dataProvider, AuthService authService, LocalStorageService localStorageService)
+        public UserService(IDataProvider dataProvider, AuthService authService, LocalStorageService localStorageService)
         {
-            _networkService = networkService;
             _authService = authService;
             _dataProvider = dataProvider;
             _localStorageService = localStorageService;

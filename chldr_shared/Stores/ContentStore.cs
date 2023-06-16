@@ -18,7 +18,6 @@ namespace chldr_shared.Stores
         public event Action? CachedResultsChanged;
 
         private readonly ExceptionHandler _exceptionHandler;
-        private readonly NetworkService _networkService;
         private readonly IDataProvider _dataProvider;
         private readonly ISearchService _searchService;
         private readonly RequestService _requestService;
@@ -55,7 +54,6 @@ namespace chldr_shared.Stores
 
         #region Constructors
         public ContentStore(ExceptionHandler exceptionHandler,
-                            NetworkService networkService,
                             IDataProvider dataProvider,
                             ISearchService searchService,
                             RequestService requestService
@@ -63,7 +61,6 @@ namespace chldr_shared.Stores
             )
         {
             _exceptionHandler = exceptionHandler;
-            _networkService = networkService;
             _dataProvider = dataProvider;
             _searchService = searchService;
             _requestService = requestService;

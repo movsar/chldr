@@ -16,4 +16,8 @@
     <ProjectReference Include="..\chldr_data.local\chldr_data.local.csproj" />
     <ProjectReference Include="..\chldr_ui\chldr_ui.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
 </Project>
