@@ -3,6 +3,20 @@
 @import url('bootstrap-icons/bootstrap-icons.css');
 @import url('font-awesome/all.min.css');
 
+.chldr_selected_entry * {
+    background-color: #f2f2f2;
+}
+
+.chldr_selectable_entry {
+    cursor: pointer;
+}
+
+    .chldr_selectable_entry :hover {
+        background-color: #f1f1f1;
+    }
+
+
+
 .bi {
     color: darkblue;
 }

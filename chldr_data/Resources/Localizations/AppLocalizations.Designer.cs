@@ -708,6 +708,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to References.
+        /// </summary>
+        public static string References {
+            get {
+                return ResourceManager.GetString("References", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Register.
         /// </summary>
         public static string Register {
@@ -1145,6 +1154,15 @@ namespace chldr_data.Resources.Localizations {
         public static string Word_Intransitive {
             get {
                 return ResourceManager.GetString("Word:Intransitive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Link to another word.
+        /// </summary>
+        public static string Word_Link_to_another_entry {
+            get {
+                return ResourceManager.GetString("Word:Link_to_another_entry", resourceCulture);
             }
         }
         

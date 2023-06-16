@@ -8,12 +8,14 @@ using Newtonsoft.Json;
 using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums.WordDetails;
 using chldr_shared;
+using Blazored.Modal;
+using chldr_ui.Components;
 
 namespace chldr_ui.ViewModels
 {
     public class EntryEditViewModel : EditFormViewModelBase<EntryDto, EntryValidator>
     {
-        [Parameter] 
+        [Parameter]
         public string? EntryId { get; set; }
         public EntryDto EntryDto { get; set; } = new EntryDto();
         protected string SourceId { get; set; } = "63a816205d1af0e432fba6de";
@@ -25,7 +27,7 @@ namespace chldr_ui.ViewModels
                 SelectedEntryType = selectedEntryType;
             }
         }
-    
+
         #region Lifecycle Event Handlers
         private bool isInitialized = false;
         protected override void OnInitialized()
@@ -81,6 +83,7 @@ namespace chldr_ui.ViewModels
         #endregion
 
         #region Form Actions
+
         public async Task SaveClickHandler()
         {
             if (EntryDto.Translations.Count() == 0)
@@ -90,7 +93,7 @@ namespace chldr_ui.ViewModels
                     return;
                 }
             }
-            
+
             await ValidateAndSubmitAsync(EntryDto, Save);
         }
 

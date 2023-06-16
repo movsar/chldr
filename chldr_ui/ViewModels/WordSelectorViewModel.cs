@@ -1,9 +1,7 @@
-﻿using chldr_data.DatabaseObjects.Models;
-using chldr_utils.Models;
+﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Models;
 using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+
 namespace chldr_ui.ViewModels
 {
     public class WordSelectorViewModel : ViewModelBase
@@ -11,7 +9,15 @@ namespace chldr_ui.ViewModels
         public List<EntryModel> Entries { get; set; }
         internal string? SearchQuery { get; set; }
         internal ElementReference SearchInputReference { get; set; }
+        internal string? SelectedEntryId { get; set; }
 
+        [Parameter]
+        public EventCallback<EntryModel> OnEntrySelected { get; set; }
+        public async Task SelectEntry(EntryModel entry)
+        {
+            SelectedEntryId = entry.EntryId;
+            await OnEntrySelected.InvokeAsync(entry);
+        }
         public void Search(ChangeEventArgs evgentArgs)
         {
             string? inputText = evgentArgs.Value?.ToString();

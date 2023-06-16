@@ -644,4 +644,10 @@
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
+  <data name="Word:Link_to_another_entry" xml:space="preserve">
+    <value>Link to another word</value>
+  </data>
+  <data name="References" xml:space="preserve">
+    <value>References</value>
+  </data>
 </root>

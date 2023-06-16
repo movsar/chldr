@@ -2,14 +2,19 @@
 
 <form class="col-8">
     <div class="col-12 form-outline mb-2">
-        
+
         <input class="form-control" type="text" placeholder="@Localizer["EnterWord"]" @bind="EntryDto.Content" />
-        
-        <button class="form-control btn btn-secondary mt-2" type="button" disabled="@(EntryDto?.Content.Length > 0)">
+
+        <button class="form-control btn btn-secondary mt-2"
+                type="button" @onclick="OpenSetParentWordDialog">
             @Localizer["Word:Link_to_another_entry"]
         </button>
 
-        <WordSelectorView></WordSelectorView>
+        @if (ParentEntry != null)
+        {
+            <h6 class="mt-2">@Localizer["References"]: <u>@ParentEntry.Content</u></h6>
+        }
+
     </div>
 
     <div class="row form-outline form-group mt-2">

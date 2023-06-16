@@ -70,9 +70,9 @@ namespace chldr_shared.Stores
             _dataProvider.Initialize();
         }
 
-        public IEnumerable<EntryModel> Find(string inputText)
+        public IEnumerable<EntryModel> Find(string inputText, int limit = 10)
         {
-            return _searchService.Find(inputText, 50);
+            return _searchService.Find(inputText, limit);
         }
 
         public void StartSearch(string inputText, FiltrationFlags filterationFlags)

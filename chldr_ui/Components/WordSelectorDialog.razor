@@ -1,0 +1,32 @@
+﻿@inherits ViewModelBase;
+
+<div>
+
+    ﻿<div>
+        <p>@Localizer["Select_the_parent_word"]</p>
+
+        <div style="max-height:400px; overflow:auto;">
+            <WordSelectorView OnEntrySelected="HandleEntrySelected"></WordSelectorView>
+        </div>
+
+        <div class="float-end mt-2">
+            <button @onclick="Cancel" class="btn btn-secondary"> @Localizer["Cancel"] </button>
+            <button @onclick="Ok" class="btn btn-primary"> @Localizer["Ok"] </button>
+        </div>
+    </div>
+
+    @code {
+        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+        EntryModel? SelectedEntry { get; set; } = null;
+
+        async Task Ok() => await BlazoredModal.CloseAsync(ModalResult.Ok(SelectedEntry));
+        async Task Cancel() => await BlazoredModal.CancelAsync();
+
+        public void HandleEntrySelected(EntryModel selectedEntry)
+        {
+            SelectedEntry = selectedEntry;
+        }
+    }
+
+</div>

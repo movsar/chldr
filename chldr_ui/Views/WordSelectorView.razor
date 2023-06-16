@@ -23,42 +23,40 @@
 
             @if (Entries != null)
             {
-                <div class="chldr_entries">
-                    @foreach (var entry in Entries)
-                    {
+                @foreach (var entry in Entries)
+                {
 
-                        <div class="chldr_entry">
-                            <div class="card card-body">
+                    <div class="@(entry.EntryId == SelectedEntryId ? "chldr_selected_entry" : "chldr_selectable_entry")" @onclick="() => SelectEntry(entry)">
+                        <div class="card card-body">
 
-                                <div class="chldr_entry_header card-title">
-                                    @entry.Content
+                            <div class="chldr_entry_header card-title">
+                                @entry.Content
+                            </div>
+
+                            @if (!String.IsNullOrWhiteSpace(@entry.Source?.Name))
+                            {
+                                <div class="chldr_entry_source">
+                                    @Localizer["Source"]: @entry.Source?.Name
                                 </div>
+                            }
 
-                                @if (!String.IsNullOrWhiteSpace(@entry.Source?.Name))
+                            <div class="chldr_entry_translations mt-2">
+                                @foreach (var translation in @entry.Translations)
                                 {
-                                    <div class="chldr_entry_source">
-                                        @Localizer["Source"]: @entry.Source?.Name
+                                    <div class="chldr_translation card-subtitle">
+                                        <span class="chldr_translation_language-code">
+                                            @translation?.LanguageCode
+                                        </span>
+
+                                        <span class="chldr_translation_content">
+                                            @translation?.Content
+                                        </span>
                                     </div>
                                 }
-
-                                <div class="chldr_entry_translations mt-2">
-                                    @foreach (var translation in @entry.Translations)
-                                    {
-                                        <div class="chldr_translation card-subtitle">
-                                            <span class="chldr_translation_language-code">
-                                                @translation?.LanguageCode
-                                            </span>
-
-                                            <span class="chldr_translation_content">
-                                                @translation?.Content
-                                            </span>
-                                        </div>
-                                    }
-                                </div>
                             </div>
                         </div>
-                    }
-                </div>
+                    </div>
+                }
             }
         </div>
     </div>

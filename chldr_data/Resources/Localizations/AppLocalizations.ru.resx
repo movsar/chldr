@@ -212,9 +212,6 @@
   <data name="Profile" xml:space="preserve">
     <value>Профиль</value>
   </data>
-  <data name="Register" xml:space="preserve">
-    <value>Зарегестрироваться</value>
-  </data>
   <data name="Registration" xml:space="preserve">
     <value>Регистрация</value>
   </data>
@@ -643,5 +640,14 @@
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Да</value>
+  </data>
+  <data name="Word:Link_to_another_entry" xml:space="preserve">
+    <value>Создать отсылку к другому слову</value>
+  </data>
+  <data name="References" xml:space="preserve">
+    <value>Ссылается на</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Зарегистрироваться</value>
   </data>
 </root>

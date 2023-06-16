@@ -1,7 +1,11 @@
-﻿using chldr_data.DatabaseObjects.Dtos;
+﻿using Blazored.Modal;
+using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums.WordDetails;
 using chldr_data.Helpers;
+using chldr_data.Interfaces;
+using chldr_ui.Components;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 
@@ -9,6 +13,7 @@ namespace chldr_ui.ViewModels
 {
     public class WordEditViewModel : ViewModelBase
     {
+        [Inject] IDataProvider DataProvider { get; set; }
         [Parameter]
         public EntryDto EntryDto { get; set; }
         protected override Task OnAfterRenderAsync(bool firstRender)
@@ -21,6 +26,13 @@ namespace chldr_ui.ViewModels
             if (EntryDto.Details != "")
             {
                 DeserializeWordDetails();
+            }
+
+            if (!string.IsNullOrEmpty(EntryDto.ParentEntryId))
+            {
+
+                var unitOfWork = DataProvider.CreateUnitOfWork();
+                ParentEntry = unitOfWork.Entries.Get(EntryDto.ParentEntryId);
             }
 
             return base.OnParametersSetAsync();
@@ -39,6 +51,23 @@ namespace chldr_ui.ViewModels
         public InterjectionDetails InterjectionDetails { get; set; } = new InterjectionDetails();
         public GerundDetails GerundDetails { get; set; } = new GerundDetails();
         #endregion
+        internal EntryModel? ParentEntry { get; set; }
+        protected async Task OpenSetParentWordDialog()
+        {
+            var entrySelectionDialog = Modal.Show<WordSelectorDialog>("", new ModalOptions()
+            {
+                HideHeader = true,
+                Size = ModalSize.Large,
+                HideCloseButton = true
+            });
+
+            var result = await entrySelectionDialog.Result;
+            if (result.Confirmed)
+            {
+                ParentEntry = result.Data as EntryModel;
+                EntryDto.ParentEntryId = ParentEntry?.EntryId;
+            }
+        }
         private void DeserializeWordDetails()
         {
             if (string.IsNullOrEmpty(EntryDto.Details))
