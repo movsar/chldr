@@ -8,6 +8,7 @@ namespace chldr_data.Interfaces
     {
         event Action<SearchResultModel>? GotNewSearchResult;
         Task FindAsync(string inputText, FiltrationFlags filtrationFlags);
+        SearchResultModel Find(string startsWith);
         List<EntryModel> GetEntriesOnModeration();
         List<EntryModel> GetRandomEntries(int limit = 100);
         List<EntryModel> GetLatestEntries();

@@ -70,7 +70,12 @@ namespace chldr_shared.Stores
             _dataProvider.Initialize();
         }
 
-        public void Search(string inputText, FiltrationFlags filterationFlags)
+        public async Task FindAsync(string inputText)
+        {
+            return _searchService.FindAsync(inputText, new FiltrationFlags() );
+        }
+
+        public void StartSearch(string inputText, FiltrationFlags filterationFlags)
         {
             Task.Run(() => _searchService.FindAsync(inputText, filterationFlags));
         }
@@ -140,7 +145,7 @@ namespace chldr_shared.Stores
 
         public void Search(string query)
         {
-            Search(query, new FiltrationFlags());
+            StartSearch(query, new FiltrationFlags());
         }
         public EntryModel GetCachedEntryById(string phraseId)
         {

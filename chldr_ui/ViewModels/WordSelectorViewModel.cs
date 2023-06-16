@@ -1,11 +1,19 @@
-﻿using chldr_utils.Models;
+﻿using chldr_data.DatabaseObjects.Models;
+using chldr_utils.Models;
 using Microsoft.AspNetCore.Components;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace chldr_ui.ViewModels
 {
-    public class SearchQueryViewModel : ViewModelBase
+    public class WordSelectorViewModel : ViewModelBase
     {
+        [Parameter]
+        public List<EntryModel> Entries { get; set; }
         internal string? SearchQuery { get; set; }
         internal ElementReference SearchInputReference { get; set; }
         internal FiltrationFlags FiltrationFlags = new FiltrationFlags();
@@ -65,6 +73,10 @@ namespace chldr_ui.ViewModels
             {
                 Debug.WriteLine("Error while showing randoms");
             }
+        }
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
         }
     }
 }

@@ -215,5 +215,10 @@ namespace chldr_data.local.Services
 
             return entries;
         }
+
+        public SearchResultModel Find(string startsWith)
+        {
+
+        }
     }
 }
