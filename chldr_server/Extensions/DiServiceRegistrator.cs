@@ -17,14 +17,5 @@ namespace chldr_blazor.Extensions
             
             return appBuilder;
         }
-        public static WebApplicationBuilder RegisterViewModels(this WebApplicationBuilder appBuilder)
-        {
-            appBuilder.Services.AddScoped<MainPageViewModel>();
-            appBuilder.Services.AddScoped<LoginPageViewModel>();
-            appBuilder.Services.AddScoped<RegistrationPageViewModel>();
-            appBuilder.Services.AddScoped<SearchResultsViewModel>();
-
-            return appBuilder;
-        }
     }
 }
