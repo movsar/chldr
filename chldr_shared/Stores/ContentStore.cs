@@ -70,9 +70,9 @@ namespace chldr_shared.Stores
             _dataProvider.Initialize();
         }
 
-        public async Task FindAsync(string inputText)
+        public IEnumerable<EntryModel> Find(string inputText)
         {
-            return _searchService.FindAsync(inputText, new FiltrationFlags() );
+            return _searchService.Find(inputText, 50);
         }
 
         public void StartSearch(string inputText, FiltrationFlags filterationFlags)

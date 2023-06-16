@@ -4,46 +4,14 @@ using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace chldr_ui.ViewModels
 {
     public class WordSelectorViewModel : ViewModelBase
     {
-        [Parameter]
         public List<EntryModel> Entries { get; set; }
         internal string? SearchQuery { get; set; }
         internal ElementReference SearchInputReference { get; set; }
-        internal FiltrationFlags FiltrationFlags = new FiltrationFlags();
 
-        internal void ToggleOnModerationFlag()
-        {
-            ContentStore.LoadEntriesOnModeration();
-            //FiltrationFlags.OnModeration = !FiltrationFlags.OnModeration;
-        }
-
-        internal void LoadLatestEntries()
-        {
-            ContentStore.LoadLatestEntries();
-        }
-        internal void LoadEntriesToFiddleWith()
-        {
-            ContentStore.LoadEntriesToFiddleWith();
-        }
-
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-
-            if (ContentStore.CachedSearchResult.Entries.Count > 0)
-            {
-                SearchQuery = ContentStore.CachedSearchResult.SearchQuery;
-            }
-        }
-
-        // Called when something is typed into search input
         public void Search(ChangeEventArgs evgentArgs)
         {
             string? inputText = evgentArgs.Value?.ToString();
@@ -52,7 +20,7 @@ namespace chldr_ui.ViewModels
                 return;
             }
 
-            ContentStore.StartSearch(inputText, FiltrationFlags);
+            Entries = ContentStore.Find(inputText).ToList();
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -63,20 +31,6 @@ namespace chldr_ui.ViewModels
 
             await base.OnAfterRenderAsync(firstRender);
         }
-        public void LoadRandomEntries()
-        {
-            try
-            {
-                ContentStore.LoadRandomEntries();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Error while showing randoms");
-            }
-        }
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-        }
+
     }
 }

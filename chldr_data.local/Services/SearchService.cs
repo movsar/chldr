@@ -216,9 +216,26 @@ namespace chldr_data.local.Services
             return entries;
         }
 
-        public SearchResultModel Find(string startsWith)
+        public List<EntryModel> Find(string startsWith, int limit)
         {
+            var inputText = startsWith.Replace("1", "Ӏ").ToLower();
 
+            var resultingEntries = new List<EntryModel>();
+
+            using var realmInstance = Database;
+
+            var entries = realmInstance.All<RealmEntry>()
+                                                    .Where(StartsWithFilter(inputText))
+                                                    .Where(e => e.Rate > 0)
+                                                    .AsEnumerable()
+                                                    .Take(limit);
+
+            foreach (var entry in entries)
+            {
+                resultingEntries.Add(FromEntity(entry));
+            }
+
+            return resultingEntries;
         }
     }
 }
