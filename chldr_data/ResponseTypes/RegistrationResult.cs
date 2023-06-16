@@ -1,6 +1,6 @@
 ﻿namespace chldr_data.ResponseTypes
 {
-    public class RegistrationResponse : MutationResponse
+    public class RegistrationResult : OperationResult
     {
         public string? Token { get; set; }
     }

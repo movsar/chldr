@@ -638,4 +638,10 @@
   <data name="Question:Do_you_really_want_to_add_new_entry_without_a_translation?" xml:space="preserve">
     <value>Вы действительно хотите добавить новую запись без перевода?</value>
   </data>
+  <data name="No" xml:space="preserve">
+    <value>Нет</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Да</value>
+  </data>
 </root>

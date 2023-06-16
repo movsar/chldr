@@ -16,7 +16,7 @@ namespace chldr_api.GraphQL.MutationServices
 {
     public class RegisterUserResolver
     {
-        internal async Task<RegistrationResponse> ExecuteAsync(
+        internal async Task<RegistrationResult> ExecuteAsync(
             SqlDataProvider dataProvider, 
             IStringLocalizer<AppLocalizations> _localizer, 
             EmailService _emailService,
@@ -28,7 +28,7 @@ namespace chldr_api.GraphQL.MutationServices
             var existingUser = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
             if (existingUser != null)
             {
-                return new RegistrationResponse() { ErrorMessage = "A user with this email already exists" };
+                return new RegistrationResult() { ErrorMessage = "A user with this email already exists" };
             }
 
             // Create the new user
@@ -68,7 +68,7 @@ namespace chldr_api.GraphQL.MutationServices
             try
             {
                 _emailService.Send(message);
-                return new RegistrationResponse()
+                return new RegistrationResult()
                 {
                     Success = true,
                     Token = confirmationToken
@@ -77,7 +77,7 @@ namespace chldr_api.GraphQL.MutationServices
             catch (Exception ex)
             {
                 //LogError(ex);
-                return new RegistrationResponse();
+                return new RegistrationResult();
             }
         }
     }

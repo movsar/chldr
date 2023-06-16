@@ -5,6 +5,7 @@ using chldr_data.local.Services;
 using chldr_data.remote.Services;
 using chldr_data.Resources.Localizations;
 using chldr_data.ResponseTypes;
+using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.Extensions.Localization;
 
@@ -17,7 +18,9 @@ namespace chldr_api
         private readonly RegisterUserResolver _registerUserMutation;
         private readonly ConfirmEmailResolver _confirmEmailResolver;
         private readonly LoginResolver _loginUserMutation;
+        private readonly ExceptionHandler _exceptionHandler;
         private readonly IDataProvider _dataProvider;
+
         protected readonly SqlContext _dbContext;
         protected readonly IConfiguration _configuration;
         protected readonly IStringLocalizer<AppLocalizations> _localizer;
@@ -32,13 +35,16 @@ namespace chldr_api
             IDataProvider dataProvider,
             IConfiguration configuration,
             IStringLocalizer<AppLocalizations> localizer,
-            EmailService emailService)
+            EmailService emailService,
+            ExceptionHandler exceptionHandler
+            )
         {
             _passwordResetMutation = passwordResetResolver;
             _updatePasswordMutation = updatePasswordResolver;
             _registerUserMutation = registerUserResolver;
             _confirmEmailResolver = confirmEmailResolver;
             _loginUserMutation = loginUserResolver;
+            _exceptionHandler = exceptionHandler;
 
             _dataProvider = dataProvider;
             _configuration = configuration;
@@ -46,21 +52,26 @@ namespace chldr_api
             _emailService = emailService;
 
         }
-        public async Task<InsertResponse> AddEntry(string userId, EntryDto entryDto)
+        public InsertResult AddEntry(string userId, EntryDto entryDto)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
+            using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             try
             {
                 unitOfWork.Entries.Add(entryDto);
                 unitOfWork.Commit();
 
-                return new InsertResponse() { Success = true, CreatedAt = entryDto.CreatedAt };
+                return new InsertResult()
+                {
+                    Success = true,
+                    CreatedAt = entryDto.CreatedAt
+                };
             }
             catch (Exception ex)
             {
                 unitOfWork.Rollback();
-                throw ex;
+                _exceptionHandler.LogError(ex);
+                return new InsertResult() { Success = false };
             }
             finally
             {
@@ -68,21 +79,22 @@ namespace chldr_api
             }
         }
 
-        public async Task<MutationResponse> UpdateEntry(string userId, EntryDto entryDto)
+        public OperationResult UpdateEntry(string userId, EntryDto entryDto)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
+            using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             try
             {
                 unitOfWork.Entries.Update(entryDto);
                 unitOfWork.Commit();
 
-                return new MutationResponse() { Success = true };
+                return new OperationResult() { Success = true };
             }
             catch (Exception ex)
             {
                 unitOfWork.Rollback();
-                throw ex;
+                _exceptionHandler.LogError(ex);
+                return new OperationResult() { Success = false };
             }
             finally
             {
@@ -90,21 +102,22 @@ namespace chldr_api
             }
         }
 
-        public async Task<MutationResponse> RemoveEntry(string userId, string entryId)
+        public OperationResult RemoveEntry(string userId, string entryId)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
+            using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             try
             {
                 unitOfWork.Entries.Remove(entryId);
                 unitOfWork.Commit();
 
-                return new MutationResponse() { Success = true };
+                return new OperationResult() { Success = true };
             }
             catch (Exception ex)
             {
                 unitOfWork.Rollback();
-                throw ex;
+                _exceptionHandler.LogError(ex);
+                return new OperationResult() { Success = false };
             }
             finally
             {
@@ -113,34 +126,34 @@ namespace chldr_api
         }
 
         // User mutations
-        public async Task<RegistrationResponse> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
+        public async Task<RegistrationResult> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
-            return await _registerUserMutation.ExecuteAsync(_dataProvider as SqlDataProvider, _localizer, _emailService, email, password, firstName, lastName, patronymic);
+            return await _registerUserMutation.ExecuteAsync((SqlDataProvider)_dataProvider, _localizer, _emailService, email, password, firstName, lastName, patronymic);
         }
 
-        public async Task<MutationResponse> ConfirmEmailAsync(string token)
+        public async Task<OperationResult> ConfirmEmailAsync(string token)
         {
-            return await _confirmEmailResolver.ExecuteAsync(_dataProvider as SqlDataProvider, token);
+            return await _confirmEmailResolver.ExecuteAsync((SqlDataProvider)_dataProvider, token);
         }
 
-        public async Task<PasswordResetResponse> PasswordReset(string email)
+        public async Task<PasswordResetResult> PasswordReset(string email)
         {
-            return await _passwordResetMutation.ExecuteAsync(_dataProvider as SqlDataProvider, _configuration, _localizer, _emailService, email);
+            return await _passwordResetMutation.ExecuteAsync((SqlDataProvider)_dataProvider, _configuration, _localizer, _emailService, email);
         }
 
-        public async Task<MutationResponse> UpdatePasswordAsync(string token, string newPassword)
+        public async Task<OperationResult> UpdatePasswordAsync(string token, string newPassword)
         {
-            return await _updatePasswordMutation.ExecuteAsync(_dataProvider as SqlDataProvider, token, newPassword);
+            return await _updatePasswordMutation.ExecuteAsync((SqlDataProvider)_dataProvider, token, newPassword);
         }
 
-        public async Task<LoginResponse> LogInRefreshTokenAsync(string refreshToken)
+        public async Task<LoginResult> LogInRefreshTokenAsync(string refreshToken)
         {
-            return await _loginUserMutation.ExecuteAsync(_dataProvider as SqlDataProvider, refreshToken);
+            return await _loginUserMutation.ExecuteAsync((SqlDataProvider)_dataProvider, refreshToken);
         }
 
-        public async Task<LoginResponse> LoginEmailPasswordAsync(string email, string password)
+        public async Task<LoginResult> LoginEmailPasswordAsync(string email, string password)
         {
-            return await _loginUserMutation.ExecuteAsync(_dataProvider as SqlDataProvider, email, password);
+            return await _loginUserMutation.ExecuteAsync((SqlDataProvider)_dataProvider, email, password);
         }
     }
 

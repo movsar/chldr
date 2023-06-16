@@ -2,7 +2,7 @@
 
 namespace chldr_data.ResponseTypes
 {
-    public class LoginResponse : MutationResponse
+    public class LoginResult : OperationResult
     {
         public string? AccessToken { get; set; }
         public string? RefreshToken { get; set; }

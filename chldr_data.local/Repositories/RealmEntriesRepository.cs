@@ -28,11 +28,6 @@ namespace chldr_data.Repositories
 
         public override void Add(EntryDto newEntryDto)
         {
-            if (!newEntryDto.Translations.Any())
-            {
-                throw new Exception("Empty translations");
-            }
-
             _dbContext.Write(() =>
             {
                 var newEntry = RealmEntry.FromDto(newEntryDto, _dbContext);

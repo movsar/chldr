@@ -33,7 +33,7 @@ namespace chldr_shared.Stores
                 }
                 catch (Exception ex)
                 {
-                    _exceptionHandler.LogAndThrow(ex);
+                    throw _exceptionHandler.Error(ex);
                 };
             });
         }

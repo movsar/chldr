@@ -30,7 +30,7 @@ namespace chldr_utils.Services
                 Variables = new { email }
             };
 
-            var response = await _requestSender.SendRequestAsync<PasswordResetResponse>(request, "passwordReset");
+            var response = await _requestSender.SendRequestAsync<PasswordResetResult>(request, "passwordReset");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);
@@ -51,7 +51,7 @@ namespace chldr_utils.Services
                 Variables = new { token, newPassword }
             };
 
-            var response = await _requestSender.SendRequestAsync<MutationResponse>(request, "updatePassword");
+            var response = await _requestSender.SendRequestAsync<OperationResult>(request, "updatePassword");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);
@@ -73,7 +73,7 @@ namespace chldr_utils.Services
                 Variables = new { token }
             };
 
-            var response = await _requestSender.SendRequestAsync<MutationResponse>(request, "confirmEmail");
+            var response = await _requestSender.SendRequestAsync<OperationResult>(request, "confirmEmail");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);
@@ -105,7 +105,7 @@ namespace chldr_utils.Services
                 Variables = new { email, password }
             };
 
-            var response = await _requestSender.SendRequestAsync<LoginResponse>(request, "loginEmailPassword");
+            var response = await _requestSender.SendRequestAsync<LoginResult>(request, "loginEmailPassword");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);
@@ -137,7 +137,7 @@ namespace chldr_utils.Services
                 Variables = new { email, password }
             };
 
-            var response = await _requestSender.SendRequestAsync<RegistrationResponse>(request, "registerUser");
+            var response = await _requestSender.SendRequestAsync<RegistrationResult>(request, "registerUser");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);
@@ -176,7 +176,7 @@ namespace chldr_utils.Services
                 Variables = new { refreshToken }
             };
 
-            var response = await _requestSender.SendRequestAsync<LoginResponse>(request, "logInRefreshToken");
+            var response = await _requestSender.SendRequestAsync<LoginResult>(request, "logInRefreshToken");
             return new ActiveSession()
             {
                 AccessToken = response.Data.Success ? response.Data.AccessToken! : "",

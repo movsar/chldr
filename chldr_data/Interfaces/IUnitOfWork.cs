@@ -10,8 +10,5 @@ namespace chldr_data.Interfaces
         ITranslationsRepository Translations { get; }
         ISourcesRepository Sources { get; }
         IUsersRepository Users { get; }
-        void BeginTransaction();
-        void Rollback();
-        void Commit();
     }
 }

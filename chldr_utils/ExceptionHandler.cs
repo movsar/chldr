@@ -30,16 +30,6 @@ namespace chldr_utils
         {
         }
 
-        public void LogAndThrow(Exception ex)
-        {
-            string message = Regex.Replace($"{ex.Message} {ex.StackTrace}\r\n", @"\s\s+", "\r\n\t");
-
-            _fileLogger.Error(message);
-            _consoleLogger?.LogError(message);
-
-            IncomingException?.Invoke(ex);
-        }
-
         public void LogError(Exception ex, string msg = "")
         {
             string message = Regex.Replace($"{msg} {ex.Message} {ex.StackTrace}\r\n", @"\s\s+", "\r\n\t");
@@ -55,6 +45,16 @@ namespace chldr_utils
         {
             _fileLogger.Error(message);
             _consoleLogger?.LogError(message);
+        }
+        public Exception Error(Exception ex)
+        {
+            return Error(Regex.Replace($"{ex.Message} {ex.StackTrace}\r\n", @"\s\s+", "\r\n\t"));
+        }
+
+        public Exception Error(string message)
+        {
+            LogError(message);
+            return new Exception(message);
         }
     }
 

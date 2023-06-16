@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.Services
 {
-    public class SqlUnitOfWork : IUnitOfWork
+    public class SqlUnitOfWork : ISqlUnitOfWork
     {
         private readonly SqlContext _context;
         private readonly string _userId;

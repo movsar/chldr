@@ -3,16 +3,10 @@ using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
-using chldr_data.DatabaseObjects.Models.Words;
 using chldr_utils;
 using chldr_utils.Models;
 using chldr_utils.Services;
-using System.Runtime.CompilerServices;
-using chldr_data.ResponseTypes;
-using chldr_utils.Interfaces;
-using Realms.Sync;
-using GraphQL;
-using chldr_data.DatabaseObjects.Interfaces;
+using chldr_shared.Services;
 
 namespace chldr_shared.Stores
 {
@@ -27,7 +21,7 @@ namespace chldr_shared.Stores
         private readonly NetworkService _networkService;
         private readonly IDataProvider _dataProvider;
         private readonly ISearchService _searchService;
-        private readonly IGraphQLRequestSender _graphQLRequestSender;
+        private readonly RequestService _requestService;
         #endregion
 
         #region Fields and Properties
@@ -64,14 +58,15 @@ namespace chldr_shared.Stores
                             NetworkService networkService,
                             IDataProvider dataProvider,
                             ISearchService searchService,
-                            IGraphQLRequestSender graphQLRequestSender
+                            RequestService requestService
+
             )
         {
             _exceptionHandler = exceptionHandler;
             _networkService = networkService;
             _dataProvider = dataProvider;
             _searchService = searchService;
-            _graphQLRequestSender = graphQLRequestSender;
+            _requestService = requestService;
             _searchService.GotNewSearchResult += DataAccess_GotNewSearchResults;
 
             _dataProvider.EntryUpdated += EntriesRepository_EntryUpdated;
@@ -176,9 +171,7 @@ namespace chldr_shared.Stores
 
             if (phrase == null)
             {
-                var npe = new Exception("Error:Phrase_shouldn't_be_null");
-                _exceptionHandler.LogAndThrow(npe);
-                throw npe;
+                throw _exceptionHandler.Error("Error:Phrase_shouldn't_be_null");
             }
 
             return phrase;
@@ -187,24 +180,10 @@ namespace chldr_shared.Stores
         public async Task DeleteEntry(UserModel loggedInUser, string entryId)
         {
             // Remove remote entity
-            var request = new GraphQLRequest
+            var request = await _requestService.RemoveEntry(loggedInUser.UserId, entryId);
+            if (!request.Success)
             {
-                Query = @"
-                        mutation removeEntry($userId: String!, $entryId: String!) {
-                          removeEntry(userId: $userId, entryId: $entryId) {
-                            success
-                            errorMessage
-                          }
-                        }
-                        ",
-                // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new { userId = loggedInUser.UserId, entryId }
-            };
-
-            var response = await _graphQLRequestSender.SendRequestAsync<MutationResponse>(request, "removeEntry");
-            if (!response.Data.Success)
-            {
-                throw new Exception(response.Data.ErrorMessage);
+                throw _exceptionHandler.Error("Error:Request_failed");
             }
 
             // Remove local entity
@@ -216,58 +195,28 @@ namespace chldr_shared.Stores
 
         public async Task UpdateEntry(UserModel loggedInUser, EntryDto EntryDto)
         {
-            // Update remote entity
-            var request = new GraphQLRequest
+            var request = await _requestService.UpdateEntry(loggedInUser.UserId, EntryDto);
+            if (!request.Success)
             {
-                Query = @"
-                        mutation updateEntry($userId: String!, $entryDto: EntryDtoInput!) {
-                          updateEntry(userId: $userId, entryDto: $entryDto) {
-                            success
-                            errorMessage
-                          }
-                        }
-                        ",
-                // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new { userId = loggedInUser.UserId, EntryDto }
-            };
-
-            var response = await _graphQLRequestSender.SendRequestAsync<MutationResponse>(request, "updateEntry");
-            if (!response.Data.Success)
-            {
-                throw new Exception(response.Data.ErrorMessage);
+                throw _exceptionHandler.Error("Error:Request_failed");
             }
 
             // Update local entity
             _unitOfWork.Entries.Update(EntryDto);
         }
 
-        public async Task AddEntry(UserModel loggedInUser, EntryDto EntryDto)
+        public async Task AddEntry(UserModel loggedInUser, EntryDto entryDto)
         {
             // Add remote entity
-            var request = new GraphQLRequest
+            var request = await _requestService.AddEntry(loggedInUser.UserId, entryDto);
+            if (!request.Success)
             {
-                Query = @"
-                        mutation addEntry($userId: String!, $entryDto: EntryDtoInput!) {
-                          addEntry(userId: $userId, entryDto: $entryDto) {
-                            success
-                            errorMessage
-                            createdAt
-                          }
-                        }
-                        ",
-                // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new { userId = loggedInUser.UserId, EntryDto }
-            };
-
-            var response = await _graphQLRequestSender.SendRequestAsync<InsertResponse>(request, "addEntry");
-            if (!response.Data.Success)
-            {
-                throw new Exception(response.Data.ErrorMessage);
+                throw _exceptionHandler.Error("Error:Request_failed");
             }
 
             // Update local entity
-            EntryDto.CreatedAt = response.Data.CreatedAt;
-            _unitOfWork.Entries.Add(EntryDto);
+            entryDto.CreatedAt = request.CreatedAt;
+            _unitOfWork.Entries.Add(entryDto);
         }
     }
 }

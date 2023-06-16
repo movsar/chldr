@@ -17,7 +17,7 @@ namespace chldr_api.GraphQL.MutationServices
 {
     public class LoginResolver
     {
-        internal static async Task<LoginResponse> SignInAsync(SqlContext dbContext, SqlUser user)
+        internal static async Task<LoginResult> SignInAsync(SqlContext dbContext, SqlUser user)
         {
             // Generate a new access token and calculate expiration time
             var accessTokenExpiration = DateTime.UtcNow.AddMinutes(60);
@@ -45,7 +45,7 @@ namespace chldr_api.GraphQL.MutationServices
 
             await dbContext.SaveChangesAsync();
 
-            return new LoginResponse()
+            return new LoginResult()
             {
                 User = UserDto.FromModel(UserModel.FromEntity(user)),
                 AccessToken = accessToken,
@@ -55,7 +55,7 @@ namespace chldr_api.GraphQL.MutationServices
             };
         }
 
-        internal async Task<LoginResponse> ExecuteAsync(SqlDataProvider dataProvider, string refreshToken)
+        internal async Task<LoginResult> ExecuteAsync(SqlDataProvider dataProvider, string refreshToken)
         {
             var dbContext = dataProvider.GetContext();
 
@@ -63,18 +63,18 @@ namespace chldr_api.GraphQL.MutationServices
             var token = await dbContext.Tokens.SingleOrDefaultAsync(t => t.Type == (int)TokenType.Refresh && t.Value == refreshToken);
             if (token == null)
             {
-                return new LoginResponse() { ErrorMessage = "Invalid refresh token" };
+                return new LoginResult() { ErrorMessage = "Invalid refresh token" };
             }
 
             if (DateTime.UtcNow > token.ExpiresIn)
             {
-                return new LoginResponse() { ErrorMessage = "Refresh token has expired" };
+                return new LoginResult() { ErrorMessage = "Refresh token has expired" };
             }
 
             var user = dbContext.Users.SingleOrDefault(u => u.UserId.Equals(token.UserId));
             if (user == null)
             {
-                return new LoginResponse() { ErrorMessage = "No user has been found for the requested token" };
+                return new LoginResult() { ErrorMessage = "No user has been found for the requested token" };
             }
 
             // Remove previous tokens related to this user (in future this can be done in a batch job to increase efficiency)
@@ -86,7 +86,7 @@ namespace chldr_api.GraphQL.MutationServices
             return await SignInAsync(dbContext, user);
         }
 
-        internal async Task<LoginResponse> ExecuteAsync(SqlDataProvider dataProvider, string email, string password)
+        internal async Task<LoginResult> ExecuteAsync(SqlDataProvider dataProvider, string email, string password)
         {
             var dbContext = dataProvider.GetContext();
          
@@ -94,13 +94,13 @@ namespace chldr_api.GraphQL.MutationServices
             var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
             if (user == null)
             {
-                return new LoginResponse() { ErrorMessage = "No user found with this email" };
+                return new LoginResult() { ErrorMessage = "No user found with this email" };
             }
 
             // Check if the password is correct
             if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
             {
-                return new LoginResponse() { ErrorMessage = "Incorrect Password" };
+                return new LoginResult() { ErrorMessage = "Incorrect Password" };
             }
 
             return await SignInAsync(dbContext, user);

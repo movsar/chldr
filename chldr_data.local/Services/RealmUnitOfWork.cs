@@ -4,7 +4,6 @@ using chldr_data.Models;
 using chldr_data.Repositories;
 using chldr_utils.Interfaces;
 using chldr_utils;
-using Newtonsoft.Json;
 using Realms;
 
 namespace chldr_data.local.Services
@@ -16,8 +15,6 @@ namespace chldr_data.local.Services
         private ISourcesRepository _sourcesRepository;
         private IUsersRepository _usersRepository;
         private IEntriesRepository _entriesRepository;
-
-        private Transaction _transaction;
 
         private readonly Realm _context;
         private readonly ExceptionHandler _exceptionHandler;
@@ -33,29 +30,10 @@ namespace chldr_data.local.Services
             _graphQLRequestSender = graphQLRequestSender;
         }
 
-        #region Not Used for Realm
-        public void BeginTransaction()
-        {
-            _transaction = _context.BeginWrite();
-        }
-
-        public void Commit()
-        {
-            _transaction.Commit();
-        }
-
-        public void Rollback()
-        {
-            _transaction?.Rollback();
-        }
-
         public void Dispose()
         {
-            _transaction?.Dispose();
             _context.Dispose();
         }
-
-        #endregion
 
         public ITranslationsRepository Translations => _translationsRepository ??= new RealmTranslationsRepository(_context, _exceptionHandler, _graphQLRequestSender);
         public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new RealmChangeSetsRepository(_context, _exceptionHandler, _graphQLRequestSender);

@@ -1,6 +1,6 @@
 ﻿namespace chldr_data.ResponseTypes
 {
-    public class InsertResponse : MutationResponse
+    public class InsertResult : OperationResult
     {
         public DateTimeOffset CreatedAt { get; set; }
     }

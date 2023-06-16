@@ -17,7 +17,7 @@ namespace chldr_api.GraphQL.MutationServices
 {
     public class PasswordResetResolver
     {
-        internal async Task<PasswordResetResponse> ExecuteAsync(
+        internal async Task<PasswordResetResult> ExecuteAsync(
             SqlDataProvider dataProvider, 
             IConfiguration _configuration, 
             IStringLocalizer<AppLocalizations> _localizer, 
@@ -63,7 +63,7 @@ namespace chldr_api.GraphQL.MutationServices
 
             _emailService.Send(message);
 
-            return new PasswordResetResponse() { Success = true, ResetToken = tokenValue };
+            return new PasswordResetResult() { Success = true, ResetToken = tokenValue };
         }
     }
 }

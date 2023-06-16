@@ -13,6 +13,7 @@ using FluentValidation;
 using chldr_utils.Interfaces;
 using chldr_data.local.Services;
 using Blazored.Modal;
+using chldr_shared.Services;
 
 namespace chldr_native.Extensions
 {
@@ -30,8 +31,8 @@ namespace chldr_native.Extensions
         public static MauiAppBuilder RegisterAppServices(this MauiAppBuilder appBuilder)
         {
             // Data
-            appBuilder.Services.AddSingleton<ServiceLocator>();
             appBuilder.Services.AddSingleton<IGraphQLRequestSender, GraphQLRequestSender>();
+            appBuilder.Services.AddScoped<RequestService>();
             appBuilder.Services.AddScoped<AuthService>();
             appBuilder.Services.AddScoped<IDataProvider, RealmDataProvider>();
 

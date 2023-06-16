@@ -80,8 +80,8 @@ namespace chldr_tools
             _fileService = new FileService(AppContext.BaseDirectory);
             _exceptionHandler = new ExceptionHandler(_fileService);
             _networkService = new NetworkService();
-            _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Windows);
-            _requestSender = new GraphQLRequestSender(_exceptionHandler);
+            _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Windows, true);
+            _requestSender = new GraphQLRequestSender(_exceptionHandler, _environmentService);
             _syncService = new SyncService(_requestSender);
 
             var serviceLocator = new ServiceLocator();
