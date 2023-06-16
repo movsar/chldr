@@ -188,7 +188,7 @@ namespace chldr_shared.Stores
 
             // Update on UI
             var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId);
-            
+
             var entryIndex = CachedSearchResult.Entries.IndexOf(existingEntry);
             CachedSearchResult.Entries[entryIndex] = _unitOfWork.Entries.Get(entryDto.EntryId);
 
