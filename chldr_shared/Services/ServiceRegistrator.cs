@@ -40,7 +40,7 @@ namespace chldr_utils.Services
             // Shared
             services.AddScoped<ContentStore>();
             services.AddScoped<UserStore>();
-            services.AddScoped<JsInterop>();
+            services.AddScoped<JsInteropService>();
             services.AddScoped<LocalStorageService>();
 
             services.AddSingleton<EmailService>();

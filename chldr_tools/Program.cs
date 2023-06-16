@@ -12,7 +12,6 @@ namespace chldr_tools
     {
         private static FileService _fileService;
         private static ExceptionHandler _exceptionHandler;
-        private static NetworkService _networkService;
         private static EnvironmentService _environmentService;
         private static GraphQLRequestSender _requestSender;
         private static SyncService _syncService;
@@ -79,7 +78,6 @@ namespace chldr_tools
 
             _fileService = new FileService(AppContext.BaseDirectory);
             _exceptionHandler = new ExceptionHandler(_fileService);
-            _networkService = new NetworkService();
             _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Windows, true);
             _requestSender = new GraphQLRequestSender(_exceptionHandler, _environmentService);
             _syncService = new SyncService(_requestSender);

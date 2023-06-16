@@ -1,4 +1,5 @@
-﻿using chldr_ui.Interfaces;
+﻿using chldr_shared;
+using chldr_ui.Interfaces;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Components;
@@ -8,9 +9,9 @@ namespace chldr_ui.ViewModels
     public abstract class EditFormViewModelBase<TFormDto, TFormValidator> : ViewModelBase, IEditFormViewModel<TFormDto, TFormValidator>
         where TFormValidator : AbstractValidator<TFormDto>
     {
+        [Inject] JsInteropService JsInterop { get; set; }
         [Inject] TFormValidator? DtoValidator { get; set; }
         public List<string> ErrorMessages { get; set; } = new();
-        public bool FormDisabled { get; set; }
         public bool FormSubmitted { get; set; }
 
         protected bool ExecuteSafely(Action action)
@@ -39,7 +40,7 @@ namespace chldr_ui.ViewModels
                 ErrorMessages.Clear();
                 ErrorMessages.Add(ex.Message);
 
-                ExceptionHandler?.LogError(ex); 
+                ExceptionHandler?.LogError(ex);
                 return false;
             }
         }
@@ -72,24 +73,6 @@ namespace chldr_ui.ViewModels
             return true;
         }
 
-        public void ValidateAndSubmit(TFormDto? formDto, Action action, string[]? validationRuleSets = null)
-        {
-            if (Validate(formDto, validationRuleSets) == false)
-            {
-                return;
-            }
-
-            // Block controls while processing
-            FormDisabled = true;
-
-            if (ExecuteSafely(action))
-            {
-                FormSubmitted = true;
-            }
-
-            FormDisabled = false;
-            StateHasChanged();
-        }
         public async Task ValidateAndSubmitAsync(TFormDto? formDto, Func<Task> func, string[]? validationRuleSets = null)
         {
             if (Validate(formDto, validationRuleSets) == false)
@@ -97,16 +80,19 @@ namespace chldr_ui.ViewModels
                 return;
             }
 
-            // Block controls while processing
-            FormDisabled = true;
+            // Block controls
+            await JsInterop.Disable("[data-id=form_container]");
 
+            // Process
             if (await ExecuteSafelyAsync(func))
             {
                 FormSubmitted = true;
             }
 
-            FormDisabled = false;
-            StateHasChanged();
+            // Unblock controls
+            await JsInterop.Enable("[data-id=form_container]");
+
+            await RefreshUi();
         }
     }
 }

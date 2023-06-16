@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace chldr_ui.ViewModels
 {
-    public partial class TranslationViewModel : ViewModelBase
+    public class TranslationViewModel : ViewModelBase
     {
         [Inject] NavigationManager NavigationManager { get; set; }
         [Parameter]

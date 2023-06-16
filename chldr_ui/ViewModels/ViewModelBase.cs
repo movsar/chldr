@@ -1,6 +1,7 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
 using chldr_data.Resources.Localizations;
+using chldr_shared;
 using chldr_shared.Stores;
 using chldr_ui.Components;
 using chldr_utils;
@@ -14,13 +15,13 @@ namespace chldr_ui.ViewModels
 {
     public class ViewModelBase : ComponentBase
     {
-        [Inject] internal CultureService CultureService { get; set; }
-        [Inject] internal ContentStore ContentStore { get; set; }
-        [Inject] internal UserStore UserStore { get; set; }
-        [Inject] internal IStringLocalizer<AppLocalizations> Localizer { get; set; }
-        [Inject] internal EnvironmentService? EnvironmentService { get; set; }
-        [Inject] internal ExceptionHandler? ExceptionHandler { get; set; }
-        [Inject] internal NavigationManager NavigationManager { get; set; }
+        [Inject] protected CultureService CultureService { get; set; }
+        [Inject] protected ContentStore ContentStore { get; set; }
+        [Inject] protected UserStore UserStore { get; set; }
+        [Inject] protected IStringLocalizer<AppLocalizations> Localizer { get; set; }
+        [Inject] protected EnvironmentService? EnvironmentService { get; set; }
+        [Inject] protected ExceptionHandler? ExceptionHandler { get; set; }
+        [Inject] protected NavigationManager NavigationManager { get; set; }
         [CascadingParameter] protected IModalService Modal { get; set; } = default!;
         protected async Task<bool> AskForConfirmation(string message)
         {

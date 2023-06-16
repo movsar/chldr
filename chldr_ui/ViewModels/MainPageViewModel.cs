@@ -7,8 +7,7 @@ namespace chldr_ui.ViewModels
 {
     public partial class MainPageViewModel : ViewModelBase
     {
-        [Inject] JsInterop? JsInteropFunctions { get; set; }
-
+        [Inject] JsInteropService? JsInteropService { get; set; }
         private async Task ShowRandoms()
         {
             if (ContentStore.CachedSearchResult.Entries.Count > 0)
@@ -23,7 +22,7 @@ namespace chldr_ui.ViewModels
             else
             {
                 await Task.Delay(500);
-                await JsInteropFunctions!.ClickShowRandoms();
+                await JsInteropService!.ClickShowRandoms();
             }
         }
 

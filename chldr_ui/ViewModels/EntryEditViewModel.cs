@@ -7,15 +7,24 @@ using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums.WordDetails;
+using chldr_shared;
 
 namespace chldr_ui.ViewModels
 {
-    public class EditWordViewModel : EditFormViewModelBase<EntryDto, EntryValidator>
+    public class EntryEditViewModel : EditFormViewModelBase<EntryDto, EntryValidator>
     {
-        [Parameter] public string? EntryId { get; set; }
+        [Parameter] 
+        public string? EntryId { get; set; }
         public EntryDto EntryDto { get; set; } = new EntryDto();
         protected string SourceId { get; set; } = "63a816205d1af0e432fba6de";
-
+        internal EntryType SelectedEntryType { get; set; } = EntryType.Word;
+        internal void HandleEntryTypeChange(ChangeEventArgs e)
+        {
+            if (Enum.TryParse(e.Value?.ToString(), out EntryType selectedEntryType))
+            {
+                SelectedEntryType = selectedEntryType;
+            }
+        }
         #region WordDetails
         public VerbDetails VerbDetails { get; set; } = new VerbDetails();
         public NounDetails NounDetails { get; set; } = new NounDetails();
@@ -143,11 +152,12 @@ namespace chldr_ui.ViewModels
         {
             if (!isInitialized)
             {
+                isInitialized = true;
+
                 if (string.IsNullOrEmpty(EntryId))
                 {
                     return;
                 }
-                isInitialized = true;
 
                 // Get current word from cached results
                 var existingEntry = ContentStore.CachedSearchResult.Entries
@@ -201,9 +211,8 @@ namespace chldr_ui.ViewModels
                     return;
                 }
             }
-
+            
             await ValidateAndSubmitAsync(EntryDto, Save);
-
         }
 
         public async Task Save()
@@ -223,7 +232,7 @@ namespace chldr_ui.ViewModels
                 await ContentStore.AddEntry(user, EntryDto);
             }
 
-            NavigationManager.NavigateTo("/");
+            //NavigationManager.NavigateTo("/");
         }
         #endregion
     }

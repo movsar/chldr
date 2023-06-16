@@ -14,20 +14,20 @@
         <form class="col-6">
             <!-- Email input -->
             <div class="form-outline mb-4">
-                <input type="email" name="email" class="form-control" disabled="@FormDisabled"
+                <input type="email" name="email" class="form-control" 
                        placeholder="@Localizer["Email"]" @bind="UserInfo.Email" />
             </div>
 
             <!-- Password input -->
             <div class="form-outline mb-4">
-                <input type="password" class="form-control" disabled="@FormDisabled"
+                <input type="password" class="form-control" 
                        placeholder="@Localizer["Password"]" @bind="UserInfo.Password" />
             </div>
 
             <div class="row d-flex">
                 <div class="col">
                     <button type="button" class="btn btn-primary btn-block mb-4"
-                            disabled="@FormDisabled" @onclick="ValidateAndSubmitAsync">
+                             @onclick="ValidateAndSubmitAsync">
                         @Localizer["Log_in"]
                     </button>
                     <a href="/registration">

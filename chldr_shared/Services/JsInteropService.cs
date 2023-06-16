@@ -10,15 +10,16 @@ namespace chldr_shared
     // This class can be registered as scoped DI service and then injected into Blazor
     // components for use.
 
-    public class JsInterop : IAsyncDisposable
+    public class JsInteropService : IAsyncDisposable
     {
         private readonly Lazy<Task<IJSObjectReference>> moduleTask;
 
-        public JsInterop(IJSRuntime jsRuntime)
+        public JsInteropService(IJSRuntime jsRuntime)
         {
             moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
                 "import", "./_content/chldr_ui/jsInterop.js").AsTask());
         }
+     
 
         public async ValueTask<string> Prompt(string message)
         {
@@ -46,6 +47,22 @@ namespace chldr_shared
                 var module = await moduleTask.Value;
                 await module.DisposeAsync();
             }
+        }
+        public async ValueTask Disable(string selector)
+        {
+            var module = await moduleTask.Value;
+            await module.InvokeVoidAsync("disable", selector);
+        }
+        public async ValueTask Enable(string selector)
+        {
+            var module = await moduleTask.Value;
+            await module.InvokeVoidAsync("enable", selector);
+        }
+
+        public async ValueTask DisableAll(string selector)
+        {
+            var module = await moduleTask.Value;
+            await module.InvokeVoidAsync("disableAll", selector);
         }
     }
 }
