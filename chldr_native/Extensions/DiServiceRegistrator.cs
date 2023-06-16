@@ -10,40 +10,58 @@ using chldr_ui.ViewModels;
 using chldr_utils.Services;
 using chldr_data.local.Services;
 using Blazored.Modal;
+
 namespace chldr_native.Extensions
 {
     internal static class DiServiceRegistrator
     {
-        public static MauiAppBuilder RegisterNativeAppServices(this MauiAppBuilder appBuilder)
+        internal static MauiAppBuilder RegisterNativeAppServices(this MauiAppBuilder appBuilder)
         {
             ServiceRegistrator.RegisterCommonServices(appBuilder.Services);
+
+            appBuilder.Services.AddMauiBlazorWebView();
+            appBuilder.Services.AddBlazorWebViewDeveloperTools();
+
+            appBuilder.Services.AddLocalization();
+            appBuilder.Services.AddBlazoredModal();
 
             // Data    
             appBuilder.Services.AddScoped<IDataProvider, RealmDataProvider>();
             appBuilder.Services.AddScoped<ISearchService, SearchService>();
             appBuilder.Services.AddScoped<SyncService>();
 
-            appBuilder.Services.AddBlazoredModal();
+            appBuilder.Services.AddSingleton(x => new EnvironmentService(CurrentPlatform, IsDevelopment));
 
-            var platform = Platforms.Web;
-#if ANDROID
-            platform = Platforms.Android;
-#elif IOS
-            platform = Platforms.IOS;
-#elif WINDOWS
-            platform = Platforms.Windows;
-#elif MACCATALYST
-            platform = Platforms.MacCatalyst;
-#endif
-
-            var isDevelopment = true;
-#if RELEASE
-            isDevelopment = false;
-#endif
-
-            appBuilder.Services.AddSingleton(x => new EnvironmentService(platform, isDevelopment));
-            
             return appBuilder;
+        }
+
+        private static Platforms CurrentPlatform
+        {
+            get
+            {
+
+#if ANDROID
+            return Platforms.Android;
+#elif IOS
+            return Platforms.IOS;
+#elif WINDOWS
+            return Platforms.Windows;
+#elif MACCATALYST
+                return Platforms.MacCatalyst;
+#endif
+            }
+        }
+
+        private static bool IsDevelopment
+        {
+            get
+            {
+#if RELEASE
+                return false;
+#else
+                return true;
+#endif
+            }
         }
     }
 }

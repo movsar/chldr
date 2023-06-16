@@ -1,8 +1,4 @@
-﻿using Blazored.Modal;
-using chldr_blazor.Extensions;
-using chldr_shared.Enums;
-using chldr_utils.Services;
-using System.Reflection.PortableExecutable;
+﻿using chldr_blazor.Extensions;
 
 namespace chldr_blazor
 {
@@ -12,15 +8,7 @@ namespace chldr_blazor
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddRazorPages();
-            builder.Services.AddControllers();
-            builder.Services.AddServerSideBlazor();
-            builder.Services.AddServerSideBlazor().AddCircuitOptions(option => { option.DetailedErrors = true; });
-
-            builder.Services.AddLocalization();
-            builder.Services.AddBlazoredModal();
-
+            // Add services to the container.          
             builder.RegisterWebAppServices();
            
             var app = builder.Build();
