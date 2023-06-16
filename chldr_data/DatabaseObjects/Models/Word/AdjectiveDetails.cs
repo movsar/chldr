@@ -4,7 +4,7 @@ using chldr_data.Interfaces;
 namespace chldr_data.DatabaseObjects.Models.Words
 {
     // Прилагательное
-    public class AdjectiveDetails : IWordDetails
+    public class AdjectiveDetails : IDetails
     {
         // качественные и относительные
         public AdjectiveSemanticType SemanticType { get; set; }

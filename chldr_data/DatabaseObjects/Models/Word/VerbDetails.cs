@@ -3,7 +3,7 @@ using chldr_data.Interfaces;
 
 namespace chldr_data.DatabaseObjects.Models.Words
 {
-    public class VerbDetails : IWordDetails
+    public class VerbDetails : IDetails
     {
         public VerbTense Tense { get; set; }
         public VerbConjugation Conjugation { get; set; }

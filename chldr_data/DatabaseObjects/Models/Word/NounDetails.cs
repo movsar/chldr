@@ -3,7 +3,7 @@ using chldr_data.Interfaces;
 
 namespace chldr_data.DatabaseObjects.Models.Words
 {
-    public class NounDetails : IWordDetails
+    public class NounDetails : IDetails
     {
         // One of 6 grammatical classes    
         public int Class { get; set; }

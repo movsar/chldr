@@ -2,7 +2,7 @@
 
 namespace chldr_data.DatabaseObjects.Models.Words
 {
-    public class InterjectionDetails : IWordDetails
+    public class InterjectionDetails : IDetails
     {
     }
 }

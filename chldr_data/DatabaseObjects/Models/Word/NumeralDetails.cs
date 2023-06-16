@@ -3,7 +3,7 @@ using chldr_data.Interfaces;
 
 namespace chldr_data.DatabaseObjects.Models.Words
 {
-    public class NumeralDetails : IWordDetails
+    public class NumeralDetails : IDetails
     {
         public NumericalComplexity Complexity { get; set; }
         public NumericalCategory Category { get; set; }

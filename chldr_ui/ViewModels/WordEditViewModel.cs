@@ -1,6 +1,9 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums.WordDetails;
+using chldr_data.Helpers;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 using System;
@@ -17,7 +20,7 @@ namespace chldr_ui.ViewModels
         public EntryDto EntryDto { get; set; }
         protected override Task OnAfterRenderAsync(bool firstRender)
         {
-            SerializeWordDetails();
+            EntryDto.Details = SerializeWordDetails((WordType)EntryDto.EntrySubtype);
             return base.OnAfterRenderAsync(firstRender);
         }
         protected override Task OnParametersSetAsync()
@@ -44,109 +47,104 @@ namespace chldr_ui.ViewModels
         public GerundDetails GerundDetails { get; set; } = new GerundDetails();
         private void DeserializeWordDetails()
         {
-            if (!string.IsNullOrEmpty(EntryDto.Details))
+            if (string.IsNullOrEmpty(EntryDto.Details))
             {
-                switch ((WordType)EntryDto.EntrySubtype)
-                {
-                    case WordType.Noun:
-                        NounDetails = JsonConvert.DeserializeObject<NounDetails>(EntryDto.Details);
-                        break;
-
-                    case WordType.Verb:
-                        VerbDetails = JsonConvert.DeserializeObject<VerbDetails>(EntryDto.Details);
-                        break;
-
-                    case WordType.Adjective:
-                        AdjectiveDetails = JsonConvert.DeserializeObject<AdjectiveDetails>(EntryDto.Details);
-                        break;
-
-                    case WordType.Interjection:
-                        InterjectionDetails = JsonConvert.DeserializeObject<InterjectionDetails>(EntryDto.Details);
-                        break;
-
-                    case WordType.Conjunction:
-                        ConjunctionDetails = JsonConvert.DeserializeObject<ConjunctionDetails>(EntryDto.Details);
-                        break;
-
-                    case WordType.Adverb:
-                        AdverbDetails = JsonConvert.DeserializeObject<AdverbDetails>(EntryDto.Details);
-                        break;
-
-                    case WordType.Gerund:
-                        GerundDetails = JsonConvert.DeserializeObject<GerundDetails>(EntryDto.Details);
-                        break;
-
-                    case WordType.Masdar:
-                        MasdarDetails = JsonConvert.DeserializeObject<MasdarDetails>(EntryDto.Details);
-                        break;
-
-                    case WordType.Numeral:
-                        NumeralDetails = JsonConvert.DeserializeObject<NumeralDetails>(EntryDto.Details);
-                        break;
-
-                    case WordType.Pronoun:
-                        PronounDetails = JsonConvert.DeserializeObject<PronounDetails>(EntryDto.Details);
-                        break;
-
-                    case WordType.Particle:
-                        ParticleDetails = JsonConvert.DeserializeObject<ParticleDetails>(EntryDto.Details);
-                        break;
-
-                    default:
-                        break;
-                }
+                return;
             }
-        }
-        internal void SerializeWordDetails()
-        {
-            switch ((WordType)EntryDto.EntrySubtype)
+
+            var details = WordHelper.DeserializeWordDetails((WordType)EntryDto.EntrySubtype, EntryDto.Details);
+            switch (details)
             {
-                case WordType.Noun:
-                    EntryDto.Details = JsonConvert.SerializeObject(NounDetails);
+                case VerbDetails verbDetails:
+                    VerbDetails = verbDetails;
                     break;
 
-                case WordType.Verb:
-                    EntryDto.Details = JsonConvert.SerializeObject(VerbDetails);
+                case NounDetails nounDetails:
+                    NounDetails = nounDetails;
                     break;
 
-                case WordType.Adjective:
-                    EntryDto.Details = JsonConvert.SerializeObject(AdjectiveDetails);
+                case ConjunctionDetails conjunctionDetails:
+                    ConjunctionDetails = conjunctionDetails;
                     break;
 
-                case WordType.Interjection:
-                    EntryDto.Details = JsonConvert.SerializeObject(InterjectionDetails);
+                case PronounDetails pronounDetails:
+                    PronounDetails = pronounDetails;
                     break;
 
-                case WordType.Conjunction:
-                    EntryDto.Details = JsonConvert.SerializeObject(ConjunctionDetails);
+                case AdverbDetails adverbDetails:
+                    AdverbDetails = adverbDetails;
                     break;
 
-                case WordType.Adverb:
-                    EntryDto.Details = JsonConvert.SerializeObject(AdverbDetails);
+                case AdjectiveDetails adjectiveDetails:
+                    AdjectiveDetails = adjectiveDetails;
                     break;
 
-                case WordType.Gerund:
-                    EntryDto.Details = JsonConvert.SerializeObject(GerundDetails);
+                case NumeralDetails numeralDetails:
+                    NumeralDetails = numeralDetails;
                     break;
 
-                case WordType.Masdar:
-                    EntryDto.Details = JsonConvert.SerializeObject(MasdarDetails);
+                case ParticleDetails particleDetails:
+                    ParticleDetails = particleDetails;
                     break;
 
-                case WordType.Numeral:
-                    EntryDto.Details = JsonConvert.SerializeObject(NumeralDetails);
+                case MasdarDetails masdarDetails:
+                    MasdarDetails = masdarDetails;
                     break;
 
-                case WordType.Pronoun:
-                    EntryDto.Details = JsonConvert.SerializeObject(PronounDetails);
+                case InterjectionDetails interjectionDetails:
+                    InterjectionDetails = interjectionDetails;
                     break;
 
-                case WordType.Particle:
-                    EntryDto.Details = JsonConvert.SerializeObject(ParticleDetails);
+                case GerundDetails gerundDetails:
+                    GerundDetails = gerundDetails;
                     break;
 
                 default:
+                    // Handle unknown type or provide an error message
                     break;
+            }
+        }
+
+
+        private string SerializeWordDetails(WordType wordType)
+        {
+            switch (wordType)
+            {
+                case WordType.Noun:
+                    return JsonConvert.SerializeObject(NounDetails);
+
+                case WordType.Verb:
+                    return JsonConvert.SerializeObject(VerbDetails);
+
+                case WordType.Adjective:
+                    return JsonConvert.SerializeObject(AdjectiveDetails);
+
+                case WordType.Interjection:
+                    return JsonConvert.SerializeObject(InterjectionDetails);
+
+                case WordType.Conjunction:
+                    return JsonConvert.SerializeObject(ConjunctionDetails);
+
+                case WordType.Adverb:
+                    return JsonConvert.SerializeObject(AdverbDetails);
+
+                case WordType.Gerund:
+                    return JsonConvert.SerializeObject(GerundDetails);
+
+                case WordType.Masdar:
+                    return JsonConvert.SerializeObject(MasdarDetails);
+
+                case WordType.Numeral:
+                    return JsonConvert.SerializeObject(NumeralDetails);
+
+                case WordType.Pronoun:
+                    return JsonConvert.SerializeObject(PronounDetails);
+
+                case WordType.Particle:
+                    return JsonConvert.SerializeObject(ParticleDetails);
+
+                default:
+                    return "";
             }
         }
         #endregion
