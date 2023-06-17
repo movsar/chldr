@@ -17,6 +17,7 @@ namespace chldr_data.Services
         private SqlEntriesRepository _entriesRepository;
         private SqlSourcesRepository _sourcesRepository;
         private SqlUsersRepository _usersRepository;
+        private SqlSoundsRepository _soundsRepository;
 
         public SqlUnitOfWork(SqlContext sqlContext, string userId)
         {
@@ -53,6 +54,6 @@ namespace chldr_data.Services
         public IEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_context, _userId, Translations);
         public ISourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_context, _userId);
         public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_context, _userId);
-
+        public ISoundsRepository Sounds => _soundsRepository ?? new SqlSoundsRepository(_context, _userId);
     }
 }

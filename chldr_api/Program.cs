@@ -33,15 +33,16 @@ namespace chldr_api
                 return new SqlDataProvider(connectionString);
             });
 
-            builder.Services.AddScoped<ExceptionHandler>();
+            builder.Services.AddSingleton<EmailService>();
+            builder.Services.AddSingleton(x => new FileService(AppContext.BaseDirectory));
+            builder.Services.AddSingleton<ExceptionHandler>();
 
             builder.Services.AddScoped<PasswordResetResolver>();
             builder.Services.AddScoped<UpdatePasswordResolver>();
             builder.Services.AddScoped<RegisterUserResolver>();
             builder.Services.AddScoped<ConfirmEmailResolver>();
             builder.Services.AddScoped<LoginResolver>();
-
-            builder.Services.AddSingleton<EmailService>();
+            
 
             builder.Services.AddLocalization();
 

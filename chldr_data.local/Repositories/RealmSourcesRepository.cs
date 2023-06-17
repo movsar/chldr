@@ -13,7 +13,7 @@ namespace chldr_data.Repositories
 {
     public class RealmSourcesRepository : RealmRepository<RealmSource, SourceModel, SourceDto>, ISourcesRepository
     {
-        public RealmSourcesRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
+        public RealmSourcesRepository(Realm context, ExceptionHandler exceptionHandler): base(context, exceptionHandler) { }
         protected override RecordType RecordType => RecordType.Source;
         protected override SourceModel FromEntityShortcut(RealmSource entry)
         {

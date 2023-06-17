@@ -15,12 +15,10 @@ namespace chldr_data.Repositories
 
         protected readonly Realm _dbContext;
         protected readonly ExceptionHandler _exceptionHandler;
-        protected readonly IGraphQLRequestSender _graphQLRequestSender;
-        public RealmRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender)
+        public RealmRepository(Realm context, ExceptionHandler exceptionHandler)
         {
             _dbContext = context;
             _exceptionHandler = exceptionHandler;
-            _graphQLRequestSender = graphQLRequestSender;
         }
         protected abstract TModel FromEntityShortcut(TEntity entity);
 

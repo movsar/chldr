@@ -55,34 +55,6 @@ namespace chldr_api
             _emailService = emailService;
         }
 
-        // ! To be removed and integrated with Add / Update Entry
-        public async Task<OperationResult> UploadAudio(string userId, SoundDto soundDto, IFormFile file)
-        {
-            using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
-            unitOfWork.BeginTransaction();
-            try
-            {
-                await _fileService.SaveSoundAsync(soundDto.SoundId, file);
-                unitOfWork.Sounds.Add(soundDto);
-                unitOfWork.Commit();
-
-                return new OperationResult()
-                {
-                    Success = true,
-                };
-            }
-            catch (Exception ex)
-            {
-                unitOfWork.Rollback();
-                _exceptionHandler.LogError(ex);
-                return new OperationResult() { Success = false };
-            }
-            finally
-            {
-                unitOfWork.Dispose();
-            }
-        }
-
         public InsertResult AddEntry(string userId, EntryDto entryDto)
         {
             using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);

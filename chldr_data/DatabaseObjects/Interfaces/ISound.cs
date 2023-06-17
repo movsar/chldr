@@ -2,6 +2,7 @@
 {
     public interface ISound
     {
+        string EntryId { get; }
         string FileName { get; set; }
         string SoundId { get; set; }
         DateTimeOffset CreatedAt { get; set; }

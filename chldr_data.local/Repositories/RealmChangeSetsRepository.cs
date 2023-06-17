@@ -12,7 +12,7 @@ namespace chldr_data.Repositories
 {
     public class RealmChangeSetsRepository : RealmRepository<RealmChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {
-        public RealmChangeSetsRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
+        public RealmChangeSetsRepository(Realm context, ExceptionHandler exceptionHandler) : base(context, exceptionHandler) { }
         protected override RecordType RecordType => throw new Exception("Shouldn't be used");
         protected override ChangeSetModel FromEntityShortcut(RealmChangeSet entity)
         {

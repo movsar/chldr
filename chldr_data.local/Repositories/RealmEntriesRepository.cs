@@ -16,7 +16,7 @@ namespace chldr_data.Repositories
 {
     public class RealmEntriesRepository : RealmRepository<RealmEntry, EntryModel, EntryDto>, IEntriesRepository
     {
-        public RealmEntriesRepository(Realm context, ExceptionHandler exceptionHandler, IGraphQLRequestSender graphQLRequestSender) : base(context, exceptionHandler, graphQLRequestSender) { }
+        public RealmEntriesRepository(Realm context, ExceptionHandler exceptionHandler) : base(context, exceptionHandler) { }
         protected override RecordType RecordType => RecordType.Entry;
         protected override EntryModel FromEntityShortcut(RealmEntry entry)
         {
