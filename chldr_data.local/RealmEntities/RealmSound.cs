@@ -10,6 +10,7 @@ public class RealmSound : RealmObject, ISoundEntity
     public RealmUser User { get; set; } = null!;
     public RealmEntry Entry { get; set; } = null!;
     [Ignored] public string EntryId => Entry.EntryId;
+    [Ignored] public string UserId => User.UserId;
     public string FileName { get; set; } = null!;
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }

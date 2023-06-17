@@ -19,7 +19,7 @@ namespace chldr_shared
             moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
                 "import", "./_content/chldr_ui/jsInterop.js").AsTask());
         }
-     
+
 
         public async ValueTask<string> Prompt(string message)
         {
@@ -63,6 +63,12 @@ namespace chldr_shared
         {
             var module = await moduleTask.Value;
             await module.InvokeVoidAsync("disableAll", selector);
+        }
+
+        public async Task ToggleRecording()
+        {
+            var module = await moduleTask.Value;
+            await module.InvokeVoidAsync("toggleRecording");
         }
     }
 }

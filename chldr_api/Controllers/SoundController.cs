@@ -33,7 +33,7 @@ namespace chldr_api.Controllers
             {
                 var soundDto = new SoundDto()
                 {
-                    UserId =userId, 
+                    UserId = userId, 
                     EntryId = entryId
                 };
 

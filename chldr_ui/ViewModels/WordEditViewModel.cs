@@ -5,6 +5,7 @@ using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums.WordDetails;
 using chldr_data.Helpers;
 using chldr_data.Interfaces;
+using chldr_shared;
 using chldr_ui.Components;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
@@ -52,6 +53,7 @@ namespace chldr_ui.ViewModels
         public GerundDetails GerundDetails { get; set; } = new GerundDetails();
         #endregion
         internal EntryModel? ParentEntry { get; set; }
+
         protected async Task OpenSetParentWordDialog()
         {
            

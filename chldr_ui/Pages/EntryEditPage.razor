@@ -29,6 +29,11 @@
             break;
     }
 
+    <div>
+        <button id="recordButton" class="button record" @onclick="ToggleRecording">Add Pronunciation</button>
+        <div id="audioContainer"></div>
+    </div>
+
     <h5 class="mt-2">
         @Localizer["Translations"]:
         <button class="btn btn-success" type="button" @onclick="@(() => NewTranslation())">@Localizer["Add"]</button>

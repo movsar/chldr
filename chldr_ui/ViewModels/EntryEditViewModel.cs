@@ -84,6 +84,10 @@ namespace chldr_ui.ViewModels
 
         #region Form Actions
 
+        public async Task ToggleRecording()
+        {
+            await JsInterop.ToggleRecording();
+        }
         public async Task SaveClickHandler()
         {
             if (EntryDto.Translations.Count() == 0)
