@@ -4,6 +4,7 @@ using chldr_data.ResponseTypes;
 using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.AspNetCore.Mvc;
+using Realms.Sync;
 
 namespace chldr_api.Controllers
 {
@@ -27,11 +28,12 @@ namespace chldr_api.Controllers
         public async Task<OperationResult> Post([FromForm] string userId, [FromForm] string entryId, [FromForm] IFormFile file)
         {
             using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
-            unitOfWork.BeginTransaction();
+            unitOfWork.BeginTransaction();  
             try
             {
                 var soundDto = new SoundDto()
                 {
+                    UserId =userId, 
                     EntryId = entryId
                 };
 

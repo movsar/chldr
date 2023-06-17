@@ -54,6 +54,8 @@ namespace chldr_ui.ViewModels
         internal EntryModel? ParentEntry { get; set; }
         protected async Task OpenSetParentWordDialog()
         {
+           
+
             var entrySelectionDialog = Modal.Show<WordSelectorDialog>("", new ModalOptions()
             {
                 HideHeader = true,
