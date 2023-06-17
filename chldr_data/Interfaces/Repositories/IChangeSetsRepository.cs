@@ -5,7 +5,6 @@ namespace chldr_data.Interfaces.Repositories
 {
     public interface IChangeSetsRepository : IRepository<ChangeSetModel, ChangeSetDto>
     {
-        void AddRange(IEnumerable<ChangeSetDto> dtos);
         IEnumerable<ChangeSetModel> Get(string[] changeSetIds);
         IEnumerable<ChangeSetModel> GetLatest(int minIndex);
     }

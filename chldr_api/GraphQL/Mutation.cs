@@ -1,5 +1,6 @@
 ﻿using chldr_api.GraphQL.MutationServices;
 using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.Interfaces;
 using chldr_data.local.Services;
 using chldr_data.remote.Services;
@@ -19,6 +20,7 @@ namespace chldr_api
         private readonly ConfirmEmailResolver _confirmEmailResolver;
         private readonly LoginResolver _loginUserMutation;
         private readonly ExceptionHandler _exceptionHandler;
+        private readonly FileService _fileService;
         private readonly IDataProvider _dataProvider;
 
         protected readonly SqlContext _dbContext;
@@ -36,7 +38,8 @@ namespace chldr_api
             IConfiguration configuration,
             IStringLocalizer<AppLocalizations> localizer,
             EmailService emailService,
-            ExceptionHandler exceptionHandler
+            ExceptionHandler exceptionHandler,
+            FileService fileService
             )
         {
             _passwordResetMutation = passwordResetResolver;
@@ -45,13 +48,41 @@ namespace chldr_api
             _confirmEmailResolver = confirmEmailResolver;
             _loginUserMutation = loginUserResolver;
             _exceptionHandler = exceptionHandler;
-
+            _fileService = fileService;
             _dataProvider = dataProvider;
             _configuration = configuration;
             _localizer = localizer;
             _emailService = emailService;
-
         }
+
+        // ! To be removed and integrated with Add / Update Entry
+        public async Task<OperationResult> UploadAudio(string userId, SoundDto soundDto, IFormFile file)
+        {
+            using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
+            unitOfWork.BeginTransaction();
+            try
+            {
+                await _fileService.SaveSoundAsync(soundDto.SoundId, file);
+                unitOfWork.Sounds.Add(soundDto);
+                unitOfWork.Commit();
+
+                return new OperationResult()
+                {
+                    Success = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                _exceptionHandler.LogError(ex);
+                return new OperationResult() { Success = false };
+            }
+            finally
+            {
+                unitOfWork.Dispose();
+            }
+        }
+
         public InsertResult AddEntry(string userId, EntryDto entryDto)
         {
             using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);

@@ -1,4 +1,7 @@
-﻿namespace chldr_utils.Services
+﻿using Microsoft.AspNetCore.Http;
+using System.IO.Abstractions;
+
+namespace chldr_utils.Services
 {
     public class FileService
     {
@@ -10,15 +13,16 @@
         public static string AppBaseDirectory;
         public static string AppDataDirectory => Path.Combine(AppBaseDirectory, DataDirName);
         public string OfflineDatabaseFilePath => Path.Combine(AppBaseDirectory, OfflineDatabaseFileName);
+        public static string EntrySoundsDirectory => Path.Combine(AppDataDirectory, "sounds");
         #endregion
 
         public FileService(string basePath)
         {
             AppBaseDirectory = basePath;
 
-            if (!Directory.Exists(AppDataDirectory))
+            if (!Directory.Exists(EntrySoundsDirectory))
             {
-                Directory.CreateDirectory(AppDataDirectory);
+                Directory.CreateDirectory(EntrySoundsDirectory);
             }
         }
 
@@ -34,5 +38,14 @@
             //}
         }
 
+        public async Task SaveSoundAsync(string soundId, IFormFile file)
+        {
+            var filePath = Path.Combine(EntrySoundsDirectory, soundId + ".m4a");
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+        }
     }
 }
