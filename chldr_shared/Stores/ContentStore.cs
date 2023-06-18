@@ -6,6 +6,7 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_utils;
 using chldr_utils.Models;
 using chldr_shared.Services;
+using chldr_utils.Services;
 
 namespace chldr_shared.Stores
 {
@@ -202,6 +203,14 @@ namespace chldr_shared.Stores
 
         public async Task AddEntry(UserModel loggedInUser, EntryDto entryDto)
         {
+
+            // Send to ContentStore, where
+            //  Create a new Sound Dto
+            //  Send to the API
+            //  Update local
+            // File.WriteAllBytes(Path.Combine(FileService.EntrySoundsDirectory, "file.m4a"), recording);
+
+
             // Add remote entity
             var request = await _requestService.AddEntry(loggedInUser.UserId, entryDto);
             if (!request.Success)

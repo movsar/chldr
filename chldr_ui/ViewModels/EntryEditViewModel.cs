@@ -80,6 +80,7 @@ namespace chldr_ui.ViewModels
 
         #region Form Actions
 
+
         bool isRecording = false;
         public async Task ToggleRecording()
         {
@@ -92,7 +93,14 @@ namespace chldr_ui.ViewModels
                     return;
                 }
 
-                File.WriteAllBytes(Path.Combine(FileService.EntrySoundsDirectory, "file.m4a"), recording);
+                var sound = new SoundDto()
+                {
+                    EntryId = EntryDto.EntryId!,
+                    Recording = recording,
+                    UserId = UserStore.ActiveSession.User!.UserId
+                };
+
+                EntryDto.AudioRecordings.Add(sound);
             }
             else
             {
