@@ -77,7 +77,7 @@ namespace chldr_shared
             await module.InvokeVoidAsync("startRecording", recordingId);
         }
 
-        public async Task<byte[]?> StopRecording()
+        public async Task<string?> StopRecording()
         {
             var module = await moduleTask.Value;
             var jsonDocument = await module.InvokeAsync<JsonDocument>("stopRecording");
@@ -85,9 +85,7 @@ namespace chldr_shared
             string recordingId = jsonDocument.RootElement.GetProperty("id").GetString();
             string base64String = jsonDocument.RootElement.GetProperty("data").GetString();
 
-            byte[] audioBytes = Convert.FromBase64String(base64String);
-
-            return audioBytes;
+            return base64String;
         }
 
 

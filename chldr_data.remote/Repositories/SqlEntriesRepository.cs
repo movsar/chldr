@@ -97,6 +97,8 @@ namespace chldr_data.remote.Repositories
             // Set CreatedAt to update it on local entry
             newEntryDto.CreatedAt = entry.CreatedAt;
 
+            // TODO: Add sounds
+
             // Insert a change set
             InsertChangeSet(Operation.Insert, _userId, newEntryDto.EntryId);
             // Insert new translation changesets? - not necessary, but could be used for audit
@@ -125,6 +127,8 @@ namespace chldr_data.remote.Repositories
             {
                 InsertChangeSet(Operation.Update, _userId, existingEntryDto.EntryId, entryChanges);
             }
+
+            // TODO: Update sounds
 
             // Save the changes
             var updatedEntryEntity = SqlEntry.FromDto(updatedEntryDto, _dbContext);

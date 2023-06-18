@@ -8,7 +8,7 @@ namespace chldr_data.DatabaseObjects.Dtos
         public string EntryId { get; set; }
         public string UserId { get; set; }
         public string? FileName { get; set; }
-        public virtual byte[] Recording { get; set; }
+        public virtual string Recording { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
     }

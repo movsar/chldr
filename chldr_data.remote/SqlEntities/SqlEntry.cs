@@ -62,6 +62,7 @@ public class SqlEntry : IEntryEntity
         entry.CreatedAt = entryDto.CreatedAt;
         entry.UpdatedAt = entryDto.UpdatedAt;
 
+
         // Translations
         entry.Translations.Clear();
         foreach (var translationDto in entryDto.Translations)
