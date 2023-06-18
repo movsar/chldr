@@ -19,8 +19,6 @@ namespace chldr_utils.Services
             AppBaseDirectory = AppContext.BaseDirectory;
         }
 
-        public FileService() : this(AppContext.BaseDirectory) { }
-
         public FileService(string basePath)
         {
             AppBaseDirectory = basePath;
