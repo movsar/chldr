@@ -125,7 +125,7 @@ namespace chldr_ui.ViewModels
                 return;
             }
 
-            latestSoundDto.Recording = recording;
+            latestSoundDto.RecordingB64 = recording;
             EntryDto.Sounds.Add(latestSoundDto);
         }
 

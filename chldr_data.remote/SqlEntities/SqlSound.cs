@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.remote.Services;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.remote.SqlEntities;
@@ -14,4 +16,22 @@ public class SqlSound
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
     public virtual SqlEntry Entry { get; set; } = null!;
     public virtual SqlUser User { get; set; } = null!;
+
+    internal static SqlSound FromDto(SoundDto soundDto, SqlContext context)
+    {
+        //var user = context.Find<SqlUser>(soundDto.UserId);
+
+        var soundEntity = context.Find<SqlSound>(soundDto.SoundId);
+        if (soundEntity == null)
+        {
+            soundEntity = new SqlSound();
+        }
+
+        soundEntity.EntryId = soundDto.EntryId;
+        soundEntity.UserId = soundDto.UserId;
+        soundEntity.SoundId = soundDto.SoundId;
+        soundEntity.FileName = soundDto.FileName;
+
+        return soundEntity;
+    }
 }

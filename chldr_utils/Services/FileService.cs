@@ -38,14 +38,21 @@ namespace chldr_utils.Services
             //}
         }
 
-        public async Task SaveSoundAsync(string soundId, IFormFile file)
+        public async Task SaveSoundAsync(IFormFile contents, string fileName)
         {
-            var filePath = Path.Combine(EntrySoundsDirectory, soundId + ".m4a");
+            var filePath = Path.Combine(EntrySoundsDirectory, fileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                await file.CopyToAsync(stream);
+                await contents.CopyToAsync(stream);
             }
+        }
+
+        public void SaveSoundAsync(byte[] contents, string fileName)
+        {
+            var filePath = Path.Combine(EntrySoundsDirectory, fileName);
+
+            File.WriteAllBytes(filePath, contents);
         }
     }
 }

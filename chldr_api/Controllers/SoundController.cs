@@ -37,7 +37,7 @@ namespace chldr_api.Controllers
                     EntryId = entryId
                 };
 
-                await _fileService.SaveSoundAsync(soundDto.SoundId, file);
+                await _fileService.SaveSoundAsync(file, soundDto.FileName);
 
                 unitOfWork.Sounds.Add(soundDto);
                 unitOfWork.Commit();

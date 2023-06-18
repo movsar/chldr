@@ -62,6 +62,14 @@ public class SqlEntry : IEntryEntity
         entry.CreatedAt = entryDto.CreatedAt;
         entry.UpdatedAt = entryDto.UpdatedAt;
 
+        // Sounds
+        foreach (var soundDto in entryDto.Sounds)
+        {
+            soundDto.EntryId = entry.EntryId;
+
+            var sound = SqlSound.FromDto(soundDto, context);
+            entry.Sounds.Add(sound);
+        }
 
         // Translations
         entry.Translations.Clear();

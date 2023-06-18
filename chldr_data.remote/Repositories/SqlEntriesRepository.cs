@@ -6,6 +6,7 @@ using chldr_data.Interfaces.Repositories;
 using chldr_data.Models;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
+using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
@@ -14,10 +15,19 @@ namespace chldr_data.remote.Repositories
     internal class SqlEntriesRepository : SqlRepository<SqlEntry, EntryModel, EntryDto>, IEntriesRepository
     {
         private readonly ITranslationsRepository _translations;
+        private readonly ISoundsRepository _sounds;
+        private readonly FileService _fileService;
 
-        public SqlEntriesRepository(SqlContext context, string userId, ITranslationsRepository translationsRepository) : base(context, userId)
+        public SqlEntriesRepository(
+            SqlContext context,
+            FileService fileService,
+            ITranslationsRepository translationsRepository,
+            ISoundsRepository soundsRepository,
+            string userId) : base(context, userId)
         {
             _translations = translationsRepository;
+            _sounds = soundsRepository;
+            _fileService = fileService;
         }
 
         protected override RecordType RecordType => RecordType.Entry;
@@ -89,6 +99,13 @@ namespace chldr_data.remote.Repositories
 
         public override void Add(EntryDto newEntryDto)
         {
+            // Write sounds, doing this first, so that the entry won't get added if this fails
+            foreach (var sound in newEntryDto.Sounds)
+            {
+                var data = Convert.FromBase64String(sound.RecordingB64);
+                _fileService.SaveSoundAsync(data, sound.FileName);
+            }
+
             // Insert Entry entity
             var entry = SqlEntry.FromDto(newEntryDto, _dbContext);
             _dbContext.Add(entry);
@@ -97,11 +114,40 @@ namespace chldr_data.remote.Repositories
             // Set CreatedAt to update it on local entry
             newEntryDto.CreatedAt = entry.CreatedAt;
 
-            // TODO: Add sounds
-
             // Insert a change set
             InsertChangeSet(Operation.Insert, _userId, newEntryDto.EntryId);
-            // Insert new translation changesets? - not necessary, but could be used for audit
+
+            // ! Insert new translation changesets? - not necessary, but could be used for audit
+        }
+
+        private void HandleUpdatedEntryTranslations(EntryDto existingEntryDto, EntryDto updatedEntryDto)
+        {
+            // Handle associated translation changes
+            var existingEntryTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
+            var updatedEntryTranslationIds = updatedEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
+
+            var added = updatedEntryDto.Translations.Where(t => !existingEntryTranslationIds.Contains(t.TranslationId));
+            var deleted = existingEntryDto.Translations.Where(t => !updatedEntryTranslationIds.Contains(t.TranslationId));
+            var updated = updatedEntryDto.Translations.Where(t => existingEntryTranslationIds.Contains(t.TranslationId) && updatedEntryTranslationIds.Contains(t.TranslationId));
+
+            _translations.AddRange(added);
+            _translations.RemoveRange(deleted.Select(t => t.TranslationId));
+            _translations.UpdateRange(updated);
+        }
+
+        private void HandleUpdatedEntrySounds(EntryDto existingEntryDto, EntryDto updatedEntryDto)
+        {
+            // Handle associated translation changes
+            var existingEntrySoundIds = existingEntryDto.Sounds.Select(t => t.SoundId).ToHashSet();
+            var updatedEntrySoundIds = updatedEntryDto.Sounds.Select(t => t.SoundId).ToHashSet();
+
+            var added = updatedEntryDto.Sounds.Where(t => !existingEntrySoundIds.Contains(t.SoundId));
+            var deleted = existingEntryDto.Sounds.Where(t => !updatedEntrySoundIds.Contains(t.SoundId));
+            var updated = updatedEntryDto.Sounds.Where(t => existingEntrySoundIds.Contains(t.SoundId) && updatedEntrySoundIds.Contains(t.SoundId));
+
+            _sounds.AddRange(added);
+            _sounds.RemoveRange(deleted.Select(t => t.SoundId));
+            _sounds.UpdateRange(updated);
         }
 
         public override void Update(EntryDto updatedEntryDto)
@@ -109,17 +155,9 @@ namespace chldr_data.remote.Repositories
             var existingEntry = Get(updatedEntryDto.EntryId);
             var existingEntryDto = EntryDto.FromModel(existingEntry);
 
-            // Handle associated translation changes
-            var existingEntryTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
-            var updatedEntryTranslationIds = updatedEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
+            HandleUpdatedEntryTranslations(existingEntryDto, updatedEntryDto);
 
-            var addedTranslations = updatedEntryDto.Translations.Where(t => !existingEntryTranslationIds.Contains(t.TranslationId));
-            var deletedTranslations = existingEntryDto.Translations.Where(t => !updatedEntryTranslationIds.Contains(t.TranslationId));
-            var updatedTranslations = updatedEntryDto.Translations.Where(t => existingEntryTranslationIds.Contains(t.TranslationId) && updatedEntryTranslationIds.Contains(t.TranslationId));
-
-            _translations.AddRange(addedTranslations);
-            _translations.RemoveRange(deletedTranslations.Select(t => t.TranslationId));
-            _translations.UpdateRange(updatedTranslations);
+            HandleUpdatedEntrySounds(existingEntryDto, updatedEntryDto);
 
             // Add changeset if applicable
             var entryChanges = Change.GetChanges(existingEntryDto, existingEntryDto);
