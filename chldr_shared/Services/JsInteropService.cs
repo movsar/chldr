@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Reflection.Metadata;
+using System.Text.Json;
 
 namespace chldr_shared
 {
@@ -79,19 +80,16 @@ namespace chldr_shared
         public async Task<byte[]?> StopRecording()
         {
             var module = await moduleTask.Value;
-            var result = await module.InvokeAsync<string>("stopRecording");
-            var deserializedResult = JsonConvert.DeserializeObject<(int recordingIndex, string base64String)>(result);
-            int recordingIndex = deserializedResult.recordingIndex;
-            string base64String = deserializedResult.base64String;     //byte[] recording = result.base64String;
-            //int recordingIndex = result.recordingIndex;
-            ////if (string.IsNullOrEmpty(base64String))
-            //{
-            //    return null;
-            //}
-            //var recording = Convert.FromBase64String(base64String);
+            var jsonDocument = await module.InvokeAsync<JsonDocument>("stopRecording");
 
-            return null;
+            int recordedAudioIndex = jsonDocument.RootElement.GetProperty("index").GetInt32();
+            string base64String = jsonDocument.RootElement.GetProperty("data").GetString();
+
+            byte[] audioBytes = Convert.FromBase64String(base64String);
+
+            return audioBytes;
         }
+
 
         [JSInvokable]
         public static void WordEdit_RemoveSound_ClickHandler(string recordingId)

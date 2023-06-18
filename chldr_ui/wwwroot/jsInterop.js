@@ -46,7 +46,7 @@ export function stopRecording() {
             const reader = new FileReader();
             reader.onloadend = function () {
                 const base64String = reader.result.split(',')[1];
-                resolve({ recordingIndex: recordedAudioIndex, base64String });
+                resolve({ index: recordedAudioIndex, data: base64String });
                 recordedAudioIndex++;
             };
             reader.readAsDataURL(recordedBlob);
