@@ -1,16 +1,19 @@
 ﻿let mediaRecorder;
 let chunks = [];
 let recordedBlob;
-let recordedAudioIndex = 0;
+let latestRecordingId;
 
 const recordButton = document.getElementById("recordButton");
 const audioContainer = document.getElementById("audioContainer");
 
-export function startRecording() {
+export function startRecording(recordingId) {
     showStopButton();
 
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(function (stream) {
+
+            latestRecordingId = recordingId;
+
             chunks = [];
             mediaRecorder = new MediaRecorder(stream);
             mediaRecorder.audioBitsPerSecond
@@ -23,9 +26,9 @@ export function startRecording() {
                 recordedBlob = audioBlob;
 
                 const audioUrl = URL.createObjectURL(audioBlob);
-                const recordedAudio = createAudioElement(audioUrl);
+                const recordedAudio = createAudioElement(audioUrl, recordingId);
 
-                let removeButton = createRemoveButton(recordedAudio.id);
+                let removeButton = createRemoveButton(recordingId);
 
                 audioContainer.appendChild(recordedAudio);
                 audioContainer.appendChild(removeButton);
@@ -46,8 +49,7 @@ export function stopRecording() {
             const reader = new FileReader();
             reader.onloadend = function () {
                 const base64String = reader.result.split(',')[1];
-                resolve({ index: recordedAudioIndex, data: base64String });
-                recordedAudioIndex++;
+                resolve({ id: latestRecordingId, data: base64String });
             };
             reader.readAsDataURL(recordedBlob);
         });
@@ -67,24 +69,26 @@ export function showStartButton() {
     recordButton.classList.add("record");
 }
 
-export function createAudioElement(audioUrl) {
+export function createAudioElement(audioUrl, recordingId) {
     const recordedAudio = document.createElement("audio");
     recordedAudio.src = audioUrl;
     recordedAudio.controls = true;
-    recordedAudio.id = `recordedAudio_${recordedAudioIndex}`;
+    recordedAudio.id = `recordedAudio_${recordingId}`;
 
     return recordedAudio;
 }
 
-export function createRemoveButton(audioId) {
+export function createRemoveButton(recordingId) {
     var button = document.createElement('button');
     button.classList.add('btn');
     button.classList.add('btn-danger');
     button.textContent = 'Remove';
     button.addEventListener('click', () => {
-        const audioToRemove = document.getElementById(audioId);
+        const audioToRemove = document.getElementById(`recordedAudio_${recordingId}`);
         audioToRemove.remove();
         button.remove();
+         
+        DotNet.invokeMethodAsync("chldr_shared", "WordEdit_RemoveSound_ClickHandler", recordingId);
     });
 
     return button;

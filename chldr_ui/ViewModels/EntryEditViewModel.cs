@@ -5,12 +5,26 @@ using chldr_shared.Validators;
 using chldr_data.DatabaseObjects.Models;
 using Microsoft.AspNetCore.Components;
 using chldr_utils.Services;
+using chldr_shared;
 
 namespace chldr_ui.ViewModels
 {
     public class EntryEditViewModel : EditFormViewModelBase<EntryDto, EntryValidator>
     {
-        [Inject] FileService FileService { get; set; }
+        public EntryEditViewModel()
+        {
+            JsInteropService.OnRemoveAudio = (recordingId) =>
+            {
+                var removedSound = EntryDto.Sounds.FirstOrDefault(s => s.SoundId.Equals(recordingId));
+                if (removedSound == null)
+                {
+                    throw ExceptionHandler!.Error("Sound doesn't exist in the dto");
+                }
+
+                EntryDto.Sounds.Remove(removedSound);
+            };
+        }
+
         [Parameter]
         public string? EntryId { get; set; }
         public EntryDto EntryDto { get; set; } = new EntryDto();
@@ -80,38 +94,43 @@ namespace chldr_ui.ViewModels
 
         #region Form Actions
 
-
         bool isRecording = false;
-        public void HandleRemoveClick()
+        SoundDto latestSoundDto;
+        private async Task StartRecording()
         {
+            isRecording = true;
+            latestSoundDto = new SoundDto();
 
+            latestSoundDto.EntryId = EntryDto.EntryId!;
+            latestSoundDto.UserId = UserStore.ActiveSession.User!.UserId;
+
+            await JsInterop.StartRecording(latestSoundDto.SoundId);
         }
         public async Task ToggleRecording()
         {
             if (isRecording)
             {
-                isRecording = false;
-                var recording = await JsInterop.StopRecording();
-                if (recording == null)
-                {
-                    return;
-                }
-
-                var sound = new SoundDto()
-                {
-                    EntryId = EntryDto.EntryId!,
-                    Recording = recording,
-                    UserId = UserStore.ActiveSession.User!.UserId
-                };
-
-                EntryDto.AudioRecordings.Add(sound);
+                await StopRecording();
             }
             else
             {
-                isRecording = true;
-                await JsInterop.StartRecording();
+                await StartRecording();
             }
         }
+
+        private async Task StopRecording()
+        {
+            isRecording = false;
+            var recording = await JsInterop.StopRecording();
+            if (recording == null)
+            {
+                return;
+            }
+
+            latestSoundDto.Recording = recording;
+            EntryDto.Sounds.Add(latestSoundDto);
+        }
+
         public async Task SaveClickHandler()
         {
             if (EntryDto.Translations.Count() == 0)

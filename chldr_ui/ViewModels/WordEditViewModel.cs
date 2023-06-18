@@ -14,14 +14,6 @@ namespace chldr_ui.ViewModels
 {
     public class WordEditViewModel : ViewModelBase
     {
-        public WordEditViewModel()
-        {
-            JsInteropService.OnRemoveAudio = (recordingId) =>
-            {
-
-            };
-        }
-
         [Inject] IDataProvider DataProvider { get; set; }
         [Parameter]
         public EntryDto EntryDto { get; set; }
