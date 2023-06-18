@@ -63,7 +63,7 @@ namespace chldr_data.local.Services
             // Copy original file so that app will be able to access entries immediately
             byte[] encKey = AppConstants.EncKey.Split(":").Select(numAsString => Convert.ToByte(numAsString)).ToArray();
             var hexKey = BitConverter.ToString(encKey).Replace("-", "");
-            var encryptedConfig = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
+            var encryptedConfig = new RealmConfiguration(FileService.OfflineDatabaseFilePath)
             {
                 EncryptionKey = encKey
             };
@@ -72,7 +72,7 @@ namespace chldr_data.local.Services
         }
         public void Initialize()
         {
-            OfflineDatabaseConfiguration = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
+            OfflineDatabaseConfiguration = new RealmConfiguration(FileService.OfflineDatabaseFilePath)
             {
                 SchemaVersion = 15
             };

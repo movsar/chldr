@@ -11,9 +11,14 @@ namespace chldr_utils.Services
 
         public static string AppBaseDirectory;
         public static string AppDataDirectory => Path.Combine(AppBaseDirectory, DataDirName);
-        public string OfflineDatabaseFilePath => Path.Combine(AppBaseDirectory, OfflineDatabaseFileName);
+        public static string OfflineDatabaseFilePath => Path.Combine(AppBaseDirectory, OfflineDatabaseFileName);
         public static string EntrySoundsDirectory => Path.Combine(AppDataDirectory, "sounds");
         #endregion
+        static FileService()
+        {
+            AppBaseDirectory = AppContext.BaseDirectory;
+        }
+
         public FileService() : this(AppContext.BaseDirectory) { }
 
         public FileService(string basePath)
@@ -46,13 +51,6 @@ namespace chldr_utils.Services
             {
                 await contents.CopyToAsync(stream);
             }
-        }
-
-        public void SaveSoundAsync(byte[] contents, string fileName)
-        {
-            var filePath = Path.Combine(EntrySoundsDirectory, fileName);
-
-            File.WriteAllBytes(filePath, contents);
         }
     }
 }

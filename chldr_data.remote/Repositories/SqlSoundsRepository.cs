@@ -2,8 +2,10 @@
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
+using chldr_data.Models;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
+using chldr_utils.Services;
 
 namespace chldr_data.remote.Repositories
 {
@@ -13,14 +15,38 @@ namespace chldr_data.remote.Repositories
 
         protected override RecordType RecordType => RecordType.Sound;
 
-        public override void Add(SoundDto dto)
+        public override void Add(SoundDto soundDto)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(soundDto.RecordingB64))
+            {
+                throw new NullReferenceException("Sound data is empty");
+            }
+
+            var data = Convert.FromBase64String(soundDto.RecordingB64);
+            var filePath = Path.Combine(FileService.EntrySoundsDirectory, soundDto.FileName);
+            File.WriteAllBytes(filePath, data);
+
+            var sound = SqlSound.FromDto(soundDto, _dbContext);
+            _dbContext.Sounds.Add(sound);
+            _dbContext.SaveChanges();
+
+            InsertChangeSet(Operation.Insert, _userId, sound.SoundId);
         }
 
         public override void Update(SoundDto dto)
-        {
-            throw new NotImplementedException();
+        {   
+            // Find out what has been changed
+            var existing = Get(dto.SoundId);
+            var existingDto = SoundDto.FromModel(existing);
+
+            var changes = Change.GetChanges(dto, existingDto);
+            if (changes.Count == 0)
+            {
+                return;
+            }
+            ApplyChanges<SqlSound>(dto.SoundId, changes);
+
+            InsertChangeSet(Operation.Update, _userId, dto.SoundId, changes);
         }
 
         protected override SoundModel FromEntityShortcut(SqlSound entity)

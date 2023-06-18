@@ -18,9 +18,7 @@ namespace chldr_data.local.Services
 
         public event Action? DatabaseInitialized;
         string _connectionString;
-        public SqlDataProvider(
-            string connectionString
-            )
+        public SqlDataProvider(string connectionString)
         {
             _connectionString = connectionString;
         }

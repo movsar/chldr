@@ -16,18 +16,15 @@ namespace chldr_data.remote.Repositories
     {
         private readonly ITranslationsRepository _translations;
         private readonly ISoundsRepository _sounds;
-        private readonly FileService _fileService;
 
         public SqlEntriesRepository(
             SqlContext context,
-            FileService fileService,
             ITranslationsRepository translationsRepository,
             ISoundsRepository soundsRepository,
             string userId) : base(context, userId)
         {
             _translations = translationsRepository;
             _sounds = soundsRepository;
-            _fileService = fileService;
         }
 
         protected override RecordType RecordType => RecordType.Entry;
@@ -100,10 +97,9 @@ namespace chldr_data.remote.Repositories
         public override void Add(EntryDto newEntryDto)
         {
             // Write sounds, doing this first, so that the entry won't get added if this fails
-            foreach (var sound in newEntryDto.Sounds)
+            foreach (var soundDto in newEntryDto.Sounds)
             {
-                var data = Convert.FromBase64String(sound.RecordingB64);
-                _fileService.SaveSoundAsync(data, sound.FileName);
+                _sounds.Add(soundDto);                
             }
 
             // Insert Entry entity

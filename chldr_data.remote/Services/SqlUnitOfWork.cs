@@ -13,19 +13,17 @@ namespace chldr_data.Services
         private readonly string _userId;
         private IDbContextTransaction _transaction;
 
-        private IChangeSetsRepository _changeSetsRepository;
-        private ITranslationsRepository _translationsRepository;
+        private SqlChangeSetsRepository _changeSetsRepository;
+        private SqlTranslationsRepository _translationsRepository;
         private SqlEntriesRepository _entriesRepository;
         private SqlSourcesRepository _sourcesRepository;
         private SqlUsersRepository _usersRepository;
         private SqlSoundsRepository _soundsRepository;
-        private FileService _fileService;
 
-        public SqlUnitOfWork(SqlContext sqlContext, FileService fileService, string userId)
+        public SqlUnitOfWork(SqlContext sqlContext, string userId)
         {
             _context = sqlContext;
             _userId = userId;
-            _fileService = fileService;
         }
 
         public void BeginTransaction()
@@ -54,7 +52,7 @@ namespace chldr_data.Services
 
         public ITranslationsRepository Translations => _translationsRepository ??= new SqlTranslationsRepository(_context, _userId);
         public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new SqlChangeSetsRepository(_context, _userId);
-        public IEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_context, _fileService, _userId, Translations);
+        public IEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_context, Translations, Sounds, _userId);
         public ISourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_context, _userId);
         public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_context, _userId);
         public ISoundsRepository Sounds => _soundsRepository ?? new SqlSoundsRepository(_context, _userId);
