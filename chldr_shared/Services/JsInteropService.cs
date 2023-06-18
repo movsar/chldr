@@ -65,10 +65,18 @@ namespace chldr_shared
             await module.InvokeVoidAsync("disableAll", selector);
         }
 
-        public async Task ToggleRecording()
+        public async Task StartRecording()
         {
             var module = await moduleTask.Value;
-            await module.InvokeVoidAsync("toggleRecording");
+            await module.InvokeVoidAsync("startRecording");
+        }
+
+        public async Task<object> StopRecording()
+        {
+            var module = await moduleTask.Value;
+            var recording = await module.InvokeAsync<object>("stopRecording");
+
+            return recording;
         }
     }
 }

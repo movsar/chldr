@@ -84,9 +84,19 @@ namespace chldr_ui.ViewModels
 
         #region Form Actions
 
+        bool isRecording = false;
         public async Task ToggleRecording()
         {
-            await JsInterop.ToggleRecording();
+            if (isRecording)
+            {
+                isRecording = false;
+                await JsInterop.StopRecording();
+            }
+            else
+            {
+                isRecording = true;
+                await JsInterop.StartRecording();
+            }
         }
         public async Task SaveClickHandler()
         {

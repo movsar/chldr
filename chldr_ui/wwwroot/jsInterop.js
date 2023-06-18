@@ -1,24 +1,17 @@
 ﻿let mediaRecorder;
 let chunks = [];
+let recordedBlob;
 let recordedAudio;
 
 const recordButton = document.getElementById("recordButton");
-
-export function toggleRecording() {
-    if (isRecording()) {
-        stopRecording();
-        showPlaybackControls();
-    } else {
-        startRecording();
-        showStopButton();
-    }
-}
 
 export function isRecording() {
     return mediaRecorder && mediaRecorder.state === "recording";
 }
 
 export function startRecording() {
+    showStopButton();
+
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(function (stream) {
             chunks = [];
@@ -30,6 +23,8 @@ export function startRecording() {
 
             mediaRecorder.addEventListener("stop", function () {
                 const audioBlob = new Blob(chunks, { type: "audio/wav" });
+                recordedBlob = audioBlob;
+
                 const audioUrl = URL.createObjectURL(audioBlob);
                 recordedAudio = new Audio(audioUrl);
                 recordedAudio.controls = true;
@@ -38,7 +33,6 @@ export function startRecording() {
 
                 document.getElementById("audioContainer").appendChild(recordedAudio);
                 document.getElementById("audioContainer").appendChild(removeButton);
-
             });
 
             mediaRecorder.start();
@@ -59,57 +53,27 @@ export function createRemoveButton() {
     // Set the text of the button to "Remove"
     button.textContent = 'Remove';
 
-    // Add an event listener to handle the button click
-    button.addEventListener('click', function () {
-        // Remove the button when clicked
-        button.parentNode.removeChild(button);
-    });
-
-
-    // // Create a span element for the remove icon
-    // var icon = document.createElement('span');
-
-    // // Add a class to the icon for styling
-    // icon.classList.add('remove-icon');
-
-    // // Append the icon to the button
-    // button.appendChild(icon);
-
-    // Append the button to the document body or any other desired element
-
     return button;
 }
 
 export function stopRecording() {
-    if (isRecording()) {
-        mediaRecorder.stop();
-    }
+    showStartButton();
+
+    mediaRecorder.stop();
+    return recordedBlob;
 }
 
+
 export function showStopButton() {
-    recordButton.textContent = "Stop";
-    recordButton.classList.remove("play");
+    recordButton.textContent = "Stop recording";
+    recordButton.classList.remove("record");
     recordButton.classList.add("stop");
 }
 
-export function showPlaybackControls() {
-    recordButton.textContent = "Record";
+export function showStartButton() {
+    recordButton.textContent = "Add pronunciation";
     recordButton.classList.remove("stop");
-    recordButton.classList.add("Record");
-}
-
-
-export function handleSaveClick() {
-    resetRecorder();
-}
-
-export function resetRecorder() {
-    stopRecording();
-
-    recordButton.textContent = "Record";
-    recordButton.classList.remove("stop", "play");
     recordButton.classList.add("record");
-    document.getElementById("audioContainer").innerHTML = "";
 }
 
 export function enable(selector) {
