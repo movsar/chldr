@@ -1,4 +1,7 @@
-﻿using Microsoft.JSInterop;
+﻿using GraphQL;
+using Microsoft.JSInterop;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Reflection.Metadata;
 
@@ -76,14 +79,18 @@ namespace chldr_shared
         public async Task<byte[]?> StopRecording()
         {
             var module = await moduleTask.Value;
-            var base64String = await module.InvokeAsync<string>("stopRecording");
-            if (string.IsNullOrEmpty(base64String))
-            {
-                return null;
-            }
-            var recording = Convert.FromBase64String(base64String);
+            var result = await module.InvokeAsync<string>("stopRecording");
+            var deserializedResult = JsonConvert.DeserializeObject<(int recordingIndex, string base64String)>(result);
+            int recordingIndex = deserializedResult.recordingIndex;
+            string base64String = deserializedResult.base64String;     //byte[] recording = result.base64String;
+            //int recordingIndex = result.recordingIndex;
+            ////if (string.IsNullOrEmpty(base64String))
+            //{
+            //    return null;
+            //}
+            //var recording = Convert.FromBase64String(base64String);
 
-            return recording;
+            return null;
         }
 
         [JSInvokable]

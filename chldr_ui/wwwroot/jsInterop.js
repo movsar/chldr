@@ -1,9 +1,10 @@
 ﻿let mediaRecorder;
 let chunks = [];
 let recordedBlob;
-let recordedAudio;
+let recordedAudioIndex = 0;
 
 const recordButton = document.getElementById("recordButton");
+const audioContainer = document.getElementById("audioContainer");
 
 export function startRecording() {
     showStopButton();
@@ -22,13 +23,12 @@ export function startRecording() {
                 recordedBlob = audioBlob;
 
                 const audioUrl = URL.createObjectURL(audioBlob);
-                recordedAudio = new Audio(audioUrl);
-                recordedAudio.controls = true;
+                const recordedAudio = createAudioElement(audioUrl);
 
-                let removeButton = createRemoveButton();
+                let removeButton = createRemoveButton(recordedAudio.id);
 
-                document.getElementById("audioContainer").appendChild(recordedAudio);
-                document.getElementById("audioContainer").appendChild(removeButton);
+                audioContainer.appendChild(recordedAudio);
+                audioContainer.appendChild(removeButton);
             });
 
             mediaRecorder.start();
@@ -46,7 +46,8 @@ export function stopRecording() {
             const reader = new FileReader();
             reader.onloadend = function () {
                 const base64String = reader.result.split(',')[1];
-                resolve(base64String);
+                resolve({ recordingIndex: recordedAudioIndex, base64String });
+                recordedAudioIndex++;
             };
             reader.readAsDataURL(recordedBlob);
         });
@@ -66,29 +67,29 @@ export function showStartButton() {
     recordButton.classList.add("record");
 }
 
-export function createRemoveButton(id) {
-    // Create a button element
-    var button = document.createElement('button');
+export function createAudioElement(audioUrl) {
+    const recordedAudio = document.createElement("audio");
+    recordedAudio.src = audioUrl;
+    recordedAudio.controls = true;
+    recordedAudio.id = `recordedAudio_${recordedAudioIndex}`;
 
-    // Add classes to the button for styling
+    return recordedAudio;
+}
+
+export function createRemoveButton(audioId) {
+    var button = document.createElement('button');
     button.classList.add('btn');
     button.classList.add('btn-danger');
-
-    // Set the text of the button to "Remove"
     button.textContent = 'Remove';
     button.addEventListener('click', () => {
-        DotNet.invokeMethodAsync("chldr_shared", "WordEdit_RemoveSound_ClickHandler", id);
+        const audioToRemove = document.getElementById(audioId);
+        audioToRemove.remove();
+        button.remove();
     });
 
     return button;
 }
 
-function guidGenerator() {
-    var S4 = function () {
-        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-    };
-    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
-}
 
 export function enable(selector) {
     var container = document.querySelector(selector);
