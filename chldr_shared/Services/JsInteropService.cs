@@ -1,5 +1,6 @@
 ﻿using Microsoft.JSInterop;
 using System.Diagnostics;
+using System.Reflection.Metadata;
 
 namespace chldr_shared
 {
@@ -71,10 +72,15 @@ namespace chldr_shared
             await module.InvokeVoidAsync("startRecording");
         }
 
-        public async Task<object> StopRecording()
+        public async Task<byte[]?> StopRecording()
         {
             var module = await moduleTask.Value;
-            var recording = await module.InvokeAsync<object>("stopRecording");
+            var base64String = await module.InvokeAsync<string>("stopRecording");
+            if (string.IsNullOrEmpty(base64String))
+            {
+                return null;
+            }
+            var recording = Convert.FromBase64String(base64String);
 
             return recording;
         }

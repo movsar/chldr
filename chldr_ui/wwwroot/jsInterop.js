@@ -5,10 +5,6 @@ let recordedAudio;
 
 const recordButton = document.getElementById("recordButton");
 
-export function isRecording() {
-    return mediaRecorder && mediaRecorder.state === "recording";
-}
-
 export function startRecording() {
     showStopButton();
 
@@ -16,13 +12,13 @@ export function startRecording() {
         .then(function (stream) {
             chunks = [];
             mediaRecorder = new MediaRecorder(stream);
-
+            mediaRecorder.audioBitsPerSecond
             mediaRecorder.addEventListener("dataavailable", function (event) {
                 chunks.push(event.data);
             });
 
             mediaRecorder.addEventListener("stop", function () {
-                const audioBlob = new Blob(chunks, { type: "audio/wav" });
+                const audioBlob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
                 recordedBlob = audioBlob;
 
                 const audioUrl = URL.createObjectURL(audioBlob);
@@ -42,27 +38,22 @@ export function startRecording() {
         });
 }
 
-export function createRemoveButton() {
-    // Create a button element
-    var button = document.createElement('button');
-
-    // Add classes to the button for styling
-    button.classList.add('btn');
-    button.classList.add('btn-danger');
-
-    // Set the text of the button to "Remove"
-    button.textContent = 'Remove';
-
-    return button;
-}
 
 export function stopRecording() {
     showStartButton();
 
-    mediaRecorder.stop();
-    return recordedBlob;
+    return new Promise((resolve, reject) => {
+        mediaRecorder.addEventListener("stop", function () {
+            const reader = new FileReader();
+            reader.onloadend = function () {
+                const base64String = reader.result.split(',')[1];
+                resolve(base64String);
+            };
+            reader.readAsDataURL(recordedBlob);
+        });
+        mediaRecorder.stop();
+    });
 }
-
 
 export function showStopButton() {
     recordButton.textContent = "Stop recording";
@@ -76,6 +67,19 @@ export function showStartButton() {
     recordButton.classList.add("record");
 }
 
+export function createRemoveButton() {
+    // Create a button element
+    var button = document.createElement('button');
+
+    // Add classes to the button for styling
+    button.classList.add('btn');
+    button.classList.add('btn-danger');
+
+    // Set the text of the button to "Remove"
+    button.textContent = 'Remove';
+
+    return button;
+}
 export function enable(selector) {
     var container = document.querySelector(selector);
     if (container == null) {

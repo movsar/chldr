@@ -4,17 +4,13 @@ using chldr_shared.Stores;
 using chldr_shared.Validators;
 using chldr_data.DatabaseObjects.Models;
 using Microsoft.AspNetCore.Components;
-using Newtonsoft.Json;
-using chldr_data.DatabaseObjects.Models.Words;
-using chldr_data.Enums.WordDetails;
-using chldr_shared;
-using Blazored.Modal;
-using chldr_ui.Components;
+using chldr_utils.Services;
 
 namespace chldr_ui.ViewModels
 {
     public class EntryEditViewModel : EditFormViewModelBase<EntryDto, EntryValidator>
     {
+        [Inject] FileService FileService { get; set; }
         [Parameter]
         public string? EntryId { get; set; }
         public EntryDto EntryDto { get; set; } = new EntryDto();
@@ -90,7 +86,9 @@ namespace chldr_ui.ViewModels
             if (isRecording)
             {
                 isRecording = false;
-                await JsInterop.StopRecording();
+                var recording = await JsInterop.StopRecording();
+
+                File.WriteAllBytes(Path.Combine(FileService.EntrySoundsDirectory, "file.m4a"), recording);
             }
             else
             {
