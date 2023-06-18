@@ -1,12 +1,11 @@
 ﻿let mediaRecorder;
-let chunks = [];
 let recordedBlob;
+
 let latestRecordingId;
 
-const recordButton = document.getElementById("recordButton");
-const audioContainer = document.getElementById("audioContainer");
 
 export function startRecording(recordingId) {
+    console.log(recordingId);
     showStopButton();
 
     navigator.mediaDevices.getUserMedia({ audio: true })
@@ -14,7 +13,8 @@ export function startRecording(recordingId) {
 
             latestRecordingId = recordingId;
 
-            chunks = [];
+            let chunks = [];
+
             mediaRecorder = new MediaRecorder(stream);
             mediaRecorder.audioBitsPerSecond
             mediaRecorder.addEventListener("dataavailable", function (event) {
@@ -30,6 +30,7 @@ export function startRecording(recordingId) {
 
                 let removeButton = createRemoveButton(recordingId);
 
+                const audioContainer = document.getElementById("audioContainer");
                 audioContainer.appendChild(recordedAudio);
                 audioContainer.appendChild(removeButton);
             });
@@ -58,12 +59,16 @@ export function stopRecording() {
 }
 
 export function showStopButton() {
+    const recordButton = document.getElementById("recordButton");
+
     recordButton.textContent = "Stop recording";
     recordButton.classList.remove("record");
     recordButton.classList.add("stop");
 }
 
 export function showStartButton() {
+    const recordButton = document.getElementById("recordButton");
+
     recordButton.textContent = "Add pronunciation";
     recordButton.classList.remove("stop");
     recordButton.classList.add("record");
@@ -87,7 +92,7 @@ export function createRemoveButton(recordingId) {
         const audioToRemove = document.getElementById(`recordedAudio_${recordingId}`);
         audioToRemove.remove();
         button.remove();
-         
+
         DotNet.invokeMethodAsync("chldr_shared", "WordEdit_RemoveSound_ClickHandler", recordingId);
     });
 

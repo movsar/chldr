@@ -37,8 +37,8 @@ namespace chldr_ui.ViewModels
                 SelectedEntryType = selectedEntryType;
             }
         }
-
-        #region Lifecycle Event Handlers
+        bool isRecording = false;
+        SoundDto latestSoundDto;
         private bool isInitialized = false;
         protected override void OnInitialized()
         {
@@ -65,7 +65,6 @@ namespace chldr_ui.ViewModels
                 EntryDto = EntryDto.FromModel(existingEntry);
             }
         }
-        #endregion
 
         #region Translation Handlers
         List<string> _newTranslationIds = new List<string>();
@@ -94,8 +93,6 @@ namespace chldr_ui.ViewModels
 
         #region Form Actions
 
-        bool isRecording = false;
-        SoundDto latestSoundDto;
         private async Task StartRecording()
         {
             isRecording = true;
@@ -116,6 +113,7 @@ namespace chldr_ui.ViewModels
             {
                 await StartRecording();
             }
+            await RefreshUi();
         }
 
         private async Task StopRecording()
