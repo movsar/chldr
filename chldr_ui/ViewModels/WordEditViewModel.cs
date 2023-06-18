@@ -14,6 +14,14 @@ namespace chldr_ui.ViewModels
 {
     public class WordEditViewModel : ViewModelBase
     {
+        public WordEditViewModel()
+        {
+            JsInteropService.OnRemoveAudio = (recordingId) =>
+            {
+
+            };
+        }
+
         [Inject] IDataProvider DataProvider { get; set; }
         [Parameter]
         public EntryDto EntryDto { get; set; }
@@ -56,7 +64,7 @@ namespace chldr_ui.ViewModels
 
         protected async Task OpenSetParentWordDialog()
         {
-           
+
 
             var entrySelectionDialog = Modal.Show<WordSelectorDialog>("", new ModalOptions()
             {

@@ -14,7 +14,8 @@ namespace chldr_shared
     public class JsInteropService : IAsyncDisposable
     {
         private readonly Lazy<Task<IJSObjectReference>> moduleTask;
-
+        public static Action<string> OnRemoveAudio { get; set; }
+        
         public JsInteropService(IJSRuntime jsRuntime)
         {
             moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
@@ -83,6 +84,12 @@ namespace chldr_shared
             var recording = Convert.FromBase64String(base64String);
 
             return recording;
+        }
+
+        [JSInvokable]
+        public static void WordEdit_RemoveSound_ClickHandler(string recordingId)
+        {
+            OnRemoveAudio?.Invoke(recordingId);
         }
     }
 }

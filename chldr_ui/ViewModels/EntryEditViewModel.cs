@@ -82,6 +82,10 @@ namespace chldr_ui.ViewModels
 
 
         bool isRecording = false;
+        public void HandleRemoveClick()
+        {
+
+        }
         public async Task ToggleRecording()
         {
             if (isRecording)

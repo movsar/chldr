@@ -4,6 +4,7 @@ let recordedBlob;
 let recordedAudio;
 
 const recordButton = document.getElementById("recordButton");
+
 export function startRecording() {
     showStopButton();
 
@@ -65,7 +66,7 @@ export function showStartButton() {
     recordButton.classList.add("record");
 }
 
-export function createRemoveButton() {
+export function createRemoveButton(id) {
     // Create a button element
     var button = document.createElement('button');
 
@@ -75,9 +76,20 @@ export function createRemoveButton() {
 
     // Set the text of the button to "Remove"
     button.textContent = 'Remove';
+    button.addEventListener('click', () => {
+        DotNet.invokeMethodAsync("chldr_shared", "WordEdit_RemoveSound_ClickHandler", id);
+    });
 
     return button;
 }
+
+function guidGenerator() {
+    var S4 = function () {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    };
+    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+}
+
 export function enable(selector) {
     var container = document.querySelector(selector);
     if (container == null) {
