@@ -87,6 +87,10 @@ namespace chldr_ui.ViewModels
             {
                 isRecording = false;
                 var recording = await JsInterop.StopRecording();
+                if (recording == null)
+                {
+                    return;
+                }
 
                 File.WriteAllBytes(Path.Combine(FileService.EntrySoundsDirectory, "file.m4a"), recording);
             }

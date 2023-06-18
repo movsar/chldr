@@ -4,7 +4,6 @@ let recordedBlob;
 let recordedAudio;
 
 const recordButton = document.getElementById("recordButton");
-
 export function startRecording() {
     showStopButton();
 
@@ -37,7 +36,6 @@ export function startRecording() {
             console.log("The following error occurred: " + err);
         });
 }
-
 
 export function stopRecording() {
     showStartButton();
