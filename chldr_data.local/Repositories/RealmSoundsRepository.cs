@@ -23,9 +23,11 @@ namespace chldr_data.local.Repositories
         public override void Add(SoundDto soundDto)
         {
             var entry = _dbContext.Find<RealmEntry>(soundDto.EntryId);
+
             _dbContext.Write(() =>
             {
-                RealmSound.FromDto(soundDto, _dbContext, entry);
+                var sound = RealmSound.FromDto(soundDto, _dbContext, entry);
+                _dbContext.Add(sound);
             });
 
             var filePath = Path.Combine(FileService.EntrySoundsDirectory, soundDto.FileName);

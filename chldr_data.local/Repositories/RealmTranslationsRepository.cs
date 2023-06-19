@@ -18,20 +18,19 @@ namespace chldr_data.Repositories
         {
             return TranslationModel.FromEntity(entity);
         }
-
-        public override void Update(TranslationDto translationDto)
-        {
-            _dbContext.Write(() =>
-            {
-                var updatedEntry = RealmTranslation.FromDto(translationDto, _dbContext);
-            });
-        }
         public override void Add(TranslationDto translationDto)
         {
             _dbContext.Write(() =>
             {
                 var translation = RealmTranslation.FromDto(translationDto, _dbContext);
                 _dbContext.Add(translation);
+            });
+        }
+        public override void Update(TranslationDto translationDto)
+        {
+            _dbContext.Write(() =>
+            {
+                var updatedEntry = RealmTranslation.FromDto(translationDto, _dbContext);
             });
         }
     }
