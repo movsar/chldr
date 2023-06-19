@@ -40,15 +40,24 @@ namespace chldr_ui.ViewModels
         }
         bool isRecording = false;
         SoundDto latestSoundDto;
-        private bool isInitialized = false;
-        private bool uiRendered = false;
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnParametersSetAsync()
         {
-            // Return if it's addition mode
-            if (uiRendered || EntryDto.CreatedAt == DateTimeOffset.MinValue)
+            if (string.IsNullOrEmpty(EntryId))
             {
-                await base.OnAfterRenderAsync(firstRender);
+                return;
             }
+
+            // Load the EntryDto for the existing entry being edited
+            var existingEntry = ContentStore.CachedSearchResult.Entries
+                .Where(e => e.Type == EntryType.Word)
+                .Cast<EntryModel>()
+                .FirstOrDefault(w => w.EntryId == EntryId);
+
+            if (existingEntry == null)
+            {
+                existingEntry = ContentStore.GetByEntryId(EntryId);
+            }
+            EntryDto = EntryDto.FromModel(existingEntry);
 
             // Load audio recordings, if any
             foreach (var soundDto in EntryDto.Sounds)
@@ -61,41 +70,12 @@ namespace chldr_ui.ViewModels
                 }
 
                 soundDto.RecordingB64 = File.ReadAllText(soundPath);
-                await JsInterop.AddExistingEntryRecording(soundDto);
+                JsInterop.AddExistingEntryRecording(soundDto);
             }
 
-            uiRendered = true;
-
-            await base.OnAfterRenderAsync(firstRender);
+            await base.OnParametersSetAsync();
         }
-        protected override async Task OnInitializedAsync()
-        {
-            if (!isInitialized)
-            {
-                isInitialized = true;
-
-                if (string.IsNullOrEmpty(EntryId))
-                {
-                    return;
-                }
-
-                // Get current word from cached results
-                var existingEntry = ContentStore.CachedSearchResult.Entries
-                    .Where(e => e.Type == EntryType.Word)
-                    .Cast<EntryModel>()
-                    .FirstOrDefault(w => w.EntryId == EntryId);
-
-                if (existingEntry == null)
-                {
-                    existingEntry = ContentStore.GetByEntryId(EntryId);
-                }
-
-                EntryDto = EntryDto.FromModel(existingEntry);
-            }
-
-            await base.OnInitializedAsync();
-        }
-
+    
         #region Translation Handlers
         List<string> _newTranslationIds = new List<string>();
         public async Task NewTranslation()
@@ -150,11 +130,11 @@ namespace chldr_ui.ViewModels
         {
             isRecording = false;
             var recording = await JsInterop.StopRecording();
-            if (recording == null)
+            if (recording == null || string.IsNullOrEmpty(recording))
             {
                 return;
             }
-
+            
             latestSoundDto.RecordingB64 = recording;
             EntryDto.Sounds.Add(latestSoundDto);
         }

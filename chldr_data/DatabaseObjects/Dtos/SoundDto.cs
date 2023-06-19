@@ -9,7 +9,7 @@ namespace chldr_data.DatabaseObjects.Dtos
         public string FileName { get; set; } = Guid.NewGuid().ToString();
         public string EntryId { get; set; }
         public string UserId { get; set; }
-        public virtual string RecordingB64 { get; set; }
+        public virtual string? RecordingB64 { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
 
@@ -22,11 +22,13 @@ namespace chldr_data.DatabaseObjects.Dtos
 
             return new SoundDto()
             {
-                EntryId = sound.EntryId,
-                FileName = sound.FileName,
-                CreatedAt = sound.CreatedAt,
                 SoundId = sound.SoundId,
+                EntryId = sound.EntryId,
                 UserId = sound.UserId,
+                FileName = sound.FileName,
+
+                CreatedAt = sound.CreatedAt,
+                UpdatedAt = sound.UpdatedAt,
             };
         }
     }

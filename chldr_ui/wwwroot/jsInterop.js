@@ -2,24 +2,25 @@
 let recordedBlob;
 
 let latestRecordingId;
-export function addExistingEntryRecording(soundDto) {
-    console.log(soundDto);
-
-    let audioContainer = document.getElementById("audioContainer");
+export function addRecordingListItem(id, data) {
+    let audioContainer = document.getElementById("recordings-list");
     if (!audioContainer) {
         console.error("audio container is null");
         return;
     }
+    
+    let audioUrl = URL.createObjectURL(data);
+    let recordedAudio = createAudioElement(audioUrl, id);
+    let removeButton = createRemoveButton(id);
 
-    let audioUrl = URL.createObjectURL(base64ToBlob(soundDto.recordingB64));
-    let recordedAudio = createAudioElement(audioUrl, soundDto.soundId);
-    let removeButton = createRemoveButton(soundDto.soundId);
+    const listItem = document.createElement("div");
+    listItem.classList.add("recording-list-item");
+    listItem.id = `rli_${id}`;
+    listItem.appendChild(recordedAudio);
+    listItem.appendChild(removeButton);
 
-
-    audioContainer.appendChild(recordedAudio);
-    audioContainer.appendChild(removeButton);
+    audioContainer.appendChild(listItem);
 }
-
 function base64ToBlob(base64String) {
     const byteCharacters = atob(base64String);
     const byteNumbers = new Array(byteCharacters.length);
@@ -31,6 +32,11 @@ function base64ToBlob(base64String) {
     const byteArray = new Uint8Array(byteNumbers);
 
     return new Blob([byteArray], { type: "audio/ogg; codecs=opus" });
+}
+export function addExistingEntryRecording(soundDto) {
+    console.log(soundDto);
+
+    addRecordingListItem(soundDto.soundId, base64ToBlob(soundDto.recordingB64));
 }
 
 export function startRecording(recordingId) {
@@ -54,14 +60,7 @@ export function startRecording(recordingId) {
                 const audioBlob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
                 recordedBlob = audioBlob;
 
-                const audioUrl = URL.createObjectURL(audioBlob);
-                const recordedAudio = createAudioElement(audioUrl, recordingId);
-
-                let removeButton = createRemoveButton(recordingId);
-
-                const audioContainer = document.getElementById("audioContainer");
-                audioContainer.appendChild(recordedAudio);
-                audioContainer.appendChild(removeButton);
+                addRecordingListItem(recordingId, audioBlob);
             });
 
             mediaRecorder.start();
@@ -122,10 +121,8 @@ export function createRemoveButton(recordingId) {
     button.classList.add('bi');
     button.classList.add('bi-trash');
     button.addEventListener('click', () => {
-        const audioToRemove = document.getElementById(`recordedAudio_${recordingId}`);
-        audioToRemove.remove();
-        button.remove();
-
+        let recordingListItem = document.querySelector(`#rli_${recordingId}`);
+        recordingListItem.remove();
         DotNet.invokeMethodAsync("chldr_shared", "WordEdit_RemoveSound_ClickHandler", recordingId);
     });
 

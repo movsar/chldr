@@ -152,8 +152,8 @@ namespace chldr_data.remote.Repositories
             var updated = updatedEntryDto.Sounds.Where(t => existingEntrySoundIds.Contains(t.SoundId) && updatedEntrySoundIds.Contains(t.SoundId));
 
             _sounds.AddRange(added);
-            _sounds.RemoveRange(deleted.Select(t => t.SoundId));
             _sounds.UpdateRange(updated);
+            _sounds.RemoveRange(deleted.Select(t => t.SoundId));
         }
 
         public override void Update(EntryDto updatedEntryDto)

@@ -82,6 +82,11 @@ namespace chldr_shared
         {
             var module = await moduleTask.Value;
             var jsonDocument = await module.InvokeAsync<JsonDocument>("stopRecording");
+            if (jsonDocument == null)
+            {
+                // Happens when recording is too quickly stopped
+                return null;
+            }
 
             string recordingId = jsonDocument.RootElement.GetProperty("id").GetString();
             string base64String = jsonDocument.RootElement.GetProperty("data").GetString();
