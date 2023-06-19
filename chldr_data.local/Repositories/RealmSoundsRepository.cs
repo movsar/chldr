@@ -30,8 +30,7 @@ namespace chldr_data.local.Repositories
                 _dbContext.Add(sound);
             });
 
-            var filePath = Path.Combine(FileService.EntrySoundsDirectory, soundDto.FileName);
-            File.WriteAllText(filePath, soundDto.RecordingB64);
+            FileService.AddEntrySound(soundDto.FileName, soundDto.RecordingB64!);            
         }
         public override void Update(SoundDto soundDto)
         {
@@ -46,8 +45,7 @@ namespace chldr_data.local.Repositories
             var sound = Get(entityId);
             base.Remove(entityId);
 
-            var filePath = Path.Combine(FileService.EntrySoundsDirectory, sound.FileName);
-            File.Delete(filePath);
+            FileService.DeleteEntrySound(sound.FileName);
         }
     }
 }

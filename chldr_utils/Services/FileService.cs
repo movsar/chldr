@@ -50,5 +50,17 @@ namespace chldr_utils.Services
                 await contents.CopyToAsync(stream);
             }
         }
+
+        public static void AddEntrySound(string fileName, string b64data)
+        {
+            var filePath = Path.Combine(EntrySoundsDirectory, fileName);
+            File.WriteAllText(filePath, b64data);
+        }
+
+        public static void DeleteEntrySound(string fileName)
+        {
+            var filePath = Path.Combine(EntrySoundsDirectory, fileName);
+            File.Delete(filePath);
+        }
     }
 }
