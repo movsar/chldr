@@ -5,7 +5,7 @@ let latestRecordingId;
 export function addExistingEntryRecording(soundDto) {
     console.log(soundDto);
 
-    let audioContainer = document.getElementById("recordings-list");
+    let audioContainer = document.getElementById("audioContainer");
     if (!audioContainer) {
         console.error("audio container is null");
         return;
