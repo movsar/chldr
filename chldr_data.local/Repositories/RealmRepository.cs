@@ -34,7 +34,7 @@ namespace chldr_data.Repositories
 
             return FromEntityShortcut(entry);
         }
-        public void Remove(string entityId)
+        public virtual void Remove(string entityId)
         {
             var entity = _dbContext.Find<TEntity>(entityId);
             if (entity == null)

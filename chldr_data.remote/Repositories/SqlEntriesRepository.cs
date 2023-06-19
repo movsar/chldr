@@ -162,7 +162,6 @@ namespace chldr_data.remote.Repositories
             var existingEntryDto = EntryDto.FromModel(existingEntry);
 
             HandleUpdatedEntryTranslations(existingEntryDto, updatedEntryDto);
-
             HandleUpdatedEntrySounds(existingEntryDto, updatedEntryDto);
 
             // Add changeset if applicable
