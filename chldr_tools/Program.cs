@@ -87,7 +87,7 @@ namespace chldr_tools
             var realmDatabase = localRealmContext.GetContext();
 
             var connectionString = "asfsdfsadf";
-            var remoteSqlContext = new SqlDataProvider(connectionString);
+            var remoteSqlContext = new SqlDataProvider(_fileService, connectionString);
             remoteSqlContext.Initialize();
             var sqlDatabase = remoteSqlContext.GetContext();
 

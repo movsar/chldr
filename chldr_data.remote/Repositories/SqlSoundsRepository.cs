@@ -11,7 +11,7 @@ namespace chldr_data.remote.Repositories
 {
     internal class SqlSoundsRepository : SqlRepository<SqlSound, SoundModel, SoundDto>, ISoundsRepository
     {
-        public SqlSoundsRepository(SqlContext context, string userId) : base(context, userId) { }
+        public SqlSoundsRepository(SqlContext context, FileService fileService, string userId) : base(context, fileService, userId) { }
         protected override RecordType RecordType => RecordType.Sound;
         protected override SoundModel FromEntityShortcut(SqlSound entity)
         {
@@ -24,7 +24,7 @@ namespace chldr_data.remote.Repositories
                 throw new NullReferenceException("Sound data is empty");
             }
 
-            FileService.AddEntrySound(soundDto.FileName, soundDto.RecordingB64!);
+            _fileService.AddEntrySound(soundDto.FileName, soundDto.RecordingB64!);
 
             var sound = SqlSound.FromDto(soundDto, _dbContext);
             _dbContext.Sounds.Add(sound);
@@ -50,9 +50,15 @@ namespace chldr_data.remote.Repositories
         }
         public override void Remove(string entityId)
         {
-            base.Remove(entityId);
+            var sound = _dbContext.Sounds.Find(entityId);
+            if (sound == null)
+            {
+                return;
+            }
 
-            FileService.DeleteEntrySound(entityId);
+            _fileService.DeleteEntrySound(sound.FileName);
+
+            base.Remove(entityId);
         }
     }
 }

@@ -8,12 +8,13 @@ using chldr_tools;
 using chldr_utils.Interfaces;
 using chldr_utils;
 using Realms;
+using chldr_utils.Services;
 
 namespace chldr_data.Repositories
 {
     public class RealmSourcesRepository : RealmRepository<RealmSource, SourceModel, SourceDto>, ISourcesRepository
     {
-        public RealmSourcesRepository(Realm context, ExceptionHandler exceptionHandler): base(context, exceptionHandler) { }
+        public RealmSourcesRepository(Realm context, ExceptionHandler exceptionHandler, FileService fileService) : base(context, exceptionHandler, fileService) { }
         protected override RecordType RecordType => RecordType.Source;
         protected override SourceModel FromEntityShortcut(RealmSource entry)
         {

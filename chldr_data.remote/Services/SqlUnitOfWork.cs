@@ -10,6 +10,7 @@ namespace chldr_data.Services
     public class SqlUnitOfWork : ISqlUnitOfWork
     {
         private readonly SqlContext _context;
+        private readonly FileService _fileService;
         private readonly string _userId;
         private IDbContextTransaction _transaction;
 
@@ -20,9 +21,10 @@ namespace chldr_data.Services
         private SqlUsersRepository _usersRepository;
         private SqlSoundsRepository _soundsRepository;
 
-        public SqlUnitOfWork(SqlContext sqlContext, string userId)
+        public SqlUnitOfWork(SqlContext sqlContext, FileService fileService, string userId)
         {
             _context = sqlContext;
+            _fileService = fileService;
             _userId = userId;
         }
 
@@ -50,11 +52,11 @@ namespace chldr_data.Services
             _context.Dispose();
         }
 
-        public ITranslationsRepository Translations => _translationsRepository ??= new SqlTranslationsRepository(_context, _userId);
-        public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new SqlChangeSetsRepository(_context, _userId);
-        public IEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_context, Translations, Sounds, _userId);
-        public ISourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_context, _userId);
-        public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_context, _userId);
-        public ISoundsRepository Sounds => _soundsRepository ?? new SqlSoundsRepository(_context, _userId);
+        public ITranslationsRepository Translations => _translationsRepository ??= new SqlTranslationsRepository(_context, _fileService, _userId);
+        public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new SqlChangeSetsRepository(_context, _fileService, _userId);
+        public IEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_context, _fileService, Translations, Sounds, _userId);
+        public ISourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_context, _fileService, _userId);
+        public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_context, _fileService, _userId);
+        public ISoundsRepository Sounds => _soundsRepository ?? new SqlSoundsRepository(_context, _fileService, _userId);
     }
 }

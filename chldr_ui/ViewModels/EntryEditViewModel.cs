@@ -12,6 +12,7 @@ namespace chldr_ui.ViewModels
 {
     public class EntryEditViewModel : EditFormViewModelBase<EntryDto, EntryValidator>
     {
+
         public EntryEditViewModel()
         {
             JsInteropService.OnRemoveAudio = (recordingId) =>
@@ -26,8 +27,8 @@ namespace chldr_ui.ViewModels
             };
         }
 
-        [Parameter]
-        public string? EntryId { get; set; }
+        [Parameter] public string? EntryId { get; set; }
+        [Inject] FileService FileService { get; set; }
         public EntryDto EntryDto { get; set; } = new EntryDto();
         protected string SourceId { get; set; } = "63a816205d1af0e432fba6de";
         internal EntryType SelectedEntryType { get; set; } = EntryType.Word;
@@ -49,7 +50,7 @@ namespace chldr_ui.ViewModels
 
                 await JsInterop.AddExistingEntryRecording(soundDto);
             }
-         
+
             existingSoundsRendered = true;
         }
 

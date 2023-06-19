@@ -13,6 +13,7 @@ using GraphQL;
 using Realms;
 using Microsoft.EntityFrameworkCore.Update;
 using chldr_utils.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.Repositories
 {
@@ -24,8 +25,9 @@ namespace chldr_data.Repositories
         public RealmEntriesRepository(
             Realm context,
             ExceptionHandler exceptionHandler,
+            FileService fileService,
             ITranslationsRepository translationsRepository,
-            ISoundsRepository soundsRepository) : base(context, exceptionHandler)
+            ISoundsRepository soundsRepository) : base(context, exceptionHandler, fileService)
         {
             _translations = translationsRepository;
             _sounds = soundsRepository;
@@ -33,11 +35,7 @@ namespace chldr_data.Repositories
         protected override RecordType RecordType => RecordType.Entry;
         protected override EntryModel FromEntityShortcut(RealmEntry entry)
         {
-            return EntryModel.FromEntity(
-                                    entry,
-                                    entry.Source,
-                                    entry.Translations,
-                                    entry.Sounds);
+            return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
         }
 
         public override void Add(EntryDto newEntryDto)
@@ -63,7 +61,7 @@ namespace chldr_data.Repositories
                     continue;
                 }
 
-                var filePath = Path.Combine(FileService.EntrySoundsDirectory, soundDto.FileName);
+                var filePath = Path.Combine(_fileService.EntrySoundsDirectory, soundDto.FileName);
                 File.WriteAllText(filePath, soundDto.RecordingB64);
             }
         }
@@ -85,13 +83,19 @@ namespace chldr_data.Repositories
 
         public override void Remove(string entityId)
         {
+            var entry = _dbContext.Find<RealmEntry>(entityId);
+            if (entry == null)
+            {
+                return;
+            }
+
+            var sounds = entry.Sounds.Select(s => s.SoundId).ToArray();
+            var translations = entry.Translations.Select(t => t.TranslationId).ToArray();
+
+            _sounds.RemoveRange(sounds);
+            _translations.RemoveRange(translations);
+
             base.Remove(entityId);
-
-            var sounds = _dbContext.All<RealmSound>().Where(s => s.EntryId.Equals(entityId));
-            var translations = _dbContext.All<RealmTranslation>().Where(t => t.EntryId.Equals(entityId));
-
-            _sounds.RemoveRange(sounds.Select(s => s.SoundId));
-            _translations.RemoveRange(translations.Select(t => t.TranslationId));
         }
     }
 }

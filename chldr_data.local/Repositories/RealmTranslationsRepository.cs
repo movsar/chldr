@@ -6,12 +6,13 @@ using Realms;
 using chldr_data.Interfaces.Repositories;
 using chldr_utils.Interfaces;
 using chldr_utils;
+using chldr_utils.Services;
 
 namespace chldr_data.Repositories
 {
     public class RealmTranslationsRepository : RealmRepository<RealmTranslation, TranslationModel, TranslationDto>, ITranslationsRepository
     {
-        public RealmTranslationsRepository(Realm context, ExceptionHandler exceptionHandler) : base(context, exceptionHandler) { }
+        public RealmTranslationsRepository(Realm context, ExceptionHandler exceptionHandler, FileService fileService) : base(context, exceptionHandler, fileService) { }
         
         protected override RecordType RecordType => RecordType.Translation;
         protected override TranslationModel FromEntityShortcut(RealmTranslation entity)

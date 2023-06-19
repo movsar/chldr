@@ -74,12 +74,13 @@ namespace chldr_api
             {
                 unitOfWork.Rollback();
                 _exceptionHandler.LogError(ex);
-                return new InsertResult() { Success = false };
             }
             finally
             {
                 unitOfWork.Dispose();
             }
+
+            return new InsertResult() { Success = false };
         }
 
         public OperationResult UpdateEntry(string userId, EntryDto entryDto)
@@ -97,12 +98,13 @@ namespace chldr_api
             {
                 unitOfWork.Rollback();
                 _exceptionHandler.LogError(ex);
-                return new OperationResult() { Success = false };
             }
             finally
             {
                 unitOfWork.Dispose();
             }
+
+            return new OperationResult() { Success = false };
         }
 
         public OperationResult RemoveEntry(string userId, string entryId)
@@ -120,12 +122,13 @@ namespace chldr_api
             {
                 unitOfWork.Rollback();
                 _exceptionHandler.LogError(ex);
-                return new OperationResult() { Success = false };
             }
             finally
             {
                 unitOfWork.Dispose();
             }
+
+            return new OperationResult() { Success = false };
         }
 
         // User mutations

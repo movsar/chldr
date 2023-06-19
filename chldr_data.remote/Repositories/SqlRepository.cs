@@ -1,8 +1,10 @@
 ﻿using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.Models;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
+using chldr_utils.Services;
 using Newtonsoft.Json;
 
 namespace chldr_data.remote.Repositories
@@ -12,13 +14,16 @@ namespace chldr_data.remote.Repositories
         where TModel : class
         where TEntity : class
     {
-        public SqlRepository(SqlContext context, string userId)
+        public SqlRepository(SqlContext context, FileService fileService, string userId)
         {
             _dbContext = context;
             _userId = userId;
+            _fileService = fileService;
         }
         protected readonly SqlContext _dbContext;
+        protected readonly FileService _fileService;
         protected readonly string _userId;
+
         protected abstract RecordType RecordType { get; }
         protected abstract TModel FromEntityShortcut(TEntity entity);
 
@@ -39,7 +44,7 @@ namespace chldr_data.remote.Repositories
             var entity = _dbContext.Set<TEntity>().Find(entityId);
             if (entity == null)
             {
-                throw new ArgumentException("Entity doesn't exist");
+                return;
             }
             _dbContext.Remove(entity);
             _dbContext.SaveChanges();

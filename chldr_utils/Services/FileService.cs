@@ -9,16 +9,13 @@ namespace chldr_utils.Services
         private const string DataDirName = "data";
         private const string OfflineDatabaseFileName = "local.datx";
 
-        public static string AppBaseDirectory;
-        public static string AppDataDirectory => Path.Combine(AppBaseDirectory, DataDirName);
-        public static string OfflineDatabaseFilePath => Path.Combine(AppBaseDirectory, OfflineDatabaseFileName);
-        public static string EntrySoundsDirectory => Path.Combine(AppDataDirectory, "sounds");
+        public string AppBaseDirectory;
+        public string AppDataDirectory => Path.Combine(AppBaseDirectory, DataDirName);
+        public string OfflineDatabaseFilePath => Path.Combine(AppBaseDirectory, OfflineDatabaseFileName);
+        public string EntrySoundsDirectory => Path.Combine(AppDataDirectory, "sounds");
         #endregion
-        static FileService()
-        {
-            AppBaseDirectory = AppContext.BaseDirectory;
-        }
 
+        public FileService() : this(AppContext.BaseDirectory) { }
         public FileService(string basePath)
         {
             AppBaseDirectory = basePath;
@@ -51,13 +48,13 @@ namespace chldr_utils.Services
             }
         }
 
-        public static void AddEntrySound(string fileName, string b64data)
+        public void AddEntrySound(string fileName, string b64data)
         {
             var filePath = Path.Combine(EntrySoundsDirectory, fileName);
             File.WriteAllText(filePath, b64data);
         }
 
-        public static void DeleteEntrySound(string fileName)
+        public void DeleteEntrySound(string fileName)
         {
             var filePath = Path.Combine(EntrySoundsDirectory, fileName);
             File.Delete(filePath);

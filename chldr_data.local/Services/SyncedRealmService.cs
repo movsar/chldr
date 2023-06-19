@@ -39,7 +39,7 @@ namespace chldr_data.local.Services
             {
                 _app = App.Create(new AppConfiguration(myTestRealmAppId)
                 {
-                    BaseFilePath = FileService.AppDataDirectory,
+                    BaseFilePath = _fileService.AppDataDirectory,
                 });
             }
             return _app;
@@ -79,7 +79,7 @@ namespace chldr_data.local.Services
         {
             // Copy original file so that app will be able to access entries immediately
 
-            var syncedDatabasePath = Path.Combine(FileService.AppDataDirectory, GetUserDatabaseName(GetApp().CurrentUser.Id));
+            var syncedDatabasePath = Path.Combine(_fileService.AppDataDirectory, GetUserDatabaseName(GetApp().CurrentUser.Id));
 
             byte[] encKey = AppConstants.EncKey.Split(":").Select(numAsString => Convert.ToByte(numAsString)).ToArray();
 

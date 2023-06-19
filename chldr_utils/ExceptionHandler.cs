@@ -16,13 +16,13 @@ namespace chldr_utils
         {
             _consoleLogger = consoleLogger;
             _fileLogger = new LoggerConfiguration()
-                         .WriteTo.File(Path.Combine(FileService.AppDataDirectory!, "logs", "log.txt"), rollingInterval: RollingInterval.Month)
+                         .WriteTo.File(Path.Combine(fileService.AppDataDirectory!, "logs", "log.txt"), rollingInterval: RollingInterval.Month)
                          .CreateLogger();
         }
         public ExceptionHandler(FileService fileService)
         {
             _fileLogger = new LoggerConfiguration()
-                         .WriteTo.File(Path.Combine(FileService.AppDataDirectory!, "logs", "log.txt"), rollingInterval: RollingInterval.Month)
+                         .WriteTo.File(Path.Combine(fileService.AppDataDirectory!, "logs", "log.txt"), rollingInterval: RollingInterval.Month)
                          .CreateLogger();
         }
 

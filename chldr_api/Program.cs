@@ -30,7 +30,8 @@ namespace chldr_api
 
             builder.Services.AddScoped<IDataProvider>(serviceProvider =>
             {
-                return new SqlDataProvider(connectionString);
+                var fileService = serviceProvider.GetRequiredService<FileService>();
+                return new SqlDataProvider(fileService, connectionString);
             });
 
             builder.Services.AddSingleton<EmailService>();
@@ -42,7 +43,7 @@ namespace chldr_api
             builder.Services.AddScoped<RegisterUserResolver>();
             builder.Services.AddScoped<ConfirmEmailResolver>();
             builder.Services.AddScoped<LoginResolver>();
-            
+
 
             builder.Services.AddLocalization();
 

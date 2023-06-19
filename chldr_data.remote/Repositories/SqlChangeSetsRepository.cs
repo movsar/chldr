@@ -5,6 +5,7 @@ using chldr_data.Interfaces.Repositories;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_tools;
+using chldr_utils.Services;
 
 namespace chldr_data.remote.Repositories
 {
@@ -12,7 +13,7 @@ namespace chldr_data.remote.Repositories
     {
         protected override RecordType RecordType => throw new Exception("Shouldn't be used");
 
-        public SqlChangeSetsRepository(SqlContext sqlContext, string _userId) : base(sqlContext, _userId) { }
+        public SqlChangeSetsRepository(SqlContext sqlContext, FileService fileService, string _userId) : base(sqlContext, fileService, _userId) { }
 
         protected override ChangeSetModel FromEntityShortcut(SqlChangeSet entity)
         {

@@ -14,7 +14,7 @@ namespace chldr_data.local.Repositories
 {
     internal class RealmSoundsRepository : RealmRepository<RealmSound, SoundModel, SoundDto>, ISoundsRepository
     {
-        public RealmSoundsRepository(Realm context, ExceptionHandler exceptionHandler) : base(context, exceptionHandler) { }
+        public RealmSoundsRepository(Realm context, ExceptionHandler exceptionHandler, FileService fileService) : base(context, exceptionHandler, fileService) { }
         protected override RecordType RecordType => throw new NotImplementedException();
         protected override SoundModel FromEntityShortcut(RealmSound entity)
         {
@@ -30,7 +30,7 @@ namespace chldr_data.local.Repositories
                 _dbContext.Add(sound);
             });
 
-            FileService.AddEntrySound(soundDto.FileName, soundDto.RecordingB64!);            
+            _fileService.AddEntrySound(soundDto.FileName, soundDto.RecordingB64!);            
         }
         public override void Update(SoundDto soundDto)
         {
@@ -43,9 +43,9 @@ namespace chldr_data.local.Repositories
         public override void Remove(string entityId)
         {
             var sound = Get(entityId);
-            base.Remove(entityId);
+            _fileService.DeleteEntrySound(sound.FileName);
 
-            FileService.DeleteEntrySound(sound.FileName);
+            base.Remove(entityId);
         }
     }
 }

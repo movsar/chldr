@@ -6,6 +6,7 @@ using chldr_utils.Interfaces;
 using chldr_utils;
 using Realms;
 using chldr_data.local.Repositories;
+using chldr_utils.Services;
 
 namespace chldr_data.local.Services
 {
@@ -17,14 +18,19 @@ namespace chldr_data.local.Services
         private IUsersRepository _usersRepository;
         private IEntriesRepository _entriesRepository;
         private RealmSoundsRepository? _soundsRepository;
+
         private readonly Realm _context;
+        private readonly FileService _fileService;
         private readonly ExceptionHandler _exceptionHandler;
 
         public RealmUnitOfWork(
             Realm context, 
-            ExceptionHandler exceptionHandler)
+            ExceptionHandler exceptionHandler,
+            FileService fileService
+            )
         {
             _context = context;
+            _fileService = fileService;
             _exceptionHandler = exceptionHandler;
         }
 
@@ -33,12 +39,12 @@ namespace chldr_data.local.Services
             _context.Dispose();
         }
 
-        public ITranslationsRepository Translations => _translationsRepository ??= new RealmTranslationsRepository(_context, _exceptionHandler);
-        public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new RealmChangeSetsRepository(_context, _exceptionHandler);
-        public IEntriesRepository Entries => _entriesRepository ??= new RealmEntriesRepository(_context, _exceptionHandler, Translations, Sounds);
-        public ISourcesRepository Sources => _sourcesRepository ??= new RealmSourcesRepository(_context, _exceptionHandler);
-        public IUsersRepository Users => _usersRepository ??= new RealmUsersRepository(_context, _exceptionHandler);
-        public ISoundsRepository Sounds => _soundsRepository ?? new RealmSoundsRepository(_context, _exceptionHandler);
+        public ITranslationsRepository Translations => _translationsRepository ??= new RealmTranslationsRepository(_context, _exceptionHandler, _fileService);
+        public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new RealmChangeSetsRepository(_context, _exceptionHandler, _fileService);
+        public IEntriesRepository Entries => _entriesRepository ??= new RealmEntriesRepository(_context, _exceptionHandler, _fileService, Translations, Sounds);
+        public ISourcesRepository Sources => _sourcesRepository ??= new RealmSourcesRepository(_context, _exceptionHandler, _fileService);
+        public IUsersRepository Users => _usersRepository ??= new RealmUsersRepository(_context, _exceptionHandler, _fileService);
+        public ISoundsRepository Sounds => _soundsRepository ?? new RealmSoundsRepository(_context, _exceptionHandler, _fileService);
 
     }
 }

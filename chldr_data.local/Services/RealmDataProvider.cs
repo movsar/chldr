@@ -49,7 +49,7 @@ namespace chldr_data.local.Services
 
         private string KeyAsString()
         {
-            byte[] encryptionKey = File.ReadAllBytes(Path.Combine(FileService.AppDataDirectory, "encryption.key"));
+            byte[] encryptionKey = File.ReadAllBytes(Path.Combine(_fileService.AppDataDirectory, "encryption.key"));
 
             var key = encryptionKey.Select(b => (int)b);
             var stringified = string.Join(":", key);
@@ -60,7 +60,7 @@ namespace chldr_data.local.Services
             // Copy original file so that app will be able to access entries immediately
             byte[] encKey = AppConstants.EncKey.Split(":").Select(numAsString => Convert.ToByte(numAsString)).ToArray();
             var hexKey = BitConverter.ToString(encKey).Replace("-", "");
-            var encryptedConfig = new RealmConfiguration(FileService.OfflineDatabaseFilePath)
+            var encryptedConfig = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
             {
                 EncryptionKey = encKey
             };
@@ -69,7 +69,7 @@ namespace chldr_data.local.Services
         }
         public void Initialize()
         {
-            OfflineDatabaseConfiguration = new RealmConfiguration(FileService.OfflineDatabaseFilePath)
+            OfflineDatabaseConfiguration = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
             {
                 SchemaVersion = 15
             };
@@ -91,7 +91,7 @@ namespace chldr_data.local.Services
         }
         public IUnitOfWork CreateUnitOfWork(string? userId = null)
         {
-            return new RealmUnitOfWork(GetDatabase(), _exceptionHandler);
+            return new RealmUnitOfWork(GetDatabase(), _exceptionHandler, _fileService);
 
         }
 

@@ -7,12 +7,13 @@ using chldr_tools;
 using chldr_utils.Interfaces;
 using chldr_utils;
 using Realms;
+using chldr_utils.Services;
 
 namespace chldr_data.Repositories
 {
     public class RealmChangeSetsRepository : RealmRepository<RealmChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {
-        public RealmChangeSetsRepository(Realm context, ExceptionHandler exceptionHandler) : base(context, exceptionHandler) { }
+        public RealmChangeSetsRepository(Realm context, ExceptionHandler exceptionHandler, FileService fileService) : base(context, exceptionHandler, fileService) { }
         protected override RecordType RecordType => throw new Exception("Shouldn't be used");
         protected override ChangeSetModel FromEntityShortcut(RealmChangeSet entity)
         {

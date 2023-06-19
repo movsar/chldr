@@ -8,12 +8,13 @@ using chldr_data.Interfaces.Repositories;
 using chldr_data.remote.SqlEntities;
 using chldr_data.remote.Services;
 using chldr_data.Models;
+using chldr_utils.Services;
 
 namespace chldr_data.remote.Repositories
 {
     internal class SqlTranslationsRepository : SqlRepository<SqlTranslation, TranslationModel, TranslationDto>, ITranslationsRepository
     {
-        public SqlTranslationsRepository(SqlContext context, string _userId) : base(context, _userId) { }
+        public SqlTranslationsRepository(SqlContext context, FileService fileService, string _userId) : base(context, fileService, _userId) { }
         protected override RecordType RecordType => RecordType.Translation;
         protected override TranslationModel FromEntityShortcut(SqlTranslation translation)
         {

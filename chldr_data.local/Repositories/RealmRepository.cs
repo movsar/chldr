@@ -3,6 +3,8 @@ using chldr_utils;
 using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
 using Realms;
+using chldr_utils.Services;
+using chldr_data.Interfaces;
 
 namespace chldr_data.Repositories
 {
@@ -15,14 +17,17 @@ namespace chldr_data.Repositories
 
         protected readonly Realm _dbContext;
         protected readonly ExceptionHandler _exceptionHandler;
-        public RealmRepository(Realm context, ExceptionHandler exceptionHandler)
+        protected readonly FileService _fileService;
+
+        public RealmRepository(Realm context, ExceptionHandler exceptionHandler, FileService fileService)
         {
             _dbContext = context;
             _exceptionHandler = exceptionHandler;
+            _fileService = fileService;
         }
         protected abstract TModel FromEntityShortcut(TEntity entity);
 
-        public abstract void Add(TDto dto);  
+        public abstract void Add(TDto dto);
         public abstract void Update(TDto EntryDto);
         public TModel Get(string entityId)
         {
@@ -39,7 +44,7 @@ namespace chldr_data.Repositories
             var entity = _dbContext.Find<TEntity>(entityId);
             if (entity == null)
             {
-                throw new ArgumentException("Entity doesn't exist");
+                return;
             }
 
             _dbContext.Write(() =>

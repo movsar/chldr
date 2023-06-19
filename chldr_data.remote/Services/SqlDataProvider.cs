@@ -17,20 +17,23 @@ namespace chldr_data.local.Services
         public bool IsInitialized { get; set; }
 
         public event Action? DatabaseInitialized;
+
+        private readonly FileService _fileService;
         string _connectionString;
-        public SqlDataProvider(string connectionString)
+        public SqlDataProvider(FileService fileService, string connectionString)
         {
+            _fileService = fileService;
             _connectionString = connectionString;
         }
 
-        private string KeyAsString()
-        {
-            byte[] encryptionKey = File.ReadAllBytes(Path.Combine(FileService.AppDataDirectory, "encryption.key"));
+        //private string KeyAsString()
+        //{
+            //byte[] encryptionKey = File.ReadAllBytes(Path.Combine(_fileService.AppDataDirectory, "encryption.key"));
 
-            var key = encryptionKey.Select(b => (int)b);
-            var stringified = string.Join(":", key);
-            return stringified;
-        }
+            //var key = encryptionKey.Select(b => (int)b);
+            //var stringified = string.Join(":", key);
+            //return stringified;
+        //}
 
         public void Initialize()
         {
@@ -66,7 +69,7 @@ namespace chldr_data.local.Services
             }
 
             var context = GetContext();
-            return new SqlUnitOfWork(context, userId);
+            return new SqlUnitOfWork(context, _fileService, userId);
         }
     }
 }

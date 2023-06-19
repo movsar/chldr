@@ -19,9 +19,10 @@ namespace chldr_data.remote.Repositories
 
         public SqlEntriesRepository(
             SqlContext context,
+            FileService fileService,
             ITranslationsRepository translationsRepository,
             ISoundsRepository soundsRepository,
-            string userId) : base(context, userId)
+            string userId) : base(context, fileService, userId)
         {
             _translations = translationsRepository;
             _sounds = soundsRepository;
@@ -31,14 +32,13 @@ namespace chldr_data.remote.Repositories
 
         public override void Remove(string entityId)
         {
+            var soundIds = _dbContext.Sounds.Where(s => s.EntryId.Equals(entityId)).Select(s => s.SoundId);
+            var translationIds = _dbContext.Translations.Where(t => t.EntryId.Equals(entityId)).Select(t => t.TranslationId);
+
+            _translations.RemoveRange(translationIds);
+            _sounds.RemoveRange(soundIds);
+
             base.Remove(entityId);
-
-            var sounds = _dbContext.Sounds.Where(s => s.EntryId.Equals(entityId));
-            var translations = _dbContext.Translations.Where(t => t.EntryId.Equals(entityId));
-
-            _translations.RemoveRange(translations.Select(t => t.TranslationId));
-            _sounds.RemoveRange(sounds.Select(s => s.SoundId));
-
         }
         public override EntryModel Get(string entityId)
         {
@@ -103,7 +103,7 @@ namespace chldr_data.remote.Repositories
                     continue;
                 }
 
-                var filePath = Path.Combine(FileService.EntrySoundsDirectory, soundDto.FileName);
+                var filePath = Path.Combine(_fileService.EntrySoundsDirectory, soundDto.FileName);
                 File.WriteAllText(filePath, soundDto.RecordingB64);
             }
 

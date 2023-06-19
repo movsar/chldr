@@ -7,12 +7,13 @@ using chldr_data.local.RealmEntities;
 using chldr_data.Interfaces.Repositories;
 using chldr_utils.Interfaces;
 using chldr_utils;
+using chldr_utils.Services;
 
 namespace chldr_data.Repositories
 {
     public class RealmUsersRepository : RealmRepository<RealmUser, UserModel, UserDto>, IUsersRepository
     {
-        public RealmUsersRepository(Realm context, ExceptionHandler exceptionHandler) : base(context, exceptionHandler) { }
+        public RealmUsersRepository(Realm context, ExceptionHandler exceptionHandler, FileService fileService) : base(context, exceptionHandler, fileService) { }
 
         protected override RecordType RecordType => RecordType.User;
         protected override UserModel FromEntityShortcut(RealmUser entity)
