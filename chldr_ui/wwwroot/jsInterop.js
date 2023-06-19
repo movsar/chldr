@@ -5,7 +5,7 @@ let latestRecordingId;
 export function addExistingEntryRecording(soundDto) {
     console.log(soundDto);
 
-    let audioContainer = document.getElementById("audioContainer");
+    let audioContainer = document.getElementById("recordings-list");
     if (!audioContainer) {
         console.error("audio container is null");
         return;
@@ -118,9 +118,9 @@ export function createAudioElement(audioUrl, recordingId) {
 
 export function createRemoveButton(recordingId) {
     var button = document.createElement('button');
-    button.classList.add('btn');
-    button.classList.add('btn-danger');
-    button.textContent = 'Remove';
+    button.classList.add('remove-button');
+    button.classList.add('bi');
+    button.classList.add('bi-trash');
     button.addEventListener('click', () => {
         const audioToRemove = document.getElementById(`recordedAudio_${recordingId}`);
         audioToRemove.remove();
