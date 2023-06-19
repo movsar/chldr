@@ -31,6 +31,9 @@ namespace chldr_ui.ViewModels
         public EntryDto EntryDto { get; set; } = new EntryDto();
         protected string SourceId { get; set; } = "63a816205d1af0e432fba6de";
         internal EntryType SelectedEntryType { get; set; } = EntryType.Word;
+        bool isRecording;
+        bool existingSoundsRendered;
+        SoundDto latestSoundDto;
         internal void HandleEntryTypeChange(ChangeEventArgs e)
         {
             if (Enum.TryParse(e.Value?.ToString(), out EntryType selectedEntryType))
@@ -38,8 +41,28 @@ namespace chldr_ui.ViewModels
                 SelectedEntryType = selectedEntryType;
             }
         }
-        bool isRecording = false;
-        SoundDto latestSoundDto;
+
+        private async Task RenderExistingSounds()
+        {
+            foreach (var soundDto in EntryDto.Sounds)
+            {
+
+                await JsInterop.AddExistingEntryRecording(soundDto);
+            }
+         
+            existingSoundsRendered = true;
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (!existingSoundsRendered)
+            {
+                await RenderExistingSounds();
+            }
+
+            await base.OnAfterRenderAsync(firstRender);
+        }
+
         protected override async Task OnParametersSetAsync()
         {
             if (string.IsNullOrEmpty(EntryId))
@@ -70,12 +93,11 @@ namespace chldr_ui.ViewModels
                 }
 
                 soundDto.RecordingB64 = File.ReadAllText(soundPath);
-                JsInterop.AddExistingEntryRecording(soundDto);
             }
 
             await base.OnParametersSetAsync();
         }
-    
+
         #region Translation Handlers
         List<string> _newTranslationIds = new List<string>();
         public async Task NewTranslation()
@@ -134,7 +156,7 @@ namespace chldr_ui.ViewModels
             {
                 return;
             }
-            
+
             latestSoundDto.RecordingB64 = recording;
             EntryDto.Sounds.Add(latestSoundDto);
         }
