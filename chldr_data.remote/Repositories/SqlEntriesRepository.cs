@@ -32,8 +32,18 @@ namespace chldr_data.remote.Repositories
 
         public override void Remove(string entityId)
         {
-            var soundIds = _dbContext.Sounds.Where(s => s.EntryId.Equals(entityId)).Select(s => s.SoundId);
-            var translationIds = _dbContext.Translations.Where(t => t.EntryId.Equals(entityId)).Select(t => t.TranslationId);
+            var entry = _dbContext.Entries
+                .Include(e => e.Translations)
+                .Include(e => e.Sounds)
+                .FirstOrDefault(e => e.EntryId.Equals(entityId));
+
+            if (entry == null)
+            {
+                return;
+            }
+
+            var soundIds = entry.Sounds.Select(s => s.SoundId).ToArray();
+            var translationIds = entry.Translations.Select(t => t.TranslationId).ToArray();
 
             _translations.RemoveRange(translationIds);
             _sounds.RemoveRange(soundIds);
