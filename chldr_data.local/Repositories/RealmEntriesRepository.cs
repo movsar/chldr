@@ -11,6 +11,8 @@ using chldr_utils.Interfaces;
 using chldr_utils;
 using GraphQL;
 using Realms;
+using Microsoft.EntityFrameworkCore.Update;
+using chldr_utils.Services;
 
 namespace chldr_data.Repositories
 {
@@ -29,19 +31,56 @@ namespace chldr_data.Repositories
 
         public override void Add(EntryDto newEntryDto)
         {
+            RealmEntry? newEntry = null;
+            
             _dbContext.Write(() =>
             {
-                var newEntry = RealmEntry.FromDto(newEntryDto, _dbContext);
+                newEntry = RealmEntry.FromDto(newEntryDto, _dbContext);
                 _dbContext.Add(newEntry);
             });
+
+            if (newEntry == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            foreach (var sound in newEntry.Sounds)
+            {
+                var soundDto = newEntryDto.Sounds.FirstOrDefault(s => s.SoundId == sound.SoundId && !string.IsNullOrEmpty(s.RecordingB64));
+                if (soundDto == null)
+                {
+                    continue;
+                }
+
+                var filePath = Path.Combine(FileService.EntrySoundsDirectory, soundDto.FileName);
+                File.WriteAllText(filePath, soundDto.RecordingB64);
+            }
         }
 
         public override void Update(EntryDto updatedEntryDto)
         {
+            RealmEntry? updatedEntry = null;
             _dbContext.Write(() =>
             {
-                var updatedEntry = RealmEntry.FromDto(updatedEntryDto, _dbContext);
+                updatedEntry = RealmEntry.FromDto(updatedEntryDto, _dbContext);
             });
+
+            if (updatedEntry == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            foreach (var sound in updatedEntry.Sounds)
+            {
+                var soundDto = updatedEntryDto.Sounds.FirstOrDefault(s => s.SoundId == sound.SoundId && !string.IsNullOrEmpty(s.RecordingB64));
+                if (soundDto == null)
+                {
+                    continue;
+                }
+
+                var filePath = Path.Combine(FileService.EntrySoundsDirectory, soundDto.FileName);
+                File.WriteAllText(filePath, soundDto.RecordingB64);
+            }
         }
     }
 }

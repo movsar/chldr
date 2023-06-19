@@ -1,4 +1,5 @@
-﻿using chldr_data.DatabaseObjects.Interfaces;
+﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
 using Realms;
 
 namespace chldr_data.local.RealmEntities;
@@ -9,9 +10,45 @@ public class RealmSound : RealmObject, ISoundEntity
     [PrimaryKey] public string SoundId { get; set; }
     public RealmUser User { get; set; } = null!;
     public RealmEntry Entry { get; set; } = null!;
+    public string FileName { get; set; } = null!;
+
     [Ignored] public string EntryId => Entry.EntryId;
     [Ignored] public string UserId => User.UserId;
-    public string FileName { get; set; } = null!;
+
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
+
+    internal static RealmSound FromDto(SoundDto soundDto, Realm context, RealmEntry? entry = null)
+    {
+        var user = context.Find<RealmUser>(soundDto.UserId);
+
+        if (string.IsNullOrEmpty(soundDto.EntryId) || user == null)
+        {
+            throw new NullReferenceException();
+        }
+
+        if (entry == null)
+        {
+            entry = context.Find<RealmEntry>(soundDto.EntryId);
+        }
+
+        if (entry == null)
+        {
+            throw new NullReferenceException();
+        }
+
+        // Sound
+        var soundEntity = context.Find<RealmSound>(soundDto.SoundId);
+        if (soundEntity == null)
+        {
+            soundEntity = new RealmSound();
+        }
+
+        soundEntity.Entry = entry;
+        soundEntity.User = user;
+        soundEntity.SoundId = soundDto.SoundId;
+        soundEntity.FileName = soundDto.FileName;
+
+        return soundEntity;
+    }
 }

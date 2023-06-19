@@ -63,6 +63,17 @@ namespace chldr_ui.ViewModels
                 }
 
                 EntryDto = EntryDto.FromModel(existingEntry);
+                foreach (var soundDto in EntryDto.Sounds)
+                {
+                    var soundPath = Path.Combine(FileService.EntrySoundsDirectory, soundDto.FileName);
+                    if (!File.Exists(soundPath))
+                    {
+                        // TODO: Retireve
+                        continue;
+                    }
+
+                    soundDto.RecordingB64 = File.ReadAllText(soundPath);
+                }
             }
         }
 

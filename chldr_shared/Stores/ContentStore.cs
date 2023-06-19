@@ -203,23 +203,22 @@ namespace chldr_shared.Stores
 
         public async Task AddEntry(UserModel loggedInUser, EntryDto entryDto)
         {
-
-            // Send to ContentStore, where
-            //  Create a new Sound Dto
-            //  Send to the API
-            //  Update local
-            // File.WriteAllBytes(Path.Combine(FileService.EntrySoundsDirectory, "file.m4a"), recording);
-
-
             // Add remote entity
             var request = await _requestService.AddEntry(loggedInUser.UserId, entryDto);
+
             if (!request.Success)
+            {
+                throw _exceptionHandler.Error("Error:Request_failed");
+            }
+
+            if (request.CreatedAt == DateTimeOffset.MinValue)
             {
                 throw _exceptionHandler.Error("Error:Request_failed");
             }
 
             // Update local entity
             entryDto.CreatedAt = request.CreatedAt;
+
             _unitOfWork.Entries.Add(entryDto);
 
             CachedSearchResult.Entries.Add(_unitOfWork.Entries.Get(entryDto.EntryId));

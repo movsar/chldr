@@ -30,9 +30,8 @@ namespace chldr_data.remote.Repositories
                 throw new NullReferenceException("Sound data is empty");
             }
 
-            var data = Convert.FromBase64String(soundDto.RecordingB64);
             var filePath = Path.Combine(FileService.EntrySoundsDirectory, soundDto.FileName);
-            File.WriteAllBytes(filePath, data);
+            File.WriteAllText(filePath, soundDto.RecordingB64);
 
             var sound = SqlSound.FromDto(soundDto, _dbContext);
             _dbContext.Sounds.Add(sound);

@@ -63,6 +63,7 @@ public class SqlEntry : IEntryEntity
         entry.UpdatedAt = entryDto.UpdatedAt;
 
         // Sounds
+        entry.Sounds.Clear();
         foreach (var soundDto in entryDto.Sounds)
         {
             soundDto.EntryId = entry.EntryId;

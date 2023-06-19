@@ -17,6 +17,7 @@ namespace chldr_ui.ViewModels
         [Inject] IDataProvider DataProvider { get; set; }
         [Parameter]
         public EntryDto EntryDto { get; set; }
+        internal EntryModel? ParentEntry { get; set; }
         protected override Task OnAfterRenderAsync(bool firstRender)
         {
             EntryDto.Details = SerializeWordDetails((WordType)EntryDto.EntrySubtype);
@@ -52,12 +53,10 @@ namespace chldr_ui.ViewModels
         public InterjectionDetails InterjectionDetails { get; set; } = new InterjectionDetails();
         public GerundDetails GerundDetails { get; set; } = new GerundDetails();
         #endregion
-        internal EntryModel? ParentEntry { get; set; }
 
-        protected async Task OpenSetParentWordDialog()
+        protected async Task SetParentWord()
         {
-
-
+            // Opem selection dialog
             var entrySelectionDialog = Modal.Show<WordSelectorDialog>("", new ModalOptions()
             {
                 HideHeader = true,
@@ -65,12 +64,16 @@ namespace chldr_ui.ViewModels
                 HideCloseButton = true
             });
 
+            // Return if not confirmed
             var result = await entrySelectionDialog.Result;
-            if (result.Confirmed)
+            if (!result.Confirmed)
             {
-                ParentEntry = result.Data as EntryModel;
-                EntryDto.ParentEntryId = ParentEntry?.EntryId;
+                return;
             }
+
+            // Set the ParentEntryId
+            ParentEntry = result.Data as EntryModel;
+            EntryDto.ParentEntryId = ParentEntry?.EntryId;
         }
         private void DeserializeWordDetails()
         {

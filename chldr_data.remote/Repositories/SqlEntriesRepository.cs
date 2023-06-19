@@ -67,6 +67,7 @@ namespace chldr_data.remote.Repositories
                 .Include(e => e.Source)
                 .Include(e => e.User)
                 .Include(e => e.Translations)
+                .Include(e => e.Sounds)
                 .Take(limit);
 
             return entities.Select(e => FromEntityShortcut(e));
@@ -79,6 +80,7 @@ namespace chldr_data.remote.Repositories
                 .Include(e => e.Source)
                 .Include(e => e.User)
                 .Include(e => e.Translations)
+                .Include(e => e.Sounds)
                 .OrderBy(x => randomizer.Next(0, 75000))
                 .OrderBy(entry => entry.GetHashCode())
                 .Take(limit)
@@ -98,16 +100,22 @@ namespace chldr_data.remote.Repositories
 
         public override void Add(EntryDto newEntryDto)
         {
-            // Write sounds, doing this first, so that the entry won't get added if this fails
-            foreach (var soundDto in newEntryDto.Sounds)
-            {
-                _sounds.Add(soundDto);                
-            }
-
-            // Insert Entry entity
+            // Insert Entry entity (with associated sound and translation entities)
             var entry = SqlEntry.FromDto(newEntryDto, _dbContext);
             _dbContext.Add(entry);
             _dbContext.SaveChanges();
+
+            // Save audiofiles if any
+            foreach (var soundDto in newEntryDto.Sounds)
+            {
+                if (string.IsNullOrEmpty(soundDto.RecordingB64))
+                {
+                    continue;
+                }
+
+                var filePath = Path.Combine(FileService.EntrySoundsDirectory, soundDto.FileName);
+                File.WriteAllText(filePath, soundDto.RecordingB64);
+            }
 
             // Set CreatedAt to update it on local entry
             newEntryDto.CreatedAt = entry.CreatedAt;
@@ -163,8 +171,6 @@ namespace chldr_data.remote.Repositories
             {
                 InsertChangeSet(Operation.Update, _userId, existingEntryDto.EntryId, entryChanges);
             }
-
-            // TODO: Update sounds
 
             // Save the changes
             var updatedEntryEntity = SqlEntry.FromDto(updatedEntryDto, _dbContext);

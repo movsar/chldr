@@ -70,6 +70,16 @@ public class RealmEntry : RealmObject, IEntryEntity
         entry.CreatedAt = entryDto.CreatedAt;
         entry.UpdatedAt = entryDto.UpdatedAt;
 
+        // Sounds
+        entry.Sounds.Clear();
+        foreach (var soundDto in entryDto.Sounds)
+        {
+            soundDto.EntryId = entry.EntryId;
+
+            var sound = RealmSound.FromDto(soundDto, realm, entry);
+            entry.Sounds.Add(sound);
+        }
+        
         // Translations
         entry.Translations.Clear();
         foreach (var translationDto in entryDto.Translations)

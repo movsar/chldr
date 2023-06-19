@@ -70,7 +70,7 @@ namespace chldr_shared.Services
                         }}
                         ",
                 // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new { userId = userId, entryDto }
+                Variables = new { userId, entryDto }
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<OperationResult>(request, operation);
