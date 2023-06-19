@@ -7,6 +7,7 @@ using chldr_data.Helpers;
 using chldr_data.Interfaces;
 using chldr_shared;
 using chldr_ui.Components;
+using chldr_utils.Services;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 
@@ -15,13 +16,24 @@ namespace chldr_ui.ViewModels
     public class WordEditViewModel : ViewModelBase
     {
         [Inject] IDataProvider DataProvider { get; set; }
+        [Inject] JsInteropService JsInterop { get; set; }
+
+
         [Parameter]
         public EntryDto EntryDto { get; set; }
         internal EntryModel? ParentEntry { get; set; }
-        protected override Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            // Return if it's addition mode
+            if (EntryDto.CreatedAt == DateTimeOffset.MinValue)
+            {
+                await base.OnAfterRenderAsync(firstRender);
+            }
+
+            // Load entry details
             EntryDto.Details = SerializeWordDetails((WordType)EntryDto.EntrySubtype);
-            return base.OnAfterRenderAsync(firstRender);
+
+            await base.OnAfterRenderAsync(firstRender);
         }
         protected override Task OnParametersSetAsync()
         {

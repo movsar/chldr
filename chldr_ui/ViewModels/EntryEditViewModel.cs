@@ -6,6 +6,7 @@ using chldr_data.DatabaseObjects.Models;
 using Microsoft.AspNetCore.Components;
 using chldr_utils.Services;
 using chldr_shared;
+using chldr_data.Enums.WordDetails;
 
 namespace chldr_ui.ViewModels
 {
@@ -40,7 +41,34 @@ namespace chldr_ui.ViewModels
         bool isRecording = false;
         SoundDto latestSoundDto;
         private bool isInitialized = false;
-        protected override void OnInitialized()
+        private bool uiRendered = false;
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            // Return if it's addition mode
+            if (uiRendered || EntryDto.CreatedAt == DateTimeOffset.MinValue)
+            {
+                await base.OnAfterRenderAsync(firstRender);
+            }
+
+            // Load audio recordings, if any
+            foreach (var soundDto in EntryDto.Sounds)
+            {
+                var soundPath = Path.Combine(FileService.EntrySoundsDirectory, soundDto.FileName);
+                if (!File.Exists(soundPath))
+                {
+                    // TODO: Retireve
+                    continue;
+                }
+
+                soundDto.RecordingB64 = File.ReadAllText(soundPath);
+                await JsInterop.AddExistingEntryRecording(soundDto);
+            }
+
+            uiRendered = true;
+
+            await base.OnAfterRenderAsync(firstRender);
+        }
+        protected override async Task OnInitializedAsync()
         {
             if (!isInitialized)
             {
@@ -63,18 +91,9 @@ namespace chldr_ui.ViewModels
                 }
 
                 EntryDto = EntryDto.FromModel(existingEntry);
-                foreach (var soundDto in EntryDto.Sounds)
-                {
-                    var soundPath = Path.Combine(FileService.EntrySoundsDirectory, soundDto.FileName);
-                    if (!File.Exists(soundPath))
-                    {
-                        // TODO: Retireve
-                        continue;
-                    }
-
-                    soundDto.RecordingB64 = File.ReadAllText(soundPath);
-                }
             }
+
+            await base.OnInitializedAsync();
         }
 
         #region Translation Handlers

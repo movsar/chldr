@@ -2,7 +2,36 @@
 let recordedBlob;
 
 let latestRecordingId;
+export function addExistingEntryRecording(soundDto) {
+    console.log(soundDto);
 
+    let audioContainer = document.getElementById("audioContainer");
+    if (!audioContainer) {
+        console.error("audio container is null");
+        return;
+    }
+
+    let audioUrl = URL.createObjectURL(base64ToBlob(soundDto.recordingB64));
+    let recordedAudio = createAudioElement(audioUrl, soundDto.soundId);
+    let removeButton = createRemoveButton(soundDto.soundId);
+
+
+    audioContainer.appendChild(recordedAudio);
+    audioContainer.appendChild(removeButton);
+}
+
+function base64ToBlob(base64String) {
+    const byteCharacters = atob(base64String);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+
+    return new Blob([byteArray], { type: "audio/ogg; codecs=opus" });
+}
 
 export function startRecording(recordingId) {
     console.log(recordingId);
