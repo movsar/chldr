@@ -126,43 +126,13 @@ namespace chldr_data.remote.Repositories
             // ! Insert new translation changesets? - not necessary, but could be used for audit
         }
 
-        private void HandleUpdatedEntryTranslations(EntryDto existingEntryDto, EntryDto updatedEntryDto)
-        {
-            // Handle associated translation changes
-            var existingEntryTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
-            var updatedEntryTranslationIds = updatedEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
-
-            var added = updatedEntryDto.Translations.Where(t => !existingEntryTranslationIds.Contains(t.TranslationId));
-            var deleted = existingEntryDto.Translations.Where(t => !updatedEntryTranslationIds.Contains(t.TranslationId));
-            var updated = updatedEntryDto.Translations.Where(t => existingEntryTranslationIds.Contains(t.TranslationId) && updatedEntryTranslationIds.Contains(t.TranslationId));
-
-            _translations.AddRange(added);
-            _translations.RemoveRange(deleted.Select(t => t.TranslationId));
-            _translations.UpdateRange(updated);
-        }
-
-        private void HandleUpdatedEntrySounds(EntryDto existingEntryDto, EntryDto updatedEntryDto)
-        {
-            // Handle associated translation changes
-            var existingEntrySoundIds = existingEntryDto.Sounds.Select(t => t.SoundId).ToHashSet();
-            var updatedEntrySoundIds = updatedEntryDto.Sounds.Select(t => t.SoundId).ToHashSet();
-
-            var added = updatedEntryDto.Sounds.Where(t => !existingEntrySoundIds.Contains(t.SoundId));
-            var deleted = existingEntryDto.Sounds.Where(t => !updatedEntrySoundIds.Contains(t.SoundId));
-            var updated = updatedEntryDto.Sounds.Where(t => existingEntrySoundIds.Contains(t.SoundId) && updatedEntrySoundIds.Contains(t.SoundId));
-
-            _sounds.AddRange(added);
-            _sounds.UpdateRange(updated);
-            _sounds.RemoveRange(deleted.Select(t => t.SoundId));
-        }
-
         public override void Update(EntryDto updatedEntryDto)
         {
             var existingEntry = Get(updatedEntryDto.EntryId);
             var existingEntryDto = EntryDto.FromModel(existingEntry);
 
-            HandleUpdatedEntryTranslations(existingEntryDto, updatedEntryDto);
-            HandleUpdatedEntrySounds(existingEntryDto, updatedEntryDto);
+            IEntriesRepository.HandleUpdatedEntryTranslations(_translations, existingEntryDto, updatedEntryDto);
+            IEntriesRepository.HandleUpdatedEntrySounds(_sounds, existingEntryDto, updatedEntryDto);
 
             // Add changeset if applicable
             var entryChanges = Change.GetChanges(existingEntryDto, existingEntryDto);

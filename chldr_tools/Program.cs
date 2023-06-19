@@ -82,9 +82,7 @@ namespace chldr_tools
             _requestSender = new GraphQLRequestSender(_exceptionHandler, _environmentService);
             _syncService = new SyncService(_requestSender);
 
-            var serviceLocator = new ServiceLocator();
-
-            var localRealmContext = new RealmDataProvider(_fileService, _exceptionHandler, _requestSender, _syncService);
+            var localRealmContext = new RealmDataProvider(_fileService, _exceptionHandler, _syncService);
             localRealmContext.Initialize();
             var realmDatabase = localRealmContext.GetContext();
 

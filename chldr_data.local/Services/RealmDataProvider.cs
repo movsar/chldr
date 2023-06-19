@@ -15,7 +15,6 @@ namespace chldr_data.local.Services
     {
         private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
-        private readonly IGraphQLRequestSender _graphQLRequestSender;
         private readonly SyncService _syncService;
         internal static RealmConfigurationBase? OfflineDatabaseConfiguration;
 
@@ -40,13 +39,11 @@ namespace chldr_data.local.Services
         public RealmDataProvider(
             FileService fileService,
             ExceptionHandler exceptionHandler,
-            IGraphQLRequestSender graphQLRequestSender,
             SyncService syncService
             )
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
-            _graphQLRequestSender = graphQLRequestSender;
             _syncService = syncService;
         }
 
@@ -94,7 +91,7 @@ namespace chldr_data.local.Services
         }
         public IUnitOfWork CreateUnitOfWork(string? userId = null)
         {
-            return new RealmUnitOfWork(GetDatabase(), _exceptionHandler, _graphQLRequestSender);
+            return new RealmUnitOfWork(GetDatabase(), _exceptionHandler);
 
         }
 
