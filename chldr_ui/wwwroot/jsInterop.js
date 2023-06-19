@@ -43,6 +43,10 @@ export function startRecording(recordingId) {
 }
 
 export function stopRecording() {
+    if (!mediaRecorder) {
+        return;
+    }
+
     showStartButton();
 
     return new Promise((resolve, reject) => {

@@ -39,6 +39,8 @@ namespace chldr_data.DatabaseObjects.Dtos
             entryDto.Translations.Clear();
             entryDto.Translations.AddRange(entryModel.Translations.Select(t => TranslationDto.FromModel(t)));
 
+            entryDto.Sounds.Clear();
+            entryDto.Sounds.AddRange(entryModel.Sounds.Select(s => SoundDto.FromModel(s)));
             return entryDto;
         }
     }

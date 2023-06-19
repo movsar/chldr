@@ -20,7 +20,8 @@ namespace chldr_data.local.Services
             return EntryModel.FromEntity(
                 entry,
                 entry.Source,
-                entry.Translations
+                entry.Translations,
+                entry.Sounds
             );
         }
         private static IEnumerable<EntryModel> SortDirectSearchEntries(string inputText, IEnumerable<EntryModel> entries)

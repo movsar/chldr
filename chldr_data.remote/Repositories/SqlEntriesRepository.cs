@@ -51,6 +51,7 @@ namespace chldr_data.remote.Repositories
                 .Include(e => e.Source)
                 .Include(e => e.User)
                 .Include(e => e.Translations)
+                .Include(e => e.Sounds)
                 .FirstOrDefault(e => e.EntryId.Equals(entityId));
 
             if (entry == null)
@@ -90,7 +91,8 @@ namespace chldr_data.remote.Repositories
             return EntryModel.FromEntity(
                entry,
                entry.Source,
-               entry.Translations
+               entry.Translations,
+               entry.Sounds
            );
         }
 

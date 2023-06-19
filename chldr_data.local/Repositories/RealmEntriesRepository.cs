@@ -23,7 +23,8 @@ namespace chldr_data.Repositories
             return EntryModel.FromEntity(
                                     entry,
                                     entry.Source,
-                                    entry.Translations);
+                                    entry.Translations,
+                                    entry.Sounds);
         }
 
         public override void Add(EntryDto newEntryDto)

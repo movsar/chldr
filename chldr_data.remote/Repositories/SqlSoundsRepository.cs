@@ -14,7 +14,15 @@ namespace chldr_data.remote.Repositories
         public SqlSoundsRepository(SqlContext context, string userId) : base(context, userId) { }
 
         protected override RecordType RecordType => RecordType.Sound;
+        public override void Remove(string entityId)
+        {
+            var sound = Get(entityId);
 
+            base.Remove(entityId);
+          
+            var filePath = Path.Combine(FileService.EntrySoundsDirectory, sound.FileName);
+            File.Delete(filePath);
+        }
         public override void Add(SoundDto soundDto)
         {
             if (string.IsNullOrEmpty(soundDto.RecordingB64))
@@ -34,7 +42,7 @@ namespace chldr_data.remote.Repositories
         }
 
         public override void Update(SoundDto dto)
-        {   
+        {
             // Find out what has been changed
             var existing = Get(dto.SoundId);
             var existingDto = SoundDto.FromModel(existing);
@@ -51,7 +59,7 @@ namespace chldr_data.remote.Repositories
 
         protected override SoundModel FromEntityShortcut(SqlSound entity)
         {
-            throw new NotImplementedException();
+            return SoundModel.FromEntity(entity);
         }
     }
 }
