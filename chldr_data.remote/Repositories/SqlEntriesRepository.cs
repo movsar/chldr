@@ -31,19 +31,14 @@ namespace chldr_data.remote.Repositories
 
         public override void Remove(string entityId)
         {
-            var entity = _dbContext.Entries.Include(e => e.Translations).FirstOrDefault(e => e.EntryId.Equals(entityId));
-            if (entity == null)
-            {
-                throw new ArgumentException("Entity doesn't exist");
-            }
+            base.Remove(entityId);
 
-            foreach (var translation in entity.Translations)
-            {
-                _dbContext.Remove(translation);
-            }
-            _dbContext.Remove(entity);
+            var sounds = _dbContext.Sounds.Where(s => s.EntryId.Equals(entityId));
+            var translations = _dbContext.Translations.Where(t => t.EntryId.Equals(entityId));
 
-            InsertChangeSet(Operation.Delete, _userId, entityId);
+            _translations.RemoveRange(translations.Select(t => t.TranslationId));
+            _sounds.RemoveRange(sounds.Select(s => s.SoundId));
+
         }
         public override EntryModel Get(string entityId)
         {
@@ -90,12 +85,7 @@ namespace chldr_data.remote.Repositories
         }
         protected override EntryModel FromEntityShortcut(SqlEntry entry)
         {
-            return EntryModel.FromEntity(
-               entry,
-               entry.Source,
-               entry.Translations,
-               entry.Sounds
-           );
+            return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
         }
 
         public override void Add(EntryDto newEntryDto)

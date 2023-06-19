@@ -67,7 +67,7 @@ namespace chldr_data.Repositories
                 File.WriteAllText(filePath, soundDto.RecordingB64);
             }
         }
-        
+
 
         public override void Update(EntryDto updatedEntryDto)
         {
@@ -81,6 +81,17 @@ namespace chldr_data.Repositories
             {
                 RealmEntry.FromDto(updatedEntryDto, _dbContext);
             });
+        }
+
+        public override void Remove(string entityId)
+        {
+            base.Remove(entityId);
+
+            var sounds = _dbContext.All<RealmSound>().Where(s => s.EntryId.Equals(entityId));
+            var translations = _dbContext.All<RealmTranslation>().Where(t => t.EntryId.Equals(entityId));
+
+            _sounds.RemoveRange(sounds.Select(s => s.SoundId));
+            _translations.RemoveRange(translations.Select(t => t.TranslationId));
         }
     }
 }
