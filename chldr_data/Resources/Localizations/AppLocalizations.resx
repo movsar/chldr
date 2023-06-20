@@ -650,4 +650,10 @@
   <data name="References" xml:space="preserve">
     <value>References</value>
   </data>
+  <data name="RecordPronunciation" xml:space="preserve">
+    <value>Record pronunciation</value>
+  </data>
+  <data name="StopRecording" xml:space="preserve">
+    <value>Stop recording</value>
+  </data>
 </root>

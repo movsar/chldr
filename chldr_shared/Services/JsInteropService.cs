@@ -1,5 +1,7 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.Resources.Localizations;
 using GraphQL;
+using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -19,12 +21,16 @@ namespace chldr_shared
     public class JsInteropService : IAsyncDisposable
     {
         private readonly Lazy<Task<IJSObjectReference>> moduleTask;
+        private readonly IStringLocalizer<AppLocalizations> _localizer;
+
         public static Action<string> OnRemoveAudio { get; set; }
 
-        public JsInteropService(IJSRuntime jsRuntime)
+        public JsInteropService(IJSRuntime jsRuntime, IStringLocalizer<AppLocalizations> localizer)
         {
             moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
                 "import", "./_content/chldr_ui/jsInterop.js").AsTask());
+
+            _localizer = localizer;
         }
 
 
@@ -74,8 +80,11 @@ namespace chldr_shared
 
         public async Task StartRecording(string recordingId)
         {
+            var lblRecordPronunciation = _localizer["RecordPronunciation"].ToString();
+            var lblStopRecording = _localizer["StopRecording"].ToString();
+
             var module = await moduleTask.Value;
-            await module.InvokeVoidAsync("startRecording", recordingId);
+            await module.InvokeVoidAsync("startRecording", recordingId, lblRecordPronunciation, lblStopRecording);
         }
 
         public async Task<string?> StopRecording()

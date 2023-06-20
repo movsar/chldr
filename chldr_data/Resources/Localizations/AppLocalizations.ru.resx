@@ -650,4 +650,10 @@
   <data name="Register" xml:space="preserve">
     <value>Зарегистрироваться</value>
   </data>
+  <data name="RecordPronunciation" xml:space="preserve">
+    <value>Записать произношение</value>
+  </data>
+  <data name="StopRecording" xml:space="preserve">
+    <value>Остановить запись</value>
+  </data>
 </root>

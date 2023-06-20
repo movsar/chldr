@@ -1,7 +1,9 @@
 ﻿let mediaRecorder;
 let recordedBlob;
 
-let latestRecordingId;
+let _lblRecord;
+let _lblStopRecording;
+let _latestRecordingId;
 export function addRecordingListItem(id, data) {
     let audioContainer = document.getElementById("recordings-list");
     if (!audioContainer) {
@@ -39,14 +41,16 @@ export function addExistingEntryRecording(soundDto) {
     addRecordingListItem(soundDto.soundId, base64ToBlob(soundDto.recordingB64));
 }
 
-export function startRecording(recordingId) {
-    console.log(recordingId);
+export function startRecording(recordingId, lblRecord, lblStopRecording) {
+    _lblRecord = lblRecord;
+    _lblStopRecording = lblStopRecording;
+
     showStopButton();
 
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(function (stream) {
 
-            latestRecordingId = recordingId;
+            _latestRecordingId = recordingId;
 
             let chunks = [];
 
@@ -82,7 +86,7 @@ export function stopRecording() {
             const reader = new FileReader();
             reader.onloadend = function () {
                 const base64String = reader.result.split(',')[1];
-                resolve({ id: latestRecordingId, data: base64String });
+                resolve({ id: _latestRecordingId, data: base64String });
             };
             reader.readAsDataURL(recordedBlob);
         });
@@ -93,7 +97,7 @@ export function stopRecording() {
 export function showStopButton() {
     const recordButton = document.getElementById("recordButton");
 
-    recordButton.textContent = "Stop recording";
+    recordButton.textContent = _lblStopRecording;
     recordButton.classList.remove("record");
     recordButton.classList.add("stop");
 }
@@ -101,7 +105,7 @@ export function showStopButton() {
 export function showStartButton() {
     const recordButton = document.getElementById("recordButton");
 
-    recordButton.textContent = "Add pronunciation";
+    recordButton.textContent = _lblRecord;
     recordButton.classList.remove("stop");
     recordButton.classList.add("record");
 }

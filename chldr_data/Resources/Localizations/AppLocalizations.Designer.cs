@@ -708,6 +708,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Record pronunciation.
+        /// </summary>
+        public static string RecordPronunciation {
+            get {
+                return ResourceManager.GetString("RecordPronunciation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to References.
         /// </summary>
         public static string References {
@@ -794,6 +803,15 @@ namespace chldr_data.Resources.Localizations {
         public static string Start_typing {
             get {
                 return ResourceManager.GetString("Start_typing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop recording.
+        /// </summary>
+        public static string StopRecording {
+            get {
+                return ResourceManager.GetString("StopRecording", resourceCulture);
             }
         }
         
