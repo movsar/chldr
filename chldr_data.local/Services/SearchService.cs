@@ -187,8 +187,7 @@ namespace chldr_data.local.Services
         {
             var entries = Database.All<RealmEntry>().AsEnumerable().OrderByDescending(e => e.CreatedAt).Take(100);
 
-            var entriesToReturn = entries
-              .Select(entry => FromEntity(entry));
+            var entriesToReturn = entries.Select(entry => FromEntity(entry));
 
             return entriesToReturn.ToList();
         }

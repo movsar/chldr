@@ -13,7 +13,7 @@ namespace chldr_data.DatabaseObjects.Dtos
         public int Rate { get; set; }
         public string Content { get; set; } = string.Empty;
         public string? Details { get; set; }
-        public int EntryType { get; set; } = 1;
+        public int Type { get; set; } = 1;
         public int EntrySubtype { get; set; } = 0;
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
@@ -27,7 +27,7 @@ namespace chldr_data.DatabaseObjects.Dtos
                 UserId = entryModel.UserId,
                 SourceId = entryModel.SourceId!,
                 ParentEntryId = entryModel.ParentEntryId,
-                EntryType = (int)entryModel.Type,
+                Type = (int)entryModel.Type,
                 EntrySubtype = entryModel.Subtype,
                 Rate = entryModel.Rate,
                 Content = entryModel.Content,

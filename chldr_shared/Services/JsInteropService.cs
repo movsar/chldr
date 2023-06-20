@@ -80,11 +80,11 @@ namespace chldr_shared
 
         public async Task StartRecording(string recordingId)
         {
-            var lblRecordPronunciation = _localizer["RecordPronunciation"].ToString();
+            var lblPronunciation = _localizer["Pronunciation"].ToString();
             var lblStopRecording = _localizer["StopRecording"].ToString();
 
             var module = await moduleTask.Value;
-            await module.InvokeVoidAsync("startRecording", recordingId, lblRecordPronunciation, lblStopRecording);
+            await module.InvokeVoidAsync("startRecording", recordingId, lblPronunciation, lblStopRecording);
         }
 
         public async Task<string?> StopRecording()

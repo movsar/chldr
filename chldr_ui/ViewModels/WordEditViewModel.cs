@@ -16,32 +16,25 @@ namespace chldr_ui.ViewModels
     public class WordEditViewModel : ViewModelBase
     {
         [Inject] IDataProvider DataProvider { get; set; }
-        [Inject] JsInteropService JsInterop { get; set; }
 
-
-        [Parameter]
-        public EntryDto EntryDto { get; set; }
+        [Parameter] public EntryDto EntryDto { get; set; }
         internal EntryModel? ParentEntry { get; set; }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            // Return if it's addition mode
-            if (EntryDto.CreatedAt == DateTimeOffset.MinValue)
-            {
-                await base.OnAfterRenderAsync(firstRender);
-            }
-
-            // Load entry details
+            // Update Details field, whenever something has changed
             EntryDto.Details = SerializeWordDetails((WordType)EntryDto.EntrySubtype);
 
             await base.OnAfterRenderAsync(firstRender);
         }
         protected override Task OnParametersSetAsync()
         {
+            // Restore Details
             if (EntryDto.Details != "")
             {
                 DeserializeWordDetails();
             }
 
+            // Restore Parent
             if (!string.IsNullOrEmpty(EntryDto.ParentEntryId))
             {
 

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.Enums;
 using chldr_data.remote.Services;
 using Microsoft.EntityFrameworkCore;
 using Realms;
@@ -86,21 +87,21 @@ public class SqlEntry : IEntryEntity
             entry = new SqlEntry();
         }
 
+        if (entryDto.Type == (int)EntryType.Word && !string.IsNullOrEmpty(entryDto.ParentEntryId) && ValidateParentId(entryDto, context) == false)
+        {
+            throw new Exception("Error:Invalid_parent_id");
+        }
+
         entry.EntryId = entryDto.EntryId;
+        entry.ParentEntryId = entryDto.ParentEntryId;
         entry.UserId = entryDto.UserId;
         entry.SourceId = entryDto.SourceId!;
 
-        if (ValidateParentId(entryDto, context))
-        {
-            entry.ParentEntryId = entryDto.ParentEntryId;
-        }
-
-        entry.Type = entryDto.EntryType;
+        entry.Type = entryDto.Type;
         entry.Subtype = entryDto.EntrySubtype;
+        entry.Details = entryDto.Details;
 
         entry.Content = entryDto.Content;
-
-        entry.Details = entryDto.Details;
         entry.Rate = entryDto.Rate;
 
         entry.CreatedAt = entryDto.CreatedAt;

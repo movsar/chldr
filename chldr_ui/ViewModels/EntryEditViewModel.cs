@@ -31,16 +31,19 @@ namespace chldr_ui.ViewModels
         [Inject] FileService FileService { get; set; }
         public EntryDto EntryDto { get; set; } = new EntryDto();
         protected string SourceId { get; set; } = "63a816205d1af0e432fba6de";
-        internal EntryType SelectedEntryType { get; set; } = EntryType.Word;
         bool isRecording;
         bool existingSoundsRendered;
         SoundDto latestSoundDto;
         internal void HandleEntryTypeChange(ChangeEventArgs e)
         {
-            if (Enum.TryParse(e.Value?.ToString(), out EntryType selectedEntryType))
+            Enum.TryParse(e.Value?.ToString(), out EntryType selectedEntryType);
+
+            if (selectedEntryType == (EntryType)EntryDto.Type)
             {
-                SelectedEntryType = selectedEntryType;
+                return;
             }
+
+            EntryDto.Type = (int)selectedEntryType;
         }
 
         private async Task RenderExistingSounds()

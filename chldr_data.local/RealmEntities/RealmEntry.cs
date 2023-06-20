@@ -60,7 +60,7 @@ public class RealmEntry : RealmObject, IEntryEntity
 
         entry.Content = entryDto.Content;
 
-        entry.Type = entryDto.EntryType;
+        entry.Type = entryDto.Type;
         entry.Subtype = entryDto.EntrySubtype;
 
         entry.Rate = entryDto.Rate;

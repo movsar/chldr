@@ -43,17 +43,25 @@
 
 <div data-id="form_container">
     <div class="form-group mt-2 mb-2">
-        <h4 class="col-4">
+        <h4>
             @Localizer["Entry_type"]
         </h4>
-        <select class="col-4 btn btn-info" @onchange="@HandleEntryTypeChange">
+        <select class="col-3 btn btn-info" @onchange="@HandleEntryTypeChange">
             <option class="btn btn-info" value="@(EntryType.Word)">@Localizer["Word"]</option>
             <option class="btn btn-info" value="@(EntryType.Phrase)">@Localizer["Phrase"]</option>
             <option class="btn btn-info" value="@(EntryType.Text)">@Localizer["Text"]</option>
         </select>
+
+        <button class="col-3 btn btn-success" type="button" @onclick="@(() => NewTranslation())">+ @Localizer["Translation"]</button>
+        <button class="col-3 btn btn-warning" id="recordButton" @onclick="ToggleRecording">+ @Localizer["Pronunciation"]</button>
+
     </div>
 
-    @switch (SelectedEntryType)
+    <div class="mt-2">
+        <input class="form-control" type="text" placeholder="@Localizer["EnterWord"]" @bind="EntryDto.Content" />
+    </div>
+
+    @switch ((EntryType)EntryDto.Type)
     {
         case EntryType.Word:
             <WordEditView EntryDto="@EntryDto"></WordEditView>
@@ -71,13 +79,7 @@
     }
 
     <div class="mt-2">
-        <button id="recordButton" class="col-4 btn btn-secondary" @onclick="ToggleRecording">@Localizer["RecordPronunciation"]</button>
         <div id="recordings-list" class="mt-2"></div>
-
-        <h5 class="mt-2 col-4">
-            @Localizer["Translations"]:
-            <button class="btn btn-success" type="button" @onclick="@(() => NewTranslation())">@Localizer["Add"]</button>
-        </h5>
     </div>
 
     <div class="mt-2">

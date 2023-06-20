@@ -221,7 +221,8 @@ namespace chldr_shared.Stores
 
             _unitOfWork.Entries.Add(entryDto);
 
-            CachedSearchResult.Entries.Add(_unitOfWork.Entries.Get(entryDto.EntryId));
+            var added = _unitOfWork.Entries.Get(entryDto.EntryId);
+            CachedSearchResult.Entries.Add(added);
             CachedResultsChanged?.Invoke();
         }
     }

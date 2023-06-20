@@ -699,20 +699,20 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pronunciation.
+        /// </summary>
+        public static string Pronunciation {
+            get {
+                return ResourceManager.GetString("Pronunciation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Do you really want to add new entry without a translation?.
         /// </summary>
         public static string Question_Do_you_really_want_to_add_new_entry_without_a_translation_ {
             get {
                 return ResourceManager.GetString("Question:Do_you_really_want_to_add_new_entry_without_a_translation?", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Record pronunciation.
-        /// </summary>
-        public static string RecordPronunciation {
-            get {
-                return ResourceManager.GetString("RecordPronunciation", resourceCulture);
             }
         }
         
@@ -821,6 +821,15 @@ namespace chldr_data.Resources.Localizations {
         public static string StopRecording {
             get {
                 return ResourceManager.GetString("StopRecording", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Translation.
+        /// </summary>
+        public static string Translation {
+            get {
+                return ResourceManager.GetString("Translation", resourceCulture);
             }
         }
         
