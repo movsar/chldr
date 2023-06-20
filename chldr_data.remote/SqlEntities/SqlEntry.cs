@@ -2,6 +2,7 @@
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.remote.Services;
+using Microsoft.EntityFrameworkCore;
 using Realms;
 
 namespace chldr_data.remote.SqlEntities;
@@ -37,6 +38,45 @@ public class SqlEntry : IEntryEntity
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
 
+    public static bool ValidateParentId(EntryDto entryDto, SqlContext context)
+    {
+        if (string.IsNullOrEmpty(entryDto.ParentEntryId))
+        {
+            return false;
+        }
+
+        if (entryDto.ParentEntryId == entryDto.EntryId)
+        {
+            // Self-linking is not allowed
+            return false;
+        }
+
+        var isCircularReference = IsCircularReference(entryDto.EntryId, entryDto.ParentEntryId, context);
+        if (isCircularReference)
+        {
+            // Circular linking is not allowed
+            return false;
+        }
+
+        return true;
+    }
+
+    private static bool IsCircularReference(string entryId, string parentEntryId, SqlContext context)
+    {
+        var currentEntry = context.Entries.Find(entryId);
+        while (currentEntry != null)
+        {
+            if (currentEntry.EntryId == parentEntryId)
+            {
+                // Circular reference detected
+                return true;
+            }
+
+            currentEntry = context.Entries.Find(currentEntry.ParentEntryId);
+        }
+
+        return false;
+    }
     internal static SqlEntry FromDto(EntryDto entryDto, SqlContext context)
     {
         // Entry
@@ -49,7 +89,11 @@ public class SqlEntry : IEntryEntity
         entry.EntryId = entryDto.EntryId;
         entry.UserId = entryDto.UserId;
         entry.SourceId = entryDto.SourceId!;
-        entry.ParentEntryId = entryDto.ParentEntryId;
+
+        if (ValidateParentId(entryDto, context))
+        {
+            entry.ParentEntryId = entryDto.ParentEntryId;
+        }
 
         entry.Type = entryDto.EntryType;
         entry.Subtype = entryDto.EntrySubtype;

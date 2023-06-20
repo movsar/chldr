@@ -656,4 +656,7 @@
   <data name="StopRecording" xml:space="preserve">
     <value>Stop recording</value>
   </data>
+  <data name="Select_the_parent_word" xml:space="preserve">
+    <value>Select the parent word</value>
+  </data>
 </root>

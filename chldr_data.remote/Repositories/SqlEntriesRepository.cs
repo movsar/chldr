@@ -146,39 +146,5 @@ namespace chldr_data.remote.Repositories
             _dbContext.Update(updatedEntryEntity);
             _dbContext.SaveChanges();
         }
-        public async Task<bool> CanCreateOrUpdateEntry(SqlEntry entry)
-        {
-            if (entry.ParentEntryId == entry.EntryId)
-            {
-                // Self-linking is not allowed
-                return false;
-            }
-
-            var isCircularReference = await IsCircularReference(entry.EntryId, entry.ParentEntryId);
-            if (isCircularReference)
-            {
-                // Circular linking is not allowed
-                return false;
-            }
-
-            return true;
-        }
-
-        private async Task<bool> IsCircularReference(string entryId, string parentEntryId)
-        {
-            var currentEntry = await _dbContext.Entries.FindAsync(entryId);
-            while (currentEntry != null)
-            {
-                if (currentEntry.EntryId == parentEntryId)
-                {
-                    // Circular reference detected
-                    return true;
-                }
-
-                //currentEntry = currentEntry.ParentEntry;
-            }
-
-            return false;
-        }
     }
 }

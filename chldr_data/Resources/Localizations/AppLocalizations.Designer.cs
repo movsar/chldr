@@ -780,6 +780,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select the parent word.
+        /// </summary>
+        public static string Select_the_parent_word {
+            get {
+                return ResourceManager.GetString("Select_the_parent_word", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set new password.
         /// </summary>
         public static string Set_new_password {
