@@ -43,11 +43,13 @@
 
 <div data-id="form_container">
     <div class="form-group mt-2 mb-2">
-        <h5>@Localizer["Entry_type"]</h5>
-        <select class="form-control" @onchange="@HandleEntryTypeChange">
-            <option value="@(EntryType.Word)">@Localizer["Word"]</option>
-            <option value="@(EntryType.Phrase)">@Localizer["Phrase"]</option>
-            <option value="@(EntryType.Text)">@Localizer["Text"]</option>
+        <h4 class="col-4">
+            @Localizer["Entry_type"]
+        </h4>
+        <select class="col-4 btn btn-info" @onchange="@HandleEntryTypeChange">
+            <option class="btn btn-info" value="@(EntryType.Word)">@Localizer["Word"]</option>
+            <option class="btn btn-info" value="@(EntryType.Phrase)">@Localizer["Phrase"]</option>
+            <option class="btn btn-info" value="@(EntryType.Text)">@Localizer["Text"]</option>
         </select>
     </div>
 
