@@ -4,7 +4,7 @@ using chldr_data.DatabaseObjects.Models;
 
 namespace chldr_data.Interfaces.Repositories
 {
-    public interface IEntriesRepository : IRepository<EntryModel, EntryDto>
+    public interface IEntriesRepository
     {
         public static void HandleUpdatedEntryTranslations(ITranslationsRepository translations, EntryDto existingEntryDto, EntryDto updatedEntryDto)
         {
