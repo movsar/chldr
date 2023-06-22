@@ -21,7 +21,6 @@ public class RealmUser : RealmObject, IUserEntity
     public DateTimeOffset UpdatedAt { get; set; }
 
     public IList<RealmEntry> Entries { get; }
-    public IList<RealmQuery> Queries { get; }
     public IList<RealmSound> Sounds { get; }
     public IList<RealmSource> Sources { get; }
     public IList<RealmTranslation> Translations { get; }

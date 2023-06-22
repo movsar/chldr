@@ -92,7 +92,6 @@ namespace chldr_data.local.Services
         public IUnitOfWork CreateUnitOfWork(string? userId = null)
         {
             return new RealmUnitOfWork(GetDatabase(), _exceptionHandler, _fileService);
-
         }
 
         public Realm GetContext()
