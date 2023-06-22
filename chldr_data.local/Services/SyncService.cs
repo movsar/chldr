@@ -33,7 +33,7 @@ namespace chldr_data.local.Services
             }
         }
 
-        private Realm _dbContext = Realm.GetInstance(RealmDataProvider.OfflineDatabaseConfiguration);
+        private Realm _dbContext => Realm.GetInstance(RealmDataProvider.OfflineDatabaseConfiguration);
 
         public string Insert(SourceDto sourceDto)
         {
@@ -121,6 +121,30 @@ namespace chldr_data.local.Services
         //    }
         //}
         bool _isRunning = false;
+        private async Task PullRemoteDatabase()
+        {
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                        query allUsers($offset: Int!, $limit: Int!) {
+                          allUsers(offset: $offset, limit: $limit) {
+                            
+                          }
+                        }
+                        ",
+                // ! The names here must exactly match the names defined in the graphql schema
+                Variables = new { offset = 0, limit = 100 }
+            };
+
+            var response = await _graphQLRequestSender.SendRequestAsync<IEnumerable<ChangeSetDto>>(request, "retrieveLatestChangeSets");
+
+            // Get users
+            // Get sources
+            // Get entries with sounds and translations
+            // Get latest changeset
+
+            // Get by chunks until finished
+        }
         internal async Task Sync()
         {
             if (_isRunning)
@@ -135,6 +159,13 @@ namespace chldr_data.local.Services
 
                 var latestChangeSet = _dbContext.All<RealmChangeSet>().LastOrDefault();
                 var latestChangeSetIndex = latestChangeSet == null ? 0 : latestChangeSet.ChangeSetIndex;
+
+                if (latestChangeSetIndex == 0)
+                {
+                    await PullRemoteDatabase();
+                    return;
+                }
+
                 var request = new GraphQLRequest
                 {
                     Query = @"

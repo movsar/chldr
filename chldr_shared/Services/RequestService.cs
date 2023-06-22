@@ -3,6 +3,7 @@ using chldr_data.ResponseTypes;
 using chldr_utils.Interfaces;
 using GraphQL;
 using Org.BouncyCastle.Asn1.Ocsp;
+using Realms.Sync;
 
 namespace chldr_shared.Services
 {
@@ -13,6 +14,28 @@ namespace chldr_shared.Services
             _graphQLRequestSender = graphQLRequestSender;
         }
         private IGraphQLRequestSender _graphQLRequestSender;
+
+        public async Task<IEnumerable<UserDto>> TakeUsers(int offset, int limit)
+        {
+            var operation = "takeUsers";
+            var request = new GraphQLRequest
+            {
+                Query = $@"
+                        query {operation}($offset: Int!, $limit: Int!) {{
+                          {operation}(offset: $offset, limit: $limit) {{
+                            success
+                            errorMessage
+                            users
+                          }}
+                        }}",
+
+                Variables = new { offset = 0, limit = 100 }
+            };
+            var response = await _graphQLRequestSender.SendRequestAsync<IEnumerable<UserDto>>(request, );
+
+            return response.Data;
+        }
+
         public async Task<InsertResult> AddEntry(string userId, EntryDto entryDto)
         {
             var operation = "addEntry";

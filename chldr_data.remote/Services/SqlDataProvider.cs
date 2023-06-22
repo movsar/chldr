@@ -28,11 +28,11 @@ namespace chldr_data.local.Services
 
         //private string KeyAsString()
         //{
-            //byte[] encryptionKey = File.ReadAllBytes(Path.Combine(_fileService.AppDataDirectory, "encryption.key"));
+        //byte[] encryptionKey = File.ReadAllBytes(Path.Combine(_fileService.AppDataDirectory, "encryption.key"));
 
-            //var key = encryptionKey.Select(b => (int)b);
-            //var stringified = string.Join(":", key);
-            //return stringified;
+        //var key = encryptionKey.Select(b => (int)b);
+        //var stringified = string.Join(":", key);
+        //return stringified;
         //}
 
         public void Initialize()
@@ -61,15 +61,12 @@ namespace chldr_data.local.Services
             return new SqlContext(options);
         }
 
-        public IUnitOfWork CreateUnitOfWork(string? userId = null)
-        {
-            if (userId == null)
-            {
-                throw new Exception("The active user must be set");
-            }
+        private const string _defaultUserId = "63a816205d1af0e432fba6dd";
 
+        public IUnitOfWork CreateUnitOfWork(string? userId = _defaultUserId)
+        {
             var context = GetContext();
-            return new SqlUnitOfWork(context, _fileService, userId);
+            return new SqlUnitOfWork(context, _fileService, userId!);
         }
     }
 }
