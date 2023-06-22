@@ -27,7 +27,7 @@ namespace chldr_data.remote.Repositories
 
         protected override UserModel FromEntityShortcut(SqlUser entity)
         {
-            throw new NotImplementedException();
+            return UserModel.FromEntity(entity);
         }
     }
 }

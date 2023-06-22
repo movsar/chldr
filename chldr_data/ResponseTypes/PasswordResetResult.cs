@@ -3,7 +3,7 @@
 namespace chldr_data.ResponseTypes
 {
     [Serializable]
-    public class PasswordResetResult : OperationResult
+    public class PasswordResetResult : RequestResult
     {
         [JsonProperty("resetToken")]
         public string ResetToken { get; set; } = string.Empty;

@@ -5,7 +5,6 @@ using chldr_shared.Stores;
 using chldr_shared.Validators;
 using FluentValidation;
 using chldr_utils.Interfaces;
-using chldr_shared.Services;
 using chldr_shared;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -31,7 +30,7 @@ namespace chldr_utils.Services
         private static void RegisterAppServices(IServiceCollection services)
         {
             // Data
-            services.AddSingleton<IGraphQLRequestSender, GraphQLRequestSender>();
+            services.AddSingleton<IGraphQlClient, GraphQLClient>();
             services.AddScoped<RequestService>();
             services.AddScoped<AuthService>();
 

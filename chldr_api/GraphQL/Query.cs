@@ -1,5 +1,7 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Interfaces;
+using chldr_data.ResponseTypes;
+using Newtonsoft.Json;
 
 namespace chldr_api
 {
@@ -15,6 +17,18 @@ namespace chldr_api
         {
             _dataProvider = dataProvider;
             _configuration = configuration;
+        }
+
+        public RequestResult TakeUsers(int offset, int limit)
+        {
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var words = unitOfWork.Users.Take(offset, limit).ToList();
+
+            return new RequestResult()
+            {
+                Success = true,
+                SerializedData = JsonConvert.SerializeObject(words.Select(u => UserDto.FromModel(u)))
+            };
         }
 
         [UseProjection]

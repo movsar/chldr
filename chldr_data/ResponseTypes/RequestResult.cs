@@ -1,8 +1,10 @@
 ﻿namespace chldr_data.ResponseTypes
 {
-    public class OperationResult
+    public class RequestResult
     {
         public bool Success { get; set; } = false;
+        public string SerializedData { get; set; }
+
         private string _errorMessage = string.Empty;
         public string ErrorMessage
         {
@@ -13,8 +15,8 @@
                 Success = string.IsNullOrWhiteSpace(value);
             }
         }
-        public OperationResult() { }
-        public OperationResult(string errorMessage)
+        public RequestResult() { }
+        public RequestResult(string errorMessage)
         {
             ErrorMessage = errorMessage;
         }

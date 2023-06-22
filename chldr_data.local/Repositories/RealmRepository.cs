@@ -53,12 +53,12 @@ namespace chldr_data.Repositories
             });
         }
 
-        public IEnumerable<TModel> Take(int limit)
+        public List<TModel> Take(int offset = 0, int limit = 50)
         {
             var entities = _dbContext.All<TEntity>().Take(limit);
-            return entities.Select(e => FromEntityShortcut(e));
+            return entities.Select(FromEntityShortcut).ToList();
         }
-        public IEnumerable<TModel> GetRandoms(int limit)
+        public List<TModel> GetRandoms(int limit)
         {
             var randomizer = new Random();
 
@@ -68,7 +68,7 @@ namespace chldr_data.Repositories
               .Take(limit)
               .Select(FromEntityShortcut);
 
-            return entries;
+            return entries.ToList();
         }
 
         public void AddRange(IEnumerable<TDto> added)

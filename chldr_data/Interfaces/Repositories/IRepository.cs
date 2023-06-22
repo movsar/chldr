@@ -5,8 +5,8 @@ namespace chldr_data.Interfaces.Repositories
     public interface IRepository<TModel, TDto>
     {
 
-        IEnumerable<TModel> Take(int limit);
-        IEnumerable<TModel> GetRandoms(int limit);
+        List<TModel> Take(int offset = 0, int limit = 50);
+        List<TModel> GetRandoms(int limit);
 
         TModel Get(string entityId);
         void Add(TDto dto);

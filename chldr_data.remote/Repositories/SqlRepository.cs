@@ -103,12 +103,12 @@ namespace chldr_data.remote.Repositories
 
             _dbContext.SaveChanges();
         }
-        public virtual IEnumerable<TModel> Take(int limit)
+        public virtual List<TModel> Take(int offset = 0, int limit = 50)
         {
             var entities = _dbContext.Set<TEntity>().Take(limit);
-            return entities.Select(e => FromEntityShortcut(e));
+            return entities.Select(FromEntityShortcut).ToList();
         }
-        public virtual IEnumerable<TModel> GetRandoms(int limit)
+        public virtual List<TModel> GetRandoms(int limit)
         {
             var randomizer = new Random();
 
@@ -118,7 +118,7 @@ namespace chldr_data.remote.Repositories
               .Take(limit)
               .Select(entry => FromEntityShortcut(entry));
 
-            return entries;
+            return entries.ToList();
         }
 
         public void AddRange(IEnumerable<TDto> added)

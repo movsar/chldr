@@ -3,21 +3,18 @@ using GraphQL.Client.Serializer.Newtonsoft;
 using GraphQL;
 using Newtonsoft.Json.Linq;
 using chldr_utils.Interfaces;
+using chldr_data;
 
 namespace chldr_utils.Services
 {
-    public class GraphQLRequestSender : IGraphQLRequestSender
+    public class GraphQLClient : IGraphQlClient
     {
         private readonly GraphQLHttpClient _graphQLClient;
         private readonly ExceptionHandler _exceptionHandler;
 
-        public GraphQLRequestSender(ExceptionHandler exceptionHandler, EnvironmentService environmentService)
+        public GraphQLClient(ExceptionHandler exceptionHandler, EnvironmentService environmentService)
         {
-            string devApiHost = "https://localhost:7065/graphql";
-            string prodApiHost = "https://api.nohchiyn-mott.com/graphql";
-            var apiHost = environmentService.IsDevelopment ? devApiHost : prodApiHost;
-
-            _graphQLClient = new GraphQLHttpClient($"{devApiHost}", new NewtonsoftJsonSerializer());
+            _graphQLClient = new GraphQLHttpClient($"{Constants.DevApiHost}/graphql", new NewtonsoftJsonSerializer());
             _exceptionHandler = exceptionHandler;
         }
 

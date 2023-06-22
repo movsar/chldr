@@ -66,7 +66,7 @@ namespace chldr_data.remote.Repositories
 
             return FromEntityShortcut(entry);
         }
-        public override IEnumerable<EntryModel> Take(int limit)
+        public override List<EntryModel> Take(int offset = 0, int limit = 50)
         {
             var entities = _dbContext.Set<SqlEntry>()
                 .Include(e => e.Source)
@@ -75,9 +75,9 @@ namespace chldr_data.remote.Repositories
                 .Include(e => e.Sounds)
                 .Take(limit);
 
-            return entities.Select(e => FromEntityShortcut(e));
+            return entities.Select(FromEntityShortcut).ToList();
         }
-        public override IEnumerable<EntryModel> GetRandoms(int limit)
+        public override List<EntryModel> GetRandoms(int limit)
         {
             var randomizer = new Random();
 
@@ -91,7 +91,7 @@ namespace chldr_data.remote.Repositories
                 .Take(limit)
                 .Select(entry => FromEntityShortcut(entry));
 
-            return entries;
+            return entries.ToList();
         }
         protected override EntryModel FromEntityShortcut(SqlEntry entry)
         {

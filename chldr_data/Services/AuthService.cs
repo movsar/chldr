@@ -8,9 +8,9 @@ namespace chldr_utils.Services
 {
     public class AuthService
     {
-        private readonly IGraphQLRequestSender _requestSender;
+        private readonly IGraphQlClient _requestSender;
 
-        public AuthService(IGraphQLRequestSender requestSender)
+        public AuthService(IGraphQlClient requestSender)
         {
             _requestSender = requestSender;
         }
@@ -51,7 +51,7 @@ namespace chldr_utils.Services
                 Variables = new { token, newPassword }
             };
 
-            var response = await _requestSender.SendRequestAsync<OperationResult>(request, "updatePassword");
+            var response = await _requestSender.SendRequestAsync<RequestResult>(request, "updatePassword");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);
@@ -73,7 +73,7 @@ namespace chldr_utils.Services
                 Variables = new { token }
             };
 
-            var response = await _requestSender.SendRequestAsync<OperationResult>(request, "confirmEmail");
+            var response = await _requestSender.SendRequestAsync<RequestResult>(request, "confirmEmail");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);

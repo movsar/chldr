@@ -2,7 +2,7 @@
 
 namespace chldr_data.ResponseTypes
 {
-    public class LoginResult : OperationResult
+    public class LoginResult : RequestResult
     {
         public string? AccessToken { get; set; }
         public string? RefreshToken { get; set; }

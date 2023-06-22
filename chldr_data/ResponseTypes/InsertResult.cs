@@ -1,6 +1,6 @@
 ﻿namespace chldr_data.ResponseTypes
 {
-    public class InsertResult : OperationResult
+    public class InsertResult : RequestResult
     {
         public DateTimeOffset CreatedAt { get; set; }
     }

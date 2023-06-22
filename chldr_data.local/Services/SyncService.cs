@@ -5,6 +5,7 @@ using chldr_data.Interfaces;
 using chldr_data.local.RealmEntities;
 using chldr_data.Models;
 using chldr_data.ResponseTypes;
+using chldr_data.Services;
 using chldr_utils.Interfaces;
 using GraphQL;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -16,13 +17,13 @@ namespace chldr_data.local.Services
 {
     public class SyncService
     {
-        private readonly IGraphQLRequestSender _graphQLRequestSender;
+        private readonly RequestService _requestService;
         private Timer _timer;
 
         private readonly SemaphoreSlim _syncLock = new SemaphoreSlim(1);
-        public SyncService(IGraphQLRequestSender graphQLRequestSender)
+        public SyncService(RequestService requestService)
         {
-            _graphQLRequestSender = graphQLRequestSender;
+            _requestService = requestService;
         }
         private void SetPropertyValue(object obj, string propertyName, object value)
         {
@@ -123,20 +124,7 @@ namespace chldr_data.local.Services
         bool _isRunning = false;
         private async Task PullRemoteDatabase()
         {
-            var request = new GraphQLRequest
-            {
-                Query = @"
-                        query allUsers($offset: Int!, $limit: Int!) {
-                          allUsers(offset: $offset, limit: $limit) {
-                            
-                          }
-                        }
-                        ",
-                // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new { offset = 0, limit = 100 }
-            };
-
-            var response = await _graphQLRequestSender.SendRequestAsync<IEnumerable<ChangeSetDto>>(request, "retrieveLatestChangeSets");
+            var users = await _requestService.TakeUsers(0, 100);
 
             // Get users
             // Get sources
@@ -166,28 +154,8 @@ namespace chldr_data.local.Services
                     return;
                 }
 
-                var request = new GraphQLRequest
-                {
-                    Query = @"
-                        query retrieveLatestChangeSets($minIndex: Int!) {
-                          retrieveLatestChangeSets(minIndex: $minIndex) {
-                            changeSetId                   
-                            changeSetIndex
-                            recordId
-                            recordChanges
-                            recordType
-                            operation
-                            userId
-                          }
-                        }
-                        ",
-                    // ! The names here must exactly match the names defined in the graphql schema
-                    Variables = new { minIndex = latestChangeSetIndex }
-                };
-
-                var response = await _graphQLRequestSender.SendRequestAsync<IEnumerable<ChangeSetDto>>(request, "retrieveLatestChangeSets");
-
-                var changeSetsToApply = response.Data;
+             
+                var changeSetsToApply = await _requestService.GetChangeSets();
                 if (changeSetsToApply == null)
                 {
                     // TODO: Get latest changesets based on...?

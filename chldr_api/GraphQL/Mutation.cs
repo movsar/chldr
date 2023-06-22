@@ -83,7 +83,7 @@ namespace chldr_api
             return new InsertResult() { Success = false };
         }
 
-        public OperationResult UpdateEntry(string userId, EntryDto entryDto)
+        public RequestResult UpdateEntry(string userId, EntryDto entryDto)
         {
             using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
@@ -92,7 +92,7 @@ namespace chldr_api
                 unitOfWork.Entries.Update(entryDto);
                 unitOfWork.Commit();
 
-                return new OperationResult() { Success = true };
+                return new RequestResult() { Success = true };
             }
             catch (Exception ex)
             {
@@ -104,10 +104,10 @@ namespace chldr_api
                 unitOfWork.Dispose();
             }
 
-            return new OperationResult() { Success = false };
+            return new RequestResult() { Success = false };
         }
 
-        public OperationResult RemoveEntry(string userId, string entryId)
+        public RequestResult RemoveEntry(string userId, string entryId)
         {
             using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
@@ -116,7 +116,7 @@ namespace chldr_api
                 unitOfWork.Entries.Remove(entryId);
                 unitOfWork.Commit();
 
-                return new OperationResult() { Success = true };
+                return new RequestResult() { Success = true };
             }
             catch (Exception ex)
             {
@@ -128,7 +128,7 @@ namespace chldr_api
                 unitOfWork.Dispose();
             }
 
-            return new OperationResult() { Success = false };
+            return new RequestResult() { Success = false };
         }
 
         // User mutations
@@ -137,7 +137,7 @@ namespace chldr_api
             return await _registerUserMutation.ExecuteAsync((SqlDataProvider)_dataProvider, _localizer, _emailService, email, password, firstName, lastName, patronymic);
         }
 
-        public async Task<OperationResult> ConfirmEmailAsync(string token)
+        public async Task<RequestResult> ConfirmEmailAsync(string token)
         {
             return await _confirmEmailResolver.ExecuteAsync((SqlDataProvider)_dataProvider, token);
         }
@@ -147,7 +147,7 @@ namespace chldr_api
             return await _passwordResetMutation.ExecuteAsync((SqlDataProvider)_dataProvider, _configuration, _localizer, _emailService, email);
         }
 
-        public async Task<OperationResult> UpdatePasswordAsync(string token, string newPassword)
+        public async Task<RequestResult> UpdatePasswordAsync(string token, string newPassword)
         {
             return await _updatePasswordMutation.ExecuteAsync((SqlDataProvider)_dataProvider, token, newPassword);
         }

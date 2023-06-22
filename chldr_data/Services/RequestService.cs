@@ -2,18 +2,43 @@
 using chldr_data.ResponseTypes;
 using chldr_utils.Interfaces;
 using GraphQL;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Realms.Sync;
+using Newtonsoft.Json;
 
-namespace chldr_shared.Services
+namespace chldr_data.Services
 {
     public class RequestService
     {
-        public RequestService(IGraphQLRequestSender graphQLRequestSender)
+        public RequestService(IGraphQlClient graphQLRequestSender)
         {
             _graphQLRequestSender = graphQLRequestSender;
         }
-        private IGraphQLRequestSender _graphQLRequestSender;
+        private IGraphQlClient _graphQLRequestSender;
+
+
+        public async Task<IEnumerable<ChangeSetDto>> GetChangeSets()
+        {
+            var request = new GraphQLRequest
+            {
+                Query = @"
+                        query retrieveLatestChangeSets($minIndex: Int!) {
+                          retrieveLatestChangeSets(minIndex: $minIndex) {
+                            changeSetId                   
+                            changeSetIndex
+                            recordId
+                            recordChanges
+                            recordType
+                            operation
+                            userId
+                          }
+                        }
+                        ",
+                // ! The names here must exactly match the names defined in the graphql schema
+                Variables = new { minIndex = 0 }
+            };
+
+            var response = await _graphQLRequestSender.SendRequestAsync<IEnumerable<ChangeSetDto>>(request, "retrieveLatestChangeSets");
+            return response.Data;
+        }
 
         public async Task<IEnumerable<UserDto>> TakeUsers(int offset, int limit)
         {
@@ -25,15 +50,21 @@ namespace chldr_shared.Services
                           {operation}(offset: $offset, limit: $limit) {{
                             success
                             errorMessage
-                            users
+                            serializedData
                           }}
                         }}",
 
-                Variables = new { offset = 0, limit = 100 }
+                Variables = new { offset = offset, limit = limit }
             };
-            var response = await _graphQLRequestSender.SendRequestAsync<IEnumerable<UserDto>>(request, );
+            var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
+            if (!response.Data.Success)
+            {
+                throw new Exception("Error:unexpected_error");
+            }
 
-            return response.Data;
+            var users = JsonConvert.DeserializeObject<IEnumerable<UserDto>>(response.Data.SerializedData);
+
+            return users;
         }
 
         public async Task<InsertResult> AddEntry(string userId, EntryDto entryDto)
@@ -58,7 +89,7 @@ namespace chldr_shared.Services
             return response.Data;
         }
 
-        public async Task<OperationResult> RemoveEntry(string userId, string entityId)
+        public async Task<RequestResult> RemoveEntry(string userId, string entityId)
         {
             var operation = "removeEntry";
             var request = new GraphQLRequest
@@ -75,11 +106,11 @@ namespace chldr_shared.Services
                 Variables = new { userId, entryId = entityId }
             };
 
-            var response = await _graphQLRequestSender.SendRequestAsync<OperationResult>(request, operation);
+            var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
             return response.Data;
         }
 
-        internal async Task<OperationResult> UpdateEntry(string userId, EntryDto entryDto)
+        public async Task<RequestResult> UpdateEntry(string userId, EntryDto entryDto)
         {
             var operation = "updateEntry";
             var request = new GraphQLRequest
@@ -96,7 +127,7 @@ namespace chldr_shared.Services
                 Variables = new { userId, entryDto }
             };
 
-            var response = await _graphQLRequestSender.SendRequestAsync<OperationResult>(request, operation);
+            var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
             return response.Data;
         }
     }

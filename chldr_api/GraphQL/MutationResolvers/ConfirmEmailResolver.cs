@@ -9,7 +9,7 @@ namespace chldr_api.GraphQL.MutationServices
 {
     public class ConfirmEmailResolver
     {
-        internal async Task<OperationResult> ExecuteAsync(SqlDataProvider dataProvider, string tokenValue)
+        internal async Task<RequestResult> ExecuteAsync(SqlDataProvider dataProvider, string tokenValue)
         {
             var dbContext = dataProvider.GetContext();
 
@@ -17,20 +17,20 @@ namespace chldr_api.GraphQL.MutationServices
             var token = await dbContext.Tokens.SingleOrDefaultAsync(t => t.Value.Equals(tokenValue));
             if (token == null)
             {
-                return new OperationResult() { ErrorMessage = "Invalid token" };
+                return new RequestResult() { ErrorMessage = "Invalid token" };
             }
 
             var isExpired = JwtService.IsTokenExpired(token.Value);
             if (isExpired)
             {
-                return new OperationResult() { ErrorMessage = "Token has expired " };
+                return new RequestResult() { ErrorMessage = "Token has expired " };
             }
 
             var user = dbContext.Users.First(u => u.UserId.Equals(token.UserId));
             user.Status = (int)UserStatus.Active;
             await dbContext.SaveChangesAsync();
 
-            return new OperationResult();
+            return new RequestResult();
         }
     }
 }

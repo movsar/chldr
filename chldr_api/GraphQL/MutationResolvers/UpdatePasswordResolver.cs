@@ -8,7 +8,7 @@ namespace chldr_api.GraphQL.MutationServices
 {
     public class UpdatePasswordResolver
     {
-        internal async Task<OperationResult> ExecuteAsync(SqlDataProvider dataProvider, string token, string newPassword)
+        internal async Task<RequestResult> ExecuteAsync(SqlDataProvider dataProvider, string token, string newPassword)
         {
             var dbContext = dataProvider.GetContext();
 
@@ -16,13 +16,13 @@ namespace chldr_api.GraphQL.MutationServices
 
             if (tokenInDatabase == null)
             {
-                return new OperationResult("Invalid token");
+                return new RequestResult("Invalid token");
             }
 
             var user = await dbContext.Users.FindAsync(tokenInDatabase.UserId);
             if (user == null)
             {
-                return new OperationResult("User not found");
+                return new RequestResult("User not found");
             }
 
             // Hash the new password and update the user's password in the Users table
@@ -33,7 +33,7 @@ namespace chldr_api.GraphQL.MutationServices
             dbContext.Tokens.Remove(tokenInDatabase);
             await dbContext.SaveChangesAsync();
 
-            return new OperationResult() { Success = true };
+            return new RequestResult() { Success = true };
         }
     }
 }
