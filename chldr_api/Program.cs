@@ -28,11 +28,7 @@ namespace chldr_api
                 throw new Exception("Connection string is not set");
             }
 
-            builder.Services.AddScoped<IDataProvider>(serviceProvider =>
-            {
-                var fileService = serviceProvider.GetRequiredService<FileService>();
-                return new SqlDataProvider(fileService, connectionString);
-            });
+            builder.Services.AddScoped<IDataProvider, SqlDataProvider>();
 
             builder.Services.AddSingleton<EmailService>();
             builder.Services.AddSingleton(x => new FileService(AppContext.BaseDirectory));

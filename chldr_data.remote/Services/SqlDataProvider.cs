@@ -20,10 +20,10 @@ namespace chldr_data.local.Services
 
         private readonly FileService _fileService;
         string _connectionString;
-        public SqlDataProvider(FileService fileService, string connectionString)
+        public SqlDataProvider(FileService fileService, IConfiguration configuration)
         {
             _fileService = fileService;
-            _connectionString = connectionString;
+            _connectionString = configuration.GetConnectionString("RemoteDatabase")!;
         }
 
         //private string KeyAsString()

@@ -44,7 +44,7 @@ namespace chldr_data.local.Services
         private async Task PullRemoteDatabase()
         {
             var offset = 0;
-            var limit = 5000;
+            var limit = 10000;
 
             // Remove existing database
             _dbContext.Write(() =>
