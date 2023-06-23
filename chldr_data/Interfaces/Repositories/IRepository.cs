@@ -5,7 +5,7 @@ namespace chldr_data.Interfaces.Repositories
     public interface IRepository<TModel, TDto>
     {
 
-        Task<IEnumerable<TModel>> TakeAsync(int offset = 0, int limit = 50);
+        Task<IEnumerable<TModel>> TakeAsync(int offset, int limit);
         List<TModel> GetRandoms(int limit);
 
         TModel Get(string entityId);

@@ -104,9 +104,14 @@ namespace chldr_data.remote.Repositories
 
             _dbContext.SaveChanges();
         }
-        public virtual async Task<IEnumerable<TModel>> TakeAsync(int offset = 0, int limit = 50)
+        public virtual async Task<IEnumerable<TModel>> TakeAsync(int offset, int limit)
         {
-            var entities = await _dbContext.Set<TEntity>().Take(limit).ToListAsync();
+            var entities = await _dbContext.Set<TEntity>()                
+                .Skip(offset)
+                .Take(limit)
+
+                .ToListAsync();
+
             return entities.Select(FromEntityShortcut).ToList();
         }
         public virtual List<TModel> GetRandoms(int limit)

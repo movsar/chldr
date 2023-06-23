@@ -54,9 +54,12 @@ namespace chldr_data.Repositories
             });
         }
 
-        public async Task<IEnumerable<TModel>> TakeAsync(int offset = 0, int limit = 50)
+        public async Task<IEnumerable<TModel>> TakeAsync(int offset, int limit)
         {
-            var entities = await _dbContext.All<TEntity>().Take(limit).ToListAsync();
+            var entities = await _dbContext.All<TEntity>()
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
             return entities.Select(FromEntityShortcut).ToList();
         }
         public List<TModel> GetRandoms(int limit)

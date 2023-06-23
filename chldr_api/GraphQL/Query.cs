@@ -48,7 +48,7 @@ namespace chldr_api
                         break;
 
                     case RecordType.ChangeSet:
-                        var changeSets = await unitOfWork.ChangeSets.TakeAsync(0, 100);
+                        var changeSets = await unitOfWork.ChangeSets.TakeAsync(offset, limit);
                         dtos = changeSets.Select(ChangeSetDto.FromModel);
                         break;
 

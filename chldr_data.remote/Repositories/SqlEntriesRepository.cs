@@ -66,14 +66,17 @@ namespace chldr_data.remote.Repositories
 
             return FromEntityShortcut(entry);
         }
-        public override async Task<IEnumerable<EntryModel>> TakeAsync(int offset = 0, int limit = 50)
+        public override async Task<IEnumerable<EntryModel>> TakeAsync(int offset, int limit)
         {
             var entities = await _dbContext.Set<SqlEntry>()
                       .Include(e => e.Source)
                       .Include(e => e.User)
                       .Include(e => e.Translations)
                       .Include(e => e.Sounds)
+
+                      .Skip(offset)
                       .Take(limit)
+
                       .ToListAsync();
 
             return entities.Select(FromEntityShortcut).ToList();

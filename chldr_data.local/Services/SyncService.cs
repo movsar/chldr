@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Newtonsoft.Json;
 using Realms;
 using Realms.Sync;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace chldr_data.local.Services
 {
@@ -41,56 +43,84 @@ namespace chldr_data.local.Services
         bool _isRunning = false;
         private async Task PullRemoteDatabase()
         {
+            var offset = 0;
+            var limit = 5000;
+
             // Remove existing database
             _dbContext.Write(() =>
             {
                 _dbContext.RemoveAll();
             });
 
+            var sw = Stopwatch.StartNew();
+
             // Get users
-            var userDtos = await _requestService.Take<UserDto>(RecordType.User, 0, 100);
-            _dbContext.Write(() =>
+            IEnumerable<UserDto> userDtos;
+            do
             {
-                foreach (var dto in userDtos)
+                userDtos = await _requestService.Take<UserDto>(RecordType.User, offset, limit);
+                _dbContext.Write(() =>
                 {
-                    _dbContext.Add(RealmUser.FromDto(dto, _dbContext));
-                }
-            });
+                    foreach (var dto in userDtos)
+                    {
+                        _dbContext.Add(RealmUser.FromDto(dto, _dbContext));
+                    }
+                });
+                offset += limit;
+            } while (userDtos.Any());
 
-            // Get sources
-            var sourceDtos = await _requestService.Take<SourceDto>(RecordType.Source, 0, 100);
-            _dbContext.Write(() =>
+            // Get all sources
+            offset = 0;
+            IEnumerable<SourceDto> sourceDtos;
+            do
             {
-                foreach (var dto in sourceDtos)
+                sourceDtos = await _requestService.Take<SourceDto>(RecordType.Source, offset, limit);
+                _dbContext.Write(() =>
                 {
-                    _dbContext.Add(RealmSource.FromDto(dto, _dbContext));
-                }
-            });
+                    foreach (var dto in sourceDtos)
+                    {
+                        _dbContext.Add(RealmSource.FromDto(dto, _dbContext));
+                    }
+                });
+                offset += limit;
+            } while (sourceDtos.Any());
 
-            // Get entries with translations and sounds
-            var entryDtos = await _requestService.Take<EntryDto>(RecordType.Entry, 0, 100);
-            _dbContext.Write(() =>
+            // Get all entries with translations and sounds
+            offset = 0;
+            IEnumerable<EntryDto> entryDtos;
+            do
             {
-                foreach (var dto in entryDtos)
-                {
-                    _dbContext.Add(RealmEntry.FromDto(dto, _dbContext));
-                }
-            });
+                entryDtos = await _requestService.Take<EntryDto>(RecordType.Entry, offset, limit);
+                _dbContext.Write(() =>
+                        {
+                            foreach (var dto in entryDtos)
+                            {
+                                _dbContext.Add(RealmEntry.FromDto(dto, _dbContext));
+                            }
+                        });
+                offset += limit;
+            } while (entryDtos.Any());
 
-            // Get latest changesets
-            var changeSetDtos = await _requestService.Take<ChangeSetDto>(RecordType.ChangeSet, 0, 100);
-            _dbContext.Write(() =>
+            // Get all changeSets
+            offset = 0;
+            IEnumerable<ChangeSetDto> changeSetDtos;
+            do
             {
-                foreach (var dto in changeSetDtos)
+                changeSetDtos = await _requestService.Take<ChangeSetDto>(RecordType.ChangeSet, offset, limit);
+                _dbContext.Write(() =>
                 {
-                    _dbContext.Add(RealmChangeSet.FromDto(dto, _dbContext));
+                    foreach (var dto in changeSetDtos)
+                    {
+                        _dbContext.Add(RealmChangeSet.FromDto(dto, _dbContext));
+                    }
+                });
+                offset += limit;
+            } while (entryDtos.Any());
 
-                }
-            });
-
-            // Get by chunks until finished
-
+            sw.Stop();
+            var ms = sw.ElapsedMilliseconds;
         }
+
         internal async Task Sync()
         {
             if (_isRunning)
