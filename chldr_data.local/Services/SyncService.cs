@@ -131,13 +131,13 @@ namespace chldr_data.local.Services
                 }
 
                 // Return if there are no changesets available on remote server
-                var latestRemoteChangeSets = await _requestService.TakeLast<ChangeSetDto>(RecordType.ChangeSet, 1);
+                var latestRemoteChangeSets = await _requestService.TakeLast<ChangeSetDto>(RecordType.ChangeSet, Constants.ChangeSetsToApply);
                 if (!latestRemoteChangeSets.Any())
                 {
                     return;
                 }
 
-                var latestRemoteChangeSet = latestRemoteChangeSets.ToList()[0];
+                var latestRemoteChangeSet = latestRemoteChangeSets.Last();
                 if (latestRemoteChangeSet.ChangeSetIndex <= latestlocalChangeSetIndex)
                 {
                     return;
@@ -150,44 +150,7 @@ namespace chldr_data.local.Services
                     return;
                 }
 
-                // TODO: ApplyChangeSets()
-
-                _dbContext.Write(() =>
-                {
-
-
-                    //foreach (var changeSet in latestRemoteChangeSets)
-                    //{
-                    //    var changes = JsonConvert.DeserializeObject<List<Change>>(changeSet.RecordChanges);
-                    //    if (changes == null || changes.Count == 0)
-                    //    {
-                    //        continue;
-                    //    }
-
-                    //    // Apply changes to the local database
-                    //    if (changeSet.RecordType == Enums.RecordType.Entry)
-                    //    {
-                    //        try
-                    //        {
-                    //            var realmWord = _dbContext.Find<RealmEntry>(changeSet.RecordId);
-                    //            if (realmWord == null)
-                    //            {
-                    //                throw new NullReferenceException();
-                    //            }
-
-                    //            foreach (var change in changes)
-                    //            {
-                    //                SetPropertyValue(realmWord, change.Property, change.NewValue);
-                    //            }
-                    //        }
-                    //        catch (Exception ex)
-                    //        {
-
-                    //        }
-                    //    }
-                    //}
-
-                });
+                ApplyChangeSets(latestRemoteChangeSets);
             }
             catch (Exception ex)
             {
@@ -199,6 +162,71 @@ namespace chldr_data.local.Services
                 _isRunning = false;
             }
 
+        }
+
+        private void ApplyChangeSets(IEnumerable<ChangeSetDto> changeSets)
+        {
+            _dbContext.Write(() =>
+            {
+                foreach (var changeSet in changeSets)
+                {
+                    switch (changeSet.Operation)
+                    {
+                        case Operation.Insert:
+                            break;
+                        case Operation.Delete:
+                            break;
+                        case Operation.Update:
+                            var changes = JsonConvert.DeserializeObject<System.Collections.Generic.List<Change>>(changeSet.RecordChanges);
+                            if (changes == null || changes.Count == 0)
+                            {
+                                continue;
+                            }
+
+                            //ApplyChanges(changeSet.RecordType, changeSet.RecordId, changes);
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+
+            });
+        }
+        private void ApplyChanges<T>(RecordType recordType, string entityId, IEnumerable<Change> changes)
+        {
+            switch (recordType)
+            {
+                case RecordType.Entry:
+                    ApplyChangesForType<RealmEntry>(entityId, changes);
+                    break;
+                case RecordType.User:
+                    ApplyChangesForType<RealmUser>(entityId, changes);
+                    break;
+                case RecordType.Source:
+                    ApplyChangesForType<RealmSource>(entityId, changes);
+                    break;
+                case RecordType.Sound:
+                    ApplyChangesForType<RealmSound>(entityId, changes);
+                    break;
+                case RecordType.Translation:
+                    ApplyChangesForType<RealmTranslation>(entityId, changes);
+                    break;
+                case RecordType.ChangeSet:
+                    ApplyChangesForType<RealmChangeSet>(entityId, changes);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ApplyChangesForType<T>(string entityId, IEnumerable<Change> changes) where T: RealmObject
+        {
+            var realmWord = _dbContext.Find<T>(entityId);
+            foreach (var change in changes)
+            {
+                SetPropertyValue(realmWord, change.Property, change.NewValue);
+            }
         }
 
         internal void BeginListening()
