@@ -16,6 +16,8 @@ using Realms.Sync;
 using System.Collections.Generic;
 using System.Diagnostics;
 
+using static Realms.ThreadSafeReference;
+
 namespace chldr_data.local.Services
 {
     public class SyncService
@@ -41,12 +43,27 @@ namespace chldr_data.local.Services
 
 
         bool _isRunning = false;
-        private async Task PullRemoteDatabase()
+
+        private async Task<System.Collections.Generic.List<T>> RetrieveAll<T>(RecordType recordType) where T : class, new()
         {
-            var offset = 0;
             // Best number for requests according to the measurements
             var limit = 13000;
+            int offset = 0;
 
+            var combinedResults = new System.Collections.Generic.List<T>();
+            IEnumerable<T> newResults;
+            do
+            {
+                newResults = await _requestService.Take<T>(recordType, offset, limit);
+                combinedResults.AddRange(newResults);
+                offset += limit;
+            } while (newResults.Any());
+
+            return combinedResults;
+        }
+
+        private async Task PullRemoteDatabase()
+        {
             // Remove existing database
             _dbContext.Write(() =>
             {
@@ -56,79 +73,39 @@ namespace chldr_data.local.Services
             var sw = Stopwatch.StartNew();
 
             // Get users
-            IEnumerable<UserDto> userDtos;
-            do
-            {
-                userDtos = await _requestService.Take<UserDto>(RecordType.User, offset, limit);
-                _dbContext.Write(() =>
-                {
-                    foreach (var dto in userDtos)
-                    {
-                        _dbContext.Add(RealmUser.FromDto(dto, _dbContext));
-                    }
-                });
-                offset += limit;
-            } while (userDtos.Any());
+            var userDtos = await RetrieveAll<UserDto>(RecordType.User);
+            var sourceDtos = await RetrieveAll<SourceDto>(RecordType.Source);
+            var entryDtos = await RetrieveAll<EntryDto>(RecordType.Entry);
+            var changeSetDtos = await RetrieveAll<ChangeSetDto>(RecordType.ChangeSet);
 
-            // Get all sources
-            offset = 0;
-            IEnumerable<SourceDto> sourceDtos;
-            do
-            {
-                sourceDtos = await _requestService.Take<SourceDto>(RecordType.Source, offset, limit);
-                _dbContext.Write(() =>
-                {
-                    foreach (var dto in sourceDtos)
-                    {
-                        _dbContext.Add(RealmSource.FromDto(dto, _dbContext));
-                    }
-                });
-                offset += limit;
-            } while (sourceDtos.Any());
-
-            // Get all entries with translations and sounds
-            var entriesStopWatch = Stopwatch.StartNew();
-
-            offset = 0;
-            List<EntryDto> totalEntryDtos = new List<EntryDto>();
-            IEnumerable<EntryDto> newEntryDtos;
-            do
-            {
-                newEntryDtos = await _requestService.Take<EntryDto>(RecordType.Entry, offset, limit);
-                totalEntryDtos.AddRange(newEntryDtos);
-                offset += limit;
-            } while (newEntryDtos.Any());
+            var downloadedIn = sw.ElapsedMilliseconds;
+            sw.Restart();
 
             _dbContext.Write(() =>
             {
-                foreach (var dto in totalEntryDtos)
+                foreach (var dto in userDtos)
+                {
+                    _dbContext.Add(RealmUser.FromDto(dto, _dbContext));
+                }
+
+                foreach (var dto in sourceDtos)
+                {
+                    _dbContext.Add(RealmSource.FromDto(dto, _dbContext));
+                }
+
+                foreach (var dto in entryDtos)
                 {
                     _dbContext.Add(RealmEntry.FromDto(dto, _dbContext));
                 }
+
+                foreach (var dto in changeSetDtos)
+                {
+                    _dbContext.Add(RealmChangeSet.FromDto(dto, _dbContext));
+                }
             });
 
-            var entriesPerformance = entriesStopWatch.ElapsedMilliseconds;
-            // 62500, 62000
-            // 61400 - when write done separately
-
-            // Get all changeSets
-            offset = 0;
-            IEnumerable<ChangeSetDto> changeSetDtos;
-            do
-            {
-                changeSetDtos = await _requestService.Take<ChangeSetDto>(RecordType.ChangeSet, offset, limit);
-                _dbContext.Write(() =>
-                {
-                    foreach (var dto in changeSetDtos)
-                    {
-                        _dbContext.Add(RealmChangeSet.FromDto(dto, _dbContext));
-                    }
-                });
-                offset += limit;
-            } while (totalEntryDtos.Any());
-
             sw.Stop();
-            var ms = sw.ElapsedMilliseconds;
+            var savedIn = sw.ElapsedMilliseconds;
         }
 
         internal async Task Sync()
