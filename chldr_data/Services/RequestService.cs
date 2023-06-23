@@ -1,4 +1,5 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.Enums;
 using chldr_data.ResponseTypes;
 using chldr_utils.Interfaces;
 using GraphQL;
@@ -40,21 +41,21 @@ namespace chldr_data.Services
             return response.Data;
         }
 
-        public async Task<IEnumerable<UserDto>> TakeUsers(int offset, int limit)
+        public async Task<IEnumerable<T>> Take<T>(RecordType recordType, int offset, int limit)            
         {
-            var operation = "takeUsers";
+            var operation = "take";
             var request = new GraphQLRequest
             {
                 Query = $@"
-                        query {operation}($offset: Int!, $limit: Int!) {{
-                          {operation}(offset: $offset, limit: $limit) {{
+                        query {operation}($recordTypeName: String!, $offset: Int!, $limit: Int!) {{
+                          {operation}(recordTypeName: $recordTypeName, offset: $offset, limit: $limit) {{
                             success
                             errorMessage
                             serializedData
                           }}
                         }}",
 
-                Variables = new { offset = offset, limit = limit }
+                Variables = new { recordTypeName = recordType.ToString(), offset, limit }
             };
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
             if (!response.Data.Success)
@@ -62,9 +63,8 @@ namespace chldr_data.Services
                 throw new Exception("Error:unexpected_error");
             }
 
-            var users = JsonConvert.DeserializeObject<IEnumerable<UserDto>>(response.Data.SerializedData);
-
-            return users;
+            var listOfObjects = JsonConvert.DeserializeObject<IEnumerable<T>>(response.Data.SerializedData);
+            return listOfObjects;
         }
 
         public async Task<InsertResult> AddEntry(string userId, EntryDto entryDto)

@@ -9,6 +9,5 @@
         Sound = 4,
         Image = 5,
         Translation = 6,
-        Language = 7            
     }
 }
