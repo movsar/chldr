@@ -90,22 +90,26 @@ namespace chldr_data.local.Services
             var entriesStopWatch = Stopwatch.StartNew();
 
             offset = 0;
-            IEnumerable<EntryDto> entryDtos;
+            List<EntryDto> totalEntryDtos = new List<EntryDto>();
+            IEnumerable<EntryDto> newEntryDtos;
             do
             {
-                entryDtos = await _requestService.Take<EntryDto>(RecordType.Entry, offset, limit);
-
-                _dbContext.Write(() =>
-                        {
-                            foreach (var dto in entryDtos)
-                            {
-                                _dbContext.Add(RealmEntry.FromDto(dto, _dbContext));
-                            }
-                        });
+                newEntryDtos = await _requestService.Take<EntryDto>(RecordType.Entry, offset, limit);
+                totalEntryDtos.AddRange(newEntryDtos);
                 offset += limit;
-            } while (entryDtos.Any());
+            } while (newEntryDtos.Any());
+
+            _dbContext.Write(() =>
+            {
+                foreach (var dto in totalEntryDtos)
+                {
+                    _dbContext.Add(RealmEntry.FromDto(dto, _dbContext));
+                }
+            });
+
             var entriesPerformance = entriesStopWatch.ElapsedMilliseconds;
             // 62500, 62000
+            // 61400 - when write done separately
 
             // Get all changeSets
             offset = 0;
@@ -121,7 +125,7 @@ namespace chldr_data.local.Services
                     }
                 });
                 offset += limit;
-            } while (entryDtos.Any());
+            } while (totalEntryDtos.Any());
 
             sw.Stop();
             var ms = sw.ElapsedMilliseconds;
