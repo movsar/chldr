@@ -26,22 +26,25 @@ namespace chldr_api.GraphQL.MutationServices
             var accessToken = JwtService.GenerateToken(user.UserId, "access-token-secretaccess-token-secretaccess-token-secret", accessTokenExpiration);
             var refreshToken = JwtService.GenerateToken(user.UserId, "refresh-token-secretrefresh-token-secretrefresh-token-secret", refreshTokenExpiration);
 
-            // Save the tokens to the database
-            dbContext.Tokens.Add(new SqlToken
+            var accessTokenEntity = new SqlToken
             {
                 UserId = user.UserId,
                 Type = (int)TokenType.Access,
                 Value = accessToken,
                 ExpiresIn = accessTokenExpiration
-            });
-
-            dbContext.Tokens.Add(new SqlToken
+            };
+            
+            var refreshTokenEntity = new SqlToken
             {
                 UserId = user.UserId,
                 Type = (int)TokenType.Refresh,
                 Value = refreshToken,
                 ExpiresIn = refreshTokenExpiration
-            });
+            };
+
+            // Save the tokens to the database
+            dbContext.Tokens.Add(accessTokenEntity);
+            dbContext.Tokens.Add(refreshTokenEntity);
 
             await dbContext.SaveChangesAsync();
 
@@ -57,39 +60,50 @@ namespace chldr_api.GraphQL.MutationServices
 
         internal async Task<LoginResult> ExecuteAsync(SqlDataProvider dataProvider, string refreshToken)
         {
-            var dbContext = dataProvider.GetContext();
-
-            // Check if a user with this email exists
-            var token = await dbContext.Tokens.SingleOrDefaultAsync(t => t.Type == (int)TokenType.Refresh && t.Value == refreshToken);
-            if (token == null)
+            try
             {
-                return new LoginResult() { ErrorMessage = "Invalid refresh token" };
-            }
+                var dbContext = dataProvider.GetContext();
 
-            if (DateTime.UtcNow > token.ExpiresIn)
+                // Check if a user with this email exists
+                var token = await dbContext.Tokens.SingleOrDefaultAsync(t => t.Type == (int)TokenType.Refresh && t.Value == refreshToken);
+                if (token == null)
+                {
+                    return new LoginResult() { ErrorMessage = "Invalid refresh token" };
+                }
+
+                if (DateTime.UtcNow > token.ExpiresIn)
+                {
+                    return new LoginResult() { ErrorMessage = "Refresh token has expired" };
+                }
+
+                var user = dbContext.Users.SingleOrDefault(u => u.UserId.Equals(token.UserId));
+                if (user == null)
+                {
+                    return new LoginResult() { ErrorMessage = "No user has been found for the requested token" };
+                }
+
+                // Remove previous tokens related to this user (in future this can be done in a batch job to increase efficiency)
+                var previousTokens = dbContext.Tokens
+                    .Where(t => t.Type == (int)TokenType.Refresh || t.Type == (int)TokenType.Access)
+                    .Where(t => t.UserId.Equals(token.UserId));
+
+                dbContext.Tokens.RemoveRange(previousTokens);
+
+                return await SignInAsync(dbContext, user);
+            }
+            catch (Exception ex)
             {
-                return new LoginResult() { ErrorMessage = "Refresh token has expired" };
+                return new LoginResult()
+                {
+                    ErrorMessage = ex.Message
+                };
             }
-
-            var user = dbContext.Users.SingleOrDefault(u => u.UserId.Equals(token.UserId));
-            if (user == null)
-            {
-                return new LoginResult() { ErrorMessage = "No user has been found for the requested token" };
-            }
-
-            // Remove previous tokens related to this user (in future this can be done in a batch job to increase efficiency)
-            var previousTokens = dbContext.Tokens
-                .Where(t => t.Type == (int)TokenType.Refresh || t.Type == (int)TokenType.Access)
-                .Where(t => t.UserId.Equals(token.UserId));
-            dbContext.Tokens.RemoveRange(previousTokens);
-
-            return await SignInAsync(dbContext, user);
         }
 
         internal async Task<LoginResult> ExecuteAsync(SqlDataProvider dataProvider, string email, string password)
         {
             var dbContext = dataProvider.GetContext();
-         
+
             // Check if a user with this email exists
             var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
             if (user == null)

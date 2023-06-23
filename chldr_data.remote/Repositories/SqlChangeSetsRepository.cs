@@ -26,7 +26,7 @@ namespace chldr_data.remote.Repositories
             _dbContext.AddRange(entities);
         }
 
-        public async Task<IEnumerable<ChangeSetModel>> TakeLastAsync(int count)
+        public async Task<List<ChangeSetModel>> TakeLastAsync(int count)
         {
             var lastChangeSetIndices = await _dbContext.ChangeSets
             .OrderByDescending(c => c.ChangeSetIndex)
@@ -38,7 +38,7 @@ namespace chldr_data.remote.Repositories
                 .Where(c => lastChangeSetIndices.Contains(c.ChangeSetIndex))
                 .ToListAsync();
 
-            return models.Select(ChangeSetModel.FromEntity);
+            return models.Select(ChangeSetModel.FromEntity).ToList();
         }
 
         public IEnumerable<ChangeSetModel> Get(string[] changeSetIds)

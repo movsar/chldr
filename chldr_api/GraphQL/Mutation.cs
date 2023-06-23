@@ -34,6 +34,7 @@ namespace chldr_api
             RegisterUserResolver registerUserResolver,
             ConfirmEmailResolver confirmEmailResolver,
             LoginResolver loginUserResolver,
+            
             IDataProvider dataProvider,
             IConfiguration configuration,
             IStringLocalizer<AppLocalizations> localizer,

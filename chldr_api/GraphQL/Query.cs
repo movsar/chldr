@@ -23,12 +23,13 @@ namespace chldr_api
 
         public async Task<RequestResult> TakeAsync(string recordTypeName, int offset, int limit)
         {
-            using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork();
-
-            object? dtos = null;
-            var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);
             try
             {
+                using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+
+                object? dtos = null;
+                var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);
+
                 switch (recordType)
                 {
                     case RecordType.User:
@@ -75,12 +76,13 @@ namespace chldr_api
 
         public async Task<RequestResult> TakeLastAsync(string recordTypeName, int count)
         {
-            using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork();
-
-            object? dtos = null;
-            var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);
             try
             {
+                using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+
+                object? dtos = null;
+                var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);
+
                 switch (recordType)
                 {
                     case RecordType.ChangeSet:

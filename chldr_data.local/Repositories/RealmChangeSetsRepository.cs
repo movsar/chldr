@@ -20,14 +20,14 @@ namespace chldr_data.Repositories
             return ChangeSetModel.FromEntity(entity);
         }
 
-        public async Task<IEnumerable<ChangeSetModel>> TakeLastAsync(int count)
+        public async Task<List<ChangeSetModel>> TakeLastAsync(int count)
         {
             var models = await _dbContext.All<RealmChangeSet>()
                 .OrderByDescending(c => c.ChangeSetIndex)
                 .TakeLast(count)
                 .ToListAsync();
 
-            return models.AsEnumerable().Select(ChangeSetModel.FromEntity);
+            return models.AsEnumerable().Select(ChangeSetModel.FromEntity).ToList();
         }
 
         public IEnumerable<ChangeSetModel> Get(string[] changeSetIds)
