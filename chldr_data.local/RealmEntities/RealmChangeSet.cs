@@ -1,13 +1,14 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using Realms;
 using chldr_data.DatabaseObjects.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.local.RealmEntities
 {
     [MapTo("ChangeSet")]
     public class RealmChangeSet : RealmObject, IChangeSetEntity
     {
-        [PrimaryKey]
+        [Realms.PrimaryKey]
         public long ChangeSetIndex { get; set; }
         public string ChangeSetId { get; set; }
         public string UserId { get; set; }
@@ -20,19 +21,30 @@ namespace chldr_data.local.RealmEntities
 
         public RealmChangeSet() { }
 
-        public static IChangeSetEntity FromDto(ChangeSetDto entity)
+        public static RealmChangeSet FromDto(ChangeSetDto dto, Realm _dbContext)
         {
-            return new RealmChangeSet()
+            if (string.IsNullOrEmpty(dto.ChangeSetId) || _dbContext == null)
             {
-                ChangeSetIndex = entity.ChangeSetIndex,
-                ChangeSetId = entity.ChangeSetId,
-                UserId = entity.UserId,
-                Operation = (int)entity.Operation,
-                RecordType = (int)entity.RecordType,
-                RecordId = entity.RecordId,
-                RecordChanges = entity.RecordChanges,
-                CreatedAt = entity.CreatedAt,
-            };
+                throw new NullReferenceException();
+            }
+
+            // Translation
+            var changeSet = _dbContext.Find<RealmChangeSet>(dto.ChangeSetIndex);
+            if (changeSet == null)
+            {
+                changeSet = new RealmChangeSet();
+            }
+
+            changeSet.ChangeSetIndex = dto.ChangeSetIndex;
+            changeSet.ChangeSetId = dto.ChangeSetId;
+            changeSet.UserId = dto.UserId;
+            changeSet.Operation = (int)dto.Operation;
+            changeSet.RecordType = (int)dto.RecordType;
+            changeSet.RecordId = dto.RecordId;
+            changeSet.RecordChanges = dto.RecordChanges;
+            changeSet.CreatedAt = dto.CreatedAt;
+            return changeSet;
+
         }
     }
 }

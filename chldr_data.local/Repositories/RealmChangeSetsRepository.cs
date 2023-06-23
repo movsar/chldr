@@ -4,10 +4,10 @@ using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.local.RealmEntities;
 using chldr_tools;
-using chldr_utils.Interfaces;
 using chldr_utils;
 using Realms;
 using chldr_utils.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.Repositories
 {
@@ -20,14 +20,14 @@ namespace chldr_data.Repositories
             return ChangeSetModel.FromEntity(entity);
         }
 
-        public IEnumerable<ChangeSetModel> GetLatest(int limit)
+        public async Task<IEnumerable<ChangeSetModel>> TakeLastAsync(int count)
         {
-            var models = _dbContext.All<RealmChangeSet>()
+            var models = await _dbContext.All<RealmChangeSet>()
                 .OrderByDescending(c => c.ChangeSetIndex)
-                .Take(limit)
-                .Select(c => ChangeSetModel.FromEntity(c));
+                .TakeLast(count)
+                .ToListAsync();
 
-            return models;
+            return models.AsEnumerable().Select(ChangeSetModel.FromEntity);
         }
 
         public IEnumerable<ChangeSetModel> Get(string[] changeSetIds)
@@ -49,7 +49,7 @@ namespace chldr_data.Repositories
             // Store max 500 changesets
             _dbContext.Write(() =>
             {
-                var changeSet = (RealmChangeSet)RealmChangeSet.FromDto(dto);
+                var changeSet = RealmChangeSet.FromDto(dto, _dbContext);
                 _dbContext.Add(changeSet);
             });
         }

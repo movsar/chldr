@@ -5,6 +5,7 @@ using chldr_data.Models;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_utils.Services;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace chldr_data.remote.Repositories
@@ -103,9 +104,9 @@ namespace chldr_data.remote.Repositories
 
             _dbContext.SaveChanges();
         }
-        public virtual List<TModel> Take(int offset = 0, int limit = 50)
+        public virtual async Task<IEnumerable<TModel>> TakeAsync(int offset = 0, int limit = 50)
         {
-            var entities = _dbContext.Set<TEntity>().Take(limit);
+            var entities = await _dbContext.Set<TEntity>().Take(limit).ToListAsync();
             return entities.Select(FromEntityShortcut).ToList();
         }
         public virtual List<TModel> GetRandoms(int limit)

@@ -6,6 +6,6 @@ namespace chldr_data.Interfaces.Repositories
     public interface IChangeSetsRepository : IRepository<ChangeSetModel, ChangeSetDto>
     {
         IEnumerable<ChangeSetModel> Get(string[] changeSetIds);
-        IEnumerable<ChangeSetModel> GetLatest(int minIndex);
+        Task<IEnumerable<ChangeSetModel>> TakeLastAsync(int count);
     }
 }

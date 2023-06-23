@@ -15,33 +15,33 @@ namespace chldr_data.Services
         }
         private IGraphQlClient _graphQLRequestSender;
 
-
-        public async Task<IEnumerable<ChangeSetDto>> GetChangeSets()
+        public async Task<IEnumerable<T>> TakeLast<T>(RecordType recordType, int count)
         {
+            var operation = "takeLast";
             var request = new GraphQLRequest
             {
-                Query = @"
-                        query retrieveLatestChangeSets($minIndex: Int!) {
-                          retrieveLatestChangeSets(minIndex: $minIndex) {
-                            changeSetId                   
-                            changeSetIndex
-                            recordId
-                            recordChanges
-                            recordType
-                            operation
-                            userId
-                          }
-                        }
-                        ",
-                // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new { minIndex = 0 }
-            };
+                Query = $@"
+                        query {operation}($recordTypeName: String!, $count: Int!) {{
+                          {operation}(recordTypeName: $recordTypeName, count: $count) {{
+                            success
+                            errorMessage
+                            serializedData
+                          }}
+                        }}",
 
-            var response = await _graphQLRequestSender.SendRequestAsync<IEnumerable<ChangeSetDto>>(request, "retrieveLatestChangeSets");
-            return response.Data;
+                Variables = new { recordTypeName = recordType.ToString(), count }
+            };
+            var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
+            if (!response.Data.Success)
+            {
+                throw new Exception(response.Data.ErrorMessage);
+            }
+
+            var listOfObjects = JsonConvert.DeserializeObject<IEnumerable<T>>(response.Data.SerializedData);
+            return listOfObjects;
         }
 
-        public async Task<IEnumerable<T>> Take<T>(RecordType recordType, int offset, int limit)            
+        public async Task<IEnumerable<T>> Take<T>(RecordType recordType, int offset, int limit)
         {
             var operation = "take";
             var request = new GraphQLRequest
@@ -60,7 +60,7 @@ namespace chldr_data.Services
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
             if (!response.Data.Success)
             {
-                throw new Exception("Error:unexpected_error");
+                throw new Exception(response.Data.ErrorMessage);
             }
 
             var listOfObjects = JsonConvert.DeserializeObject<IEnumerable<T>>(response.Data.SerializedData);

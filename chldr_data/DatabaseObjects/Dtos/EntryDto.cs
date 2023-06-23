@@ -17,7 +17,7 @@ namespace chldr_data.DatabaseObjects.Dtos
         public int EntrySubtype { get; set; } = 0;
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
-        public List<TranslationDto> Translations { get; set; } = new List<TranslationDto>();
+        public virtual List<TranslationDto> Translations { get; set; } = new List<TranslationDto>();
         public virtual List<SoundDto> Sounds { get; set; } = new List<SoundDto>();
         public static EntryDto FromModel(EntryModel entryModel)
         {

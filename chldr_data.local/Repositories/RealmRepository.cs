@@ -5,6 +5,7 @@ using chldr_data.Interfaces.Repositories;
 using Realms;
 using chldr_utils.Services;
 using chldr_data.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.Repositories
 {
@@ -53,9 +54,9 @@ namespace chldr_data.Repositories
             });
         }
 
-        public List<TModel> Take(int offset = 0, int limit = 50)
+        public async Task<IEnumerable<TModel>> TakeAsync(int offset = 0, int limit = 50)
         {
-            var entities = _dbContext.All<TEntity>().Take(limit);
+            var entities = await _dbContext.All<TEntity>().Take(limit).ToListAsync();
             return entities.Select(FromEntityShortcut).ToList();
         }
         public List<TModel> GetRandoms(int limit)

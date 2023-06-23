@@ -3,6 +3,7 @@ using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.ResponseTypes;
 using Newtonsoft.Json;
+using Realms.Sync;
 
 namespace chldr_api
 {
@@ -20,62 +21,96 @@ namespace chldr_api
             _configuration = configuration;
         }
 
-        public RequestResult Take(string recordTypeName, int offset, int limit)
+        public async Task<RequestResult> TakeAsync(string recordTypeName, int offset, int limit)
         {
+            using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork();
 
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
             object? dtos = null;
-
-
             var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);
-            switch (recordType)
+            try
             {
-                case RecordType.Entry:
-                    dtos = unitOfWork.Entries.Take(offset, limit).Select(EntryDto.FromModel);
-                    break;
+                switch (recordType)
+                {
+                    case RecordType.User:
+                        var users = await unitOfWork.Users.TakeAsync(offset, limit);
+                        dtos = users.Select(UserDto.FromModel);
+                        break;
 
-                case RecordType.User:
-                    dtos = unitOfWork.Users.Take(offset, limit).Select(UserDto.FromModel);
-                    break;
+                    case RecordType.Source:
+                        var sources = await unitOfWork.Sources.TakeAsync(offset, limit);
+                        dtos = sources.Select(SourceDto.FromModel);
+                        break;
 
-                case RecordType.Source:
-                    dtos = unitOfWork.Sources.Take(offset, limit).Select(SourceDto.FromModel);
-                    break;
+                    case RecordType.Entry:
+                        var entries = await unitOfWork.Entries.TakeAsync(offset, limit);
+                        dtos = entries.Select(EntryDto.FromModel);
+                        break;
 
-                case RecordType.Sound:
-                    break;
+                    case RecordType.ChangeSet:
+                        var changeSets = await unitOfWork.ChangeSets.TakeAsync(0, 100);
+                        dtos = changeSets.Select(ChangeSetDto.FromModel);
+                        break;
 
-                case RecordType.Translation:
-                    dtos = unitOfWork.Translations.Take(offset, limit).Select(TranslationDto.FromModel);
-                    break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
+
+                return new RequestResult()
+                {
+                    Success = true,
+                    SerializedData = JsonConvert.SerializeObject(dtos)
+                };
             }
-
-            return new RequestResult()
+            catch (Exception ex)
             {
-                Success = true,
-                SerializedData = JsonConvert.SerializeObject(dtos)
-            };
+                return new RequestResult()
+                {
+                    Success = false,
+                    ErrorMessage = ex.Message,
+                    SerializedData = string.Empty
+                };
+            }
         }
 
-        [UseProjection]
-        [UseFiltering]
-        [UseSorting]
-        public IQueryable<EntryDto> GetEntries(int limit)
+        public async Task<RequestResult> TakeLastAsync(string recordTypeName, int count)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
-            var words = unitOfWork.Entries.Take(limit);
-            return words.Select(w => EntryDto.FromModel(w)).AsQueryable();
+            using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+
+            object? dtos = null;
+            var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);
+            try
+            {
+                switch (recordType)
+                {
+                    case RecordType.ChangeSet:
+                        var changeSets = await unitOfWork.ChangeSets.TakeLastAsync(count);
+                        dtos = changeSets.Select(ChangeSetDto.FromModel);
+                        break;
+
+                    default:
+                        break;
+                }
+
+                return new RequestResult()
+                {
+                    Success = true,
+                    SerializedData = JsonConvert.SerializeObject(dtos)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RequestResult()
+                {
+                    Success = false,
+                    ErrorMessage = ex.Message,
+                    SerializedData = string.Empty
+                };
+            }
         }
 
-        public IQueryable<ChangeSetDto> RetrieveLatestChangeSets(int minIndex)
-        {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
-            var changeSets = unitOfWork.ChangeSets.GetLatest(minIndex);
-            return changeSets.Select(c => ChangeSetDto.FromModel(c)).AsQueryable();
-        }
-
+        //[UseProjection]
+        //[UseFiltering]
+        //[UseSorting]
     }
 }

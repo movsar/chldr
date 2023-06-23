@@ -6,6 +6,7 @@ using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_tools;
 using chldr_utils.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.remote.Repositories
 {
@@ -25,14 +26,19 @@ namespace chldr_data.remote.Repositories
             _dbContext.AddRange(entities);
         }
 
-        public IEnumerable<ChangeSetModel> GetLatest(int limit)
+        public async Task<IEnumerable<ChangeSetModel>> TakeLastAsync(int count)
         {
-            var models = _dbContext.ChangeSets
-                .OrderByDescending(c => c.ChangeSetIndex)
-                .Take(limit)
-                .Select(c => (ChangeSetModel)ChangeSetModel.FromEntity(c));
+            var lastChangeSetIndices = await _dbContext.ChangeSets
+            .OrderByDescending(c => c.ChangeSetIndex)
+            .Select(c => c.ChangeSetIndex)
+            .Take(count)
+            .ToListAsync();
 
-            return models;
+            var models = await _dbContext.ChangeSets
+                .Where(c => lastChangeSetIndices.Contains(c.ChangeSetIndex))
+                .ToListAsync();
+
+            return models.Select(ChangeSetModel.FromEntity);
         }
 
         public IEnumerable<ChangeSetModel> Get(string[] changeSetIds)

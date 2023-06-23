@@ -26,7 +26,7 @@ namespace chldr_data.remote.Repositories
 
         protected override SourceModel FromEntityShortcut(SqlSource entity)
         {
-            throw new NotImplementedException();
+            return SourceModel.FromEntity(entity);
         }
     }
 }

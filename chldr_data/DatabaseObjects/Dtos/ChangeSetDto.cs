@@ -1,11 +1,13 @@
 ﻿using chldr_data.Enums;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Interfaces;
+using Realms;
 
 namespace chldr_data.DatabaseObjects.Dtos
 {
     public class ChangeSetDto : IChangeSet
     {
+        [PrimaryKey]
         public long ChangeSetIndex { get; set; }
         public string ChangeSetId { get; set; } = Guid.NewGuid().ToString();
         public RecordType RecordType { get; set; }

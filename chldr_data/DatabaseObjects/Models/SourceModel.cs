@@ -4,7 +4,7 @@ namespace chldr_data.DatabaseObjects.Models
 {
     public class SourceModel : IEntity
     {
-        private SourceModel() { }   
+        private SourceModel() { }
         public string Name { get; set; }
         public string Notes { get; set; }
         public string? SourceId { get; internal set; }
@@ -14,8 +14,9 @@ namespace chldr_data.DatabaseObjects.Models
             return new SourceModel()
             {
                 SourceId = source.SourceId,
+                UserId = source.UserId,
                 Name = source.Name,
-                Notes = source.Notes,
+                Notes = source.Notes ?? string.Empty,
             };
         }
     }

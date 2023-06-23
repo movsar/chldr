@@ -42,32 +42,54 @@ namespace chldr_data.local.Services
         private async Task PullRemoteDatabase()
         {
             // Remove existing database
-            _dbContext.Write(() => { _dbContext.RemoveAll(); });
-
-            var userDtos = await _requestService.Take<UserDto>(RecordType.User, 0, 100);
             _dbContext.Write(() =>
             {
-                userDtos.Select(userDto => _dbContext.Add(RealmUser.FromDto(userDto, _dbContext)));
-            });
-
-            var sourceDtos = await _requestService.Take<UserDto>(RecordType.Source, 0, 100);
-            _dbContext.Write(() =>
-            {
-                userDtos.Select(sourceDtos => _dbContext.Add(RealmSource.FromDto(userDto, _dbContext)));
-            });
-
-            var entryDtos = await _requestService.Take<UserDto>(RecordType.Entry, 0, 100);
-            _dbContext.Write(() =>
-            {
-                userDtos.Select(userDto => _dbContext.Add(RealmUser.FromDto(userDto, _dbContext)));
+                _dbContext.RemoveAll();
             });
 
             // Get users
+            var userDtos = await _requestService.Take<UserDto>(RecordType.User, 0, 100);
+            _dbContext.Write(() =>
+            {
+                foreach (var dto in userDtos)
+                {
+                    _dbContext.Add(RealmUser.FromDto(dto, _dbContext));
+                }
+            });
+
             // Get sources
-            // Get entries with sounds and translations
-            // Get latest changeset
+            var sourceDtos = await _requestService.Take<SourceDto>(RecordType.Source, 0, 100);
+            _dbContext.Write(() =>
+            {
+                foreach (var dto in sourceDtos)
+                {
+                    _dbContext.Add(RealmSource.FromDto(dto, _dbContext));
+                }
+            });
+
+            // Get entries with translations and sounds
+            var entryDtos = await _requestService.Take<EntryDto>(RecordType.Entry, 0, 100);
+            _dbContext.Write(() =>
+            {
+                foreach (var dto in entryDtos)
+                {
+                    _dbContext.Add(RealmEntry.FromDto(dto, _dbContext));
+                }
+            });
+
+            // Get latest changesets
+            var changeSetDtos = await _requestService.Take<ChangeSetDto>(RecordType.ChangeSet, 0, 100);
+            _dbContext.Write(() =>
+            {
+                foreach (var dto in changeSetDtos)
+                {
+                    _dbContext.Add(RealmChangeSet.FromDto(dto, _dbContext));
+
+                }
+            });
 
             // Get by chunks until finished
+
         }
         internal async Task Sync()
         {
@@ -81,64 +103,65 @@ namespace chldr_data.local.Services
                 _isRunning = true;
                 await _syncLock.WaitAsync();
 
-                var latestChangeSet = _dbContext.All<RealmChangeSet>().LastOrDefault();
-                var latestChangeSetIndex = latestChangeSet == null ? 0 : latestChangeSet.ChangeSetIndex;
-
-                if (latestChangeSetIndex == 0)
+                try
                 {
-                    await PullRemoteDatabase();
-                    return;
-                }
+                    var latestChangeSet = _dbContext.All<RealmChangeSet>().LastOrDefault();
+                    var latestChangeSetIndex = latestChangeSet == null ? 0 : latestChangeSet.ChangeSetIndex;
 
-
-                var changeSetsToApply = await _requestService.GetChangeSets();
-                if (changeSetsToApply == null)
-                {
-                    // TODO: Get latest changesets based on...?
-                }
-                return;
-                _dbContext.Write(() =>
-                {
-
-
-                    foreach (var changeSet in changeSetsToApply)
+                    if (latestChangeSetIndex == 0)
                     {
-                        var changes = JsonConvert.DeserializeObject<List<Change>>(changeSet.RecordChanges);
-                        if (changes == null || changes.Count == 0)
+                        await PullRemoteDatabase();
+                    }
+                    else
+                    {
+                        var latestRemoteChangeSets = await _requestService.TakeLast<ChangeSetDto>(RecordType.ChangeSet, 1);
+                        if (latestRemoteChangeSets == null)
                         {
-                            continue;
-                        }
-
-                        // Apply changes to the local database
-                        if (changeSet.RecordType == Enums.RecordType.Entry)
-                        {
-                            try
-                            {
-                                var realmWord = _dbContext.Find<RealmEntry>(changeSet.RecordId);
-                                if (realmWord == null)
-                                {
-                                    throw new NullReferenceException();
-                                }
-
-                                foreach (var change in changes)
-                                {
-                                    SetPropertyValue(realmWord, change.Property, change.NewValue);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-
-                            }
+                            // TODO: Get latest changesets based on...?
                         }
                     }
 
-                });
+                    _dbContext.Write(() =>
+                    {
 
-            }
-            catch (Exception ex)
-            {
 
-                throw ex;
+                        //foreach (var changeSet in latestRemoteChangeSets)
+                        //{
+                        //    var changes = JsonConvert.DeserializeObject<List<Change>>(changeSet.RecordChanges);
+                        //    if (changes == null || changes.Count == 0)
+                        //    {
+                        //        continue;
+                        //    }
+
+                        //    // Apply changes to the local database
+                        //    if (changeSet.RecordType == Enums.RecordType.Entry)
+                        //    {
+                        //        try
+                        //        {
+                        //            var realmWord = _dbContext.Find<RealmEntry>(changeSet.RecordId);
+                        //            if (realmWord == null)
+                        //            {
+                        //                throw new NullReferenceException();
+                        //            }
+
+                        //            foreach (var change in changes)
+                        //            {
+                        //                SetPropertyValue(realmWord, change.Property, change.NewValue);
+                        //            }
+                        //        }
+                        //        catch (Exception ex)
+                        //        {
+
+                        //        }
+                        //    }
+                        //}
+
+                    });
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
             }
             finally
             {
