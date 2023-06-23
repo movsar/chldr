@@ -44,7 +44,8 @@ namespace chldr_data.local.Services
         private async Task PullRemoteDatabase()
         {
             var offset = 0;
-            var limit = 10000;
+            // Best number for requests according to the measurements
+            var limit = 13000;
 
             // Remove existing database
             _dbContext.Write(() =>
@@ -86,11 +87,14 @@ namespace chldr_data.local.Services
             } while (sourceDtos.Any());
 
             // Get all entries with translations and sounds
+            var entriesStopWatch = Stopwatch.StartNew();
+
             offset = 0;
             IEnumerable<EntryDto> entryDtos;
             do
             {
                 entryDtos = await _requestService.Take<EntryDto>(RecordType.Entry, offset, limit);
+
                 _dbContext.Write(() =>
                         {
                             foreach (var dto in entryDtos)
@@ -100,6 +104,8 @@ namespace chldr_data.local.Services
                         });
                 offset += limit;
             } while (entryDtos.Any());
+            var entriesPerformance = entriesStopWatch.ElapsedMilliseconds;
+            // 62500, 62000
 
             // Get all changeSets
             offset = 0;
