@@ -120,65 +120,78 @@ namespace chldr_data.local.Services
                 _isRunning = true;
                 await _syncLock.WaitAsync();
 
-                try
+                var latestlocalChangeSet = _dbContext.All<RealmChangeSet>().LastOrDefault();
+                var latestlocalChangeSetIndex = latestlocalChangeSet == null ? 0 : latestlocalChangeSet.ChangeSetIndex;
+
+                // If there are no changesets available in local database - hardreset
+                if (latestlocalChangeSetIndex == 0)
                 {
-                    var latestChangeSet = _dbContext.All<RealmChangeSet>().LastOrDefault();
-                    var latestChangeSetIndex = latestChangeSet == null ? 0 : latestChangeSet.ChangeSetIndex;
-
-                    if (latestChangeSetIndex == 0)
-                    {
-                        await PullRemoteDatabase();
-                    }
-                    else
-                    {
-                        var latestRemoteChangeSets = await _requestService.TakeLast<ChangeSetDto>(RecordType.ChangeSet, 1);
-                        if (latestRemoteChangeSets == null)
-                        {
-                            // TODO: Get latest changesets based on...?
-                        }
-                    }
-
-                    _dbContext.Write(() =>
-                    {
-
-
-                        //foreach (var changeSet in latestRemoteChangeSets)
-                        //{
-                        //    var changes = JsonConvert.DeserializeObject<List<Change>>(changeSet.RecordChanges);
-                        //    if (changes == null || changes.Count == 0)
-                        //    {
-                        //        continue;
-                        //    }
-
-                        //    // Apply changes to the local database
-                        //    if (changeSet.RecordType == Enums.RecordType.Entry)
-                        //    {
-                        //        try
-                        //        {
-                        //            var realmWord = _dbContext.Find<RealmEntry>(changeSet.RecordId);
-                        //            if (realmWord == null)
-                        //            {
-                        //                throw new NullReferenceException();
-                        //            }
-
-                        //            foreach (var change in changes)
-                        //            {
-                        //                SetPropertyValue(realmWord, change.Property, change.NewValue);
-                        //            }
-                        //        }
-                        //        catch (Exception ex)
-                        //        {
-
-                        //        }
-                        //    }
-                        //}
-
-                    });
+                    await PullRemoteDatabase();
+                    return;
                 }
-                catch (Exception ex)
+
+                // Return if there are no changesets available on remote server
+                var latestRemoteChangeSets = await _requestService.TakeLast<ChangeSetDto>(RecordType.ChangeSet, 1);
+                if (!latestRemoteChangeSets.Any())
                 {
-                    throw;
+                    return;
                 }
+
+                var latestRemoteChangeSet = latestRemoteChangeSets.ToList()[0];
+                if (latestRemoteChangeSet.ChangeSetIndex <= latestlocalChangeSetIndex)
+                {
+                    return;
+                }
+
+                // If more than 1000 changes have been made - just perform hard reset
+                if ((latestRemoteChangeSet.ChangeSetIndex - latestlocalChangeSetIndex) > Constants.ChangeSetsToApply)
+                {
+                    await PullRemoteDatabase();
+                    return;
+                }
+
+                // TODO: ApplyChangeSets()
+
+                _dbContext.Write(() =>
+                {
+
+
+                    //foreach (var changeSet in latestRemoteChangeSets)
+                    //{
+                    //    var changes = JsonConvert.DeserializeObject<List<Change>>(changeSet.RecordChanges);
+                    //    if (changes == null || changes.Count == 0)
+                    //    {
+                    //        continue;
+                    //    }
+
+                    //    // Apply changes to the local database
+                    //    if (changeSet.RecordType == Enums.RecordType.Entry)
+                    //    {
+                    //        try
+                    //        {
+                    //            var realmWord = _dbContext.Find<RealmEntry>(changeSet.RecordId);
+                    //            if (realmWord == null)
+                    //            {
+                    //                throw new NullReferenceException();
+                    //            }
+
+                    //            foreach (var change in changes)
+                    //            {
+                    //                SetPropertyValue(realmWord, change.Property, change.NewValue);
+                    //            }
+                    //        }
+                    //        catch (Exception ex)
+                    //        {
+
+                    //        }
+                    //    }
+                    //}
+
+                });
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
             finally
             {

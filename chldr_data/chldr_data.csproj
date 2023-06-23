@@ -54,7 +54,7 @@
 
   <ItemGroup>
     <None Update="local.datx">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
