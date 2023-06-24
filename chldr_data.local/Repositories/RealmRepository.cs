@@ -6,6 +6,9 @@ using Realms;
 using chldr_utils.Services;
 using chldr_data.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using chldr_data.Models;
+using chldr_data.local.RealmEntities;
+using Newtonsoft.Json;
 
 namespace chldr_data.Repositories
 {
@@ -73,6 +76,34 @@ namespace chldr_data.Repositories
               .Select(FromEntityShortcut);
 
             return entries.ToList();
+        }
+
+        protected void InsertChangeSet(Operation operation, string userId, string recordId, List<Change>? changes = null)
+        {
+            var changeSet = new RealmChangeSet()
+            {
+                Operation = (int)operation,
+                UserId = userId!,
+                RecordId = recordId,
+                RecordType = (int)RecordType,
+            };
+
+            if (changeSet.Operation == (int)Operation.Update && changes != null)
+            {
+                changeSet.RecordChanges = JsonConvert.SerializeObject(changes);
+            }
+
+            try
+            {
+                _dbContext.Write(() =>
+                {
+                    _dbContext.Add(changeSet);
+                });
+            }
+            catch (Exception ex)
+            {
+                var msg = ex.Message;
+            }
         }
 
         public void AddRange(IEnumerable<TDto> added)

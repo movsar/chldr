@@ -110,9 +110,5 @@ namespace chldr_api
                 };
             }
         }
-
-        //[UseProjection]
-        //[UseFiltering]
-        //[UseSorting]
     }
 }
