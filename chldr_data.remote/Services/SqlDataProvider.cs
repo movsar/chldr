@@ -61,9 +61,7 @@ namespace chldr_data.local.Services
             return new SqlContext(options);
         }
 
-        private const string _defaultUserId = "63a816205d1af0e432fba6dd";
-
-        public IUnitOfWork CreateUnitOfWork(string? userId = _defaultUserId)
+        public IUnitOfWork CreateUnitOfWork(string userId = Constants.DefaultUserId)
         {
             var context = GetContext();
             return new SqlUnitOfWork(context, _fileService, userId!);

@@ -6,5 +6,6 @@
         public const string ProdApiHost = "https://api.nohchiyn-mott.com";
 
         public const int ChangeSetsToApply = 1000;
+        public const string DefaultUserId = "63a816205d1af0e432fba6dd";
     }
 }

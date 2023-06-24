@@ -16,8 +16,8 @@ namespace chldr_data.local.Repositories
 {
     internal class RealmSoundsRepository : RealmRepository<RealmSound, SoundModel, SoundDto>, ISoundsRepository
     {
-        public RealmSoundsRepository(Realm context, ExceptionHandler exceptionHandler, FileService fileService) : base(context, exceptionHandler, fileService) { }
-        protected override RecordType RecordType => throw new NotImplementedException();
+        public RealmSoundsRepository(Realm context, ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(context, exceptionHandler, fileService, userId) { }
+        protected override RecordType RecordType => RecordType.Sound;
         protected override SoundModel FromEntityShortcut(RealmSound entity)
         {
             return SoundModel.FromEntity(entity);

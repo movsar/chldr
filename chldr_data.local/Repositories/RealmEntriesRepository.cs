@@ -26,8 +26,9 @@ namespace chldr_data.Repositories
             Realm context,
             ExceptionHandler exceptionHandler,
             FileService fileService,
+            string userId,
             ITranslationsRepository translationsRepository,
-            ISoundsRepository soundsRepository) : base(context, exceptionHandler, fileService)
+            ISoundsRepository soundsRepository) : base(context, exceptionHandler, fileService, userId)
         {
             _translations = translationsRepository;
             _sounds = soundsRepository;

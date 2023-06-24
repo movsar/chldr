@@ -89,9 +89,9 @@ namespace chldr_data.local.Services
                 database.RemoveAll<RealmTranslation>();
             });
         }
-        public IUnitOfWork CreateUnitOfWork(string? userId = null)
+        public IUnitOfWork CreateUnitOfWork(string userId = Constants.DefaultUserId)
         {
-            return new RealmUnitOfWork(GetDatabase(), _exceptionHandler, _fileService);
+            return new RealmUnitOfWork(GetDatabase(), _exceptionHandler, _fileService, userId);
         }
 
         public Realm GetContext()
