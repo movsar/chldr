@@ -5,6 +5,8 @@ using chldr_data.local.Services;
 using chldr_data.local.RealmEntities;
 using Realms;
 using chldr_data.remote.Services;
+using chldr_data.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace chldr_tools
 {
@@ -89,7 +91,13 @@ namespace chldr_tools
             var realmDatabase = localRealmContext.GetContext();
 
             var connectionString = "asfsdfsadf";
-            var remoteSqlContext = new SqlDataProvider(_fileService, connectionString);
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(new Dictionary<string, string>
+                {
+                        { "RemoteDatabase",  connectionString}
+                }!).Build();
+
+            var remoteSqlContext = new SqlDataProvider(_fileService, configuration);
             remoteSqlContext.Initialize();
             var sqlDatabase = remoteSqlContext.GetContext();
 
