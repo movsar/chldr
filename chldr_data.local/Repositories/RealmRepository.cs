@@ -22,12 +22,14 @@ namespace chldr_data.Repositories
         protected readonly Realm _dbContext;
         protected readonly ExceptionHandler _exceptionHandler;
         protected readonly FileService _fileService;
+        protected readonly string _userId;
 
-        public RealmRepository(Realm context, ExceptionHandler exceptionHandler, FileService fileService)
+        public RealmRepository(Realm context, ExceptionHandler exceptionHandler, FileService fileService, string userId)
         {
             _dbContext = context;
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
+            _userId = userId;
         }
         protected abstract TModel FromEntityShortcut(TEntity entity);
 
@@ -55,6 +57,8 @@ namespace chldr_data.Repositories
             {
                 _dbContext.Remove(entity);
             });
+
+            InsertChangeSet(Operation.Delete, _userId, entityId);
         }
 
         public async Task<IEnumerable<TModel>> TakeAsync(int offset, int limit)

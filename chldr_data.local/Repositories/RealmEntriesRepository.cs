@@ -40,20 +40,22 @@ namespace chldr_data.Repositories
 
         public override void Add(EntryDto newEntryDto)
         {
-            RealmEntry? newEntry = null;
-
-            _dbContext.Write(() =>
-            {
-                newEntry = RealmEntry.FromDto(newEntryDto, _dbContext);
-                _dbContext.Add(newEntry);
-            });
-
-            if (newEntry == null)
+            if (newEntryDto == null || string.IsNullOrEmpty(newEntryDto.EntryId))
             {
                 throw new NullReferenceException();
             }
 
-            foreach (var sound in newEntry.Sounds)
+            RealmEntry entry = null!;
+
+            // Insert Entry entity (with associated sound and translation entities)
+            _dbContext.Write(() =>
+            {
+                entry = RealmEntry.FromDto(newEntryDto, _dbContext);
+                _dbContext.Add(entry);
+            });
+
+            // Save audiofiles if any
+            foreach (var sound in entry.Sounds)
             {
                 var soundDto = newEntryDto.Sounds.FirstOrDefault(s => s.SoundId == sound.SoundId && !string.IsNullOrEmpty(s.RecordingB64));
                 if (soundDto == null)
@@ -64,6 +66,8 @@ namespace chldr_data.Repositories
                 var filePath = Path.Combine(_fileService.EntrySoundsDirectory, soundDto.FileName);
                 File.WriteAllText(filePath, soundDto.RecordingB64);
             }
+
+            InsertChangeSet(Operation.Insert, newEntryDto.UserId!, newEntryDto.EntryId);
         }
 
 
@@ -72,13 +76,23 @@ namespace chldr_data.Repositories
             var existingEntry = Get(updatedEntryDto.EntryId);
             var existingEntryDto = EntryDto.FromModel(existingEntry);
 
+            // Update associated translations and sounds
             IEntriesRepository.HandleUpdatedEntryTranslations(_translations, existingEntryDto, updatedEntryDto);
             IEntriesRepository.HandleUpdatedEntrySounds(_sounds, existingEntryDto, updatedEntryDto);
+
+            // Add changeset if applicable
+            var entryChanges = Change.GetChanges(existingEntryDto, existingEntryDto);
+            if (entryChanges.Count == 0)
+            {
+                return;
+            }
 
             _dbContext.Write(() =>
             {
                 RealmEntry.FromDto(updatedEntryDto, _dbContext);
             });
+
+            InsertChangeSet(Operation.Update, updatedEntryDto.UserId!, existingEntryDto.EntryId, entryChanges);
         }
 
         public override void Remove(string entityId)

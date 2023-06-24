@@ -47,7 +47,7 @@ namespace chldr_data.remote.Repositories
 
             _translations.RemoveRange(translationIds);
             _sounds.RemoveRange(soundIds);
-
+          
             base.Remove(entityId);
         }
         public override EntryModel Get(string entityId)
@@ -104,6 +104,11 @@ namespace chldr_data.remote.Repositories
 
         public override void Add(EntryDto newEntryDto)
         {
+            if (newEntryDto == null || string.IsNullOrEmpty(newEntryDto.EntryId))
+            {
+                throw new NullReferenceException();
+            }
+            
             // Insert Entry entity (with associated sound and translation entities)
             var entry = SqlEntry.FromDto(newEntryDto, _dbContext);
             _dbContext.Add(entry);
@@ -135,20 +140,23 @@ namespace chldr_data.remote.Repositories
             var existingEntry = Get(updatedEntryDto.EntryId);
             var existingEntryDto = EntryDto.FromModel(existingEntry);
 
+            // Update associated translations and sounds
             IEntriesRepository.HandleUpdatedEntryTranslations(_translations, existingEntryDto, updatedEntryDto);
             IEntriesRepository.HandleUpdatedEntrySounds(_sounds, existingEntryDto, updatedEntryDto);
+            _dbContext.SaveChanges();
 
             // Add changeset if applicable
             var entryChanges = Change.GetChanges(existingEntryDto, existingEntryDto);
-            if (entryChanges.Count != 0)
+            if (entryChanges.Count == 0)
             {
-                InsertChangeSet(Operation.Update, _userId, existingEntryDto.EntryId, entryChanges);
+                return;
             }
 
-            // Save the changes
+            // Save the changes, even if there are no changes to the entry, as there might be 
             var updatedEntryEntity = SqlEntry.FromDto(updatedEntryDto, _dbContext);
             _dbContext.Update(updatedEntryEntity);
-            _dbContext.SaveChanges();
+            
+            InsertChangeSet(Operation.Update, _userId, existingEntryDto.EntryId, entryChanges);
         }
     }
 }
