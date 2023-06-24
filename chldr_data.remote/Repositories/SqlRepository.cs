@@ -50,6 +50,11 @@ namespace chldr_data.remote.Repositories
             _dbContext.Remove(entity);
             _dbContext.SaveChanges();
 
+            if (RecordType == RecordType.ChangeSet)
+            {
+                return;
+            }
+
             InsertChangeSet(Operation.Delete, _userId, entityId);
         }
 

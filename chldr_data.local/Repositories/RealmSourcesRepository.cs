@@ -9,6 +9,8 @@ using chldr_utils.Interfaces;
 using chldr_utils;
 using Realms;
 using chldr_utils.Services;
+using chldr_data.Models;
+using System.Threading.Channels;
 
 namespace chldr_data.Repositories
 {
@@ -38,13 +40,26 @@ namespace chldr_data.Repositories
                 var entity = RealmSource.FromDto(dto, _dbContext);
                 _dbContext.Add(entity);
             });
+
+            InsertChangeSet(Operation.Insert, dto.UserId!, dto.SourceId);
         }
         public override void Update(SourceDto dto)
         {
+            var existingEntity = Get(dto.SourceId);
+            var existingDto = SourceDto.FromModel(existingEntity);
+
+            var changes = Change.GetChanges(dto, existingDto);
+            if (changes.Count == 0)
+            {
+                return;
+            }
+
             _dbContext.Write(() =>
             {
                 var entity = RealmSource.FromDto(dto, _dbContext);
             });
+
+            InsertChangeSet(Operation.Update, dto.UserId!, dto.SourceId, changes);
         }
     }
 }

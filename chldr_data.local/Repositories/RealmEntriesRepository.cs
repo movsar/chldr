@@ -80,7 +80,6 @@ namespace chldr_data.Repositories
             IEntriesRepository.HandleUpdatedEntryTranslations(_translations, existingEntryDto, updatedEntryDto);
             IEntriesRepository.HandleUpdatedEntrySounds(_sounds, existingEntryDto, updatedEntryDto);
 
-            // Add changeset if applicable
             var entryChanges = Change.GetChanges(existingEntryDto, existingEntryDto);
             if (entryChanges.Count == 0)
             {

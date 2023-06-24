@@ -58,6 +58,11 @@ namespace chldr_data.Repositories
                 _dbContext.Remove(entity);
             });
 
+            if (RecordType == RecordType.ChangeSet)
+            {
+                return;
+            }
+
             InsertChangeSet(Operation.Delete, _userId, entityId);
         }
 

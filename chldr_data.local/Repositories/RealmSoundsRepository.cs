@@ -4,11 +4,13 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.local.RealmEntities;
+using chldr_data.Models;
 using chldr_data.Repositories;
 using chldr_utils;
 using chldr_utils.Interfaces;
 using chldr_utils.Services;
 using Realms;
+using System.Threading.Channels;
 
 namespace chldr_data.local.Repositories
 {
@@ -20,25 +22,37 @@ namespace chldr_data.local.Repositories
         {
             return SoundModel.FromEntity(entity);
         }
-        public override void Add(SoundDto soundDto)
+        public override void Add(SoundDto dto)
         {
-            var entry = _dbContext.Find<RealmEntry>(soundDto.EntryId);
+            var entry = _dbContext.Find<RealmEntry>(dto.EntryId);
 
             _dbContext.Write(() =>
             {
-                var sound = RealmSound.FromDto(soundDto, _dbContext, entry);
+                var sound = RealmSound.FromDto(dto, _dbContext, entry);
                 _dbContext.Add(sound);
             });
 
-            _fileService.AddEntrySound(soundDto.FileName, soundDto.RecordingB64!);            
+            _fileService.AddEntrySound(dto.FileName, dto.RecordingB64!);
+
+            InsertChangeSet(Operation.Insert, dto.UserId!, dto.SoundId);
         }
-        public override void Update(SoundDto soundDto)
+        public override void Update(SoundDto dto)
         {
-            var entry = _dbContext.Find<RealmEntry>(soundDto.EntryId);
+            var existingEntity = Get(dto.SoundId);
+            var existingDto = SoundDto.FromModel(existingEntity);
+
+            var changes = Change.GetChanges(dto, existingDto);
+            if (changes.Count == 0)
+            {
+                return;
+            }
+
             _dbContext.Write(() =>
             {
-                RealmSound.FromDto(soundDto, _dbContext, entry);
+                RealmSound.FromDto(dto, _dbContext);
             });
+
+            InsertChangeSet(Operation.Update, dto.UserId!, dto.SoundId, changes);
         }
         public override void Remove(string entityId)
         {
