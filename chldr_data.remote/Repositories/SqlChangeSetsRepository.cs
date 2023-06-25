@@ -31,8 +31,8 @@ namespace chldr_data.remote.Repositories
             {
 
                 lastChangeSetIndices = await _dbContext.ChangeSets
+                    .OrderByDescending(c => c.ChangeSetIndex)
                     .Select(c => c.ChangeSetIndex)
-                    .OrderByDescending(c => c)
                     .Take(count)
                     .ToListAsync();
 
