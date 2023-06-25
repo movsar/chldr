@@ -120,6 +120,13 @@ namespace chldr_data.local.Services
                 _isRunning = true;
                 await _syncLock.WaitAsync();
 
+                // Return if there are no changesets available on remote server
+                var latestRemoteChangeSets = await _requestService.TakeLast<ChangeSetDto>(RecordType.ChangeSet, Constants.ChangeSetsToApply);
+                if (!latestRemoteChangeSets.Any())
+                {
+                    return;
+                }
+
                 var latestlocalChangeSet = _dbContext.All<RealmChangeSet>().LastOrDefault();
                 var latestlocalChangeSetIndex = latestlocalChangeSet == null ? 0 : latestlocalChangeSet.ChangeSetIndex;
 
@@ -127,13 +134,6 @@ namespace chldr_data.local.Services
                 if (latestlocalChangeSetIndex == 0)
                 {
                     await PullRemoteDatabase();
-                    return;
-                }
-
-                // Return if there are no changesets available on remote server
-                var latestRemoteChangeSets = await _requestService.TakeLast<ChangeSetDto>(RecordType.ChangeSet, Constants.ChangeSetsToApply);
-                if (!latestRemoteChangeSets.Any())
-                {
                     return;
                 }
 

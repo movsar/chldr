@@ -1,34 +1,21 @@
-﻿using chldr_data.Enums;
-using chldr_data.Interfaces;
+﻿using chldr_data.Interfaces;
 using chldr_data.Models;
-using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.DatabaseObjects.Models;
-using chldr_data.ResponseTypes;
-using chldr_utils;
 using chldr_utils.Services;
-using GraphQL;
-using GraphQL.Client.Http;
-using GraphQL.Client.Serializer.Newtonsoft;
-using MongoDB.Bson;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Realms;
-using Realms.Sync;
-using MySqlX.XDevAPI;
 
 namespace chldr_data.Services
 {
     public class UserService
     {
         public event Action<ActiveSession>? UserStateHasChanged;
-        private readonly AuthService _authService;
+
+        private readonly RequestService _requestService;
         private readonly IDataProvider _dataProvider;
         private readonly LocalStorageService _localStorageService;
         private ActiveSession _currentSession = new ActiveSession();
 
-        public UserService(IDataProvider dataProvider, AuthService authService, LocalStorageService localStorageService)
+        public UserService(IDataProvider dataProvider, RequestService requestService, LocalStorageService localStorageService)
         {
-            _authService = authService;
+            _requestService = requestService;
             _dataProvider = dataProvider;
             _localStorageService = localStorageService;
 
@@ -41,22 +28,22 @@ namespace chldr_data.Services
 
         public async Task<string> RegisterNewUserAsync(string email, string password)
         {
-            return await _authService.RegisterUserAsync(email, password);
+            return await _requestService.RegisterUserAsync(email, password);
         }
 
         public async Task SendPasswordResetRequestAsync(string email)
         {
-            await _authService.PasswordResetRequestAsync(email);
+            await _requestService.PasswordResetRequestAsync(email);
         }
 
         public async Task UpdatePasswordAsync(string token, string newPassword)
         {
-            await _authService.UpdatePasswordAsync(token, newPassword);
+            await _requestService.UpdatePasswordAsync(token, newPassword);
         }
 
         public async Task ConfirmUserAsync(string token)
         {
-            await _authService.ConfirmUserAsync(token);
+            await _requestService.ConfirmUserAsync(token);
         }
         private async Task SaveActiveSession()
         {
@@ -67,7 +54,7 @@ namespace chldr_data.Services
         {
             try
             {
-                _currentSession = await _authService.LogInEmailPasswordAsync(email, password);
+                _currentSession = await _requestService.LogInEmailPasswordAsync(email, password);
                 await SaveActiveSession();
 
                 UserStateHasChanged?.Invoke(_currentSession);
@@ -88,7 +75,7 @@ namespace chldr_data.Services
 
         public async Task<ActiveSession> RefreshTokens(string refreshToken)
         {
-            return await _authService.RefreshTokens(refreshToken);
+            return await _requestService.RefreshTokens(refreshToken);
         }
 
         public async Task RestoreLastSession()
