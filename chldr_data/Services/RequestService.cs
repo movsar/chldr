@@ -18,10 +18,11 @@ namespace chldr_data.Services
             var request = new GraphQLRequest
             {
                 Query = @"
-                mutation($token: String!, $newPassword: String!) {
+                    mutation($token: String!, $newPassword: String!) {
                     updatePassword(token: $token, newPassword: $newPassword) {
                         success
                         errorMessage
+                        serializedData
                     }
                 }",
                 Variables = new { token, newPassword }
@@ -40,6 +41,7 @@ namespace chldr_data.Services
                             confirmEmail(token: $token) {
                                 success
                                 errorMessage
+                                serializedData
                             }
                         }",
 
@@ -59,16 +61,7 @@ namespace chldr_data.Services
                             loginEmailPassword(email: $email, password: $password) {
                                 success
                                 errorMessage
-                                accessToken
-                                refreshToken
-                                accessTokenExpiresIn
-                                user {
-                                    userId,
-                                    email,
-                                    firstName,
-                                    lastName,
-                                    rate
-                                }
+                                serializedData
                             }
                         }",
 
@@ -88,7 +81,7 @@ namespace chldr_data.Services
                             registerUser(email: $email, password: $password) {
                                 success
                                 errorMessage
-                                token
+                                serializedData
                             }
                         }",
 
@@ -108,16 +101,7 @@ namespace chldr_data.Services
                             logInRefreshToken(refreshToken: $refreshToken) {
                                 success
                                 errorMessage
-                                accessToken
-                                refreshToken
-                                accessTokenExpiresIn
-                                user {
-                                    userId,
-                                    email,
-                                    firstName,
-                                    lastName,
-                                    rate
-                                }
+                                serializedData
                             }
                         }",
 
@@ -136,7 +120,7 @@ namespace chldr_data.Services
                     passwordReset(email: $email) {
                         success
                         errorMessage
-                        resetToken
+                        serializedData
                     }
                 }",
                 Variables = new { email }
@@ -195,7 +179,7 @@ namespace chldr_data.Services
                           {operation}(userId: $userId, entryDto: $entryDto) {{
                             success
                             errorMessage
-                            createdAt
+                            serializedData
                           }}
                         }}
                         ",
@@ -217,6 +201,7 @@ namespace chldr_data.Services
                           {operation}(userId: $userId, entryId: $entryId) {{
                             success
                             errorMessage
+                            serializedData
                           }}
                         }}
                         ",
@@ -238,6 +223,7 @@ namespace chldr_data.Services
                           {operation}(userId: $userId, entryDto: $entryDto) {{
                             success
                             errorMessage
+                            serializedData
                           }}
                         }}
                         ",

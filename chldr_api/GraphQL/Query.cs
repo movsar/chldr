@@ -1,4 +1,5 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.ResponseTypes;
@@ -10,15 +11,10 @@ namespace chldr_api
     public class Query
     {
         private readonly IDataProvider _dataProvider;
-        protected readonly IConfiguration _configuration;
 
-        public Query(
-            IDataProvider dataProvider,
-            IConfiguration configuration
-            )
+        public Query(IDataProvider dataProvider)
         {
             _dataProvider = dataProvider;
-            _configuration = configuration;
         }
 
         public async Task<RequestResult> TakeAsync(string recordTypeName, int offset, int limit)
@@ -86,8 +82,22 @@ namespace chldr_api
                 switch (recordType)
                 {
                     case RecordType.ChangeSet:
-                        var changeSets = await unitOfWork.ChangeSets.TakeLastAsync(count);
+
+                        List<ChangeSetModel> changeSets = null!;
+                        try
+                        {
+                            changeSets = await unitOfWork.ChangeSets.TakeLastAsync(count);
+                        }
+                        catch (Exception ex)
+                        {
+                            // These errors get thrown occasionally, around 1/5
+                            // 1. An item with the same key has already been added. Key: server=104.248.40.142;port=3306;..
+                            // 2. Operations that change non-concurrent collections must have exclusive access. A concurrent update was performed on this collection and corrupted its state. The collection's state is no longer correct.
+                            throw;
+                        }
+
                         dtos = changeSets.Select(ChangeSetDto.FromModel);
+
                         break;
 
                     default:

@@ -42,7 +42,7 @@ namespace chldr_data.local.Services
         private Realm _dbContext => Realm.GetInstance(RealmDataProvider.OfflineDatabaseConfiguration);
 
 
-        bool _isRunning = false;
+        static bool _isRunning = false;
 
         private async Task<System.Collections.Generic.List<T>> RetrieveAll<T>(RecordType recordType) where T : class, new()
         {
@@ -60,7 +60,7 @@ namespace chldr_data.local.Services
                     throw new Exception(response.ErrorMessage);
                 }
 
-                newResults = response.Data<IEnumerable<T>>();
+                newResults = RequestResult.GetData<IEnumerable<T>>(response);
                 combinedResults.AddRange(newResults);
 
                 offset += limit;
@@ -114,6 +114,7 @@ namespace chldr_data.local.Services
             sw.Stop();
             var savedIn = sw.ElapsedMilliseconds;
         }
+        int i = 0;
 
         internal async Task Sync()
         {
@@ -129,8 +130,12 @@ namespace chldr_data.local.Services
 
                 // Return if there are no changesets available on remote server
                 var response = await _requestService.TakeLast<ChangeSetDto>(RecordType.ChangeSet, Constants.ChangeSetsToApply);
-                var latestRemoteChangeSets = response.Data<IEnumerable<ChangeSetDto>>();
+                if (!response.Success)
+                {
+                    throw new Exception(response.ErrorMessage);
+                }
 
+                var latestRemoteChangeSets = RequestResult.GetData<IEnumerable<ChangeSetDto>>(response);
                 if (!latestRemoteChangeSets.Any())
                 {
                     return;

@@ -1,7 +1,4 @@
-﻿using chldr_data.DatabaseObjects.Models;
-using Realms;
-
-namespace chldr_data.Interfaces
+﻿namespace chldr_data.Interfaces
 {
     public interface IDataProvider
     {
@@ -9,6 +6,6 @@ namespace chldr_data.Interfaces
         bool IsInitialized { get; set; }
         void Initialize();
         IUnitOfWork CreateUnitOfWork(string userId = null);
-        void PurgeAllData();
+        void TruncateDatabase();
     }
 }

@@ -30,7 +30,6 @@ namespace chldr_api
         private readonly IDataProvider _dataProvider;
 
         protected readonly SqlContext _dbContext;
-        protected readonly IConfiguration _configuration;
         protected readonly IStringLocalizer<AppLocalizations> _localizer;
         protected readonly EmailService _emailService;
 
@@ -42,7 +41,6 @@ namespace chldr_api
             LoginResolver loginUserResolver,
 
             IDataProvider dataProvider,
-            IConfiguration configuration,
             IStringLocalizer<AppLocalizations> localizer,
             EmailService emailService,
             ExceptionHandler exceptionHandler,
@@ -57,7 +55,6 @@ namespace chldr_api
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
             _dataProvider = dataProvider;
-            _configuration = configuration;
             _localizer = localizer;
             _emailService = emailService;
         }
@@ -280,7 +277,7 @@ namespace chldr_api
 
         public async Task<RequestResult> PasswordReset(string email)
         {
-            return await _passwordResetMutation.ExecuteAsync((SqlDataProvider)_dataProvider, _configuration, _localizer, _emailService, email);
+            return await _passwordResetMutation.ExecuteAsync((SqlDataProvider)_dataProvider, _localizer, _emailService, email);
         }
 
         public async Task<RequestResult> UpdatePasswordAsync(string token, string newPassword)
@@ -290,7 +287,14 @@ namespace chldr_api
 
         public async Task<RequestResult> LogInRefreshTokenAsync(string refreshToken)
         {
-            return await _loginUserMutation.ExecuteAsync((SqlDataProvider)_dataProvider, refreshToken);
+            try
+            {
+                return await _loginUserMutation.ExecuteAsync((SqlDataProvider)_dataProvider, refreshToken);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public async Task<RequestResult> LoginEmailPasswordAsync(string email, string password)

@@ -30,7 +30,7 @@ namespace chldr_utils.Services
         private static void RegisterAppServices(IServiceCollection services)
         {
             // Data
-            services.AddSingleton<IGraphQlClient, GraphQLClient>();
+            services.AddScoped<IGraphQlClient, GraphQLClient>();
             services.AddScoped<RequestService>();
             services.AddScoped<AuthService>();
 
@@ -42,12 +42,12 @@ namespace chldr_utils.Services
             services.AddScoped<JsInteropService>();
             services.AddScoped<LocalStorageService>();
 
-            services.AddSingleton<EmailService>();
-            services.AddSingleton(x => new FileService(AppContext.BaseDirectory));
+            services.AddScoped<EmailService>();
+            services.AddScoped<FileService>();
 
             // Utils
-            services.AddSingleton<ExceptionHandler>();
-            services.AddSingleton<CultureService>();
+            services.AddScoped<ExceptionHandler>();
+            services.AddScoped<CultureService>();
         }
     }
 }

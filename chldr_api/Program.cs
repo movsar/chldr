@@ -28,11 +28,11 @@ namespace chldr_api
                 throw new Exception("Connection string is not set");
             }
 
-            builder.Services.AddScoped<IDataProvider, SqlDataProvider>();
+            builder.Services.AddTransient<IDataProvider, SqlDataProvider>();
 
-            builder.Services.AddSingleton<EmailService>();
-            builder.Services.AddSingleton(x => new FileService(AppContext.BaseDirectory));
-            builder.Services.AddSingleton<ExceptionHandler>();
+            builder.Services.AddScoped<EmailService>();
+            builder.Services.AddScoped<FileService>();
+            builder.Services.AddScoped<ExceptionHandler>();
 
             builder.Services.AddScoped<PasswordResetResolver>();
             builder.Services.AddScoped<UpdatePasswordResolver>();

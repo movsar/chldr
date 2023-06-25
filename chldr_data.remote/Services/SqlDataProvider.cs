@@ -20,10 +20,14 @@ namespace chldr_data.local.Services
 
         private readonly FileService _fileService;
         string _connectionString;
+        private static DbContextOptions<SqlContext> _options;
+
         public SqlDataProvider(FileService fileService, IConfiguration configuration)
         {
             _fileService = fileService;
             _connectionString = configuration.GetConnectionString("RemoteDatabase")!;
+
+            _options ??= new DbContextOptionsBuilder<SqlContext>().UseMySQL(_connectionString).Options;
         }
 
         //private string KeyAsString()
@@ -40,25 +44,21 @@ namespace chldr_data.local.Services
             DatabaseInitialized?.Invoke();
         }
 
-        public void PurgeAllData()
+        public void TruncateDatabase()
         {
-            //_sqlContext.Entries.Remove();
-            //database.Write(() =>
-            //{
-            //    database.RemoveAll<RealmEntry>();
-            //    database.RemoveAll<RealmText>();
-            //    database.RemoveAll<RealmWord>();
-            //    database.RemoveAll<RealmPhrase>();
-            //    database.RemoveAll<RealmTranslation>();
-            //});
+
         }
         public SqlContext GetContext()
         {
-            var options = new DbContextOptionsBuilder<SqlContext>()
-                               .UseMySQL(_connectionString)
-                               .Options;
+            try
+            {
 
-            return new SqlContext(options);
+                return new SqlContext(_options);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public IUnitOfWork CreateUnitOfWork(string userId = Constants.DefaultUserId)

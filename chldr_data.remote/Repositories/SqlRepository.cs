@@ -83,7 +83,7 @@ namespace chldr_data.remote.Repositories
         }
         public virtual async Task<IEnumerable<TModel>> TakeAsync(int offset, int limit)
         {
-            var entities = await _dbContext.Set<TEntity>()                
+            var entities = await _dbContext.Set<TEntity>()
                 .Skip(offset)
                 .Take(limit)
 
@@ -91,17 +91,18 @@ namespace chldr_data.remote.Repositories
 
             return entities.Select(FromEntityShortcut).ToList();
         }
-        public virtual List<TModel> GetRandoms(int limit)
+        public virtual async Task<List<TModel>> GetRandoms(int limit)
         {
             var randomizer = new Random();
 
-            var entries = _dbContext.Set<TEntity>()
+            var entries = await _dbContext.Set<TEntity>()
               .OrderBy(x => randomizer.Next(0, 75000))
               .OrderBy(entry => entry.GetHashCode())
               .Take(limit)
-              .Select(entry => FromEntityShortcut(entry));
+              .Select(entry => FromEntityShortcut(entry))
+              .ToListAsync();
 
-            return entries.ToList();
+            return entries;
         }
 
         public void AddRange(IEnumerable<TDto> added)

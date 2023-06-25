@@ -1,6 +1,7 @@
 ﻿using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
+using chldr_data.ResponseTypes;
 using chldr_utils.Services;
 using Newtonsoft.Json;
 
@@ -32,7 +33,7 @@ namespace chldr_data.Services
         {
             var response = await _requestService.RegisterUserAsync(email, password);
 
-            var token = response.Data<string>();
+            var token = RequestResult.GetData<string>(response);
             if (string.IsNullOrWhiteSpace(token))
             {
                 throw new Exception("Token shouldn't be null");
@@ -70,7 +71,7 @@ namespace chldr_data.Services
                     throw new Exception("Error:Bad_request");
                 }
 
-                var data = response.Data<dynamic>();
+                var data = RequestResult.GetData<dynamic>(response);
 
                 _currentSession = new ActiveSession()
                 {
@@ -108,7 +109,7 @@ namespace chldr_data.Services
                 throw new Exception("Error:Bad_request");
             }
 
-            var data = response.Data<dynamic>();
+            var data = RequestResult.GetData<dynamic>(response);
 
             return new ActiveSession()
             {

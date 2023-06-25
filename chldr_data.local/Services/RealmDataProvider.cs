@@ -80,7 +80,7 @@ namespace chldr_data.local.Services
             //GetDatabase().WriteCopy(new RealmConfiguration("m.realm"));
         }
 
-        public void PurgeAllData()
+        public void TruncateDatabase()
         {
             var database = GetDatabase();
             database.Write(() =>

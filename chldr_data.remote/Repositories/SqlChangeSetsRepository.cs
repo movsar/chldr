@@ -22,11 +22,6 @@ namespace chldr_data.remote.Repositories
         {
             return ChangeSetModel.FromEntity(entity);
         }
-        public void AddRange(IEnumerable<ChangeSetDto> dtos)
-        {
-            var entities = dtos.Select(d => (SqlChangeSet)SqlChangeSet.FromDto(d));
-            _dbContext.AddRange(entities);
-        }
 
         public async Task<List<ChangeSetModel>> TakeLastAsync(int count)
         {
@@ -60,20 +55,7 @@ namespace chldr_data.remote.Repositories
         public override void Add(ChangeSetDto dto)
         {
             var changeSet = SqlChangeSet.FromDto(dto);
-            Add(changeSet);
-        }
-
-        public void Add(IChangeSetEntity changeSetEntity)
-        {
-            _dbContext.Add((SqlChangeSet)changeSetEntity);
-        }
-
-        public void AddRange(IEnumerable<IChangeSetEntity> changeSetEntities)
-        {
-            foreach (var changeSet in changeSetEntities.Select(ce => (SqlChangeSet)ce))
-            {
-                Add(changeSet);
-            }
+            _dbContext.Add(changeSet);
         }
     }
 }

@@ -7,6 +7,7 @@ using chldr_utils;
 using chldr_utils.Models;
 using chldr_data.Services;
 using chldr_data.Interfaces.Repositories;
+using chldr_data.ResponseTypes;
 
 namespace chldr_shared.Stores
 {
@@ -24,7 +25,6 @@ namespace chldr_shared.Stores
         #endregion
 
         #region Fields and Properties
-        private IUnitOfWork _unitOfWork;
         private readonly ExceptionHandler _exceptionHandler;
         private readonly IDataProvider _dataProvider;
         private readonly ISearchService _searchService;
@@ -135,12 +135,11 @@ namespace chldr_shared.Stores
         }
         public EntryModel GetByEntryId(string entryId)
         {
-            return _unitOfWork.Entries.Get(entryId);
+            using var unitOfWork = _dataProvider.CreateUnitOfWork();
+            return unitOfWork.Entries.Get(entryId);
         }
         public void DataAccess_DatasourceInitialized()
         {
-            _unitOfWork = _dataProvider.CreateUnitOfWork();
-
             ContentInitialized?.Invoke();
         }
 
@@ -174,7 +173,8 @@ namespace chldr_shared.Stores
             }
 
             // Remove local entity
-            _unitOfWork.Entries.Remove(entryId);
+            using var unitOfWork =  _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
+            unitOfWork.Entries.Remove(entryId);
 
             // Update on UI
             CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
@@ -189,16 +189,17 @@ namespace chldr_shared.Stores
                 throw _exceptionHandler.Error("Error:Request_failed");
             }
 
-            var changeSets = response.Data<IEnumerable<ChangeSetDto>>();
+            var changeSets = RequestResult.GetData<IEnumerable<ChangeSetDto>>(response);
 
             // Update local entity
-            _unitOfWork.Entries.Update(entryDto);
+            using var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId); 
+            unitOfWork.Entries.Update(entryDto);
 
             // Update on UI
             var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId);
 
             var entryIndex = CachedSearchResult.Entries.IndexOf(existingEntry);
-            CachedSearchResult.Entries[entryIndex] = _unitOfWork.Entries.Get(entryDto.EntryId);
+            CachedSearchResult.Entries[entryIndex] = unitOfWork.Entries.Get(entryDto.EntryId);
 
             CachedResultsChanged?.Invoke();
         }
@@ -241,7 +242,7 @@ namespace chldr_shared.Stores
                 throw _exceptionHandler.Error("Error:Request_failed");
             }
 
-            var createdAt = response.Data<DateTimeOffset>();
+            var createdAt = RequestResult.GetData<DateTimeOffset>(response);
             if (createdAt == DateTimeOffset.MinValue)
             {
                 throw _exceptionHandler.Error("Error:Request_failed");
@@ -250,9 +251,10 @@ namespace chldr_shared.Stores
             // Update local entity
             entryDto.CreatedAt = createdAt;
 
-            _unitOfWork.Entries.Add(entryDto);
+            using var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId); 
+            unitOfWork.Entries.Add(entryDto);
 
-            var added = _unitOfWork.Entries.Get(entryDto.EntryId);
+            var added = unitOfWork.Entries.Get(entryDto.EntryId);
             CachedSearchResult.Entries.Add(added);
             CachedResultsChanged?.Invoke();
         }

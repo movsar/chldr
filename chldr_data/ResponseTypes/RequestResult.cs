@@ -6,7 +6,7 @@ namespace chldr_data.ResponseTypes
     public class RequestResult
     {
         public bool Success { get; set; } = false;
-        public string SerializedData { get; set; }
+        public string? SerializedData { get; set; }
         private string _errorMessage = string.Empty;
         public string ErrorMessage
         {
@@ -22,16 +22,13 @@ namespace chldr_data.ResponseTypes
         {
             ErrorMessage = errorMessage;
         }
-        [Ignore]
-        public T Data<T>()
+        public static T GetData<T>(RequestResult requestResult)
         {
-            if (!Success)
+            if (!requestResult.Success || requestResult.SerializedData == null)
             {
-                throw new Exception("Error:Unsuccessful");
+                throw new Exception("Error:Unexpected_result");
             }
-
-            return JsonConvert.DeserializeObject<T>(SerializedData)!;
+            return JsonConvert.DeserializeObject<T>(requestResult.SerializedData)!;
         }
-
     }
 }

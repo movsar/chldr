@@ -20,7 +20,6 @@ namespace chldr_api.GraphQL.MutationServices
     {
         internal async Task<RequestResult> ExecuteAsync(
             SqlDataProvider dataProvider,
-            IConfiguration _configuration,
             IStringLocalizer<AppLocalizations> _localizer,
             EmailService _emailService,
             string email)
@@ -50,8 +49,6 @@ namespace chldr_api.GraphQL.MutationServices
             await dbContext.SaveChangesAsync();
 
             // Send the password reset link to the user's email
-            var host = _configuration.GetValue<string>("AppHost");
-
             var resetPasswordLink = new Uri(QueryHelpers.AddQueryString($"{AppConstants.Host}/set-new-password", new Dictionary<string, string?>(){
                 { "token", tokenValue }
             })).ToString();

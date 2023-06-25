@@ -47,7 +47,7 @@ namespace chldr_data.remote.Repositories
 
             _translations.RemoveRange(translationIds);
             _sounds.RemoveRange(soundIds);
-          
+
             base.Remove(entityId);
         }
         public override EntryModel Get(string entityId)
@@ -81,11 +81,11 @@ namespace chldr_data.remote.Repositories
 
             return entities.Select(FromEntityShortcut).ToList();
         }
-        public override List<EntryModel> GetRandoms(int limit)
+        public override async Task<List<EntryModel>> GetRandoms(int limit)
         {
             var randomizer = new Random();
 
-            var entries = _dbContext.Set<SqlEntry>()
+            var entries = await _dbContext.Set<SqlEntry>()
                 .Include(e => e.Source)
                 .Include(e => e.User)
                 .Include(e => e.Translations)
@@ -93,9 +93,11 @@ namespace chldr_data.remote.Repositories
                 .OrderBy(x => randomizer.Next(0, 75000))
                 .OrderBy(entry => entry.GetHashCode())
                 .Take(limit)
-                .Select(entry => FromEntityShortcut(entry));
+                .Select(entry => FromEntityShortcut(entry))
 
-            return entries.ToList();
+                .ToListAsync();
+
+            return entries;
         }
         protected override EntryModel FromEntityShortcut(SqlEntry entry)
         {
@@ -108,7 +110,7 @@ namespace chldr_data.remote.Repositories
             {
                 throw new NullReferenceException();
             }
-            
+
             // Insert Entry entity (with associated sound and translation entities)
             var entry = SqlEntry.FromDto(newEntryDto, _dbContext);
             _dbContext.Add(entry);

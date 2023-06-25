@@ -8,7 +8,6 @@ using chldr_utils;
 using Realms;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
-using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_data.Repositories
 {
@@ -47,25 +46,13 @@ namespace chldr_data.Repositories
 
         public override void Add(ChangeSetDto dto)
         {
-            var changeSet = RealmChangeSet.FromDto(dto, _dbContext);
-            Add(changeSet);
-        }
-
-        public void Add(IChangeSetEntity changeSetEntity)
-        {
             // Store max 500 changesets
             _dbContext.Write(() =>
             {
-                _dbContext.Add((RealmChangeSet)changeSetEntity);
-            });
-        }
+                var changeSet = RealmChangeSet.FromDto(dto, _dbContext);
 
-        public void AddRange(IEnumerable<IChangeSetEntity> changeSetEntities)
-        {
-            foreach (var changeSet in changeSetEntities.Select(ce => (RealmChangeSet)ce))
-            {
-                Add(changeSet);
-            }
+                _dbContext.Add(changeSet);
+            });
         }
     }
 }
