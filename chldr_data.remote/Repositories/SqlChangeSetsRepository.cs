@@ -26,7 +26,7 @@ namespace chldr_data.remote.Repositories
 
         public async Task<List<ChangeSetModel>> TakeLastAsync(int count)
         {
-            // 1. An item with the same key has already been added. Key: server=104.248.40.142;port=3306;..
+          
 
             List<long> lastChangeSetIndices = null!;
             try
@@ -41,8 +41,8 @@ namespace chldr_data.remote.Repositories
             }
             catch (Exception ex)
             {
-                // Operations that change non-concurrent collections must have exclusive access. A concurrent update was performed on this collection and corrupted its state. The collection's state is no longer correct.
-
+                // 1. An item with the same key has already been added. Key: server=104.248.40.142;port=3306;..
+                // 2. Operations that change non-concurrent collections must have exclusive access. A concurrent update was performed on this collection and corrupted its state. The collection's state is no longer correct.
                 throw;
             }
 
