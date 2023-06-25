@@ -11,14 +11,15 @@ using chldr_utils.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using Newtonsoft.Json;
 
 namespace chldr_api.GraphQL.MutationServices
 {
     public class RegisterUserResolver
     {
-        internal async Task<RegistrationResult> ExecuteAsync(
-            SqlDataProvider dataProvider, 
-            IStringLocalizer<AppLocalizations> _localizer, 
+        internal async Task<RequestResult> ExecuteAsync(
+            SqlDataProvider dataProvider,
+            IStringLocalizer<AppLocalizations> _localizer,
             EmailService _emailService,
             string email, string password, string? firstName, string? lastName, string? patronymic)
         {
@@ -28,7 +29,7 @@ namespace chldr_api.GraphQL.MutationServices
             var existingUser = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
             if (existingUser != null)
             {
-                return new RegistrationResult() { ErrorMessage = "A user with this email already exists" };
+                return new RequestResult() { ErrorMessage = "A user with this email already exists" };
             }
 
             // Create the new user
@@ -68,16 +69,16 @@ namespace chldr_api.GraphQL.MutationServices
             try
             {
                 _emailService.Send(message);
-                return new RegistrationResult()
+                return new RequestResult()
                 {
                     Success = true,
-                    Token = confirmationToken
+                    SerializedData = JsonConvert.SerializeObject(confirmationToken)
                 };
             }
             catch (Exception ex)
             {
                 //LogError(ex);
-                return new RegistrationResult();
+                return new RequestResult();
             }
         }
     }

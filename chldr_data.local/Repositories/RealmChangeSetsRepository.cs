@@ -8,13 +8,14 @@ using chldr_utils;
 using Realms;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
+using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_data.Repositories
 {
     public class RealmChangeSetsRepository : RealmRepository<RealmChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {
         public RealmChangeSetsRepository(Realm context, ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(context, exceptionHandler, fileService, userId) { }
-        protected override RecordType RecordType => throw new Exception("Shouldn't be used");
+        protected override RecordType RecordType => RecordType.ChangeSet;
         protected override ChangeSetModel FromEntityShortcut(RealmChangeSet entity)
         {
             return ChangeSetModel.FromEntity(entity);
@@ -46,12 +47,25 @@ namespace chldr_data.Repositories
 
         public override void Add(ChangeSetDto dto)
         {
+            var changeSet = RealmChangeSet.FromDto(dto, _dbContext);
+            Add(changeSet);
+        }
+
+        public void Add(IChangeSetEntity changeSetEntity)
+        {
             // Store max 500 changesets
             _dbContext.Write(() =>
             {
-                var changeSet = RealmChangeSet.FromDto(dto, _dbContext);
-                _dbContext.Add(changeSet);
+                _dbContext.Add((RealmChangeSet)changeSetEntity);
             });
+        }
+
+        public void AddRange(IEnumerable<IChangeSetEntity> changeSetEntities)
+        {
+            foreach (var changeSet in changeSetEntities.Select(ce => (RealmChangeSet)ce))
+            {
+                Add(changeSet);
+            }
         }
     }
 }

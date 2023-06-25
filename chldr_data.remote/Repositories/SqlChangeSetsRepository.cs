@@ -1,4 +1,5 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
@@ -7,6 +8,7 @@ using chldr_data.remote.SqlEntities;
 using chldr_tools;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
+using Realms;
 
 namespace chldr_data.remote.Repositories
 {
@@ -58,8 +60,20 @@ namespace chldr_data.remote.Repositories
         public override void Add(ChangeSetDto dto)
         {
             var changeSet = SqlChangeSet.FromDto(dto);
-            _dbContext.Add(changeSet);
+            Add(changeSet);
         }
 
+        public void Add(IChangeSetEntity changeSetEntity)
+        {
+            _dbContext.Add((SqlChangeSet)changeSetEntity);
+        }
+
+        public void AddRange(IEnumerable<IChangeSetEntity> changeSetEntities)
+        {
+            foreach (var changeSet in changeSetEntities.Select(ce => (SqlChangeSet)ce))
+            {
+                Add(changeSet);
+            }
+        }
     }
 }

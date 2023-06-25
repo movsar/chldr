@@ -54,34 +54,6 @@ namespace chldr_data.remote.Repositories
             {
                 return;
             }
-
-            InsertChangeSet(Operation.Delete, _userId, entityId);
-        }
-
-        protected void InsertChangeSet(Operation operation, string userId, string recordId, List<Change>? changes = null)
-        {
-            var changeSet = new SqlChangeSet()
-            {
-                Operation = (int)operation,
-                UserId = userId!,
-                RecordId = recordId,
-                RecordType = (int)RecordType,
-            };
-
-            if (changeSet.Operation == (int)Operation.Update && changes != null)
-            {
-                changeSet.RecordChanges = JsonConvert.SerializeObject(changes);
-            }
-
-            try
-            {
-                _dbContext.ChangeSets.Add(changeSet);
-                _dbContext.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                var msg = ex.Message;
-            }
         }
 
         protected static void SetPropertyValue(object obj, string propertyName, object value)

@@ -16,12 +16,14 @@ namespace chldr_data.remote.Repositories
 
         public override void Update(SourceDto dto)
         {
-            throw new NotImplementedException();
+            var source = SqlSource.FromDto(dto);
+            _dbContext.Update(source);
         }
 
         public override void Add(SourceDto dto)
         {
-            throw new NotImplementedException();
+            var source = SqlSource.FromDto(dto);
+            _dbContext.Add(source);
         }
 
         protected override SourceModel FromEntityShortcut(SqlSource entity)

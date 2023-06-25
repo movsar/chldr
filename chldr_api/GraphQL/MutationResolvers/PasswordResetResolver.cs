@@ -12,15 +12,16 @@ using chldr_utils.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using Newtonsoft.Json;
 
 namespace chldr_api.GraphQL.MutationServices
 {
     public class PasswordResetResolver
     {
-        internal async Task<PasswordResetResult> ExecuteAsync(
-            SqlDataProvider dataProvider, 
-            IConfiguration _configuration, 
-            IStringLocalizer<AppLocalizations> _localizer, 
+        internal async Task<RequestResult> ExecuteAsync(
+            SqlDataProvider dataProvider,
+            IConfiguration _configuration,
+            IStringLocalizer<AppLocalizations> _localizer,
             EmailService _emailService,
             string email)
         {
@@ -63,7 +64,11 @@ namespace chldr_api.GraphQL.MutationServices
 
             _emailService.Send(message);
 
-            return new PasswordResetResult() { Success = true, ResetToken = tokenValue };
+            return new RequestResult()
+            {
+                Success = true,
+                SerializedData = JsonConvert.SerializeObject(tokenValue)
+            };
         }
     }
 }

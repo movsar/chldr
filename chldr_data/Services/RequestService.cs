@@ -1,10 +1,13 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Models;
 using chldr_data.ResponseTypes;
 using chldr_utils.Interfaces;
 using GraphQL;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Realms.Sync;
 
 namespace chldr_data.Services
 {
@@ -83,19 +86,25 @@ namespace chldr_data.Services
                 Variables = new { email, password }
             };
 
-            var response = await _graphQLRequestSender.SendRequestAsync<LoginResult>(request, "loginEmailPassword");
+            var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, "loginEmailPassword");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);
             }
 
+            var data = JsonConvert.DeserializeObject<dynamic>(response.Data.SerializedData);
+            if (data == null)
+            {
+                throw new Exception("Error:Data_cannot_be_null");
+            }
+
             return new ActiveSession()
             {
-                AccessToken = response.Data.AccessToken,
-                RefreshToken = response.Data.RefreshToken,
-                AccessTokenExpiresIn = (DateTimeOffset)response.Data.AccessTokenExpiresIn,
+                AccessToken = data.AccessToken!,
+                RefreshToken = data.RefreshToken!,
+                AccessTokenExpiresIn = data.AccessTokenExpiresIn!,
                 Status = SessionStatus.LoggedIn,
-                User = response.Data.User
+                User = data.User
             };
         }
 
@@ -115,18 +124,19 @@ namespace chldr_data.Services
                 Variables = new { email, password }
             };
 
-            var response = await _graphQLRequestSender.SendRequestAsync<RegistrationResult>(request, "registerUser");
+            var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, "registerUser");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);
             }
 
-            if (string.IsNullOrWhiteSpace(response.Data.Token))
+            var token = JsonConvert.DeserializeObject<string>(response.Data.SerializedData);
+            if (string.IsNullOrWhiteSpace(token))
             {
                 throw new Exception("Token shouldn't be null");
             }
 
-            return response.Data.Token;
+            return token;
         }
 
         internal async Task<ActiveSession> RefreshTokens(string refreshToken)
@@ -154,14 +164,26 @@ namespace chldr_data.Services
                 Variables = new { refreshToken }
             };
 
-            var response = await _graphQLRequestSender.SendRequestAsync<LoginResult>(request, "logInRefreshToken");
+            var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, "logInRefreshToken");
+
+            if (!response.Data.Success)
+            {
+                throw new Exception("Error:Bad_request");
+            }
+
+            var data = JsonConvert.DeserializeObject<dynamic>(response.Data.SerializedData);
+            if (data == null)
+            {
+                throw new Exception("Error:Data_cannot_be_null");
+            }
+
             return new ActiveSession()
             {
-                AccessToken = response.Data.Success ? response.Data.AccessToken! : "",
-                RefreshToken = response.Data.Success ? response.Data.RefreshToken! : "",
-                AccessTokenExpiresIn = response.Data.Success ? (DateTimeOffset)response.Data.AccessTokenExpiresIn! : DateTime.UtcNow,
-                Status = response.Data.Success ? SessionStatus.LoggedIn : SessionStatus.Anonymous,
-                User = response.Data.Success ? response.Data.User : null
+                AccessToken = data.AccessToken!,
+                RefreshToken = data.RefreshToken!,
+                AccessTokenExpiresIn = data.AccessTokenExpiresIn!,
+                Status = SessionStatus.LoggedIn,
+                User = data.User
             };
         }
         public async Task PasswordResetRequestAsync(string email)
@@ -179,7 +201,7 @@ namespace chldr_data.Services
                 Variables = new { email }
             };
 
-            var response = await _graphQLRequestSender.SendRequestAsync<PasswordResetResult>(request, "passwordReset");
+            var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, "passwordReset");
             if (!response.Data.Success)
             {
                 throw new Exception(response.Data.ErrorMessage);
@@ -237,7 +259,7 @@ namespace chldr_data.Services
             return listOfObjects;
         }
 
-        public async Task<InsertResult> AddEntry(string userId, EntryDto entryDto)
+        public async Task<RequestResult> AddEntry(string userId, EntryDto entryDto)
         {
             var operation = "addEntry";
             var request = new GraphQLRequest
@@ -255,7 +277,7 @@ namespace chldr_data.Services
                 Variables = new { userId, entryDto }
             };
 
-            var response = await _graphQLRequestSender.SendRequestAsync<InsertResult>(request, operation);
+            var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
             return response.Data;
         }
 

@@ -128,11 +128,6 @@ namespace chldr_data.remote.Repositories
 
             // Set CreatedAt to update it on local entry
             newEntryDto.CreatedAt = entry.CreatedAt;
-
-            // Insert a change set
-            InsertChangeSet(Operation.Insert, _userId, newEntryDto.EntryId);
-
-            // ! Insert new translation changesets? - not necessary, but could be used for audit
         }
 
         public override void Update(EntryDto updatedEntryDto)
@@ -140,13 +135,8 @@ namespace chldr_data.remote.Repositories
             var existingEntry = Get(updatedEntryDto.EntryId);
             var existingEntryDto = EntryDto.FromModel(existingEntry);
 
-            // Update associated translations and sounds
-            IEntriesRepository.HandleUpdatedEntryTranslations(_translations, existingEntryDto, updatedEntryDto);
-            IEntriesRepository.HandleUpdatedEntrySounds(_sounds, existingEntryDto, updatedEntryDto);
-            _dbContext.SaveChanges();
-
             // Add changeset if applicable
-            var entryChanges = Change.GetChanges(existingEntryDto, existingEntryDto);
+            var entryChanges = Change.GetChanges(updatedEntryDto, existingEntryDto);
             if (entryChanges.Count == 0)
             {
                 return;
@@ -155,8 +145,7 @@ namespace chldr_data.remote.Repositories
             // Save the changes, even if there are no changes to the entry, as there might be 
             var updatedEntryEntity = SqlEntry.FromDto(updatedEntryDto, _dbContext);
             _dbContext.Update(updatedEntryEntity);
-            
-            InsertChangeSet(Operation.Update, _userId, existingEntryDto.EntryId, entryChanges);
+            _dbContext.SaveChanges();
         }
     }
 }

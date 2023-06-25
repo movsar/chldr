@@ -1,14 +1,20 @@
 ﻿using chldr_api.GraphQL.MutationServices;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.local.Services;
+using chldr_data.Models;
 using chldr_data.remote.Services;
+using chldr_data.remote.SqlEntities;
 using chldr_data.Resources.Localizations;
 using chldr_data.ResponseTypes;
 using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.Extensions.Localization;
+using Newtonsoft.Json;
+using Realms;
+using Realms.Sync;
 
 namespace chldr_api
 {
@@ -34,7 +40,7 @@ namespace chldr_api
             RegisterUserResolver registerUserResolver,
             ConfirmEmailResolver confirmEmailResolver,
             LoginResolver loginUserResolver,
-            
+
             IDataProvider dataProvider,
             IConfiguration configuration,
             IStringLocalizer<AppLocalizations> localizer,
@@ -56,7 +62,7 @@ namespace chldr_api
             _emailService = emailService;
         }
 
-        public InsertResult AddEntry(string userId, EntryDto entryDto)
+        public RequestResult AddEntry(string userId, EntryDto entryDto)
         {
             using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
@@ -65,10 +71,13 @@ namespace chldr_api
                 unitOfWork.Entries.Add(entryDto);
                 unitOfWork.Commit();
 
-                return new InsertResult()
+                return new RequestResult()
                 {
                     Success = true,
-                    CreatedAt = entryDto.CreatedAt
+                    SerializedData = JsonConvert.SerializeObject(new
+                    {
+                        entryDto.CreatedAt
+                    })
                 };
             }
             catch (Exception ex)
@@ -81,16 +90,41 @@ namespace chldr_api
                 unitOfWork.Dispose();
             }
 
-            return new InsertResult() { Success = false };
+            return new RequestResult() { Success = false };
         }
 
-        public RequestResult UpdateEntry(string userId, EntryDto entryDto)
+        public RequestResult UpdateEntry(string userId, EntryDto updatedEntryDto)
         {
+            var resultingChangeSetDtos = new List<ChangeSetDto>();
+
             using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             try
             {
-                unitOfWork.Entries.Update(entryDto);
+                var existingEntry = unitOfWork.Entries.Get(updatedEntryDto.EntryId);
+                var existingEntryDto = EntryDto.FromModel(existingEntry);
+
+                // Update entry
+                var entryChanges = Change.GetChanges(updatedEntryDto, existingEntryDto);
+                if (entryChanges.Count != 0)
+                {
+                    unitOfWork.Entries.Update(updatedEntryDto);
+
+                    var entryChangeSetDto = ChangeSetDto.Create(Operation.Update, userId, RecordType.Entry, updatedEntryDto.EntryId, entryChanges);
+                    resultingChangeSetDtos.Add(entryChangeSetDto);
+                }
+
+                // Add / Remove / Update translations
+                var translationChangeSets = ProcessAssociatedTranslations(unitOfWork, userId, existingEntryDto, updatedEntryDto);
+                resultingChangeSetDtos.AddRange(translationChangeSets);
+
+                // Add / Remove / Update sounds
+                var soundChangeSets = ProcessAssociatedSounds(unitOfWork, userId, existingEntryDto, updatedEntryDto);
+                resultingChangeSetDtos.AddRange(soundChangeSets);
+
+                // Insert changesets
+                unitOfWork.ChangeSets.AddRange(resultingChangeSetDtos);
+
                 unitOfWork.Commit();
 
                 return new RequestResult() { Success = true };
@@ -108,6 +142,103 @@ namespace chldr_api
             return new RequestResult() { Success = false };
         }
 
+        private IEnumerable<ChangeSetDto> ProcessAssociatedSounds(ISqlUnitOfWork unitOfWork, string userId, EntryDto existingEntryDto, EntryDto updatedEntryDto)
+        {
+            var changeSets = new List<ChangeSetDto>();
+
+            var existingEntrySoundIds = existingEntryDto.Sounds.Select(t => t.SoundId).ToHashSet();
+            var updatedEntrySoundIds = updatedEntryDto.Sounds.Select(t => t.SoundId).ToHashSet();
+
+            var added = updatedEntryDto.Sounds.Where(t => !existingEntrySoundIds.Contains(t.SoundId));
+            var deleted = existingEntryDto.Sounds.Where(t => !updatedEntrySoundIds.Contains(t.SoundId));
+            var updated = updatedEntryDto.Sounds.Where(t => existingEntrySoundIds.Contains(t.SoundId) && updatedEntrySoundIds.Contains(t.SoundId));
+
+            // Process inserted translations
+            foreach (var sound in added)
+            {
+                unitOfWork.Sounds.Add(sound);
+
+                var changeSet = ChangeSetDto.Create(Operation.Insert, userId, RecordType.Sound, sound.SoundId);
+                changeSets.Add(changeSet);
+            }
+
+            // Process removed translations
+            foreach (var sound in deleted)
+            {
+                unitOfWork.Sounds.Remove(sound.SoundId);
+
+                var changeSet = ChangeSetDto.Create(Operation.Delete, userId, RecordType.Sound, sound.SoundId);
+                changeSets.Add(changeSet);
+            }
+
+            // Process updated translations
+            foreach (var sound in updated)
+            {
+                var existingDto = existingEntryDto.Sounds.First(t => t.SoundId.Equals(sound.SoundId));
+
+                var changes = Change.GetChanges(sound, existingDto);
+                if (changes.Count == 0)
+                {
+                    continue;
+                }
+
+                unitOfWork.Sounds.Update(sound);
+
+                var changeSet = ChangeSetDto.Create(Operation.Update, userId, RecordType.Sound, sound.SoundId, changes);
+                changeSets.Add(changeSet);
+            }
+
+            return changeSets;
+        }
+        private IEnumerable<ChangeSetDto> ProcessAssociatedTranslations(IUnitOfWork unitOfWork, string userId, EntryDto existingEntryDto, EntryDto updatedEntryDto)
+        {
+            var changeSets = new List<ChangeSetDto>();
+
+            var existingEntryTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
+            var updatedEntryTranslationIds = updatedEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
+
+            var added = updatedEntryDto.Translations.Where(t => !existingEntryTranslationIds.Contains(t.TranslationId));
+            var deleted = existingEntryDto.Translations.Where(t => !updatedEntryTranslationIds.Contains(t.TranslationId));
+            var updated = updatedEntryDto.Translations.Where(t => existingEntryTranslationIds.Contains(t.TranslationId) && updatedEntryTranslationIds.Contains(t.TranslationId));
+
+            // Process inserted translations
+            foreach (var translation in added)
+            {
+                unitOfWork.Translations.Add(translation);
+
+                var changeSet = ChangeSetDto.Create(Operation.Insert, userId, RecordType.Translation, translation.TranslationId);
+                changeSets.Add(changeSet);
+            }
+
+            // Process removed translations
+            foreach (var translation in deleted)
+            {
+                unitOfWork.Translations.Remove(translation.TranslationId);
+
+                var changeSet = ChangeSetDto.Create(Operation.Delete, userId, RecordType.Translation, translation.TranslationId);
+                changeSets.Add(changeSet);
+            }
+
+            // Process updated translations
+            foreach (var translation in updated)
+            {
+                var existingTranslationDto = existingEntryDto.Translations.First(t => t.TranslationId.Equals(translation.TranslationId));
+
+                var changes = Change.GetChanges(translation, existingTranslationDto);
+                if (changes.Count == 0)
+                {
+                    continue;
+                }
+
+                unitOfWork.Translations.Update(translation);
+
+                var changeSet = ChangeSetDto.Create(Operation.Update, userId, RecordType.Translation, translation.TranslationId, changes);
+                changeSets.Add(changeSet);
+            }
+
+            return changeSets;
+        }
+
         public RequestResult RemoveEntry(string userId, string entryId)
         {
             using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
@@ -115,6 +246,10 @@ namespace chldr_api
             try
             {
                 unitOfWork.Entries.Remove(entryId);
+
+                var changeSet = ChangeSetDto.Create(Operation.Delete, userId, RecordType.Entry, entryId);
+                unitOfWork.ChangeSets.Add(changeSet);
+
                 unitOfWork.Commit();
 
                 return new RequestResult() { Success = true };
@@ -133,7 +268,7 @@ namespace chldr_api
         }
 
         // User mutations
-        public async Task<RegistrationResult> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
+        public async Task<RequestResult> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
             return await _registerUserMutation.ExecuteAsync((SqlDataProvider)_dataProvider, _localizer, _emailService, email, password, firstName, lastName, patronymic);
         }
@@ -143,7 +278,7 @@ namespace chldr_api
             return await _confirmEmailResolver.ExecuteAsync((SqlDataProvider)_dataProvider, token);
         }
 
-        public async Task<PasswordResetResult> PasswordReset(string email)
+        public async Task<RequestResult> PasswordReset(string email)
         {
             return await _passwordResetMutation.ExecuteAsync((SqlDataProvider)_dataProvider, _configuration, _localizer, _emailService, email);
         }
@@ -153,12 +288,12 @@ namespace chldr_api
             return await _updatePasswordMutation.ExecuteAsync((SqlDataProvider)_dataProvider, token, newPassword);
         }
 
-        public async Task<LoginResult> LogInRefreshTokenAsync(string refreshToken)
+        public async Task<RequestResult> LogInRefreshTokenAsync(string refreshToken)
         {
             return await _loginUserMutation.ExecuteAsync((SqlDataProvider)_dataProvider, refreshToken);
         }
 
-        public async Task<LoginResult> LoginEmailPasswordAsync(string email, string password)
+        public async Task<RequestResult> LoginEmailPasswordAsync(string email, string password)
         {
             return await _loginUserMutation.ExecuteAsync((SqlDataProvider)_dataProvider, email, password);
         }

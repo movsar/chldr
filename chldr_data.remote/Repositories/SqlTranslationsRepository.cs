@@ -25,7 +25,6 @@ namespace chldr_data.remote.Repositories
         {
             var entity = SqlTranslation.FromDto(dto, _dbContext);
             _dbContext.Add(entity);
-            InsertChangeSet(Operation.Insert, _userId, dto.TranslationId);
         }
 
         public override void Update(TranslationDto dto)
@@ -40,8 +39,6 @@ namespace chldr_data.remote.Repositories
                 return;
             }
             ApplyChanges<SqlTranslation>(dto.TranslationId, changes);
-
-            InsertChangeSet(Operation.Update, _userId, dto.TranslationId, changes);
         }
 
     }

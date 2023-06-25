@@ -29,8 +29,6 @@ namespace chldr_data.remote.Repositories
             var sound = SqlSound.FromDto(soundDto, _dbContext);
             _dbContext.Sounds.Add(sound);
             _dbContext.SaveChanges();
-
-            InsertChangeSet(Operation.Insert, _userId, sound.SoundId);
         }
 
         public override void Update(SoundDto dto)
@@ -45,8 +43,6 @@ namespace chldr_data.remote.Repositories
                 return;
             }
             ApplyChanges<SqlSound>(dto.SoundId, changes);
-
-            InsertChangeSet(Operation.Update, _userId, dto.SoundId, changes);
         }
         public override void Remove(string entityId)
         {
