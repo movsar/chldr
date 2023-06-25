@@ -13,7 +13,7 @@ using Realms.Sync;
 
 namespace chldr_data.remote.Repositories
 {
-    internal class SqlTranslationsRepository : SqlRepository<SqlTranslation, TranslationModel, TranslationDto>, ITranslationsRepository
+    public class SqlTranslationsRepository : SqlRepository<SqlTranslation, TranslationModel, TranslationDto>, ITranslationsRepository
     {
         public SqlTranslationsRepository(SqlContext context, FileService fileService, string _userId) : base(context, fileService, _userId) { }
         protected override RecordType RecordType => RecordType.Translation;

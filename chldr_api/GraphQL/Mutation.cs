@@ -9,6 +9,7 @@ using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_data.Resources.Localizations;
 using chldr_data.ResponseTypes;
+using chldr_data.Services;
 using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.Extensions.Localization;
@@ -61,7 +62,7 @@ namespace chldr_api
 
         public RequestResult AddEntry(string userId, EntryDto entryDto)
         {
-            using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
+            using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             try
             {
@@ -93,7 +94,7 @@ namespace chldr_api
 
         public RequestResult UpdateEntry(string userId, EntryDto entryDto)
         {
-            using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
+            using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             try
             {
@@ -117,7 +118,7 @@ namespace chldr_api
 
         public RequestResult RemoveEntry(string userId, string entryId)
         {
-            using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
+            using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             try
             {

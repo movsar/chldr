@@ -9,21 +9,33 @@ using chldr_utils.Services;
 
 namespace chldr_data.remote.Repositories
 {
-    internal class SqlSourcesRepository : SqlRepository<SqlSource, SourceModel, SourceDto>, ISourcesRepository
+    public class SqlSourcesRepository : SqlRepository<SqlSource, SourceModel, SourceDto>, ISourcesRepository
     {
         protected override RecordType RecordType => RecordType.Source;
         public SqlSourcesRepository(SqlContext context, FileService fileService, string _userId) : base(context, fileService, _userId) { }
 
-        public override void Update(SourceDto dto)
+        public override List<ChangeSetModel> Update(SourceDto dto)
         {
             var source = SqlSource.FromDto(dto);
             _dbContext.Update(source);
+
+            var changeSet = CreateChangeSetEntity(Operation.Update, dto.SourceId);
+            _dbContext.ChangeSets.Add(changeSet);
+
+            _dbContext.SaveChanges();
+            return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override void Add(SourceDto dto)
+        public override List<ChangeSetModel> Add(SourceDto dto)
         {
             var source = SqlSource.FromDto(dto);
             _dbContext.Add(source);
+
+            var changeSet = CreateChangeSetEntity(Operation.Insert, dto.SourceId);
+            _dbContext.ChangeSets.Add(changeSet);
+
+            _dbContext.SaveChanges();
+            return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
         protected override SourceModel FromEntityShortcut(SqlSource entity)

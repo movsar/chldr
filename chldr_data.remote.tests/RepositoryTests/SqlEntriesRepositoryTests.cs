@@ -1,6 +1,7 @@
 ﻿using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
+using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -17,7 +18,7 @@ namespace chldr_data.remote.tests.RepositoryTests
         private readonly SqlContext _dbContext;
         private readonly SqlEntriesRepository _repository;
         private readonly string _userId;
-
+        private readonly ExceptionHandler _exceptionHandler;
         public SqlEntriesRepositoryTests()
         {
             // Create an in-memory SQLite database for testing
@@ -26,13 +27,14 @@ namespace chldr_data.remote.tests.RepositoryTests
                 .Options;
 
             _dbContext = new SqlContext(options);
-
+            _exceptionHandler = new ExceptionHandler();
             // Mock any dependencies required by the repository
             var fileServiceMock = new Mock<FileService>();
             _userId = "test_user";
 
+
             // Create the repository instance
-            _repository = new SqlEntriesRepository(_dbContext, fileServiceMock.Object, _userId);
+            _repository = new SqlEntriesRepository(_dbContext, fileServiceMock.Object, _exceptionHandler, _userId);
         }
 
         [Fact]

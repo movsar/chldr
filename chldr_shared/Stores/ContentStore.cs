@@ -9,6 +9,8 @@ using chldr_data.Services;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.ResponseTypes;
 using chldr_data.local.Services;
+using chldr_data.Repositories;
+using chldr_data.local.Repositories;
 
 namespace chldr_shared.Stores
 {
@@ -136,7 +138,7 @@ namespace chldr_shared.Stores
         }
         public EntryModel GetByEntryId(string entryId)
         {
-            using var unitOfWork = _dataProvider.CreateUnitOfWork();
+            using var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork();
             return unitOfWork.Entries.Get(entryId);
         }
         public void DataAccess_DatasourceInitialized()
@@ -174,7 +176,7 @@ namespace chldr_shared.Stores
             }
 
             // Remove local entity
-            using var unitOfWork =  _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
+            using var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId);
             unitOfWork.Entries.Remove(entryId);
 
             // Update on UI
@@ -193,7 +195,7 @@ namespace chldr_shared.Stores
             var changeSets = RequestResult.GetData<IEnumerable<ChangeSetDto>>(response);
 
             // Update local entity
-            using var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId) as RealmUnitOfWork; 
+            using var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId);
             unitOfWork.Entries.Update(entryDto);
 
             // Update on UI
@@ -204,7 +206,7 @@ namespace chldr_shared.Stores
 
             CachedResultsChanged?.Invoke();
         }
-        public static void HandleUpdatedEntryTranslations(ITranslationsRepository translations, EntryDto existingEntryDto, EntryDto updatedEntryDto)
+        public static void HandleUpdatedEntryTranslations(RealmTranslationsRepository translations, EntryDto existingEntryDto, EntryDto updatedEntryDto)
         {
             // Handle associated translation changes
             var existingEntryTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
@@ -219,7 +221,7 @@ namespace chldr_shared.Stores
             translations.UpdateRange(updated);
         }
 
-        public static void HandleUpdatedEntrySounds(ISoundsRepository sounds, EntryDto existingEntryDto, EntryDto updatedEntryDto)
+        public static void HandleUpdatedEntrySounds(RealmSoundsRepository sounds, EntryDto existingEntryDto, EntryDto updatedEntryDto)
         {
             // Handle associated translation changes
             var existingEntrySoundIds = existingEntryDto.Sounds.Select(t => t.SoundId).ToHashSet();
@@ -252,7 +254,7 @@ namespace chldr_shared.Stores
             // Update local entity
             entryDto.CreatedAt = createdAt;
 
-            using var unitOfWork = (IRealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId); 
+            using var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId);
             unitOfWork.Entries.Add(entryDto);
 
             var added = unitOfWork.Entries.Get(entryDto.EntryId);

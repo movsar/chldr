@@ -14,21 +14,22 @@ using Realms;
 using Microsoft.EntityFrameworkCore.Update;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
+using chldr_data.local.Repositories;
 
 namespace chldr_data.Repositories
 {
     public class RealmEntriesRepository : RealmRepository<RealmEntry, EntryModel, EntryDto>, IEntriesRepository
     {
-        private readonly ITranslationsRepository _translations;
-        private readonly ISoundsRepository _sounds;
+        private readonly RealmTranslationsRepository _translations;
+        private readonly RealmSoundsRepository _sounds;
 
         public RealmEntriesRepository(
             Realm context,
             ExceptionHandler exceptionHandler,
             FileService fileService,
             string userId,
-            ITranslationsRepository translationsRepository,
-            ISoundsRepository soundsRepository) : base(context, exceptionHandler, fileService, userId)
+            RealmTranslationsRepository translationsRepository,
+            RealmSoundsRepository soundsRepository) : base(context, exceptionHandler, fileService, userId)
         {
             _translations = translationsRepository;
             _sounds = soundsRepository;

@@ -5,6 +5,7 @@ using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums.WordDetails;
 using chldr_data.Helpers;
 using chldr_data.Interfaces;
+using chldr_data.local.Services;
 using chldr_shared;
 using chldr_ui.Components;
 using chldr_utils.Services;
@@ -38,7 +39,7 @@ namespace chldr_ui.ViewModels
             if (!string.IsNullOrEmpty(EntryDto.ParentEntryId))
             {
 
-                var unitOfWork = DataProvider.CreateUnitOfWork();
+                var unitOfWork = (RealmUnitOfWork)DataProvider.CreateUnitOfWork();
                 ParentEntry = unitOfWork.Entries.Get(EntryDto.ParentEntryId);
             }
 

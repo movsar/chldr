@@ -17,7 +17,7 @@ using System.Linq;
 
 namespace chldr_data.remote.Repositories
 {
-    internal class SqlEntriesRepository : SqlRepository<SqlEntry, EntryModel, EntryDto>, IEntriesRepository
+    public class SqlEntriesRepository : SqlRepository<SqlEntry, EntryModel, EntryDto>, IEntriesRepository
     {
         private readonly ExceptionHandler _exceptionHandler;
         private readonly SqlTranslationsRepository _translations;

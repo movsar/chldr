@@ -3,6 +3,7 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.ResponseTypes;
+using chldr_data.Services;
 using Newtonsoft.Json;
 using Realms.Sync;
 
@@ -21,7 +22,7 @@ namespace chldr_api
         {
             try
             {
-                using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+                using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
 
                 object? dtos = null;
                 var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);
@@ -74,7 +75,7 @@ namespace chldr_api
         {
             try
             {
-                using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+                using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
 
                 object? dtos = null;
                 var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);

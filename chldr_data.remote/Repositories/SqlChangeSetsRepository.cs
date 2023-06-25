@@ -13,7 +13,7 @@ using Realms;
 
 namespace chldr_data.remote.Repositories
 {
-    internal class SqlChangeSetsRepository : SqlRepository<SqlChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
+    public class SqlChangeSetsRepository : SqlRepository<SqlChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {
         protected override RecordType RecordType => throw new Exception("Shouldn't be used");
 
@@ -82,15 +82,17 @@ namespace chldr_data.remote.Repositories
             return models;
         }
 
-        public override void Update(ChangeSetDto dto)
+        public override List<ChangeSetModel> Update(ChangeSetDto dto)
         {
             throw new Exception("This method should never be called for ChangeSets, they're immutable");
         }
 
-        public override void Add(ChangeSetDto dto)
+        public override List<ChangeSetModel> Add(ChangeSetDto dto)
         {
             var changeSet = SqlChangeSet.FromDto(dto);
             _dbContext.Add(changeSet);
+
+            return new List<ChangeSetModel>();
         }
     }
 }

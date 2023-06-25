@@ -6,23 +6,47 @@ using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_data.Interfaces.Repositories;
 using chldr_utils.Services;
+using chldr_data.Models;
 
 namespace chldr_data.remote.Repositories
 {
-    internal class SqlUsersRepository : SqlRepository<SqlUser, UserModel, UserDto>, IUsersRepository
+    public class SqlUsersRepository : SqlRepository<SqlUser, UserModel, UserDto>, IUsersRepository
     {
         public SqlUsersRepository(SqlContext context, FileService fileService, string _userId) : base(context, fileService, _userId) { }
 
         protected override RecordType RecordType => RecordType.User;
 
-        public override void Add(UserDto dto)
+        public override List<ChangeSetModel> Add(UserDto dto)
         {
-            throw new NotImplementedException();
+            var user = SqlUser.FromDto(dto);
+            _dbContext.Users.Add(user);
+
+            var changeSet = CreateChangeSetEntity(Operation.Insert, dto.UserId);
+            _dbContext.ChangeSets.Add(changeSet);
+
+            _dbContext.SaveChanges();
+            return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override void Update(UserDto dto)
+        public override List<ChangeSetModel> Update(UserDto dto)
         {
-            throw new NotImplementedException();
+            var existingEntity = Get(dto.UserId);
+            var existingDto = UserDto.FromModel(existingEntity);
+
+            var changes = Change.GetChanges(dto, existingDto);
+            if (changes.Count == 0)
+            {
+                return new List<ChangeSetModel>();
+            }
+
+            var user = SqlUser.FromDto(dto);
+            _dbContext.Users.Update(user);
+            
+            var changeSet = CreateChangeSetEntity(Operation.Update, dto.UserId, changes);
+            _dbContext.ChangeSets.Add(changeSet);
+
+            _dbContext.SaveChanges();
+            return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
         protected override UserModel FromEntityShortcut(SqlUser entity)

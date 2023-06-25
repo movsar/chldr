@@ -42,12 +42,12 @@ namespace chldr_data.local.Services
             _context.Dispose();
         }
 
-        internal RealmTranslationsRepository Translations => _translationsRepository ??= new RealmTranslationsRepository(_context, _exceptionHandler, _fileService, _userId);
-        internal RealmChangeSetsRepository ChangeSets => _changeSetsRepository ??= new RealmChangeSetsRepository(_context, _exceptionHandler, _fileService, _userId);
-        internal RealmEntriesRepository Entries => _entriesRepository ??= new RealmEntriesRepository(_context, _exceptionHandler, _fileService, _userId, Translations, Sounds);
-        internal RealmSourcesRepository Sources => _sourcesRepository ??= new RealmSourcesRepository(_context, _exceptionHandler, _fileService, _userId);
-        internal RealmUsersRepository Users => _usersRepository ??= new RealmUsersRepository(_context, _exceptionHandler, _fileService, _userId);
-        internal RealmSoundsRepository Sounds => _soundsRepository ?? new RealmSoundsRepository(_context, _exceptionHandler, _fileService, _userId);
+        public RealmTranslationsRepository Translations => _translationsRepository ??= new RealmTranslationsRepository(_context, _exceptionHandler, _fileService, _userId);
+        public RealmChangeSetsRepository ChangeSets => _changeSetsRepository ??= new RealmChangeSetsRepository(_context, _exceptionHandler, _fileService, _userId);
+        public RealmEntriesRepository Entries => _entriesRepository ??= new RealmEntriesRepository(_context, _exceptionHandler, _fileService, _userId, Translations, Sounds);
+        public RealmSourcesRepository Sources => _sourcesRepository ??= new RealmSourcesRepository(_context, _exceptionHandler, _fileService, _userId);
+        public RealmUsersRepository Users => _usersRepository ??= new RealmUsersRepository(_context, _exceptionHandler, _fileService, _userId);
+        public RealmSoundsRepository Sounds => _soundsRepository ?? new RealmSoundsRepository(_context, _exceptionHandler, _fileService, _userId);
 
     }
 }

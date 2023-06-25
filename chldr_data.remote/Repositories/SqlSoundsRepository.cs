@@ -9,7 +9,7 @@ using chldr_utils.Services;
 
 namespace chldr_data.remote.Repositories
 {
-    internal class SqlSoundsRepository : SqlRepository<SqlSound, SoundModel, SoundDto>, ISoundsRepository
+    public class SqlSoundsRepository : SqlRepository<SqlSound, SoundModel, SoundDto>, ISoundsRepository
     {
         public SqlSoundsRepository(SqlContext context, FileService fileService, string userId) : base(context, fileService, userId) { }
         protected override RecordType RecordType => RecordType.Sound;

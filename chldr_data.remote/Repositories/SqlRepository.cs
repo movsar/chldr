@@ -15,7 +15,7 @@ using Realms;
 
 namespace chldr_data.remote.Repositories
 {
-    internal abstract class SqlRepository<TEntity, TModel, TDto> : ISqlRepository<TModel, TDto>
+    public abstract class SqlRepository<TEntity, TModel, TDto> : ISqlRepository<TModel, TDto>
         where TDto : class, new()
         where TModel : class
         where TEntity : class
@@ -45,12 +45,12 @@ namespace chldr_data.remote.Repositories
                 throw new ArgumentException();
             }
 
-            var changeSetEntity = CreateChangeSetEntity(Operation.Delete, _userId, entityId);
+            var changeSetEntity = CreateChangeSetEntity(Operation.Delete, entityId);
             _dbContext.ChangeSets.Add(changeSetEntity);
 
             _dbContext.SaveChanges();
 
-            return ChangeSetModel.FromEntity(changeSetEntity);
+            return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSetEntity) };
         }
 
         protected abstract RecordType RecordType { get; }
@@ -67,7 +67,7 @@ namespace chldr_data.remote.Repositories
             return FromEntityShortcut(entry);
         }
 
-        protected SqlChangeSet CreateChangeSetEntity(Operation operation,  string recordId, List<Change>? changes = null)
+        protected SqlChangeSet CreateChangeSetEntity(Operation operation, string recordId, List<Change>? changes = null)
         {
             var changeSet = new SqlChangeSet()
             {
