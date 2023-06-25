@@ -1,18 +1,13 @@
-﻿using chldr_utils.Interfaces;
-using chldr_utils;
+﻿using chldr_utils;
 using chldr_data.Enums;
-using chldr_data.Interfaces.Repositories;
 using Realms;
 using chldr_utils.Services;
-using chldr_data.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using chldr_data.Models;
-using chldr_data.local.RealmEntities;
-using Newtonsoft.Json;
+using chldr_data.local.Interfaces;
 
 namespace chldr_data.Repositories
 {
-    public abstract class RealmRepository<TEntity, TModel, TDto> : IRepository<TModel, TDto>
+    public abstract class RealmRepository<TEntity, TModel, TDto> : IRealmRepository<TModel, TDto>
         where TEntity : RealmObject, new()
         where TDto : class, new()
         where TModel : class

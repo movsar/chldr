@@ -17,7 +17,7 @@ namespace chldr_data.remote.Repositories
         {
             return SoundModel.FromEntity(entity);
         }
-        public override void Add(SoundDto soundDto)
+        public override List<ChangeSetModel> Add(SoundDto soundDto)
         {
             if (string.IsNullOrEmpty(soundDto.RecordingB64))
             {
@@ -28,10 +28,15 @@ namespace chldr_data.remote.Repositories
 
             var sound = SqlSound.FromDto(soundDto, _dbContext);
             _dbContext.Sounds.Add(sound);
+
+            var changeSet = CreateChangeSetEntity(Operation.Insert, soundDto.SoundId);
+            _dbContext.ChangeSets.Add(changeSet);
             _dbContext.SaveChanges();
+
+            return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override void Update(SoundDto dto)
+        public override List<ChangeSetModel> Update(SoundDto dto)
         {
             // Find out what has been changed
             var existing = Get(dto.SoundId);
@@ -40,21 +45,28 @@ namespace chldr_data.remote.Repositories
             var changes = Change.GetChanges(dto, existingDto);
             if (changes.Count == 0)
             {
-                return;
+                return new List<ChangeSetModel>();
             }
             ApplyChanges<SqlSound>(dto.SoundId, changes);
+
+            var changeSet = CreateChangeSetEntity(Operation.Update, dto.SoundId);
+            _dbContext.ChangeSets.Add(changeSet);
+            _dbContext.SaveChanges();
+
+            return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
-        public override void Remove(string entityId)
+
+        public override List<ChangeSetModel> Remove(string entityId)
         {
             var sound = _dbContext.Sounds.Find(entityId);
             if (sound == null)
             {
-                return;
+                return new List<ChangeSetModel>();
             }
 
             _fileService.DeleteEntrySound(sound.FileName);
 
-            base.Remove(entityId);
+            return base.Remove(entityId);
         }
     }
 }

@@ -8,12 +8,5 @@ namespace chldr_data.Interfaces.Repositories
         Task<List<TModel>> GetRandoms(int limit);
 
         TModel Get(string entityId);
-        void Add(TDto dto);
-        void Update(TDto dto);
-        void Remove(string entityId);
-
-        void AddRange(IEnumerable<TDto> added);
-        void UpdateRange(IEnumerable<TDto> updated);
-        void RemoveRange(IEnumerable<string> removed);
     }
 }

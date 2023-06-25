@@ -18,23 +18,7 @@ namespace chldr_data.DatabaseObjects.Dtos
         public string RecordChanges { get; set; }
         public Operation Operation { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
-        public static ChangeSetDto Create(Operation operation, string userId, RecordType recordType, string recordId, List<Change>? changes = null)
-        {
-            var changeSet = new ChangeSetDto()
-            {
-                Operation = operation,
-                UserId = userId!,
-                RecordId = recordId,
-                RecordType = recordType,
-            };
-
-            if (changeSet.Operation == Operation.Update && changes != null)
-            {
-                changeSet.RecordChanges = JsonConvert.SerializeObject(changes);
-            }
-
-            return changeSet;
-        }
+      
         public static ChangeSetDto FromModel(ChangeSetModel changeSetModel)
         {
             return new ChangeSetDto()

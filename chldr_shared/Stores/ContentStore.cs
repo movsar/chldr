@@ -8,6 +8,7 @@ using chldr_utils.Models;
 using chldr_data.Services;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.ResponseTypes;
+using chldr_data.local.Services;
 
 namespace chldr_shared.Stores
 {
@@ -192,7 +193,7 @@ namespace chldr_shared.Stores
             var changeSets = RequestResult.GetData<IEnumerable<ChangeSetDto>>(response);
 
             // Update local entity
-            using var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId); 
+            using var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId) as RealmUnitOfWork; 
             unitOfWork.Entries.Update(entryDto);
 
             // Update on UI
@@ -251,7 +252,7 @@ namespace chldr_shared.Stores
             // Update local entity
             entryDto.CreatedAt = createdAt;
 
-            using var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId); 
+            using var unitOfWork = (IRealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId); 
             unitOfWork.Entries.Add(entryDto);
 
             var added = unitOfWork.Entries.Get(entryDto.EntryId);

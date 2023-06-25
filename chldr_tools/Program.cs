@@ -97,7 +97,7 @@ namespace chldr_tools
                         { "RemoteDatabase",  connectionString}
                 }!).Build();
 
-            var remoteSqlContext = new SqlDataProvider(_fileService, configuration);
+            var remoteSqlContext = new SqlDataProvider(_fileService, configuration, _exceptionHandler);
             remoteSqlContext.Initialize();
             var sqlDatabase = remoteSqlContext.GetContext();
 

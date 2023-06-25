@@ -9,6 +9,7 @@ using chldr_data.remote.SqlEntities;
 using chldr_data.remote.Services;
 using chldr_data.Models;
 using chldr_utils.Services;
+using Realms.Sync;
 
 namespace chldr_data.remote.Repositories
 {
@@ -20,14 +21,21 @@ namespace chldr_data.remote.Repositories
         {
             return TranslationModel.FromEntity(translation);
         }
-     
-        public override void Add(TranslationDto dto)
+
+        public override List<ChangeSetModel> Add(TranslationDto dto)
         {
             var entity = SqlTranslation.FromDto(dto, _dbContext);
-            _dbContext.Add(entity);
+            _dbContext.Translations.Add(entity);
+
+            var changeSet = CreateChangeSetEntity(Operation.Insert, dto.TranslationId);
+            _dbContext.ChangeSets.Add(changeSet);
+
+            _dbContext.SaveChanges();
+
+            return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override void Update(TranslationDto dto)
+        public override List<ChangeSetModel> Update(TranslationDto dto)
         {
             // Find out what has been changed
             var existing = Get(dto.TranslationId);
@@ -36,9 +44,16 @@ namespace chldr_data.remote.Repositories
             var changes = Change.GetChanges(dto, existingDto);
             if (changes.Count == 0)
             {
-                return;
+                return new List<ChangeSetModel>();
             }
+
             ApplyChanges<SqlTranslation>(dto.TranslationId, changes);
+
+            var changeSet = CreateChangeSetEntity(Operation.Update, dto.TranslationId, changes);
+            _dbContext.ChangeSets.Add(changeSet);
+            _dbContext.SaveChanges();
+
+            return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
     }

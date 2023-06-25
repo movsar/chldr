@@ -20,13 +20,14 @@ namespace chldr_data.local.Services
 
         private readonly FileService _fileService;
         string _connectionString;
+        private readonly ExceptionHandler _exceptionHandler;
         private static DbContextOptions<SqlContext> _options;
 
-        public SqlDataProvider(FileService fileService, IConfiguration configuration)
+        public SqlDataProvider(FileService fileService, IConfiguration configuration, ExceptionHandler exceptionHandler)
         {
             _fileService = fileService;
             _connectionString = configuration.GetConnectionString("RemoteDatabase")!;
-
+            _exceptionHandler = exceptionHandler;
             _options ??= new DbContextOptionsBuilder<SqlContext>().UseMySQL(_connectionString).Options;
         }
 
@@ -56,7 +57,7 @@ namespace chldr_data.local.Services
         public IUnitOfWork CreateUnitOfWork(string userId = Constants.DefaultUserId)
         {
             var context = GetContext();
-            return new SqlUnitOfWork(context, _fileService, userId!);
+            return new SqlUnitOfWork(context, _fileService, _exceptionHandler, userId!);
         }
     }
 }

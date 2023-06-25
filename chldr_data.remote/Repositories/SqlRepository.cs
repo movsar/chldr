@@ -1,16 +1,21 @@
-﻿using chldr_data.Enums;
+﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.DatabaseObjects.Models;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.Models;
+using chldr_data.remote.Interfaces;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Realms;
 
 namespace chldr_data.remote.Repositories
 {
-    internal abstract class SqlRepository<TEntity, TModel, TDto> : IRepository<TModel, TDto>
+    internal abstract class SqlRepository<TEntity, TModel, TDto> : ISqlRepository<TModel, TDto>
         where TDto : class, new()
         where TModel : class
         where TEntity : class
@@ -24,6 +29,29 @@ namespace chldr_data.remote.Repositories
         protected readonly SqlContext _dbContext;
         protected readonly FileService _fileService;
         protected readonly string _userId;
+        public abstract List<ChangeSetModel> Add(TDto dto);
+        public abstract List<ChangeSetModel> Update(TDto dto);
+        public virtual List<ChangeSetModel> Remove(string entityId)
+        {
+            var entity = _dbContext.Set<TEntity>().Find(entityId);
+            if (entity == null)
+            {
+                throw new NullReferenceException();
+            }
+            _dbContext.Remove(entity);
+
+            if (RecordType == RecordType.ChangeSet)
+            {
+                throw new ArgumentException();
+            }
+
+            var changeSetEntity = CreateChangeSetEntity(Operation.Delete, _userId, entityId);
+            _dbContext.ChangeSets.Add(changeSetEntity);
+
+            _dbContext.SaveChanges();
+
+            return ChangeSetModel.FromEntity(changeSetEntity);
+        }
 
         protected abstract RecordType RecordType { get; }
         protected abstract TModel FromEntityShortcut(TEntity entity);
@@ -38,24 +66,24 @@ namespace chldr_data.remote.Repositories
 
             return FromEntityShortcut(entry);
         }
-        public abstract void Update(TDto dto);
-        public abstract void Add(TDto dto);
-        public virtual void Remove(string entityId)
+
+        protected SqlChangeSet CreateChangeSetEntity(Operation operation,  string recordId, List<Change>? changes = null)
         {
-            var entity = _dbContext.Set<TEntity>().Find(entityId);
-            if (entity == null)
+            var changeSet = new SqlChangeSet()
             {
-                return;
-            }
-            _dbContext.Remove(entity);
-            _dbContext.SaveChanges();
+                Operation = (int)operation,
+                UserId = _userId!,
+                RecordId = recordId,
+                RecordType = (int)RecordType,
+            };
 
-            if (RecordType == RecordType.ChangeSet)
+            if (changeSet.Operation == (int)Operation.Update && changes != null)
             {
-                return;
+                changeSet.RecordChanges = JsonConvert.SerializeObject(changes);
             }
+
+            return changeSet;
         }
-
         protected static void SetPropertyValue(object obj, string propertyName, object value)
         {
             var propertyInfo = obj.GetType().GetProperty(propertyName);
@@ -105,26 +133,38 @@ namespace chldr_data.remote.Repositories
             return entries;
         }
 
-        public void AddRange(IEnumerable<TDto> added)
+        #region Bulk actions
+        public List<ChangeSetModel> AddRange(IEnumerable<TDto> added)
         {
+            var changeSets = new List<ChangeSetModel>();
             foreach (var dto in added)
             {
-                Add(dto);
+                var changeSet = Add(dto);
+                changeSets.AddRange(changeSet);
             }
+            return changeSets;
         }
-        public void UpdateRange(IEnumerable<TDto> updated)
+        public List<ChangeSetModel> UpdateRange(IEnumerable<TDto> updated)
         {
+            var changeSets = new List<ChangeSetModel>();
             foreach (var dto in updated)
             {
-                Update(dto);
+                var changeSet = Update(dto);
+                changeSets.AddRange(changeSet);
             }
+            return changeSets;
         }
-        public void RemoveRange(IEnumerable<string> removed)
+        public List<ChangeSetModel> RemoveRange(IEnumerable<string> removed)
         {
+            var changeSets = new List<ChangeSetModel>();
             foreach (var id in removed)
             {
-                Remove(id);
+                var changeSet = Remove(id);
+                changeSets.AddRange(changeSet);
             }
+            return changeSets;
         }
+        #endregion
+
     }
 }

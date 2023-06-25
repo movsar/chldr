@@ -65,30 +65,7 @@ namespace chldr_api
             unitOfWork.BeginTransaction();
             try
             {
-                // Process added entry
-                unitOfWork.Entries.Add(entryDto);
-
-                var entryChangeSet = ChangeSetDto.Create(Operation.Insert, userId, RecordType.Entry, entryDto.EntryId);
-                unitOfWork.ChangeSets.Add(entryChangeSet);
-                
-                // Process added translations
-                foreach (var translation in entryDto.Translations)
-                {
-                    unitOfWork.Translations.Add(translation);
-
-                    var translationChangeSet = ChangeSetDto.Create(Operation.Insert, userId, RecordType.Translation, translation.TranslationId);
-                    unitOfWork.ChangeSets.Add(translationChangeSet);
-                }
-
-                // Process added sounds
-                foreach (var sound in entryDto.Sounds)
-                {
-                    unitOfWork.Sounds.Add(sound);
-
-                    var translationChangeSet = ChangeSetDto.Create(Operation.Insert, userId, RecordType.Sound, sound.SoundId);
-                    unitOfWork.ChangeSets.Add(translationChangeSet);
-                }
-
+                var changeSets = unitOfWork.EntryService.Add(userId, entryDto);
                 unitOfWork.Commit();
 
                 return new RequestResult()
@@ -96,7 +73,8 @@ namespace chldr_api
                     Success = true,
                     SerializedData = JsonConvert.SerializeObject(new
                     {
-                        entryDto.CreatedAt
+                        ChangeSets = changeSets,
+                        CreatedAt = entryDto.CreatedAt
                     })
                 };
             }
@@ -110,44 +88,19 @@ namespace chldr_api
                 unitOfWork.Dispose();
             }
 
-            return new RequestResult() { Success = false };
+            return new RequestResult();
         }
 
-        public RequestResult UpdateEntry(string userId, EntryDto updatedEntryDto)
+        public RequestResult UpdateEntry(string userId, EntryDto entryDto)
         {
-            var resultingChangeSetDtos = new List<ChangeSetDto>();
-
             using var unitOfWork = (ISqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             try
             {
-                var existingEntry = unitOfWork.Entries.Get(updatedEntryDto.EntryId);
-                var existingEntryDto = EntryDto.FromModel(existingEntry);
-
-                // Update entry
-                var entryChanges = Change.GetChanges(updatedEntryDto, existingEntryDto);
-                if (entryChanges.Count != 0)
-                {
-                    unitOfWork.Entries.Update(updatedEntryDto);
-
-                    var entryChangeSetDto = ChangeSetDto.Create(Operation.Update, userId, RecordType.Entry, updatedEntryDto.EntryId, entryChanges);
-                    resultingChangeSetDtos.Add(entryChangeSetDto);
-                }
-
-                // Add / Remove / Update translations
-                var translationChangeSets = ProcessTranslationsForEntryUpdate(unitOfWork, userId, existingEntryDto, updatedEntryDto);
-                resultingChangeSetDtos.AddRange(translationChangeSets);
-
-                // Add / Remove / Update sounds
-                var soundChangeSets = ProcessSoundsForEntryUpdate(unitOfWork, userId, existingEntryDto, updatedEntryDto);
-                resultingChangeSetDtos.AddRange(soundChangeSets);
-
-                // Insert changesets
-                unitOfWork.ChangeSets.AddRange(resultingChangeSetDtos);
-
+                var changeSets = unitOfWork.EntryService.Update(userId, entryDto);
                 unitOfWork.Commit();
 
-                return new RequestResult() { Success = true };
+                return new RequestResult() { Success = true, SerializedData = JsonConvert.SerializeObject(changeSets) };
             }
             catch (Exception ex)
             {
@@ -159,104 +112,7 @@ namespace chldr_api
                 unitOfWork.Dispose();
             }
 
-            return new RequestResult() { Success = false };
-        }
-
-        private IEnumerable<ChangeSetDto> ProcessSoundsForEntryUpdate(ISqlUnitOfWork unitOfWork, string userId, EntryDto existingEntryDto, EntryDto updatedEntryDto)
-        {
-            var changeSets = new List<ChangeSetDto>();
-
-            var existingEntrySoundIds = existingEntryDto.Sounds.Select(t => t.SoundId).ToHashSet();
-            var updatedEntrySoundIds = updatedEntryDto.Sounds.Select(t => t.SoundId).ToHashSet();
-
-            var added = updatedEntryDto.Sounds.Where(t => !existingEntrySoundIds.Contains(t.SoundId));
-            var deleted = existingEntryDto.Sounds.Where(t => !updatedEntrySoundIds.Contains(t.SoundId));
-            var updated = updatedEntryDto.Sounds.Where(t => existingEntrySoundIds.Contains(t.SoundId) && updatedEntrySoundIds.Contains(t.SoundId));
-
-            // Process inserted translations
-            foreach (var sound in added)
-            {
-                unitOfWork.Sounds.Add(sound);
-
-                var changeSet = ChangeSetDto.Create(Operation.Insert, userId, RecordType.Sound, sound.SoundId);
-                changeSets.Add(changeSet);
-            }
-
-            // Process removed translations
-            foreach (var sound in deleted)
-            {
-                unitOfWork.Sounds.Remove(sound.SoundId);
-
-                var changeSet = ChangeSetDto.Create(Operation.Delete, userId, RecordType.Sound, sound.SoundId);
-                changeSets.Add(changeSet);
-            }
-
-            // Process updated translations
-            foreach (var sound in updated)
-            {
-                var existingDto = existingEntryDto.Sounds.First(t => t.SoundId.Equals(sound.SoundId));
-
-                var changes = Change.GetChanges(sound, existingDto);
-                if (changes.Count == 0)
-                {
-                    continue;
-                }
-
-                unitOfWork.Sounds.Update(sound);
-
-                var changeSet = ChangeSetDto.Create(Operation.Update, userId, RecordType.Sound, sound.SoundId, changes);
-                changeSets.Add(changeSet);
-            }
-
-            return changeSets;
-        }
-        private IEnumerable<ChangeSetDto> ProcessTranslationsForEntryUpdate(IUnitOfWork unitOfWork, string userId, EntryDto existingEntryDto, EntryDto updatedEntryDto)
-        {
-            var changeSets = new List<ChangeSetDto>();
-
-            var existingEntryTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
-            var updatedEntryTranslationIds = updatedEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
-
-            var added = updatedEntryDto.Translations.Where(t => !existingEntryTranslationIds.Contains(t.TranslationId));
-            var deleted = existingEntryDto.Translations.Where(t => !updatedEntryTranslationIds.Contains(t.TranslationId));
-            var updated = updatedEntryDto.Translations.Where(t => existingEntryTranslationIds.Contains(t.TranslationId) && updatedEntryTranslationIds.Contains(t.TranslationId));
-
-            // Process inserted translations
-            foreach (var translation in added)
-            {
-                unitOfWork.Translations.Add(translation);
-
-                var changeSet = ChangeSetDto.Create(Operation.Insert, userId, RecordType.Translation, translation.TranslationId);
-                changeSets.Add(changeSet);
-            }
-
-            // Process removed translations
-            foreach (var translation in deleted)
-            {
-                unitOfWork.Translations.Remove(translation.TranslationId);
-
-                var changeSet = ChangeSetDto.Create(Operation.Delete, userId, RecordType.Translation, translation.TranslationId);
-                changeSets.Add(changeSet);
-            }
-
-            // Process updated translations
-            foreach (var translation in updated)
-            {
-                var existingTranslationDto = existingEntryDto.Translations.First(t => t.TranslationId.Equals(translation.TranslationId));
-
-                var changes = Change.GetChanges(translation, existingTranslationDto);
-                if (changes.Count == 0)
-                {
-                    continue;
-                }
-
-                unitOfWork.Translations.Update(translation);
-
-                var changeSet = ChangeSetDto.Create(Operation.Update, userId, RecordType.Translation, translation.TranslationId, changes);
-                changeSets.Add(changeSet);
-            }
-
-            return changeSets;
+            return new RequestResult();
         }
 
         public RequestResult RemoveEntry(string userId, string entryId)
@@ -265,37 +121,10 @@ namespace chldr_api
             unitOfWork.BeginTransaction();
             try
             {
-                var entry = unitOfWork.Entries.Get(entryId);
-                var soundIds = entry.Sounds.Select(s => s.SoundId).ToArray();
-                var translationIds = entry.Translations.Select(t => t.TranslationId).ToArray();
-
-                // Process removed translations
-                foreach (var translationId in translationIds)
-                {
-                    unitOfWork.Translations.Remove(translationId);
-
-                    var translationChangeSet = ChangeSetDto.Create(Operation.Delete, userId, RecordType.Translation, translationId);
-                    unitOfWork.ChangeSets.Add(translationChangeSet);
-                }
-
-                // Process removed sounds
-                foreach (var soundId in soundIds)
-                {
-                    unitOfWork.Sounds.Remove(soundId);
-
-                    var translationChangeSet = ChangeSetDto.Create(Operation.Delete, userId, RecordType.Sound, soundId);
-                    unitOfWork.ChangeSets.Add(translationChangeSet);
-                }
-
-                // Process removed entry
-                unitOfWork.Entries.Remove(entryId);
-
-                var changeSet = ChangeSetDto.Create(Operation.Delete, userId, RecordType.Entry, entryId);
-                unitOfWork.ChangeSets.Add(changeSet);
-
+                var changeSets = unitOfWork.EntryService.Remove(userId, entryId);
                 unitOfWork.Commit();
 
-                return new RequestResult() { Success = true };
+                return new RequestResult() { Success = true, SerializedData = JsonConvert.SerializeObject(changeSets) };
             }
             catch (Exception ex)
             {
@@ -307,7 +136,7 @@ namespace chldr_api
                 unitOfWork.Dispose();
             }
 
-            return new RequestResult() { Success = false };
+            return new RequestResult();
         }
 
         // User mutations
