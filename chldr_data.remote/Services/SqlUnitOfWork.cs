@@ -54,7 +54,7 @@ namespace chldr_data.Services
 
         public ITranslationsRepository Translations => _translationsRepository ??= new SqlTranslationsRepository(_context, _fileService, _userId);
         public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new SqlChangeSetsRepository(_context, _fileService, _userId);
-        public IEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_context, _fileService, Translations, Sounds, _userId);
+        public IEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_context, _fileService, _userId);
         public ISourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_context, _fileService, _userId);
         public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_context, _fileService, _userId);
         public ISoundsRepository Sounds => _soundsRepository ?? new SqlSoundsRepository(_context, _fileService, _userId);

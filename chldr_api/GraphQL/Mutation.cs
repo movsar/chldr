@@ -65,7 +65,30 @@ namespace chldr_api
             unitOfWork.BeginTransaction();
             try
             {
+                // Process added entry
                 unitOfWork.Entries.Add(entryDto);
+
+                var entryChangeSet = ChangeSetDto.Create(Operation.Insert, userId, RecordType.Entry, entryDto.EntryId);
+                unitOfWork.ChangeSets.Add(entryChangeSet);
+                
+                // Process added translations
+                foreach (var translation in entryDto.Translations)
+                {
+                    unitOfWork.Translations.Add(translation);
+
+                    var translationChangeSet = ChangeSetDto.Create(Operation.Insert, userId, RecordType.Translation, translation.TranslationId);
+                    unitOfWork.ChangeSets.Add(translationChangeSet);
+                }
+
+                // Process added sounds
+                foreach (var sound in entryDto.Sounds)
+                {
+                    unitOfWork.Sounds.Add(sound);
+
+                    var translationChangeSet = ChangeSetDto.Create(Operation.Insert, userId, RecordType.Sound, sound.SoundId);
+                    unitOfWork.ChangeSets.Add(translationChangeSet);
+                }
+
                 unitOfWork.Commit();
 
                 return new RequestResult()
@@ -112,11 +135,11 @@ namespace chldr_api
                 }
 
                 // Add / Remove / Update translations
-                var translationChangeSets = ProcessAssociatedTranslations(unitOfWork, userId, existingEntryDto, updatedEntryDto);
+                var translationChangeSets = ProcessTranslationsForEntryUpdate(unitOfWork, userId, existingEntryDto, updatedEntryDto);
                 resultingChangeSetDtos.AddRange(translationChangeSets);
 
                 // Add / Remove / Update sounds
-                var soundChangeSets = ProcessAssociatedSounds(unitOfWork, userId, existingEntryDto, updatedEntryDto);
+                var soundChangeSets = ProcessSoundsForEntryUpdate(unitOfWork, userId, existingEntryDto, updatedEntryDto);
                 resultingChangeSetDtos.AddRange(soundChangeSets);
 
                 // Insert changesets
@@ -139,7 +162,7 @@ namespace chldr_api
             return new RequestResult() { Success = false };
         }
 
-        private IEnumerable<ChangeSetDto> ProcessAssociatedSounds(ISqlUnitOfWork unitOfWork, string userId, EntryDto existingEntryDto, EntryDto updatedEntryDto)
+        private IEnumerable<ChangeSetDto> ProcessSoundsForEntryUpdate(ISqlUnitOfWork unitOfWork, string userId, EntryDto existingEntryDto, EntryDto updatedEntryDto)
         {
             var changeSets = new List<ChangeSetDto>();
 
@@ -187,7 +210,7 @@ namespace chldr_api
 
             return changeSets;
         }
-        private IEnumerable<ChangeSetDto> ProcessAssociatedTranslations(IUnitOfWork unitOfWork, string userId, EntryDto existingEntryDto, EntryDto updatedEntryDto)
+        private IEnumerable<ChangeSetDto> ProcessTranslationsForEntryUpdate(IUnitOfWork unitOfWork, string userId, EntryDto existingEntryDto, EntryDto updatedEntryDto)
         {
             var changeSets = new List<ChangeSetDto>();
 
@@ -242,6 +265,29 @@ namespace chldr_api
             unitOfWork.BeginTransaction();
             try
             {
+                var entry = unitOfWork.Entries.Get(entryId);
+                var soundIds = entry.Sounds.Select(s => s.SoundId).ToArray();
+                var translationIds = entry.Translations.Select(t => t.TranslationId).ToArray();
+
+                // Process removed translations
+                foreach (var translationId in translationIds)
+                {
+                    unitOfWork.Translations.Remove(translationId);
+
+                    var translationChangeSet = ChangeSetDto.Create(Operation.Delete, userId, RecordType.Translation, translationId);
+                    unitOfWork.ChangeSets.Add(translationChangeSet);
+                }
+
+                // Process removed sounds
+                foreach (var soundId in soundIds)
+                {
+                    unitOfWork.Sounds.Remove(soundId);
+
+                    var translationChangeSet = ChangeSetDto.Create(Operation.Delete, userId, RecordType.Sound, soundId);
+                    unitOfWork.ChangeSets.Add(translationChangeSet);
+                }
+
+                // Process removed entry
                 unitOfWork.Entries.Remove(entryId);
 
                 var changeSet = ChangeSetDto.Create(Operation.Delete, userId, RecordType.Entry, entryId);

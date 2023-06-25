@@ -10,44 +10,21 @@ using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("chldr_data.remote.tests")]
+
 namespace chldr_data.remote.Repositories
 {
     internal class SqlEntriesRepository : SqlRepository<SqlEntry, EntryModel, EntryDto>, IEntriesRepository
     {
-        private readonly ITranslationsRepository _translations;
-        private readonly ISoundsRepository _sounds;
-
         public SqlEntriesRepository(
             SqlContext context,
             FileService fileService,
-            ITranslationsRepository translationsRepository,
-            ISoundsRepository soundsRepository,
-            string userId) : base(context, fileService, userId)
-        {
-            _translations = translationsRepository;
-            _sounds = soundsRepository;
-        }
+            string userId) : base(context, fileService, userId) { }
 
         protected override RecordType RecordType => RecordType.Entry;
 
         public override void Remove(string entityId)
-        {
-            var entry = _dbContext.Entries
-                .Include(e => e.Translations)
-                .Include(e => e.Sounds)
-                .FirstOrDefault(e => e.EntryId.Equals(entityId));
-
-            if (entry == null)
-            {
-                return;
-            }
-
-            var soundIds = entry.Sounds.Select(s => s.SoundId).ToArray();
-            var translationIds = entry.Translations.Select(t => t.TranslationId).ToArray();
-
-            _translations.RemoveRange(translationIds);
-            _sounds.RemoveRange(soundIds);
-
+        {          
             base.Remove(entityId);
         }
         public override EntryModel Get(string entityId)

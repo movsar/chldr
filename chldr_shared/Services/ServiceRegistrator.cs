@@ -32,7 +32,6 @@ namespace chldr_utils.Services
             // Data
             services.AddScoped<IGraphQlClient, GraphQLClient>();
             services.AddScoped<RequestService>();
-            services.AddScoped<AuthService>();
 
             services.AddScoped<UserService>();
 

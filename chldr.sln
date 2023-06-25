@@ -34,6 +34,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_data.local", "chldr_d
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_data.remote", "chldr_data.remote\chldr_data.remote.csproj", "{638C4E47-BF72-4281-9602-7521C37E885C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chldr_data.remote.tests", "chldr_data.remote.tests\chldr_data.remote.tests.csproj", "{A98A6A90-3359-4BAF-BA74-C7A248C3CF22}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,6 +92,10 @@ Global
 		{638C4E47-BF72-4281-9602-7521C37E885C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{638C4E47-BF72-4281-9602-7521C37E885C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{638C4E47-BF72-4281-9602-7521C37E885C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A98A6A90-3359-4BAF-BA74-C7A248C3CF22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A98A6A90-3359-4BAF-BA74-C7A248C3CF22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A98A6A90-3359-4BAF-BA74-C7A248C3CF22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A98A6A90-3359-4BAF-BA74-C7A248C3CF22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
