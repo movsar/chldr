@@ -62,8 +62,6 @@ namespace chldr_data.Repositories
             {
                 return;
             }
-
-            InsertChangeSet(Operation.Delete, _userId, entityId);
         }
 
         public async Task<IEnumerable<TModel>> TakeAsync(int offset, int limit)
@@ -85,34 +83,6 @@ namespace chldr_data.Repositories
               .Select(FromEntityShortcut);
 
             return entries.ToList();
-        }
-
-        protected void InsertChangeSet(Operation operation, string userId, string recordId, List<Change>? changes = null)
-        {
-            var changeSet = new RealmChangeSet()
-            {
-                Operation = (int)operation,
-                UserId = userId!,
-                RecordId = recordId,
-                RecordType = (int)RecordType,
-            };
-
-            if (changeSet.Operation == (int)Operation.Update && changes != null)
-            {
-                changeSet.RecordChanges = JsonConvert.SerializeObject(changes);
-            }
-
-            try
-            {
-                _dbContext.Write(() =>
-                {
-                    _dbContext.Add(changeSet);
-                });
-            }
-            catch (Exception ex)
-            {
-                var msg = ex.Message;
-            }
         }
 
         public void AddRange(IEnumerable<TDto> added)

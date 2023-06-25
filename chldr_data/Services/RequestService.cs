@@ -1,13 +1,8 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
-using chldr_data.Models;
 using chldr_data.ResponseTypes;
 using chldr_utils.Interfaces;
 using GraphQL;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Realms.Sync;
 
 namespace chldr_data.Services
 {
@@ -18,7 +13,7 @@ namespace chldr_data.Services
             _graphQLRequestSender = graphQLRequestSender;
         }
         private IGraphQlClient _graphQLRequestSender;
-        public async Task UpdatePasswordAsync(string token, string newPassword)
+        public async Task<RequestResult> UpdatePasswordAsync(string token, string newPassword)
         {
             var request = new GraphQLRequest
             {
@@ -33,13 +28,10 @@ namespace chldr_data.Services
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, "updatePassword");
-            if (!response.Data.Success)
-            {
-                throw new Exception(response.Data.ErrorMessage);
-            }
+            return response.Data;
         }
 
-        public async Task ConfirmUserAsync(string token)
+        public async Task<RequestResult> ConfirmUserAsync(string token)
         {
             var request = new GraphQLRequest
             {
@@ -55,13 +47,10 @@ namespace chldr_data.Services
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, "confirmEmail");
-            if (!response.Data.Success)
-            {
-                throw new Exception(response.Data.ErrorMessage);
-            }
+            return response.Data;
         }
 
-        internal async Task<ActiveSession> LogInEmailPasswordAsync(string email, string password)
+        internal async Task<RequestResult> LogInEmailPasswordAsync(string email, string password)
         {
             var request = new GraphQLRequest
             {
@@ -87,28 +76,10 @@ namespace chldr_data.Services
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, "loginEmailPassword");
-            if (!response.Data.Success)
-            {
-                throw new Exception(response.Data.ErrorMessage);
-            }
-
-            var data = JsonConvert.DeserializeObject<dynamic>(response.Data.SerializedData);
-            if (data == null)
-            {
-                throw new Exception("Error:Data_cannot_be_null");
-            }
-
-            return new ActiveSession()
-            {
-                AccessToken = data.AccessToken!,
-                RefreshToken = data.RefreshToken!,
-                AccessTokenExpiresIn = data.AccessTokenExpiresIn!,
-                Status = SessionStatus.LoggedIn,
-                User = data.User
-            };
+            return response.Data;
         }
 
-        internal async Task<string> RegisterUserAsync(string email, string password)
+        internal async Task<RequestResult> RegisterUserAsync(string email, string password)
         {
             var request = new GraphQLRequest
             {
@@ -125,21 +96,10 @@ namespace chldr_data.Services
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, "registerUser");
-            if (!response.Data.Success)
-            {
-                throw new Exception(response.Data.ErrorMessage);
-            }
-
-            var token = JsonConvert.DeserializeObject<string>(response.Data.SerializedData);
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                throw new Exception("Token shouldn't be null");
-            }
-
-            return token;
+            return response.Data;
         }
 
-        internal async Task<ActiveSession> RefreshTokens(string refreshToken)
+        internal async Task<RequestResult> RefreshTokens(string refreshToken)
         {
             var request = new GraphQLRequest
             {
@@ -165,28 +125,9 @@ namespace chldr_data.Services
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, "logInRefreshToken");
-
-            if (!response.Data.Success)
-            {
-                throw new Exception("Error:Bad_request");
-            }
-
-            var data = JsonConvert.DeserializeObject<dynamic>(response.Data.SerializedData);
-            if (data == null)
-            {
-                throw new Exception("Error:Data_cannot_be_null");
-            }
-
-            return new ActiveSession()
-            {
-                AccessToken = data.AccessToken!,
-                RefreshToken = data.RefreshToken!,
-                AccessTokenExpiresIn = data.AccessTokenExpiresIn!,
-                Status = SessionStatus.LoggedIn,
-                User = data.User
-            };
+            return response.Data;
         }
-        public async Task PasswordResetRequestAsync(string email)
+        public async Task<RequestResult> PasswordResetRequestAsync(string email)
         {
             var request = new GraphQLRequest
             {
@@ -202,12 +143,9 @@ namespace chldr_data.Services
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, "passwordReset");
-            if (!response.Data.Success)
-            {
-                throw new Exception(response.Data.ErrorMessage);
-            }
+            return response.Data;
         }
-        public async Task<IEnumerable<T>> TakeLast<T>(RecordType recordType, int count)
+        public async Task<RequestResult> TakeLast<T>(RecordType recordType, int count)
         {
             var operation = "takeLast";
             var request = new GraphQLRequest
@@ -224,16 +162,10 @@ namespace chldr_data.Services
                 Variables = new { recordTypeName = recordType.ToString(), count }
             };
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
-            if (!response.Data.Success)
-            {
-                throw new Exception(response.Data.ErrorMessage);
-            }
-
-            var listOfObjects = JsonConvert.DeserializeObject<IEnumerable<T>>(response.Data.SerializedData);
-            return listOfObjects;
+            return response.Data;
         }
 
-        public async Task<IEnumerable<T>> Take<T>(RecordType recordType, int offset, int limit)
+        public async Task<RequestResult> Take<T>(RecordType recordType, int offset, int limit)
         {
             var operation = "take";
             var request = new GraphQLRequest
@@ -250,13 +182,7 @@ namespace chldr_data.Services
                 Variables = new { recordTypeName = recordType.ToString(), offset, limit }
             };
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
-            if (!response.Data.Success)
-            {
-                throw new Exception(response.Data.ErrorMessage);
-            }
-
-            var listOfObjects = JsonConvert.DeserializeObject<IEnumerable<T>>(response.Data.SerializedData);
-            return listOfObjects;
+            return response.Data;
         }
 
         public async Task<RequestResult> AddEntry(string userId, EntryDto entryDto)

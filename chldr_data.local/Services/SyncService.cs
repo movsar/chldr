@@ -54,8 +54,15 @@ namespace chldr_data.local.Services
             IEnumerable<T> newResults;
             do
             {
-                newResults = await _requestService.Take<T>(recordType, offset, limit);
+                var response = await _requestService.Take<T>(recordType, offset, limit);
+                if (!response.Success)
+                {
+                    throw new Exception(response.ErrorMessage);
+                }
+
+                newResults = response.Data<IEnumerable<T>>();
                 combinedResults.AddRange(newResults);
+
                 offset += limit;
             } while (newResults.Any());
 
@@ -121,7 +128,9 @@ namespace chldr_data.local.Services
                 await _syncLock.WaitAsync();
 
                 // Return if there are no changesets available on remote server
-                var latestRemoteChangeSets = await _requestService.TakeLast<ChangeSetDto>(RecordType.ChangeSet, Constants.ChangeSetsToApply);
+                var response = await _requestService.TakeLast<ChangeSetDto>(RecordType.ChangeSet, Constants.ChangeSetsToApply);
+                var latestRemoteChangeSets = response.Data<IEnumerable<ChangeSetDto>>();
+
                 if (!latestRemoteChangeSets.Any())
                 {
                     return;
@@ -220,7 +229,7 @@ namespace chldr_data.local.Services
             }
         }
 
-        private void ApplyChangesForType<T>(string entityId, IEnumerable<Change> changes) where T: RealmObject
+        private void ApplyChangesForType<T>(string entityId, IEnumerable<Change> changes) where T : RealmObject
         {
             var realmWord = _dbContext.Find<T>(entityId);
             foreach (var change in changes)

@@ -1,10 +1,12 @@
-﻿namespace chldr_data.ResponseTypes
+﻿using GraphQL;
+using Newtonsoft.Json;
+
+namespace chldr_data.ResponseTypes
 {
     public class RequestResult
     {
         public bool Success { get; set; } = false;
         public string SerializedData { get; set; }
-
         private string _errorMessage = string.Empty;
         public string ErrorMessage
         {
@@ -20,5 +22,16 @@
         {
             ErrorMessage = errorMessage;
         }
+        [Ignore]
+        public T Data<T>()
+        {
+            if (!Success)
+            {
+                throw new Exception("Error:Unsuccessful");
+            }
+
+            return JsonConvert.DeserializeObject<T>(SerializedData)!;
+        }
+
     }
 }

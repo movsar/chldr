@@ -6,6 +6,7 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_utils;
 using chldr_utils.Models;
 using chldr_data.Services;
+using chldr_data.Interfaces.Repositories;
 
 namespace chldr_shared.Stores
 {
@@ -182,11 +183,13 @@ namespace chldr_shared.Stores
 
         public async Task UpdateEntry(UserModel loggedInUser, EntryDto entryDto)
         {
-            var request = await _requestService.UpdateEntry(loggedInUser.UserId, entryDto);
-            if (!request.Success)
+            var response = await _requestService.UpdateEntry(loggedInUser.UserId, entryDto);
+            if (!response.Success)
             {
                 throw _exceptionHandler.Error("Error:Request_failed");
             }
+
+            var changeSets = response.Data<IEnumerable<ChangeSetDto>>();
 
             // Update local entity
             _unitOfWork.Entries.Update(entryDto);
@@ -199,24 +202,53 @@ namespace chldr_shared.Stores
 
             CachedResultsChanged?.Invoke();
         }
+        public static void HandleUpdatedEntryTranslations(ITranslationsRepository translations, EntryDto existingEntryDto, EntryDto updatedEntryDto)
+        {
+            // Handle associated translation changes
+            var existingEntryTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
+            var updatedEntryTranslationIds = updatedEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
 
+            var added = updatedEntryDto.Translations.Where(t => !existingEntryTranslationIds.Contains(t.TranslationId));
+            var deleted = existingEntryDto.Translations.Where(t => !updatedEntryTranslationIds.Contains(t.TranslationId));
+            var updated = updatedEntryDto.Translations.Where(t => existingEntryTranslationIds.Contains(t.TranslationId) && updatedEntryTranslationIds.Contains(t.TranslationId));
+
+            translations.AddRange(added);
+            translations.RemoveRange(deleted.Select(t => t.TranslationId));
+            translations.UpdateRange(updated);
+        }
+
+        public static void HandleUpdatedEntrySounds(ISoundsRepository sounds, EntryDto existingEntryDto, EntryDto updatedEntryDto)
+        {
+            // Handle associated translation changes
+            var existingEntrySoundIds = existingEntryDto.Sounds.Select(t => t.SoundId).ToHashSet();
+            var updatedEntrySoundIds = updatedEntryDto.Sounds.Select(t => t.SoundId).ToHashSet();
+
+            var added = updatedEntryDto.Sounds.Where(t => !existingEntrySoundIds.Contains(t.SoundId));
+            var deleted = existingEntryDto.Sounds.Where(t => !updatedEntrySoundIds.Contains(t.SoundId));
+            var updated = updatedEntryDto.Sounds.Where(t => existingEntrySoundIds.Contains(t.SoundId) && updatedEntrySoundIds.Contains(t.SoundId));
+
+            sounds.AddRange(added);
+            sounds.UpdateRange(updated);
+            sounds.RemoveRange(deleted.Select(t => t.SoundId));
+        }
         public async Task AddEntry(UserModel loggedInUser, EntryDto entryDto)
         {
             // Add remote entity
-            var request = await _requestService.AddEntry(loggedInUser.UserId, entryDto);
+            var response = await _requestService.AddEntry(loggedInUser.UserId, entryDto);
 
-            if (!request.Success)
+            if (!response.Success)
             {
                 throw _exceptionHandler.Error("Error:Request_failed");
             }
 
-            if (request.CreatedAt == DateTimeOffset.MinValue)
+            var createdAt = response.Data<DateTimeOffset>();
+            if (createdAt == DateTimeOffset.MinValue)
             {
                 throw _exceptionHandler.Error("Error:Request_failed");
             }
 
             // Update local entity
-            entryDto.CreatedAt = request.CreatedAt;
+            entryDto.CreatedAt = createdAt;
 
             _unitOfWork.Entries.Add(entryDto);
 

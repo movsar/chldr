@@ -67,8 +67,6 @@ namespace chldr_data.Repositories
                 var filePath = Path.Combine(_fileService.EntrySoundsDirectory, soundDto.FileName);
                 File.WriteAllText(filePath, soundDto.RecordingB64);
             }
-
-            InsertChangeSet(Operation.Insert, newEntryDto.UserId!, newEntryDto.EntryId);
         }
 
 
@@ -76,23 +74,11 @@ namespace chldr_data.Repositories
         {
             var existingEntry = Get(updatedEntryDto.EntryId);
             var existingEntryDto = EntryDto.FromModel(existingEntry);
-
-            // Update associated translations and sounds
-            IEntriesRepository.HandleUpdatedEntryTranslations(_translations, existingEntryDto, updatedEntryDto);
-            IEntriesRepository.HandleUpdatedEntrySounds(_sounds, existingEntryDto, updatedEntryDto);
-
-            var entryChanges = Change.GetChanges(existingEntryDto, existingEntryDto);
-            if (entryChanges.Count == 0)
-            {
-                return;
-            }
-
+         
             _dbContext.Write(() =>
             {
                 RealmEntry.FromDto(updatedEntryDto, _dbContext);
             });
-
-            InsertChangeSet(Operation.Update, updatedEntryDto.UserId!, existingEntryDto.EntryId, entryChanges);
         }
 
         public override void Remove(string entityId)

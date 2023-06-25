@@ -33,8 +33,6 @@ namespace chldr_data.local.Repositories
             });
 
             _fileService.AddEntrySound(dto.FileName, dto.RecordingB64!);
-
-            InsertChangeSet(Operation.Insert, dto.UserId!, dto.SoundId);
         }
         public override void Update(SoundDto dto)
         {
@@ -51,8 +49,6 @@ namespace chldr_data.local.Repositories
             {
                 RealmSound.FromDto(dto, _dbContext);
             });
-
-            InsertChangeSet(Operation.Update, dto.UserId!, dto.SoundId, changes);
         }
         public override void Remove(string entityId)
         {

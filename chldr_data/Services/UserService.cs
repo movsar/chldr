@@ -1,6 +1,8 @@
-﻿using chldr_data.Interfaces;
+﻿using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_utils.Services;
+using Newtonsoft.Json;
 
 namespace chldr_data.Services
 {
@@ -28,7 +30,15 @@ namespace chldr_data.Services
 
         public async Task<string> RegisterNewUserAsync(string email, string password)
         {
-            return await _requestService.RegisterUserAsync(email, password);
+            var response = await _requestService.RegisterUserAsync(email, password);
+
+            var token = response.Data<string>();
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                throw new Exception("Token shouldn't be null");
+            }
+
+            return token;
         }
 
         public async Task SendPasswordResetRequestAsync(string email)
@@ -54,7 +64,23 @@ namespace chldr_data.Services
         {
             try
             {
-                _currentSession = await _requestService.LogInEmailPasswordAsync(email, password);
+                var response = await _requestService.LogInEmailPasswordAsync(email, password);
+                if (!response.Success)
+                {
+                    throw new Exception("Error:Bad_request");
+                }
+
+                var data = response.Data<dynamic>();
+
+                _currentSession = new ActiveSession()
+                {
+                    AccessToken = data.AccessToken!,
+                    RefreshToken = data.RefreshToken!,
+                    AccessTokenExpiresIn = data.AccessTokenExpiresIn!,
+                    Status = SessionStatus.LoggedIn,
+                    User = data.User
+                };
+
                 await SaveActiveSession();
 
                 UserStateHasChanged?.Invoke(_currentSession);
@@ -75,7 +101,23 @@ namespace chldr_data.Services
 
         public async Task<ActiveSession> RefreshTokens(string refreshToken)
         {
-            return await _requestService.RefreshTokens(refreshToken);
+            var response = await _requestService.RefreshTokens(refreshToken);
+
+            if (!response.Success)
+            {
+                throw new Exception("Error:Bad_request");
+            }
+
+            var data = response.Data<dynamic>();
+
+            return new ActiveSession()
+            {
+                AccessToken = data.AccessToken!,
+                RefreshToken = data.RefreshToken!,
+                AccessTokenExpiresIn = data.AccessTokenExpiresIn!,
+                Status = SessionStatus.LoggedIn,
+                User = data.User
+            };
         }
 
         public async Task RestoreLastSession()

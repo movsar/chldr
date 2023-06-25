@@ -40,8 +40,6 @@ namespace chldr_data.Repositories
                 var entity = RealmSource.FromDto(dto, _dbContext);
                 _dbContext.Add(entity);
             });
-
-            InsertChangeSet(Operation.Insert, dto.UserId!, dto.SourceId);
         }
         public override void Update(SourceDto dto)
         {
@@ -58,8 +56,6 @@ namespace chldr_data.Repositories
             {
                 var entity = RealmSource.FromDto(dto, _dbContext);
             });
-
-            InsertChangeSet(Operation.Update, dto.UserId!, dto.SourceId, changes);
         }
     }
 }

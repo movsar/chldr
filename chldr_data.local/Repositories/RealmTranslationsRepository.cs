@@ -28,8 +28,6 @@ namespace chldr_data.Repositories
                 var translation = RealmTranslation.FromDto(dto, _dbContext);
                 _dbContext.Add(translation);
             });
-
-            InsertChangeSet(Operation.Insert, dto.UserId!, dto.TranslationId);
         }
         public override void Update(TranslationDto dto)
         {
@@ -46,8 +44,6 @@ namespace chldr_data.Repositories
             {
                 var updatedEntry = RealmTranslation.FromDto(dto, _dbContext);
             });
-
-            InsertChangeSet(Operation.Update, dto.UserId!, dto.TranslationId, changes);
         }
     }
 }
