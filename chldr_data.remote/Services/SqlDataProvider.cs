@@ -50,15 +50,7 @@ namespace chldr_data.local.Services
         }
         public SqlContext GetContext()
         {
-            try
-            {
-
-                return new SqlContext(_options);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            return new SqlContext(_options);
         }
 
         public IUnitOfWork CreateUnitOfWork(string userId = Constants.DefaultUserId)

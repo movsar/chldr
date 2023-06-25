@@ -8,6 +8,7 @@ using chldr_data.remote.SqlEntities;
 using chldr_tools;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Abstractions;
 using Realms;
 
 namespace chldr_data.remote.Repositories
@@ -25,17 +26,51 @@ namespace chldr_data.remote.Repositories
 
         public async Task<List<ChangeSetModel>> TakeLastAsync(int count)
         {
-            var lastChangeSetIndices = await _dbContext.ChangeSets
-            .OrderByDescending(c => c.ChangeSetIndex)
-            .Select(c => c.ChangeSetIndex)
-            .Take(count)
-            .ToListAsync();
+            // 1. An item with the same key has already been added. Key: server=104.248.40.142;port=3306;..
 
-            var models = await _dbContext.ChangeSets
-                .Where(c => lastChangeSetIndices.Contains(c.ChangeSetIndex))
-                .ToListAsync();
+            List<long> lastChangeSetIndices = null!;
+            try
+            {
 
-            return models.Select(ChangeSetModel.FromEntity).ToList();
+                lastChangeSetIndices = await _dbContext.ChangeSets
+                    .OrderByDescending(c => c.ChangeSetIndex)
+                    .Select(c => c.ChangeSetIndex)
+                    .Take(count)
+                    .ToListAsync();
+
+            }
+            catch (Exception ex)
+            {
+                // Operations that change non-concurrent collections must have exclusive access. A concurrent update was performed on this collection and corrupted its state. The collection's state is no longer correct.
+
+                throw;
+            }
+
+            List<SqlChangeSet> entities = null!;
+            try
+            {
+                entities = await _dbContext.ChangeSets
+                   .Where(c => lastChangeSetIndices.Contains(c.ChangeSetIndex))
+                   .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            List<ChangeSetModel> models = null!;
+
+            try
+            {
+                models = entities.Select(ChangeSetModel.FromEntity).ToList();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+            return models;
         }
 
         public IEnumerable<ChangeSetModel> Get(string[] changeSetIds)

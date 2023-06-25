@@ -287,14 +287,7 @@ namespace chldr_api
 
         public async Task<RequestResult> LogInRefreshTokenAsync(string refreshToken)
         {
-            try
-            {
-                return await _loginUserMutation.ExecuteAsync((SqlDataProvider)_dataProvider, refreshToken);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            return await _loginUserMutation.ExecuteAsync((SqlDataProvider)_dataProvider, refreshToken);
         }
 
         public async Task<RequestResult> LoginEmailPasswordAsync(string email, string password)
