@@ -16,7 +16,7 @@ namespace chldr_data.remote.tests.RepositoryTests
     public class SqlEntriesRepositoryTests
     {
         private readonly SqlContext _dbContext;
-        private readonly SqlEntriesRepository _repository;
+        private readonly SqlEntriesRepository _entries;
         private readonly string _userId;
         private readonly ExceptionHandler _exceptionHandler;
         public SqlEntriesRepositoryTests()
@@ -32,9 +32,16 @@ namespace chldr_data.remote.tests.RepositoryTests
             var fileServiceMock = new Mock<FileService>();
             _userId = "test_user";
 
+            var translations = new SqlTranslationsRepository(_dbContext, fileServiceMock.Object, _userId);
+            var sounds = new SqlSoundsRepository(_dbContext, fileServiceMock.Object, _userId);
 
-            // Create the repository instance
-            _repository = new SqlEntriesRepository(_dbContext, fileServiceMock.Object, _exceptionHandler, _userId);
+            _entries = new SqlEntriesRepository(
+                _dbContext,
+                fileServiceMock.Object, _exceptionHandler,
+                translations,
+                sounds,
+                _userId
+            );
         }
 
         [Fact]
@@ -47,7 +54,7 @@ namespace chldr_data.remote.tests.RepositoryTests
             _dbContext.SaveChanges();
 
             // Act
-            var result = _repository.Get(entityId);
+            var result = _entries.Get(entityId);
 
             // Assert
             Assert.NotNull(result);
@@ -61,7 +68,7 @@ namespace chldr_data.remote.tests.RepositoryTests
             var entityId = "non_existing_entity_id";
 
             // Act and Assert
-            Assert.Throws<Exception>(() => _repository.Get(entityId));
+            Assert.Throws<Exception>(() => _entries.Get(entityId));
         }
 
         [Fact]
@@ -74,7 +81,7 @@ namespace chldr_data.remote.tests.RepositoryTests
             _dbContext.SaveChanges();
 
             // Act
-            _repository.Remove(entityId);
+            _entries.Remove(entityId);
 
             // Assert
             var result = _dbContext.Entries.Find(entityId);
@@ -88,7 +95,7 @@ namespace chldr_data.remote.tests.RepositoryTests
             var entityId = "non_existing_entity_id";
 
             // Act
-            _repository.Remove(entityId);
+            _entries.Remove(entityId);
 
             // Assert
             // No exception should be thrown
@@ -112,7 +119,7 @@ namespace chldr_data.remote.tests.RepositoryTests
             _dbContext.SaveChanges();
 
             // Act
-            var result = await _repository.TakeAsync(offset, limit);
+            var result = await _entries.TakeAsync(offset, limit);
 
             // Assert
             Assert.Equal(limit, result.Count());

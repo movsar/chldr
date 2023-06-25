@@ -66,7 +66,7 @@ namespace chldr_api
             unitOfWork.BeginTransaction();
             try
             {
-                var changeSets = unitOfWork.EntryService.Add(userId, entryDto);
+                var changeSets = unitOfWork.Entries.Add(entryDto);
                 unitOfWork.Commit();
 
                 return new RequestResult()
@@ -98,7 +98,7 @@ namespace chldr_api
             unitOfWork.BeginTransaction();
             try
             {
-                var changeSets = unitOfWork.EntryService.Update(userId, entryDto);
+                var changeSets = unitOfWork.Entries.Update(entryDto);
                 unitOfWork.Commit();
 
                 return new RequestResult() { Success = true, SerializedData = JsonConvert.SerializeObject(changeSets) };
@@ -122,7 +122,7 @@ namespace chldr_api
             unitOfWork.BeginTransaction();
             try
             {
-                var changeSets = unitOfWork.EntryService.Remove(userId, entryId);
+                var changeSets = unitOfWork.Entries.Remove(entryId);
                 unitOfWork.Commit();
 
                 return new RequestResult() { Success = true, SerializedData = JsonConvert.SerializeObject(changeSets) };

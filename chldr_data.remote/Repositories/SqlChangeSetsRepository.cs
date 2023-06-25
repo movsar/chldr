@@ -26,15 +26,13 @@ namespace chldr_data.remote.Repositories
 
         public async Task<List<ChangeSetModel>> TakeLastAsync(int count)
         {
-          
-
             List<long> lastChangeSetIndices = null!;
             try
             {
 
                 lastChangeSetIndices = await _dbContext.ChangeSets
-                    .OrderByDescending(c => c.ChangeSetIndex)
                     .Select(c => c.ChangeSetIndex)
+                    .OrderByDescending(c => c)
                     .Take(count)
                     .ToListAsync();
 
