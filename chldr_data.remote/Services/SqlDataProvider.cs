@@ -30,6 +30,16 @@ namespace chldr_data.local.Services
             _exceptionHandler = exceptionHandler;
             _options ??= new DbContextOptionsBuilder<SqlContext>().UseMySQL(_connectionString).Options;
         }
+        public SqlContext GetContext()
+        {
+            return new SqlContext(_options);
+        }
+
+        public IUnitOfWork CreateUnitOfWork(string userId = Constants.DefaultUserId)
+        {
+            var context = GetContext();
+            return new SqlUnitOfWork(context, _fileService, _exceptionHandler, userId!);
+        }
 
         //private string KeyAsString()
         //{
@@ -49,15 +59,6 @@ namespace chldr_data.local.Services
         {
 
         }
-        public SqlContext GetContext()
-        {
-            return new SqlContext(_options);
-        }
-
-        public IUnitOfWork CreateUnitOfWork(string userId = Constants.DefaultUserId)
-        {
-            var context = GetContext();
-            return new SqlUnitOfWork(context, _fileService, _exceptionHandler, userId!);
-        }
+ 
     }
 }

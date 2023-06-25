@@ -161,7 +161,7 @@ namespace chldr_data.remote.Repositories
                     var updatedEntryEntity = SqlEntry.FromDto(updatedEntryDto, _dbContext);
                     _dbContext.Update(updatedEntryEntity);
                     _dbContext.SaveChanges();
-
+                    
                     var entryChangeSetDto = CreateChangeSetEntity(Operation.Update, updatedEntryDto.EntryId, entryChanges);
                     changeSets.Add(ChangeSetModel.FromEntity(entryChangeSetDto));
                 }

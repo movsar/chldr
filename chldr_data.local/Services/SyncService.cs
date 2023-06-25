@@ -164,7 +164,7 @@ namespace chldr_data.local.Services
                     return;
                 }
 
-                ApplyChangeSets(latestRemoteChangeSets);
+                //ApplyChangeSets(latestRemoteChangeSets);
             }
             catch (Exception ex)
             {
