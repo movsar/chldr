@@ -7,6 +7,7 @@ using chldr_data.local.RealmEntities;
 using chldr_data.Models;
 using chldr_data.Services;
 using chldr_utils.Interfaces;
+using chldr_utils.Services;
 using GraphQL;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Newtonsoft.Json;
@@ -22,12 +23,14 @@ namespace chldr_data.local.Services
     public class SyncService
     {
         private readonly RequestService _requestService;
+        private readonly FileService _fileService;
         private Timer _timer;
 
         private readonly SemaphoreSlim _syncLock = new SemaphoreSlim(1);
-        public SyncService(RequestService requestService)
+        public SyncService(RequestService requestService, FileService fileService)
         {
             _requestService = requestService;
+            _fileService = fileService;
         }
         private void SetPropertyValue(object obj, string propertyName, object value)
         {
@@ -110,7 +113,8 @@ namespace chldr_data.local.Services
                 }
             });
 
-            _dbContext.WriteCopy(new RealmConfiguration(RealmDataProvider.OfflineDatabaseConfiguration + ".new"));
+            Realm.Compact(RealmDataProvider.OfflineDatabaseConfiguration);
+            //_dbContext.WriteCopy(new RealmConfiguration(_fileService.OfflineDatabaseFilePath + ".new"));
 
             sw.Stop();
             var savedIn = sw.ElapsedMilliseconds;
@@ -119,6 +123,7 @@ namespace chldr_data.local.Services
 
         internal async Task Sync()
         {
+
             if (_isRunning)
             {
                 return;
@@ -136,12 +141,6 @@ namespace chldr_data.local.Services
                     throw new Exception(response.ErrorMessage);
                 }
 
-                var latestRemoteChangeSets = RequestResult.GetData<IEnumerable<ChangeSetDto>>(response);
-                if (!latestRemoteChangeSets.Any())
-                {
-                    return;
-                }
-
                 var latestlocalChangeSet = _dbContext.All<RealmChangeSet>().LastOrDefault();
                 var latestlocalChangeSetIndex = latestlocalChangeSet == null ? 0 : latestlocalChangeSet.ChangeSetIndex;
 
@@ -149,6 +148,12 @@ namespace chldr_data.local.Services
                 if (latestlocalChangeSetIndex == 0)
                 {
                     await PullRemoteDatabase();
+                    return;
+                }
+
+                var latestRemoteChangeSets = RequestResult.GetData<IEnumerable<ChangeSetDto>>(response);
+                if (!latestRemoteChangeSets.Any())
+                {
                     return;
                 }
 
