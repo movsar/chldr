@@ -1,7 +1,6 @@
 ﻿
 using chldr_data.Enums;
 using chldr_data.Resources.Localizations;
-using chldr_data.ResponseTypes;
 using chldr_tools;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +12,7 @@ using chldr_data.remote.SqlEntities;
 using chldr_data.Interfaces;
 using chldr_data.local.Services;
 using Newtonsoft.Json;
+using chldr_data.Models;
 
 namespace chldr_api.GraphQL.MutationServices
 {

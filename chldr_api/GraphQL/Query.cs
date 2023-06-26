@@ -2,7 +2,7 @@
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
-using chldr_data.ResponseTypes;
+using chldr_data.Models;
 using chldr_data.Services;
 using Newtonsoft.Json;
 using Realms.Sync;

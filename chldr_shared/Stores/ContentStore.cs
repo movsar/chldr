@@ -7,10 +7,10 @@ using chldr_utils;
 using chldr_utils.Models;
 using chldr_data.Services;
 using chldr_data.Interfaces.Repositories;
-using chldr_data.ResponseTypes;
 using chldr_data.local.Services;
 using chldr_data.Repositories;
 using chldr_data.local.Repositories;
+using chldr_data.Responses;
 
 namespace chldr_shared.Stores
 {
@@ -169,15 +169,17 @@ namespace chldr_shared.Stores
         public async Task DeleteEntry(UserModel loggedInUser, string entryId)
         {
             // Remove remote entity
-            var request = await _requestService.RemoveEntry(loggedInUser.UserId, entryId);
-            if (!request.Success)
+            var response = await _requestService.RemoveEntry(loggedInUser.UserId, entryId);
+            if (!response.Success)
             {
                 throw _exceptionHandler.Error("Error:Request_failed");
             }
+            var changeSets = RequestResult.GetData<IEnumerable<ChangeSetDto>>(response);
 
             // Remove local entity
             using var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId);
             unitOfWork.Entries.Remove(entryId);
+            unitOfWork.ChangeSets.AddRange(changeSets);
 
             // Update on UI
             CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
@@ -196,7 +198,9 @@ namespace chldr_shared.Stores
 
             // Update local entity
             using var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId);
+
             unitOfWork.Entries.Update(entryDto);
+            unitOfWork.ChangeSets.AddRange(changeSets);
 
             // Update on UI
             var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId);
@@ -245,17 +249,18 @@ namespace chldr_shared.Stores
                 throw _exceptionHandler.Error("Error:Request_failed");
             }
 
-            var createdAt = RequestResult.GetData<DateTimeOffset>(response);
-            if (createdAt == DateTimeOffset.MinValue)
+            var data = RequestResult.GetData<InsertResponse>(response);
+            if (data.CreatedAt == DateTimeOffset.MinValue)
             {
                 throw _exceptionHandler.Error("Error:Request_failed");
             }
 
             // Update local entity
-            entryDto.CreatedAt = createdAt;
+            entryDto.CreatedAt = data.CreatedAt;
 
             using var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId);
             unitOfWork.Entries.Add(entryDto);
+            unitOfWork.ChangeSets.AddRange(data.ChangeSets);
 
             var added = unitOfWork.Entries.Get(entryDto.EntryId);
             CachedSearchResult.Entries.Add(added);

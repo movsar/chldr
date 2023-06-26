@@ -174,8 +174,6 @@ namespace chldr_data.remote.Repositories
                 var soundChangeSets = ProcessSoundsForEntryUpdate(existingEntryDto, updatedEntryDto);
                 changeSets.AddRange(soundChangeSets);
 
-                // Insert changesets
-                changeSets.AddRange(changeSets);
                 return changeSets;
             }
             catch (Exception ex)

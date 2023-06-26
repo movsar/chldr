@@ -1,6 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Enums;
-using chldr_data.ResponseTypes;
+using chldr_data.Models;
 using chldr_utils.Interfaces;
 using GraphQL;
 

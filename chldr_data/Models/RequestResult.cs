@@ -1,7 +1,7 @@
 ﻿using GraphQL;
 using Newtonsoft.Json;
 
-namespace chldr_data.ResponseTypes
+namespace chldr_data.Models
 {
     public class RequestResult
     {

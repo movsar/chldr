@@ -8,7 +8,7 @@ using chldr_data.Models;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_data.Resources.Localizations;
-using chldr_data.ResponseTypes;
+using chldr_data.Responses;
 using chldr_data.Services;
 using chldr_utils;
 using chldr_utils.Services;
@@ -72,9 +72,9 @@ namespace chldr_api
                 return new RequestResult()
                 {
                     Success = true,
-                    SerializedData = JsonConvert.SerializeObject(new
+                    SerializedData = JsonConvert.SerializeObject(new InsertResponse
                     {
-                        ChangeSets = changeSets,
+                        ChangeSets = changeSets.Select(ChangeSetDto.FromModel),
                         CreatedAt = entryDto.CreatedAt
                     })
                 };
@@ -101,7 +101,11 @@ namespace chldr_api
                 var changeSets = unitOfWork.Entries.Update(entryDto);
                 unitOfWork.Commit();
 
-                return new RequestResult() { Success = true, SerializedData = JsonConvert.SerializeObject(changeSets) };
+                return new RequestResult()
+                {
+                    Success = true,
+                    SerializedData = JsonConvert.SerializeObject(changeSets.Select(ChangeSetDto.FromModel))
+                };
             }
             catch (Exception ex)
             {
@@ -125,7 +129,11 @@ namespace chldr_api
                 var changeSets = unitOfWork.Entries.Remove(entryId);
                 unitOfWork.Commit();
 
-                return new RequestResult() { Success = true, SerializedData = JsonConvert.SerializeObject(changeSets) };
+                return new RequestResult()
+                {
+                    Success = true,
+                    SerializedData = JsonConvert.SerializeObject(changeSets.Select(ChangeSetDto.FromModel))
+                };
             }
             catch (Exception ex)
             {
