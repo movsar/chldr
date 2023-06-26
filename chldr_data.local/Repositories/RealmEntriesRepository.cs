@@ -6,7 +6,6 @@ using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.local.RealmEntities;
 using chldr_data.Models;
-using chldr_data.ResponseTypes;
 using chldr_utils.Interfaces;
 using chldr_utils;
 using GraphQL;
