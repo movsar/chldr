@@ -6,10 +6,9 @@ namespace chldr_data.local.RealmEntities;
 [MapTo("User")]
 public class RealmUser : RealmObject, IUserEntity
 {
-    [PrimaryKey]
-    public string UserId { get; set; }
+    [PrimaryKey] public string UserId { get; set; }
     public string? Email { get; set; }
-    public string? Password { get; set; }
+    [Ignored] public string? Password { get; set; }
     public int Rate { get; set; } = 0;
     public string? ImagePath { get; set; }
     public string? FirstName { get; set; }

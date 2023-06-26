@@ -110,6 +110,8 @@ namespace chldr_data.local.Services
                 }
             });
 
+            _dbContext.WriteCopy(new RealmConfiguration(RealmDataProvider.OfflineDatabaseConfiguration + ".new"));
+
             sw.Stop();
             var savedIn = sw.ElapsedMilliseconds;
         }

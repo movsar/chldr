@@ -76,8 +76,6 @@ namespace chldr_data.local.Services
 
             DatabaseInitialized?.Invoke();
             _syncService.BeginListening();
-
-            GetDatabase().WriteCopy(new RealmConfiguration("m.realm"));
         }
 
         public void TruncateDatabase()
