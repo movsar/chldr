@@ -23,11 +23,19 @@ namespace chldr_data.local.Services
         private readonly ExceptionHandler _exceptionHandler;
         private static DbContextOptions<SqlContext> _options;
 
-        public SqlDataProvider(FileService fileService, IConfiguration configuration, ExceptionHandler exceptionHandler)
+        public SqlDataProvider(FileService fileService, ExceptionHandler exceptionHandler, IConfiguration configuration)
         {
             _fileService = fileService;
             _connectionString = configuration.GetConnectionString("RemoteDatabase")!;
+            _connectionString = Constants.TestDatabaseConnectionString;
             _exceptionHandler = exceptionHandler;
+            _options ??= new DbContextOptionsBuilder<SqlContext>().UseMySQL(_connectionString).Options;
+        }
+        public SqlDataProvider(FileService fileService, ExceptionHandler exceptionHandler, string connectionString)
+        {
+            _fileService = fileService;
+            _exceptionHandler = exceptionHandler;
+            _connectionString = connectionString;
             _options ??= new DbContextOptionsBuilder<SqlContext>().UseMySQL(_connectionString).Options;
         }
         public SqlContext GetContext()
@@ -59,6 +67,6 @@ namespace chldr_data.local.Services
         {
 
         }
- 
+
     }
 }

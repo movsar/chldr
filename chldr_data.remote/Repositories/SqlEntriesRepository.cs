@@ -114,13 +114,6 @@ namespace chldr_data.remote.Repositories
                 var entryChangeSet = CreateChangeSetEntity(Operation.Insert, newEntryDto.EntryId);
                 changeSets.Add(ChangeSetModel.FromEntity(entryChangeSet));
 
-                // Process added translations
-                foreach (var translation in newEntryDto.Translations)
-                {
-                    var translationChangeSets = _translations.Add(translation);
-                    changeSets.AddRange(translationChangeSets);
-                }
-
                 // Process added sounds
                 foreach (var sound in newEntryDto.Sounds)
                 {
@@ -132,15 +125,16 @@ namespace chldr_data.remote.Repositories
                     var filePath = Path.Combine(_fileService.EntrySoundsDirectory, sound.FileName);
                     File.WriteAllText(filePath, sound.RecordingB64);
                     _sounds.Add(sound);
-
-                    var soundChangeSets = _sounds.Add(sound);
-                    changeSets.AddRange(soundChangeSets);
                 }
 
                 return changeSets;
             }
             catch (Exception ex)
             {
+                if (ex.InnerException != null && ex.Message.Equals("Could not save changes. Please configure your entity type accordingly."))
+                {
+                    throw _exceptionHandler.Error(ex.InnerException);
+                }
                 throw _exceptionHandler.Error(ex);
             }
         }
@@ -161,7 +155,7 @@ namespace chldr_data.remote.Repositories
                     var updatedEntryEntity = SqlEntry.FromDto(updatedEntryDto, _dbContext);
                     _dbContext.Update(updatedEntryEntity);
                     _dbContext.SaveChanges();
-                    
+
                     var entryChangeSetDto = CreateChangeSetEntity(Operation.Update, updatedEntryDto.EntryId, entryChanges);
                     changeSets.Add(ChangeSetModel.FromEntity(entryChangeSetDto));
                 }
@@ -229,13 +223,6 @@ namespace chldr_data.remote.Repositories
             var deleted = existingEntryDto.Sounds.Where(t => !updatedEntrySoundIds.Contains(t.SoundId));
             var updated = updatedEntryDto.Sounds.Where(t => existingEntrySoundIds.Contains(t.SoundId) && updatedEntrySoundIds.Contains(t.SoundId));
 
-            // Process inserted translations
-            foreach (var sound in added)
-            {
-                var changeSet = _sounds.Add(sound);
-                changeSets.AddRange(changeSet);
-            }
-
             // Process removed translations
             foreach (var sound in deleted)
             {
@@ -274,8 +261,8 @@ namespace chldr_data.remote.Repositories
             // Process inserted translations
             foreach (var translation in added)
             {
-                var changeSet = _translations.Add(translation);
-                changeSets.AddRange(changeSet);
+                //var changeSet = _translations.Add(translation);
+                //changeSets.AddRange(changeSet);
             }
 
             // Process removed translations

@@ -5,11 +5,6 @@ using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace chldr_data.remote.tests.RepositoryTests
 {
