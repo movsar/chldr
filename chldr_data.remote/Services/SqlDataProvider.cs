@@ -26,7 +26,7 @@ namespace chldr_data.local.Services
         public SqlDataProvider(FileService fileService, ExceptionHandler exceptionHandler, IConfiguration configuration)
         {
             _fileService = fileService;
-            _connectionString = configuration.GetConnectionString("RemoteDatabase")!;
+            //_connectionString = configuration.GetConnectionString("RemoteDatabase")!;
             _connectionString = Constants.TestDatabaseConnectionString;
             _exceptionHandler = exceptionHandler;
             _options ??= new DbContextOptionsBuilder<SqlContext>().UseMySQL(_connectionString).Options;
@@ -48,15 +48,6 @@ namespace chldr_data.local.Services
             var context = GetContext();
             return new SqlUnitOfWork(context, _fileService, _exceptionHandler, userId!);
         }
-
-        //private string KeyAsString()
-        //{
-        //byte[] encryptionKey = File.ReadAllBytes(Path.Combine(_fileService.AppDataDirectory, "encryption.key"));
-
-        //var key = encryptionKey.Select(b => (int)b);
-        //var stringified = string.Join(":", key);
-        //return stringified;
-        //}
 
         public void Initialize()
         {

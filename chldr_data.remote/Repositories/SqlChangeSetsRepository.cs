@@ -45,16 +45,10 @@ namespace chldr_data.remote.Repositories
             }
 
             List<SqlChangeSet> entities = null!;
-            try
-            {
-                entities = await _dbContext.ChangeSets
-                   .Where(c => lastChangeSetIndices.Contains(c.ChangeSetIndex))
-                   .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            entities = await _dbContext.ChangeSets
+               .Where(c => lastChangeSetIndices.Contains(c.ChangeSetIndex))
+               .ToListAsync();
+
 
             List<ChangeSetModel> models = null!;
 
