@@ -5,6 +5,7 @@ using chldr_data.remote.Services;
 using chldr_data.remote.Repositories;
 using chldr_utils.Services;
 using chldr_utils;
+using chldr_data.remote.SqlEntities;
 
 namespace chldr_data.Services
 {
@@ -22,6 +23,7 @@ namespace chldr_data.Services
         private SqlSourcesRepository _sourcesRepository;
         private SqlUsersRepository _usersRepository;
         private SqlSoundsRepository _soundsRepository;
+        private SqlTokensRepository? _tokensRepository;
 
         public SqlUnitOfWork(SqlContext sqlContext, FileService fileService, ExceptionHandler exceptionHandler, string userId)
         {
@@ -61,5 +63,6 @@ namespace chldr_data.Services
         public SqlSourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_context, _fileService, _userId);
         public SqlUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_context, _fileService, _userId);
         public SqlSoundsRepository Sounds => _soundsRepository ?? new SqlSoundsRepository(_context, _fileService, _userId);
+        public SqlTokensRepository Tokens => _tokensRepository ?? new SqlTokensRepository(_context, _fileService, _userId);
     }
 }

@@ -1,19 +1,29 @@
-﻿using Newtonsoft.Json;
-using Realms.Sync;
+﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.remote.SqlEntities;
 [Table("Tokens")]
-public partial class SqlToken
+public class SqlToken : ITokenEntity
 {
-    // Change when you create a DTO
     public string TokenId { get; set; } = Guid.NewGuid().ToString();
     public string UserId { get; set; } = null!;
-    // See, TokenType enum
     public int? Type { get; set; }
     public string Value { get; set; }
-    public DateTime? ExpiresIn { get; set; }
-    public DateTime? CreatedAt { get; set; }
-
+    public DateTimeOffset? ExpiresIn { get; set; }
+    public DateTimeOffset? CreatedAt { get; set; }
     public virtual SqlUser User { get; set; } = null!;
+
+    internal static SqlToken FromDto(TokenDto dto)
+    {
+        return new SqlToken()
+        {
+            Type = dto.Type!,
+            Value = dto.Value,
+            UserId = dto.UserId,
+            TokenId = dto.TokenId,
+            CreatedAt = dto.CreatedAt,
+            ExpiresIn = dto.ExpiresIn
+        };
+    }
 }

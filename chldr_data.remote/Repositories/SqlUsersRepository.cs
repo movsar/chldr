@@ -15,6 +15,17 @@ namespace chldr_data.remote.Repositories
         public SqlUsersRepository(SqlContext context, FileService fileService, string _userId) : base(context, fileService, _userId) { }
 
         protected override RecordType RecordType => RecordType.User;
+        public async Task SetStatus(string userId, UserStatus newStatus)
+        {
+            var user = await _dbContext.Users.FindAsync(userId);
+            if (user == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            user.Status = (int)newStatus;
+            await _dbContext.SaveChangesAsync();
+        }
 
         public override List<ChangeSetModel> Add(UserDto dto)
         {
@@ -41,7 +52,7 @@ namespace chldr_data.remote.Repositories
 
             var user = SqlUser.FromDto(dto);
             _dbContext.Users.Update(user);
-            
+
             var changeSet = CreateChangeSetEntity(Operation.Update, dto.UserId, changes);
             _dbContext.ChangeSets.Add(changeSet);
 

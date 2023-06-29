@@ -11,5 +11,6 @@
         Sound = 6,
         Image = 7,
         ChangeSet = 8,
+        Token = 9,
     }
 }

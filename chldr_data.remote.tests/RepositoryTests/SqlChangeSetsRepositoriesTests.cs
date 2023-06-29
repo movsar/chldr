@@ -24,7 +24,7 @@ namespace chldr_data.remote.tests.RepositoryTests
         [Fact]
         public async Task TakeLastAsync_ReturnsCorrectNumberOfChangeSets()
         {
-            var tasks = Enumerable.Range(0, 1).Select(async _ =>
+            var tasks = Enumerable.Range(0, 10).Select(async _ =>
             {
                 // Act
                 var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
