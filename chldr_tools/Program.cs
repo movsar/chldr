@@ -7,6 +7,9 @@ using Realms;
 using chldr_data.remote.Services;
 using chldr_data.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using chldr_data;
+using chldr_maintenance;
 
 namespace chldr_tools
 {
@@ -17,6 +20,16 @@ namespace chldr_tools
         private static EnvironmentService _environmentService;
         private static RequestService _requestSender;
         private static SyncService _syncService;
+
+        static Program()
+        {
+            _fileService = new FileService(AppContext.BaseDirectory);
+            _exceptionHandler = new ExceptionHandler(_fileService);
+            _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Windows, true);
+
+            var graphQlClient = new GraphQLClient(_exceptionHandler, _environmentService);
+            _requestSender = new RequestService(graphQlClient);
+        }
 
         static void ContentUpdater(Realm realmDatabase, SqlContext sqlDatabase)
         {
@@ -74,34 +87,42 @@ namespace chldr_tools
             realmDatabase.WriteCopy(new RealmConfiguration("new.realm"));
         }
 
+        static RealmDataProvider GetRealmDataProvider()
+        {
+            var localRealmContext = new RealmDataProvider(_fileService, _exceptionHandler, _syncService);
+            localRealmContext.Initialize();
+
+            return localRealmContext;
+        }
+
+        static SqlDataProvider GetSqlDataProvider()
+        {
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(new Dictionary<string, string>
+                {
+                        { "ConnectionStrings:SqlContext",  Constants.TestDatabaseConnectionString}
+                }!).Build();
+
+            var sqlContext = new SqlDataProvider(_fileService, _exceptionHandler, configuration);
+            sqlContext.Initialize();
+            return sqlContext;
+        }
+
+        static SqlContext GetSqlContext()
+        {
+            var options = new DbContextOptionsBuilder<SqlContext>().UseMySQL(Constants.TestDatabaseConnectionString).Options;
+            var context = new SqlContext(options);
+
+            return context;
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
 
-            _fileService = new FileService(AppContext.BaseDirectory);
-            _exceptionHandler = new ExceptionHandler(_fileService);
-            _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Windows, true);
-            var graphQlClient = new GraphQLClient(_exceptionHandler, _environmentService);
-            _requestSender = new RequestService(graphQlClient);
+            var entries = LegacyEntriesProvider.GetAllLegacyEntries();
 
-            _syncService = new SyncService(_requestSender);
-
-            var localRealmContext = new RealmDataProvider(_fileService, _exceptionHandler, _syncService);
-            localRealmContext.Initialize();
-            var realmDatabase = localRealmContext.GetContext();
-
-            var connectionString = "asfsdfsadf";
-            var configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string>
-                {
-                        { "RemoteDatabase",  connectionString}
-                }!).Build();
-
-            var remoteSqlContext = new SqlDataProvider(_fileService, configuration, _exceptionHandler);
-            remoteSqlContext.Initialize();
-            var sqlDatabase = remoteSqlContext.GetContext();
-
-            LanguageCodeLocal(realmDatabase);
+            var e = entries.Take(10);
         }
     }
 }

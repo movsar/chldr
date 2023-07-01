@@ -17,13 +17,11 @@ namespace chldr_data.local.Services
         private readonly FileService _fileService;
         string _connectionString;
         private readonly ExceptionHandler _exceptionHandler;
-        private DbContextOptions<SqlContext> _options;
 
         public SqlDataProvider(FileService fileService, ExceptionHandler exceptionHandler, IConfiguration configuration)
         {
             _fileService = fileService;
-            //_connectionString = configuration.GetConnectionString("RemoteDatabase")!;
-            _connectionString = Constants.TestDatabaseConnectionString;
+            _connectionString = configuration.GetConnectionString("SqlContext")!;
             _exceptionHandler = exceptionHandler;
         }
         public SqlDataProvider(FileService fileService, ExceptionHandler exceptionHandler, string connectionString)
