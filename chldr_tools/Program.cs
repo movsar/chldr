@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using chldr_data;
 using chldr_maintenance;
+using System.Text.RegularExpressions;
+using chldr_data.remote.SqlEntities;
+using chldr_data.Enums;
 
 namespace chldr_tools
 {
@@ -120,9 +123,41 @@ namespace chldr_tools
         {
             Console.WriteLine("Hello, World!");
 
-            var entries = LegacyEntriesProvider.GetAllLegacyEntries();
+            var context = GetSqlContext();
 
-            var e = entries.Take(10);
+            context.SaveChanges();
+
+            using var legacyContext = new EfContext();
+
+            var legacyEntries = legacyContext.LegacyPhraseEntries.Where(phrase => phrase.Source == "MACIEV");
+            var legacyEntryIndeces = legacyEntries.Select(e => e.Id).ToArray();
+            var legacyTranslations = legacyContext.LegacyTranslationEntries.Where(t => legacyEntryIndeces.Contains(t.PhraseId)).ToList();
+
+            foreach (var legacyEntry in legacyEntries)
+            {
+                var rawNotes = legacyEntry.Notes ?? string.Empty;
+                var rusNotes = Regex.Match(rawNotes, @"(?<=RUS:).*?(?=Ψ)").ToString();
+                var cheNotes = Regex.Match(rawNotes, @"(?<=CHE:).*?(?=Ψ)").ToString();
+
+                var translations = legacyTranslations
+                    .Where(t => t.LanguageCode!.Equals("RUS") && t.PhraseId.Equals(legacyEntry.Id))
+                    .DistinctBy(t => t.LanguageCode);
+
+                var entry = new SqlEntry();
+                entry.Type = (int)EntryType.Word;
+
+                // Часть речи
+                // entry.Subtype = 
+
+                entry.SourceId = context.Sources.First(s => s.Name.Equals("Maciev")).SourceId;
+                entry.Rate = 10;
+                entry.Content = legacyEntry.Phrase;
+                entry.EntryId = Guid.NewGuid().ToString();
+                // Set rawcontents
+                // entry.RawContents = 
+
+                entry.UserId = context.Users.First().UserId;
+            }
         }
     }
 }

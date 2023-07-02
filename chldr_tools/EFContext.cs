@@ -6,7 +6,7 @@ namespace chldr_maintenance
 {
     internal class EfContext : DbContext
     {
-        public DbSet<LegacyEntry> LegacyEntries { get; set; }
+        public DbSet<LegacyKarasaevUserphrase> LegacyEntries { get; set; }
         public DbSet<LegacyPhraseEntry> LegacyPhraseEntries { get; set; }
         public DbSet<LegacyTranslationEntry> LegacyTranslationEntries { get; set; }
 
@@ -18,7 +18,7 @@ namespace chldr_maintenance
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<LegacyEntry>(x => x
+            builder.Entity<LegacyKarasaevUserphrase>(x => x
              .ToTable("userphrases")
          );
         }
