@@ -13,6 +13,7 @@ using chldr_maintenance;
 using System.Text.RegularExpressions;
 using chldr_data.remote.SqlEntities;
 using chldr_data.Enums;
+using System.Diagnostics;
 
 namespace chldr_tools
 {
@@ -119,6 +120,36 @@ namespace chldr_tools
             return context;
         }
 
+        static bool TestFor(string str, string needle)
+        {
+            string pattern = $"(?<={needle}\\W?\\s?)[1ӀӏА-яA-z]+";
+            return Regex.Match(str, pattern, RegexOptions.CultureInvariant).Success;
+        }
+
+        static void SetEntryContents(SqlEntry entry, string translation)
+        {
+
+            // Часть речи
+            // entry.Subtype = 
+
+            if (TestFor("понуд", translation))
+            {
+
+            }
+            else if (TestFor("потенц", translation))
+            {
+
+            }
+            else if (TestFor("прил", translation))
+            {
+
+            }
+            else if (TestFor("масд", translation))
+            {
+
+            }
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
@@ -139,24 +170,21 @@ namespace chldr_tools
                 var rusNotes = Regex.Match(rawNotes, @"(?<=RUS:).*?(?=Ψ)").ToString();
                 var cheNotes = Regex.Match(rawNotes, @"(?<=CHE:).*?(?=Ψ)").ToString();
 
-                var translations = legacyTranslations
+                var translation = legacyTranslations
                     .Where(t => t.LanguageCode!.Equals("RUS") && t.PhraseId.Equals(legacyEntry.Id))
-                    .DistinctBy(t => t.LanguageCode);
+                    .DistinctBy(t => t.LanguageCode).Single();
 
                 var entry = new SqlEntry();
                 entry.Type = (int)EntryType.Word;
-
-                // Часть речи
-                // entry.Subtype = 
-
                 entry.SourceId = context.Sources.First(s => s.Name.Equals("Maciev")).SourceId;
                 entry.Rate = 10;
-                entry.Content = legacyEntry.Phrase;
                 entry.EntryId = Guid.NewGuid().ToString();
+                entry.UserId = context.Users.First().UserId;
+
+                SetEntryContents(entry, translation.Translation!);
+
                 // Set rawcontents
                 // entry.RawContents = 
-
-                entry.UserId = context.Users.First().UserId;
             }
         }
     }
