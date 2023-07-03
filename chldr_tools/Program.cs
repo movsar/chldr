@@ -17,6 +17,10 @@ using System.Diagnostics;
 using chldr_data.Enums.WordDetails;
 using System.Configuration;
 using chldr_data.DatabaseObjects.Models.Words;
+using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Models;
+using GraphQL;
+using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_tools
 {
@@ -129,12 +133,129 @@ namespace chldr_tools
             return Regex.Match(str, pattern, RegexOptions.CultureInvariant).Success;
         }
 
-        static void SetEntryContents(SqlEntry entry, string input)
+        static void Main(string[] args)
         {
-            var nounDetails = new NounDetails();
+            Console.WriteLine("Hello, World!");
 
-            // Set part of speech
+            var context = GetSqlContext();
 
+            context.SaveChanges();
+
+            using var legacyContext = new EfContext();
+
+            var legacyEntries = legacyContext.LegacyPhraseEntries.Where(phrase => phrase.Source == "MACIEV");
+            var legacyEntryIndeces = legacyEntries.Select(e => e.Id).ToArray();
+            var legacyTranslations = legacyContext.LegacyTranslationEntries.Where(t => legacyEntryIndeces.Contains(t.PhraseId)).ToList();
+
+            foreach (var legacyEntry in legacyEntries)
+            {
+                var rawNotes = legacyEntry.Notes ?? string.Empty;
+                var rusNotes = Regex.Match(rawNotes, @"(?<=RUS:).*?(?=Ψ)").Value ?? string.Empty;
+                var cheNotes = Regex.Match(rawNotes, @"(?<=CHE:).*?(?=Ψ)").Value ?? string.Empty;
+
+                var translationText = legacyTranslations
+                    .Where(t => t.LanguageCode!.Equals("RUS") && t.PhraseId.Equals(legacyEntry.Id))
+                    .DistinctBy(t => t.LanguageCode).Single().Translation!;
+
+                var entry = new SqlEntry();
+                entry.Content = legacyEntry.Phrase;
+                entry.Type = (int)EntryType.Word;
+                entry.Source = context.Sources.First(s => s.Name.Equals("Maciev"));
+                entry.SourceId = entry.Source.SourceId;
+                entry.Rate = 10;
+                entry.EntryId = Guid.NewGuid().ToString();
+                entry.User = context.Users.First();
+                entry.UserId = entry.User.UserId;
+
+                SetPartOfSpeech(entry, translationText!);
+
+                // Set entry details, add related forms
+                var match = Regex.Match(translationText, @"\[.*?\]");
+                if (!match.Success)
+                {
+                    // TODO: Add word
+
+                    AddTranslation(entry, legacyEntry.Phrase!, rusNotes, cheNotes);
+
+                    continue;
+                }
+
+                var nounDetails = new NounDetails();
+
+
+                var commasCount = match.Value.Count(c => c.Equals(','));
+
+                if (commasCount == 2 || commasCount == 3)
+                {
+                    entry.Subtype = (int)WordType.Verb;
+
+                    var model = EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
+                    var dto = EntryDto.FromModel(model);
+                    var forms = Regex.Matches(match.Value, @"[1ӀӏА-я]{2,}").Select(m => m.Value).ToList();
+
+                    if (forms.Contains("или"))
+                    {
+
+                    }
+
+                    forms.RemoveAll(form => form.Equals("или") || form.Equals("ду") || form.Equals("ву") || form.Equals("йу") || form.Equals("бу"));
+
+                    foreach (var form in forms)
+                    {
+
+
+                        // Insert related word
+                    }
+                }
+                else if (commasCount >= 4 || commasCount <= 6)
+                {
+                    entry.Subtype = (int)WordType.Noun;
+
+                    nounDetails.Case = Case.Absolutive;
+                    nounDetails.NumeralType = !translationText.Contains("только мн") ? NumeralType.Singular : NumeralType.Plural;
+
+                    // Add Forms
+                }
+
+
+            }
+        }
+
+        private static void AddTranslation(SqlEntry entry, string content, string rusNotes, string cheNotes)
+        {
+            var rusTranslation = new SqlTranslation()
+            {
+                TranslationId = Guid.NewGuid().ToString(),
+                Content = content,
+                Entry = entry,
+                EntryId = entry.EntryId,
+                LanguageCode = "RUS",
+                Notes = rusNotes,
+                User = entry.User,
+                UserId = entry.User.UserId,
+                Rate = 10,
+            };
+            // TODO: Add
+
+            if (!string.IsNullOrEmpty(cheNotes))
+            {
+                var cheTranslation = new SqlTranslation()
+                {
+                    TranslationId = Guid.NewGuid().ToString(),
+                    Content = cheNotes,
+                    Entry = entry,
+                    EntryId = entry.EntryId,
+                    LanguageCode = "RUS",
+                    User = entry.User,
+                    UserId = entry.User.UserId,
+                    Rate = 10,
+                };
+
+                // TODO: Add
+            }
+        }
+        private static void SetPartOfSpeech(SqlEntry entry, string input)
+        {
             if (TestFor(input, "сущ"))
             {
                 entry.Subtype = (int)WordType.Noun;
@@ -178,65 +299,6 @@ namespace chldr_tools
             else if (TestFor(input, "масд"))
             {
                 entry.Subtype = (int)WordType.Masdar;
-            }
-
-            var match = Regex.Match(input, @"\[.*?\]");
-            if (!match.Success)
-            {
-                return;
-            }
-
-            var commasCount = match.Value.Count(c => c.Equals(','));
-
-            if (commasCount == 2 || commasCount == 3)
-            {
-                entry.Subtype = (int)WordType.Verb;
-            }
-            else if (commasCount >= 4 || commasCount <= 6)
-            {
-                entry.Subtype = (int)WordType.Noun;
-                nounDetails.Case = Case.Absolutive;
-                nounDetails.NumeralType = !input.Contains("только мн") ? NumeralType.Singular : NumeralType.Plural;
-
-                // Add Forms
-            }
-        }
-
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello, World!");
-
-            var context = GetSqlContext();
-
-            context.SaveChanges();
-
-            using var legacyContext = new EfContext();
-
-            var legacyEntries = legacyContext.LegacyPhraseEntries.Where(phrase => phrase.Source == "MACIEV");
-            var legacyEntryIndeces = legacyEntries.Select(e => e.Id).ToArray();
-            var legacyTranslations = legacyContext.LegacyTranslationEntries.Where(t => legacyEntryIndeces.Contains(t.PhraseId)).ToList();
-
-            foreach (var legacyEntry in legacyEntries)
-            {
-                var rawNotes = legacyEntry.Notes ?? string.Empty;
-                var rusNotes = Regex.Match(rawNotes, @"(?<=RUS:).*?(?=Ψ)").ToString();
-                var cheNotes = Regex.Match(rawNotes, @"(?<=CHE:).*?(?=Ψ)").ToString();
-
-                var translation = legacyTranslations
-                    .Where(t => t.LanguageCode!.Equals("RUS") && t.PhraseId.Equals(legacyEntry.Id))
-                    .DistinctBy(t => t.LanguageCode).Single();
-
-                var entry = new SqlEntry();
-                entry.Type = (int)EntryType.Word;
-                entry.SourceId = context.Sources.First(s => s.Name.Equals("Maciev")).SourceId;
-                entry.Rate = 10;
-                entry.EntryId = Guid.NewGuid().ToString();
-                entry.UserId = context.Users.First().UserId;
-
-                SetEntryContents(entry, translation.Translation!);
-
-                // Set rawcontents
-                // entry.RawContents = 
             }
         }
     }

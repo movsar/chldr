@@ -21,7 +21,7 @@ namespace chldr_data.DatabaseObjects.Models
         public IDetails? Details { get; set; }
         public SourceModel Source { get; set; }
         public List<TranslationModel> Translations { get; set; } = new List<TranslationModel>();
-        public List<SoundModel> Sounds{ get; set; } = new List<SoundModel>();
+        public List<SoundModel> Sounds { get; set; } = new List<SoundModel>();
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
 
