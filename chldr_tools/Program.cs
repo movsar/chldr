@@ -14,6 +14,9 @@ using System.Text.RegularExpressions;
 using chldr_data.remote.SqlEntities;
 using chldr_data.Enums;
 using System.Diagnostics;
+using chldr_data.Enums.WordDetails;
+using System.Configuration;
+using chldr_data.DatabaseObjects.Models.Words;
 
 namespace chldr_tools
 {
@@ -126,27 +129,76 @@ namespace chldr_tools
             return Regex.Match(str, pattern, RegexOptions.CultureInvariant).Success;
         }
 
-        static void SetEntryContents(SqlEntry entry, string translation)
+        static void SetEntryContents(SqlEntry entry, string input)
         {
+            var nounDetails = new NounDetails();
 
-            // Часть речи
-            // entry.Subtype = 
+            // Set part of speech
 
-            if (TestFor("понуд", translation))
+            if (TestFor(input, "сущ"))
             {
-
+                entry.Subtype = (int)WordType.Noun;
             }
-            else if (TestFor("потенц", translation))
+            else if (TestFor(input, "гл"))
             {
-
+                entry.Subtype = (int)WordType.Verb;
             }
-            else if (TestFor("прил", translation))
+            else if (TestFor(input, "прил"))
             {
-
+                entry.Subtype = (int)WordType.Adjective;
             }
-            else if (TestFor("масд", translation))
+            else if (TestFor(input, "мест"))
             {
+                entry.Subtype = (int)WordType.Pronoun;
+            }
+            else if (TestFor(input, "частица"))
+            {
+                entry.Subtype = (int)WordType.Conjunction;
+            }
+            else if (TestFor(input, "частица"))
+            {
+                entry.Subtype = (int)WordType.Particle;
+            }
+            else if (TestFor(input, "прич"))
+            {
+                entry.Subtype = (int)WordType.Verb;
+            }
+            else if (TestFor(input, "неопр"))
+            {
+                entry.Subtype = (int)WordType.Verb;
+            }
+            else if (TestFor(input, "нареч"))
+            {
+                entry.Subtype = (int)WordType.Adverb;
+            }
+            else if (TestFor(input, "числ"))
+            {
+                entry.Subtype = (int)WordType.Numeral;
+            }
+            else if (TestFor(input, "масд"))
+            {
+                entry.Subtype = (int)WordType.Masdar;
+            }
 
+            var match = Regex.Match(input, @"\[.*?\]");
+            if (!match.Success)
+            {
+                return;
+            }
+
+            var commasCount = match.Value.Count(c => c.Equals(','));
+
+            if (commasCount == 2 || commasCount == 3)
+            {
+                entry.Subtype = (int)WordType.Verb;
+            }
+            else if (commasCount >= 4 || commasCount <= 6)
+            {
+                entry.Subtype = (int)WordType.Noun;
+                nounDetails.Case = Case.Absolutive;
+                nounDetails.NumeralType = !input.Contains("только мн") ? NumeralType.Singular : NumeralType.Plural;
+
+                // Add Forms
             }
         }
 

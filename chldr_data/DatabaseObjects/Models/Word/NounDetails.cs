@@ -11,8 +11,7 @@ namespace chldr_data.DatabaseObjects.Models.Words
         // 4 Declensions of nouns
         // https://nohchalla.com/literatura/chechenskiy-yazyk/audio-yazyk/791-urok28
         public NounDeclension Declension { get; set; }
-        public Case SingularCase { get; set; }
-        public Case PluralCase { get; set; }
+        public Case Case { get; set; }
         public NameType NameType { get; set; }
         public NumeralType NumeralType { get; set; }
     }
