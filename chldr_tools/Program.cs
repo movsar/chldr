@@ -13,14 +13,10 @@ using chldr_maintenance;
 using System.Text.RegularExpressions;
 using chldr_data.remote.SqlEntities;
 using chldr_data.Enums;
-using System.Diagnostics;
 using chldr_data.Enums.WordDetails;
-using System.Configuration;
 using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
-using GraphQL;
-using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_tools
 {
@@ -167,61 +163,76 @@ namespace chldr_tools
                 entry.User = context.Users.First();
                 entry.UserId = entry.User.UserId;
 
-                SetPartOfSpeech(entry, translationText!);
+                var match = Regex.Match(translationText, @"\[.*?\]");
+
+                translationText = translationText.Substring(translationText.IndexOf("]")+1).Trim();
+
+                FirstGate(entry, translationText!, rusNotes, cheNotes);
 
                 // Set entry details, add related forms
-                var match = Regex.Match(translationText, @"\[.*?\]");
+
                 if (!match.Success)
                 {
                     // TODO: Add word
 
-                    AddTranslation(entry, legacyEntry.Phrase!, rusNotes, cheNotes);
-
                     continue;
                 }
+                var rawForms = match.Value;
 
-                var nounDetails = new NounDetails();
+                var forms = Regex.Matches(rawForms, @"[1ӀӏА-я]{2,}").Select(m => m.Value).ToList();
+                var isVerb = forms.Contains("или");
 
-
-                var commasCount = match.Value.Count(c => c.Equals(','));
-
-                if (commasCount == 2 || commasCount == 3)
+                forms.RemoveAll(form => form.Equals("или") || form.Equals("ду") || form.Equals("ву") || form.Equals("йу") || form.Equals("бу") || form.Equals("мн"));
+                var formsCount = forms.Count();
+              
+                if (!isVerb)
                 {
-                    entry.Subtype = (int)WordType.Verb;
-
-                    var model = EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
-                    var dto = EntryDto.FromModel(model);
-                    var forms = Regex.Matches(match.Value, @"[1ӀӏА-я]{2,}").Select(m => m.Value).ToList();
-
-                    if (forms.Contains("или"))
-                    {
-
-                    }
-
-                    forms.RemoveAll(form => form.Equals("или") || form.Equals("ду") || form.Equals("ву") || form.Equals("йу") || form.Equals("бу"));
-
-                    foreach (var form in forms)
-                    {
-
-
-                        // Insert related word
-                    }
-                }
-                else if (commasCount >= 4 || commasCount <= 6)
-                {
-                    entry.Subtype = (int)WordType.Noun;
-
-                    nounDetails.Case = Case.Absolutive;
-                    nounDetails.NumeralType = !translationText.Contains("только мн") ? NumeralType.Singular : NumeralType.Plural;
-
-                    // Add Forms
+                    isVerb = formsCount == 2 || formsCount == 3;
                 }
 
+                if (isVerb)
+                {
+                    // Verb
+                    AddVerbDetails(entry, forms, translationText);
+                }
+                else if (formsCount > 0)
+                {
+                    // Noun
+                    AddNounDetails(entry, forms, translationText);
+                }
+                else
+                {
 
+                }
             }
         }
 
-        private static void AddTranslation(SqlEntry entry, string content, string rusNotes, string cheNotes)
+        private static void AddNounDetails(SqlEntry entry, List<string> forms, string rawTranslation)
+        {
+            var nounDetails = new NounDetails();
+            entry.Subtype = (int)WordType.Noun;
+
+            nounDetails.Case = Case.Absolutive;
+            nounDetails.NumeralType = !rawTranslation.Contains("только мн") ? NumeralType.Singular : NumeralType.Plural;
+            // Add Forms
+        }
+
+        private static void AddVerbDetails(SqlEntry entry, List<string> forms, string rawTranslation)
+        {
+            var verbDetails = new VerbDetails();
+            entry.Subtype = (int)WordType.Verb;
+
+            var model = EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
+            var dto = EntryDto.FromModel(model);
+
+            foreach (var form in forms)
+            {
+
+                // Insert related word
+            }
+        }
+
+        private static void AddTranslations(SqlEntry entry, string content, string rusNotes, string cheNotes)
         {
             var rusTranslation = new SqlTranslation()
             {
@@ -254,49 +265,51 @@ namespace chldr_tools
                 // TODO: Add
             }
         }
-        private static void SetPartOfSpeech(SqlEntry entry, string input)
+        private static void FirstGate(SqlEntry entry, string translationText, string rusNotes, string cheNotes)
         {
-            if (TestFor(input, "сущ"))
+            AddTranslations(entry, translationText, rusNotes, cheNotes);
+
+            if (TestFor(translationText, "сущ"))
             {
                 entry.Subtype = (int)WordType.Noun;
             }
-            else if (TestFor(input, "гл"))
+            else if (TestFor(translationText, "гл"))
             {
                 entry.Subtype = (int)WordType.Verb;
             }
-            else if (TestFor(input, "прил"))
+            else if (TestFor(translationText, "прил"))
             {
                 entry.Subtype = (int)WordType.Adjective;
             }
-            else if (TestFor(input, "мест"))
+            else if (TestFor(translationText, "мест"))
             {
                 entry.Subtype = (int)WordType.Pronoun;
             }
-            else if (TestFor(input, "частица"))
+            else if (TestFor(translationText, "частица"))
             {
                 entry.Subtype = (int)WordType.Conjunction;
             }
-            else if (TestFor(input, "частица"))
+            else if (TestFor(translationText, "частица"))
             {
                 entry.Subtype = (int)WordType.Particle;
             }
-            else if (TestFor(input, "прич"))
+            else if (TestFor(translationText, "прич"))
             {
                 entry.Subtype = (int)WordType.Verb;
             }
-            else if (TestFor(input, "неопр"))
+            else if (TestFor(translationText, "неопр"))
             {
                 entry.Subtype = (int)WordType.Verb;
             }
-            else if (TestFor(input, "нареч"))
+            else if (TestFor(translationText, "нареч"))
             {
                 entry.Subtype = (int)WordType.Adverb;
             }
-            else if (TestFor(input, "числ"))
+            else if (TestFor(translationText, "числ"))
             {
                 entry.Subtype = (int)WordType.Numeral;
             }
-            else if (TestFor(input, "масд"))
+            else if (TestFor(translationText, "масд"))
             {
                 entry.Subtype = (int)WordType.Masdar;
             }
