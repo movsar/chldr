@@ -85,15 +85,6 @@ namespace chldr_maintenance
                     AddTranslations(subEntry, t, rusNotes, cheNotes);
                     _context.Entries.Add(subEntry);
 
-                    try
-                    {
-                        translationText = translationText.Substring(match.Value.Length + t.Length + 1).Trim();
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-
                     var rawForms = match.Value.Replace("[", "").Replace("]", "").Trim();
 
                     var mnMatch = Regex.Match(t, @"мн..*\W.*?(?=\])");
@@ -128,37 +119,44 @@ namespace chldr_maintenance
                     {
                         // Verb
                         subEntry.Subtype = (int)WordType.Verb;
-                        AddVerbForms(subEntry, forms, t);
+                        AddVerbForms(subEntry, forms, t, grammaticalClass);
                     }
                     else if (formsCount > 4)
                     {
                         // Noun
                         subEntry.Subtype = (int)WordType.Noun;
-                        AddNounForms(subEntry, forms, t);
+                        AddNounForms(subEntry, forms, t, grammaticalClass);
                     }
                     else
                     {
-                        var classPartPattern = @"\s\w$";
-                        var classLiteral = Regex.Match(rawForms, classPartPattern);
-                        if (classLiteral.Success)
-                        {
-                            // Set class
-                            var classLiteralTrimmed = classLiteral.Value.Trim();
-                        }
-
                         var singularVsPluralPattern = @"мн\W";
                         var plurality = Regex.Match(rawForms, singularVsPluralPattern);
-                        if (plurality.Success)
+                        if (plurality.Success && (subEntry.Subtype == (int)WordType.Noun || subEntry.Subtype == 0))
                         {
                             // Set plural
+                            subEntry.Subtype = (int)WordType.Noun;
+
+                            var nounDetails = new NounDetails();
+                            nounDetails.NumeralType = NumeralType.Plural;
+                            nounDetails.Class = grammaticalClass;
+
+                            subEntry.Details = JsonConvert.SerializeObject(nounDetails);
                         }
 
-                        t = t + "(" + rawForms + ")";
+                        t = t + " [" + rawForms + "]";
                     }
 
                     //_context.SaveChanges();
 
-                    // Update Id for the next subEntry
+
+                    // Prepare for the next cycle
+                    try
+                    {
+                        translationText = translationText.Substring(match.Value.Length + t.Length + 1).Trim();
+                    }
+                    catch (Exception ex)
+                    { }
+
                     entry.EntryId = Guid.NewGuid().ToString();
                 }
             }
@@ -203,7 +201,7 @@ namespace chldr_maintenance
             return 0;
         }
 
-        private static void AddNounForms(SqlEntry entry, List<string> forms, string translationText)
+        private static void AddNounForms(SqlEntry entry, List<string> forms, string translationText, int grammaticalClass)
         {
             var count = forms.Count();
 
@@ -258,7 +256,7 @@ namespace chldr_maintenance
             };
         }
 
-        private static void AddVerbForms(SqlEntry entry, List<string> forms, string translationText)
+        private static void AddVerbForms(SqlEntry entry, List<string> forms, string translationText, int grammaticalClass)
         {
             var count = forms.Count();
 
@@ -318,8 +316,7 @@ namespace chldr_maintenance
                 EntryId = entry.EntryId,
                 LanguageCode = "RUS",
                 Notes = rusNotes,
-                User = entry.User,
-                UserId = entry.User.UserId,
+                UserId = entry.UserId,
                 Rate = 10,
             };
             entry.Translations.Add(rusTranslation);
@@ -333,8 +330,7 @@ namespace chldr_maintenance
                     Entry = entry,
                     EntryId = entry.EntryId,
                     LanguageCode = "RUS",
-                    User = entry.User,
-                    UserId = entry.User.UserId,
+                    UserId = entry.UserId,
                     Rate = 10,
                 };
                 entry.Translations.Add(cheTranslation);
