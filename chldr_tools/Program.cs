@@ -163,61 +163,108 @@ namespace chldr_tools
                 entry.User = context.Users.First();
                 entry.UserId = entry.User.UserId;
 
-                var match = Regex.Match(translationText, @"\[.*?\]");
-
-                translationText = translationText.Substring(translationText.IndexOf("]")+1).Trim();
-
-                FirstGate(entry, translationText!, rusNotes, cheNotes);
-
-                // Set entry details, add related forms
-
-                if (!match.Success)
+                var matches = Regex.Matches(translationText, @"\[.*?\]");
+                if (matches.Count() == 0)
                 {
                     // TODO: Add word
+                    
+                    SetEntryType(entry, translationText!, rusNotes, cheNotes);
+                    SetParentId(entry, translationText!);
+                    // context.Entries.Add(entry);
+                    // AddTranslations(entry, translationText, rusNotes, cheNotes);
 
                     continue;
                 }
-                var rawForms = match.Value;
 
-                var forms = Regex.Matches(rawForms, @"[1ӀӏА-я]{2,}").Select(m => m.Value).ToList();
-                var isVerb = forms.Contains("или");
+                // Add with multiple forms
+                foreach (var match in matches)
+                {
+                    // deal with synonyms
+                    var rawForms = (matches.Count() > 0) ? matches[0].Value : string.Empty;
 
-                forms.RemoveAll(form => form.Equals("или") || form.Equals("ду") || form.Equals("ву") || form.Equals("йу") || form.Equals("бу") || form.Equals("мн"));
-                var formsCount = forms.Count();
-              
-                if (!isVerb)
-                {
-                    isVerb = formsCount == 2 || formsCount == 3;
-                }
+                    if (!string.IsNullOrWhiteSpace(rawForms))
+                    {
+                        translationText = translationText.Replace(rawForms, "").Trim();
+                    }
 
-                if (isVerb)
-                {
-                    // Verb
-                    AddVerbDetails(entry, forms, translationText);
-                }
-                else if (formsCount > 0)
-                {
-                    // Noun
-                    AddNounDetails(entry, forms, translationText);
-                }
-                else
-                {
+                    var mnMatch = Regex.Match(translationText, @"мн..*\W.*?\W");
+                    if (mnMatch.Success)
+                    {
+                        rawForms = rawForms + mnMatch.Value;
+                        translationText.Replace(mnMatch.Value, "");
+                    }
 
+
+                    int grammaticalClass = ParseGrammatocalClass(rawForms);
+
+                    var forms = Regex.Matches(rawForms, @"[1ӀӏА-я]{2,}").Select(m => m.Value).ToList();
+                    var isVerb = forms.Contains("или");
+
+                    forms.RemoveAll(form => form.Equals("или") || form.Equals("ду") || form.Equals("ву") || form.Equals("йу") || form.Equals("бу") || form.Equals("мн"));
+                    var formsCount = forms.Count();
+
+                    if (!isVerb)
+                    {
+                        isVerb = formsCount == 3 || formsCount == 4;
+                    }
+
+                    if (isVerb)
+                    {
+                        // Verb
+                        AddVerbDetails(entry, forms, translationText);
+                    }
+                    else if (formsCount > 4)
+                    {
+                        // Noun
+                        AddNounDetails(entry, forms, translationText);
+                    }
+                    else
+                    {
+                        translationText = translationText + "(" + rawForms + ")";
+                    }
+
+                    // TODO: Add word
+                    //context.Entries.Add(entry);
                 }
             }
         }
 
-        private static void AddNounDetails(SqlEntry entry, List<string> forms, string rawTranslation)
+        private static void SetParentId(SqlEntry entry, string v)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static int ParseGrammatocalClass(string rawForms)
+        {
+            string pattern = @"(?<=\W)(в|б|й|д)(?=\W)";
+            var matches = Regex.Matches(rawForms, pattern);
+            var count = matches.Count();
+
+            if (count == 2)
+            {
+                // TODO
+                return 2;
+            }
+            if (count == 1)
+            {
+                // TODO
+                return 1;
+            }
+
+            return 0;
+        }
+
+        private static void AddNounDetails(SqlEntry entry, List<string> forms, string translationText)
         {
             var nounDetails = new NounDetails();
             entry.Subtype = (int)WordType.Noun;
 
             nounDetails.Case = Case.Absolutive;
-            nounDetails.NumeralType = !rawTranslation.Contains("только мн") ? NumeralType.Singular : NumeralType.Plural;
+            nounDetails.NumeralType = !translationText.Contains("только мн") ? NumeralType.Singular : NumeralType.Plural;
             // Add Forms
         }
 
-        private static void AddVerbDetails(SqlEntry entry, List<string> forms, string rawTranslation)
+        private static void AddVerbDetails(SqlEntry entry, List<string> forms, string translationText)
         {
             var verbDetails = new VerbDetails();
             entry.Subtype = (int)WordType.Verb;
@@ -225,11 +272,33 @@ namespace chldr_tools
             var model = EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
             var dto = EntryDto.FromModel(model);
 
-            foreach (var form in forms)
-            {
+            var count = forms.Count();
 
-                // Insert related word
+            var main = entry.Content;
+            var presentSimple = forms[0];
+            var witnessedPast = forms[1];
+            var pastPerfect = forms[2];
+
+            if (count == 3)
+            {
+                return;
             }
+
+            var futureSimple = forms[3];
+
+            if (count == 4)
+            {
+                return;
+            }
+
+            var futureContinuous = forms[4];
+            // main - inifinitive
+            // first - present simple
+            // second - witnessed past
+            // third - past perfect
+            // fourth - future simple
+            // fifth - future continuous
+
         }
 
         private static void AddTranslations(SqlEntry entry, string content, string rusNotes, string cheNotes)
@@ -265,9 +334,8 @@ namespace chldr_tools
                 // TODO: Add
             }
         }
-        private static void FirstGate(SqlEntry entry, string translationText, string rusNotes, string cheNotes)
+        private static void SetEntryType(SqlEntry entry, string translationText, string rusNotes, string cheNotes)
         {
-            AddTranslations(entry, translationText, rusNotes, cheNotes);
 
             if (TestFor(translationText, "сущ"))
             {
