@@ -13,16 +13,19 @@ using chldr_data.remote.Services;
 using chldr_utils;
 using Microsoft.EntityFrameworkCore;
 using chldr_data;
+using Newtonsoft.Json;
+using chldr_data.Interfaces;
+using chldr_data.Helpers;
+using chldr_maintenance.Entities;
 
 namespace chldr_maintenance
 {
     internal class TheGreatParser
     {
+        private static SqlContext _context;
         internal static void ParseEverything()
         {
-            var context = GetSqlContext();
-
-            context.SaveChanges();
+            _context = GetSqlContext();
 
             using var legacyContext = new EfContext();
 
@@ -41,13 +44,16 @@ namespace chldr_maintenance
                     .DistinctBy(t => t.LanguageCode).Single().Translation!;
 
                 var entry = new SqlEntry();
+
+                // main - inifinitive
                 entry.Content = legacyEntry.Phrase;
+
                 entry.Type = (int)EntryType.Word;
-                entry.Source = context.Sources.First(s => s.Name.Equals("Maciev"));
+                entry.Source = _context.Sources.First(s => s.Name.Equals("Maciev"));
                 entry.SourceId = entry.Source.SourceId;
                 entry.Rate = 10;
                 entry.EntryId = Guid.NewGuid().ToString();
-                entry.User = context.Users.First();
+                entry.User = _context.Users.First();
                 entry.UserId = entry.User.UserId;
 
                 var matches = Regex.Matches(translationText, @"\[.*?\]");
@@ -56,17 +62,16 @@ namespace chldr_maintenance
                     TrySetEntryType(entry, translationText!);
                     AddTranslations(entry, translationText, rusNotes, cheNotes);
 
-                    // TODO: Add word
-                    // context.Entries.Add(entry);
+                    _context.Entries.Add(entry);
+                    //_context.SaveChanges();
                     continue;
                 }
 
-                var content = legacyEntry.Phrase;
-
-                // Add with multiple forms
+                // Deal with synonyms
                 foreach (Match match in matches)
                 {
-                    // deal with synonyms
+                    // Create a new object for the synonym
+                    var subEntry = CreateSubEntry(entry, legacyEntry.Phrase!);
 
                     var t = translationText.Replace(match.Value, "").Trim();
 
@@ -75,6 +80,10 @@ namespace chldr_maintenance
                     {
                         t = t.Substring(0, subEntryStartIndex).Trim();
                     }
+
+                    TrySetEntryType(subEntry, t!);
+                    AddTranslations(subEntry, t, rusNotes, cheNotes);
+                    _context.Entries.Add(subEntry);
 
                     try
                     {
@@ -102,7 +111,7 @@ namespace chldr_maintenance
                         t = t.Replace(mnMatch.Value, "").Substring(1);
                     }
 
-                    int grammaticalClass = ParseGrammatocalClass(rawForms);
+                    int grammaticalClass = ParseGrammaticalClass(rawForms);
 
                     var forms = Regex.Matches(rawForms, @"[1ӀӏА-я]{2,}").Select(m => m.Value).ToList();
                     var isVerb = forms.Contains("или");
@@ -118,26 +127,36 @@ namespace chldr_maintenance
                     if (isVerb)
                     {
                         // Verb
-                        AddVerbDetails(entry, forms, t);
+                        subEntry.Subtype = (int)WordType.Verb;
+                        AddVerbForms(subEntry, forms, t);
                     }
                     else if (formsCount > 4)
                     {
                         // Noun
-                        AddNounDetails(entry, forms, t);
+                        subEntry.Subtype = (int)WordType.Noun;
+                        AddNounForms(subEntry, forms, t);
                     }
                     else
                     {
+                        var classPartPattern = @"\s\w$";
+                        var classLiteral = Regex.Match(rawForms, classPartPattern);
+                        if (classLiteral.Success)
+                        {
+                            // Set class
+                            var classLiteralTrimmed = classLiteral.Value.Trim();
+                        }
+
+                        var singularVsPluralPattern = @"мн\W";
+                        var plurality = Regex.Match(rawForms, singularVsPluralPattern);
+                        if (plurality.Success)
+                        {
+                            // Set plural
+                        }
+
                         t = t + "(" + rawForms + ")";
                     }
 
-
-                    TrySetEntryType(entry, t!);
-                    AddTranslations(entry, t, rusNotes, cheNotes);
-
-                    // TODO: Add word
-                    // context.Entries.Add(entry);
-
-                    InsertRelatedWords(entry, t, forms);
+                    //_context.SaveChanges();
 
                     // Update Id for the next subEntry
                     entry.EntryId = Guid.NewGuid().ToString();
@@ -145,10 +164,10 @@ namespace chldr_maintenance
             }
         }
 
-        private static void InsertRelatedWords(SqlEntry parentEntry, string translation, List<string> forms)
+        private static void InsertRelatedWords(SqlEntry parentEntry, string translation)
         {
-        }
 
+        }
 
         static SqlContext GetSqlContext()
         {
@@ -163,7 +182,8 @@ namespace chldr_maintenance
             string pattern = $"(?<={needle}\\W?\\s?)[1ӀӏА-яA-z]+";
             return Regex.Match(str, pattern, RegexOptions.CultureInvariant).Success;
         }
-        private static int ParseGrammatocalClass(string rawForms)
+
+        private static int ParseGrammaticalClass(string rawForms)
         {
             string pattern = @"(?<=\W)(в|б|й|д)(?=\W)";
             var matches = Regex.Matches(rawForms, pattern);
@@ -183,51 +203,109 @@ namespace chldr_maintenance
             return 0;
         }
 
-        private static void AddNounDetails(SqlEntry entry, List<string> forms, string translationText)
+        private static void AddNounForms(SqlEntry entry, List<string> forms, string translationText)
         {
-            var nounDetails = new NounDetails();
-            entry.Subtype = (int)WordType.Noun;
-
-            nounDetails.Case = Case.Absolutive;
-            nounDetails.NumeralType = !translationText.Contains("только мн") ? NumeralType.Singular : NumeralType.Plural;
-            // Add Forms
-        }
-
-        private static void AddVerbDetails(SqlEntry entry, List<string> forms, string translationText)
-        {
-            var verbDetails = new VerbDetails();
-            entry.Subtype = (int)WordType.Verb;
-
-            var model = EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
-            var dto = EntryDto.FromModel(model);
-
             var count = forms.Count();
 
-            var main = entry.Content;
-            var presentSimple = forms[0];
-            var witnessedPast = forms[1];
-            var pastPerfect = forms[2];
+            var nounDetails = new NounDetails();
+            nounDetails.NumeralType = !translationText.Contains("только мн") ? NumeralType.Singular : NumeralType.Plural;
+
+            // Родительный
+            var genitive = CreateSubEntry(entry, forms[0]);
+            nounDetails.Case = Case.Genitive;
+            genitive.Details = JsonConvert.SerializeObject(nounDetails);
+            _context.Entries.Add(genitive);
+
+            // Дательный
+            var dative = CreateSubEntry(entry, forms[1]);
+            nounDetails.Case = Case.Dative;
+            dative.Details = JsonConvert.SerializeObject(nounDetails);
+            _context.Entries.Add(dative);
+
+            // Эргативный
+            var ergative = CreateSubEntry(entry, forms[2]);
+            nounDetails.Case = Case.Ergative;
+            ergative.Details = JsonConvert.SerializeObject(nounDetails);
+            _context.Entries.Add(ergative);
+
+            // Местный
+            var locative = CreateSubEntry(entry, forms[3]);
+            nounDetails.Case = Case.Locative;
+            locative.Details = JsonConvert.SerializeObject(nounDetails);
+            _context.Entries.Add(locative);
+
+            // Именительный во множественном 
+            var pluralAbsolutive = CreateSubEntry(entry, forms[4]);
+            nounDetails.Case = Case.Absolutive;
+            nounDetails.NumeralType = NumeralType.Plural;
+            pluralAbsolutive.Details = JsonConvert.SerializeObject(nounDetails);
+            _context.Entries.Add(pluralAbsolutive);
+        }
+
+        private static SqlEntry CreateSubEntry(SqlEntry entry, string content)
+        {
+            return new SqlEntry()
+            {
+                EntryId = Guid.NewGuid().ToString(),
+                ParentEntryId = entry.EntryId,
+                SourceId = entry.SourceId,
+                UserId = entry.UserId,
+                Content = content,
+                Details = entry.Details,
+                Rate = entry.Rate,
+                Type = entry.Type,
+                Subtype = entry.Subtype,
+            };
+        }
+
+        private static void AddVerbForms(SqlEntry entry, List<string> forms, string translationText)
+        {
+            var count = forms.Count();
+
+            // first - present simple
+            var presentSimple = CreateSubEntry(entry, forms[0]);
+            var verbDetails = new VerbDetails();
+            verbDetails.Tense = VerbTense.PresentSimple;
+            presentSimple.Details = JsonConvert.SerializeObject(verbDetails);
+            _context.Entries.Add(presentSimple);
+
+            // second - witnessed past
+            var witnessedPast = CreateSubEntry(entry, forms[1]);
+            verbDetails = new VerbDetails();
+            verbDetails.Tense = VerbTense.PastWitnessed;
+            presentSimple.Details = JsonConvert.SerializeObject(verbDetails);
+            _context.Entries.Add(witnessedPast);
+
+            // third - past perfect
+            var pastPerfect = CreateSubEntry(entry, forms[2]);
+            verbDetails = new VerbDetails();
+            verbDetails.Tense = VerbTense.PastPerfect;
+            presentSimple.Details = JsonConvert.SerializeObject(verbDetails);
+            _context.Entries.Add(pastPerfect);
 
             if (count == 3)
             {
                 return;
             }
 
-            var futureSimple = forms[3];
+            // fourth - future simple
+            var futureSimple = CreateSubEntry(entry, forms[3]);
+            verbDetails = new VerbDetails();
+            verbDetails.Tense = VerbTense.FutureSimple;
+            presentSimple.Details = JsonConvert.SerializeObject(verbDetails);
+            _context.Entries.Add(futureSimple);
 
             if (count == 4)
             {
                 return;
             }
 
-            var futureContinuous = forms[4];
-            // main - inifinitive
-            // first - present simple
-            // second - witnessed past
-            // third - past perfect
-            // fourth - future simple
             // fifth - future continuous
-
+            var futureContinuous = CreateSubEntry(entry, forms[4]);
+            verbDetails = new VerbDetails();
+            verbDetails.Tense = VerbTense.FutureContinous;
+            presentSimple.Details = JsonConvert.SerializeObject(verbDetails);
+            _context.Entries.Add(futureContinuous);
         }
 
         private static void AddTranslations(SqlEntry entry, string content, string rusNotes, string cheNotes)
