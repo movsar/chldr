@@ -41,11 +41,8 @@ namespace chldr_maintenance
 
             try
             {
-
                 foreach (var legacyEntry in legacyEntries)
                 {
-                    Debug.WriteLine("INF: " + legacyEntry.Phrase);
-
                     var rawNotes = legacyEntry.Notes ?? string.Empty;
                     var rusNotes = Regex.Match(rawNotes, @"(?<=RUS:).*?(?=Ψ)").Value ?? string.Empty;
                     var cheNotes = Regex.Match(rawNotes, @"(?<=CHE:).*?(?=Ψ)").Value ?? string.Empty;
@@ -222,16 +219,15 @@ namespace chldr_maintenance
                         catch (Exception ex)
                         { }
                     }
-
                 }
+
+                transaction.Commit();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
                 transaction.Rollback();
             }
-
-            transaction.Commit();
         }
 
         static bool IsPlural(string str)
