@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace chldr_data.Enums.WordDetails
+﻿namespace chldr_data.Enums.WordDetails
 {
     public enum VerbTense
     {
@@ -17,6 +11,7 @@ namespace chldr_data.Enums.WordDetails
         PastPerfect = 6,
         PastRecent = 7,
         PastWitnessed = 8,
-        PastRemote = 9
+        PastRemote = 9,
+        Infinitive = 10,
     }
 }

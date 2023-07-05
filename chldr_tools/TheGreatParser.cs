@@ -20,6 +20,7 @@ using chldr_maintenance.Entities;
 using System.Formats.Asn1;
 using System.Diagnostics;
 using System.Security.AccessControl;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 
 namespace chldr_maintenance
 {
@@ -32,145 +33,213 @@ namespace chldr_maintenance
 
             using var legacyContext = new EfContext();
 
-            var legacyEntries = legacyContext.LegacyPhraseEntries.Where(phrase => phrase.Source == "MACIEV").Take(3).ToList();
+            var legacyEntries = legacyContext.LegacyPhraseEntries.Where(phrase => phrase.Source == "MACIEV");
             var legacyEntryIndeces = legacyEntries.Select(e => e.Id).ToArray();
             var legacyTranslations = legacyContext.LegacyTranslationEntries.Where(t => legacyEntryIndeces.Contains(t.PhraseId)).ToList();
 
-            foreach (var legacyEntry in legacyEntries)
+            var transaction = _context.Database.BeginTransaction();
+
+            try
             {
-              
-                var rawNotes = legacyEntry.Notes ?? string.Empty;
-                var rusNotes = Regex.Match(rawNotes, @"(?<=RUS:).*?(?=Ψ)").Value ?? string.Empty;
-                var cheNotes = Regex.Match(rawNotes, @"(?<=CHE:).*?(?=Ψ)").Value ?? string.Empty;
 
-                var translationText = legacyTranslations
-                    .Where(t => t.LanguageCode!.Equals("RUS") && t.PhraseId.Equals(legacyEntry.Id))
-                    .DistinctBy(t => t.LanguageCode).Single().Translation!;
-
-                var entry = new SqlEntry();
-
-                // main - inifinitive
-                entry.Content = legacyEntry.Phrase;
-
-                entry.Type = (int)EntryType.Word;
-                entry.Source = _context.Sources.First(s => s.Name.Equals("Maciev"));
-                entry.SourceId = entry.Source.SourceId;
-                entry.Rate = 10;
-                entry.EntryId = Guid.NewGuid().ToString();
-                entry.User = _context.Users.First();
-                entry.UserId = entry.User.UserId;
-
-                var matches = Regex.Matches(translationText, @"\[.*?\]");
-                if (matches.Count() == 0)
+                foreach (var legacyEntry in legacyEntries)
                 {
-                    TrySetEntryType(entry, translationText!);
-                    AddTranslations(entry, translationText, rusNotes, cheNotes);
+                    Debug.WriteLine("INF: " + legacyEntry.Phrase);
 
-                    _context.Entries.Add(entry);
-                    _context.SaveChanges();
-                    continue;
-                }
+                    var rawNotes = legacyEntry.Notes ?? string.Empty;
+                    var rusNotes = Regex.Match(rawNotes, @"(?<=RUS:).*?(?=Ψ)").Value ?? string.Empty;
+                    var cheNotes = Regex.Match(rawNotes, @"(?<=CHE:).*?(?=Ψ)").Value ?? string.Empty;
 
-                // Deal with synonyms
-                foreach (Match match in matches)
-                {
-                    // Create a new object for the synonym
-                    var subEntry = CreateSubEntry(entry, legacyEntry.Phrase!);
+                    var translationText = legacyTranslations
+                        .Where(t => t.LanguageCode!.Equals("RUS") && t.PhraseId.Equals(legacyEntry.Id))
+                        .DistinctBy(t => t.LanguageCode).Single().Translation!;
 
-                    var t = translationText.Replace(match.Value, "").Trim();
+                    var entry = new SqlEntry();
 
-                    var subEntryStartIndex = t.IndexOf("[");
-                    if (subEntryStartIndex != -1)
+                    // main - inifinitive
+                    entry.Content = legacyEntry.Phrase;
+
+                    entry.Type = (int)EntryType.Word;
+                    entry.Source = _context.Sources.First(s => s.Name.Equals("Maciev"));
+                    entry.SourceId = entry.Source.SourceId;
+                    entry.Rate = 10;
+                    entry.EntryId = Guid.NewGuid().ToString();
+                    entry.User = _context.Users.First();
+                    entry.UserId = entry.User.UserId;
+
+                    var matches = Regex.Matches(translationText, @"\[.*?\]");
+                    if (matches.Count() == 0)
                     {
-                        t = t.Substring(0, subEntryStartIndex).Trim();
+                        TrySetEntryType(entry, translationText!);
+                        AddTranslations(entry, translationText, rusNotes, cheNotes);
+
+                        _context.Entries.Add(entry);
+                        _context.SaveChanges();
+                        continue;
                     }
 
-                    TrySetEntryType(subEntry, t!);
-                    AddTranslations(subEntry, t, rusNotes, cheNotes);
-                    _context.Entries.Add(subEntry);
 
-                    var rawForms = match.Value.Replace("[", "").Replace("]", "").Trim();
-
-                    var mnMatch = Regex.Match(t, @"мн..*\W.*?(?=\])");
-                    if (mnMatch.Success)
+                    // Deal with synonyms
+                    for (int i = 0; i < matches.Count; i++)
                     {
-                        if (!t.StartsWith(mnMatch.Value))
+                        Match match = matches[i];
+
+                        var subEntry = (i == 0) ? entry : CreateSubEntry(entry, legacyEntry.Phrase!);
+
+                        var t = translationText.Replace(match.Value, "").Trim();
+
+                        var subEntryStartIndex = t.IndexOf("[");
+                        if (subEntryStartIndex != -1)
                         {
-                            break;
+                            t = t.Substring(0, subEntryStartIndex).Trim();
                         }
 
-                        if (!rawForms.Contains(mnMatch.Value))
+                        TrySetEntryType(subEntry, t!);
+                        AddTranslations(subEntry, t, rusNotes, cheNotes);
+                        _context.Entries.Add(subEntry);
+
+                        var rawForms = match.Value.Replace("[", "").Replace("]", "").Trim();
+
+                        var mnMatch = Regex.Match(t, @"мн..*\W.*?(?=\])");
+                        if (mnMatch.Success)
                         {
-                            rawForms = rawForms + "; " + mnMatch.Value;
+                            if (!t.StartsWith(mnMatch.Value))
+                            {
+                                break;
+                            }
+
+                            if (!rawForms.Contains(mnMatch.Value))
+                            {
+                                rawForms = rawForms + "; " + mnMatch.Value;
+                            }
+                            t = t.Replace(mnMatch.Value, "").Substring(1);
                         }
-                        t = t.Replace(mnMatch.Value, "").Substring(1);
-                    }
 
-                    int[] grammaticalClasses = ParseGrammaticalClass(rawForms);
-
-                    var forms = Regex.Matches(rawForms, @"[1ӀӏА-я]{2,}").Select(m => m.Value).ToList();
-                    var isVerb = forms.Contains("или");
-
-                    forms.RemoveAll(form => form.Equals("или") || form.Equals("ду") || form.Equals("ву") || form.Equals("йу") || form.Equals("бу") || form.Equals("мн"));
-                    var formsCount = forms.Count();
-
-                    if (!isVerb)
-                    {
-                        isVerb = formsCount == 3 || formsCount == 4;
-                    }
-
-                    if (isVerb)
-                    {
-                        // Verb
-                        subEntry.Subtype = (int)WordType.Verb;
-                        AddVerbForms(subEntry, forms, t, grammaticalClasses);
-                    }
-                    else if (grammaticalClasses.Length == 2)
-                    {
-                        subEntry.Subtype = (int)WordType.Pronoun;
-                        AddPronounForms(subEntry, forms, t, grammaticalClasses);
-                    }
-                    else if (formsCount > 4)
-                    {
-                        // Noun
-                        subEntry.Subtype = (int)WordType.Noun;
-                        AddNounForms(subEntry, forms, t, grammaticalClasses);
-                    }
-                    else
-                    {
-                        var singularVsPluralPattern = @"мн\W";
-                        var plurality = Regex.Match(rawForms, singularVsPluralPattern);
-                        if (plurality.Success && (subEntry.Subtype == (int)WordType.Noun || subEntry.Subtype == 0))
+                        if (string.IsNullOrWhiteSpace(t) || string.IsNullOrWhiteSpace(legacyEntry.Phrase))
                         {
-                            // Set plural
-                            subEntry.Subtype = (int)WordType.Noun;
+                            Debug.WriteLine($"DBG: {entry.Content} : {translationText}");
+                        }
 
-                            var nounDetails = new NounDetails();
-                            nounDetails.NumeralType = NumeralType.Plural;
+                        int[] grammaticalClasses = ParseGrammaticalClass(rawForms);
+
+                        var forms = Regex.Matches(rawForms, @"[1ӀӏА-я]{2,}").Select(m => m.Value).ToList();
+                        var isVerb = forms.Contains("или");
+
+                        forms.RemoveAll(form => form.Equals("или") || form.Equals("ду") || form.Equals("ву") || form.Equals("йу") || form.Equals("бу") || form.Equals("мн"));
+                        var formsCount = forms.Count();
+
+                        if (!isVerb)
+                        {
+                            isVerb = formsCount == 3 || formsCount == 4;
+                        }
+
+                        if (isVerb)
+                        {
+                            // Verb
+                            subEntry.Subtype = (int)WordType.Verb;
+                            var verbDetails = new VerbDetails()
+                            {
+                                Tense = VerbTense.Infinitive,
+                                NumeralType = IsPlural(rawForms) ? NumeralType.Plural : NumeralType.Singular,
+                            };
+
+                            bool transitiveness = translationText.Contains("объект в ");
+                            bool inTransitiveness = translationText.Contains("субъект в ");
+                            if (transitiveness)
+                            {
+                                verbDetails.Transitiveness = Transitiveness.Transitive;
+                            }
+                            else if (inTransitiveness)
+                            {
+                                verbDetails.Transitiveness = Transitiveness.Intransitive;
+                            }
+
+                            if (grammaticalClasses.Length == 1)
+                            {
+                                verbDetails.Class = grammaticalClasses[0];
+                            }
+
+                            subEntry.Details = JsonConvert.SerializeObject(verbDetails);
+
+                            AddVerbForms(subEntry, forms, t, grammaticalClasses, verbDetails);
+                        }
+                        else if (grammaticalClasses.Length == 2)
+                        {
+                            subEntry.Subtype = (int)WordType.Pronoun;
+                            var pronounDetails = new PronounDetails()
+                            {
+                                Case = Case.Absolutive,
+                            };
+
                             if (grammaticalClasses.Length > 0)
                             {
-                                nounDetails.Class = grammaticalClasses[0];
+                                pronounDetails.Classes.AddRange(grammaticalClasses);
                             }
-                            subEntry.Details = JsonConvert.SerializeObject(nounDetails);
+
+                            subEntry.Details = JsonConvert.SerializeObject(pronounDetails);
+
+                            AddPronounForms(subEntry, forms, t, grammaticalClasses, pronounDetails);
                         }
+                        else if (formsCount > 4)
+                        {
+                            // Noun
+                            subEntry.Subtype = (int)WordType.Noun;
+                            var nounDetails = new NounDetails()
+                            {
+                                Case = Case.Absolutive,
+                                Class = grammaticalClasses.Length > 0 ? grammaticalClasses[0] : 0,
+                                NumeralType = !translationText.Contains("только мн") ? NumeralType.Singular : NumeralType.Plural,
+                            };
+                            subEntry.Details = JsonConvert.SerializeObject(nounDetails);
 
-                        t = t + " [" + rawForms + "]";
+                            AddNounForms(subEntry, forms, t, grammaticalClasses, nounDetails);
+                        }
+                        else
+                        {
+                            if (IsPlural(rawForms) && (subEntry.Subtype == (int)WordType.Noun || subEntry.Subtype == 0))
+                            {
+                                // Set plural
+                                subEntry.Subtype = (int)WordType.Noun;
+
+                                var nounDetails = new NounDetails();
+                                nounDetails.NumeralType = NumeralType.Plural;
+                                if (grammaticalClasses.Length > 0)
+                                {
+                                    nounDetails.Class = grammaticalClasses[0];
+                                }
+                                subEntry.Details = JsonConvert.SerializeObject(nounDetails);
+                            }
+
+                            t = t + " [" + rawForms + "]";
+                        }
+                        _context.SaveChanges();
+
+                        // Prepare for the next cycle
+                        try
+                        {
+                            translationText = translationText.Substring(match.Value.Length + t.Length + 1).Trim();
+                        }
+                        catch (Exception ex)
+                        { }
                     }
-                    _context.SaveChanges();
 
-                    // Prepare for the next cycle
-                    try
-                    {
-                        translationText = translationText.Substring(match.Value.Length + t.Length + 1).Trim();
-                    }
-                    catch (Exception ex)
-                    { }
-
-                    entry.EntryId = Guid.NewGuid().ToString();
                 }
             }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                transaction.Rollback();
+            }
+
+            transaction.Commit();
         }
 
+        static bool IsPlural(string str)
+        {
+            var singularVsPluralPattern = @"мн\W";
+            var plurality = Regex.Match(str, singularVsPluralPattern);
+            return plurality.Success;
+        }
         static SqlContext GetSqlContext()
         {
             var options = new DbContextOptionsBuilder<SqlContext>().UseMySQL(Constants.TestDatabaseConnectionString).Options;
@@ -246,12 +315,9 @@ namespace chldr_maintenance
 
             return new int[] { };
         }
-        private static void AddPronounForms(SqlEntry entry, List<string> forms, string translationText, int[] grammaticalClasses)
+        private static void AddPronounForms(SqlEntry entry, List<string> forms, string translationText, int[] grammaticalClasses, PronounDetails pronounDetails)
         {
             var count = forms.Count();
-
-            var pronounDetails = new PronounDetails();
-            pronounDetails.Classes.AddRange(grammaticalClasses);
 
             // Родительный
             var genitive = CreateSubEntry(entry, forms[0]);
@@ -283,16 +349,9 @@ namespace chldr_maintenance
             pluralAbsolutive.Details = JsonConvert.SerializeObject(pronounDetails);
             _context.Entries.Add(pluralAbsolutive);
         }
-        private static void AddNounForms(SqlEntry entry, List<string> forms, string translationText, int[] grammaticalClasses)
+        private static void AddNounForms(SqlEntry entry, List<string> forms, string translationText, int[] grammaticalClasses, NounDetails nounDetails)
         {
             var count = forms.Count();
-
-            var nounDetails = new NounDetails();
-            nounDetails.NumeralType = !translationText.Contains("только мн") ? NumeralType.Singular : NumeralType.Plural;
-            if (grammaticalClasses.Length == 1)
-            {
-                nounDetails.Class = grammaticalClasses[0];
-            }
 
             // Родительный
             var genitive = CreateSubEntry(entry, forms[0]);
@@ -342,27 +401,9 @@ namespace chldr_maintenance
             };
         }
 
-        private static void AddVerbForms(SqlEntry entry, List<string> forms, string translationText, int[] grammaticalClasses)
+        private static void AddVerbForms(SqlEntry entry, List<string> forms, string translationText, int[] grammaticalClasses, VerbDetails verbDetails)
         {
             var count = forms.Count();
-
-            var verbDetails = new VerbDetails();
-
-            bool transitiveness = translationText.Contains("объект в ");
-            bool inTransitiveness = translationText.Contains("субъект в ");
-            if (transitiveness)
-            {
-                verbDetails.Transitiveness = Transitiveness.Transitive;
-            }
-            else if (inTransitiveness)
-            {
-                verbDetails.Transitiveness = Transitiveness.Intransitive;
-            }
-
-            if (grammaticalClasses.Length == 1)
-            {
-                verbDetails.Class = grammaticalClasses[0];
-            }
 
             // first - present simple
             var presentSimple = CreateSubEntry(entry, forms[0]);
