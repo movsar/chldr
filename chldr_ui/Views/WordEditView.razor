@@ -2,7 +2,7 @@
 
 <form class="col-8">
     <div class="col-12 form-outline mb-2">
-     
+
         <button class="form-control btn btn-secondary mt-2"
                 type="button" @onclick="SetParentWord">
             @Localizer["Word:Link_to_another_entry"]
@@ -183,39 +183,19 @@
                         </select>
                     </div>
 
-                    @if (NounDetails.NumeralType == NumeralType.Singular)
-                    {
-                        <b>@Localizer["Word:Case"] @Localizer["Word:Singular"]</b>
-                        <div class="form-outline mb-2">
-                            <select @bind="NounDetails.Case"
-                                    class="form-select"
-                                    title="@Localizer["Word:Case"]">
+                    <b>@Localizer["Word:Case"]</b>
+                    <div class="form-outline mb-2">
+                        <select @bind="NounDetails.Case"
+                                class="form-select"
+                                title="@Localizer["Word:Case"]">
 
-                                <option value="0" class="form-control">@Localizer[$"Word:Undefined"]</option>
-                                @foreach (Case val in ((Case[])Enum.GetValues(typeof(Case))).Skip(1))
-                                {
-                                    <option value="@val" class="form-control">@Localizer[$"Word:Case:{val.ToString()}"]</option>
-                                }
-                            </select>
-                        </div>
-                    }
-
-                    @if (NounDetails.NumeralType == NumeralType.Plural)
-                    {
-                        <b>@Localizer["Word:Case"] @Localizer["Word:Plural"]</b>
-                        <div class="form-outline mb-2">
-                            <select @bind="NounDetails.PluralCase"
-                                    class="form-select"
-                                    title="@Localizer["Word:Case"]">
-
-                                <option value="0" class="form-control">@Localizer[$"Word:Undefined"]</option>
-                                @foreach (Case val in ((Case[])Enum.GetValues(typeof(Case))).Skip(1))
-                                {
-                                    <option value="@val" class="form-control">@Localizer[$"Word:Case:{val.ToString()}"]</option>
-                                }
-                            </select>
-                        </div>
-                    }
+                            <option value="0" class="form-control">@Localizer[$"Word:Undefined"]</option>
+                            @foreach (Case val in ((Case[])Enum.GetValues(typeof(Case))).Skip(1))
+                            {
+                                <option value="@val" class="form-control">@Localizer[$"Word:Case:{val.ToString()}"]</option>
+                            }
+                        </select>
+                    </div>
                 }
 
                 @if (EntryDto.EntrySubtype == (int)WordType.Pronoun)

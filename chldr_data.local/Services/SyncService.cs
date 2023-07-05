@@ -76,15 +76,15 @@ namespace chldr_data.local.Services
             // Remove existing database
             _dbContext.Write(() =>
             {
-                //_dbContext.RemoveAll();
+                _dbContext.RemoveAll();
             });
 
             var sw = Stopwatch.StartNew();
 
             // Get users
-            //var userDtos = await RetrieveAll<UserDto>(RecordType.User);
-            //var sourceDtos = await RetrieveAll<SourceDto>(RecordType.Source);
-            //var entryDtos = await RetrieveAll<EntryDto>(RecordType.Entry);
+            var userDtos = await RetrieveAll<UserDto>(RecordType.User);
+            var sourceDtos = await RetrieveAll<SourceDto>(RecordType.Source);
+            var entryDtos = await RetrieveAll<EntryDto>(RecordType.Entry);
             var changeSetDtos = await RetrieveAll<ChangeSetDto>(RecordType.ChangeSet);
 
             var downloadedIn = sw.ElapsedMilliseconds;
@@ -92,20 +92,20 @@ namespace chldr_data.local.Services
 
             _dbContext.Write(() =>
             {
-                //foreach (var dto in userDtos)
-                //{
-                //    _dbContext.Add(RealmUser.FromDto(dto, _dbContext));
-                //}
+                foreach (var dto in userDtos)
+                {
+                    _dbContext.Add(RealmUser.FromDto(dto, _dbContext));
+                }
 
-                //foreach (var dto in sourceDtos)
-                //{
-                //    _dbContext.Add(RealmSource.FromDto(dto, _dbContext));
-                //}
+                foreach (var dto in sourceDtos)
+                {
+                    _dbContext.Add(RealmSource.FromDto(dto, _dbContext));
+                }
 
-                //foreach (var dto in entryDtos)
-                //{
-                //    _dbContext.Add(RealmEntry.FromDto(dto, _dbContext));
-                //}
+                foreach (var dto in entryDtos)
+                {
+                    _dbContext.Add(RealmEntry.FromDto(dto, _dbContext));
+                }
 
                 foreach (var dto in changeSetDtos)
                 {
@@ -114,7 +114,7 @@ namespace chldr_data.local.Services
             });
 
             Realm.Compact(RealmDataProvider.OfflineDatabaseConfiguration);
-            //_dbContext.WriteCopy(new RealmConfiguration(_fileService.OfflineDatabaseFilePath + ".new"));
+            _dbContext.WriteCopy(new RealmConfiguration(_fileService.OfflineDatabaseFilePath + ".new"));
 
             sw.Stop();
             var savedIn = sw.ElapsedMilliseconds;

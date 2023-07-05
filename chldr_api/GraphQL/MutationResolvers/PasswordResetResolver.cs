@@ -1,10 +1,12 @@
-﻿using chldr_data.Enums;
+﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.local.Services;
 using chldr_data.Models;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_data.Resources.Localizations;
+using chldr_data.Services;
 using chldr_shared.Models;
 using chldr_tools;
 using chldr_utils;
@@ -24,9 +26,9 @@ namespace chldr_api.GraphQL.MutationServices
             EmailService _emailService,
             string email)
         {
-            var dbContext = dataProvider.GetContext();
+            var unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork();
 
-            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await unitOfWork.Users.FindByEmail(email);
             if (user == null)
             {
                 throw new ArgumentException($"User with email {email} does not exist.");
@@ -37,7 +39,7 @@ namespace chldr_api.GraphQL.MutationServices
             var tokenValue = JwtService.GenerateToken(user.UserId, "password-reset-secret", tokenExpiresIn);
 
             // Store the token in the Tokens table
-            var token = new SqlToken
+            var token = new TokenDto
             {
                 UserId = user.UserId,
                 Type = (int)TokenType.PasswordReset,
@@ -45,9 +47,8 @@ namespace chldr_api.GraphQL.MutationServices
                 ExpiresIn = tokenExpiresIn,
             };
 
-            dbContext.Tokens.Add(token);
-            await dbContext.SaveChangesAsync();
-
+            unitOfWork.Tokens.Add(token);
+            
             // Send the password reset link to the user's email
             var resetPasswordLink = new Uri(QueryHelpers.AddQueryString($"{AppConstants.Host}/set-new-password", new Dictionary<string, string?>(){
                 { "token", tokenValue }

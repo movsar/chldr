@@ -7,6 +7,7 @@ using chldr_data.remote.SqlEntities;
 using chldr_data.Interfaces.Repositories;
 using chldr_utils.Services;
 using chldr_data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.remote.Repositories
 {
@@ -63,6 +64,12 @@ namespace chldr_data.remote.Repositories
         protected override UserModel FromEntityShortcut(SqlUser entity)
         {
             return UserModel.FromEntity(entity);
+        }
+
+        public async Task<UserModel?> FindByEmail(string email)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email!.Equals(email));
+            return user == null ? null : UserModel.FromEntity(user);
         }
     }
 }

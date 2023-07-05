@@ -21,7 +21,8 @@ namespace chldr_data.local.Services
         public SqlDataProvider(FileService fileService, ExceptionHandler exceptionHandler, IConfiguration configuration)
         {
             _fileService = fileService;
-            _connectionString = configuration.GetConnectionString("SqlContext")!;
+            _connectionString = Constants.TestDatabaseConnectionString;
+            //_connectionString = configuration.GetConnectionString("SqlContext")!;
             _exceptionHandler = exceptionHandler;
         }
         public SqlDataProvider(FileService fileService, ExceptionHandler exceptionHandler, string connectionString)
@@ -30,7 +31,7 @@ namespace chldr_data.local.Services
             _exceptionHandler = exceptionHandler;
             _connectionString = connectionString;
         }
-     
+
         public IUnitOfWork CreateUnitOfWork(string userId = Constants.DefaultUserId)
         {
             var options = new DbContextOptionsBuilder<SqlContext>()
