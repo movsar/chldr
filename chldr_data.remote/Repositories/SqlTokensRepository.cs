@@ -22,6 +22,7 @@ namespace chldr_data.remote.Repositories
         {
             var token = SqlToken.FromDto(dto);
             _dbContext.Add(token);
+            _dbContext.SaveChanges();
 
             return new List<ChangeSetModel>();
         }
@@ -35,6 +36,12 @@ namespace chldr_data.remote.Repositories
             }
 
             return TokenModel.FromEntity(token);
+        }
+
+        public async Task<TokenModel?> GetPasswordResetTokenAsync(string tokenValue)
+        {
+            var tokenInDatabase = await _dbContext.Tokens.FirstOrDefaultAsync(t => t.Type == (int)TokenType.PasswordReset && t.Value == tokenValue && t.ExpiresIn > DateTimeOffset.UtcNow);
+            return tokenInDatabase == null ? null : TokenModel.FromEntity(tokenInDatabase);
         }
 
         public override List<ChangeSetModel> Update(TokenDto dto)
