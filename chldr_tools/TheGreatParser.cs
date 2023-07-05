@@ -17,6 +17,9 @@ using Newtonsoft.Json;
 using chldr_data.Interfaces;
 using chldr_data.Helpers;
 using chldr_maintenance.Entities;
+using System.Formats.Asn1;
+using System.Diagnostics;
+using System.Security.AccessControl;
 
 namespace chldr_maintenance
 {
@@ -102,7 +105,7 @@ namespace chldr_maintenance
                         t = t.Replace(mnMatch.Value, "").Substring(1);
                     }
 
-                    int grammaticalClass = ParseGrammaticalClass(rawForms);
+                    int[] grammaticalClasses = ParseGrammaticalClass(rawForms);
 
                     var forms = Regex.Matches(rawForms, @"[1ӀӏА-я]{2,}").Select(m => m.Value).ToList();
                     var isVerb = forms.Contains("или");
@@ -119,13 +122,18 @@ namespace chldr_maintenance
                     {
                         // Verb
                         subEntry.Subtype = (int)WordType.Verb;
-                        AddVerbForms(subEntry, forms, t, grammaticalClass);
+                        AddVerbForms(subEntry, forms, t, grammaticalClasses);
+                    }
+                    else if (grammaticalClasses.Length == 2)
+                    {
+                        subEntry.Subtype = (int)WordType.Pronoun;
+                        AddPronounForms(subEntry, forms, t, grammaticalClasses);
                     }
                     else if (formsCount > 4)
                     {
                         // Noun
                         subEntry.Subtype = (int)WordType.Noun;
-                        AddNounForms(subEntry, forms, t, grammaticalClass);
+                        AddNounForms(subEntry, forms, t, grammaticalClasses);
                     }
                     else
                     {
@@ -138,13 +146,17 @@ namespace chldr_maintenance
 
                             var nounDetails = new NounDetails();
                             nounDetails.NumeralType = NumeralType.Plural;
-                            nounDetails.Class = grammaticalClass;
+                            //nounDetails.Class = grammaticalClasses;
 
                             subEntry.Details = JsonConvert.SerializeObject(nounDetails);
                         }
 
+
+
                         t = t + " [" + rawForms + "]";
                     }
+
+
 
                     //_context.SaveChanges();
 
@@ -162,11 +174,6 @@ namespace chldr_maintenance
             }
         }
 
-        private static void InsertRelatedWords(SqlEntry parentEntry, string translation)
-        {
-
-        }
-
         static SqlContext GetSqlContext()
         {
             var options = new DbContextOptionsBuilder<SqlContext>().UseMySQL(Constants.TestDatabaseConnectionString).Options;
@@ -181,32 +188,114 @@ namespace chldr_maintenance
             return Regex.Match(str, pattern, RegexOptions.CultureInvariant).Success;
         }
 
-        private static int ParseGrammaticalClass(string rawForms)
+        private static int[] ParseGrammaticalClass(string rawForms)
         {
-            string pattern = @"(?<=\W)(в|б|й|д)(?=\W)";
+            rawForms = rawForms.Replace("5", "б");
+
+            var ClassesMap = new Dictionary<int, string>()
+            {
+                { 1 ,"в, б/д"},
+                { 2 ,"й, б/д"},
+                { 3 ,"й, й"},
+                { 4 ,"д, д"},
+                { 5 ,"б, б/й"},
+                { 6 ,"б, д"},
+            };
+
+            string pattern = @"(?<=\s|\W)(д|в|б|й)(?=\W|$)";
             var matches = Regex.Matches(rawForms, pattern);
             var count = matches.Count();
 
+
+            if (count == 3)
+            {
+                // Search by first and last
+                // Search by second and last
+
+                var gClass1 = ClassesMap.First(kvp => kvp.Value.Contains(matches[0].Value + ",")
+                                      && kvp.Value.Substring(kvp.Value.IndexOf(",")).Contains(matches[2].Value)).Key;
+
+                var gClass2 = ClassesMap.First(kvp => kvp.Value.Contains(matches[1].Value + ",")
+                                      && kvp.Value.Substring(kvp.Value.IndexOf(",")).Contains(matches[2].Value)).Key;
+
+                return new int[] { gClass1, gClass2 };
+            }
             if (count == 2)
             {
-                // TODO
-                return 2;
+                var c1 = matches[0].Value;
+                var c2 = matches[1].Value;
+
+                if (c1 == "й" && c2 == "д")
+                {
+                    c1 = "д";
+                }
+
+                if (c1 == "д" && c2 == "й")
+                {
+                    c1 = "й";
+                }
+
+                var gClass1 = ClassesMap.First(kvp => kvp.Value.Contains(c1 + ",")
+                                      && kvp.Value.Substring(kvp.Value.IndexOf(",")).Contains(c2)).Key;
+
+                return new int[] { gClass1 };
             }
             if (count == 1)
             {
-                // TODO
-                return 1;
+                var gClass1 = ClassesMap.First(kvp => kvp.Value.Contains(matches[0].Value + ",")).Key;
+
+                return new int[] { gClass1 };
             }
 
-            return 0;
+            return new int[] { };
         }
+        private static void AddPronounForms(SqlEntry entry, List<string> forms, string translationText, int[] grammaticalClasses)
+        {
+            var count = forms.Count();
 
-        private static void AddNounForms(SqlEntry entry, List<string> forms, string translationText, int grammaticalClass)
+            var pronounDetails = new PronounDetails();
+            pronounDetails.Classes.AddRange(grammaticalClasses);
+
+            // Родительный
+            var genitive = CreateSubEntry(entry, forms[0]);
+            pronounDetails.Case = Case.Genitive;
+            genitive.Details = JsonConvert.SerializeObject(pronounDetails);
+            _context.Entries.Add(genitive);
+
+            // Дательный
+            var dative = CreateSubEntry(entry, forms[1]);
+            pronounDetails.Case = Case.Dative;
+            dative.Details = JsonConvert.SerializeObject(pronounDetails);
+            _context.Entries.Add(dative);
+
+            // Эргативный
+            var ergative = CreateSubEntry(entry, forms[2]);
+            pronounDetails.Case = Case.Ergative;
+            ergative.Details = JsonConvert.SerializeObject(pronounDetails);
+            _context.Entries.Add(ergative);
+
+            // Местный
+            var locative = CreateSubEntry(entry, forms[3]);
+            pronounDetails.Case = Case.Locative;
+            locative.Details = JsonConvert.SerializeObject(pronounDetails);
+            _context.Entries.Add(locative);
+
+            // Именительный во множественном 
+            var pluralAbsolutive = CreateSubEntry(entry, forms[4]);
+            pronounDetails.Case = Case.Absolutive;
+            pluralAbsolutive.Details = JsonConvert.SerializeObject(pronounDetails);
+            _context.Entries.Add(pluralAbsolutive);
+        }
+        private static void AddNounForms(SqlEntry entry, List<string> forms, string translationText, int[] grammaticalClasses)
         {
             var count = forms.Count();
 
             var nounDetails = new NounDetails();
             nounDetails.NumeralType = !translationText.Contains("только мн") ? NumeralType.Singular : NumeralType.Plural;
+            if (grammaticalClasses.Length == 1)
+            {
+                nounDetails.Class = grammaticalClasses[0];
+            }
 
             // Родительный
             var genitive = CreateSubEntry(entry, forms[0]);
@@ -256,27 +345,42 @@ namespace chldr_maintenance
             };
         }
 
-        private static void AddVerbForms(SqlEntry entry, List<string> forms, string translationText, int grammaticalClass)
+        private static void AddVerbForms(SqlEntry entry, List<string> forms, string translationText, int[] grammaticalClasses)
         {
             var count = forms.Count();
 
+            var verbDetails = new VerbDetails();
+
+            bool transitiveness = translationText.Contains("объект в ");
+            bool inTransitiveness = translationText.Contains("субъект в ");
+            if (transitiveness)
+            {
+                verbDetails.Transitiveness = Transitiveness.Transitive;
+            }
+            else if (inTransitiveness)
+            {
+                verbDetails.Transitiveness = Transitiveness.Intransitive;
+            }
+
+            if (grammaticalClasses.Length == 1)
+            {
+                verbDetails.Class = grammaticalClasses[0];
+            }
+
             // first - present simple
             var presentSimple = CreateSubEntry(entry, forms[0]);
-            var verbDetails = new VerbDetails();
             verbDetails.Tense = VerbTense.PresentSimple;
             presentSimple.Details = JsonConvert.SerializeObject(verbDetails);
             _context.Entries.Add(presentSimple);
 
             // second - witnessed past
             var witnessedPast = CreateSubEntry(entry, forms[1]);
-            verbDetails = new VerbDetails();
             verbDetails.Tense = VerbTense.PastWitnessed;
             presentSimple.Details = JsonConvert.SerializeObject(verbDetails);
             _context.Entries.Add(witnessedPast);
 
             // third - past perfect
             var pastPerfect = CreateSubEntry(entry, forms[2]);
-            verbDetails = new VerbDetails();
             verbDetails.Tense = VerbTense.PastPerfect;
             presentSimple.Details = JsonConvert.SerializeObject(verbDetails);
             _context.Entries.Add(pastPerfect);
@@ -288,7 +392,6 @@ namespace chldr_maintenance
 
             // fourth - future simple
             var futureSimple = CreateSubEntry(entry, forms[3]);
-            verbDetails = new VerbDetails();
             verbDetails.Tense = VerbTense.FutureSimple;
             presentSimple.Details = JsonConvert.SerializeObject(verbDetails);
             _context.Entries.Add(futureSimple);
@@ -300,7 +403,6 @@ namespace chldr_maintenance
 
             // fifth - future continuous
             var futureContinuous = CreateSubEntry(entry, forms[4]);
-            verbDetails = new VerbDetails();
             verbDetails.Tense = VerbTense.FutureContinous;
             presentSimple.Details = JsonConvert.SerializeObject(verbDetails);
             _context.Entries.Add(futureContinuous);
