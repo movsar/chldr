@@ -251,8 +251,7 @@ namespace chldr_data.local.Services
 
         internal void BeginListening()
         {
-            _timer = new Timer(async state => await Sync(), null, TimeSpan.Zero, TimeSpan.FromSeconds(10));
-            //Task.Run(Sync);
+            //_timer = new Timer(async state => await Sync(), null, TimeSpan.Zero, TimeSpan.FromSeconds(10));
         }
     }
 }

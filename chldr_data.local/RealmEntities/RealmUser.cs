@@ -8,7 +8,6 @@ public class RealmUser : RealmObject, IUserEntity
 {
     [PrimaryKey] public string UserId { get; set; }
     public string? Email { get; set; }
-    [Ignored] public string? Password { get; set; }
     public int Rate { get; set; } = 0;
     public string? ImagePath { get; set; }
     public string? FirstName { get; set; }
@@ -39,7 +38,6 @@ public class RealmUser : RealmObject, IUserEntity
         }
 
         user.UserId = userDto.UserId;
-        user.Password = userDto.Password;
         user.Rate = userDto.Rate;
         user.Email = userDto.Email;
         user.Status = (int)userDto.Status;

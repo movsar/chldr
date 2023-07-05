@@ -8,6 +8,8 @@ using chldr_data.Interfaces.Repositories;
 using chldr_utils.Services;
 using chldr_data.Models;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Crypto.Generators;
+using Realms.Sync;
 
 namespace chldr_data.remote.Repositories
 {
@@ -70,6 +72,17 @@ namespace chldr_data.remote.Repositories
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email!.Equals(email));
             return user == null ? null : UserModel.FromEntity(user);
+        }
+
+        public async Task<bool> VerifyAsync(string userId, string password)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId.Equals(userId));
+            if (user == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            return BCrypt.Net.BCrypt.Verify(password, user.Password);
         }
     }
 }

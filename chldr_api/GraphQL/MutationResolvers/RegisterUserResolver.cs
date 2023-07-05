@@ -1,9 +1,11 @@
-﻿using chldr_data.Enums;
+﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.Enums;
 using chldr_data.local.Services;
 using chldr_data.Models;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_data.Resources.Localizations;
+using chldr_data.Services;
 using chldr_shared.Models;
 using chldr_tools;
 using chldr_utils;
@@ -23,40 +25,41 @@ namespace chldr_api.GraphQL.MutationServices
             EmailService _emailService,
             string email, string password, string? firstName, string? lastName, string? patronymic)
         {
-            var dbContext = dataProvider.GetContext();
+            var unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork();
+            unitOfWork.BeginTransaction();
 
             // Check if a user with this email already exists
-            var existingUser = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
+            var existingUser = await unitOfWork.Users.FindByEmail(email);
             if (existingUser != null)
             {
                 return new RequestResult() { ErrorMessage = "A user with this email already exists" };
             }
 
             // Create the new user
-            var user = new SqlUser
+            var user = new UserDto
             {
                 Email = email,
                 Password = BCrypt.Net.BCrypt.HashPassword(password),
-                Status = (int)UserStatus.Unconfirmed,
+                Status = UserStatus.Unconfirmed,
                 FirstName = firstName,
                 LastName = lastName,
                 Patronymic = patronymic
             };
-            dbContext.Users.Add(user);
-            await dbContext.SaveChangesAsync();
+            unitOfWork.Users.Add(user);
 
             var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
             var confirmationToken = JwtService.GenerateToken(user.UserId, "confirmation-token-secretconfirmation-token-secretconfirmation-token-secret", confirmationTokenExpiration);
 
             // Save the tokens to the database
-            dbContext.Tokens.Add(new SqlToken
+            unitOfWork.Tokens.Add(new TokenDto
             {
                 UserId = user.UserId,
                 Type = (int)TokenType.Confirmation,
                 Value = confirmationToken,
                 ExpiresIn = confirmationTokenExpiration
             });
-            await dbContext.SaveChangesAsync();
+            
+            unitOfWork.Commit();
 
             var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{AppConstants.Host}/login", new Dictionary<string, string?>(){
                 { "token", confirmationToken},

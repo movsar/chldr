@@ -13,12 +13,13 @@ using chldr_data.Interfaces;
 using chldr_data.local.Services;
 using Newtonsoft.Json;
 using chldr_data.Models;
+using chldr_data.Services;
 
 namespace chldr_api.GraphQL.MutationServices
 {
     public class LoginResolver
     {
-        internal static async Task<RequestResult> SignInAsync(SqlContext dbContext, SqlUser user)
+        internal static async Task<RequestResult> SignInAsync(SqlUnitOfWork unitOfWork, UserModel user)
         {
             // Generate a new access token and calculate expiration time
             var accessTokenExpiration = DateTime.UtcNow.AddMinutes(60);
@@ -27,7 +28,7 @@ namespace chldr_api.GraphQL.MutationServices
             var accessToken = JwtService.GenerateToken(user.UserId, "access-token-secretaccess-token-secretaccess-token-secret", accessTokenExpiration);
             var refreshToken = JwtService.GenerateToken(user.UserId, "refresh-token-secretrefresh-token-secretrefresh-token-secret", refreshTokenExpiration);
 
-            var accessTokenEntity = new SqlToken
+            var accessTokenDto = new TokenDto
             {
                 UserId = user.UserId,
                 Type = (int)TokenType.Access,
@@ -35,7 +36,7 @@ namespace chldr_api.GraphQL.MutationServices
                 ExpiresIn = accessTokenExpiration
             };
 
-            var refreshTokenEntity = new SqlToken
+            var refreshTokenDto = new TokenDto
             {
                 UserId = user.UserId,
                 Type = (int)TokenType.Refresh,
@@ -44,16 +45,16 @@ namespace chldr_api.GraphQL.MutationServices
             };
 
             // Save the tokens to the database
-            dbContext.Tokens.Add(accessTokenEntity);
-            dbContext.Tokens.Add(refreshTokenEntity);
+            unitOfWork.Tokens.Add(accessTokenDto);
+            unitOfWork.Tokens.Add(refreshTokenDto);
 
-            await dbContext.SaveChangesAsync();
+            unitOfWork.Commit();
 
             return new RequestResult()
             {
                 SerializedData = JsonConvert.SerializeObject(new
                 {
-                    User = UserDto.FromModel(UserModel.FromEntity(user)),
+                    User = UserDto.FromModel(user),
                     AccessToken = accessToken,
                     RefreshToken = refreshToken,
                     AccessTokenExpiresIn = accessTokenExpiration,
@@ -66,10 +67,10 @@ namespace chldr_api.GraphQL.MutationServices
         {
             try
             {
-                var dbContext = dataProvider.GetContext();
+                var unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork();
 
                 // Check if a user with this email exists
-                var token = await dbContext.Tokens.SingleOrDefaultAsync(t => t.Type == (int)TokenType.Refresh && t.Value == refreshToken);
+                var token = await unitOfWork.Tokens.GetByValueAsync(refreshToken);
                 if (token == null)
                 {
                     return new RequestResult() { ErrorMessage = "Invalid refresh token" };
@@ -80,20 +81,18 @@ namespace chldr_api.GraphQL.MutationServices
                     return new RequestResult() { ErrorMessage = "Refresh token has expired" };
                 }
 
-                var user = dbContext.Users.SingleOrDefault(u => u.UserId.Equals(token.UserId));
+                var user = unitOfWork.Users.Get(token.UserId);
                 if (user == null)
                 {
                     return new RequestResult() { ErrorMessage = "No user has been found for the requested token" };
                 }
 
                 // Remove previous tokens related to this user (in future this can be done in a batch job to increase efficiency)
-                var previousTokens = dbContext.Tokens
-                    .Where(t => t.Type == (int)TokenType.Refresh || t.Type == (int)TokenType.Access)
-                    .Where(t => t.UserId.Equals(token.UserId));
+                var previousTokens = unitOfWork.Tokens.GetByUserId(user.UserId);
 
-                dbContext.Tokens.RemoveRange(previousTokens);
+                unitOfWork.Tokens.RemoveRange(previousTokens.Select(t => t.TokenId));
 
-                return await SignInAsync(dbContext, user);
+                return await SignInAsync(unitOfWork, user);
             }
             catch (Exception ex)
             {
@@ -106,22 +105,25 @@ namespace chldr_api.GraphQL.MutationServices
 
         internal async Task<RequestResult> ExecuteAsync(SqlDataProvider dataProvider, string email, string password)
         {
-            var dbContext = dataProvider.GetContext();
+            var unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork();
 
             // Check if a user with this email exists
-            var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
+            var user = await unitOfWork.Users.FindByEmail(email);
             if (user == null)
             {
                 return new RequestResult() { ErrorMessage = "No user found with this email" };
             }
 
             // Check if the password is correct
-            if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
+
+            var isVerified = await unitOfWork.Users.VerifyAsync(user.UserId, password);
+
+            if (!isVerified)
             {
                 return new RequestResult() { ErrorMessage = "Incorrect Password" };
             }
 
-            return await SignInAsync(dbContext, user);
+            return await SignInAsync(unitOfWork, user);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace chldr_api
 
             builder.Services.AddControllers();
 
-            var connectionString = builder.Configuration.GetConnectionString("RemoteDatabase");
+            var connectionString = builder.Configuration.GetConnectionString("SqlContext");
             var signingSecret = builder.Configuration.GetValue<string>("ApiJwtSigningKey");
             if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(signingSecret))
             {

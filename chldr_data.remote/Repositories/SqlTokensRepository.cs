@@ -8,6 +8,7 @@ using chldr_data.remote.Interfaces;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_utils.Services;
+using GraphQLParser;
 using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.remote.Repositories
@@ -36,6 +37,21 @@ namespace chldr_data.remote.Repositories
             }
 
             return TokenModel.FromEntity(token);
+        }
+
+        public IEnumerable<TokenModel> GetByUserId(string userId)
+        {
+            var tokens = _dbContext.Tokens
+                    .Where(t => t.Type == (int)TokenType.Refresh || t.Type == (int)TokenType.Access)
+                    .Where(t => t.UserId.Equals(userId));
+
+            return tokens.Select(t => TokenModel.FromEntity(t));
+        }
+
+        public async Task<TokenModel?> GetByValueAsync(string refreshToken)
+        {
+            var tokenInDatabase = await _dbContext.Tokens.FirstOrDefaultAsync(t => t.Value == refreshToken);
+            return tokenInDatabase == null ? null : TokenModel.FromEntity(tokenInDatabase);
         }
 
         public async Task<TokenModel?> GetPasswordResetTokenAsync(string tokenValue)
