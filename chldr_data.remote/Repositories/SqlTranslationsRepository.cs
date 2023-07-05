@@ -51,6 +51,7 @@ namespace chldr_data.remote.Repositories
 
             var changeSet = CreateChangeSetEntity(Operation.Update, dto.TranslationId, changes);
             _dbContext.ChangeSets.Add(changeSet);
+            
             _dbContext.SaveChanges();
 
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };

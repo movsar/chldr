@@ -154,7 +154,6 @@ namespace chldr_data.remote.Repositories
                     // Save the changes, even if there are no changes to the entry, as there might be 
                     var updatedEntryEntity = SqlEntry.FromDto(updatedEntryDto, _dbContext);
                     _dbContext.Update(updatedEntryEntity);
-                    _dbContext.SaveChanges();
 
                     var entryChangeSetDto = CreateChangeSetEntity(Operation.Update, updatedEntryDto.EntryId, entryChanges);
                     changeSets.Add(ChangeSetModel.FromEntity(entryChangeSetDto));
@@ -167,6 +166,8 @@ namespace chldr_data.remote.Repositories
                 // Add / Remove / Update sounds
                 var soundChangeSets = ProcessSoundsForEntryUpdate(existingEntryDto, updatedEntryDto);
                 changeSets.AddRange(soundChangeSets);
+
+                _dbContext.SaveChanges();
 
                 return changeSets;
             }
