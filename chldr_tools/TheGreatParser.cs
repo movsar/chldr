@@ -32,12 +32,13 @@ namespace chldr_maintenance
 
             using var legacyContext = new EfContext();
 
-            var legacyEntries = legacyContext.LegacyPhraseEntries.Where(phrase => phrase.Source == "MACIEV");
+            var legacyEntries = legacyContext.LegacyPhraseEntries.Where(phrase => phrase.Source == "MACIEV").Take(3).ToList();
             var legacyEntryIndeces = legacyEntries.Select(e => e.Id).ToArray();
             var legacyTranslations = legacyContext.LegacyTranslationEntries.Where(t => legacyEntryIndeces.Contains(t.PhraseId)).ToList();
 
             foreach (var legacyEntry in legacyEntries)
             {
+              
                 var rawNotes = legacyEntry.Notes ?? string.Empty;
                 var rusNotes = Regex.Match(rawNotes, @"(?<=RUS:).*?(?=Ψ)").Value ?? string.Empty;
                 var cheNotes = Regex.Match(rawNotes, @"(?<=CHE:).*?(?=Ψ)").Value ?? string.Empty;
@@ -66,7 +67,7 @@ namespace chldr_maintenance
                     AddTranslations(entry, translationText, rusNotes, cheNotes);
 
                     _context.Entries.Add(entry);
-                    //_context.SaveChanges();
+                    _context.SaveChanges();
                     continue;
                 }
 
@@ -146,20 +147,16 @@ namespace chldr_maintenance
 
                             var nounDetails = new NounDetails();
                             nounDetails.NumeralType = NumeralType.Plural;
-                            //nounDetails.Class = grammaticalClasses;
-
+                            if (grammaticalClasses.Length > 0)
+                            {
+                                nounDetails.Class = grammaticalClasses[0];
+                            }
                             subEntry.Details = JsonConvert.SerializeObject(nounDetails);
                         }
 
-
-
                         t = t + " [" + rawForms + "]";
                     }
-
-
-
-                    //_context.SaveChanges();
-
+                    _context.SaveChanges();
 
                     // Prepare for the next cycle
                     try

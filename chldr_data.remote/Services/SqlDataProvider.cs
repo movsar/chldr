@@ -33,7 +33,10 @@ namespace chldr_data.local.Services
      
         public IUnitOfWork CreateUnitOfWork(string userId = Constants.DefaultUserId)
         {
-            var options = new DbContextOptionsBuilder<SqlContext>().UseMySQL(_connectionString).Options;
+            var options = new DbContextOptionsBuilder<SqlContext>()
+                .UseMySQL(_connectionString)
+                .Options;
+
             var context = new SqlContext(options);
             return new SqlUnitOfWork(context, _fileService, _exceptionHandler, userId!);
         }

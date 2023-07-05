@@ -1,6 +1,7 @@
 ﻿using chldr_data.remote.SqlEntities;
 using Microsoft.EntityFrameworkCore;
 using MySql.EntityFrameworkCore.Extensions;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace chldr_data.remote.Services;
 
@@ -19,7 +20,7 @@ public class SqlContext : DbContext
     public virtual DbSet<SqlTranslation> Translations { get; set; }
     public virtual DbSet<SqlUser> Users { get; set; }
     public virtual DbSet<SqlToken> Tokens { get; set; }
-
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         try
@@ -374,9 +375,7 @@ public class SqlContext : DbContext
                 entity.Property(e => e.RecordType).HasColumnName("record_type");
                 entity.Property(e => e.UserId)
                     .HasMaxLength(40)
-                    .HasColumnName("user_id")
-                    .UseCollation("utf8mb3_general_ci")
-                    .HasCharSet("utf8mb3");
+                    .HasColumnName("user_id");
 
                 entity.HasOne(d => d.User).WithMany(p => p.ChangeSets)
                     .HasForeignKey(d => d.UserId)
@@ -388,6 +387,6 @@ public class SqlContext : DbContext
         {
             throw;
         }
-      
+
     }
 }
