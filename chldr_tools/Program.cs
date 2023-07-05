@@ -147,7 +147,7 @@ namespace chldr_tools
         {
             Console.WriteLine("Hello, World!");
 
-            TheGreatParser.ParseEverything();
+            //TheGreatParser.ParseEverything();
         }
     }
 }
