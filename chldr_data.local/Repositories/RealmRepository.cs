@@ -67,16 +67,20 @@ namespace chldr_data.Repositories
                 .ToListAsync();
             return entities.Select(FromEntityShortcut).ToList();
         }
-        public virtual List<TModel> GetRandoms(int limit)
+        public virtual async Task<List<TModel>> GetRandomsAsync(int limit)
         {
             var randomizer = new Random();
 
-            var entries = _dbContext.All<TEntity>().AsEnumerable()
+            var entries = await Task.Run(() =>
+            {
+                return _dbContext.All<TEntity>()
+                  .AsEnumerable()
                   .OrderBy(x => randomizer.Next(0, 75000))
                   .OrderBy(entry => entry.GetHashCode())
                   .Take(limit)
                   .Select(FromEntityShortcut)
                   .ToList();
+            });
 
             return entries;
         }

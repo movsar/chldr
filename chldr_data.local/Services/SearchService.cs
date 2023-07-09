@@ -166,23 +166,6 @@ namespace chldr_data.local.Services
             logger.StopSpeedTest($"FindAsync finished");
         }
 
-        public List<EntryModel> GetRandomEntries(int limit = 50)
-        {
-            var randomizer = new Random();
-            var realm = Database.All<RealmEntry>();
-
-            var entries = Database.All<RealmEntry>().AsEnumerable();
-            var count = entries.Count();
-
-            return entries
-              .Where(entry => entry.Rate > 0)
-              .OrderBy(x => randomizer.Next(0, 70000))
-              .Take(limit)
-              .OrderBy(entry => entry.GetHashCode())
-              .Select(entry => FromEntity(entry))
-              .ToList();
-        }
-
         public List<EntryModel> GetLatestEntries()
         {
             var entries = Database.All<RealmEntry>().AsEnumerable().OrderByDescending(e => e.CreatedAt).Take(100);

@@ -84,11 +84,11 @@ namespace chldr_shared.Stores
             Task.Run(() => _searchService.FindAsync(inputText, filterationFlags));
         }
 
-        public void LoadRandomEntries()
+        public async Task LoadRandomEntries()
         {
             CachedSearchResult.Entries.Clear();
             var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork();
-            var entries = unitOfWork.Entries.GetRandoms(100);
+            var entries = await unitOfWork.Entries.GetRandomsAsync(100);
 
             CachedSearchResult.Entries.Clear();
             foreach (var entry in entries)

@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore.Update;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using chldr_data.local.Repositories;
+using System.Collections.Immutable;
 
 namespace chldr_data.Repositories
 {
@@ -38,12 +39,37 @@ namespace chldr_data.Repositories
         {
             return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
         }
-
-        public override List<EntryModel> GetRandoms(int limit)
+        protected EntryModel FromEntityShortcut(RealmEntry entry, ImmutableList<RealmEntry> subEntries)
         {
-            var entries = base.GetRandoms(limit);
+            var subSources = subEntries.ToDictionary(e => e.EntryId, e => e.Source as ISourceEntity);
+            var subSounds = subEntries.ToDictionary(e => e.EntryId, e => e.Sounds.ToList().Cast<ISoundEntity>());
+            var subEntryTranslations = subEntries.ToDictionary(e => e.EntryId, e => e.Translations.ToList().Cast<ITranslationEntity>());
 
-            return entries;
+            // Dictionary<EntryId, List<Source>
+
+            return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds,
+                subEntries.Cast<IEntryEntity>(), subSources, subEntryTranslations, subSounds);
+        }
+
+        public override async Task<List<EntryModel>> GetRandomsAsync(int limit)
+        {
+            var randomizer = new Random();
+
+            var entries = _dbContext.All<RealmEntry>()
+                .Where(e => e.ParentEntryId == null)
+                .Where(e => e.Rate > 0)
+                .AsEnumerable()
+                .OrderBy(x => randomizer.Next(0, 75000))
+                .OrderBy(entry => entry.GetHashCode())
+                .Take(limit);
+
+            var parentIds = entries.Select(e => e.EntryId);
+            var subEntries = _dbContext.All<RealmEntry>()
+                .AsEnumerable()
+                .Where(e => parentIds.Contains(e.ParentEntryId))
+                .ToImmutableList();
+
+            return await Task.Run(() => entries.Select(e => FromEntityShortcut(e, subEntries)).ToList());
         }
 
         public override void Add(EntryDto newEntryDto)
