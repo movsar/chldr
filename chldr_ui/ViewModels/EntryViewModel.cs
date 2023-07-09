@@ -7,8 +7,9 @@ namespace chldr_ui.ViewModels
 {
     public class EntryViewModel : EntryViewModelBase
     {
-
         public EntryModel? Word { get; set; }
+        // Only for Words
+        public List<EntryModel> SubWords { get; set; }
 
         public string? Header => Word?.Content;
         public string? Subheader => CreateSubheader();

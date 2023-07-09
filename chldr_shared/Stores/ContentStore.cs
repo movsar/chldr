@@ -188,6 +188,11 @@ namespace chldr_shared.Stores
 
         public async Task UpdateEntry(UserModel loggedInUser, EntryDto entryDto)
         {
+            if (string.IsNullOrWhiteSpace(entryDto.ParentEntryId) && entryDto.Translations.Count() > 0)
+            {
+                throw new Exception("Error:Translations_not_allowed_for_subentries");
+            }
+
             var response = await _requestService.UpdateEntry(loggedInUser.UserId, entryDto);
             if (!response.Success)
             {
@@ -241,6 +246,11 @@ namespace chldr_shared.Stores
         }
         public async Task AddEntry(UserModel loggedInUser, EntryDto entryDto)
         {
+            if (string.IsNullOrWhiteSpace(entryDto.ParentEntryId) && entryDto.Translations.Count() > 0)
+            {
+                throw new Exception("Error:Translations_not_allowed_for_subentries");
+            }
+
             // Add remote entity
             var response = await _requestService.AddEntry(loggedInUser.UserId, entryDto);
 

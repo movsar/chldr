@@ -39,6 +39,13 @@ namespace chldr_data.Repositories
             return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
         }
 
+        public override List<EntryModel> GetRandoms(int limit)
+        {
+            var entries = base.GetRandoms(limit);
+
+            return entries;
+        }
+
         public override void Add(EntryDto newEntryDto)
         {
             if (newEntryDto == null || string.IsNullOrEmpty(newEntryDto.EntryId))
@@ -74,7 +81,7 @@ namespace chldr_data.Repositories
         {
             var existingEntry = Get(updatedEntryDto.EntryId);
             var existingEntryDto = EntryDto.FromModel(existingEntry);
-         
+
             _dbContext.Write(() =>
             {
                 RealmEntry.FromDto(updatedEntryDto, _dbContext);

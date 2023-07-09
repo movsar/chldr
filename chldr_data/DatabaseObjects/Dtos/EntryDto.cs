@@ -40,7 +40,7 @@ namespace chldr_data.DatabaseObjects.Dtos
             entryDto.Translations.AddRange(entryModel.Translations.Select(t => TranslationDto.FromModel(t)));
 
             entryDto.Sounds.Clear();
-            entryDto.Sounds.AddRange(entryModel.Sounds.Select(s => SoundDto.FromModel(s)));
+            entryDto.Sounds.AddRange(entryModel.Sounds.Select(s => SoundDto.FromModel(s)));          
             return entryDto;
         }
     }
