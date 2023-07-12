@@ -38,9 +38,9 @@ namespace chldr_data.Repositories
             return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
         }
 
-        public override async Task<List<EntryModel>> GetRandoms(int limit)
+        public override async Task<List<EntryModel>> GetRandomsAsync(int limit)
         {
-            var entries = await base.GetRandoms(limit);
+            var entries = await base.GetRandomsAsync(limit);
 
             return entries;
         }

@@ -72,7 +72,7 @@ namespace chldr_data.Repositories
                 .ToListAsync();
             return entities.Select(FromEntityShortcut).ToList();
         }
-        public virtual async Task<List<TModel>> GetRandoms(int limit)
+        public virtual async Task<List<TModel>> GetRandomsAsync(int limit)
         {
             var randomizer = new Random();
 

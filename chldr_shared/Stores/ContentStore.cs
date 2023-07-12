@@ -88,7 +88,7 @@ namespace chldr_shared.Stores
         {
             CachedSearchResult.Entries.Clear();
             var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork();
-            var entries = await unitOfWork.Entries.GetRandoms(100);
+            var entries = await unitOfWork.Entries.GetRandomsAsync(100);
 
             CachedSearchResult.Entries.Clear();
             foreach (var entry in entries)
