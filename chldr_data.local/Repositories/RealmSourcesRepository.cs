@@ -16,7 +16,7 @@ namespace chldr_data.Repositories
 {
     public class RealmSourcesRepository : RealmRepository<RealmSource, SourceModel, SourceDto>, ISourcesRepository
     {
-        public RealmSourcesRepository(Realm context, ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(context, exceptionHandler, fileService, userId) { }
+        public RealmSourcesRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
         protected override RecordType RecordType => RecordType.Source;
         protected override SourceModel FromEntityShortcut(RealmSource entry)
         {

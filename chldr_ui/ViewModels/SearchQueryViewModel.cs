@@ -55,11 +55,11 @@ namespace chldr_ui.ViewModels
 
             await base.OnAfterRenderAsync(firstRender);
         }
-        public void LoadRandomEntries()
+        public async void LoadRandomEntries()
         {
             try
             {
-                ContentStore.LoadRandomEntries();
+                await ContentStore.LoadRandomEntries();
             }
             catch (Exception ex)
             {

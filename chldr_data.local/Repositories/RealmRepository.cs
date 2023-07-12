@@ -4,6 +4,7 @@ using Realms;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using chldr_data.local.Interfaces;
+using chldr_data.Interfaces.Repositories;
 
 namespace chldr_data.Repositories
 {
@@ -13,18 +14,22 @@ namespace chldr_data.Repositories
         where TModel : class
     {
         protected abstract RecordType RecordType { get; }
-
-        protected readonly Realm _dbContext;
+        private readonly RealmConfiguration _dbConfig;
+        protected Realm _dbContext => Realm.GetInstance(_dbConfig);
         protected readonly ExceptionHandler _exceptionHandler;
         protected readonly FileService _fileService;
         protected readonly string _userId;
 
-        public RealmRepository(Realm context, ExceptionHandler exceptionHandler, FileService fileService, string userId)
+        public RealmRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId)
         {
-            _dbContext = context;
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
             _userId = userId;
+
+            _dbConfig = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
+            {
+                SchemaVersion = Constants.RealmSchemaVersion
+            };
         }
         protected abstract TModel FromEntityShortcut(TEntity entity);
 
@@ -67,16 +72,16 @@ namespace chldr_data.Repositories
                 .ToListAsync();
             return entities.Select(FromEntityShortcut).ToList();
         }
-        public virtual List<TModel> GetRandoms(int limit)
+        public virtual async Task<List<TModel>> GetRandoms(int limit)
         {
             var randomizer = new Random();
 
-            var entries = _dbContext.All<TEntity>().AsEnumerable()
+            var entries = await Task.Run(() => _dbContext.All<TEntity>().AsEnumerable()
                   .OrderBy(x => randomizer.Next(0, 75000))
                   .OrderBy(entry => entry.GetHashCode())
                   .Take(limit)
                   .Select(FromEntityShortcut)
-                  .ToList();
+                  .ToList());
 
             return entries;
         }
@@ -102,5 +107,6 @@ namespace chldr_data.Repositories
                 Remove(id);
             }
         }
+
     }
 }

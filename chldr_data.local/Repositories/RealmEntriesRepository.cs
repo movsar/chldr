@@ -23,12 +23,11 @@ namespace chldr_data.Repositories
         private readonly RealmSoundsRepository _sounds;
 
         public RealmEntriesRepository(
-            Realm context,
             ExceptionHandler exceptionHandler,
             FileService fileService,
             string userId,
             RealmTranslationsRepository translationsRepository,
-            RealmSoundsRepository soundsRepository) : base(context, exceptionHandler, fileService, userId)
+            RealmSoundsRepository soundsRepository) : base(exceptionHandler, fileService, userId)
         {
             _translations = translationsRepository;
             _sounds = soundsRepository;
@@ -39,9 +38,9 @@ namespace chldr_data.Repositories
             return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
         }
 
-        public override List<EntryModel> GetRandoms(int limit)
+        public override async Task<List<EntryModel>> GetRandoms(int limit)
         {
-            var entries = base.GetRandoms(limit);
+            var entries = await base.GetRandoms(limit);
 
             return entries;
         }

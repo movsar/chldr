@@ -13,21 +13,11 @@ namespace chldr_data.Repositories
 {
     public class RealmChangeSetsRepository : RealmRepository<RealmChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {
-        public RealmChangeSetsRepository(Realm context, ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(context, exceptionHandler, fileService, userId) { }
+        public RealmChangeSetsRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
         protected override RecordType RecordType => RecordType.ChangeSet;
         protected override ChangeSetModel FromEntityShortcut(RealmChangeSet entity)
         {
             return ChangeSetModel.FromEntity(entity);
-        }
-
-        public async Task<List<ChangeSetModel>> TakeLastAsync(int count)
-        {
-            var models = await _dbContext.All<RealmChangeSet>()
-                .OrderByDescending(c => c.ChangeSetIndex)
-                .TakeLast(count)
-                .ToListAsync();
-
-            return models.AsEnumerable().Select(ChangeSetModel.FromEntity).ToList();
         }
 
         public IEnumerable<ChangeSetModel> Get(string[] changeSetIds)
@@ -53,6 +43,16 @@ namespace chldr_data.Repositories
 
                 _dbContext.Add(changeSet);
             });
+        }
+
+        public async Task<List<ChangeSetModel>> TakeLastAsync(int count)
+        {
+            var models = await _dbContext.All<RealmChangeSet>()
+                .OrderByDescending(c => c.ChangeSetIndex)
+                .TakeLast(count)
+                .ToListAsync();
+
+            return models.AsEnumerable().Select(ChangeSetModel.FromEntity).ToList();
         }
     }
 }

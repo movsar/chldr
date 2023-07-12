@@ -84,11 +84,11 @@ namespace chldr_shared.Stores
             Task.Run(() => _searchService.FindAsync(inputText, filterationFlags));
         }
 
-        public void LoadRandomEntries()
+        public async Task LoadRandomEntries()
         {
             CachedSearchResult.Entries.Clear();
             var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork();
-            var entries = unitOfWork.Entries.GetRandoms(100);
+            var entries = await unitOfWork.Entries.GetRandoms(100);
 
             CachedSearchResult.Entries.Clear();
             foreach (var entry in entries)
@@ -139,7 +139,7 @@ namespace chldr_shared.Stores
         }
         public EntryModel GetByEntryId(string entryId)
         {
-            using var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork();
+            var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork();
             return unitOfWork.Entries.Get(entryId);
         }
         public void DataAccess_DatasourceInitialized()
@@ -178,7 +178,7 @@ namespace chldr_shared.Stores
             var changeSets = RequestResult.GetData<IEnumerable<ChangeSetDto>>(response);
 
             // Remove local entity
-            using var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId);
+            var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId);
             unitOfWork.Entries.Remove(entryId);
             unitOfWork.ChangeSets.AddRange(changeSets);
 
@@ -203,7 +203,7 @@ namespace chldr_shared.Stores
             var changeSets = RequestResult.GetData<IEnumerable<ChangeSetDto>>(response);
 
             // Update local entity
-            using var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId);
+            var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId);
 
             unitOfWork.Entries.Update(entryDto);
             unitOfWork.ChangeSets.AddRange(changeSets);
@@ -269,7 +269,7 @@ namespace chldr_shared.Stores
             // Update local entity
             entryDto.CreatedAt = data.CreatedAt;
 
-            using var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId);
+            var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId);
             unitOfWork.Entries.Add(entryDto);
             unitOfWork.ChangeSets.AddRange(data.ChangeSets);
 

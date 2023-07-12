@@ -17,7 +17,7 @@ namespace chldr_ui.ViewModels
 
             if (EnvironmentService?.CurrentPlatform != Platforms.Web)
             {
-                ContentStore.LoadRandomEntries();
+                await ContentStore.LoadRandomEntries();
             }
             else
             {

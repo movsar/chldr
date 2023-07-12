@@ -9,7 +9,7 @@ using chldr_data.remote.SqlEntities;
 
 namespace chldr_data.Services
 {
-    public class SqlUnitOfWork : IUnitOfWork
+    public class SqlUnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly string _userId;
         private readonly SqlContext _context;

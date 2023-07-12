@@ -71,7 +71,7 @@ namespace chldr_data.local.Services
         {
             OfflineDatabaseConfiguration = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
             {
-                SchemaVersion = 16
+                SchemaVersion = Constants.RealmSchemaVersion
             };
 
             DatabaseInitialized?.Invoke();
@@ -89,7 +89,7 @@ namespace chldr_data.local.Services
         }
         public IUnitOfWork CreateUnitOfWork(string userId = Constants.DefaultUserId)
         {
-            return new RealmUnitOfWork(GetDatabase(), _exceptionHandler, _fileService, userId);
+            return new RealmUnitOfWork(_exceptionHandler, _fileService, userId);
         }
 
         public Realm GetContext()

@@ -14,7 +14,7 @@ namespace chldr_data.Repositories
 {
     public class RealmTranslationsRepository : RealmRepository<RealmTranslation, TranslationModel, TranslationDto>, ITranslationsRepository
     {
-        public RealmTranslationsRepository(Realm context, ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(context, exceptionHandler, fileService, userId) { }
+        public RealmTranslationsRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
 
         protected override RecordType RecordType => RecordType.Translation;
         protected override TranslationModel FromEntityShortcut(RealmTranslation entity)
