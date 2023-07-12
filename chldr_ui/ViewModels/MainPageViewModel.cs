@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace chldr_ui.ViewModels
 {
-    public partial class MainPageViewModel : ViewModelBase
+    public class MainPageViewModel : ViewModelBase
     {
         [Inject] JsInteropService? JsInteropService { get; set; }
         private async Task ShowRandoms()

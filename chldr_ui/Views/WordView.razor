@@ -29,6 +29,14 @@
             }
         </div>
 
+        @if (Entry.SubEntries?.Count() > 0)
+        {
+            foreach (var subEntry in Entry.SubEntries)
+            {
+                <WordView Entry="subEntry"></WordView>
+            }
+        }
+
         @if (UserStore.ActiveSession.Status == SessionStatus.LoggedIn)
         {
             <div class="chldr_entry_actions">

@@ -14,6 +14,7 @@ namespace chldr_data.DatabaseObjects.Models
         public string UserId { get; set; }
         public string? SourceId => Source.SourceId;
         public string? ParentEntryId { get; set; }
+        public List<EntryModel> SubEntries { get; set; } = new List<EntryModel>();
         public int Rate { get; set; }
         public EntryType Type { get; set; }
         public int Subtype { get; set; }
@@ -59,6 +60,22 @@ namespace chldr_data.DatabaseObjects.Models
             foreach (var sound in sounds)
             {
                 entryModel.Sounds.Add(SoundModel.FromEntity(sound));
+            }
+
+            return entryModel;
+        }
+
+        public static EntryModel FromEntity(IEntryEntity entry, ISourceEntity source, IEnumerable<ITranslationEntity> translations, IEnumerable<ISoundEntity> sounds,
+          IEnumerable<IEntryEntity> subEntries, Dictionary<string, ISourceEntity> subSources, Dictionary<string, IEnumerable<ITranslationEntity>> subTranslations, Dictionary<string, IEnumerable<ISoundEntity>> subSounds)
+        {
+            var entryModel = FromEntity(entry, source, translations, sounds);
+
+
+            foreach (var subEntry in subEntries)
+            {
+                var subEntryModel = FromEntity(subEntry, subSources[subEntry.EntryId], subTranslations[subEntry.EntryId], subSounds[subEntry.EntryId]);
+
+                entryModel.SubEntries.Add(subEntryModel);
             }
 
             return entryModel;

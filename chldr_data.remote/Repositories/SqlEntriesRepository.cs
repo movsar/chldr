@@ -69,7 +69,7 @@ namespace chldr_data.remote.Repositories
 
             return entities.Select(FromEntityShortcut).ToList();
         }
-        public override async Task<List<EntryModel>> GetRandoms(int limit)
+        public override async Task<List<EntryModel>> GetRandomsAsync(int limit)
         {
             var randomizer = new Random();
 
