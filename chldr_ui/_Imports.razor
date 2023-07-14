@@ -7,22 +7,25 @@
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using Microsoft.JSInterop
 
-@using chldr_data.Resources.Localizations;
+@using Blazored.Modal
+@using Blazored.Modal.Services
 
+@using chldr_data.Resources.Localizations;
 @using chldr_data.Services
 @using chldr_data.Enums
 @using chldr_data.Models
 @using chldr_data.DatabaseObjects.Models;
 @using chldr_data.DatabaseObjects.Interfaces;
-
-@using chldr_ui;
-@using chldr_shared.Stores
-@using chldr_ui.ViewModels;
-@using chldr_shared.Validators;
-@using chldr_ui.Views
+@using chldr_data.DatabaseObjects.Models.Words;
+@using chldr_data.Interfaces;
 @using chldr_data.DatabaseObjects.Dtos;
 @using chldr_data.Enums.WordDetails;
-@using chldr_shared.Enums;
 
-@using Blazored.Modal
-@using Blazored.Modal.Services
+@using chldr_ui;
+@using chldr_ui.ViewModels;
+@using chldr_ui.Views;
+@using chldr_ui.Views.DetailViews;
+
+@using chldr_shared.Validators;
+@using chldr_shared.Stores
+@using chldr_shared.Enums;
