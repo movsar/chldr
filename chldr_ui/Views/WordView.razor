@@ -22,20 +22,26 @@
             </div>
         }
 
+        @if (Entry.SubEntries?.Count() > 0)
+        {
+            <div class="flex-column">
+                [
+                    @foreach (var subEntry in Entry.SubEntries)
+                    {
+                        <span>
+                            @subEntry.Content;
+                        </span>
+                    }
+                ]
+            </div>
+        }
+
         <div class="chldr_entry_translations mt-2">
             @foreach (var translation in @Translations)
             {
                 <TranslationView Translation="@translation"></TranslationView>
             }
         </div>
-
-        @if (Entry.SubEntries?.Count() > 0)
-        {
-            foreach (var subEntry in Entry.SubEntries)
-            {
-                <WordView Entry="subEntry"></WordView>
-            }
-        }
 
         @if (UserStore.ActiveSession.Status == SessionStatus.LoggedIn)
         {
