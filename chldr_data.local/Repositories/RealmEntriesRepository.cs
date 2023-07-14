@@ -36,7 +36,18 @@ namespace chldr_data.Repositories
         protected override RecordType RecordType => RecordType.Entry;
         protected override EntryModel FromEntityShortcut(RealmEntry entry)
         {
-            return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
+            var subEntries = _dbContext.All<RealmEntry>()
+                .Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entry.EntryId))
+                .ToImmutableList();
+
+            if (subEntries.Count() == 0)
+            {
+                return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
+            }
+            else
+            {
+                return FromEntityShortcut(entry, subEntries);
+            }
         }
 
         protected EntryModel FromEntityShortcut(RealmEntry entry, ImmutableList<RealmEntry> subEntries)
@@ -45,29 +56,36 @@ namespace chldr_data.Repositories
             var subSounds = subEntries.ToDictionary(e => e.EntryId, e => e.Sounds.ToList().Cast<ISoundEntity>());
             var subEntryTranslations = subEntries.ToDictionary(e => e.EntryId, e => e.Translations.ToList().Cast<ITranslationEntity>());
 
-            return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds,
-                subEntries.Cast<IEntryEntity>(), subSources, subEntryTranslations, subSounds);
+            return EntryModel.FromEntity(
+                    entry,
+                    entry.Source,
+                    entry.Translations,
+                    entry.Sounds,
+                    subEntries.Cast<IEntryEntity>(),
+                    subSources,
+                    subEntryTranslations,
+                    subSounds
+                );
         }
 
         public override async Task<List<EntryModel>> GetRandomsAsync(int limit)
         {
-            var randomizer = new Random();
+            var randomizer = new Random(DateTime.Now.Millisecond);
 
-            var entries = _dbContext.All<RealmEntry>()
-                .Where(e => e.ParentEntryId == null)
-                .Where(e => e.Rate > 0)
-                .AsEnumerable()
-                .OrderBy(x => randomizer.Next(0, 75000))
-                .OrderBy(entry => entry.GetHashCode())
-                .Take(limit);
+            var results = await Task.Run(() =>
+            {
+                var entries = _dbContext.All<RealmEntry>()
+                     .Where(e => e.ParentEntryId == null)
+                     .Where(e => e.Rate > 0)
+                     .AsEnumerable()
+                     .OrderBy(entry => entry.GetHashCode())
+                     .OrderBy(x => randomizer.Next(0, 75000))
+                     .Take(limit);
 
-            var parentIds = entries.Select(e => e.EntryId);
-            var subEntries = _dbContext.All<RealmEntry>()
-                .AsEnumerable()
-                .Where(e => parentIds.Contains(e.ParentEntryId))
-                .ToImmutableList();
+                return entries.Select(e => FromEntityShortcut(e)).ToList();
+            });
 
-            return await Task.Run(() => entries.Select(e => FromEntityShortcut(e, subEntries)).ToList());
+            return results;
         }
 
         public override void Add(EntryDto newEntryDto)
