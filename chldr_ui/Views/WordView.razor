@@ -22,16 +22,28 @@
             </div>
         }
 
+        @if (Entry.Subtype != 0)
+        {
+            var partOfSpeech = (WordType)Entry.Subtype;
+            var partOfSpeechName = Localizer[$"Word:{partOfSpeech.ToString()}"];
+            <p>@partOfSpeechName</p>
+
+            if (Entry.Details != null)
+            {
+                var details = Entry.Details;
+            }
+        }
+
         @if (Entry.SubEntries?.Count() > 0)
         {
             <div class="flex-column">
                 [
-                    @foreach (var subEntry in Entry.SubEntries)
-                    {
-                        <span>
-                            @subEntry.Content;
-                        </span>
-                    }
+                @foreach (var subEntry in Entry.SubEntries)
+                {
+                    <span>
+                        @subEntry.Content;
+                    </span>
+                }
                 ]
             </div>
         }
