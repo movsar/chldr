@@ -46,21 +46,15 @@ namespace chldr_ui.ViewModels
         {
             await InvokeAsync(StateHasChanged);
         }
-        static bool isInitialized = false;
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            if (!isInitialized)
-            {
-                UserStore.UserStateHasChanged += UserStore_UserStateHasChanged;
-                CultureService.CurrentCultureChanged += CultureService_CurrentCultureChanged;
-
-                isInitialized = true;
-            }
+            UserStore.UserStateHasChanged += UserStore_UserStateHasChanged;
+            CultureService.CurrentCultureChanged += CultureService_CurrentCultureChanged;
         }
 
-        private void SetCulture(string cultureCode)
+        protected void SetCulture(string cultureCode)
         {
             var culture = CultureInfo.GetCultureInfo(cultureCode);
 

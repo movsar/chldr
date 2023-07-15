@@ -30,6 +30,8 @@ namespace chldr_ui.ViewModels
         {
             await ShowRandoms();
             await base.OnInitializedAsync();
+
+            CultureService.CurrentCulture = "ru-RU";
         }
     }
 }

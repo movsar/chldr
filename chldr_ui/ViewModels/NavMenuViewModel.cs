@@ -7,6 +7,13 @@ namespace chldr_ui.ViewModels
         public bool collapseNavMenu = true;
         public string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
+        protected override Task OnInitializedAsync()
+        {
+            CultureService.CurrentCulture = "ru-RU";
+
+            return base.OnInitializedAsync();
+        }
+
         public void SetCurrentLanguage(ChangeEventArgs args)
         {
             var newCulture = args.Value?.ToString();

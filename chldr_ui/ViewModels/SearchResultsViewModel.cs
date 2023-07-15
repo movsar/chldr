@@ -7,8 +7,9 @@ namespace chldr_ui.ViewModels
     {
         private string _searchQuery = string.Empty;
         internal List<EntryModel> Entries { get; set; } = new();
-
-        protected override void OnInitialized()
+        
+        static bool isInitialized = false;
+        protected override Task OnInitializedAsync()
         {
             Console.WriteLine("OnInitialized");
 
@@ -20,7 +21,18 @@ namespace chldr_ui.ViewModels
                 Entries.AddRange(ContentStore.CachedSearchResult.Entries);
             }
 
-            base.OnInitialized();
+            if (!isInitialized)
+            {
+                CultureService.CurrentCultureChanged += CultureService_CurrentCultureChanged;
+                isInitialized = true;
+            }
+
+            return base.OnInitializedAsync();
+        }
+        private async void CultureService_CurrentCultureChanged(string cultureCode)
+        {
+            SetUiLanguage(cultureCode);
+            await RefreshUi();
         }
 
         public void ContentStore_CachedResultsChanged()

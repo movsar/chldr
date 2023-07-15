@@ -24,7 +24,7 @@ namespace chldr_ui.ViewModels
         {
             ContentStore.LoadEntriesToFiddleWith();
         }
-
+        static bool isInitialized = false;
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -33,8 +33,20 @@ namespace chldr_ui.ViewModels
             {
                 SearchQuery = ContentStore.CachedSearchResult.SearchQuery;
             }
-        }
 
+            CultureService.CurrentCulture = "ru-RU";
+
+            if (!isInitialized)
+            {
+                CultureService.CurrentCultureChanged += CultureService_CurrentCultureChanged;
+                isInitialized = true;
+            }
+        }
+        private async void CultureService_CurrentCultureChanged(string cultureCode)
+        {
+            SetUiLanguage(cultureCode);
+            await RefreshUi();
+        }
         // Called when something is typed into search input
         public void Search(ChangeEventArgs evgentArgs)
         {
