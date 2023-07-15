@@ -12,11 +12,6 @@ namespace chldr_blazor
             // Add services to the container.          
             builder.RegisterWebAppServices();
 
-            var culture = CultureInfo.GetCultureInfo("ru_RU");
-            Thread.CurrentThread.CurrentUICulture = culture;
-            CultureInfo.CurrentCulture = culture;
-            CultureInfo.CurrentUICulture = culture;
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
