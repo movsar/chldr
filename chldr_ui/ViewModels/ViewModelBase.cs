@@ -25,8 +25,7 @@ namespace chldr_ui.ViewModels
         [CascadingParameter] protected IModalService Modal { get; set; } = default!;
         protected async Task<bool> AskForConfirmation(string message)
         {
-            var parameters = new ModalParameters()
-                   .Add(nameof(ConfirmationDialog.Message), Localizer[message].ToString());
+            var parameters = new ModalParameters().Add(nameof(ConfirmationDialog.Message), Localizer[message].ToString());
 
             var confirmationResult = Modal.Show<ConfirmationDialog>("", parameters, new ModalOptions()
             {
@@ -39,19 +38,28 @@ namespace chldr_ui.ViewModels
 
             return result.Confirmed;
         }
+        protected override Task OnAfterRenderAsync(bool firstRender)
+        {
+            return base.OnAfterRenderAsync(firstRender);
+        }
         protected async Task RefreshUi()
         {
             await InvokeAsync(StateHasChanged);
         }
-
+        static bool isInitialized = false;
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            UserStore.UserStateHasChanged += UserStore_UserStateHasChanged;
-            CultureService.CurrentCultureChanged += CultureService_CurrentCultureChanged;
+            if (!isInitialized)
+            {
+                UserStore.UserStateHasChanged += UserStore_UserStateHasChanged;
+                CultureService.CurrentCultureChanged += CultureService_CurrentCultureChanged;
+
+                isInitialized = true;
+            }
         }
 
-        private void CultureService_CurrentCultureChanged(string cultureCode)
+        private void SetCulture(string cultureCode)
         {
             var culture = CultureInfo.GetCultureInfo(cultureCode);
 
@@ -59,15 +67,24 @@ namespace chldr_ui.ViewModels
             CultureInfo.CurrentCulture = culture;
             CultureInfo.CurrentUICulture = culture;
         }
+        private void CultureService_CurrentCultureChanged(string cultureCode)
+        {
+            if (Thread.CurrentThread.CurrentUICulture.Name == cultureCode)
+            {
+                return;
+            }
+
+            SetCulture(cultureCode);
+        }
 
         private async void UserStore_UserStateHasChanged()
         {
             await RefreshUi();
         }
 
-        protected void SetUiLanguage(string culture)
+        protected void SetUiLanguage(string cultureCode)
         {
-            CultureService.CurrentCulture = culture;
+            CultureService.CurrentCulture = cultureCode;
         }
     }
 }

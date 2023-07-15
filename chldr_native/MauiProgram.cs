@@ -23,12 +23,6 @@ namespace chldr_native
             builder.Logging.AddDebug();
 #endif
 
-            var culture = CultureInfo.GetCultureInfo("ru_RU");
-
-            Thread.CurrentThread.CurrentUICulture = culture;
-            CultureInfo.CurrentCulture = culture;
-            CultureInfo.CurrentUICulture = culture;
-
             return builder.Build();
         }
 

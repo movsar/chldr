@@ -1,12 +1,6 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.Services;
-using chldr_data.Validators;
 using chldr_shared.Enums;
-using chldr_shared.Stores;
-using chldr_shared.Validators;
-using chldr_ui;
-using chldr_ui.ViewModels;
 using chldr_utils.Services;
 using chldr_data.local.Services;
 using Blazored.Modal;
