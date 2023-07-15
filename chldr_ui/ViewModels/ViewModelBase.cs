@@ -50,6 +50,7 @@ namespace chldr_ui.ViewModels
         protected override void OnInitialized()
         {
             base.OnInitialized();
+
             if (!isInitialized)
             {
                 UserStore.UserStateHasChanged += UserStore_UserStateHasChanged;
