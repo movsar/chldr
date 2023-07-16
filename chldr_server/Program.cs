@@ -27,8 +27,6 @@ namespace chldr_blazor
                 app.UseHsts();
             }
 
-
-
             app.UseHttpsRedirection();
 
             app.MapControllers();
@@ -41,8 +39,6 @@ namespace chldr_blazor
             app.MapFallbackToPage("/_Host");
 
             app.Run();
-
-            
         }
     }
 }
