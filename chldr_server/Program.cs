@@ -1,4 +1,6 @@
 ﻿using chldr_blazor.Extensions;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using System.Globalization;
 
 namespace chldr_blazor
@@ -12,6 +14,9 @@ namespace chldr_blazor
             // Add services to the container.          
             builder.RegisterWebAppServices();
 
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-RU");
+            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("ru-RU");
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -21,6 +26,8 @@ namespace chldr_blazor
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+
 
             app.UseHttpsRedirection();
 
@@ -34,6 +41,8 @@ namespace chldr_blazor
             app.MapFallbackToPage("/_Host");
 
             app.Run();
+
+            
         }
     }
 }

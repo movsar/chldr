@@ -34,8 +34,6 @@ namespace chldr_ui.ViewModels
                 SearchQuery = ContentStore.CachedSearchResult.SearchQuery;
             }
 
-            CultureService.CurrentCulture = "ru-RU";
-
             if (!isInitialized)
             {
                 CultureService.CurrentCultureChanged += CultureService_CurrentCultureChanged;

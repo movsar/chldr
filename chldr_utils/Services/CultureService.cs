@@ -8,7 +8,10 @@
 
         public string CurrentCulture
         {
-            get { return currentCulture; }
+            get
+            {
+                return currentCulture;
+            }
             set
             {
                 if (currentCulture != value)
