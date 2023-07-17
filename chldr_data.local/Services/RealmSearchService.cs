@@ -91,56 +91,49 @@ namespace chldr_data.local.Services
             return combined;
         }
         Expression<Func<RealmEntry, bool>> EntryFilter(string inputText) => entry => entry.RawContents.Contains(inputText);
-        protected async Task DirectSearch(string inputText, Expression<Func<RealmEntry, bool>> filter, int limit)
+        protected List<EntryModel> DirectSearch(string inputText, Expression<Func<RealmEntry, bool>> filter, int limit)
         {
             var resultingEntries = new List<EntryModel>();
 
-            await Task.Run(() =>
+
+            using var realmInstance = Database;
+
+            var entries = realmInstance.All<RealmEntry>().Where(filter)
+                                                    .Where(e => e.Rate > 0)
+                                                    .AsEnumerable()
+                                                    .OrderBy(e => e.RawContents.IndexOf(inputText))
+                                                    .OrderByDescending(e => e.Rate)
+                                                    .Take(limit)
+                                                    .ToList();
+
+            foreach (var entry in entries)
             {
-                using var realmInstance = Database;
+                resultingEntries.Add(FromEntity(entry));
+            }
 
-                var entries = realmInstance.All<RealmEntry>().Where(filter)
-                                                        .Where(e => e.Rate > 0)
-                                                        .AsEnumerable()
-                                                        .OrderBy(e => e.RawContents.IndexOf(inputText))
-                                                        .OrderByDescending(e => e.Rate)
-                                                        .Take(limit)
-                                                        .ToList();
 
-                foreach (var entry in entries)
-                {
-                    resultingEntries.Add(FromEntity(entry));
-                }
-
-            });
-
-            var args = new SearchResultModel(inputText, SortDirectSearchEntries(inputText, resultingEntries).ToList(), SearchResultModel.Mode.Direct);
-            GotNewSearchResult?.Invoke(args);
+            return resultingEntries;
         }
-        protected async Task ReverseSearch(string inputText, Expression<Func<RealmTranslation, bool>> filter, int limit)
+        protected List<EntryModel> ReverseSearch(string inputText, Expression<Func<RealmTranslation, bool>> filter, int limit)
         {
             var resultingEntries = new List<EntryModel>();
 
-            await Task.Run(() =>
+            using var realmInstance = Database;
+
+            var translations = realmInstance.All<RealmTranslation>()
+                                                               .Where(filter)
+                                                               .Where(t => t.Rate > 0)
+                                                               .AsEnumerable()
+                                                               .OrderBy(translation => translation.Content.IndexOf(inputText))
+                                                               .OrderByDescending(translation => translation.Rate)
+                                                               .Take(limit)
+                                                               .ToList();
+            foreach (var translation in translations)
             {
-                using var realmInstance = Database;
+                resultingEntries.Add(FromEntity(translation.Entry));
+            }
 
-                var translations = realmInstance.All<RealmTranslation>()
-                                                                   .Where(filter)
-                                                                   .Where(t => t.Rate > 0)
-                                                                   .AsEnumerable()
-                                                                   .OrderBy(translation => translation.Content.IndexOf(inputText))
-                                                                   .OrderByDescending(translation => translation.Rate)
-                                                                   .Take(limit)
-                                                                   .ToList();
-                foreach (var translation in translations)
-                {
-                    resultingEntries.Add(FromEntity(translation.Entry));
-                }
-            });
-
-            var args = new SearchResultModel(inputText, SortReverseSearchEntries(inputText, resultingEntries).ToList(), SearchResultModel.Mode.Reverse);
-            GotNewSearchResult?.Invoke(args);
+            return resultingEntries;
         }
 
         Expression<Func<RealmEntry, bool>> StartsWithFilter(string inputText) => translation => translation.RawContents.Contains(inputText);
@@ -153,16 +146,27 @@ namespace chldr_data.local.Services
 
             inputText = inputText.Replace("1", "Ӏ").ToLower();
 
-            if (inputText.Length < 3)
-            {
-                await DirectSearch(inputText, StartsWithFilter(inputText), 50);
-            }
-            else if (inputText.Length >= 3)
-            {
-                await DirectSearch(inputText, EntryFilter(inputText), 100);
+            var result = new List<EntryModel>();
 
-                await ReverseSearch(inputText, TranslationFilter(inputText), 100);
-            }
+            await Task.Run(() =>
+            {
+                if (inputText.Length <= 3)
+                {
+                    result.AddRange(DirectSearch(inputText, StartsWithFilter(inputText), 50));
+                }
+                else if (inputText.Length > 3)
+                {
+                    result.AddRange(DirectSearch(inputText, EntryFilter(inputText), 50));
+                    result.AddRange(ReverseSearch(inputText, TranslationFilter(inputText), 50));
+                }
+
+                // Sort
+                SortDirectSearchEntries(inputText, result);
+            });
+         
+            var args = new SearchResultModel(inputText, result, SearchResultModel.Mode.Full);
+            GotNewSearchResult?.Invoke(args);
+
             logger.StopSpeedTest($"FindAsync finished");
         }
 

@@ -9,7 +9,8 @@ namespace chldr_data.Models
         {
             Direct,
             Reverse,
-            Random
+            Random,
+            Full
         }
 
         public string SearchQuery { get; }
