@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "chldr_blazor": {
+    "chldr_web": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

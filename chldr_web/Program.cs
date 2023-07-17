@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using System.Globalization;
 using System.Reflection.PortableExecutable;
 
-namespace chldr_blazor
+namespace chldr_web
 {
     public class Program
     {
