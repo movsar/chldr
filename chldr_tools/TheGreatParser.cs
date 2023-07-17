@@ -238,7 +238,7 @@ namespace chldr_maintenance
         }
         static SqlContext GetSqlContext()
         {
-            var options = new DbContextOptionsBuilder<SqlContext>().UseMySQL(Constants.TestDatabaseConnectionString).Options;
+            var options = new DbContextOptionsBuilder<SqlContext>().UseMySQL(Constants.LocalDatabaseConnectionString).Options;
             var context = new SqlContext(options);
 
             return context;

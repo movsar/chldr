@@ -14,7 +14,7 @@ namespace chldr_data.remote.tests.RepositoryTests
             var fileService = new FileService();
             var exceptionHandler = new ExceptionHandler();
 
-            return new SqlDataProvider(fileService, exceptionHandler, Constants.TestDatabaseConnectionString);
+            return new SqlDataProvider(fileService, exceptionHandler, Constants.LocalDatabaseConnectionString);
         }
         public SqlChangeSetsRepositoryTests()
         {

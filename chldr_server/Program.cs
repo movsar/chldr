@@ -1,7 +1,12 @@
-﻿using chldr_blazor.Extensions;
+﻿using Blazored.Modal;
+using chldr_data.Interfaces;
+using chldr_data.local.Services;
+using chldr_shared.Enums;
+using chldr_utils.Services;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Globalization;
+using System.Reflection.PortableExecutable;
 
 namespace chldr_blazor
 {
@@ -12,7 +17,21 @@ namespace chldr_blazor
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.          
-            builder.RegisterWebAppServices();
+            ServiceRegistrator.RegisterCommonServices(builder.Services);
+
+            builder.Services.AddRazorPages();
+            builder.Services.AddServerSideBlazor();
+            builder.Services.AddServerSideBlazor().AddCircuitOptions(option => { option.DetailedErrors = true; });
+
+            builder.Services.AddLocalization();
+            builder.Services.AddBlazoredModal();
+
+            builder.Services.AddScoped<IDataProvider, RealmDataProvider>();
+            builder.Services.AddScoped<ISearchService, RealmSearchService>();
+            builder.Services.AddScoped<SyncService>();
+
+            builder.Services.AddSingleton(x => new EnvironmentService(Platforms.Web, builder.Environment.IsDevelopment()));
+
 
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-RU");
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("ru-RU");

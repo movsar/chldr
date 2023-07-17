@@ -74,7 +74,7 @@ namespace chldr_tools
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(new Dictionary<string, string>
                 {
-                        { "ConnectionStrings:SqlContext",  Constants.TestDatabaseConnectionString}
+                        { "ConnectionStrings:SqlContext",  Constants.LocalDatabaseConnectionString}
                 }!).Build();
 
             var sqlContext = new SqlDataProvider(_fileService, _exceptionHandler, configuration);

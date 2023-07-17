@@ -9,7 +9,7 @@ namespace chldr_data
 
         public const int ChangeSetsToApply = 1000;
         public const string DefaultUserId = "63a816205d1af0e432fba6dd";
-        public const string TestDatabaseConnectionString = "server=localhost;port=3306;database=chldr;user=admin;password=password;charset=utf8mb4";
+        public const string LocalDatabaseConnectionString = "server=localhost;port=3306;database=xj_chldr;user=admin;password=password;charset=utf8mb4";
 
         public const int RealmSchemaVersion = 16;
     }

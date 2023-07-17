@@ -21,7 +21,7 @@ namespace chldr_native.Extensions
 
             // Data    
             appBuilder.Services.AddScoped<IDataProvider, RealmDataProvider>();
-            appBuilder.Services.AddScoped<ISearchService, SearchService>();
+            appBuilder.Services.AddScoped<ISearchService, RealmSearchService>();
             appBuilder.Services.AddScoped<SyncService>();
 
             appBuilder.Services.AddSingleton(x => new EnvironmentService(CurrentPlatform, IsDevelopment));
