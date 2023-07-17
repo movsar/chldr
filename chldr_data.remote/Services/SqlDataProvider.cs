@@ -21,8 +21,8 @@ namespace chldr_data.local.Services
         public SqlDataProvider(FileService fileService, ExceptionHandler exceptionHandler, IConfiguration configuration)
         {
             _fileService = fileService;
-            _connectionString = Constants.LocalDatabaseConnectionString;
-            //_connectionString = configuration.GetConnectionString("SqlContext")!;
+            //_connectionString = Constants.LocalDatabaseConnectionString;
+            _connectionString = configuration.GetConnectionString("SqlContext")!;
             _exceptionHandler = exceptionHandler;
         }
         public SqlDataProvider(FileService fileService, ExceptionHandler exceptionHandler, string connectionString)
