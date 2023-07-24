@@ -68,6 +68,7 @@ namespace chldr_api.GraphQL.MutationServices
             try
             {
                 var unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork();
+                unitOfWork.BeginTransaction();
 
                 // Check if a user with this email exists
                 var token = await unitOfWork.Tokens.GetByValueAsync(refreshToken);
@@ -106,6 +107,7 @@ namespace chldr_api.GraphQL.MutationServices
         internal async Task<RequestResult> ExecuteAsync(SqlDataProvider dataProvider, string email, string password)
         {
             var unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork();
+            unitOfWork.BeginTransaction();
 
             // Check if a user with this email exists
             var user = await unitOfWork.Users.FindByEmail(email);
