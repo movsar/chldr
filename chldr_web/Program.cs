@@ -1,6 +1,7 @@
 ﻿using Blazored.Modal;
 using chldr_data.Interfaces;
 using chldr_data.local.Services;
+using chldr_data.remote.Services;
 using chldr_shared.Enums;
 using chldr_utils.Services;
 using Microsoft.AspNetCore.Localization;
@@ -26,12 +27,10 @@ namespace chldr_web
             builder.Services.AddLocalization();
             builder.Services.AddBlazoredModal();
 
-            builder.Services.AddScoped<IDataProvider, RealmDataProvider>();
-            builder.Services.AddScoped<ISearchService, RealmSearchService>();
-            builder.Services.AddScoped<SyncService>();
+            builder.Services.AddScoped<IDataProvider, SqlDataProvider>();
+            builder.Services.AddScoped<ISearchService, SqlSearchService>();
 
             builder.Services.AddSingleton(x => new EnvironmentService(Platforms.Web, builder.Environment.IsDevelopment()));
-
 
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-RU");
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("ru-RU");
