@@ -33,15 +33,17 @@ namespace chldr_data.Repositories
         {
             return _dbContext.All<RealmSource>().AsEnumerable().Select(s => SourceModel.FromEntity(s)).ToList();
         }
-        public override void Add(SourceDto dto)
+        public override List<ChangeSetModel> Add(SourceDto dto)
         {
             _dbContext.Write(() =>
             {
                 var entity = RealmSource.FromDto(dto, _dbContext);
                 _dbContext.Add(entity);
             });
+            // ! NOT IMPLEMENTED
+            return new List<ChangeSetModel>();
         }
-        public override void Update(SourceDto dto)
+        public override List<ChangeSetModel> Update(SourceDto dto)
         {
             var existingEntity = Get(dto.SourceId);
             var existingDto = SourceDto.FromModel(existingEntity);
@@ -49,13 +51,17 @@ namespace chldr_data.Repositories
             var changes = Change.GetChanges(dto, existingDto);
             if (changes.Count == 0)
             {
-                return;
+                // ! NOT IMPLEMENTED
+                return new List<ChangeSetModel>();
             }
 
             _dbContext.Write(() =>
             {
                 var entity = RealmSource.FromDto(dto, _dbContext);
             });
+
+            // ! NOT IMPLEMENTED
+            return new List<ChangeSetModel>();
         }
     }
 }

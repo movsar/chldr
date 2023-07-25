@@ -88,8 +88,9 @@ namespace chldr_data.Repositories
             return results;
         }
 
-        public override void Add(EntryDto newEntryDto)
+        public override List<ChangeSetModel> Add(EntryDto newEntryDto)
         {
+
             if (newEntryDto == null || string.IsNullOrEmpty(newEntryDto.EntryId))
             {
                 throw new NullReferenceException();
@@ -116,10 +117,13 @@ namespace chldr_data.Repositories
                 var filePath = Path.Combine(_fileService.EntrySoundsDirectory, soundDto.FileName);
                 File.WriteAllText(filePath, soundDto.RecordingB64);
             }
+
+            // ! NOT IMPLEMENTED
+            return new List<ChangeSetModel>();
         }
 
 
-        public override void Update(EntryDto updatedEntryDto)
+        public override List<ChangeSetModel> Update(EntryDto updatedEntryDto)
         {
             var existingEntry = Get(updatedEntryDto.EntryId);
             var existingEntryDto = EntryDto.FromModel(existingEntry);
@@ -128,14 +132,18 @@ namespace chldr_data.Repositories
             {
                 RealmEntry.FromDto(updatedEntryDto, _dbContext);
             });
+
+            // ! NOT IMPLEMENTED
+            return new List<ChangeSetModel>();
         }
 
-        public override void Remove(string entityId)
+        public override List<ChangeSetModel> Remove(string entityId)
         {
             var entry = _dbContext.Find<RealmEntry>(entityId);
             if (entry == null)
             {
-                return;
+                // ! NOT IMPLEMENTED
+                return new List<ChangeSetModel>();
             }
 
             var sounds = entry.Sounds.Select(s => s.SoundId).ToArray();
@@ -145,6 +153,9 @@ namespace chldr_data.Repositories
             _translations.RemoveRange(translations);
 
             base.Remove(entityId);
+
+            // ! NOT IMPLEMENTED
+            return new List<ChangeSetModel>();
         }
     }
 }

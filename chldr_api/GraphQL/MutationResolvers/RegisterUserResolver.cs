@@ -1,7 +1,9 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Enums;
+using chldr_data.Interfaces.Repositories;
 using chldr_data.local.Services;
 using chldr_data.Models;
+using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_data.Resources.Localizations;
@@ -26,10 +28,12 @@ namespace chldr_api.GraphQL.MutationServices
             string email, string password, string? firstName, string? lastName, string? patronymic)
         {
             var unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork();
+            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
+         
             unitOfWork.BeginTransaction();
 
             // Check if a user with this email already exists
-            var existingUser = await unitOfWork.Users.FindByEmail(email);
+            var existingUser = await usersRepository.FindByEmail(email);
             if (existingUser != null)
             {
                 return new RequestResult() { ErrorMessage = "A user with this email already exists" };

@@ -22,7 +22,7 @@ namespace chldr_data.local.Repositories
         {
             return SoundModel.FromEntity(entity);
         }
-        public override void Add(SoundDto dto)
+        public override List<ChangeSetModel> Add(SoundDto dto)
         {
             var entry = _dbContext.Find<RealmEntry>(dto.EntryId);
 
@@ -33,8 +33,11 @@ namespace chldr_data.local.Repositories
             });
 
             _fileService.AddEntrySound(dto.FileName, dto.RecordingB64!);
+
+            // ! NOT IMPLEMENTED
+            return new List<ChangeSetModel>();
         }
-        public override void Update(SoundDto dto)
+        public override List<ChangeSetModel> Update(SoundDto dto)
         {
             var existingEntity = Get(dto.SoundId);
             var existingDto = SoundDto.FromModel(existingEntity);
@@ -42,20 +45,27 @@ namespace chldr_data.local.Repositories
             var changes = Change.GetChanges(dto, existingDto);
             if (changes.Count == 0)
             {
-                return;
+                // ! NOT IMPLEMENTED
+                return new List<ChangeSetModel>();
             }
 
             _dbContext.Write(() =>
             {
                 RealmSound.FromDto(dto, _dbContext);
             });
+
+            // ! NOT IMPLEMENTED
+            return new List<ChangeSetModel>();
         }
-        public override void Remove(string entityId)
+        public override List<ChangeSetModel> Remove(string entityId)
         {
             var sound = Get(entityId);
             _fileService.DeleteEntrySound(sound.FileName);
 
             base.Remove(entityId);
+
+            // ! NOT IMPLEMENTED
+            return new List<ChangeSetModel>();
         }
     }
 }

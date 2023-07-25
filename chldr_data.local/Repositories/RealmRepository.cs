@@ -5,6 +5,7 @@ using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using chldr_data.local.Interfaces;
 using chldr_data.Interfaces.Repositories;
+using chldr_data.DatabaseObjects.Models;
 
 namespace chldr_data.Repositories
 {
@@ -33,8 +34,8 @@ namespace chldr_data.Repositories
         }
         protected abstract TModel FromEntityShortcut(TEntity entity);
 
-        public abstract void Add(TDto dto);
-        public abstract void Update(TDto EntryDto);
+        public abstract List<ChangeSetModel>  Add(TDto dto);
+        public abstract List<ChangeSetModel>  Update(TDto EntryDto);
         public TModel Get(string entityId)
         {
             var entry = _dbContext.Find<TEntity>(entityId);
@@ -45,12 +46,14 @@ namespace chldr_data.Repositories
 
             return FromEntityShortcut(entry);
         }
-        public virtual void Remove(string entityId)
+        public virtual List<ChangeSetModel> Remove(string entityId)
         {
             var entity = _dbContext.Find<TEntity>(entityId);
             if (entity == null)
             {
-                return;
+
+                // ! NOT IMPLEMENTED
+                return new List<ChangeSetModel>();
             }
 
             _dbContext.Write(() =>
@@ -60,8 +63,13 @@ namespace chldr_data.Repositories
 
             if (RecordType == RecordType.ChangeSet)
             {
-                return;
+                // ! NOT IMPLEMENTED
+                return new List<ChangeSetModel>();
             }
+
+
+            // ! NOT IMPLEMENTED
+            return new List<ChangeSetModel>();
         }
 
         public async Task<IEnumerable<TModel>> TakeAsync(int offset, int limit)
@@ -86,26 +94,35 @@ namespace chldr_data.Repositories
             return entries;
         }
 
-        public void AddRange(IEnumerable<TDto> added)
+        public List<ChangeSetModel> AddRange(IEnumerable<TDto> added)
         {
             foreach (var dto in added)
             {
                 Add(dto);
             }
+
+            // ! NOT IMPLEMENTED
+            return new List<ChangeSetModel>();
         }
-        public void UpdateRange(IEnumerable<TDto> updated)
+        public List<ChangeSetModel> UpdateRange(IEnumerable<TDto> updated)
         {
             foreach (var dto in updated)
             {
                 Update(dto);
             }
+
+            // ! NOT IMPLEMENTED
+            return new List<ChangeSetModel>();
         }
-        public void RemoveRange(IEnumerable<string> removed)
+        public List<ChangeSetModel> RemoveRange(IEnumerable<string> removed)
         {
             foreach (var id in removed)
             {
                 Remove(id);
             }
+
+            // ! NOT IMPLEMENTED
+            return new List<ChangeSetModel>();
         }
 
     }

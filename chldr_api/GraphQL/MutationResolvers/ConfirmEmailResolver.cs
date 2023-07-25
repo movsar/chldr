@@ -1,6 +1,8 @@
 ﻿using chldr_data.Enums;
+using chldr_data.Interfaces.Repositories;
 using chldr_data.local.Services;
 using chldr_data.Models;
+using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
 using chldr_data.Services;
 using chldr_tools;
@@ -15,7 +17,10 @@ namespace chldr_api.GraphQL.MutationServices
             using var unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork();
 
             // Check if a user with this email already exists
-            var token = await unitOfWork.Tokens.FindByValueAsync(tokenValue);
+            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
+            var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
+
+            var token = await tokensRepository.FindByValueAsync(tokenValue);
             if (token == null)
             {
                 return new RequestResult() { ErrorMessage = "Invalid token" };
@@ -27,7 +32,7 @@ namespace chldr_api.GraphQL.MutationServices
                 return new RequestResult() { ErrorMessage = "Token has expired " };
             }
 
-            var user = unitOfWork.Users.SetStatus(token.UserId, UserStatus.Active);
+            var user = usersRepository.SetStatus(token.UserId, UserStatus.Active);
 
             return new RequestResult();
         }

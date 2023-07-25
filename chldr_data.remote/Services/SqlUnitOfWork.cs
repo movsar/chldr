@@ -57,12 +57,12 @@ namespace chldr_data.Services
             _context.Dispose();
         }
 
-        public SqlTranslationsRepository Translations => _translationsRepository ??= new SqlTranslationsRepository(_context, _fileService, _userId);
-        public SqlChangeSetsRepository ChangeSets => _changeSetsRepository ??= new SqlChangeSetsRepository(_context, _fileService, _userId);
-        public SqlEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_context, _fileService, _exceptionHandler, Translations, Sounds, _userId);
-        public SqlSourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_context, _fileService, _userId);
-        public SqlUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_context, _fileService, _userId);
-        public SqlSoundsRepository Sounds => _soundsRepository ?? new SqlSoundsRepository(_context, _fileService, _userId);
-        public SqlTokensRepository Tokens => _tokensRepository ?? new SqlTokensRepository(_context, _fileService, _userId);
+        public ITranslationsRepository Translations => _translationsRepository ??= new SqlTranslationsRepository(_context, _fileService, _userId);
+        public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new SqlChangeSetsRepository(_context, _fileService, _userId);
+        public IEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_context, _fileService, _exceptionHandler, Translations, Sounds, _userId);
+        public ISourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_context, _fileService, _userId);
+        public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_context, _fileService, _userId);
+        public ISoundsRepository Sounds => _soundsRepository ?? new SqlSoundsRepository(_context, _fileService, _userId);
+        public ITokensRepository Tokens => _tokensRepository ?? new SqlTokensRepository(_context, _fileService, _userId);
     }
 }

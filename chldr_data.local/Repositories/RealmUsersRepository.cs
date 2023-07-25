@@ -21,16 +21,19 @@ namespace chldr_data.Repositories
         {
             return UserModel.FromEntity(entity);
         }
-        public override void Add(UserDto dto)
+        public override List<ChangeSetModel> Add(UserDto dto)
         {
             _dbContext.Write(() =>
             {
                 var entity = RealmUser.FromDto(dto, _dbContext);
                 _dbContext.Add(entity);
             });
+
+            // ! NOT IMPLEMENTED
+            return new List<ChangeSetModel>();
         }
 
-        public override void Update(UserDto dto)
+        public override List<ChangeSetModel> Update(UserDto dto)
         {
             var existingEntity = Get(dto.UserId);
             var existingDto = UserDto.FromModel(existingEntity);
@@ -38,13 +41,17 @@ namespace chldr_data.Repositories
             var changes = Change.GetChanges(dto, existingDto);
             if (changes.Count == 0)
             {
-                return;
+                // ! NOT IMPLEMENTED
+                return new List<ChangeSetModel>();
             }
 
             _dbContext.Write(() =>
             {
                 var entity = RealmUser.FromDto(dto, _dbContext);
             });
+
+            // ! NOT IMPLEMENTED
+            return new List<ChangeSetModel>();
         }
 
     }

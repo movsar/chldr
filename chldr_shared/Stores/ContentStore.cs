@@ -87,7 +87,7 @@ namespace chldr_shared.Stores
         public async Task LoadRandomEntries()
         {
             CachedSearchResult.Entries.Clear();
-            var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
             var entries = await unitOfWork.Entries.GetRandomsAsync(50);
 
             CachedSearchResult.Entries.Clear();
@@ -169,6 +169,8 @@ namespace chldr_shared.Stores
 
         public async Task DeleteEntry(UserModel loggedInUser, string entryId)
         {
+            // TODO: Change to call first the chosen repositories method, and only if Environment is !Web - change the realm db
+        
             // Remove remote entity
             var response = await _requestService.RemoveEntry(loggedInUser.UserId, entryId);
             if (!response.Success)
@@ -178,9 +180,12 @@ namespace chldr_shared.Stores
             var changeSets = RequestResult.GetData<IEnumerable<ChangeSetDto>>(response);
 
             // Remove local entity
-            var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId);
-            unitOfWork.Entries.Remove(entryId);
-            unitOfWork.ChangeSets.AddRange(changeSets);
+            var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
+
+            RealmEntriesRepository entriesRepository = ((RealmEntriesRepository)unitOfWork.Entries);
+            RealmChangeSetsRepository changeSetsRepository = ((RealmChangeSetsRepository)unitOfWork.ChangeSets);
+            entriesRepository.Remove(entryId);
+            changeSetsRepository.AddRange(changeSets);
 
             // Update on UI
             CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
@@ -189,6 +194,8 @@ namespace chldr_shared.Stores
 
         public async Task UpdateEntry(UserModel loggedInUser, EntryDto entryDto)
         {
+            // TODO: Change to call first the chosen repositories method, and only if Environment is !Web - change the realm db
+        
             if (string.IsNullOrWhiteSpace(entryDto.ParentEntryId) && entryDto.Translations.Count() > 0)
             {
                 throw new Exception("Error:Translations_not_allowed_for_subentries");
@@ -203,10 +210,12 @@ namespace chldr_shared.Stores
             var changeSets = RequestResult.GetData<IEnumerable<ChangeSetDto>>(response);
 
             // Update local entity
-            var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId);
+            var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
+            RealmEntriesRepository entriesRepository = ((RealmEntriesRepository)unitOfWork.Entries);
+            RealmChangeSetsRepository changeSetsRepository = ((RealmChangeSetsRepository)unitOfWork.ChangeSets);
 
-            unitOfWork.Entries.Update(entryDto);
-            unitOfWork.ChangeSets.AddRange(changeSets);
+            entriesRepository.Update(entryDto);
+            changeSetsRepository.AddRange(changeSets);
 
             // Update on UI
             var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId);
@@ -247,6 +256,8 @@ namespace chldr_shared.Stores
         }
         public async Task AddEntry(UserModel loggedInUser, EntryDto entryDto)
         {
+            // TODO: Change to call first the chosen repositories method, and only if Environment is !Web - change the realm db
+
             if (string.IsNullOrWhiteSpace(entryDto.ParentEntryId) && entryDto.Translations.Count() > 0)
             {
                 throw new Exception("Error:Translations_not_allowed_for_subentries");
@@ -269,9 +280,12 @@ namespace chldr_shared.Stores
             // Update local entity
             entryDto.CreatedAt = data.CreatedAt;
 
-            var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(loggedInUser.UserId);
-            unitOfWork.Entries.Add(entryDto);
-            unitOfWork.ChangeSets.AddRange(data.ChangeSets);
+            var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
+         
+            RealmEntriesRepository entriesRepository = ((RealmEntriesRepository)unitOfWork.Entries);
+            RealmChangeSetsRepository changeSetsRepository = ((RealmChangeSetsRepository)unitOfWork.ChangeSets);
+            entriesRepository.Add(entryDto);
+            changeSetsRepository.AddRange(data.ChangeSets);
 
             var added = unitOfWork.Entries.Get(entryDto.EntryId);
             CachedSearchResult.Entries.Add(added);

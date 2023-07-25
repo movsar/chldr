@@ -2,6 +2,7 @@
 using chldr_data.Enums;
 using chldr_data.local.Services;
 using chldr_data.Models;
+using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
 using chldr_data.Services;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,11 @@ namespace chldr_api.GraphQL.MutationServices
         internal async Task<RequestResult> ExecuteAsync(SqlDataProvider dataProvider, string tokenValue, string newPassword)
         {
             var unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork();
+            var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
+
             unitOfWork.BeginTransaction();
 
-            var tokenInDatabase = await unitOfWork.Tokens.GetPasswordResetTokenAsync(tokenValue);
+            var tokenInDatabase = await tokensRepository.GetPasswordResetTokenAsync(tokenValue);
             if (tokenInDatabase == null)
             {
                 return new RequestResult("Invalid token");

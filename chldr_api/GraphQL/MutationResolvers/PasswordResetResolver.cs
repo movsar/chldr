@@ -3,6 +3,7 @@ using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.local.Services;
 using chldr_data.Models;
+using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_data.Resources.Localizations;
@@ -27,8 +28,10 @@ namespace chldr_api.GraphQL.MutationServices
             string email)
         {
             var unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork();
+            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
+            var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
 
-            var user = await unitOfWork.Users.FindByEmail(email);
+            var user = await usersRepository.FindByEmail(email);
             if (user == null)
             {
                 throw new ArgumentException($"User with email {email} does not exist.");

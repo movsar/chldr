@@ -21,15 +21,18 @@ namespace chldr_data.Repositories
         {
             return TranslationModel.FromEntity(entity);
         }
-        public override void Add(TranslationDto dto)
+        public override List<ChangeSetModel> Add(TranslationDto dto)
         {
             _dbContext.Write(() =>
             {
                 var translation = RealmTranslation.FromDto(dto, _dbContext);
                 _dbContext.Add(translation);
             });
+
+            // ! NOT IMPLEMENTED
+            return new List<ChangeSetModel>();
         }
-        public override void Update(TranslationDto dto)
+        public override List<ChangeSetModel> Update(TranslationDto dto)
         {
             var existingEntity = Get(dto.TranslationId);
             var existingDto = TranslationDto.FromModel(existingEntity);
@@ -37,13 +40,16 @@ namespace chldr_data.Repositories
             var changes = Change.GetChanges(dto, existingDto);
             if (changes.Count == 0)
             {
-                return;
+                // ! NOT IMPLEMENTED
+                return new List<ChangeSetModel>();
             }
 
             _dbContext.Write(() =>
             {
                 var updatedEntry = RealmTranslation.FromDto(dto, _dbContext);
             });
+            // ! NOT IMPLEMENTED
+            return new List<ChangeSetModel>();
         }
     }
 }

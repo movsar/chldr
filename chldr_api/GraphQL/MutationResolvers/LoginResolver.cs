@@ -14,6 +14,7 @@ using chldr_data.local.Services;
 using Newtonsoft.Json;
 using chldr_data.Models;
 using chldr_data.Services;
+using chldr_data.remote.Repositories;
 
 namespace chldr_api.GraphQL.MutationServices
 {
@@ -68,10 +69,13 @@ namespace chldr_api.GraphQL.MutationServices
             try
             {
                 var unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork();
+                var usersRepository = (SqlUsersRepository)unitOfWork.Users;
+                var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
+
                 unitOfWork.BeginTransaction();
 
                 // Check if a user with this email exists
-                var token = await unitOfWork.Tokens.GetByValueAsync(refreshToken);
+                var token = await tokensRepository.GetByValueAsync(refreshToken);
                 if (token == null)
                 {
                     return new RequestResult() { ErrorMessage = "Invalid refresh token" };
@@ -82,16 +86,16 @@ namespace chldr_api.GraphQL.MutationServices
                     return new RequestResult() { ErrorMessage = "Refresh token has expired" };
                 }
 
-                var user = unitOfWork.Users.Get(token.UserId);
+                var user = usersRepository.Get(token.UserId);
                 if (user == null)
                 {
                     return new RequestResult() { ErrorMessage = "No user has been found for the requested token" };
                 }
 
                 // Remove previous tokens related to this user (in future this can be done in a batch job to increase efficiency)
-                var previousTokens = unitOfWork.Tokens.GetByUserId(user.UserId);
+                var previousTokens = tokensRepository.GetByUserId(user.UserId);
 
-                unitOfWork.Tokens.RemoveRange(previousTokens.Select(t => t.TokenId));
+                tokensRepository.RemoveRange(previousTokens.Select(t => t.TokenId));
 
                 return await SignInAsync(unitOfWork, user);
             }
@@ -107,10 +111,12 @@ namespace chldr_api.GraphQL.MutationServices
         internal async Task<RequestResult> ExecuteAsync(SqlDataProvider dataProvider, string email, string password)
         {
             var unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork();
+            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
+
             unitOfWork.BeginTransaction();
 
             // Check if a user with this email exists
-            var user = await unitOfWork.Users.FindByEmail(email);
+            var user = await usersRepository.FindByEmail(email);
             if (user == null)
             {
                 return new RequestResult() { ErrorMessage = "No user found with this email" };
@@ -118,7 +124,7 @@ namespace chldr_api.GraphQL.MutationServices
 
             // Check if the password is correct
 
-            var isVerified = await unitOfWork.Users.VerifyAsync(user.UserId, password);
+            var isVerified = await usersRepository.VerifyAsync(user.UserId, password);
 
             if (!isVerified)
             {
