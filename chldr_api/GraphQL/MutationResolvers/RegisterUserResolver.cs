@@ -49,19 +49,19 @@ namespace chldr_api.GraphQL.MutationServices
                 LastName = lastName,
                 Patronymic = patronymic
             };
-            unitOfWork.Users.Add(user);
+            await unitOfWork.Users.Add(user, null);
 
             var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
             var confirmationToken = JwtService.GenerateToken(user.UserId, "confirmation-token-secretconfirmation-token-secretconfirmation-token-secret", confirmationTokenExpiration);
 
             // Save the tokens to the database
-            unitOfWork.Tokens.Add(new TokenDto
+            await unitOfWork.Tokens.Add(new TokenDto
             {
                 UserId = user.UserId,
                 Type = (int)TokenType.Confirmation,
                 Value = confirmationToken,
                 ExpiresIn = confirmationTokenExpiration
-            });
+            }, null);
             
             unitOfWork.Commit();
 

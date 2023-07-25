@@ -82,7 +82,7 @@ namespace chldr_ui.ViewModels
 
             if (existingEntry == null)
             {
-                existingEntry = ContentStore.GetByEntryId(EntryId);
+                existingEntry = await ContentStore.GetByEntryId(EntryId);
             }
             EntryDto = EntryDto.FromModel(existingEntry);
 

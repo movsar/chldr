@@ -29,9 +29,9 @@ namespace chldr_data.remote.Repositories
         protected readonly SqlContext _dbContext;
         protected readonly FileService _fileService;
         protected readonly string _userId;
-        public abstract List<ChangeSetModel> Add(TDto dto);
-        public abstract List<ChangeSetModel> Update(TDto dto);
-        public virtual List<ChangeSetModel> Remove(string entityId)
+        public abstract Task<List<ChangeSetModel>> Add(TDto dto, string userId);
+        public abstract Task<List<ChangeSetModel>> Update(TDto dto, string userId);
+        public virtual async Task<List<ChangeSetModel>> Remove(string entityId, string userId)
         {
             var entity = _dbContext.Set<TEntity>().Find(entityId);
             if (entity == null)
@@ -56,9 +56,9 @@ namespace chldr_data.remote.Repositories
         protected abstract RecordType RecordType { get; }
         protected abstract TModel FromEntityShortcut(TEntity entity);
 
-        public virtual TModel Get(string entityId)
+        public virtual async Task<TModel> Get(string entityId)
         {
-            var entry = _dbContext.Find<TEntity>(entityId);
+            var entry = await _dbContext.FindAsync<TEntity>(entityId);
             if (entry == null)
             {
                 throw new Exception("There is no such word in the database");
@@ -134,35 +134,36 @@ namespace chldr_data.remote.Repositories
         }
 
         #region Bulk actions
-        public List<ChangeSetModel> AddRange(IEnumerable<TDto> added)
+        public async Task<List<ChangeSetModel>> AddRange(IEnumerable<TDto> added, string userId)
         {
-            var changeSets = new List<ChangeSetModel>();
+            var result = new List<ChangeSetModel>();
             foreach (var dto in added)
             {
-                var changeSet = Add(dto);
-                changeSets.AddRange(changeSet);
+                result.AddRange(await Add(dto, userId));
             }
-            return changeSets;
+
+            return result;
         }
-        public List<ChangeSetModel> UpdateRange(IEnumerable<TDto> updated)
+        public async Task<List<ChangeSetModel>> UpdateRange(IEnumerable<TDto> updated, string userId)
         {
-            var changeSets = new List<ChangeSetModel>();
+            var result = new List<ChangeSetModel>();
             foreach (var dto in updated)
             {
-                var changeSet = Update(dto);
-                changeSets.AddRange(changeSet);
+                result.AddRange(await Update(dto, userId));
+
             }
-            return changeSets;
+
+            return result;
         }
-        public List<ChangeSetModel> RemoveRange(IEnumerable<string> removed)
+        public async Task<List<ChangeSetModel>> RemoveRange(IEnumerable<string> removed, string userId)
         {
-            var changeSets = new List<ChangeSetModel>();
+            var result = new List<ChangeSetModel>();
             foreach (var id in removed)
             {
-                var changeSet = Remove(id);
-                changeSets.AddRange(changeSet);
+                result.AddRange(await Remove(id, userId));
             }
-            return changeSets;
+
+            return result;
         }
         #endregion
 

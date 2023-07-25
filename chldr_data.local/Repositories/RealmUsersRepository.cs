@@ -9,19 +9,20 @@ using chldr_utils.Interfaces;
 using chldr_utils;
 using chldr_utils.Services;
 using chldr_data.Models;
+using chldr_data.Services;
 
 namespace chldr_data.Repositories
 {
     public class RealmUsersRepository : RealmRepository<RealmUser, UserModel, UserDto>, IUsersRepository
     {
-        public RealmUsersRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
+        public RealmUsersRepository(ExceptionHandler exceptionHandler, FileService fileService, RequestService requestService, string userId) : base(exceptionHandler, fileService, requestService, userId) { }
 
         protected override RecordType RecordType => RecordType.User;
         protected override UserModel FromEntityShortcut(RealmUser entity)
         {
             return UserModel.FromEntity(entity);
         }
-        public override List<ChangeSetModel> Add(UserDto dto)
+        public override async Task<List<ChangeSetModel>> Add(UserDto dto, string userId)
         {
             _dbContext.Write(() =>
             {
@@ -33,9 +34,9 @@ namespace chldr_data.Repositories
             return new List<ChangeSetModel>();
         }
 
-        public override List<ChangeSetModel> Update(UserDto dto)
+        public override async Task<List<ChangeSetModel>> Update(UserDto dto, string userId)
         {
-            var existingEntity = Get(dto.UserId);
+            var existingEntity = await Get(dto.UserId);
             var existingDto = UserDto.FromModel(existingEntity);
 
             var changes = Change.GetChanges(dto, existingDto);

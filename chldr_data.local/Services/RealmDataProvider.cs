@@ -8,6 +8,7 @@ using Realms;
 using chldr_data.local.RealmEntities;
 using chldr_data.local.Services;
 using chldr_utils.Interfaces;
+using chldr_data.Services;
 
 namespace chldr_data.local.Services
 {
@@ -16,8 +17,8 @@ namespace chldr_data.local.Services
         private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
         private readonly SyncService _syncService;
+        private readonly RequestService _requestService;
         internal static RealmConfigurationBase? OfflineDatabaseConfiguration;
-
 
         public bool IsInitialized { get; set; }
 
@@ -39,11 +40,13 @@ namespace chldr_data.local.Services
         public RealmDataProvider(
             FileService fileService,
             ExceptionHandler exceptionHandler,
+            RequestService requestService,
             SyncService syncService
             )
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
+            _requestService = requestService;
             _syncService = syncService;
         }
 
@@ -89,7 +92,7 @@ namespace chldr_data.local.Services
         }
         public IUnitOfWork CreateUnitOfWork(string userId = Constants.DefaultUserId)
         {
-            return new RealmUnitOfWork(_exceptionHandler, _fileService, userId);
+            return new RealmUnitOfWork(_exceptionHandler, _fileService, _requestService, userId);
         }
 
         public Realm GetContext()

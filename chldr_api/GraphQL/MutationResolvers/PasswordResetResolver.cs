@@ -29,7 +29,6 @@ namespace chldr_api.GraphQL.MutationServices
         {
             var unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork();
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
-            var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
 
             var user = await usersRepository.FindByEmail(email);
             if (user == null)
@@ -50,7 +49,7 @@ namespace chldr_api.GraphQL.MutationServices
                 ExpiresIn = tokenExpiresIn,
             };
 
-            unitOfWork.Tokens.Add(token);
+            await unitOfWork.Tokens.Add(token, null);
             
             // Send the password reset link to the user's email
             var resetPasswordLink = new Uri(QueryHelpers.AddQueryString($"{AppConstants.Host}/set-new-password", new Dictionary<string, string?>(){

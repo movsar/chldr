@@ -27,7 +27,7 @@ namespace chldr_ui.ViewModels
 
             await base.OnAfterRenderAsync(firstRender);
         }
-        protected override Task OnParametersSetAsync()
+        protected override async Task OnParametersSetAsync()
         {
             // Restore Details
             if (EntryDto.Details != "")
@@ -40,10 +40,10 @@ namespace chldr_ui.ViewModels
             {
 
                 var unitOfWork = (RealmUnitOfWork)DataProvider.CreateUnitOfWork();
-                ParentEntry = unitOfWork.Entries.Get(EntryDto.ParentEntryId);
+                ParentEntry = await unitOfWork.Entries.Get(EntryDto.ParentEntryId);
             }
 
-            return base.OnParametersSetAsync();
+            await base.OnParametersSetAsync();
         }
 
         #region WordDetails

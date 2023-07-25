@@ -27,17 +27,17 @@ namespace chldr_tools
         private static FileService _fileService;
         private static ExceptionHandler _exceptionHandler;
         private static EnvironmentService _environmentService;
-        private static RequestService _requestSender;
+        private static RequestService _requestService;
         private static SyncService _syncService;
 
         static Program()
         {
+            var graphQlClient = new GraphQLClient(_exceptionHandler, _environmentService);
+            
             _fileService = new FileService(AppContext.BaseDirectory);
             _exceptionHandler = new ExceptionHandler(_fileService);
             _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Windows, true);
-
-            var graphQlClient = new GraphQLClient(_exceptionHandler, _environmentService);
-            _requestSender = new RequestService(graphQlClient);
+            _requestService = new RequestService(graphQlClient);
         }
 
         static void ContentUpdater(Realm realmDatabase, SqlContext sqlDatabase)
@@ -108,7 +108,7 @@ namespace chldr_tools
         }
         static RealmDataProvider GetRealmDataProvider()
         {
-            var localRealmContext = new RealmDataProvider(_fileService, _exceptionHandler, _syncService);
+            var localRealmContext = new RealmDataProvider(_fileService, _exceptionHandler, _requestService, _syncService);
             localRealmContext.Initialize();
 
             return localRealmContext;

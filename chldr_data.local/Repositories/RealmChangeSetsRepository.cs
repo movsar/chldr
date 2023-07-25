@@ -8,12 +8,13 @@ using chldr_utils;
 using Realms;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
+using chldr_data.Services;
 
 namespace chldr_data.Repositories
 {
     public class RealmChangeSetsRepository : RealmRepository<RealmChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {
-        public RealmChangeSetsRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
+        public RealmChangeSetsRepository(ExceptionHandler exceptionHandler, FileService fileService, RequestService requestService, string userId) : base(exceptionHandler, fileService, requestService, userId) { }
         protected override RecordType RecordType => RecordType.ChangeSet;
         protected override ChangeSetModel FromEntityShortcut(RealmChangeSet entity)
         {
@@ -29,12 +30,12 @@ namespace chldr_data.Repositories
             return models;
         }
 
-        public override List<ChangeSetModel> Update(ChangeSetDto dto)
+        public override async Task<List<ChangeSetModel>> Update(ChangeSetDto dto, string userId)
         {
             throw new Exception("This method should never be called for ChangeSets, they're immutable");
         }
 
-        public override List<ChangeSetModel> Add(ChangeSetDto dto)
+        public override async Task<List<ChangeSetModel>> Add(ChangeSetDto dto, string userId)
         {
             // Store max 500 changesets
             _dbContext.Write(() =>

@@ -14,7 +14,7 @@ namespace chldr_data.remote.Repositories
         protected override RecordType RecordType => RecordType.Source;
         public SqlSourcesRepository(SqlContext context, FileService fileService, string _userId) : base(context, fileService, _userId) { }
 
-        public override List<ChangeSetModel> Update(SourceDto dto)
+        public override async Task<List<ChangeSetModel>> Update(SourceDto dto, string userId)
         {
             var source = SqlSource.FromDto(dto);
             _dbContext.Update(source);
@@ -26,7 +26,7 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override List<ChangeSetModel> Add(SourceDto dto)
+        public override async Task<List<ChangeSetModel>> Add(SourceDto dto, string userId)
         {
             var source = SqlSource.FromDto(dto);
             _dbContext.Add(source);

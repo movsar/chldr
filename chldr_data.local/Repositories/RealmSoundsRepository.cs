@@ -6,6 +6,7 @@ using chldr_data.Interfaces.Repositories;
 using chldr_data.local.RealmEntities;
 using chldr_data.Models;
 using chldr_data.Repositories;
+using chldr_data.Services;
 using chldr_utils;
 using chldr_utils.Interfaces;
 using chldr_utils.Services;
@@ -16,13 +17,13 @@ namespace chldr_data.local.Repositories
 {
     public class RealmSoundsRepository : RealmRepository<RealmSound, SoundModel, SoundDto>, ISoundsRepository
     {
-        public RealmSoundsRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
+        public RealmSoundsRepository(ExceptionHandler exceptionHandler, FileService fileService, RequestService requestService, string userId) : base(exceptionHandler, fileService, requestService, userId) { }
         protected override RecordType RecordType => RecordType.Sound;
         protected override SoundModel FromEntityShortcut(RealmSound entity)
         {
             return SoundModel.FromEntity(entity);
         }
-        public override List<ChangeSetModel> Add(SoundDto dto)
+        public override async Task<List<ChangeSetModel>> Add(SoundDto dto, string userId)
         {
             var entry = _dbContext.Find<RealmEntry>(dto.EntryId);
 
@@ -37,9 +38,9 @@ namespace chldr_data.local.Repositories
             // ! NOT IMPLEMENTED
             return new List<ChangeSetModel>();
         }
-        public override List<ChangeSetModel> Update(SoundDto dto)
+        public override async Task<List<ChangeSetModel>> Update(SoundDto dto, string userId)
         {
-            var existingEntity = Get(dto.SoundId);
+            var existingEntity = await Get(dto.SoundId);
             var existingDto = SoundDto.FromModel(existingEntity);
 
             var changes = Change.GetChanges(dto, existingDto);
@@ -57,12 +58,12 @@ namespace chldr_data.local.Repositories
             // ! NOT IMPLEMENTED
             return new List<ChangeSetModel>();
         }
-        public override List<ChangeSetModel> Remove(string entityId)
+        public override async Task<List<ChangeSetModel>> Remove(string entityId, string userId)
         {
-            var sound = Get(entityId);
+            var sound = await Get(entityId);
             _fileService.DeleteEntrySound(sound.FileName);
 
-            base.Remove(entityId);
+            await base.Remove(entityId, userId);
 
             // ! NOT IMPLEMENTED
             return new List<ChangeSetModel>();

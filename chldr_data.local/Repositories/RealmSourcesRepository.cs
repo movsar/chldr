@@ -11,12 +11,13 @@ using Realms;
 using chldr_utils.Services;
 using chldr_data.Models;
 using System.Threading.Channels;
+using chldr_data.Services;
 
 namespace chldr_data.Repositories
 {
     public class RealmSourcesRepository : RealmRepository<RealmSource, SourceModel, SourceDto>, ISourcesRepository
     {
-        public RealmSourcesRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
+        public RealmSourcesRepository(ExceptionHandler exceptionHandler, FileService fileService, RequestService requestService, string userId) : base(exceptionHandler, fileService, requestService, userId) { }
         protected override RecordType RecordType => RecordType.Source;
         protected override SourceModel FromEntityShortcut(RealmSource entry)
         {
@@ -33,7 +34,7 @@ namespace chldr_data.Repositories
         {
             return _dbContext.All<RealmSource>().AsEnumerable().Select(s => SourceModel.FromEntity(s)).ToList();
         }
-        public override List<ChangeSetModel> Add(SourceDto dto)
+        public override async Task<List<ChangeSetModel>> Add(SourceDto dto, string userId)
         {
             _dbContext.Write(() =>
             {
@@ -43,9 +44,9 @@ namespace chldr_data.Repositories
             // ! NOT IMPLEMENTED
             return new List<ChangeSetModel>();
         }
-        public override List<ChangeSetModel> Update(SourceDto dto)
+        public override async Task<List<ChangeSetModel>> Update(SourceDto dto, string userId)
         {
-            var existingEntity = Get(dto.SourceId);
+            var existingEntity = await Get(dto.SourceId);
             var existingDto = SourceDto.FromModel(existingEntity);
 
             var changes = Change.GetChanges(dto, existingDto);

@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using chldr_data.local.Interfaces;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.DatabaseObjects.Models;
+using chldr_data.Services;
+using MySqlX.XDevAPI.Common;
 
 namespace chldr_data.Repositories
 {
@@ -19,12 +21,15 @@ namespace chldr_data.Repositories
         protected Realm _dbContext => Realm.GetInstance(_dbConfig);
         protected readonly ExceptionHandler _exceptionHandler;
         protected readonly FileService _fileService;
+        protected readonly RequestService _requestService;
         protected readonly string _userId;
 
-        public RealmRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId)
+        public RealmRepository(ExceptionHandler exceptionHandler, FileService fileService, RequestService requestService, string userId)
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
+            _requestService = requestService;
+
             _userId = userId;
 
             _dbConfig = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
@@ -34,9 +39,9 @@ namespace chldr_data.Repositories
         }
         protected abstract TModel FromEntityShortcut(TEntity entity);
 
-        public abstract List<ChangeSetModel>  Add(TDto dto);
-        public abstract List<ChangeSetModel>  Update(TDto EntryDto);
-        public TModel Get(string entityId)
+        public abstract Task<List<ChangeSetModel>> Add(TDto dto, string userId);
+        public abstract Task<List<ChangeSetModel>> Update(TDto EntryDto, string userId);
+        public async Task<TModel> Get(string entityId)
         {
             var entry = _dbContext.Find<TEntity>(entityId);
             if (entry == null)
@@ -46,7 +51,7 @@ namespace chldr_data.Repositories
 
             return FromEntityShortcut(entry);
         }
-        public virtual List<ChangeSetModel> Remove(string entityId)
+        public virtual async Task<List<ChangeSetModel>> Remove(string entityId, string userId)
         {
             var entity = _dbContext.Find<TEntity>(entityId);
             if (entity == null)
@@ -94,35 +99,36 @@ namespace chldr_data.Repositories
             return entries;
         }
 
-        public List<ChangeSetModel> AddRange(IEnumerable<TDto> added)
+        public async Task<List<ChangeSetModel>> AddRange(IEnumerable<TDto> added, string userId)
         {
+            var result = new List<ChangeSetModel>();
             foreach (var dto in added)
             {
-                Add(dto);
+                result.AddRange(await Add(dto, userId));
             }
 
-            // ! NOT IMPLEMENTED
-            return new List<ChangeSetModel>();
+            return result;
         }
-        public List<ChangeSetModel> UpdateRange(IEnumerable<TDto> updated)
+        public async Task<List<ChangeSetModel>> UpdateRange(IEnumerable<TDto> updated, string userId)
         {
+            var result = new List<ChangeSetModel>();
             foreach (var dto in updated)
             {
-                Update(dto);
+                result.AddRange(await Update(dto, userId));
+
             }
 
-            // ! NOT IMPLEMENTED
-            return new List<ChangeSetModel>();
+            return result;
         }
-        public List<ChangeSetModel> RemoveRange(IEnumerable<string> removed)
+        public async Task<List<ChangeSetModel>> RemoveRange(IEnumerable<string> removed, string userId)
         {
+            var result = new List<ChangeSetModel>();
             foreach (var id in removed)
             {
-                Remove(id);
+                result.AddRange(await Remove(id, userId));
             }
 
-            // ! NOT IMPLEMENTED
-            return new List<ChangeSetModel>();
+            return result;
         }
 
     }

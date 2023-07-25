@@ -11,6 +11,7 @@ using chldr_data.local.Services;
 using chldr_data.Repositories;
 using chldr_data.local.Repositories;
 using chldr_data.Responses;
+using Realms.Sync;
 
 namespace chldr_shared.Stores
 {
@@ -137,10 +138,10 @@ namespace chldr_shared.Stores
 
             CachedResultsChanged?.Invoke();
         }
-        public EntryModel GetByEntryId(string entryId)
+        public async Task<EntryModel> GetByEntryId(string entryId)
         {
             var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork();
-            return unitOfWork.Entries.Get(entryId);
+            return await unitOfWork.Entries.Get(entryId);
         }
         public void DataAccess_DatasourceInitialized()
         {
@@ -170,7 +171,7 @@ namespace chldr_shared.Stores
         public async Task DeleteEntry(UserModel loggedInUser, string entryId)
         {
             // TODO: Change to call first the chosen repositories method, and only if Environment is !Web - change the realm db
-        
+
             // Remove remote entity
             var response = await _requestService.RemoveEntry(loggedInUser.UserId, entryId);
             if (!response.Success)
@@ -184,8 +185,8 @@ namespace chldr_shared.Stores
 
             RealmEntriesRepository entriesRepository = ((RealmEntriesRepository)unitOfWork.Entries);
             RealmChangeSetsRepository changeSetsRepository = ((RealmChangeSetsRepository)unitOfWork.ChangeSets);
-            entriesRepository.Remove(entryId);
-            changeSetsRepository.AddRange(changeSets);
+            await entriesRepository.Remove(entryId, loggedInUser.UserId);
+            await changeSetsRepository.AddRange(changeSets, loggedInUser.UserId);
 
             // Update on UI
             CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
@@ -194,13 +195,14 @@ namespace chldr_shared.Stores
 
         public async Task UpdateEntry(UserModel loggedInUser, EntryDto entryDto)
         {
+            var userId = loggedInUser.UserId;
+
             // TODO: Change to call first the chosen repositories method, and only if Environment is !Web - change the realm db
-        
+
             if (string.IsNullOrWhiteSpace(entryDto.ParentEntryId) && entryDto.Translations.Count() > 0)
             {
                 throw new Exception("Error:Translations_not_allowed_for_subentries");
             }
-
             var response = await _requestService.UpdateEntry(loggedInUser.UserId, entryDto);
             if (!response.Success)
             {
@@ -214,18 +216,18 @@ namespace chldr_shared.Stores
             RealmEntriesRepository entriesRepository = ((RealmEntriesRepository)unitOfWork.Entries);
             RealmChangeSetsRepository changeSetsRepository = ((RealmChangeSetsRepository)unitOfWork.ChangeSets);
 
-            entriesRepository.Update(entryDto);
-            changeSetsRepository.AddRange(changeSets);
+            await entriesRepository.Update(entryDto, userId);
+            await changeSetsRepository.AddRange(changeSets, userId);
 
             // Update on UI
             var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId);
 
             var entryIndex = CachedSearchResult.Entries.IndexOf(existingEntry);
-            CachedSearchResult.Entries[entryIndex] = unitOfWork.Entries.Get(entryDto.EntryId);
+            CachedSearchResult.Entries[entryIndex] =await unitOfWork.Entries.Get(entryDto.EntryId);
 
             CachedResultsChanged?.Invoke();
         }
-        public static void HandleUpdatedEntryTranslations(RealmTranslationsRepository translations, EntryDto existingEntryDto, EntryDto updatedEntryDto)
+        public static async Task HandleUpdatedEntryTranslations(RealmTranslationsRepository translations, EntryDto existingEntryDto, EntryDto updatedEntryDto, string userId)
         {
             // Handle associated translation changes
             var existingEntryTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
@@ -235,12 +237,12 @@ namespace chldr_shared.Stores
             var deleted = existingEntryDto.Translations.Where(t => !updatedEntryTranslationIds.Contains(t.TranslationId));
             var updated = updatedEntryDto.Translations.Where(t => existingEntryTranslationIds.Contains(t.TranslationId) && updatedEntryTranslationIds.Contains(t.TranslationId));
 
-            translations.AddRange(added);
-            translations.RemoveRange(deleted.Select(t => t.TranslationId));
-            translations.UpdateRange(updated);
+            await translations.AddRange(added, userId);
+            await translations.RemoveRange(deleted.Select(t => t.TranslationId), userId);
+            await translations.UpdateRange(updated, userId);
         }
 
-        public static void HandleUpdatedEntrySounds(RealmSoundsRepository sounds, EntryDto existingEntryDto, EntryDto updatedEntryDto)
+        public static async Task HandleUpdatedEntrySounds(RealmSoundsRepository sounds, EntryDto existingEntryDto, EntryDto updatedEntryDto, string userId)
         {
             // Handle associated translation changes
             var existingEntrySoundIds = existingEntryDto.Sounds.Select(t => t.SoundId).ToHashSet();
@@ -250,44 +252,23 @@ namespace chldr_shared.Stores
             var deleted = existingEntryDto.Sounds.Where(t => !updatedEntrySoundIds.Contains(t.SoundId));
             var updated = updatedEntryDto.Sounds.Where(t => existingEntrySoundIds.Contains(t.SoundId) && updatedEntrySoundIds.Contains(t.SoundId));
 
-            sounds.AddRange(added);
-            sounds.UpdateRange(updated);
-            sounds.RemoveRange(deleted.Select(t => t.SoundId));
+            await sounds.AddRange(added, userId);
+            await sounds.UpdateRange(updated, userId);
+            await sounds.RemoveRange(deleted.Select(t => t.SoundId), userId);
         }
         public async Task AddEntry(UserModel loggedInUser, EntryDto entryDto)
         {
-            // TODO: Change to call first the chosen repositories method, and only if Environment is !Web - change the realm db
-
             if (string.IsNullOrWhiteSpace(entryDto.ParentEntryId) && entryDto.Translations.Count() > 0)
             {
                 throw new Exception("Error:Translations_not_allowed_for_subentries");
             }
 
-            // Add remote entity
-            var response = await _requestService.AddEntry(loggedInUser.UserId, entryDto);
-
-            if (!response.Success)
-            {
-                throw _exceptionHandler.Error("Error:Request_failed");
-            }
-
-            var data = RequestResult.GetData<InsertResponse>(response);
-            if (data.CreatedAt == DateTimeOffset.MinValue)
-            {
-                throw _exceptionHandler.Error("Error:Request_failed");
-            }
-
-            // Update local entity
-            entryDto.CreatedAt = data.CreatedAt;
+            // TODO: Set Rate of the entry and translation(s)
 
             var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
-         
-            RealmEntriesRepository entriesRepository = ((RealmEntriesRepository)unitOfWork.Entries);
-            RealmChangeSetsRepository changeSetsRepository = ((RealmChangeSetsRepository)unitOfWork.ChangeSets);
-            entriesRepository.Add(entryDto);
-            changeSetsRepository.AddRange(data.ChangeSets);
+            var resultingChangeSets = await unitOfWork.Entries.Add(entryDto, loggedInUser.UserId);
 
-            var added = unitOfWork.Entries.Get(entryDto.EntryId);
+            var added = await unitOfWork.Entries.Get(entryDto.EntryId);
             CachedSearchResult.Entries.Add(added);
             CachedResultsChanged?.Invoke();
         }

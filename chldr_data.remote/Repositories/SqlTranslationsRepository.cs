@@ -22,7 +22,7 @@ namespace chldr_data.remote.Repositories
             return TranslationModel.FromEntity(translation);
         }
 
-        public override List<ChangeSetModel> Add(TranslationDto dto)
+        public override async Task<List<ChangeSetModel>> Add(TranslationDto dto, string userId)
         {
             var entity = SqlTranslation.FromDto(dto, _dbContext);
             _dbContext.Translations.Add(entity);
@@ -35,10 +35,10 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override List<ChangeSetModel> Update(TranslationDto dto)
+        public override async Task<List<ChangeSetModel>> Update(TranslationDto dto, string userId)
         {
             // Find out what has been changed
-            var existing = Get(dto.TranslationId);
+            var existing = await Get(dto.TranslationId);
             var existingDto = TranslationDto.FromModel(existing);
 
             var changes = Change.GetChanges(dto, existingDto);

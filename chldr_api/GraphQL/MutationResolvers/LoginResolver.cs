@@ -46,8 +46,8 @@ namespace chldr_api.GraphQL.MutationServices
             };
 
             // Save the tokens to the database
-            unitOfWork.Tokens.Add(accessTokenDto);
-            unitOfWork.Tokens.Add(refreshTokenDto);
+            await unitOfWork.Tokens.Add(accessTokenDto, null);
+            await unitOfWork.Tokens.Add(refreshTokenDto, null);
 
             unitOfWork.Commit();
 
@@ -86,7 +86,7 @@ namespace chldr_api.GraphQL.MutationServices
                     return new RequestResult() { ErrorMessage = "Refresh token has expired" };
                 }
 
-                var user = usersRepository.Get(token.UserId);
+                var user = await usersRepository.Get(token.UserId);
                 if (user == null)
                 {
                     return new RequestResult() { ErrorMessage = "No user has been found for the requested token" };
@@ -95,7 +95,7 @@ namespace chldr_api.GraphQL.MutationServices
                 // Remove previous tokens related to this user (in future this can be done in a batch job to increase efficiency)
                 var previousTokens = tokensRepository.GetByUserId(user.UserId);
 
-                tokensRepository.RemoveRange(previousTokens.Select(t => t.TokenId));
+                await tokensRepository.RemoveRange(previousTokens.Select(t => t.TokenId), null);
 
                 return await SignInAsync(unitOfWork, user);
             }

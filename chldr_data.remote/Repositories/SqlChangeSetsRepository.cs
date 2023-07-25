@@ -74,15 +74,15 @@ namespace chldr_data.remote.Repositories
             return models;
         }
 
-        public override List<ChangeSetModel> Update(ChangeSetDto dto)
+        public override async Task<List<ChangeSetModel>> Update(ChangeSetDto dto, string userId)
         {
             throw new Exception("This method should never be called for ChangeSets, they're immutable");
         }
 
-        public override List<ChangeSetModel> Add(ChangeSetDto dto)
+        public override async Task<List<ChangeSetModel>> Add(ChangeSetDto dto, string userId)
         {
             var changeSet = SqlChangeSet.FromDto(dto);
-            _dbContext.Add(changeSet);
+            await _dbContext.AddAsync(changeSet);
 
             return new List<ChangeSetModel>();
         }

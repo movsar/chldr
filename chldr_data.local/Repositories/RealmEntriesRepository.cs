@@ -1,20 +1,16 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
-using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.local.RealmEntities;
 using chldr_data.Models;
-using chldr_utils.Interfaces;
 using chldr_utils;
-using GraphQL;
-using Realms;
-using Microsoft.EntityFrameworkCore.Update;
 using chldr_utils.Services;
-using Microsoft.EntityFrameworkCore;
 using chldr_data.local.Repositories;
 using System.Collections.Immutable;
+using chldr_data.Responses;
+using chldr_data.Services;
 
 namespace chldr_data.Repositories
 {
@@ -26,9 +22,10 @@ namespace chldr_data.Repositories
         public RealmEntriesRepository(
             ExceptionHandler exceptionHandler,
             FileService fileService,
+            RequestService requestService,
             string userId,
             RealmTranslationsRepository translationsRepository,
-            RealmSoundsRepository soundsRepository) : base(exceptionHandler, fileService, userId)
+            RealmSoundsRepository soundsRepository) : base(exceptionHandler, fileService, requestService, userId)
         {
             _translations = translationsRepository;
             _sounds = soundsRepository;
@@ -88,44 +85,62 @@ namespace chldr_data.Repositories
             return results;
         }
 
-        public override List<ChangeSetModel> Add(EntryDto newEntryDto)
+        public override async Task<List<ChangeSetModel>> Add(EntryDto newEntryDto, string userId)
         {
-
             if (newEntryDto == null || string.IsNullOrEmpty(newEntryDto.EntryId))
             {
                 throw new NullReferenceException();
             }
 
-            RealmEntry entry = null!;
-
-            // Insert Entry entity (with associated sound and translation entities)
-            _dbContext.Write(() =>
+            // Add remote entity
+            var response = await _requestService.AddEntry(userId, newEntryDto);
+            if (!response.Success)
             {
-                entry = RealmEntry.FromDto(newEntryDto, _dbContext);
-                _dbContext.Add(entry);
-            });
-
-            // Save audiofiles if any
-            foreach (var sound in entry.Sounds)
-            {
-                var soundDto = newEntryDto.Sounds.FirstOrDefault(s => s.SoundId == sound.SoundId && !string.IsNullOrEmpty(s.RecordingB64));
-                if (soundDto == null)
-                {
-                    continue;
-                }
-
-                var filePath = Path.Combine(_fileService.EntrySoundsDirectory, soundDto.FileName);
-                File.WriteAllText(filePath, soundDto.RecordingB64);
+                throw _exceptionHandler.Error("Error:Request_failed");
             }
 
-            // ! NOT IMPLEMENTED
-            return new List<ChangeSetModel>();
+            var data = RequestResult.GetData<InsertResponse>(response);
+            if (data.CreatedAt == DateTimeOffset.MinValue)
+            {
+                throw _exceptionHandler.Error("Error:Request_failed");
+            }
+
+            // Insert Entry entity (with associated sound and translation entities)
+            RealmEntry entry = null!;
+
+            _dbContext.Write(() =>
+            {
+                newEntryDto.CreatedAt = data.CreatedAt;
+                entry = RealmEntry.FromDto(newEntryDto, _dbContext);
+                _dbContext.Add(entry);
+
+                // Save audiofiles if any
+                foreach (var sound in entry.Sounds)
+                {
+                    var soundDto = newEntryDto.Sounds.FirstOrDefault(s => s.SoundId == sound.SoundId && !string.IsNullOrEmpty(s.RecordingB64));
+                    if (soundDto == null)
+                    {
+                        continue;
+                    }
+
+                    var filePath = Path.Combine(_fileService.EntrySoundsDirectory, soundDto.FileName);
+                    File.WriteAllText(filePath, soundDto.RecordingB64);
+                }
+
+                foreach (var changeSet in data.ChangeSets)
+                {
+                    var realmChangeSet = RealmChangeSet.FromDto(changeSet, _dbContext);
+                    _dbContext.Add(realmChangeSet);
+                }
+            });
+
+            return data.ChangeSets.Select(ChangeSetModel.FromDto).ToList();
         }
 
 
-        public override List<ChangeSetModel> Update(EntryDto updatedEntryDto)
+        public override async Task<List<ChangeSetModel>> Update(EntryDto updatedEntryDto, string userId)
         {
-            var existingEntry = Get(updatedEntryDto.EntryId);
+            var existingEntry = await Get(updatedEntryDto.EntryId);
             var existingEntryDto = EntryDto.FromModel(existingEntry);
 
             _dbContext.Write(() =>
@@ -137,7 +152,7 @@ namespace chldr_data.Repositories
             return new List<ChangeSetModel>();
         }
 
-        public override List<ChangeSetModel> Remove(string entityId)
+        public override async Task<List<ChangeSetModel>> Remove(string entityId, string userId)
         {
             var entry = _dbContext.Find<RealmEntry>(entityId);
             if (entry == null)
@@ -149,10 +164,10 @@ namespace chldr_data.Repositories
             var sounds = entry.Sounds.Select(s => s.SoundId).ToArray();
             var translations = entry.Translations.Select(t => t.TranslationId).ToArray();
 
-            _sounds.RemoveRange(sounds);
-            _translations.RemoveRange(translations);
+            await _sounds.RemoveRange(sounds, userId);
+            await _translations.RemoveRange(translations, userId);
 
-            base.Remove(entityId);
+            await base.Remove(entityId, userId);
 
             // ! NOT IMPLEMENTED
             return new List<ChangeSetModel>();

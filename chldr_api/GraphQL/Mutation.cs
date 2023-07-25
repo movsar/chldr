@@ -61,13 +61,13 @@ namespace chldr_api
             _emailService = emailService;
         }
 
-        public RequestResult AddEntry(string userId, EntryDto entryDto)
+        public async Task<RequestResult> AddEntry(string userId, EntryDto entryDto)
         {
             using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             try
             {
-                var changeSets = unitOfWork.Entries.Add(entryDto);
+                var changeSets = await unitOfWork.Entries.Add(entryDto, userId);
                 unitOfWork.Commit();
 
                 return new RequestResult()
@@ -93,13 +93,13 @@ namespace chldr_api
             return new RequestResult();
         }
 
-        public RequestResult UpdateEntry(string userId, EntryDto entryDto)
+        public async Task<RequestResult> UpdateEntry(string userId, EntryDto entryDto)
         {
             using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             try
             {
-                var changeSets = unitOfWork.Entries.Update(entryDto);
+                var changeSets = await unitOfWork.Entries.Update(entryDto, userId);
                 unitOfWork.Commit();
 
                 return new RequestResult()
@@ -121,13 +121,13 @@ namespace chldr_api
             return new RequestResult();
         }
 
-        public RequestResult RemoveEntry(string userId, string entryId)
+        public async Task<RequestResult> RemoveEntry(string userId, string entryId)
         {
             using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             try
             {
-                var changeSets = unitOfWork.Entries.Remove(entryId);
+                var changeSets = await unitOfWork.Entries.Remove(entryId, userId);
                 unitOfWork.Commit();
 
                 return new RequestResult()

@@ -24,7 +24,7 @@ namespace chldr_api.GraphQL.MutationServices
                 return new RequestResult("Invalid token");
             }
 
-            var user = unitOfWork.Users.Get(tokenInDatabase.UserId);
+            var user = await unitOfWork.Users.Get(tokenInDatabase.UserId);
             if (user == null)
             {
                 return new RequestResult("User not found");
@@ -34,10 +34,10 @@ namespace chldr_api.GraphQL.MutationServices
 
             // Hash the new password and update the user's password in the Users table
             userDto.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            unitOfWork.Users.Update(userDto);
+            await unitOfWork.Users.Update(userDto, null);
 
             // Remove the used password reset token from the Tokens table
-            unitOfWork.Tokens.Remove(tokenInDatabase.TokenId);
+            await unitOfWork.Tokens.Remove(tokenInDatabase.TokenId, null);
 
             unitOfWork.Commit();
 
