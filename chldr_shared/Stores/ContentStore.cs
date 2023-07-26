@@ -32,8 +32,8 @@ namespace chldr_shared.Stores
         private readonly ExceptionHandler _exceptionHandler;
         private readonly IDataProvider _dataProvider;
         private readonly ISearchService _searchService;
-        private readonly RequestService _requestService;
-        // This shouldn't be normally used, but only to request models that have already been loaded 
+
+        // ! This shouldn't be normally used, but only to request models that have already been loaded 
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
         public readonly List<LanguageModel> Languages = LanguageModel.GetAvailableLanguages();
         #endregion
@@ -68,7 +68,6 @@ namespace chldr_shared.Stores
             _exceptionHandler = exceptionHandler;
             _dataProvider = dataProvider;
             _searchService = searchService;
-            _requestService = requestService;
             _searchService.GotNewSearchResult += DataAccess_GotNewSearchResults;
 
             _dataProvider.DatabaseInitialized += DataAccess_DatasourceInitialized;
@@ -182,7 +181,6 @@ namespace chldr_shared.Stores
             await translations.RemoveRange(deleted.Select(t => t.TranslationId), userId);
             await translations.UpdateRange(updated, userId);
         }
-
         public static async Task HandleUpdatedEntrySounds(RealmSoundsRepository sounds, EntryDto existingEntryDto, EntryDto updatedEntryDto, string userId)
         {
             // Handle associated translation changes
@@ -197,7 +195,7 @@ namespace chldr_shared.Stores
             await sounds.UpdateRange(updated, userId);
             await sounds.RemoveRange(deleted.Select(t => t.SoundId), userId);
         }
-
+        
         public async Task DeleteEntry(UserModel loggedInUser, string entryId)
         {        
             var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
@@ -210,17 +208,13 @@ namespace chldr_shared.Stores
 
         public async Task UpdateEntry(UserModel loggedInUser, EntryDto entryDto)
         {
-            var userId = loggedInUser.UserId;
-
             if (string.IsNullOrWhiteSpace(entryDto.ParentEntryId) && entryDto.Translations.Count() > 0)
             {
                 throw new Exception("Error:Translations_not_allowed_for_subentries");
             }
 
-            // TODO: Set Rate of the entry and translation(s)
-
-            var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
-            await unitOfWork.Entries.Update(entryDto, userId);
+            var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
+            await unitOfWork.Entries.Update(entryDto, loggedInUser.UserId);
 
             // Update UI
             var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId);
@@ -235,8 +229,6 @@ namespace chldr_shared.Stores
             {
                 throw new Exception("Error:Translations_not_allowed_for_subentries");
             }
-
-            // TODO: Set Rate of the entry and translation(s)
 
             var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
             await unitOfWork.Entries.Add(entryDto, loggedInUser.UserId);

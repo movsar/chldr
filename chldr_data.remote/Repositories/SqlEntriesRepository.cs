@@ -94,6 +94,8 @@ namespace chldr_data.remote.Repositories
 
         public override async Task<List<ChangeSetModel>> Add(EntryDto newEntryDto, string userId)
         {
+            // TODO: Set Rate of the entry and translation(s)
+
             if (newEntryDto == null || string.IsNullOrEmpty(newEntryDto.EntryId))
             {
                 throw new NullReferenceException();
@@ -140,6 +142,8 @@ namespace chldr_data.remote.Repositories
         }
         public override async Task<List<ChangeSetModel>> Update(EntryDto updatedEntryDto, string userId)
         {
+            // TODO: Set Rate of the entry and translation(s)
+
             var changeSets = new List<ChangeSetModel>();
 
             try
