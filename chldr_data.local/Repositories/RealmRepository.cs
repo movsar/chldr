@@ -41,6 +41,7 @@ namespace chldr_data.Repositories
 
         public abstract Task<List<ChangeSetModel>> Add(TDto dto, string userId);
         public abstract Task<List<ChangeSetModel>> Update(TDto EntryDto, string userId);
+        public abstract Task<List<ChangeSetModel>> Remove(string entityId, string userId);
         public async Task<TModel> Get(string entityId)
         {
             var entry = _dbContext.Find<TEntity>(entityId);
@@ -50,31 +51,6 @@ namespace chldr_data.Repositories
             }
 
             return FromEntityShortcut(entry);
-        }
-        public virtual async Task<List<ChangeSetModel>> Remove(string entityId, string userId)
-        {
-            var entity = _dbContext.Find<TEntity>(entityId);
-            if (entity == null)
-            {
-
-                // ! NOT IMPLEMENTED
-                return new List<ChangeSetModel>();
-            }
-
-            _dbContext.Write(() =>
-            {
-                _dbContext.Remove(entity);
-            });
-
-            if (RecordType == RecordType.ChangeSet)
-            {
-                // ! NOT IMPLEMENTED
-                return new List<ChangeSetModel>();
-            }
-
-
-            // ! NOT IMPLEMENTED
-            return new List<ChangeSetModel>();
         }
 
         public async Task<IEnumerable<TModel>> TakeAsync(int offset, int limit)

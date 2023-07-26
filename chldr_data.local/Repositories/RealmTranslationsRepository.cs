@@ -52,5 +52,10 @@ namespace chldr_data.Repositories
             // ! NOT IMPLEMENTED
             return new List<ChangeSetModel>();
         }
+
+        public override Task<List<ChangeSetModel>> Remove(string entityId, string userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

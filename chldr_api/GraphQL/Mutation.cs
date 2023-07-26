@@ -105,7 +105,10 @@ namespace chldr_api
                 return new RequestResult()
                 {
                     Success = true,
-                    SerializedData = JsonConvert.SerializeObject(changeSets.Select(ChangeSetDto.FromModel))
+                    SerializedData = JsonConvert.SerializeObject(new UpdateResponse()
+                    {
+                        ChangeSets = changeSets.Select(ChangeSetDto.FromModel)
+                    })
                 };
             }
             catch (Exception ex)
@@ -133,7 +136,10 @@ namespace chldr_api
                 return new RequestResult()
                 {
                     Success = true,
-                    SerializedData = JsonConvert.SerializeObject(changeSets.Select(ChangeSetDto.FromModel))
+                    SerializedData = JsonConvert.SerializeObject(new UpdateResponse()
+                    {
+                        ChangeSets = changeSets.Select(ChangeSetDto.FromModel)
+                    })
                 };
             }
             catch (Exception ex)

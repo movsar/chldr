@@ -167,66 +167,7 @@ namespace chldr_shared.Stores
 
             return phrase;
         }
-
-        public async Task DeleteEntry(UserModel loggedInUser, string entryId)
-        {
-            // TODO: Change to call first the chosen repositories method, and only if Environment is !Web - change the realm db
-
-            // Remove remote entity
-            var response = await _requestService.RemoveEntry(loggedInUser.UserId, entryId);
-            if (!response.Success)
-            {
-                throw _exceptionHandler.Error("Error:Request_failed");
-            }
-            var changeSets = RequestResult.GetData<IEnumerable<ChangeSetDto>>(response);
-
-            // Remove local entity
-            var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
-
-            RealmEntriesRepository entriesRepository = ((RealmEntriesRepository)unitOfWork.Entries);
-            RealmChangeSetsRepository changeSetsRepository = ((RealmChangeSetsRepository)unitOfWork.ChangeSets);
-            await entriesRepository.Remove(entryId, loggedInUser.UserId);
-            await changeSetsRepository.AddRange(changeSets, loggedInUser.UserId);
-
-            // Update on UI
-            CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
-            CachedResultsChanged?.Invoke();
-        }
-
-        public async Task UpdateEntry(UserModel loggedInUser, EntryDto entryDto)
-        {
-            var userId = loggedInUser.UserId;
-
-            // TODO: Change to call first the chosen repositories method, and only if Environment is !Web - change the realm db
-
-            if (string.IsNullOrWhiteSpace(entryDto.ParentEntryId) && entryDto.Translations.Count() > 0)
-            {
-                throw new Exception("Error:Translations_not_allowed_for_subentries");
-            }
-            var response = await _requestService.UpdateEntry(loggedInUser.UserId, entryDto);
-            if (!response.Success)
-            {
-                throw _exceptionHandler.Error("Error:Request_failed");
-            }
-
-            var changeSets = RequestResult.GetData<IEnumerable<ChangeSetDto>>(response);
-
-            // Update local entity
-            var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
-            RealmEntriesRepository entriesRepository = ((RealmEntriesRepository)unitOfWork.Entries);
-            RealmChangeSetsRepository changeSetsRepository = ((RealmChangeSetsRepository)unitOfWork.ChangeSets);
-
-            await entriesRepository.Update(entryDto, userId);
-            await changeSetsRepository.AddRange(changeSets, userId);
-
-            // Update on UI
-            var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId);
-
-            var entryIndex = CachedSearchResult.Entries.IndexOf(existingEntry);
-            CachedSearchResult.Entries[entryIndex] =await unitOfWork.Entries.Get(entryDto.EntryId);
-
-            CachedResultsChanged?.Invoke();
-        }
+        
         public static async Task HandleUpdatedEntryTranslations(RealmTranslationsRepository translations, EntryDto existingEntryDto, EntryDto updatedEntryDto, string userId)
         {
             // Handle associated translation changes
@@ -256,6 +197,38 @@ namespace chldr_shared.Stores
             await sounds.UpdateRange(updated, userId);
             await sounds.RemoveRange(deleted.Select(t => t.SoundId), userId);
         }
+
+        public async Task DeleteEntry(UserModel loggedInUser, string entryId)
+        {        
+            var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
+            await unitOfWork.Entries.Remove(entryId, loggedInUser.UserId);
+
+            // Update on UI
+            CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
+            CachedResultsChanged?.Invoke();
+        }
+
+        public async Task UpdateEntry(UserModel loggedInUser, EntryDto entryDto)
+        {
+            var userId = loggedInUser.UserId;
+
+            if (string.IsNullOrWhiteSpace(entryDto.ParentEntryId) && entryDto.Translations.Count() > 0)
+            {
+                throw new Exception("Error:Translations_not_allowed_for_subentries");
+            }
+
+            // TODO: Set Rate of the entry and translation(s)
+
+            var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
+            await unitOfWork.Entries.Update(entryDto, userId);
+
+            // Update UI
+            var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId);
+            var entryIndex = CachedSearchResult.Entries.IndexOf(existingEntry);
+            CachedSearchResult.Entries[entryIndex] =await unitOfWork.Entries.Get(entryDto.EntryId);
+
+            CachedResultsChanged?.Invoke();
+        }
         public async Task AddEntry(UserModel loggedInUser, EntryDto entryDto)
         {
             if (string.IsNullOrWhiteSpace(entryDto.ParentEntryId) && entryDto.Translations.Count() > 0)
@@ -266,8 +239,9 @@ namespace chldr_shared.Stores
             // TODO: Set Rate of the entry and translation(s)
 
             var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
-            var resultingChangeSets = await unitOfWork.Entries.Add(entryDto, loggedInUser.UserId);
-
+            await unitOfWork.Entries.Add(entryDto, loggedInUser.UserId);
+         
+            // Update UI
             var added = await unitOfWork.Entries.Get(entryDto.EntryId);
             CachedSearchResult.Entries.Add(added);
             CachedResultsChanged?.Invoke();

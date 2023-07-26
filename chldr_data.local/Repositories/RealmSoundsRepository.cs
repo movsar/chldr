@@ -60,10 +60,22 @@ namespace chldr_data.local.Repositories
         }
         public override async Task<List<ChangeSetModel>> Remove(string entityId, string userId)
         {
+            // TODO: Remove remote entity
+
             var sound = await Get(entityId);
             _fileService.DeleteEntrySound(sound.FileName);
 
-            await base.Remove(entityId, userId);
+            // Remove local entity
+            var entity = _dbContext.Find<RealmSound>(entityId);
+            if (entity == null)
+            {
+                return new List<ChangeSetModel>();
+            }
+
+            _dbContext.Write(() =>
+            {
+                _dbContext.Remove(entity);
+            });
 
             // ! NOT IMPLEMENTED
             return new List<ChangeSetModel>();

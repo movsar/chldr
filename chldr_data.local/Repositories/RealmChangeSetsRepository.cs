@@ -58,5 +58,10 @@ namespace chldr_data.Repositories
 
             return models.AsEnumerable().Select(ChangeSetModel.FromEntity).ToList();
         }
+
+        public override Task<List<ChangeSetModel>> Remove(string entityId, string userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
