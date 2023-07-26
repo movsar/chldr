@@ -20,10 +20,7 @@ namespace chldr_ui.ViewModels
         {
             ContentStore.LoadLatestEntries();
         }
-        internal void LoadEntriesToFiddleWith()
-        {
-            ContentStore.LoadEntriesToFiddleWith();
-        }
+    
         static bool isInitialized = false;
         protected override void OnInitialized()
         {

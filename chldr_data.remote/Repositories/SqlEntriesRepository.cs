@@ -1,5 +1,4 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
@@ -9,9 +8,6 @@ using chldr_data.remote.SqlEntities;
 using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
-using Realms.Sync;
-using Realms;
-using System.Linq;
 using chldr_utils.Models;
 using chldr_data.Services;
 
@@ -108,7 +104,6 @@ namespace chldr_data.remote.Repositories
             return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
         }
 
-
         public async Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags filtrationFlags)
         {
             var result = new List<EntryModel>();
@@ -159,21 +154,42 @@ namespace chldr_data.remote.Repositories
             var args = new SearchResultModel(inputText, result, SearchResultModel.Mode.Full);
             GotNewSearchResult?.Invoke(args);
         }
+        public List<EntryModel> GetLatestEntries()
+        {
+            var count = 50;
+        
+            var entries = _dbContext.Entries
+                .Where(e => e.ParentEntryId == null)
+                .OrderByDescending(e => e.CreatedAt)
+                .Take(count)
+                .Include(e => e.Source)
+                .Include(e => e.User)
+                .Include(e => e.Translations)
+                .Include(e => e.Sounds)
+                .AsNoTracking()
+                .ToList();
+
+            return entries.Select(entry => FromEntityShortcut(entry)).ToList();
+        }
 
         public List<EntryModel> GetEntriesOnModeration()
         {
-            throw new NotImplementedException();
+            var count = 50;
+
+            var entries = _dbContext.Entries
+                .Where(e => e.ParentEntryId == null)
+                .Where(entry => entry.Rate < UserModel.MemberRateRange.Lower)
+                .Take(count)
+                .Include(e => e.Source)
+                .Include(e => e.User)
+                .Include(e => e.Translations)
+                .Include(e => e.Sounds)
+                .AsNoTracking()
+                .ToList();
+
+            return entries.Select(entry => FromEntityShortcut(entry)).ToList();
         }
 
-        public List<EntryModel> GetLatestEntries()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<EntryModel> GetWordsToFiddleWith()
-        {
-            throw new NotImplementedException();
-        }
         public override async Task<List<ChangeSetModel>> Add(EntryDto newEntryDto, string userId)
         {
             // TODO: Set Rate of the entry and translation(s)

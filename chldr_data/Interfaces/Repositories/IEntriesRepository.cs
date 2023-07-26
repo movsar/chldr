@@ -12,6 +12,5 @@ namespace chldr_data.Interfaces.Repositories
         Task FindDeferredAsync(string inputText, FiltrationFlags filtrationFlags);
         List<EntryModel> GetEntriesOnModeration();
         List<EntryModel> GetLatestEntries();
-        List<EntryModel> GetWordsToFiddleWith();
     }
 }

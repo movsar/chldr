@@ -94,18 +94,6 @@ namespace chldr_data.Repositories
 
             return entriesToReturn.ToList();
         }
-        public List<EntryModel> GetWordsToFiddleWith()
-        {
-            var words = _dbContext.All<RealmEntry>().Where(w => w.Subtype == (int)WordType.Verb);
-
-            var entries = words.AsEnumerable();
-
-            var entriesToReturn = entries
-              .Take(5)
-              .Select(entry => FromEntityShortcut(entry));
-
-            return entriesToReturn.ToList();
-        }
         public List<EntryModel> GetEntriesOnModeration()
         {
             var entries = _dbContext.All<RealmEntry>().AsEnumerable()
@@ -116,7 +104,6 @@ namespace chldr_data.Repositories
 
             return entries;
         }
-
         public async Task FindDeferredAsync(string inputText, FiltrationFlags filtrationFlags)
         {
             var result = new List<EntryModel>();

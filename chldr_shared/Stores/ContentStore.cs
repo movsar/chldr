@@ -132,20 +132,7 @@ namespace chldr_shared.Stores
 
             CachedResultsChanged?.Invoke();
         }
-        public void LoadEntriesToFiddleWith()
-        {
-            CachedSearchResult.Entries.Clear();
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
-            var entries = unitOfWork.Entries.GetWordsToFiddleWith();
-
-            CachedSearchResult.Entries.Clear();
-            foreach (var entry in entries)
-            {
-                CachedSearchResult.Entries.Add(entry);
-            }
-
-            CachedResultsChanged?.Invoke();
-        }
+     
         public void LoadEntriesOnModeration()
         {
             CachedSearchResult.Entries.Clear();
