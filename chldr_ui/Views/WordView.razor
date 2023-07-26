@@ -1,79 +1,78 @@
-﻿@using chldr_data;
-@inherits EntryViewModel;
+﻿@inherits EntryViewModel;
 
-<div class="chldr_entry">
-    <div class="card card-body">
+@if (Word != null)
+{
+    <div class="chldr_entry">
+        <div class="card card-body">
 
-        <div class="chldr_entry_header card-title">
-            @Header
-            @*<span class="oi oi-volume-high" @onclick="ViewModel.ListenToPronunciation"></span>*@
-        </div>
-
-        @if (!String.IsNullOrWhiteSpace(Subheader))
-        {
-            <div class="chldr_entry_sub-header">
-                @Subheader
+            <div class="chldr_entry_header card-title">
+                @Header
+                @*<span class="oi oi-volume-high" @onclick="ViewModel.ListenToPronunciation"></span>*@
             </div>
-        }
 
-        @if (!String.IsNullOrWhiteSpace(@Source))
-        {
-            <div class="chldr_entry_source">
-                @Localizer["Source"]: @Source
-            </div>
-        }
-
-        @if (Entry.Subtype != 0)
-        {
-            var partOfSpeech = (WordType)Word.Subtype;
-            var partOfSpeechLocalizedTitle = Localizer[$"Word:{partOfSpeech}"].ToString();
-
-            <p class="small"><i>@partOfSpeechLocalizedTitle</i></p>
-
-            @if (Word.Details != null)
+            @if (!String.IsNullOrWhiteSpace(Subheader))
             {
-                switch ((WordType)Word.Subtype)
+                <div class="chldr_entry_sub-header">
+                    @Subheader
+                </div>
+            }
+
+            @if (!String.IsNullOrWhiteSpace(@Source))
+            {
+                <div class="chldr_entry_source">
+                    @Localizer["Source"]: @Source
+                </div>
+            }
+
+            @if (Entry.Subtype != 0)
+            {
+                var partOfSpeech = (WordType)Word.Subtype;
+                var partOfSpeechLocalizedTitle = Localizer[$"Word:{partOfSpeech}"].ToString();
+
+                <p class="small"><i>@partOfSpeechLocalizedTitle</i></p>
+
+                @if (Word.Details != null)
                 {
-                    case WordType.Noun:
-                        break;
+                    switch ((WordType)Word.Subtype)
+                    {
+                        case WordType.Noun:
+                            break;
 
-                    case WordType.Verb:
-                        break;
+                        case WordType.Verb:
+                            break;
 
-                    default:
-                        Console.WriteLine("no handler for the details of this type");
-                        break;
+                        default:
+                            Console.WriteLine("no handler for the details of this type");
+                            break;
+                    }
                 }
             }
-        }
 
-        @if (Entry.SubEntries?.Count() > 0)
-        {
-            <div class="flex-column">
-                [
-                @foreach (var subEntry in Entry.SubEntries)
-                {
-                    <span>
-                        @subEntry.Content;
-                    </span>
-                }
-                ]
-            </div>
-        }
-
-        <div class="chldr_entry_translations mt-2">
-            @foreach (var translation in @Translations)
+            @if (Entry.SubEntries?.Count() > 0)
             {
-                <TranslationView Translation="@translation"></TranslationView>
+                <div class="flex-column">
+                    [
+                    @foreach (var subEntry in Entry.SubEntries)
+                    {
+                        <span>
+                            @subEntry.Content;
+                        </span>
+                    }
+                    ]
+                </div>
             }
-        </div>
 
-        @*@(Word?.Source.Name.Equals("Karasaev") == false)*@
-        <ActionButtonsView EntryId="@Word?.EntryId"
-                           CanEdit="true"
-                           CanRemove="true"
-                           IsLoggedIn="@(UserStore.ActiveSession.Status == SessionStatus.LoggedIn)"
-                           RemoveHandler="@(async () => await Remove())"
-                           ShareHandler="@Share"></ActionButtonsView>
+            <div class="chldr_entry_translations mt-2">
+                @foreach (var translation in @Translations)
+                {
+                    <TranslationView Translation="@translation"></TranslationView>
+                }
+            </div>
+
+            <ActionButtonsView Entry="Word"
+                               ShareHandler="() => Share()"
+                               RemoveHandler="async() => await Remove()">
+            </ActionButtonsView>
+        </div>
     </div>
-</div>
+}

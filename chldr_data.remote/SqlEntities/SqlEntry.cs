@@ -92,11 +92,6 @@ public class SqlEntry : IEntryEntity
             throw new Exception("Error:Invalid_parent_id");
         }
 
-        if (string.IsNullOrWhiteSpace(entryDto.ParentEntryId) && entryDto.Translations.Count() > 0)
-        {
-            throw new Exception("Error:Translations_not_allowed_for_subentries");
-        }
-
         entry.EntryId = entryDto.EntryId;
         entry.ParentEntryId = entryDto.ParentEntryId;
         entry.UserId = entryDto.UserId;

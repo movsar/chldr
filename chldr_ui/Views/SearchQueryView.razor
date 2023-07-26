@@ -27,7 +27,7 @@
     <button class="btn btn-outline-primary" @onclick="LoadLatestEntries"># @Localizer["Latest"]</button>
     @*<button class="btn btn-outline-primary" @onclick="LoadEntriesToFiddleWith">@Localizer["# experimental"]</button>*@
 
-    @if (UserStore.ActiveSession.Status == SessionStatus.LoggedIn)
+    @if (UserStore.IsLoggedIn)
     {
         <a class="btn btn-success ms-1" href="/entry/edit">+ @Localizer["AddAsk"]</a>
     }

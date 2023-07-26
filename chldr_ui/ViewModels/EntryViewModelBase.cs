@@ -19,8 +19,7 @@ namespace chldr_ui.ViewModels
         public void AddToFavorites() { }
         public async Task Remove()
         {
-            var user = UserModel.FromDto(UserStore.ActiveSession.User);
-            await ContentStore.DeleteEntry(user, Entry!.EntryId);
+            await ContentStore.DeleteEntry(UserStore.CurrentUser!, Entry!.EntryId);
         }
         public void Share() { }
         public void Flag() { }

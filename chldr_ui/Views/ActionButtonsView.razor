@@ -1,30 +1,22 @@
-﻿<div class="chldr_entry_actions">
+﻿@inherits ActionButtonsViewModel;
 
-    @if (IsLoggedIn)
+<div class="chldr_entry_actions">
+
+    @if (UserStore.IsLoggedIn)
     {
         @*<i class="bi bi-flag" @onclick="Flag"></i>*@
         @*<i class="bi bi-star" @onclick="AddToFavorites"></i>*@
 
-        @if (CanRemove)
+        @if (CanRemove())
         {
             <i class="bi bi-trash" @onclick="@RemoveHandler"></i>
         }
 
-        @if (CanEdit)
+        @if (CanEdit())
         {
-            <a href="/entry/edit/@EntryId"><i class="bi bi-pencil ms-1"></i></a>
+            <a href="/entry/edit/@Entry!.EntryId"><i class="bi bi-pencil ms-1"></i></a>
         }
     }
 
     <i class="bi bi-share ms-1" @onclick="@ShareHandler"></i>
 </div>
-
-
-@code {
-    [Parameter] public string EntryId { get; set; }
-    [Parameter] public bool IsLoggedIn { get; set; }
-    [Parameter] public bool CanEdit { get; set; }
-    [Parameter] public bool CanRemove { get; set; }
-    [Parameter] public Action RemoveHandler { get; set; }
-    [Parameter] public Action ShareHandler { get; set; }
-}

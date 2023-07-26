@@ -83,9 +83,19 @@ namespace chldr_data.DatabaseObjects.Models
                 return RateWeight.Member;
             }
         }
-        public bool CanEditEntry(EntryModel entry)
+        public bool CanRemoveEntry(EntryModel entry)
         {
-            if (RateWeight >= GetRateWeightByRate(entry.Rate))
+            if (entry.UserId.Equals(UserId) && RateWeight >= GetRateWeightByRate(entry.Rate))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool CanEditEntry(int entryRate)
+        {
+            if (RateWeight >= GetRateWeightByRate(entryRate))
             {
                 return true;
             }

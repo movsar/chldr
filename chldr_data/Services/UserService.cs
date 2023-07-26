@@ -10,12 +10,12 @@ namespace chldr_data.Services
 {
     public class UserService
     {
-        public event Action<ActiveSession>? UserStateHasChanged;
+        public event Action<SessionInformation>? UserStateHasChanged;
 
         private readonly RequestService _requestService;
         private readonly IDataProvider _dataProvider;
         private readonly LocalStorageService _localStorageService;
-        private ActiveSession _currentSession = new ActiveSession();
+        public SessionInformation CurrentSession = new SessionInformation();
 
         public UserService(IDataProvider dataProvider, RequestService requestService, LocalStorageService localStorageService)
         {
@@ -59,7 +59,7 @@ namespace chldr_data.Services
         }
         private async Task SaveActiveSession()
         {
-            await _localStorageService.SetItem<ActiveSession>("session", _currentSession);
+            await _localStorageService.SetItem<SessionInformation>("session", CurrentSession);
         }
 
         public async Task LogInEmailPasswordAsync(string email, string password)
@@ -74,18 +74,18 @@ namespace chldr_data.Services
 
                 var data = RequestResult.GetData<dynamic>(response);
 
-                _currentSession = new ActiveSession()
+                CurrentSession = new SessionInformation()
                 {
                     AccessToken = data.AccessToken!,
                     RefreshToken = data.RefreshToken!,
                     AccessTokenExpiresIn = data.AccessTokenExpiresIn!,
                     Status = SessionStatus.LoggedIn,
-                    User = JsonConvert.DeserializeObject<UserDto>(data.User.ToString())
+                    UserDto = JsonConvert.DeserializeObject<UserDto>(data.User.ToString())
                 };
 
                 await SaveActiveSession();
 
-                UserStateHasChanged?.Invoke(_currentSession);
+                UserStateHasChanged?.Invoke(CurrentSession);
             }
             catch (Exception)
             {
@@ -95,13 +95,14 @@ namespace chldr_data.Services
 
         public async Task LogOutAsync()
         {
-            _currentSession.Clear();
+            CurrentSession.Clear();
+
             await SaveActiveSession();
 
-            UserStateHasChanged?.Invoke(_currentSession);
+            UserStateHasChanged?.Invoke(CurrentSession);
         }
 
-        public async Task<ActiveSession> RefreshTokens(string refreshToken)
+        public async Task<SessionInformation> RefreshTokens(string refreshToken)
         {
             var response = await _requestService.RefreshTokens(refreshToken);
 
@@ -112,33 +113,33 @@ namespace chldr_data.Services
 
             var data = RequestResult.GetData<dynamic>(response);
 
-            return new ActiveSession()
+            return new SessionInformation()
             {
                 AccessToken = data.AccessToken!,
                 RefreshToken = data.RefreshToken!,
                 AccessTokenExpiresIn = data.AccessTokenExpiresIn!,
                 Status = SessionStatus.LoggedIn,
-                User = JsonConvert.DeserializeObject<UserDto>(data.User.ToString())
+                UserDto = JsonConvert.DeserializeObject<UserDto>(data.User.ToString())
             };
         }
 
         public async Task RestoreLastSession()
         {
             // Get last session info from the local storage
-            var session = await _localStorageService.GetItem<ActiveSession>("session");
+            var session = await _localStorageService.GetItem<SessionInformation>("session");
             if (session != null)
             {
-                _currentSession = session;
-                UserStateHasChanged?.Invoke(_currentSession);
+                CurrentSession = session;
+                UserStateHasChanged?.Invoke(CurrentSession);
             }
 
-            var expired = DateTimeOffset.UtcNow > _currentSession.AccessTokenExpiresIn;
-            if (expired && !string.IsNullOrWhiteSpace(_currentSession.RefreshToken))
+            var expired = DateTimeOffset.UtcNow > CurrentSession.AccessTokenExpiresIn;
+            if (expired && !string.IsNullOrWhiteSpace(CurrentSession.RefreshToken))
             {
                 // Try to refresh Access Token
-                _currentSession = await RefreshTokens(_currentSession.RefreshToken);
+                CurrentSession = await RefreshTokens(CurrentSession.RefreshToken);
                 await SaveActiveSession();
-                UserStateHasChanged?.Invoke(_currentSession);
+                UserStateHasChanged?.Invoke(CurrentSession);
             }
         }
 

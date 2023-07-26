@@ -1,4 +1,5 @@
-﻿using chldr_data.Enums;
+﻿using chldr_data.DatabaseObjects.Models;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Services;
@@ -13,9 +14,9 @@ namespace chldr_shared.Stores
 
         private readonly UserService _userService;
         private readonly ExceptionHandler _exceptionHandler;
-
-        public ActiveSession ActiveSession { get; private set; } = new ActiveSession();
         public Action UserStateHasChanged { get; set; }
+        public UserModel? CurrentUser { get; set; } = null;
+        public bool IsLoggedIn => CurrentUser != null;
         #endregion
 
         public UserStore(UserService userService, ExceptionHandler exceptionHandler)
@@ -38,9 +39,9 @@ namespace chldr_shared.Stores
             });
         }
 
-        private void UserStore_UserStateHasChanged(ActiveSession activeSession)
+        private void UserStore_UserStateHasChanged(SessionInformation activeSession)
         {
-            ActiveSession = activeSession;
+            CurrentUser = _userService.CurrentSession?.UserDto == null ? null : UserModel.FromDto(_userService.CurrentSession.UserDto);
             UserStateHasChanged?.Invoke();
         }
 

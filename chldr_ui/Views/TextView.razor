@@ -28,11 +28,9 @@
             }
         </div>
 
-        <ActionButtonsView EntryId="@Word?.EntryId"
-                           CanEdit="true"
-                           CanRemove="false"
-                           IsLoggedIn="@(UserStore.ActiveSession.Status == SessionStatus.LoggedIn)"
-                           RemoveHandler="@(async () => await Remove())"
-                           ShareHandler="@Share"></ActionButtonsView>
+        <ActionButtonsView Entry="Word"
+                           ShareHandler="() => Share()"
+                           RemoveHandler="async() => await Remove()">
+        </ActionButtonsView>
     </div>
 </div>

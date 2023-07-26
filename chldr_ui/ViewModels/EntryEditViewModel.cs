@@ -106,7 +106,7 @@ namespace chldr_ui.ViewModels
         List<string> _newTranslationIds = new List<string>();
         public async Task NewTranslation()
         {
-            var translation = new TranslationDto(EntryDto.EntryId, UserStore.ActiveSession.User!.UserId, ContentStore.Languages.First());
+            var translation = new TranslationDto(EntryDto.EntryId, UserStore.CurrentUser!.UserId, ContentStore.Languages.First());
 
             // Needed to know which translations are new, in case they need to be removed
             _newTranslationIds.Add(translation.TranslationId);
@@ -135,7 +135,7 @@ namespace chldr_ui.ViewModels
             latestSoundDto = new SoundDto();
 
             latestSoundDto.EntryId = EntryDto.EntryId!;
-            latestSoundDto.UserId = UserStore.ActiveSession.User!.UserId;
+            latestSoundDto.UserId = UserStore.CurrentUser!.UserId;
 
             await JsInterop.StartRecording(latestSoundDto.SoundId);
         }
@@ -180,7 +180,7 @@ namespace chldr_ui.ViewModels
 
         public async Task Save()
         {
-            var user = UserModel.FromDto(UserStore.ActiveSession.User);
+            var user = UserStore.CurrentUser;
             EntryDto.UserId = user.UserId;
             EntryDto.SourceId = SourceId;
 

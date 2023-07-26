@@ -1,5 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Models.Words;
+using chldr_data.Enums;
 using Microsoft.AspNetCore.Components;
 using MongoDB.Bson;
 
@@ -13,7 +14,7 @@ namespace chldr_ui.ViewModels
 
         public string? Header => Word?.Content;
         public string? Subheader => CreateSubheader();
-     
+
         protected override void OnParametersSet()
         {
             base.OnParametersSet();

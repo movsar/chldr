@@ -189,11 +189,6 @@ namespace chldr_shared.Stores
 
         public async Task UpdateEntry(UserModel loggedInUser, EntryDto entryDto)
         {
-            if (string.IsNullOrWhiteSpace(entryDto.ParentEntryId) && entryDto.Translations.Count() > 0)
-            {
-                throw new Exception("Error:Translations_not_allowed_for_subentries");
-            }
-
             var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
             await unitOfWork.Entries.Update(entryDto, loggedInUser.UserId);
 
@@ -206,11 +201,6 @@ namespace chldr_shared.Stores
         }
         public async Task AddEntry(UserModel loggedInUser, EntryDto entryDto)
         {
-            if (string.IsNullOrWhiteSpace(entryDto.ParentEntryId) && entryDto.Translations.Count() > 0)
-            {
-                throw new Exception("Error:Translations_not_allowed_for_subentries");
-            }
-
             var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
             await unitOfWork.Entries.Add(entryDto, loggedInUser.UserId);
 
