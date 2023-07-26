@@ -70,7 +70,6 @@ namespace chldr_api
                 };
             }
         }
-
         public async Task<RequestResult> TakeLastAsync(string recordTypeName, int count)
         {
             try

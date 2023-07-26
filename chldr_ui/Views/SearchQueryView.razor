@@ -24,7 +24,7 @@
 
 <div class="list-group-horizontal">
     <button class="btn btn-outline-primary" @onclick="ToggleOnModerationFlag"># @Localizer["OnModeration"]</button>
-    @*<button class="btn btn-outline-primary" @onclick="LoadLatestEntries"># @Localizer["Latest"]</button>*@
+    <button class="btn btn-outline-primary" @onclick="LoadLatestEntries"># @Localizer["Latest"]</button>
     @*<button class="btn btn-outline-primary" @onclick="LoadEntriesToFiddleWith">@Localizer["# experimental"]</button>*@
 
     @if (UserStore.ActiveSession.Status == SessionStatus.LoggedIn)

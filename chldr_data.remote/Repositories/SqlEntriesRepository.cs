@@ -73,17 +73,28 @@ namespace chldr_data.remote.Repositories
         {
             var randomizer = new Random();
 
-            var entries = await _dbContext.Set<SqlEntry>()
+            // Fetch all EntryIds from the database
+            var allEntryIds = await _dbContext.Set<SqlEntry>()
+                .Select(e => e.EntryId)
+                .ToListAsync();
+
+            // Shuffle the EntryIds to get random ones
+            var randomEntryIds = allEntryIds.OrderBy(x => randomizer.Next()).Take(limit).ToList();
+
+            // Fetch entries with the selected random EntryIds
+            var entriesFromDb = await _dbContext.Set<SqlEntry>()
+                .Where(entry => randomEntryIds.Contains(entry.EntryId))
                 .Include(e => e.Source)
                 .Include(e => e.User)
                 .Include(e => e.Translations)
                 .Include(e => e.Sounds)
-                .OrderBy(x => randomizer.Next(0, 75000))
-                .OrderBy(entry => entry.GetHashCode())
-                .Take(limit)
-                .Select(entry => FromEntityShortcut(entry))
-
+                .AsNoTracking()
                 .ToListAsync();
+
+            // Apply the projection (mapping to FromEntityShortcut) on the in-memory data
+            var entries = entriesFromDb
+                .Select(entry => FromEntityShortcut(entry))
+                .ToList();
 
             return entries;
         }
