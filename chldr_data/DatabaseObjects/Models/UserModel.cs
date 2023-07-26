@@ -100,7 +100,7 @@ namespace chldr_data.DatabaseObjects.Models
             }
 
             return false;
-        }
+        }   
 
         private static UserModel FromBaseInterface(IUser user)
         {

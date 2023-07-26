@@ -30,4 +30,12 @@
     <ProjectReference Include="..\chldr_data\chldr_data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="UsefulQueries.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UsefulQueries.sql</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

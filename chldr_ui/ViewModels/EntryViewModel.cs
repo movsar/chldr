@@ -13,11 +13,7 @@ namespace chldr_ui.ViewModels
 
         public string? Header => Word?.Content;
         public string? Subheader => CreateSubheader();
-        public void DeleteEntry()
-        {
-            var user = UserModel.FromDto(UserStore.ActiveSession.User!);
-            ContentStore.DeleteEntry(user!, Entry!.EntryId);
-        }
+     
         protected override void OnParametersSet()
         {
             base.OnParametersSet();

@@ -28,21 +28,11 @@
             }
         </div>
 
-        @if (UserStore.ActiveSession.Status == SessionStatus.LoggedIn)
-        {
-            <div class="chldr_entry_actions">
-                <i class="bi bi-translate" @onclick="NewTranslation"></i>
-                <i class="bi bi-share" @onclick="Share"></i>
-                <i class="bi bi-flag" @onclick="Flag"></i>
-                <i class="bi bi-star" @onclick="AddToFavorites"></i>
-                <i class="bi bi-trash" @onclick="Remove"></i>
-
-                @if (UserStore?.ActiveSession.Status == SessionStatus.LoggedIn)
-                {
-                    <a href="/entry/edit/@Word?.EntryId"><i class="bi bi-pencil"></i></a>
-                    <i class="bi bi-recycle" @onclick="@DeleteEntry"></i>
-                }
-            </div>
-        }
+        <ActionButtonsView EntryId="@Word?.EntryId"
+                           CanEdit="true"
+                           CanRemove="false"
+                           IsLoggedIn="@(UserStore.ActiveSession.Status == SessionStatus.LoggedIn)"
+                           RemoveHandler="@(async () => await Remove())"
+                           ShareHandler="@Share"></ActionButtonsView>
     </div>
 </div>
