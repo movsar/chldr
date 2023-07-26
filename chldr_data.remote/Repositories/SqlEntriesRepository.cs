@@ -78,12 +78,13 @@ namespace chldr_data.remote.Repositories
             var randomizer = new Random();
 
             // Fetch all EntryIds from the database
-            var allEntryIds = await _dbContext.Set<SqlEntry>()
+            var allTopEntryIds = await _dbContext.Set<SqlEntry>()
+                .Where(e => e.ParentEntryId == null)
                 .Select(e => e.EntryId)
                 .ToListAsync();
 
             // Shuffle the EntryIds to get random ones
-            var randomEntryIds = allEntryIds.OrderBy(x => randomizer.Next()).Take(limit).ToList();
+            var randomEntryIds = allTopEntryIds.OrderBy(x => randomizer.Next()).Take(limit).ToList();
 
             // Fetch entries with the selected random EntryIds
             var entriesFromDb = await _dbContext.Set<SqlEntry>()
