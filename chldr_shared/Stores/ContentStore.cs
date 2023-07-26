@@ -12,6 +12,7 @@ using chldr_data.Repositories;
 using chldr_data.local.Repositories;
 using chldr_data.Responses;
 using Realms.Sync;
+using chldr_utils.Services;
 
 namespace chldr_shared.Stores
 {
@@ -31,6 +32,7 @@ namespace chldr_shared.Stores
         #region Fields and Properties
         private readonly ExceptionHandler _exceptionHandler;
         private readonly IDataProvider _dataProvider;
+        private readonly EnvironmentService _environmentService;
 
         // ! This shouldn't be normally used, but only to request models that have already been loaded 
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
@@ -58,10 +60,11 @@ namespace chldr_shared.Stores
         }
         #endregion
 
-        public ContentStore(ExceptionHandler exceptionHandler, IDataProvider dataProvider)
+        public ContentStore(ExceptionHandler exceptionHandler, IDataProvider dataProvider, EnvironmentService environmentService)
         {
             _exceptionHandler = exceptionHandler;
             _dataProvider = dataProvider;
+            _environmentService = environmentService;
 
             var unitOfWork = _dataProvider.CreateUnitOfWork();
             unitOfWork.Entries.GotNewSearchResult += DataAccess_GotNewSearchResults;
@@ -76,10 +79,29 @@ namespace chldr_shared.Stores
             throw new NotImplementedException();
         }
 
-        public void StartSearch(string inputText, FiltrationFlags filterationFlags)
+        public async Task StartSearch(string inputText, FiltrationFlags filterationFlags)
         {
+            var query = inputText.Replace("1", "Ӏ").ToLower();
+
             var unitOfWork = _dataProvider.CreateUnitOfWork();
-            unitOfWork.Entries.FindDeferredAsync(inputText.Replace("1", "Ӏ").ToLower(), filterationFlags);
+
+            if (_environmentService.CurrentPlatform == Enums.Platforms.Web)
+            {
+                var results = await unitOfWork.Entries.FindAsync(query, filterationFlags);
+
+                CachedSearchResult.Entries.Clear();
+
+                foreach (var entry in results)
+                {
+                    CachedSearchResult.Entries.Add(entry);
+                }
+
+                CachedResultsChanged?.Invoke();
+            }
+            else
+            {
+                await unitOfWork.Entries.FindDeferredAsync(query, filterationFlags);
+            }
         }
 
         public async Task LoadRandomEntries()
@@ -148,9 +170,9 @@ namespace chldr_shared.Stores
             ContentInitialized?.Invoke();
         }
 
-        public void Search(string query)
+        public async Task Search(string query)
         {
-            StartSearch(query, new FiltrationFlags());
+            await StartSearch(query, new FiltrationFlags());
         }
         public EntryModel GetCachedEntryById(string phraseId)
         {
@@ -167,9 +189,9 @@ namespace chldr_shared.Stores
 
             return phrase;
         }
-        
+
         public async Task DeleteEntry(UserModel loggedInUser, string entryId)
-        {        
+        {
             var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
             await unitOfWork.Entries.Remove(entryId, loggedInUser.UserId);
 
@@ -191,7 +213,7 @@ namespace chldr_shared.Stores
             // Update UI
             var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId);
             var entryIndex = CachedSearchResult.Entries.IndexOf(existingEntry);
-            CachedSearchResult.Entries[entryIndex] =await unitOfWork.Entries.Get(entryDto.EntryId);
+            CachedSearchResult.Entries[entryIndex] = await unitOfWork.Entries.Get(entryDto.EntryId);
 
             CachedResultsChanged?.Invoke();
         }
@@ -204,7 +226,7 @@ namespace chldr_shared.Stores
 
             var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
             await unitOfWork.Entries.Add(entryDto, loggedInUser.UserId);
-         
+
             // Update UI
             var added = await unitOfWork.Entries.Get(entryDto.EntryId);
             CachedSearchResult.Entries.Add(added);

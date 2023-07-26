@@ -46,7 +46,7 @@ namespace chldr_ui.ViewModels
             await RefreshUi();
         }
         // Called when something is typed into search input
-        public void Search(ChangeEventArgs evgentArgs)
+        public async Task Search(ChangeEventArgs evgentArgs)
         {
             string? inputText = evgentArgs.Value?.ToString();
             if (string.IsNullOrWhiteSpace(inputText))
@@ -54,7 +54,7 @@ namespace chldr_ui.ViewModels
                 return;
             }
 
-            ContentStore.StartSearch(inputText, FiltrationFlags);
+            await ContentStore.StartSearch(inputText, FiltrationFlags);
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
