@@ -1,4 +1,6 @@
-﻿namespace chldr_data.Interfaces
+﻿using chldr_data.Models;
+
+namespace chldr_data.Interfaces
 {
     public interface IDataProvider
     {

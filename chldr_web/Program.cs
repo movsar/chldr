@@ -28,7 +28,6 @@ namespace chldr_web
             builder.Services.AddBlazoredModal();
 
             builder.Services.AddScoped<IDataProvider, SqlDataProvider>();
-            builder.Services.AddScoped<ISearchService, SqlSearchService>();
 
             builder.Services.AddSingleton(x => new EnvironmentService(Platforms.Web, builder.Environment.IsDevelopment()));
 

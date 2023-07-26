@@ -11,11 +11,15 @@ using chldr_data.local.Repositories;
 using System.Collections.Immutable;
 using chldr_data.Responses;
 using chldr_data.Services;
+using chldr_data.Enums.WordDetails;
+using chldr_utils.Models;
+using chldr_data.local.Services;
 
 namespace chldr_data.Repositories
 {
     public class RealmEntriesRepository : RealmRepository<RealmEntry, EntryModel, EntryDto>, IEntriesRepository
     {
+        public event Action<SearchResultModel>? GotNewSearchResult;
         private readonly RealmTranslationsRepository _translations;
         private readonly RealmSoundsRepository _sounds;
 
@@ -81,6 +85,69 @@ namespace chldr_data.Repositories
             });
 
             return results;
+        }
+        public List<EntryModel> GetLatestEntries()
+        {
+            var entries = _dbContext.All<RealmEntry>().AsEnumerable().OrderByDescending(e => e.CreatedAt).Take(100);
+
+            var entriesToReturn = entries.Select(entry => FromEntityShortcut(entry));
+
+            return entriesToReturn.ToList();
+        }
+        public List<EntryModel> GetWordsToFiddleWith()
+        {
+            var words = _dbContext.All<RealmEntry>().Where(w => w.Subtype == (int)WordType.Verb);
+
+            var entries = words.AsEnumerable();
+
+            var entriesToReturn = entries
+              .Take(5)
+              .Select(entry => FromEntityShortcut(entry));
+
+            return entriesToReturn.ToList();
+        }
+        public List<EntryModel> GetEntriesOnModeration()
+        {
+            var entries = _dbContext.All<RealmEntry>().AsEnumerable()
+                .Where(entry => entry.Rate < UserModel.EnthusiastRateRange.Lower)
+                .Take(50)
+                .Select(entry => FromEntityShortcut(entry))
+                .ToList();
+
+            return entries;
+        }
+
+        public async Task FindDeferredAsync(string inputText, FiltrationFlags filtrationFlags)
+        {
+            var result = new List<EntryModel>();
+
+            await Task.Run(async () =>
+            {
+                result = await FindAsync(inputText, filtrationFlags);
+            });
+
+            var args = new SearchResultModel(inputText, result, SearchResultModel.Mode.Full);
+            GotNewSearchResult?.Invoke(args);
+        }
+
+        public async Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags filtrationFlags)
+        {
+            var result = new List<EntryModel>();
+
+            if (inputText.Length <= 3)
+            {
+                result.AddRange(RealmSearchHelper.DirectSearch(_dbContext, inputText, RealmSearchHelper.StartsWithFilter(inputText), 50));
+            }
+            else if (inputText.Length > 3)
+            {
+                result.AddRange(RealmSearchHelper.DirectSearch(_dbContext, inputText, RealmSearchHelper.EntryFilter(inputText), 50));
+                result.AddRange(RealmSearchHelper.ReverseSearch(_dbContext, inputText, RealmSearchHelper.TranslationFilter(inputText), 50));
+            }
+
+            // Sort
+            SearchServiceHelper.SortDirectSearchEntries(inputText, result);
+
+            return result;
         }
         public override async Task<List<ChangeSetModel>> Add(EntryDto newEntryDto, string userId)
         {
@@ -172,7 +239,7 @@ namespace chldr_data.Repositories
             // Remove local entity
             var entry = _dbContext.Find<RealmEntry>(entityId);
             if (entry == null)
-            {                
+            {
                 return new List<ChangeSetModel>();
             }
 

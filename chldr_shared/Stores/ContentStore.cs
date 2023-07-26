@@ -31,7 +31,6 @@ namespace chldr_shared.Stores
         #region Fields and Properties
         private readonly ExceptionHandler _exceptionHandler;
         private readonly IDataProvider _dataProvider;
-        private readonly ISearchService _searchService;
 
         // ! This shouldn't be normally used, but only to request models that have already been loaded 
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
@@ -59,16 +58,13 @@ namespace chldr_shared.Stores
         }
         #endregion
 
-        public ContentStore(ExceptionHandler exceptionHandler,
-                            IDataProvider dataProvider,
-                            ISearchService searchService,
-                            RequestService requestService
-            )
+        public ContentStore(ExceptionHandler exceptionHandler, IDataProvider dataProvider)
         {
             _exceptionHandler = exceptionHandler;
             _dataProvider = dataProvider;
-            _searchService = searchService;
-            _searchService.GotNewSearchResult += DataAccess_GotNewSearchResults;
+
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            unitOfWork.Entries.GotNewSearchResult += DataAccess_GotNewSearchResults;
 
             _dataProvider.DatabaseInitialized += DataAccess_DatasourceInitialized;
             _dataProvider.Initialize();
@@ -76,12 +72,14 @@ namespace chldr_shared.Stores
 
         public IEnumerable<EntryModel> Find(string inputText, int limit = 10)
         {
-            return _searchService.Find(inputText, limit);
+            //return await _searchService.FindAsync(inputText, limit);
+            throw new NotImplementedException();
         }
 
         public void StartSearch(string inputText, FiltrationFlags filterationFlags)
         {
-            Task.Run(() => _searchService.FindAsync(inputText, filterationFlags));
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            unitOfWork.Entries.FindDeferredAsync(inputText.Replace("1", "Ӏ").ToLower(), filterationFlags);
         }
 
         public async Task LoadRandomEntries()
@@ -101,7 +99,8 @@ namespace chldr_shared.Stores
         public void LoadLatestEntries()
         {
             CachedSearchResult.Entries.Clear();
-            var entries = _searchService.GetLatestEntries();
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var entries = unitOfWork.Entries.GetLatestEntries();
 
             CachedSearchResult.Entries.Clear();
             foreach (var entry in entries)
@@ -114,7 +113,8 @@ namespace chldr_shared.Stores
         public void LoadEntriesToFiddleWith()
         {
             CachedSearchResult.Entries.Clear();
-            var entries = _searchService.GetWordsToFiddleWith();
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var entries = unitOfWork.Entries.GetWordsToFiddleWith();
 
             CachedSearchResult.Entries.Clear();
             foreach (var entry in entries)
@@ -127,7 +127,8 @@ namespace chldr_shared.Stores
         public void LoadEntriesOnModeration()
         {
             CachedSearchResult.Entries.Clear();
-            var entries = _searchService.GetEntriesOnModeration();
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var entries = unitOfWork.Entries.GetEntriesOnModeration();
 
             CachedSearchResult.Entries.Clear();
             foreach (var entry in entries)
@@ -139,7 +140,7 @@ namespace chldr_shared.Stores
         }
         public async Task<EntryModel> GetByEntryId(string entryId)
         {
-            var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
             return await unitOfWork.Entries.Get(entryId);
         }
         public void DataAccess_DatasourceInitialized()

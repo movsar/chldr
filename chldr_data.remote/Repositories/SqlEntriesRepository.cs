@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Realms.Sync;
 using Realms;
 using System.Linq;
+using chldr_utils.Models;
+using chldr_data.Services;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("chldr_data.remote.tests")]
 
@@ -22,6 +24,8 @@ namespace chldr_data.remote.Repositories
         private readonly ExceptionHandler _exceptionHandler;
         private readonly SqlTranslationsRepository _translations;
         private readonly SqlSoundsRepository _sounds;
+
+        public event Action<SearchResultModel>? GotNewSearchResult;
 
         public SqlEntriesRepository(
             SqlContext context,
@@ -103,6 +107,72 @@ namespace chldr_data.remote.Repositories
             return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
         }
 
+
+        public async Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags filtrationFlags)
+        {
+            var result = new List<EntryModel>();
+            IQueryable<SqlEntry> query;
+
+            if (string.IsNullOrEmpty(inputText) || inputText.Length <= 3)
+            {
+                query = _dbContext.Entries
+                    .Where(e => e.RawContents.Equals(inputText, StringComparison.OrdinalIgnoreCase));
+            }
+            else
+            {
+                query = _dbContext.Entries
+                    .Where(e => e.RawContents.StartsWith(inputText, StringComparison.OrdinalIgnoreCase));
+            }
+
+            // Get matching entry IDs
+            var matchingEntryIds = await query
+                .Select(e => e.EntryId)
+                .ToListAsync();
+
+            // Apply the shortcut method to the matching entry IDs            
+            result = matchingEntryIds
+                .Select(id => FromEntityShortcut(_dbContext.Entries
+                    .Include(e => e.Source)
+                    .Include(e => e.User)
+                    .Include(e => e.Translations)
+                    .Include(e => e.Sounds)
+                    .AsNoTracking()
+                    .First(e => e.EntryId.Equals(id))))
+                .ToList();
+
+            // Sort
+            SearchServiceHelper.SortDirectSearchEntries(inputText, result);
+
+            return result;
+        }
+
+        public async Task FindDeferredAsync(string inputText, FiltrationFlags filtrationFlags)
+        {
+            var result = new List<EntryModel>();
+
+            await Task.Run(async () =>
+            {
+                result = await FindAsync(inputText, filtrationFlags);
+            });
+
+            var args = new SearchResultModel(inputText, result, SearchResultModel.Mode.Full);
+            GotNewSearchResult?.Invoke(args);
+        }
+
+        public List<EntryModel> GetEntriesOnModeration()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<EntryModel> GetLatestEntries()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<EntryModel> GetWordsToFiddleWith()
+        {
+            throw new NotImplementedException();
+        }
         public override async Task<List<ChangeSetModel>> Add(EntryDto newEntryDto, string userId)
         {
             // TODO: Set Rate of the entry and translation(s)
@@ -304,6 +374,5 @@ namespace chldr_data.remote.Repositories
             }
             return changeSets;
         }
-
     }
 }
