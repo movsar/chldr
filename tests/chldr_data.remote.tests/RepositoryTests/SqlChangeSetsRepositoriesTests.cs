@@ -1,4 +1,5 @@
-﻿using chldr_data.local.Services;
+﻿using chldr_data.Interfaces;
+using chldr_data.local.Services;
 using chldr_data.Services;
 using chldr_utils;
 using chldr_utils.Services;
@@ -7,19 +8,7 @@ namespace chldr_data.remote.tests.RepositoryTests
 {
     public class SqlChangeSetsRepositoryTests
     {
-        private SqlDataProvider _dataProvider;
-
-        private SqlDataProvider CreateInMemoryDataProvider()
-        {
-            var fileService = new FileService();
-            var exceptionHandler = new ExceptionHandler();
-
-            return new SqlDataProvider(fileService, exceptionHandler, Constants.LocalDatabaseConnectionString);
-        }
-        public SqlChangeSetsRepositoryTests()
-        {
-            _dataProvider = CreateInMemoryDataProvider();
-        }
+        private IDataProvider _dataProvider;
 
         [Fact]
         public async Task TakeLastAsync_ReturnsCorrectNumberOfChangeSets()

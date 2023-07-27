@@ -12,13 +12,6 @@ using chldr_data;
 using chldr_maintenance;
 using System.Text.RegularExpressions;
 using chldr_data.remote.SqlEntities;
-using chldr_data.Enums;
-using chldr_data.Enums.WordDetails;
-using chldr_data.DatabaseObjects.Models.Words;
-using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Models;
-using GraphQL;
-using FluentValidation.Internal;
 
 namespace chldr_tools
 {
@@ -32,11 +25,11 @@ namespace chldr_tools
 
         static Program()
         {
-            var graphQlClient = new GraphQLClient(_exceptionHandler, _environmentService);
-            
             _fileService = new FileService(AppContext.BaseDirectory);
             _exceptionHandler = new ExceptionHandler(_fileService);
             _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Windows, true);
+
+            var graphQlClient = new GraphQLClient(_exceptionHandler, _environmentService);
             _requestService = new RequestService(graphQlClient);
         }
 

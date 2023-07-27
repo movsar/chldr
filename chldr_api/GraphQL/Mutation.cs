@@ -1,13 +1,8 @@
 ﻿using chldr_api.GraphQL.MutationServices;
 using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.Enums;
 using chldr_data.Interfaces;
-using chldr_data.local.Services;
 using chldr_data.Models;
-using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
-using chldr_data.remote.SqlEntities;
 using chldr_data.Resources.Localizations;
 using chldr_data.Responses;
 using chldr_data.Services;
@@ -15,8 +10,6 @@ using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
-using Realms;
-using Realms.Sync;
 
 namespace chldr_api
 {

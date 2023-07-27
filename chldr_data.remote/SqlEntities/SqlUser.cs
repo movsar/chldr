@@ -9,16 +9,18 @@ namespace chldr_data.remote.SqlEntities;
 public class SqlUser : IUserEntity
 {
     public SqlUser() { }
-    public static SqlUser FromDto(UserDto testUser)
+    public static SqlUser FromDto(UserDto userDto)
     {
         return new SqlUser()
         {
-            Email = testUser.Email,
-            Password = testUser.Password,
-            Status = (int)testUser.Status,
-            FirstName = testUser.FirstName,
-            LastName = testUser.LastName,
-            Patronymic = testUser.Patronymic
+            UserId = userDto.UserId,
+            Rate = userDto.Rate,
+            Email = userDto.Email,
+            Password = userDto.Password,
+            Status = (int)userDto.Status,
+            FirstName = userDto.FirstName,
+            LastName = userDto.LastName,
+            Patronymic = userDto.Patronymic
         };
     }
 
@@ -32,8 +34,8 @@ public class SqlUser : IUserEntity
     public string? Patronymic { get; set; }
     public int? IsModerator { get; set; }
     public int? Status { get; set; }
-    public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
-    public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
     public virtual ICollection<SqlEntry> Entries { get; set; } = new List<SqlEntry>();
     public virtual ICollection<SqlQuery> Queries { get; set; } = new List<SqlQuery>();
     public virtual ICollection<SqlSound> Sounds { get; set; } = new List<SqlSound>();

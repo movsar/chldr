@@ -1,22 +1,12 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
-using chldr_data.Interfaces;
 using chldr_data.local.RealmEntities;
 using chldr_data.Models;
 using chldr_data.Services;
-using chldr_utils.Interfaces;
 using chldr_utils.Services;
-using GraphQL;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Newtonsoft.Json;
 using Realms;
-using Realms.Sync;
-using System.Collections.Generic;
 using System.Diagnostics;
-
-using static Realms.ThreadSafeReference;
 
 namespace chldr_data.local.Services
 {

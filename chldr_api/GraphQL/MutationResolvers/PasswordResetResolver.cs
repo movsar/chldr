@@ -1,7 +1,7 @@
-﻿using chldr_data.DatabaseObjects.Dtos;
+﻿using chldr_data;
+using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
-using chldr_data.local.Services;
 using chldr_data.Models;
 using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
@@ -52,7 +52,7 @@ namespace chldr_api.GraphQL.MutationServices
             await unitOfWork.Tokens.Add(token, null);
             
             // Send the password reset link to the user's email
-            var resetPasswordLink = new Uri(QueryHelpers.AddQueryString($"{AppConstants.Host}/set-new-password", new Dictionary<string, string?>(){
+            var resetPasswordLink = new Uri(QueryHelpers.AddQueryString($"{Constants.Host}/set-new-password", new Dictionary<string, string?>(){
                 { "token", tokenValue }
             })).ToString();
 

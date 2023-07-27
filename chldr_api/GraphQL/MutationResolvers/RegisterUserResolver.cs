@@ -1,7 +1,7 @@
-﻿using chldr_data.DatabaseObjects.Dtos;
+﻿using chldr_data;
+using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
-using chldr_data.local.Services;
 using chldr_data.Models;
 using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
@@ -49,7 +49,7 @@ namespace chldr_api.GraphQL.MutationServices
                 LastName = lastName,
                 Patronymic = patronymic
             };
-            await unitOfWork.Users.Add(user, null);
+            await unitOfWork.Users.Add(user, dataProvider.ActingUserId);
 
             var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
             var confirmationToken = JwtService.GenerateToken(user.UserId, "confirmation-token-secretconfirmation-token-secretconfirmation-token-secret", confirmationTokenExpiration);
@@ -65,7 +65,7 @@ namespace chldr_api.GraphQL.MutationServices
             
             unitOfWork.Commit();
 
-            var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{AppConstants.Host}/login", new Dictionary<string, string?>(){
+            var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.Host}/login", new Dictionary<string, string?>(){
                 { "token", confirmationToken},
             })).ToString();
 

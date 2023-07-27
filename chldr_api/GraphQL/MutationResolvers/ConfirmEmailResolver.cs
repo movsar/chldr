@@ -1,12 +1,9 @@
 ﻿using chldr_data.Enums;
-using chldr_data.Interfaces.Repositories;
-using chldr_data.local.Services;
 using chldr_data.Models;
 using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
 using chldr_data.Services;
 using chldr_tools;
-using Microsoft.EntityFrameworkCore;
 
 namespace chldr_api.GraphQL.MutationServices
 {

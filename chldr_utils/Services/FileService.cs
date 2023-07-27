@@ -10,6 +10,7 @@ namespace chldr_utils.Services
         private const string OfflineDatabaseFileName = "local.datx";
 
         public string AppBaseDirectory;
+
         public string AppDataDirectory => Path.Combine(AppBaseDirectory, DataDirName);
         public string OfflineDatabaseFilePath => Path.Combine(AppBaseDirectory, OfflineDatabaseFileName);
         public string EntrySoundsDirectory => Path.Combine(AppDataDirectory, "sounds");

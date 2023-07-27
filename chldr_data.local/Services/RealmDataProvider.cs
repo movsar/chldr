@@ -20,6 +20,9 @@ namespace chldr_data.local.Services
         private readonly RequestService _requestService;
         internal static RealmConfigurationBase? OfflineDatabaseConfiguration;
 
+        private static string _actingUserId;
+        public string ActingUserId => _actingUserId;
+
         public bool IsInitialized { get; set; }
 
         public event Action? DatabaseInitialized;
@@ -61,7 +64,7 @@ namespace chldr_data.local.Services
         private RealmConfiguration GetEncryptedCOnfig()
         {
             // Copy original file so that app will be able to access entries immediately
-            byte[] encKey = AppConstants.EncKey.Split(":").Select(numAsString => Convert.ToByte(numAsString)).ToArray();
+            byte[] encKey = Constants.EncKey.Split(":").Select(numAsString => Convert.ToByte(numAsString)).ToArray();
             var hexKey = BitConverter.ToString(encKey).Replace("-", "");
             var encryptedConfig = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
             {
@@ -90,9 +93,18 @@ namespace chldr_data.local.Services
                 database.RemoveAll<RealmTranslation>();
             });
         }
-        public IUnitOfWork CreateUnitOfWork(string userId = Constants.DefaultUserId)
+        public IUnitOfWork CreateUnitOfWork(string? userId = null)
         {
-            return new RealmUnitOfWork(_exceptionHandler, _fileService, _requestService, userId);
+            if (!string.IsNullOrEmpty(userId))
+            {
+                _actingUserId = userId;
+            }
+            else if (string.IsNullOrEmpty(_actingUserId))
+            {
+                _actingUserId = GetContext().All<RealmUser>().First().UserId;
+            }
+
+            return new RealmUnitOfWork(_exceptionHandler, _fileService, _requestService, _actingUserId);
         }
 
         public Realm GetContext()

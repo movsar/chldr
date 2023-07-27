@@ -1,9 +1,13 @@
 ﻿using chldr_api.GraphQL.MutationServices;
-using chldr_api.tests.Factories;
-using chldr_data.DatabaseObjects.SqlEntities;
+using chldr_data.Interfaces;
+using chldr_data.local.Services;
+using chldr_data.remote.Services;
+using chldr_data.remote.SqlEntities;
 using chldr_data.Resources.Localizations;
+using chldr_test_utils;
 using chldr_utils.Services;
 using Microsoft.Extensions.Localization;
+using Newtonsoft.Json;
 
 namespace chldr_api.tests.ServiceResolverTests
 {
@@ -11,47 +15,48 @@ namespace chldr_api.tests.ServiceResolverTests
     {
         private readonly IStringLocalizer<AppLocalizations> _localizer;
         private readonly EmailService _emailService;
+        private IDataProvider _dataProvider;
 
         public RegisterUserResolverTests()
         {
-            _emailService = TestServiceFactory.CreateTestEmailService();
-            _localizer = TestServiceFactory.CreateTestStringLocalizer();
+            _emailService = TestDataFactory.CreateFakeEmailService();
+            _localizer = TestDataFactory.GetStringLocalizer();
+            _dataProvider = TestDataFactory.CreatSqlDataProvider();
         }
 
         [Fact]
         public async Task ExecuteAsync_WithValidInput_ReturnsSuccessResponse()
         {
             // Arrange
-            using var dbContext = TestServiceFactory.CreateTestDbContext();
-            var testUser = TestDataFactory.CreateUser();
+            var newUser = TestDataFactory.CreateRandomUserDto();
             var registerUserResolver = new RegisterUserResolver();
 
             // Act
             var response = await registerUserResolver.ExecuteAsync(
-                dbContext, _localizer, _emailService,
-                testUser.Email!, testUser.Password, testUser.FirstName, testUser.LastName, testUser.Patronymic);
+                (SqlDataProvider)_dataProvider, _localizer, _emailService,
+                newUser.Email!, newUser.Password, newUser.FirstName, newUser.LastName, newUser.Patronymic);
 
             // Assert
             Assert.True(response.Success);
-            Assert.NotNull(response.Token);
+
+            var token = JsonConvert.DeserializeObject(response.SerializedData!);
+
+            Assert.NotNull(token);
         }
 
         [Fact]
         public async Task ExecuteAsync_WithExistingEmail_ReturnsErrorResponse()
         {
             // Arrange
-            using var dbContext = TestServiceFactory.CreateTestDbContext();
-            var testUser = TestDataFactory.CreateUser();
-
-            // Add existing user to the database
-            dbContext.Users.Add(SqlUser.FromDto(testUser));
-            await dbContext.SaveChangesAsync();
+            var testUser = TestDataFactory.CreateRandomUserDto();
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            await unitOfWork.Users.Add(testUser, null);
 
             var registerUserResolver = new RegisterUserResolver();
 
             // Act
             var response = await registerUserResolver.ExecuteAsync(
-                dbContext, _localizer, _emailService,
+                (SqlDataProvider)_dataProvider, _localizer, _emailService,
                 testUser.Email!, testUser.Password, testUser.FirstName, testUser.LastName, testUser.Patronymic);
 
             // Assert

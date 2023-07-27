@@ -1,45 +1,65 @@
 ﻿using chldr_data.Interfaces;
 using chldr_utils;
 using chldr_utils.Services;
-using chldr_data.remote.Services;
 using chldr_data.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
-namespace chldr_data.local.Services
+namespace chldr_data.remote.Services
 {
     public class SqlDataProvider : IDataProvider
     {
         public bool IsInitialized { get; set; }
+        private static string _actingUserId;
+        public string ActingUserId => _actingUserId;
 
         public event Action? DatabaseInitialized;
 
         private readonly FileService _fileService;
-        string _connectionString;
+        private DbContextOptions<SqlContext> _options;
         private readonly ExceptionHandler _exceptionHandler;
 
         public SqlDataProvider(FileService fileService, ExceptionHandler exceptionHandler, IConfiguration configuration)
         {
             _fileService = fileService;
-            //_connectionString = Constants.LocalDatabaseConnectionString;
-            _connectionString = configuration.GetConnectionString("SqlContext")!;
             _exceptionHandler = exceptionHandler;
+
+            _options = new DbContextOptionsBuilder<SqlContext>()
+               .UseMySQL(configuration.GetConnectionString("SqlContext")!)
+               .Options;
         }
         public SqlDataProvider(FileService fileService, ExceptionHandler exceptionHandler, string connectionString)
         {
             _fileService = fileService;
             _exceptionHandler = exceptionHandler;
-            _connectionString = connectionString;
+
+            _options = new DbContextOptionsBuilder<SqlContext>()
+               .UseMySQL(connectionString)
+               .Options;
         }
 
-        public IUnitOfWork CreateUnitOfWork(string userId = Constants.DefaultUserId)
+        public SqlDataProvider(FileService fileService, ExceptionHandler exceptionHandler, DbContextOptions<SqlContext> dbContextOptionsBuilder)
         {
-            var options = new DbContextOptionsBuilder<SqlContext>()
-                .UseMySQL(_connectionString)
-                .Options;
+            _fileService = fileService;
+            _exceptionHandler = exceptionHandler;
 
-            var context = new SqlContext(options);
-            return new SqlUnitOfWork(context, _fileService, _exceptionHandler, userId!);
+            _options = dbContextOptionsBuilder;
+        }
+
+        public IUnitOfWork CreateUnitOfWork(string? userId = null)
+        {
+            var context = new SqlContext(_options);
+            if (!string.IsNullOrEmpty(userId))
+            {
+                _actingUserId = userId;
+            }
+            else if (string.IsNullOrEmpty(_actingUserId))
+            {
+                _actingUserId = context.Users.First().UserId;
+            }
+
+            return new SqlUnitOfWork(context, _fileService, _exceptionHandler, _actingUserId!);
         }
 
         public void Initialize()

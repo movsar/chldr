@@ -35,7 +35,7 @@ namespace chldr_data.remote.Repositories
             var user = SqlUser.FromDto(dto);
             _dbContext.Users.Add(user);
 
-            var changeSet = CreateChangeSetEntity(Operation.Insert, dto.UserId);
+            var changeSet = CreateChangeSetEntity(Operation.Insert, userId);
             _dbContext.ChangeSets.Add(changeSet);
 
             _dbContext.SaveChanges();
