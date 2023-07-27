@@ -6,6 +6,7 @@ using chldr_data.Models;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_utils.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.remote.Repositories
 {
@@ -16,6 +17,20 @@ namespace chldr_data.remote.Repositories
         protected override SoundModel FromEntityShortcut(SqlSound entity)
         {
             return SoundModel.FromEntity(entity);
+        }
+        public override async Task<List<SoundModel>> GetRandomsAsync(int limit)
+        {
+            var randomizer = new Random();
+            var ids = await _dbContext.Set<SqlSound>().Select(e => e.SoundId).ToListAsync();
+            var randomlySelectedIds = ids.OrderBy(x => randomizer.Next(1, Constants.EntriesApproximateCoount)).Take(limit).ToList();
+
+            var entities = await _dbContext.Set<SqlSound>()
+              .Where(e => randomlySelectedIds.Contains(e.SoundId))
+              .AsNoTracking()
+              .ToListAsync();
+
+            var models = entities.Select(FromEntityShortcut).ToList();
+            return models;
         }
         public override async Task<List<ChangeSetModel>> Add(SoundDto soundDto)
         {

@@ -74,17 +74,14 @@ namespace chldr_data.remote.Repositories
             var randomizer = new Random();
 
             // Fetch all EntryIds from the database
-            var allTopEntryIds = await _dbContext.Set<SqlEntry>()
-                .Where(e => e.ParentEntryId == null)
-                .Select(e => e.EntryId)
-                .ToListAsync();
+            var ids = await _dbContext.Set<SqlEntry>().Where(e => e.ParentEntryId == null).Select(e => e.EntryId).ToListAsync();
 
-            // Shuffle the EntryIds to get random ones
-            var randomEntryIds = allTopEntryIds.OrderBy(x => randomizer.Next()).Take(limit).ToList();
+            // Shuffle the ids and take what's needed
+            var randomlySelectedIds = ids.OrderBy(x => randomizer.Next(1, Constants.EntriesApproximateCoount)).Take(limit).ToList();
 
-            // Fetch entries with the selected random EntryIds
-            var entriesFromDb = await _dbContext.Set<SqlEntry>()
-                .Where(entry => randomEntryIds.Contains(entry.EntryId))
+            // Fetch entries with the selected EntryIds
+            var entities = await _dbContext.Set<SqlEntry>()
+                .Where(entry => randomlySelectedIds.Contains(entry.EntryId))
                 .Include(e => e.Source)
                 .Include(e => e.User)
                 .Include(e => e.Translations)
@@ -93,11 +90,8 @@ namespace chldr_data.remote.Repositories
                 .ToListAsync();
 
             // Apply the projection (mapping to FromEntityShortcut) on the in-memory data
-            var entries = entriesFromDb
-                .Select(entry => FromEntityShortcut(entry))
-                .ToList();
-
-            return entries;
+            var models = entities.Select(FromEntityShortcut).ToList();
+            return models;
         }
         protected override EntryModel FromEntityShortcut(SqlEntry entry)
         {
@@ -157,7 +151,7 @@ namespace chldr_data.remote.Repositories
         public List<EntryModel> GetLatestEntries()
         {
             var count = 50;
-        
+
             var entries = _dbContext.Entries
                 .Where(e => e.ParentEntryId == null)
                 .OrderByDescending(e => e.CreatedAt)
@@ -192,14 +186,18 @@ namespace chldr_data.remote.Repositories
 
         public override async Task<List<ChangeSetModel>> Add(EntryDto newEntryDto)
         {
-            // TODO: Set Rate of the entry and translation(s)
-
             if (newEntryDto == null || string.IsNullOrEmpty(newEntryDto.EntryId))
             {
                 throw new NullReferenceException();
             }
 
-            var changeSets = new List<ChangeSetModel>();
+            // Set rate
+            var user = await _dbContext.Users.FindAsync(_userId);
+            newEntryDto.Rate = UserModel.FromEntity(user).GetRateRange().Lower;
+            foreach (var translationDto in newEntryDto.Translations)
+            {
+                translationDto.Rate = newEntryDto.Rate;
+            }
 
             try
             {
@@ -212,7 +210,10 @@ namespace chldr_data.remote.Repositories
                 newEntryDto.CreatedAt = entry.CreatedAt;
 
                 var entryChangeSet = CreateChangeSetEntity(Operation.Insert, newEntryDto.EntryId);
-                changeSets.Add(ChangeSetModel.FromEntity(entryChangeSet));
+                var resultingChangeSets = new List<ChangeSetModel>
+                {
+                    ChangeSetModel.FromEntity(entryChangeSet)
+                };
 
                 // Process added sounds
                 foreach (var sound in newEntryDto.Sounds)
@@ -224,10 +225,9 @@ namespace chldr_data.remote.Repositories
 
                     var filePath = Path.Combine(_fileService.EntrySoundsDirectory, sound.FileName);
                     File.WriteAllText(filePath, sound.RecordingB64);
-                    await _sounds.Add(sound);
                 }
 
-                return changeSets;
+                return resultingChangeSets;
             }
             catch (Exception ex)
             {
@@ -239,10 +239,10 @@ namespace chldr_data.remote.Repositories
             }
         }
         public override async Task<List<ChangeSetModel>> Update(EntryDto updatedEntryDto)
-        {
-            // TODO: Set Rate of the entry and translation(s)
+        {         
+            // TODO: Set permissions
 
-            var changeSets = new List<ChangeSetModel>();
+            var resultingChangeSets = new List<ChangeSetModel>();
 
             try
             {
@@ -258,20 +258,20 @@ namespace chldr_data.remote.Repositories
                     _dbContext.Update(updatedEntryEntity);
 
                     var entryChangeSetDto = CreateChangeSetEntity(Operation.Update, updatedEntryDto.EntryId, entryChanges);
-                    changeSets.Add(ChangeSetModel.FromEntity(entryChangeSetDto));
+                    resultingChangeSets.Add(ChangeSetModel.FromEntity(entryChangeSetDto));
                 }
 
                 // Add / Remove / Update translations
                 var translationChangeSets = await ProcessTranslationsForEntryUpdate(existingEntryDto, updatedEntryDto);
-                changeSets.AddRange(translationChangeSets);
+                resultingChangeSets.AddRange(translationChangeSets);
 
                 // Add / Remove / Update sounds
                 var soundChangeSets = await ProcessSoundsForEntryUpdate(existingEntryDto, updatedEntryDto);
-                changeSets.AddRange(soundChangeSets);
+                resultingChangeSets.AddRange(soundChangeSets);
 
                 _dbContext.SaveChanges();
 
-                return changeSets;
+                return resultingChangeSets;
             }
             catch (Exception ex)
             {

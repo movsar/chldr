@@ -82,5 +82,10 @@ namespace chldr_data.remote.Repositories
 
             return new List<ChangeSetModel>();
         }
+
+        public override Task<List<ChangeSetModel>> GetRandomsAsync(int limit)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

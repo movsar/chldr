@@ -42,7 +42,7 @@ namespace chldr_data.remote.Services
             _options = dbContextOptionsBuilder;
         }
 
-        public IUnitOfWork CreateUnitOfWork(string? userId)
+        public IUnitOfWork CreateUnitOfWork(string? userId = null)
         {
             var context = new SqlContext(_options);
             return new SqlUnitOfWork(context, _fileService, _exceptionHandler, userId);

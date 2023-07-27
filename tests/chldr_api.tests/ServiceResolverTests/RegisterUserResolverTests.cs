@@ -21,7 +21,7 @@ namespace chldr_api.tests.ServiceResolverTests
         {
             _emailService = TestDataFactory.CreateFakeEmailService();
             _localizer = TestDataFactory.GetStringLocalizer();
-            _dataProvider = TestDataFactory.CreateSqlDataProvider();
+            //_dataProvider = TestDataFactory.CreateSqlDataProvider();
         }
 
         [Fact]

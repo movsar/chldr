@@ -22,6 +22,7 @@ using MimeKit;
 using MailKit.Net.Smtp;
 using chldr_testing_framework.Generators;
 using chldr_utils.Interfaces;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace chldr_test_utils
 {
@@ -51,33 +52,24 @@ namespace chldr_test_utils
             _soundDtoFaker = new SoundDtoFaker();
             _userDtoFaker = new UserDtoFaker();
             _sourceDtoFaker = new SourceDtoFaker();
+
+            Constants.EntriesApproximateCoount = 5000;
         }
+
         public static IStringLocalizer<AppLocalizations> GetStringLocalizer()
         {
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
             return new StringLocalizer<AppLocalizations>(factory);
         }
-        public static IDataProvider CreateSqlDataProvider(UserDto actingUser, SourceDto source)
+        public static IDataProvider CreateSqlDataProvider()
         {
             // Remove sql database
             var options = new DbContextOptionsBuilder<SqlContext>()
-             .UseMySQL(Constants.LocalDatabaseConnectionString)
+             .UseMySQL(Constants.TestingDatabaseConnectionString)
              .Options;
 
-
-            using (var dbContext = new SqlContext(options))
-            {
-                dbContext.Database.EnsureDeleted();
-                dbContext.Database.EnsureCreated();
-
-                dbContext.Add(SqlUser.FromDto(actingUser));
-                dbContext.Add(SqlSource.FromDto(source));
-                dbContext.SaveChanges();
-            }
-
-            var dataProvider = new SqlDataProvider(_fileService, _exceptionHandler, Constants.LocalDatabaseConnectionString);
-
+            var dataProvider = new SqlDataProvider(_fileService, _exceptionHandler, Constants.TestingDatabaseConnectionString);
             return dataProvider;
         }
         public static IDataProvider CreatRealmDataProvider()

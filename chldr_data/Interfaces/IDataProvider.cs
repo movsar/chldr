@@ -7,7 +7,7 @@ namespace chldr_data.Interfaces
         event Action? DatabaseInitialized;
         bool IsInitialized { get; set; }
         void Initialize();
-        IUnitOfWork CreateUnitOfWork(string? userId);
+        IUnitOfWork CreateUnitOfWork(string? userId = null);
         void TruncateDatabase();
     }
 }

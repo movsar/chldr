@@ -2,35 +2,45 @@ using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Interfaces;
 using chldr_shared.Services;
 using chldr_test_utils;
+using System.Transactions;
 
 namespace chldr_shared.tests
 {
     public class EntryServiceTests
     {
-        private UserDto _testUserDto;
-        private readonly SourceDto _sourceDto;
         private IDataProvider _dataProvider;
+        private EntryService _entryService;
 
         public EntryServiceTests()
         {
-            _testUserDto = TestDataFactory.CreateRandomUserDto();
-            _sourceDto = TestDataFactory.CreateRandomSourceDto();
-            _sourceDto.UserId = _testUserDto.UserId;
-            _dataProvider = TestDataFactory.CreateSqlDataProvider(_testUserDto, _sourceDto);
+            _dataProvider = TestDataFactory.CreateSqlDataProvider();
+            _entryService = new EntryService(_dataProvider);
         }
 
         [Fact]
         public async Task AddEntry_ActiveMember_Success()
         {
-            // Arrange
-            var entryService = new EntryService(_dataProvider);
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {   
+                // Arrange
+                var unitOfWork = _dataProvider.CreateUnitOfWork();
 
-            var entryDto = TestDataFactory.CreateRandomEntryDto(_testUserDto.UserId, _sourceDto.SourceId);
-            await entryService.AddEntry(entryDto, _testUserDto.UserId);
+                var user = (await unitOfWork.Users.GetRandomsAsync(1)).First();
+                var source = (await unitOfWork.Sources.GetRandomsAsync(1)).First();
 
-            var insertedEntry = await entryService.Get(entryDto.EntryId);
-            Assert.Equal(entryDto.Content, insertedEntry.Content);
-            // TODO: Confirm the RateRange
+                var entryDto = TestDataFactory.CreateRandomEntryDto(user.UserId, source.SourceId);
+
+                // Act
+                await _entryService.AddEntry(entryDto, user.UserId);
+
+                // Assert
+                var insertedEntry = await _entryService.Get(entryDto.EntryId);
+                var userRateRange = user.GetRateRange();
+
+                Assert.Equal(entryDto.Content, insertedEntry.Content);
+                Assert.Equal(userRateRange.Lower, insertedEntry.Rate);
+                Assert.Equal(entryDto.Sounds[0].SoundId, insertedEntry.Sounds[0].SoundId);
+            }
         }
 
         [Fact]

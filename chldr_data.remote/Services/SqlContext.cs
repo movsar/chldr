@@ -167,7 +167,7 @@ public class SqlContext : DbContext
 
                 entity.HasOne(d => d.Entry).WithMany(p => p.Sounds)
                     .HasForeignKey(d => d.EntryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("fk_sound_entry_id");
 
                 entity.HasOne(d => d.User).WithMany(p => p.Sounds)
@@ -262,7 +262,7 @@ public class SqlContext : DbContext
 
                 entity.HasOne(d => d.Entry).WithMany(p => p.Translations)
                     .HasForeignKey(d => d.EntryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("fk_translation_entry_id");
 
                 entity.HasOne(d => d.User).WithMany(p => p.Translations)

@@ -6,6 +6,7 @@ using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_tools;
 using chldr_utils.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.remote.Repositories
 {
@@ -13,7 +14,20 @@ namespace chldr_data.remote.Repositories
     {
         protected override RecordType RecordType => RecordType.Source;
         public SqlSourcesRepository(SqlContext context, FileService fileService, string _userId) : base(context, fileService, _userId) { }
+        public override async Task<List<SourceModel>> GetRandomsAsync(int limit)
+        {
+            var randomizer = new Random();
+            var ids = await _dbContext.Set<SqlSource>().Select(e => e.SourceId).ToListAsync();
+            var randomlySelectedIds = ids.OrderBy(x => randomizer.Next(1, Constants.EntriesApproximateCoount)).Take(limit).ToList();
 
+            var entities = await _dbContext.Set<SqlSource>()
+              .Where(e => randomlySelectedIds.Contains(e.SourceId))
+              .AsNoTracking()
+              .ToListAsync();
+
+            var models = entities.Select(FromEntityShortcut).ToList();
+            return models;
+        }
         public override async Task<List<ChangeSetModel>> Update(SourceDto dto)
         {
             var source = SqlSource.FromDto(dto);

@@ -119,19 +119,7 @@ namespace chldr_data.remote.Repositories
 
             return entities.Select(FromEntityShortcut).ToList();
         }
-        public virtual async Task<List<TModel>> GetRandomsAsync(int limit)
-        {
-            var randomizer = new Random();
-
-            var entries = await _dbContext.Set<TEntity>()
-              .OrderBy(x => randomizer.Next(0, 75000))
-              .OrderBy(entry => entry.GetHashCode())
-              .Take(limit)
-              .Select(entry => FromEntityShortcut(entry))
-              .ToListAsync();
-
-            return entries;
-        }
+        public abstract Task<List<TModel>> GetRandomsAsync(int limit);
 
         #region Bulk actions
         public async Task<List<ChangeSetModel>> AddRange(IEnumerable<TDto> added)

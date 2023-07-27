@@ -10,6 +10,7 @@ using chldr_data.Models;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Crypto.Generators;
 using Realms.Sync;
+using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_data.remote.Repositories
 {
@@ -83,6 +84,21 @@ namespace chldr_data.remote.Repositories
             }
 
             return BCrypt.Net.BCrypt.Verify(password, user.Password);
+        }
+
+        public override async Task<List<UserModel>> GetRandomsAsync(int limit)
+        {
+            var randomizer = new Random();
+            var ids = await _dbContext.Set<SqlUser>().Select(e => e.UserId).ToListAsync();
+            var randomlySelectedIds = ids.OrderBy(x => randomizer.Next(1, Constants.EntriesApproximateCoount)).Take(limit).ToList();
+
+            var entities = await _dbContext.Set<SqlUser>()
+              .Where(e => randomlySelectedIds.Contains(e.UserId))
+              .AsNoTracking()
+              .ToListAsync();
+
+            var models = entities.Select(FromEntityShortcut).ToList();
+            return models;
         }
     }
 }

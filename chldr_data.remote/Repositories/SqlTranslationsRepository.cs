@@ -21,9 +21,26 @@ namespace chldr_data.remote.Repositories
         {
             return TranslationModel.FromEntity(translation);
         }
+        public override async Task<List<TranslationModel>> GetRandomsAsync(int limit)
+        {
+            var randomizer = new Random();
+            var ids = await _dbContext.Set<SqlTranslation>().Select(e => e.TranslationId).ToListAsync();
+            var randomlySelectedIds = ids.OrderBy(x => randomizer.Next(1, Constants.EntriesApproximateCoount)).Take(limit).ToList();
 
+            var entities = await _dbContext.Set<SqlTranslation>()
+              .Where(e => randomlySelectedIds.Contains(e.TranslationId))
+              .AsNoTracking()
+              .ToListAsync();
+
+            var models = entities.Select(FromEntityShortcut).ToList();
+            return models;
+        }
         public override async Task<List<ChangeSetModel>> Add(TranslationDto dto)
         {
+            // Set rate
+            var user = await _dbContext.Users.FindAsync(_userId);
+            dto.Rate = UserModel.FromEntity(user).GetRateRange().Lower;
+        
             var entity = SqlTranslation.FromDto(dto, _dbContext);
             _dbContext.Translations.Add(entity);
 

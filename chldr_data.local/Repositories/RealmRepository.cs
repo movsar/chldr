@@ -66,9 +66,10 @@ namespace chldr_data.Repositories
             var randomizer = new Random();
 
             var entries = await Task.Run(() => _dbContext.All<TEntity>().AsEnumerable()
-                  .OrderBy(x => randomizer.Next(0, 75000))
+                  .OrderBy(x => randomizer.Next(0, Constants.EntriesApproximateCoount))
                   .OrderBy(entry => entry.GetHashCode())
                   .Take(limit)
+                  .ToList()
                   .Select(FromEntityShortcut)
                   .ToList());
 

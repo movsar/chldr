@@ -19,6 +19,20 @@ namespace chldr_data.remote.Repositories
 
         protected override RecordType RecordType => RecordType.Token;
 
+        public override async Task<List<TokenModel>> GetRandomsAsync(int limit)
+        {
+            var randomizer = new Random();
+            var ids = await _dbContext.Set<SqlToken>().Select(e => e.TokenId).ToListAsync();
+            var randomlySelectedIds = ids.OrderBy(x => randomizer.Next(1, Constants.EntriesApproximateCoount)).Take(limit).ToList();
+
+            var entities = await _dbContext.Set<SqlToken>()
+              .Where(e => randomlySelectedIds.Contains(e.TokenId))
+              .AsNoTracking()
+              .ToListAsync();
+
+            var models = entities.Select(FromEntityShortcut).ToList();
+            return models;
+        }
         public override async Task<List<ChangeSetModel>> Add(TokenDto dto)
         {
             var token = SqlToken.FromDto(dto);

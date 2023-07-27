@@ -31,6 +31,15 @@ namespace chldr_tools
 
             var graphQlClient = new GraphQLClient(_exceptionHandler, _environmentService);
             _requestService = new RequestService(graphQlClient);
+
+            TrimDownTheSqlDatabaseForTesting();
+        }
+
+        private static void TrimDownTheSqlDatabaseForTesting()
+        {
+            var sqlDataProvider = GetSqlDataProvider();
+            var unitOfWork = sqlDataProvider.CreateUnitOfWork(null);
+            var randomEntries = unitOfWork.Entries.GetRandomsAsync(100);
         }
 
         static void ContentUpdater(Realm realmDatabase, SqlContext sqlDatabase)
@@ -67,7 +76,7 @@ namespace chldr_tools
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(new Dictionary<string, string>
                 {
-                        { "ConnectionStrings:SqlContext",  Constants.LocalDatabaseConnectionString}
+                        //{ "ConnectionStrings:SqlContext", ""}
                 }!).Build();
 
             var sqlContext = new SqlDataProvider(_fileService, _exceptionHandler, configuration);

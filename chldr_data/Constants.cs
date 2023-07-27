@@ -20,10 +20,11 @@
         public const string ProdApiHost = "https://api.nohchiyn-mott.com";
 
         public const int ChangeSetsToApply = 1000;
-        public const string LocalDatabaseConnectionString = "server=localhost;port=3306;database=test_chldr;user=root;password=password;charset=utf8mb4";
-
         public const int RealmSchemaVersion = 16;
 
+        public const string TestingDatabaseConnectionString = "server=localhost;port=3306;database=test_chldr;user=root;password=password;charset=utf8mb4";
         public const string TestsFileServicePath = "Temp";
+
+        public static int EntriesApproximateCoount = 75000;
     }
 }

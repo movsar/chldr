@@ -78,7 +78,7 @@ namespace chldr_data.Repositories
                      .Where(e => e.Rate > 0)
                      .AsEnumerable()
                      .OrderBy(entry => entry.GetHashCode())
-                     .OrderBy(x => randomizer.Next(0, 75000))
+                     .OrderBy(x => randomizer.Next(0, Constants.EntriesApproximateCoount))
                      .Take(limit);
 
                 return entries.Select(e => FromEntityShortcut(e)).ToList();
