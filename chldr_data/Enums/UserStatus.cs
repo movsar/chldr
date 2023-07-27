@@ -2,10 +2,10 @@
 {
     public enum UserStatus
     {
-        Active = 0,
-        Banned = 1,
-        Inactive = 2,
-        Deleted = 3,
-        Unconfirmed = 4,
+        Undefined = 0,
+        Unconfirmed = 1,
+        Active = 2,
+        Inactive = 3,
+        Banned = 4,
     }
 }

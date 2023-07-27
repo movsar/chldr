@@ -69,7 +69,7 @@ namespace chldr_test_utils
              .UseMySQL(Constants.TestingDatabaseConnectionString)
              .Options;
 
-            var dataProvider = new SqlDataProvider(_fileService, _exceptionHandler, Constants.TestingDatabaseConnectionString);
+            var dataProvider = new SqlDataProvider(_fileService, _exceptionHandler, options);
             return dataProvider;
         }
         public static IDataProvider CreatRealmDataProvider()

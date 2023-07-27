@@ -196,7 +196,6 @@ namespace chldr_data.remote.Repositories
             var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId));
             if (user.Status != UserStatus.Active)
             {
-                // The 199th line, the user.Status is always Active 
                 throw new InvalidOperationException();
             }
 
