@@ -4,16 +4,12 @@ using chldr_utils.Services;
 using chldr_data.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 
 namespace chldr_data.remote.Services
 {
     public class SqlDataProvider : IDataProvider
     {
         public bool IsInitialized { get; set; }
-        private static string _defaultUserId;
-        public string DefaultUserId => _defaultUserId;
-
         public event Action? DatabaseInitialized;
 
         private readonly FileService _fileService;
@@ -43,23 +39,13 @@ namespace chldr_data.remote.Services
         {
             _fileService = fileService;
             _exceptionHandler = exceptionHandler;
-
             _options = dbContextOptionsBuilder;
         }
 
-        public IUnitOfWork CreateUnitOfWork(string? userId = null)
+        public IUnitOfWork CreateUnitOfWork(string? userId)
         {
             var context = new SqlContext(_options);
-            if (!string.IsNullOrEmpty(userId))
-            {
-                _defaultUserId = userId;
-            }
-            else if (string.IsNullOrEmpty(_defaultUserId))
-            {
-                _defaultUserId = context.Users.First().UserId;
-            }
-
-            return new SqlUnitOfWork(context, _fileService, _exceptionHandler, _defaultUserId!);
+            return new SqlUnitOfWork(context, _fileService, _exceptionHandler, userId);
         }
 
         public void Initialize()

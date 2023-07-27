@@ -1,24 +1,35 @@
-﻿using chldr_data.Interfaces;
+using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.Interfaces;
+using chldr_shared.Services;
 using chldr_test_utils;
 
-namespace chldr_data.remote.tests.RepositoryTests
+namespace chldr_shared.tests
 {
-    public class SqlEntriesRepositoryTests
-    {       
+    public class EntryServiceTests
+    {
+        private UserDto _testUserDto;
+        private readonly SourceDto _sourceDto;
         private IDataProvider _dataProvider;
-        public SqlEntriesRepositoryTests()
+
+        public EntryServiceTests()
         {
-            _dataProvider = TestDataFactory.CreateSqlDataProvider();
+            _testUserDto = TestDataFactory.CreateRandomUserDto();
+            _sourceDto = TestDataFactory.CreateRandomSourceDto();
+            _sourceDto.UserId = _testUserDto.UserId;
+            _dataProvider = TestDataFactory.CreateSqlDataProvider(_testUserDto, _sourceDto);
         }
+
         [Fact]
-        public void AddEntry_ActiveMember_Success()
+        public async Task AddEntry_ActiveMember_Success()
         {
             // Arrange
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
-            
-            var entryDto = TestDataFactory.CreateRandomEntryDto();
-            unitOfWork.Entries.Add(entryDto);
+            var entryService = new EntryService(_dataProvider);
 
+            var entryDto = TestDataFactory.CreateRandomEntryDto(_testUserDto.UserId, _sourceDto.SourceId);
+            await entryService.AddEntry(entryDto, _testUserDto.UserId);
+
+            var insertedEntry = await entryService.Get(entryDto.EntryId);
+            Assert.Equal(entryDto.Content, insertedEntry.Content);
             // TODO: Confirm the RateRange
         }
 

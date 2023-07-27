@@ -20,11 +20,7 @@ namespace chldr_data.local.Services
         private readonly RequestService _requestService;
         internal static RealmConfigurationBase? OfflineDatabaseConfiguration;
 
-        private static string _defaultUserId;
-        public string DefaultUserId => _defaultUserId;
-
         public bool IsInitialized { get; set; }
-
         public event Action? DatabaseInitialized;
 
         internal Realm GetDatabase()
@@ -93,18 +89,9 @@ namespace chldr_data.local.Services
                 database.RemoveAll<RealmTranslation>();
             });
         }
-        public IUnitOfWork CreateUnitOfWork(string? userId = null)
-        {
-            if (!string.IsNullOrEmpty(userId))
-            {
-                _defaultUserId = userId;
-            }
-            else if (string.IsNullOrEmpty(_defaultUserId))
-            {
-                _defaultUserId = GetContext().All<RealmUser>().First().UserId;
-            }
-
-            return new RealmUnitOfWork(_exceptionHandler, _fileService, _requestService, _defaultUserId);
+        public IUnitOfWork CreateUnitOfWork(string? userId)
+        {          
+            return new RealmUnitOfWork(_exceptionHandler, _fileService, _requestService, userId);
         }
 
         public Realm GetContext()

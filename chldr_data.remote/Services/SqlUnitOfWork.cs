@@ -11,7 +11,7 @@ namespace chldr_data.Services
 {
     public class SqlUnitOfWork : IUnitOfWork, IDisposable
     {
-        private readonly string _userId;
+        private readonly string? _userId;
         private readonly SqlContext _context;
         private readonly FileService _fileService;
         private readonly ExceptionHandler _exceptionHandler;

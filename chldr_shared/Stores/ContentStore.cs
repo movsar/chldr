@@ -6,6 +6,7 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_utils;
 using chldr_utils.Models;
 using chldr_utils.Services;
+using chldr_shared.Services;
 
 namespace chldr_shared.Stores
 {
@@ -14,12 +15,6 @@ namespace chldr_shared.Stores
         #region Events
         public event Action? ContentInitialized;
         public event Action? CachedResultsChanged;
-
-        // ! Are these needed?
-        public event Action<EntryModel>? EntryUpdated;
-        public event Action<EntryModel>? EntryInserted;
-        public event Action<EntryModel>? EntryDeleted;
-        public event Action<EntryModel>? EntryAdded;
         #endregion
 
         #region Fields and Properties
@@ -30,6 +25,7 @@ namespace chldr_shared.Stores
         // ! This shouldn't be normally used, but only to request models that have already been loaded 
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
         public readonly List<LanguageModel> Languages = LanguageModel.GetAvailableLanguages();
+        private EntryService _entryService;
         #endregion
 
         #region EventHandlers
@@ -59,11 +55,13 @@ namespace chldr_shared.Stores
             _dataProvider = dataProvider;
             _environmentService = environmentService;
 
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.CreateUnitOfWork(null);
             unitOfWork.Entries.GotNewSearchResult += DataAccess_GotNewSearchResults;
 
             _dataProvider.DatabaseInitialized += DataAccess_DatasourceInitialized;
             _dataProvider.Initialize();
+
+            _entryService = new EntryService(_dataProvider);
         }
 
         public IEnumerable<EntryModel> Find(string inputText, int limit = 10)
@@ -76,7 +74,7 @@ namespace chldr_shared.Stores
         {
             var query = inputText.Replace("1", "Ӏ").ToLower();
 
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.CreateUnitOfWork(null);
 
             if (_environmentService.CurrentPlatform == Enums.Platforms.Web)
             {
@@ -100,7 +98,7 @@ namespace chldr_shared.Stores
         public async Task LoadRandomEntries()
         {
             CachedSearchResult.Entries.Clear();
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.CreateUnitOfWork(null);
             var entries = await unitOfWork.Entries.GetRandomsAsync(50);
 
             CachedSearchResult.Entries.Clear();
@@ -114,7 +112,7 @@ namespace chldr_shared.Stores
         public void LoadLatestEntries()
         {
             CachedSearchResult.Entries.Clear();
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.CreateUnitOfWork(null);
             var entries = unitOfWork.Entries.GetLatestEntries();
 
             CachedSearchResult.Entries.Clear();
@@ -129,7 +127,7 @@ namespace chldr_shared.Stores
         public void LoadEntriesOnModeration()
         {
             CachedSearchResult.Entries.Clear();
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.CreateUnitOfWork(null);
             var entries = unitOfWork.Entries.GetEntriesOnModeration();
 
             CachedSearchResult.Entries.Clear();
@@ -142,7 +140,7 @@ namespace chldr_shared.Stores
         }
         public async Task<EntryModel> GetByEntryId(string entryId)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.CreateUnitOfWork(null);
             return await unitOfWork.Entries.Get(entryId);
         }
         public void DataAccess_DatasourceInitialized()
@@ -172,8 +170,7 @@ namespace chldr_shared.Stores
 
         public async Task DeleteEntry(UserModel loggedInUser, string entryId)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
-            await unitOfWork.Entries.Remove(entryId);
+            await _entryService.Remove(entryId, loggedInUser.UserId);         
 
             // Update on UI
             CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
@@ -182,23 +179,20 @@ namespace chldr_shared.Stores
 
         public async Task UpdateEntry(UserModel loggedInUser, EntryDto entryDto)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
-            await unitOfWork.Entries.Update(entryDto);
+            await _entryService.Update(entryDto, loggedInUser.UserId);
 
             // Update UI
             var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId);
             var entryIndex = CachedSearchResult.Entries.IndexOf(existingEntry);
-            CachedSearchResult.Entries[entryIndex] = await unitOfWork.Entries.Get(entryDto.EntryId);
-
+            CachedSearchResult.Entries[entryIndex] = await _entryService.Get(entryDto.EntryId);
             CachedResultsChanged?.Invoke();
         }
         public async Task AddEntry(UserModel loggedInUser, EntryDto entryDto)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
-            await unitOfWork.Entries.Add(entryDto);
+            await _entryService.AddEntry(entryDto, loggedInUser.UserId);
 
             // Update UI
-            var added = await unitOfWork.Entries.Get(entryDto.EntryId);
+            var added = await _entryService.Get(entryDto.EntryId);
             CachedSearchResult.Entries.Add(added);
             CachedResultsChanged?.Invoke();
         }

@@ -4,11 +4,10 @@ namespace chldr_data.Interfaces
 {
     public interface IDataProvider
     {
-        public string DefaultUserId { get; }
         event Action? DatabaseInitialized;
         bool IsInitialized { get; set; }
         void Initialize();
-        IUnitOfWork CreateUnitOfWork(string userId = null);
+        IUnitOfWork CreateUnitOfWork(string? userId);
         void TruncateDatabase();
     }
 }

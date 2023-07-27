@@ -1,62 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using MimeKit;
-using MailKit.Net.Smtp;
+﻿using MimeKit;
 using chldr_shared.Models;
+using chldr_utils.Interfaces;
 
 namespace chldr_utils.Services
 {
-    public interface ISmtpClientWrapper : IDisposable
-    {
-        void Connect(string host, int port, bool useSsl);
-        void Authenticate(string userName, string password);
-        void Send(MimeMessage message);
-        void Disconnect(bool quit);
-    }
-
-    public class SmtpClientWrapper : ISmtpClientWrapper
-    {
-        private readonly SmtpClient _smtpClient;
-
-        public SmtpClientWrapper()
-        {
-            _smtpClient = new SmtpClient();
-        }
-
-        public void Connect(string host, int port, bool useSsl)
-        {
-            _smtpClient.Connect(host, port, useSsl);
-        }
-
-        public void Authenticate(string userName, string password)
-        {
-            _smtpClient.AuthenticationMechanisms.Remove("XOAUTH2");
-            _smtpClient.Authenticate(userName, password);
-        }
-
-        public void Send(MimeMessage message)
-        {
-            _smtpClient.Send(message);
-        }
-
-        public void Disconnect(bool quit)
-        {
-            _smtpClient.Disconnect(quit);
-        }
-
-        public void Dispose()
-        {
-            _smtpClient.Dispose();
-        }
-    }
 
     public class EmailService
     {
-        private readonly Func<ISmtpClientWrapper> _smtpClientFactory;
+        private Func<ISmtpClientWrapper> _smtpClientFactory;
 
         public EmailService(Func<ISmtpClientWrapper> smtpClientFactory)
         {
             _smtpClientFactory = smtpClientFactory;
+        }
+
+        public EmailService()
+        {
+            _smtpClientFactory = () => new SmtpClientWrapper();
         }
 
         private MimeMessage CreateEmailMessage(EmailMessage message)

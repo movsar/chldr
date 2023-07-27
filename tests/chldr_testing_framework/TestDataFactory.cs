@@ -21,6 +21,7 @@ using chldr_data.remote.SqlEntities;
 using MimeKit;
 using MailKit.Net.Smtp;
 using chldr_testing_framework.Generators;
+using chldr_utils.Interfaces;
 
 namespace chldr_test_utils
 {
@@ -36,6 +37,7 @@ namespace chldr_test_utils
         private static readonly TranslationDtoFaker _translationDtoFaker;
         private static readonly SoundDtoFaker _soundDtoFaker;
         private static readonly UserDtoFaker _userDtoFaker;
+        private static readonly SourceDtoFaker _sourceDtoFaker;
 
         static TestDataFactory()
         {
@@ -48,6 +50,7 @@ namespace chldr_test_utils
             _translationDtoFaker = new TranslationDtoFaker();
             _soundDtoFaker = new SoundDtoFaker();
             _userDtoFaker = new UserDtoFaker();
+            _sourceDtoFaker = new SourceDtoFaker();
         }
         public static IStringLocalizer<AppLocalizations> GetStringLocalizer()
         {
@@ -55,25 +58,26 @@ namespace chldr_test_utils
             var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
             return new StringLocalizer<AppLocalizations>(factory);
         }
-        public static IDataProvider CreateSqlDataProvider()
+        public static IDataProvider CreateSqlDataProvider(UserDto actingUser, SourceDto source)
         {
             // Remove sql database
             var options = new DbContextOptionsBuilder<SqlContext>()
              .UseMySQL(Constants.LocalDatabaseConnectionString)
              .Options;
 
+
             using (var dbContext = new SqlContext(options))
             {
                 dbContext.Database.EnsureDeleted();
                 dbContext.Database.EnsureCreated();
 
-                // Add Default user
-                var defaultUser = CreateRandomUserDto();
-                dbContext.Add(SqlUser.FromDto(defaultUser));
+                dbContext.Add(SqlUser.FromDto(actingUser));
+                dbContext.Add(SqlSource.FromDto(source));
                 dbContext.SaveChanges();
             }
 
             var dataProvider = new SqlDataProvider(_fileService, _exceptionHandler, Constants.LocalDatabaseConnectionString);
+
             return dataProvider;
         }
         public static IDataProvider CreatRealmDataProvider()
@@ -111,20 +115,29 @@ namespace chldr_test_utils
             return _userDtoFaker.Generate();
         }
 
-        public static EntryDto CreateRandomEntryDto()
+        public static EntryDto CreateRandomEntryDto(string userId, string sourceId)
         {
             var entryDto = _entryDtoFaker.Generate();
+            entryDto.UserId = userId;
+            entryDto.SourceId = sourceId;
 
             var translationDto = _translationDtoFaker.Generate();
             translationDto.EntryId = entryDto.EntryId;
+            translationDto.UserId = userId;
 
             var soundDto = _soundDtoFaker.Generate();
             soundDto.EntryId = entryDto.EntryId;
+            soundDto.UserId = userId;
 
             entryDto.Translations.Add(translationDto);
             entryDto.Sounds.Add(soundDto);
 
             return entryDto;
+        }
+
+        public static SourceDto CreateRandomSourceDto()
+        {
+            return _sourceDtoFaker.Generate();
         }
     }
 }

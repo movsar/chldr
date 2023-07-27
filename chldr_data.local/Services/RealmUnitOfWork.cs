@@ -23,13 +23,13 @@ namespace chldr_data.local.Services
         private readonly FileService _fileService;
         private readonly ExceptionHandler _exceptionHandler;
         private readonly RequestService _requestService;
-        private readonly string _userId;
+        private readonly string? _userId;
 
         public RealmUnitOfWork(
             ExceptionHandler exceptionHandler,
             FileService fileService,
             RequestService requestService,
-            string userId
+            string? userId
             )
         {
             _fileService = fileService;
