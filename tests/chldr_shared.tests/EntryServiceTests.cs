@@ -12,64 +12,77 @@ namespace chldr_shared.tests
     {
         private IDataProvider _dataProvider;
         private EntryService _entryService;
-        private TransactionScope _transactionScope;
         private static string _userId;
 
         public EntryServiceTests()
         {
             _dataProvider = TestDataFactory.CreateSqlDataProvider();
             _entryService = new EntryService(_dataProvider);
-            _transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
             var unitOfWork = _dataProvider.CreateUnitOfWork();
             _userId = unitOfWork.Users.GetRandomsAsync(1).Result.First().UserId;
-        }
-        ~EntryServiceTests()
-        {
-            _transactionScope.Dispose();
         }
 
         [Fact]
         public async Task AddRemoveEntry_ActiveMember_Success()
         {
-            // Arrange
-            var unitOfWork = _dataProvider.CreateUnitOfWork(_userId);
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                // Arrange
+                var unitOfWork = _dataProvider.CreateUnitOfWork(_userId);
 
-            var user = (await unitOfWork.Users.GetRandomsAsync(1)).First();
-            var source = (await unitOfWork.Sources.GetRandomsAsync(1)).First();
+                var user = (await unitOfWork.Users.GetRandomsAsync(1)).First();
+                var source = (await unitOfWork.Sources.GetRandomsAsync(1)).First();
 
-            var entryDto = TestDataFactory.CreateRandomEntryDto(user.UserId, source.SourceId);
+                var entryDto = TestDataFactory.CreateRandomEntryDto(user.UserId, source.SourceId);
 
-            // Act
-            await _entryService.AddEntry(entryDto, user.UserId);
+                // Act
+                await _entryService.AddEntry(entryDto, user.UserId);
 
-            // Assert
-            var insertedEntry = await _entryService.Get(entryDto.EntryId);
-            var userRateRange = user.GetRateRange();
+                // Assert
+                var insertedEntry = await _entryService.Get(entryDto.EntryId);
+                var userRateRange = user.GetRateRange();
 
-            Assert.Equal(entryDto.Content, insertedEntry.Content);
-            Assert.Equal(userRateRange.Lower, insertedEntry.Rate);
-            Assert.Equal(entryDto.Sounds[0].SoundId, insertedEntry.Sounds[0].SoundId);
+                Assert.Equal(entryDto.Content, insertedEntry.Content);
+                Assert.Equal(userRateRange.Lower, insertedEntry.Rate);
+                Assert.Equal(entryDto.Sounds[0].SoundId, insertedEntry.Sounds[0].SoundId);
 
-            await _entryService.Remove(entryDto.EntryId, user.UserId);
-            await Assert.ThrowsAsync<ArgumentException>(async () => await _entryService.Get(entryDto.EntryId));
+                await _entryService.Remove(entryDto.EntryId, user.UserId);
+                await Assert.ThrowsAsync<ArgumentException>(async () => await _entryService.Get(entryDto.EntryId));
+            }
         }
 
         [Fact]
         public async Task AddEntry_InActiveUser_Fails()
         {
-            // Arrange
-            var unitOfWork = _dataProvider.CreateUnitOfWork(_userId);
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                // Arrange
+                var unitOfWork = _dataProvider.CreateUnitOfWork(_userId);
 
-            var user = TestDataFactory.CreateRandomUserDto();
-            user.Status = chldr_data.Enums.UserStatus.Banned;
-            await unitOfWork.Users.Add(user);
+                var user = TestDataFactory.CreateRandomUserDto();
+                user.Status = chldr_data.Enums.UserStatus.Banned;
+                await unitOfWork.Users.Add(user);
 
-            var source = (await unitOfWork.Sources.GetRandomsAsync(1)).First();
-            var entryDto = TestDataFactory.CreateRandomEntryDto(user.UserId, source.SourceId);
+                var source = (await unitOfWork.Sources.GetRandomsAsync(1)).First();
+                var entryDto = TestDataFactory.CreateRandomEntryDto(user.UserId, source.SourceId);
 
-            // Act
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await _entryService.AddEntry(entryDto, user.UserId));
+                // Act
+                await Assert.ThrowsAsync<InvalidOperationException>(async () => await _entryService.AddEntry(entryDto, user.UserId));
+            }
+        }
+
+        [Fact]
+        public async Task Get_NonExistingEntity_ThrowsException()
+        {
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                // Arrange
+                var entityId = "non_existing_entity_id";
+
+                // Act and Assert
+                await Assert.ThrowsAsync<ArgumentException>(async () => await _entryService.Get(entityId));
+            }
         }
 
         //[Fact]
@@ -89,15 +102,5 @@ namespace chldr_shared.tests
         //    var insertedUser = await _userService.Get(user.UserId);
         //    Assert.Equal(UserModel.MemberRateRange.Lower, insertedUser.Rate);
         //}
-
-        [Fact]
-        public async Task Get_NonExistingEntity_ThrowsException()
-        {
-            // Arrange
-            var entityId = "non_existing_entity_id";
-
-            // Act and Assert
-            await Assert.ThrowsAsync<ArgumentException>(async () => await _entryService.Get(entityId));
-        }
     }
 }

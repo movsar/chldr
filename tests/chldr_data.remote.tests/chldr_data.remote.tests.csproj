@@ -26,8 +26,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\chldr_data.remote\chldr_data.remote.csproj" />
-    <ProjectReference Include="..\chldr_testing_framework\chldr_testing_framework.csproj" />
-    <ProjectReference Include="..\chldr_test_utils\chldr_testing_framework.csproj" />
   </ItemGroup>
 
 </Project>

@@ -27,7 +27,6 @@
     <ProjectReference Include="..\..\chldr_api\chldr_api.csproj" />
     <ProjectReference Include="..\..\chldr_data\chldr_data.csproj" />
     <ProjectReference Include="..\chldr_testing_framework\chldr_testing_framework.csproj" />
-    <ProjectReference Include="..\chldr_test_utils\chldr_testing_framework.csproj" />
   </ItemGroup>
 
 </Project>
