@@ -11,8 +11,8 @@ namespace chldr_data.remote.Services
     public class SqlDataProvider : IDataProvider
     {
         public bool IsInitialized { get; set; }
-        private static string _actingUserId;
-        public string ActingUserId => _actingUserId;
+        private static string _defaultUserId;
+        public string DefaultUserId => _defaultUserId;
 
         public event Action? DatabaseInitialized;
 
@@ -52,14 +52,14 @@ namespace chldr_data.remote.Services
             var context = new SqlContext(_options);
             if (!string.IsNullOrEmpty(userId))
             {
-                _actingUserId = userId;
+                _defaultUserId = userId;
             }
-            else if (string.IsNullOrEmpty(_actingUserId))
+            else if (string.IsNullOrEmpty(_defaultUserId))
             {
-                _actingUserId = context.Users.First().UserId;
+                _defaultUserId = context.Users.First().UserId;
             }
 
-            return new SqlUnitOfWork(context, _fileService, _exceptionHandler, _actingUserId!);
+            return new SqlUnitOfWork(context, _fileService, _exceptionHandler, _defaultUserId!);
         }
 
         public void Initialize()

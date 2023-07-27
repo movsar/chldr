@@ -9,12 +9,12 @@ namespace chldr_data.Interfaces.Repositories
 
         Task<TModel> Get(string entityId);
 
-        Task<List<ChangeSetModel>> Add(TDto dto, string userId);
-        Task<List<ChangeSetModel>> Update(TDto dto, string userId);
-        Task<List<ChangeSetModel>> Remove(string entityId, string userId);
+        Task<List<ChangeSetModel>> Add(TDto dto);
+        Task<List<ChangeSetModel>> Update(TDto dto);
+        Task<List<ChangeSetModel>> Remove(string entityId);
 
-        Task<List<ChangeSetModel>> AddRange(IEnumerable<TDto> added, string userId);
-        Task<List<ChangeSetModel>> UpdateRange(IEnumerable<TDto> updated, string userId);
-        Task<List<ChangeSetModel>> RemoveRange(IEnumerable<string> removed, string userId);
+        Task<List<ChangeSetModel>> AddRange(IEnumerable<TDto> added);
+        Task<List<ChangeSetModel>> UpdateRange(IEnumerable<TDto> updated);
+        Task<List<ChangeSetModel>> RemoveRange(IEnumerable<string> removed);
     }
 }

@@ -19,7 +19,7 @@ namespace chldr_data.remote.Repositories
 
         protected override RecordType RecordType => RecordType.Token;
 
-        public override async Task<List<ChangeSetModel>> Add(TokenDto dto, string userId)
+        public override async Task<List<ChangeSetModel>> Add(TokenDto dto)
         {
             var token = SqlToken.FromDto(dto);
             _dbContext.Add(token);
@@ -60,7 +60,7 @@ namespace chldr_data.remote.Repositories
             return tokenInDatabase == null ? null : TokenModel.FromEntity(tokenInDatabase);
         }
 
-        public override async Task<List<ChangeSetModel>> Update(TokenDto dto, string userId)
+        public override async Task<List<ChangeSetModel>> Update(TokenDto dto)
         {
             var existing = await Get(dto.TokenId);
             var existingDto = TokenDto.FromModel(existing);

@@ -20,8 +20,8 @@ namespace chldr_data.local.Services
         private readonly RequestService _requestService;
         internal static RealmConfigurationBase? OfflineDatabaseConfiguration;
 
-        private static string _actingUserId;
-        public string ActingUserId => _actingUserId;
+        private static string _defaultUserId;
+        public string DefaultUserId => _defaultUserId;
 
         public bool IsInitialized { get; set; }
 
@@ -97,14 +97,14 @@ namespace chldr_data.local.Services
         {
             if (!string.IsNullOrEmpty(userId))
             {
-                _actingUserId = userId;
+                _defaultUserId = userId;
             }
-            else if (string.IsNullOrEmpty(_actingUserId))
+            else if (string.IsNullOrEmpty(_defaultUserId))
             {
-                _actingUserId = GetContext().All<RealmUser>().First().UserId;
+                _defaultUserId = GetContext().All<RealmUser>().First().UserId;
             }
 
-            return new RealmUnitOfWork(_exceptionHandler, _fileService, _requestService, _actingUserId);
+            return new RealmUnitOfWork(_exceptionHandler, _fileService, _requestService, _defaultUserId);
         }
 
         public Realm GetContext()

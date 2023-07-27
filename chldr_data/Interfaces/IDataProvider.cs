@@ -4,7 +4,7 @@ namespace chldr_data.Interfaces
 {
     public interface IDataProvider
     {
-        public string ActingUserId { get; }
+        public string DefaultUserId { get; }
         event Action? DatabaseInitialized;
         bool IsInitialized { get; set; }
         void Initialize();

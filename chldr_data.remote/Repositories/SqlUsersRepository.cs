@@ -30,19 +30,19 @@ namespace chldr_data.remote.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public override async Task<List<ChangeSetModel>> Add(UserDto dto, string userId)
+        public override async Task<List<ChangeSetModel>> Add(UserDto dto)
         {
             var user = SqlUser.FromDto(dto);
             _dbContext.Users.Add(user);
 
-            var changeSet = CreateChangeSetEntity(Operation.Insert, userId);
+            var changeSet = CreateChangeSetEntity(Operation.Insert, dto.UserId);
             _dbContext.ChangeSets.Add(changeSet);
 
             _dbContext.SaveChanges();
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override async Task<List<ChangeSetModel>> Update(UserDto dto, string userId)
+        public override async Task<List<ChangeSetModel>> Update(UserDto dto)
         {
             var existingEntity = await Get(dto.UserId);
             var existingDto = UserDto.FromModel(existingEntity);

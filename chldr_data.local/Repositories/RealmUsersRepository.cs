@@ -22,7 +22,7 @@ namespace chldr_data.Repositories
         {
             return UserModel.FromEntity(entity);
         }
-        public override async Task<List<ChangeSetModel>> Add(UserDto dto, string userId)
+        public override async Task<List<ChangeSetModel>> Add(UserDto dto)
         {
             _dbContext.Write(() =>
             {
@@ -34,7 +34,7 @@ namespace chldr_data.Repositories
             return new List<ChangeSetModel>();
         }
 
-        public override async Task<List<ChangeSetModel>> Update(UserDto dto, string userId)
+        public override async Task<List<ChangeSetModel>> Update(UserDto dto)
         {
             var existingEntity = await Get(dto.UserId);
             var existingDto = UserDto.FromModel(existingEntity);
@@ -55,7 +55,7 @@ namespace chldr_data.Repositories
             return new List<ChangeSetModel>();
         }
 
-        public override Task<List<ChangeSetModel>> Remove(string entityId, string userId)
+        public override Task<List<ChangeSetModel>> Remove(string entityId)
         {
             throw new NotImplementedException();
         }

@@ -33,10 +33,10 @@ namespace chldr_api.GraphQL.MutationServices
 
             // Hash the new password and update the user's password in the Users table
             userDto.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            await unitOfWork.Users.Update(userDto, null);
+            await unitOfWork.Users.Update(userDto);
 
             // Remove the used password reset token from the Tokens table
-            await unitOfWork.Tokens.Remove(tokenInDatabase.TokenId, null);
+            await unitOfWork.Tokens.Remove(tokenInDatabase.TokenId);
 
             unitOfWork.Commit();
 

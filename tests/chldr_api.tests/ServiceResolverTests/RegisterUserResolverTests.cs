@@ -21,7 +21,7 @@ namespace chldr_api.tests.ServiceResolverTests
         {
             _emailService = TestDataFactory.CreateFakeEmailService();
             _localizer = TestDataFactory.GetStringLocalizer();
-            _dataProvider = TestDataFactory.CreatSqlDataProvider();
+            _dataProvider = TestDataFactory.CreateSqlDataProvider();
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace chldr_api.tests.ServiceResolverTests
             // Arrange
             var testUser = TestDataFactory.CreateRandomUserDto();
             var unitOfWork = _dataProvider.CreateUnitOfWork();
-            await unitOfWork.Users.Add(testUser, null);
+            await unitOfWork.Users.Add(testUser);
 
             var registerUserResolver = new RegisterUserResolver();
 

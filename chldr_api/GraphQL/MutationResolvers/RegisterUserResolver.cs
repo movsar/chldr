@@ -49,7 +49,7 @@ namespace chldr_api.GraphQL.MutationServices
                 LastName = lastName,
                 Patronymic = patronymic
             };
-            await unitOfWork.Users.Add(user, dataProvider.ActingUserId);
+            await unitOfWork.Users.Add(user);
 
             var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
             var confirmationToken = JwtService.GenerateToken(user.UserId, "confirmation-token-secretconfirmation-token-secretconfirmation-token-secret", confirmationTokenExpiration);
@@ -61,7 +61,7 @@ namespace chldr_api.GraphQL.MutationServices
                 Type = (int)TokenType.Confirmation,
                 Value = confirmationToken,
                 ExpiresIn = confirmationTokenExpiration
-            }, null);
+            });
             
             unitOfWork.Commit();
 

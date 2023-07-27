@@ -30,12 +30,12 @@ namespace chldr_data.Repositories
             return models;
         }
 
-        public override async Task<List<ChangeSetModel>> Update(ChangeSetDto dto, string userId)
+        public override async Task<List<ChangeSetModel>> Update(ChangeSetDto dto)
         {
             throw new Exception("This method should never be called for ChangeSets, they're immutable");
         }
 
-        public override async Task<List<ChangeSetModel>> Add(ChangeSetDto dto, string userId)
+        public override async Task<List<ChangeSetModel>> Add(ChangeSetDto dto)
         {
             // Store max 500 changesets
             _dbContext.Write(() =>
@@ -59,7 +59,7 @@ namespace chldr_data.Repositories
             return models.AsEnumerable().Select(ChangeSetModel.FromEntity).ToList();
         }
 
-        public override Task<List<ChangeSetModel>> Remove(string entityId, string userId)
+        public override Task<List<ChangeSetModel>> Remove(string entityId)
         {
             throw new NotImplementedException();
         }

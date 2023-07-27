@@ -1,15 +1,11 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
-using chldr_tools;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Abstractions;
-using Realms;
 
 namespace chldr_data.remote.Repositories
 {
@@ -74,12 +70,12 @@ namespace chldr_data.remote.Repositories
             return models;
         }
 
-        public override async Task<List<ChangeSetModel>> Update(ChangeSetDto dto, string userId)
+        public override async Task<List<ChangeSetModel>> Update(ChangeSetDto dto)
         {
             throw new Exception("This method should never be called for ChangeSets, they're immutable");
         }
 
-        public override async Task<List<ChangeSetModel>> Add(ChangeSetDto dto, string userId)
+        public override async Task<List<ChangeSetModel>> Add(ChangeSetDto dto)
         {
             var changeSet = SqlChangeSet.FromDto(dto);
             await _dbContext.AddAsync(changeSet);

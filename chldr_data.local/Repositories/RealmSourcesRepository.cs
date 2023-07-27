@@ -34,7 +34,7 @@ namespace chldr_data.Repositories
         {
             return _dbContext.All<RealmSource>().AsEnumerable().Select(s => SourceModel.FromEntity(s)).ToList();
         }
-        public override async Task<List<ChangeSetModel>> Add(SourceDto dto, string userId)
+        public override async Task<List<ChangeSetModel>> Add(SourceDto dto)
         {
             _dbContext.Write(() =>
             {
@@ -44,7 +44,7 @@ namespace chldr_data.Repositories
             // ! NOT IMPLEMENTED
             return new List<ChangeSetModel>();
         }
-        public override async Task<List<ChangeSetModel>> Update(SourceDto dto, string userId)
+        public override async Task<List<ChangeSetModel>> Update(SourceDto dto)
         {
             var existingEntity = await Get(dto.SourceId);
             var existingDto = SourceDto.FromModel(existingEntity);
@@ -65,7 +65,7 @@ namespace chldr_data.Repositories
             return new List<ChangeSetModel>();
         }
 
-        public override Task<List<ChangeSetModel>> Remove(string entityId, string userId)
+        public override Task<List<ChangeSetModel>> Remove(string entityId)
         {
             throw new NotImplementedException();
         }

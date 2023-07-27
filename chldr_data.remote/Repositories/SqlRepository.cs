@@ -29,9 +29,9 @@ namespace chldr_data.remote.Repositories
         protected readonly SqlContext _dbContext;
         protected readonly FileService _fileService;
         protected readonly string _userId;
-        public abstract Task<List<ChangeSetModel>> Add(TDto dto, string userId);
-        public abstract Task<List<ChangeSetModel>> Update(TDto dto, string userId);
-        public virtual async Task<List<ChangeSetModel>> Remove(string entityId, string userId)
+        public abstract Task<List<ChangeSetModel>> Add(TDto dto);
+        public abstract Task<List<ChangeSetModel>> Update(TDto dto);
+        public virtual async Task<List<ChangeSetModel>> Remove(string entityId)
         {
             var entity = _dbContext.Set<TEntity>().Find(entityId);
             if (entity == null)
@@ -134,33 +134,33 @@ namespace chldr_data.remote.Repositories
         }
 
         #region Bulk actions
-        public async Task<List<ChangeSetModel>> AddRange(IEnumerable<TDto> added, string userId)
+        public async Task<List<ChangeSetModel>> AddRange(IEnumerable<TDto> added)
         {
             var result = new List<ChangeSetModel>();
             foreach (var dto in added)
             {
-                result.AddRange(await Add(dto, userId));
+                result.AddRange(await Add(dto));
             }
 
             return result;
         }
-        public async Task<List<ChangeSetModel>> UpdateRange(IEnumerable<TDto> updated, string userId)
+        public async Task<List<ChangeSetModel>> UpdateRange(IEnumerable<TDto> updated)
         {
             var result = new List<ChangeSetModel>();
             foreach (var dto in updated)
             {
-                result.AddRange(await Update(dto, userId));
+                result.AddRange(await Update(dto));
 
             }
 
             return result;
         }
-        public async Task<List<ChangeSetModel>> RemoveRange(IEnumerable<string> removed, string userId)
+        public async Task<List<ChangeSetModel>> RemoveRange(IEnumerable<string> removed)
         {
             var result = new List<ChangeSetModel>();
             foreach (var id in removed)
             {
-                result.AddRange(await Remove(id, userId));
+                result.AddRange(await Remove(id));
             }
 
             return result;

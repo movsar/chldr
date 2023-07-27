@@ -23,7 +23,7 @@ namespace chldr_data.local.Repositories
         {
             return SoundModel.FromEntity(entity);
         }
-        public override async Task<List<ChangeSetModel>> Add(SoundDto dto, string userId)
+        public override async Task<List<ChangeSetModel>> Add(SoundDto dto)
         {
             var entry = _dbContext.Find<RealmEntry>(dto.EntryId);
 
@@ -38,7 +38,7 @@ namespace chldr_data.local.Repositories
             // ! NOT IMPLEMENTED
             return new List<ChangeSetModel>();
         }
-        public override async Task<List<ChangeSetModel>> Update(SoundDto dto, string userId)
+        public override async Task<List<ChangeSetModel>> Update(SoundDto dto)
         {
             var existingEntity = await Get(dto.SoundId);
             var existingDto = SoundDto.FromModel(existingEntity);
@@ -58,7 +58,7 @@ namespace chldr_data.local.Repositories
             // ! NOT IMPLEMENTED
             return new List<ChangeSetModel>();
         }
-        public override async Task<List<ChangeSetModel>> Remove(string entityId, string userId)
+        public override async Task<List<ChangeSetModel>> Remove(string entityId)
         {
             // TODO: Remove remote entity
 

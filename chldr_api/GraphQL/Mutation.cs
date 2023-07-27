@@ -60,7 +60,7 @@ namespace chldr_api
             unitOfWork.BeginTransaction();
             try
             {
-                var changeSets = await unitOfWork.Entries.Add(entryDto, userId);
+                var changeSets = await unitOfWork.Entries.Add(entryDto);
                 unitOfWork.Commit();
 
                 return new RequestResult()
@@ -92,7 +92,7 @@ namespace chldr_api
             unitOfWork.BeginTransaction();
             try
             {
-                var changeSets = await unitOfWork.Entries.Update(entryDto, userId);
+                var changeSets = await unitOfWork.Entries.Update(entryDto);
                 unitOfWork.Commit();
 
                 return new RequestResult()
@@ -123,7 +123,7 @@ namespace chldr_api
             unitOfWork.BeginTransaction();
             try
             {
-                var changeSets = await unitOfWork.Entries.Remove(entryId, userId);
+                var changeSets = await unitOfWork.Entries.Remove(entryId);
                 unitOfWork.Commit();
 
                 return new RequestResult()

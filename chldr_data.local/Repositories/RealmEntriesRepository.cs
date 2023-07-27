@@ -136,7 +136,7 @@ namespace chldr_data.Repositories
 
             return result;
         }
-        public override async Task<List<ChangeSetModel>> Add(EntryDto newEntryDto, string userId)
+        public override async Task<List<ChangeSetModel>> Add(EntryDto newEntryDto)
         {
             if (newEntryDto == null || string.IsNullOrEmpty(newEntryDto.EntryId))
             {
@@ -144,7 +144,7 @@ namespace chldr_data.Repositories
             }
 
             // Insert remote entity with translations
-            var response = await _requestService.AddEntry(userId, newEntryDto);
+            var response = await _requestService.AddEntry(_userId, newEntryDto);
             if (!response.Success)
             {
                 throw _exceptionHandler.Error("Error:Request_failed");
@@ -186,13 +186,13 @@ namespace chldr_data.Repositories
 
             return responseData.ChangeSets.Select(ChangeSetModel.FromDto).ToList();
         }
-        public override async Task<List<ChangeSetModel>> Update(EntryDto updatedEntryDto, string userId)
+        public override async Task<List<ChangeSetModel>> Update(EntryDto updatedEntryDto)
         {
             var existingEntry = await Get(updatedEntryDto.EntryId);
             var existingEntryDto = EntryDto.FromModel(existingEntry);
 
             // Update remote entity
-            var response = await _requestService.UpdateEntry(userId, updatedEntryDto);
+            var response = await _requestService.UpdateEntry(_userId, updatedEntryDto);
             if (!response.Success)
             {
                 throw _exceptionHandler.Error("Error:Request_failed");
@@ -213,10 +213,10 @@ namespace chldr_data.Repositories
 
             return responseData.ChangeSets.Select(ChangeSetModel.FromDto).ToList();
         }
-        public override async Task<List<ChangeSetModel>> Remove(string entityId, string userId)
+        public override async Task<List<ChangeSetModel>> Remove(string entityId)
         {
             // Remove remote entity
-            var response = await _requestService.RemoveEntry(userId, entityId);
+            var response = await _requestService.RemoveEntry(_userId, entityId);
             if (!response.Success)
             {
                 throw _exceptionHandler.Error("Error:Request_failed");
@@ -233,8 +233,8 @@ namespace chldr_data.Repositories
             var sounds = entry.Sounds.Select(s => s.SoundId).ToArray();
             var translations = entry.Translations.Select(t => t.TranslationId).ToArray();
 
-            await _sounds.RemoveRange(sounds, userId);
-            await _translations.RemoveRange(translations, userId);
+            await _sounds.RemoveRange(sounds);
+            await _translations.RemoveRange(translations);
 
             _dbContext.Write(() =>
             {

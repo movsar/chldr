@@ -17,7 +17,7 @@ namespace chldr_data.remote.Repositories
         {
             return SoundModel.FromEntity(entity);
         }
-        public override async Task<List<ChangeSetModel>> Add(SoundDto soundDto, string userId)
+        public override async Task<List<ChangeSetModel>> Add(SoundDto soundDto)
         {
             if (string.IsNullOrEmpty(soundDto.RecordingB64))
             {
@@ -36,7 +36,7 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override async Task<List<ChangeSetModel>> Update(SoundDto dto, string userId)
+        public override async Task<List<ChangeSetModel>> Update(SoundDto dto)
         {
             // Find out what has been changed
             var existing = await Get(dto.SoundId);
@@ -56,7 +56,7 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override async Task<List<ChangeSetModel>> Remove(string entityId, string userId)
+        public override async Task<List<ChangeSetModel>> Remove(string entityId)
         {
             var sound = await _dbContext.Sounds.FindAsync(entityId);
             if (sound == null)
@@ -66,7 +66,7 @@ namespace chldr_data.remote.Repositories
 
             _fileService.DeleteEntrySound(sound.FileName);
 
-            return await base.Remove(entityId, userId);
+            return await base.Remove(entityId);
         }
     }
 }

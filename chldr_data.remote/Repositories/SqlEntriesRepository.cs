@@ -190,7 +190,7 @@ namespace chldr_data.remote.Repositories
             return entries.Select(entry => FromEntityShortcut(entry)).ToList();
         }
 
-        public override async Task<List<ChangeSetModel>> Add(EntryDto newEntryDto, string userId)
+        public override async Task<List<ChangeSetModel>> Add(EntryDto newEntryDto)
         {
             // TODO: Set Rate of the entry and translation(s)
 
@@ -224,7 +224,7 @@ namespace chldr_data.remote.Repositories
 
                     var filePath = Path.Combine(_fileService.EntrySoundsDirectory, sound.FileName);
                     File.WriteAllText(filePath, sound.RecordingB64);
-                    await _sounds.Add(sound, userId);
+                    await _sounds.Add(sound);
                 }
 
                 return changeSets;
@@ -238,7 +238,7 @@ namespace chldr_data.remote.Repositories
                 throw _exceptionHandler.Error(ex);
             }
         }
-        public override async Task<List<ChangeSetModel>> Update(EntryDto updatedEntryDto, string userId)
+        public override async Task<List<ChangeSetModel>> Update(EntryDto updatedEntryDto)
         {
             // TODO: Set Rate of the entry and translation(s)
 
@@ -262,11 +262,11 @@ namespace chldr_data.remote.Repositories
                 }
 
                 // Add / Remove / Update translations
-                var translationChangeSets = await ProcessTranslationsForEntryUpdate(existingEntryDto, updatedEntryDto, userId);
+                var translationChangeSets = await ProcessTranslationsForEntryUpdate(existingEntryDto, updatedEntryDto);
                 changeSets.AddRange(translationChangeSets);
 
                 // Add / Remove / Update sounds
-                var soundChangeSets = await ProcessSoundsForEntryUpdate(existingEntryDto, updatedEntryDto, userId);
+                var soundChangeSets = await ProcessSoundsForEntryUpdate(existingEntryDto, updatedEntryDto);
                 changeSets.AddRange(soundChangeSets);
 
                 _dbContext.SaveChanges();
@@ -278,7 +278,7 @@ namespace chldr_data.remote.Repositories
                 throw _exceptionHandler.Error(ex);
             }
         }
-        public override async Task<List<ChangeSetModel>> Remove(string entryId, string userId)
+        public override async Task<List<ChangeSetModel>> Remove(string entryId)
         {
             var changeSets = new List<ChangeSetModel>();
 
@@ -291,7 +291,7 @@ namespace chldr_data.remote.Repositories
                 // Process removed translations
                 foreach (var translationId in translationIds)
                 {
-                    var translationChangeSet = await _translations.Remove(translationId, userId);
+                    var translationChangeSet = await _translations.Remove(translationId);
                     changeSets.AddRange(translationChangeSet);
                 }
 
@@ -299,12 +299,12 @@ namespace chldr_data.remote.Repositories
                 foreach (var soundId in soundIds)
                 {
 
-                    var translationChangeSet = await _sounds.Remove(soundId, userId);
+                    var translationChangeSet = await _sounds.Remove(soundId);
                     changeSets.AddRange(translationChangeSet);
                 }
 
                 // Process removed entry
-                var changeSet = await base.Remove(entryId, userId);
+                var changeSet = await base.Remove(entryId);
                 changeSets.AddRange(changeSet);
 
                 return changeSets;
@@ -315,7 +315,7 @@ namespace chldr_data.remote.Repositories
             }
         }
 
-        private async Task<List<ChangeSetModel>> ProcessSoundsForEntryUpdate(EntryDto existingEntryDto, EntryDto updatedEntryDto, string userId)
+        private async Task<List<ChangeSetModel>> ProcessSoundsForEntryUpdate(EntryDto existingEntryDto, EntryDto updatedEntryDto)
         {
             var changeSets = new List<ChangeSetModel>();
 
@@ -329,7 +329,7 @@ namespace chldr_data.remote.Repositories
             // Process removed translations
             foreach (var sound in deleted)
             {
-                var changeSet = await _sounds.Remove(sound.SoundId, userId);
+                var changeSet = await _sounds.Remove(sound.SoundId);
                 changeSets.AddRange(changeSet);
             }
 
@@ -344,13 +344,13 @@ namespace chldr_data.remote.Repositories
                     continue;
                 }
 
-                var changeSet = await _sounds.Update(sound, userId);
+                var changeSet = await _sounds.Update(sound);
                 changeSets.AddRange(changeSet);
             }
 
             return changeSets;
         }
-        private async Task<List<ChangeSetModel>> ProcessTranslationsForEntryUpdate(EntryDto existingEntryDto, EntryDto updatedEntryDto, string userId)
+        private async Task<List<ChangeSetModel>> ProcessTranslationsForEntryUpdate(EntryDto existingEntryDto, EntryDto updatedEntryDto)
         {
             var changeSets = new List<ChangeSetModel>();
 
@@ -371,7 +371,7 @@ namespace chldr_data.remote.Repositories
             // Process removed translations
             foreach (var translation in deleted)
             {
-                var changeSet = await _translations.Remove(translation.TranslationId, userId);
+                var changeSet = await _translations.Remove(translation.TranslationId);
                 changeSets.AddRange(changeSet);
             }
 
@@ -386,7 +386,7 @@ namespace chldr_data.remote.Repositories
                     continue;
                 }
 
-                var changeSet = await _translations.Update(translation, userId);
+                var changeSet = await _translations.Update(translation);
                 changeSets.AddRange(changeSet);
             }
             return changeSets;

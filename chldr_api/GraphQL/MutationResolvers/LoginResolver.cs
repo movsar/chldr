@@ -45,8 +45,8 @@ namespace chldr_api.GraphQL.MutationServices
             };
 
             // Save the tokens to the database
-            await unitOfWork.Tokens.Add(accessTokenDto, null);
-            await unitOfWork.Tokens.Add(refreshTokenDto, null);
+            await unitOfWork.Tokens.Add(accessTokenDto);
+            await unitOfWork.Tokens.Add(refreshTokenDto);
 
             unitOfWork.Commit();
 
@@ -94,7 +94,7 @@ namespace chldr_api.GraphQL.MutationServices
                 // Remove previous tokens related to this user (in future this can be done in a batch job to increase efficiency)
                 var previousTokens = tokensRepository.GetByUserId(user.UserId);
 
-                await tokensRepository.RemoveRange(previousTokens.Select(t => t.TokenId), null);
+                await tokensRepository.RemoveRange(previousTokens.Select(t => t.TokenId));
 
                 return await SignInAsync(unitOfWork, user);
             }

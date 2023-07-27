@@ -5,13 +5,6 @@ using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_utils;
 using chldr_utils.Models;
-using chldr_data.Services;
-using chldr_data.Interfaces.Repositories;
-using chldr_data.local.Services;
-using chldr_data.Repositories;
-using chldr_data.local.Repositories;
-using chldr_data.Responses;
-using Realms.Sync;
 using chldr_utils.Services;
 
 namespace chldr_shared.Stores
@@ -180,7 +173,7 @@ namespace chldr_shared.Stores
         public async Task DeleteEntry(UserModel loggedInUser, string entryId)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
-            await unitOfWork.Entries.Remove(entryId, loggedInUser.UserId);
+            await unitOfWork.Entries.Remove(entryId);
 
             // Update on UI
             CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
@@ -190,7 +183,7 @@ namespace chldr_shared.Stores
         public async Task UpdateEntry(UserModel loggedInUser, EntryDto entryDto)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
-            await unitOfWork.Entries.Update(entryDto, loggedInUser.UserId);
+            await unitOfWork.Entries.Update(entryDto);
 
             // Update UI
             var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId);
@@ -202,7 +195,7 @@ namespace chldr_shared.Stores
         public async Task AddEntry(UserModel loggedInUser, EntryDto entryDto)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork(loggedInUser.UserId);
-            await unitOfWork.Entries.Add(entryDto, loggedInUser.UserId);
+            await unitOfWork.Entries.Add(entryDto);
 
             // Update UI
             var added = await unitOfWork.Entries.Get(entryDto.EntryId);
