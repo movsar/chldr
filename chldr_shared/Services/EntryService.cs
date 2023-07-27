@@ -24,13 +24,13 @@ namespace chldr_shared.Services
             await unitOfWork.Entries.Add(entryDto);
         }
 
-        internal async Task Update(EntryDto entryDto, string userId)
+        public async Task Update(EntryDto entryDto, string userId)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
             await unitOfWork.Entries.Update(entryDto);
         }
 
-        internal async Task Remove(string entryId, string userId)
+        public async Task Remove(string entryId, string userId)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
             await unitOfWork.Entries.Remove(entryId);

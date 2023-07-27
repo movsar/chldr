@@ -19,11 +19,12 @@ namespace chldr_data.DatabaseObjects.Models
         public static NumericRange MaintainerRateRange = new NumericRange(10000, 500000000);
         public string? Email { get; set; }
         public int Rate { get; set; }
-        public RateWeight RateWeight { get; set; }
+        public RateWeight VoteWeight => GetVoteWeightByRate(Rate);
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Patronymic { get; set; }
         public string UserId { get; set; }
+        public UserStatus Status { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
         public string? ImagePath { get; set; }
@@ -56,7 +57,7 @@ namespace chldr_data.DatabaseObjects.Models
             }
         }
 
-        public static RateWeight GetRateWeightByRate(int rate)
+        public static RateWeight GetVoteWeightByRate(int rate)
         {
             if (MemberRateRange.Contains(rate))
             {
@@ -85,7 +86,7 @@ namespace chldr_data.DatabaseObjects.Models
         }
         public bool CanRemoveEntry(EntryModel entry)
         {
-            if (entry.UserId.Equals(UserId) && RateWeight >= GetRateWeightByRate(entry.Rate))
+            if (entry.UserId.Equals(UserId) && VoteWeight >= GetVoteWeightByRate(entry.Rate))
             {
                 return true;
             }
@@ -95,7 +96,7 @@ namespace chldr_data.DatabaseObjects.Models
 
         public bool CanEditEntry(int entryRate)
         {
-            if (RateWeight >= GetRateWeightByRate(entryRate))
+            if (VoteWeight >= GetVoteWeightByRate(entryRate))
             {
                 return true;
             }
@@ -104,13 +105,13 @@ namespace chldr_data.DatabaseObjects.Models
         }
         public bool CanEditTranslation(TranslationModel translation)
         {
-            if (RateWeight >= GetRateWeightByRate(translation.Rate))
+            if (VoteWeight >= GetVoteWeightByRate(translation.Rate))
             {
                 return true;
             }
 
             return false;
-        }   
+        }
 
         private static UserModel FromBaseInterface(IUser user)
         {
@@ -128,21 +129,20 @@ namespace chldr_data.DatabaseObjects.Models
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Patronymic = user.Patronymic,
-                RateWeight = GetRateWeightByRate(user.Rate)
             };
         }
 
         public static UserModel FromDto(UserDto? userDto)
         {
             var userModel = FromBaseInterface(userDto);
-            // Specific dto fields
+            userModel.Status = userDto.Status;
             return userModel;
         }
 
         public static UserModel FromEntity(IUserEntity? userEntity)
         {
             var userModel = FromBaseInterface(userEntity);
-            // Specific entity fields
+            userModel.Status = (UserStatus)userEntity.Status;
             return userModel;
         }
     }

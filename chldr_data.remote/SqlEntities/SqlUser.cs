@@ -33,7 +33,7 @@ public class SqlUser : IUserEntity
     public string? LastName { get; set; }
     public string? Patronymic { get; set; }
     public int? IsModerator { get; set; }
-    public int? Status { get; set; }
+    public int Status { get; set; } = 0;
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
     public virtual ICollection<SqlEntry> Entries { get; set; } = new List<SqlEntry>();

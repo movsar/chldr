@@ -17,7 +17,7 @@ namespace chldr_test_utils.Generators
             RuleFor(u => u.Patronymic, f => f.Name.FirstName());
             RuleFor(u => u.FirstName, f => f.Name.FirstName());
             RuleFor(u => u.LastName, f => f.Name.LastName());
-            RuleFor(u => u.Status, f => f.PickRandom<UserStatus>());
+            RuleFor(u => u.Status, f => UserStatus.Active);
             RuleFor(u => u.ImagePath, f => f.Internet.Url());
             RuleFor(u => u.CreatedAt, f => f.Date.PastOffset());
             RuleFor(u => u.UpdatedAt, f => f.Date.RecentOffset());
