@@ -26,5 +26,7 @@
         public const string TestsFileServicePath = "Temp";
 
         public static int EntriesApproximateCoount = 75000;
+
+        public const int TimeInHrsToAllowForEntryRemoval = 12;
     }
 }

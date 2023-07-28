@@ -19,7 +19,7 @@ namespace chldr_data.DatabaseObjects.Models
         public static NumericRange MaintainerRateRange = new NumericRange(10000, 500000000);
         public string? Email { get; set; }
         public int Rate { get; set; }
-        public RateWeight VoteWeight => GetVoteWeightByRate(Rate);
+        public RateWeight VoteWeight => GetUserVoteWeightByRate(Rate);
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Patronymic { get; set; }
@@ -57,7 +57,7 @@ namespace chldr_data.DatabaseObjects.Models
             }
         }
 
-        public static RateWeight GetVoteWeightByRate(int rate)
+        public static RateWeight GetUserVoteWeightByRate(int rate)
         {
             if (MemberRateRange.Contains(rate))
             {
@@ -86,7 +86,14 @@ namespace chldr_data.DatabaseObjects.Models
         }
         public bool CanRemoveEntry(EntryModel entry)
         {
-            if (entry.UserId.Equals(UserId) && VoteWeight >= GetVoteWeightByRate(entry.Rate))
+            // Removal is allowed only for the authors and only within X hours
+            if (!entry.UserId.Equals(UserId) || VoteWeight < GetUserVoteWeightByRate(entry.Rate))
+            {
+                return false;
+            }
+
+            var timePassed = entry.CreatedAt - DateTimeOffset.UtcNow;
+            if (timePassed.Hours < Constants.TimeInHrsToAllowForEntryRemoval)
             {
                 return true;
             }
@@ -96,7 +103,7 @@ namespace chldr_data.DatabaseObjects.Models
 
         public bool CanEditEntry(int entryRate)
         {
-            if (VoteWeight >= GetVoteWeightByRate(entryRate))
+            if (VoteWeight >= GetUserVoteWeightByRate(entryRate))
             {
                 return true;
             }
@@ -105,7 +112,7 @@ namespace chldr_data.DatabaseObjects.Models
         }
         public bool CanEditTranslation(TranslationModel translation)
         {
-            if (VoteWeight >= GetVoteWeightByRate(translation.Rate))
+            if (VoteWeight >= GetUserVoteWeightByRate(translation.Rate))
             {
                 return true;
             }
