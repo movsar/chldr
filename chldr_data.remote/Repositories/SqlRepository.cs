@@ -72,7 +72,7 @@ namespace chldr_data.remote.Repositories
             var changeSet = new SqlChangeSet()
             {
                 Operation = (int)operation,
-                UserId = _userId!,
+                UserId = _userId,
                 RecordId = recordId,
                 RecordType = (int)RecordType,
             };

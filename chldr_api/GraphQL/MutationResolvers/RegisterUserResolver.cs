@@ -1,6 +1,7 @@
 ﻿using chldr_data;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.Models;
 using chldr_data.remote.Repositories;
@@ -28,8 +29,11 @@ namespace chldr_api.GraphQL.MutationServices
             string email, string password, string? firstName, string? lastName, string? patronymic)
         {
             var unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork();
+            var actingUserId = unitOfWork.Users.GetRandomsAsync(1).Result.First().UserId;
+            unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork(actingUserId);
+
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
-         
+
             unitOfWork.BeginTransaction();
 
             // Check if a user with this email already exists
@@ -62,7 +66,7 @@ namespace chldr_api.GraphQL.MutationServices
                 Value = confirmationToken,
                 ExpiresIn = confirmationTokenExpiration
             });
-            
+
             unitOfWork.Commit();
 
             var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.Host}/login", new Dictionary<string, string?>(){
