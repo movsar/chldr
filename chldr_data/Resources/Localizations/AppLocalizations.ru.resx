@@ -642,7 +642,7 @@
     <value>Да</value>
   </data>
   <data name="Word:Link_to_another_entry" xml:space="preserve">
-    <value>Создать отсылку к другому слову</value>
+    <value>Связать с исходным словом</value>
   </data>
   <data name="References" xml:space="preserve">
     <value>Ссылается на</value>

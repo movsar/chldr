@@ -71,6 +71,7 @@ namespace chldr_ui.ViewModels
         {
             if (string.IsNullOrEmpty(EntryId))
             {
+                await NewTranslation();
                 return;
             }
 

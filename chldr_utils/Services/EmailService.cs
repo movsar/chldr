@@ -1,6 +1,8 @@
 ﻿using MimeKit;
 using chldr_shared.Models;
 using chldr_utils.Interfaces;
+using Microsoft.Extensions.Configuration;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace chldr_utils.Services
 {
@@ -8,14 +10,25 @@ namespace chldr_utils.Services
     public class EmailService
     {
         private Func<ISmtpClientWrapper> _smtpClientFactory;
-
+        // Configuration properties, you can set them during the initialization of the service
+        public string SmtpServer { get; set; }
+        public int Port { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
         public EmailService(Func<ISmtpClientWrapper> smtpClientFactory)
         {
             _smtpClientFactory = smtpClientFactory;
         }
 
-        public EmailService()
+        public EmailService(IConfiguration configuration)
         {
+            var emailSettings = configuration.GetSection("Email");
+
+            SmtpServer = emailSettings["SmtpServer"];
+            Port = int.Parse(emailSettings["Port"]);
+            Username = emailSettings["Username"];
+            Password = emailSettings["Password"];
+
             _smtpClientFactory = () => new SmtpClientWrapper();
         }
 
@@ -25,7 +38,7 @@ namespace chldr_utils.Services
             builder.HtmlBody = message.Content;
 
             var emailMessage = new MimeMessage();
-            emailMessage.From.Add(new MailboxAddress(UserName, UserName));
+            emailMessage.From.Add(new MailboxAddress(Username, Username));
             emailMessage.To.AddRange(message.To);
             emailMessage.Subject = message.Subject;
             emailMessage.Body = builder.ToMessageBody();
@@ -42,7 +55,7 @@ namespace chldr_utils.Services
             try
             {
                 client.Connect(SmtpServer, Port, true);
-                client.Authenticate(UserName, Password);
+                client.Authenticate(Username, Password);
                 client.Send(emailMessage);
 
                 SentMessages.Add(message);
@@ -59,10 +72,6 @@ namespace chldr_utils.Services
             }
         }
 
-        // Configuration properties, you can set them during the initialization of the service
-        public string SmtpServer { get; set; } = "mail.hosting.reg.ru";
-        public int Port { get; set; } = 465;
-        public string UserName { get; set; } = "no-reply@nohchiyn-mott.com";
-        public string Password { get; set; } = "6MsyThgtYWiFTND";
+
     }
 }
