@@ -31,55 +31,56 @@ namespace chldr_api.GraphQL.MutationServices
             var unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork();
             var actingUserId = unitOfWork.Users.GetRandomsAsync(1).Result.First().UserId;
             unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork(actingUserId);
-
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
 
             unitOfWork.BeginTransaction();
 
-            // Check if a user with this email already exists
-            var existingUser = await usersRepository.FindByEmail(email);
-            if (existingUser != null)
+            try
             {
-                return new RequestResult() { ErrorMessage = "A user with this email already exists" };
-            }
+                // Check if a user with this email already exists
+                var existingUser = await usersRepository.FindByEmail(email);
+                if (existingUser != null)
+                {
+                    return new RequestResult() { ErrorMessage = "A user with this email already exists" };
+                }
 
-            // Create the new user
-            var user = new UserDto
-            {
-                Email = email,
-                Password = BCrypt.Net.BCrypt.HashPassword(password),
-                Status = UserStatus.Unconfirmed,
-                FirstName = firstName,
-                LastName = lastName,
-                Patronymic = patronymic
-            };
-            await unitOfWork.Users.Add(user);
+                // Create the new user
+                var user = new UserDto
+                {
+                    Email = email,
+                    Password = BCrypt.Net.BCrypt.HashPassword(password),
+                    Status = UserStatus.Unconfirmed,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    Patronymic = patronymic
+                };
+                await unitOfWork.Users.Add(user);
 
-            var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
-            var confirmationToken = JwtService.GenerateToken(user.UserId, "confirmation-token-secretconfirmation-token-secretconfirmation-token-secret", confirmationTokenExpiration);
+                var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
+                var confirmationToken = JwtService.GenerateToken(user.UserId, "confirmation-token-secretconfirmation-token-secretconfirmation-token-secret", confirmationTokenExpiration);
 
-            // Save the tokens to the database
-            await unitOfWork.Tokens.Add(new TokenDto
-            {
-                UserId = user.UserId,
-                Type = (int)TokenType.Confirmation,
-                Value = confirmationToken,
-                ExpiresIn = confirmationTokenExpiration
-            });
+                // Save the tokens to the database
+                await unitOfWork.Tokens.Add(new TokenDto
+                {
+                    UserId = user.UserId,
+                    Type = (int)TokenType.Confirmation,
+                    Value = confirmationToken,
+                    ExpiresIn = confirmationTokenExpiration
+                });
 
-            unitOfWork.Commit();
 
-            var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.Host}/login", new Dictionary<string, string?>(){
+                var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.Host}/login", new Dictionary<string, string?>(){
                 { "token", confirmationToken},
             })).ToString();
 
-            var message = new EmailMessage(new string[] { email },
-                _localizer["Email:Confirm_email_subject"],
-                _localizer["Email:Confirm_email_html", confirmEmailLink]);
+                var message = new EmailMessage(new string[] { email },
+                    _localizer["Email:Confirm_email_subject"],
+                    _localizer["Email:Confirm_email_html", confirmEmailLink]);
 
-            try
-            {
+
                 _emailService.Send(message);
+                unitOfWork.Commit();
+
                 return new RequestResult()
                 {
                     Success = true,
@@ -88,8 +89,8 @@ namespace chldr_api.GraphQL.MutationServices
             }
             catch (Exception ex)
             {
-                //LogError(ex);
-                return new RequestResult();
+                unitOfWork.Rollback();
+                return new RequestResult() { ErrorMessage = ex.Message };
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using MimeKit;
-using MailKit.Net.Smtp;
 using chldr_utils.Interfaces;
+using MailKit.Security;
+using MailKit.Net.Smtp;
 
 namespace chldr_utils.Services
 {
@@ -16,12 +17,11 @@ namespace chldr_utils.Services
 
         public void Connect(string host, int port, bool useSsl)
         {
-            _smtpClient.Connect(host, port, useSsl);
+            _smtpClient.Connect(host, port, SecureSocketOptions.StartTls);
         }
 
         public void Authenticate(string userName, string password)
         {
-            _smtpClient.AuthenticationMechanisms.Remove("XOAUTH2");
             _smtpClient.Authenticate(userName, password);
         }
 

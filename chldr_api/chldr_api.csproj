@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
     <PackageReference Include="HotChocolate.AspNetCore" Version="13.0.5" />
     <PackageReference Include="HotChocolate.Data.EntityFramework" Version="13.0.5" />

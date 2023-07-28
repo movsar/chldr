@@ -33,6 +33,10 @@ namespace chldr_data.Services
         public async Task<string> RegisterNewUserAsync(string email, string password)
         {
             var response = await _requestService.RegisterUserAsync(email, password);
+            if (!response.Success)
+            {
+                throw new Exception(response.ErrorMessage);
+            }
 
             var token = RequestResult.GetData<string>(response);
             if (string.IsNullOrWhiteSpace(token))

@@ -3,6 +3,7 @@ using chldr_shared.Models;
 using chldr_utils.Interfaces;
 using Microsoft.Extensions.Configuration;
 using static Org.BouncyCastle.Math.EC.ECCurve;
+using MailKit.Security;
 
 namespace chldr_utils.Services
 {
@@ -38,7 +39,7 @@ namespace chldr_utils.Services
             builder.HtmlBody = message.Content;
 
             var emailMessage = new MimeMessage();
-            emailMessage.From.Add(new MailboxAddress(Username, Username));
+            emailMessage.From.Add(new MailboxAddress("Movsar Bekaev", Username));
             emailMessage.To.AddRange(message.To);
             emailMessage.Subject = message.Subject;
             emailMessage.Body = builder.ToMessageBody();
@@ -55,7 +56,7 @@ namespace chldr_utils.Services
             try
             {
                 client.Connect(SmtpServer, Port, true);
-                client.Authenticate(Username, Password);
+                client.Authenticate(Username, Password);               
                 client.Send(emailMessage);
 
                 SentMessages.Add(message);
