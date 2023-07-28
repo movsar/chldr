@@ -662,4 +662,7 @@
   <data name="Translation" xml:space="preserve">
     <value>Перевод</value>
   </data>
+  <data name="Log_out" xml:space="preserve">
+    <value>Выйти</value>
+  </data>
 </root>

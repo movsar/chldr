@@ -14,7 +14,7 @@ namespace chldr_utils.Services
 
         public GraphQLClient(ExceptionHandler exceptionHandler, EnvironmentService environmentService)
         {
-            _graphQLClient = new GraphQLHttpClient($"{Constants.ProdApiHost}/graphql", new NewtonsoftJsonSerializer());
+            _graphQLClient = new GraphQLHttpClient($"{Constants.DevApiHost}/graphql", new NewtonsoftJsonSerializer());
             _exceptionHandler = exceptionHandler;
         }
 

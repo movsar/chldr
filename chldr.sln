@@ -40,9 +40,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_data.remote.tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_testing_framework", "tests\chldr_testing_framework\chldr_testing_framework.csproj", "{AE1B561E-8D69-4A78-BAE7-950A51E9D38B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chldr_utils.tests", "tests\chldr_utils.tests\chldr_utils.tests.csproj", "{2947D78B-C4EC-43B3-8ED4-261917FBF662}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_utils.tests", "tests\chldr_utils.tests\chldr_utils.tests.csproj", "{2947D78B-C4EC-43B3-8ED4-261917FBF662}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chldr_shared.tests", "tests\chldr_shared.tests\chldr_shared.tests.csproj", "{F487CD89-57DB-4E01-9DE2-498F271B1E78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_shared.tests", "tests\chldr_shared.tests\chldr_shared.tests.csproj", "{F487CD89-57DB-4E01-9DE2-498F271B1E78}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

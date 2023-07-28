@@ -108,7 +108,7 @@ namespace chldr_data.Services
 
             if (!response.Success)
             {
-                throw new Exception("Error:Bad_request");
+                return new SessionInformation();
             }
 
             var data = RequestResult.GetData<dynamic>(response);

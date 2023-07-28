@@ -573,6 +573,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log out.
+        /// </summary>
+        public static string Log_out {
+            get {
+                return ResourceManager.GetString("Log_out", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Logged In.
         /// </summary>
         public static string LoggedIn {
