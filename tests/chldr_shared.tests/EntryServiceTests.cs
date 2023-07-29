@@ -1,8 +1,10 @@
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Interfaces;
+using chldr_data.Services;
 using chldr_shared.Services;
 using chldr_test_utils;
+using chldr_utils.Exceptions;
 using System.Reactive;
 using System.Transactions;
 
@@ -31,13 +33,18 @@ namespace chldr_shared.tests
                 // Arrange
                 var unitOfWork = _dataProvider.CreateUnitOfWork(_userId);
 
-                var user = (await unitOfWork.Users.GetRandomsAsync(1)).First();
+                var userDto = TestDataFactory.CreateRandomUserDto();
+                userDto.Status = chldr_data.Enums.UserStatus.Active;
+                await unitOfWork.Users.Add(userDto);
+                unitOfWork = _dataProvider.CreateUnitOfWork(userDto.UserId);
+                var user = UserModel.FromDto(userDto);
+
                 var source = (await unitOfWork.Sources.GetRandomsAsync(1)).First();
 
                 var entryDto = TestDataFactory.CreateRandomEntryDto(user.UserId, source.SourceId);
 
                 // Act
-                await _entryService.AddEntry(entryDto, user.UserId);
+                await _entryService.AddEntry(entryDto, userDto.UserId);
 
                 // Assert
                 var insertedEntry = await _entryService.Get(entryDto.EntryId);
@@ -47,8 +54,11 @@ namespace chldr_shared.tests
                 Assert.Equal(userRateRange.Lower, insertedEntry.Rate);
                 Assert.Equal(entryDto.SoundDtos[0].SoundId, insertedEntry.Sounds[0].SoundId);
 
+                // ! These must be newed for every transaction, otherwise produces issues related with parallel
+                _dataProvider = TestDataFactory.CreateSqlDataProvider();
                 _entryService = new EntryService(_dataProvider);
-                await _entryService.Remove(entryDto.EntryId, user.UserId);
+
+                await _entryService.Remove(entryDto.EntryId, userDto.UserId);
                 await Assert.ThrowsAsync<ArgumentException>(async () => await _entryService.Get(entryDto.EntryId));
             }
         }
@@ -69,7 +79,7 @@ namespace chldr_shared.tests
                 var entryDto = TestDataFactory.CreateRandomEntryDto(user.UserId, source.SourceId);
 
                 // Act
-                await Assert.ThrowsAsync<InvalidOperationException>(async () => await _entryService.AddEntry(entryDto, user.UserId));
+                await Assert.ThrowsAsync<UnauthorizedException>(async () => await _entryService.AddEntry(entryDto, user.UserId));
             }
         }
 

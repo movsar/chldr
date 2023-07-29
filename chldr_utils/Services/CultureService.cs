@@ -1,4 +1,6 @@
-﻿namespace chldr_utils.Services
+﻿using Microsoft.Extensions.Localization;
+
+namespace chldr_utils.Services
 {
     public class CultureService
     {

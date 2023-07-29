@@ -12,6 +12,7 @@ using chldr_utils.Models;
 using chldr_data.Services;
 using Realms.Sync;
 using chldr_data.DatabaseObjects.Interfaces;
+using chldr_utils.Exceptions;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("chldr_data.remote.tests")]
 
@@ -196,7 +197,7 @@ namespace chldr_data.remote.Repositories
             var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId));
             if (user.Status != UserStatus.Active)
             {
-                throw new InvalidOperationException();
+                throw new UnauthorizedException();
             }
 
             // Set rate
