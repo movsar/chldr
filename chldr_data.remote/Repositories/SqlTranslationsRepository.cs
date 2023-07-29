@@ -9,7 +9,6 @@ using chldr_data.remote.SqlEntities;
 using chldr_data.remote.Services;
 using chldr_data.Models;
 using chldr_utils.Services;
-using Realms.Sync;
 
 namespace chldr_data.remote.Repositories
 {
@@ -38,16 +37,16 @@ namespace chldr_data.remote.Repositories
         public override async Task<List<ChangeSetModel>> Add(TranslationDto dto)
         {
             // Set rate
-            var user = await _dbContext.Users.FindAsync(_userId);
-            dto.Rate = UserModel.FromEntity(user).GetRateRange().Lower;
-        
+            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
+            dto.Rate = user.GetRateRange().Lower;
+
             var entity = SqlTranslation.FromDto(dto, _dbContext);
             _dbContext.Translations.Add(entity);
 
             var changeSet = CreateChangeSetEntity(Operation.Insert, dto.TranslationId);
             _dbContext.ChangeSets.Add(changeSet);
 
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
@@ -57,6 +56,10 @@ namespace chldr_data.remote.Repositories
             // Find out what has been changed
             var existing = await Get(dto.TranslationId);
             var existingDto = TranslationDto.FromModel(existing);
+
+            // Set rate
+            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
+            dto.Rate = user.GetRateRange().Lower;
 
             var changes = Change.GetChanges(dto, existingDto);
             if (changes.Count == 0)
@@ -68,8 +71,8 @@ namespace chldr_data.remote.Repositories
 
             var changeSet = CreateChangeSetEntity(Operation.Update, dto.TranslationId, changes);
             _dbContext.ChangeSets.Add(changeSet);
-            
-            _dbContext.SaveChanges();
+
+            await _dbContext.SaveChangesAsync();
 
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }

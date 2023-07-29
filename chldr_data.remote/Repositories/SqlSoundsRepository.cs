@@ -1,4 +1,5 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
@@ -42,11 +43,13 @@ namespace chldr_data.remote.Repositories
             _fileService.AddEntrySound(soundDto.FileName, soundDto.RecordingB64!);
 
             var sound = SqlSound.FromDto(soundDto, _dbContext);
+            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
+            sound.Rate = user.GetRateRange().Lower;
             _dbContext.Sounds.Add(sound);
 
             var changeSet = CreateChangeSetEntity(Operation.Insert, soundDto.SoundId);
             _dbContext.ChangeSets.Add(changeSet);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
@@ -57,6 +60,9 @@ namespace chldr_data.remote.Repositories
             var existing = await Get(dto.SoundId);
             var existingDto = SoundDto.FromModel(existing);
 
+            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
+            dto.Rate = user.GetRateRange().Lower;
+
             var changes = Change.GetChanges(dto, existingDto);
             if (changes.Count == 0)
             {
@@ -66,7 +72,7 @@ namespace chldr_data.remote.Repositories
 
             var changeSet = CreateChangeSetEntity(Operation.Update, dto.SoundId);
             _dbContext.ChangeSets.Add(changeSet);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }

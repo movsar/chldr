@@ -18,6 +18,8 @@ public class RealmSound : RealmObject, ISoundEntity
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 
+    public int Rate { get; set; }
+
     internal static RealmSound FromDto(SoundDto soundDto, Realm context, RealmEntry? entry = null)
     {
         var user = context.Find<RealmUser>(soundDto.UserId);
@@ -48,6 +50,7 @@ public class RealmSound : RealmObject, ISoundEntity
         soundEntity.User = user;
         soundEntity.SoundId = soundDto.SoundId;
         soundEntity.FileName = soundDto.FileName;
+        soundEntity.Rate = soundDto.Rate;
 
         return soundEntity;
     }

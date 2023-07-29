@@ -19,7 +19,9 @@ public class SqlSound : ISoundEntity
     
     public virtual SqlEntry Entry { get; set; } = null!;
     public virtual SqlUser User { get; set; } = null!;
-    
+
+    public int Rate { get; set; }
+
     internal static SqlSound FromDto(SoundDto soundDto, SqlContext context)
     {
         //var user = context.Find<SqlUser>(soundDto.UserId);
@@ -34,6 +36,7 @@ public class SqlSound : ISoundEntity
         soundEntity.UserId = soundDto.UserId;
         soundEntity.SoundId = soundDto.SoundId;
         soundEntity.FileName = soundDto.FileName;
+        soundEntity.Rate = soundDto.Rate;
 
         return soundEntity;
     }

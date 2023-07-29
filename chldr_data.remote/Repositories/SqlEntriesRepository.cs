@@ -254,7 +254,7 @@ namespace chldr_data.remote.Repositories
                 var entry = await Get(updatedEntryDto.EntryId);
                 var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId));
                 var author = UserModel.FromEntity(await _dbContext.Users.FindAsync(entry.UserId));
-                if (user.Status != UserStatus.Active || user.GetRateRange().Lower < author.GetRateRange().Lower)
+                if (user.Status != UserStatus.Active || user.GetUserRole() < author.GetUserRole())
                 {
                     throw new InvalidOperationException();
                 }
@@ -306,7 +306,7 @@ namespace chldr_data.remote.Repositories
                 var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId));
                 var author = UserModel.FromEntity(await _dbContext.Users.FindAsync(entry.UserId));
 
-                if (user.Status != UserStatus.Active || user.GetRateRange().Lower < author.GetRateRange().Lower)
+                if (user.Status != UserStatus.Active || user.GetUserRole() < author.GetUserRole())
                 {
                     throw new InvalidOperationException();
                 }

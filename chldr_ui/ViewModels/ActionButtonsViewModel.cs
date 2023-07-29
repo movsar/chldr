@@ -1,4 +1,5 @@
 ﻿using chldr_data.DatabaseObjects.Models;
+using chldr_data.Enums;
 using Microsoft.AspNetCore.Components;
 
 namespace chldr_ui.ViewModels
@@ -11,14 +12,14 @@ namespace chldr_ui.ViewModels
 
         public bool CanEdit()
         {
-            return IsLoggedInUser && UserStore.CurrentUser!.CanEditEntry(Entry!.Rate!);
+            // Anyone should be able to open an entry for edit mode, if they're logged in and active
+            // However, they might not be able to change anything, that will be governed by CanEdit* methods
+            return UserStore.IsLoggedIn && UserStore.CurrentUser!.Status == UserStatus.Active;
         }
 
         public bool CanRemove()
         {
-            return IsLoggedInUser && UserStore.CurrentUser!.CanRemoveEntry(Entry);
+            return UserStore.IsLoggedIn && UserStore.CurrentUser!.CanRemove(Entry.Rate, Entry.UserId, Entry.CreatedAt);
         }
-
-        public bool IsLoggedInUser => UserStore.IsLoggedIn;
     }
 }

@@ -8,6 +8,7 @@ namespace chldr_data.DatabaseObjects.Models
         public string SoundId { get; set; }
         public string EntryId { get; set; }
         public string UserId { get; set; }
+        public int Rate { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
 
@@ -19,7 +20,7 @@ namespace chldr_data.DatabaseObjects.Models
                 UserId = entity.UserId,
                 EntryId = entity.EntryId,
                 FileName = entity.FileName,
-
+                Rate = entity.Rate,
                 CreatedAt = entity.CreatedAt,
                 UpdatedAt = entity.UpdatedAt,
             };

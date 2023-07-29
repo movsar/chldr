@@ -10,8 +10,10 @@ namespace chldr_data.DatabaseObjects.Dtos
         public string EntryId { get; set; }
         public string UserId { get; set; }
         public virtual string? RecordingB64 { get; set; }
+        public int Rate { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
+
 
         public static SoundDto FromModel(SoundModel sound)
         {
@@ -26,7 +28,7 @@ namespace chldr_data.DatabaseObjects.Dtos
                 EntryId = sound.EntryId,
                 UserId = sound.UserId,
                 FileName = sound.FileName,
-
+                Rate = sound.Rate,
                 CreatedAt = sound.CreatedAt,
                 UpdatedAt = sound.UpdatedAt,
             };

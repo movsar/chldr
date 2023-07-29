@@ -4,6 +4,8 @@ using chldr_shared.Models;
 using Realms.Sync;
 using Newtonsoft.Json;
 using chldr_data.DatabaseObjects.Interfaces;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.DatabaseObjects.Models
 {
@@ -19,11 +21,12 @@ namespace chldr_data.DatabaseObjects.Models
         public static NumericRange MaintainerRateRange = new NumericRange(10000, 500000000);
         public string? Email { get; set; }
         public int Rate { get; set; }
-        public RateWeight VoteWeight => GetUserVoteWeightByRate(Rate);
+        public UserRole Role => GetUserRole(Rate);
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Patronymic { get; set; }
         public string UserId { get; set; }
+        public bool IsModerator { get; set; }
         public UserStatus Status { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
@@ -56,69 +59,92 @@ namespace chldr_data.DatabaseObjects.Models
                 return MemberRateRange;
             }
         }
-
-        public static RateWeight GetUserVoteWeightByRate(int rate)
+        public UserRole GetUserRole()
+        {
+            return GetUserRole(Rate);
+        }
+        public static UserRole GetUserRole(int rate)
         {
             if (MemberRateRange.Contains(rate))
             {
-                return RateWeight.Member;
+                return UserRole.Member;
             }
             else if (EnthusiastRateRange.Contains(rate))
             {
-                return RateWeight.Enthusiast;
+                return UserRole.Enthusiast;
             }
             else if (ContributorRateRange.Contains(rate))
             {
-                return RateWeight.Contributor;
+                return UserRole.Contributor;
             }
             else if (EditorRateRange.Contains(rate))
             {
-                return RateWeight.Editor;
+                return UserRole.Editor;
             }
             else if (MaintainerRateRange.Contains(rate))
             {
-                return RateWeight.Maintainer;
+                return UserRole.Maintainer;
             }
             else
             {
-                return RateWeight.Member;
+                return UserRole.Member;
             }
         }
-        public bool CanRemoveEntry(EntryModel entry)
+        #region Permissions
+        public bool CanAddSound(EntryModel entry)
         {
-            // Removal is allowed only for the authors and only within X hours
-            if (!entry.UserId.Equals(UserId) || VoteWeight < GetUserVoteWeightByRate(entry.Rate))
+            if (Status != UserStatus.Active)
             {
                 return false;
             }
 
-            var timePassed = entry.CreatedAt - DateTimeOffset.UtcNow;
-            if (timePassed.Hours < Constants.TimeInHrsToAllowForEntryRemoval)
+            if (entry.Sounds.Where(s => s.Rate > MemberRateRange.Upper).Count() >= Constants.MaxSoundsPerEntry)
             {
-                return true;
+                return false;
             }
 
-            return false;
+            return true;
         }
-
-        public bool CanEditEntry(int entryRate)
+        public bool CanAddTranslation(EntryModel entry, string languageCode)
         {
-            if (VoteWeight >= GetUserVoteWeightByRate(entryRate))
+            if (Status != UserStatus.Active)
             {
-                return true;
+                return false;
             }
 
-            return false;
+            if (entry.Translations.Where(t => t.LanguageCode.Equals(languageCode) && t.Rate > MemberRateRange.Upper).Count() >= Constants.MaxTranslationsPerEntry)
+            {
+                return false;
+            }
+
+            return true;
         }
-        public bool CanEditTranslation(TranslationModel translation)
+        public bool CanEdit(int entityRate, string entityUserId)
         {
-            if (VoteWeight >= GetUserVoteWeightByRate(translation.Rate))
+            if (Status != UserStatus.Active || (Role <= GetUserRole(entityRate) && !UserId.Equals(entityUserId)))
+            {
+                return false;
+            }
+
+            return true;
+        }
+        public bool CanRemove(int entityRate, string entityUserId, DateTimeOffset entityCreatedAt)
+        {
+            // Removal is allowed only for the authors and only within X hours and for moderators
+            if (Status != UserStatus.Active || (Role <= GetUserRole(entityRate) && !UserId.Equals(entityUserId)))
+            {
+                return false;
+            }
+
+            var timePassed = entityCreatedAt - DateTimeOffset.UtcNow;
+            if ((timePassed.Hours < Constants.TimeInHrsToAllowForEntryRemoval) || IsModerator)
             {
                 return true;
             }
 
             return false;
         }
+        #endregion
 
         private static UserModel FromBaseInterface(IUser user)
         {

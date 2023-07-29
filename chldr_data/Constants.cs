@@ -28,5 +28,8 @@
         public static int EntriesApproximateCoount = 75000;
 
         public const int TimeInHrsToAllowForEntryRemoval = 12;
+
+        public const int MaxSoundsPerEntry = 2;
+        public const int MaxTranslationsPerEntry = 2;
     }
 }
