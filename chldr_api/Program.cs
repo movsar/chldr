@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
 using System.Text;
 
 namespace chldr_api
@@ -40,8 +41,10 @@ namespace chldr_api
             builder.Services.AddScoped<ConfirmEmailResolver>();
             builder.Services.AddScoped<LoginResolver>();
 
-
             builder.Services.AddLocalization();
+
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-RU");
+            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("ru-RU");
 
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingSecret));
 

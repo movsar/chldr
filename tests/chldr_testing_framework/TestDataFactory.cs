@@ -98,7 +98,11 @@ namespace chldr_test_utils
             smtpClientMock.Setup(c => c.Send(It.IsAny<MimeMessage>()));
 
             // Create an instance of EmailService with the mocked ISmtpClientWrapper
-            var emailService = new EmailService(() => smtpClientMock.Object);
+            var emailService = new EmailService(() => smtpClientMock.Object)
+            {
+                Username = "movsar@gmail.com",
+                Password = "whatever",
+            };
 
             return emailService;
         }

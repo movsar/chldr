@@ -133,7 +133,15 @@
     <value>Электронная почта</value>
   </data>
   <data name="Email:Confirm_email_html" xml:space="preserve">
-    <value>&lt;h2&gt;&lt;span style='font-family:Lucida Sans Unicode,Lucida Grande,sans-serif'&gt;Здравствуйте и добро пожаловать!&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;&lt;span style='font-size:14px'&gt;We&amp;#39;re мы рады, что вы с нами! Let&amp;#39;s сделаем чеченский язык снова великим!&lt;br /&gt;\r\nДля активации вашего аккаунта пожалуйста следуйте &lt;a href='{0}'&gt;этой ссылке&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style='font-size:12px'&gt;Это письмо создано автоматически, не отвечайте на него. Вы всегда можете связаться с нами по адресу team@nohchiyn-mott.com&lt;/span&gt;&lt;/p&gt;</value>
+    <value>&lt;h2&gt;
+    Здравствуйте и добро пожаловать!
+&lt;/h2&gt;
+&lt;p&gt;
+    Мы рады, что вы с нами!&lt;br /&gt;Для активации вашего аккаунта пожалуйста следуйте по &lt;a href='{0}'&gt;этой ссылке&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;
+    Это письмо создано автоматически, не отвечайте на него.
+&lt;/p&gt;</value>
   </data>
   <data name="Email:Confirm_email_subject" xml:space="preserve">
     <value>Пожалуйста, подтвердите свою электронную почту</value>

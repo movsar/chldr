@@ -13,6 +13,7 @@ namespace chldr_utils.tests
         public void Send_NoError_WhenValidMessage()
         {
             // Arrange
+
             var emailService = TestDataFactory.CreateFakeEmailService();
             var message = new EmailMessage(
                  new string[] { "recipient@example.com" },
