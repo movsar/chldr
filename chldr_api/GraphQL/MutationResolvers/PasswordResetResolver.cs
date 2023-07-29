@@ -52,7 +52,7 @@ namespace chldr_api.GraphQL.MutationServices
             await unitOfWork.Tokens.Add(token);
             
             // Send the password reset link to the user's email
-            var resetPasswordLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdApiHost}/set-new-password", new Dictionary<string, string?>(){
+            var resetPasswordLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdFrontHost}/set-new-password", new Dictionary<string, string?>(){
                 { "token", tokenValue }
             })).ToString();
 

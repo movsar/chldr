@@ -668,4 +668,7 @@
   <data name="Type" xml:space="preserve">
     <value>Type</value>
   </data>
+  <data name="Your_account_is_activated_you_can_now_log_in" xml:space="preserve">
+    <value>Your account is activated you can now log in</value>
+  </data>
 </root>

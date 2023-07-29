@@ -69,7 +69,7 @@ namespace chldr_api.GraphQL.MutationServices
                 });
 
 
-                var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdApiHost}/login", new Dictionary<string, string?>(){
+                var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdFrontHost}/login", new Dictionary<string, string?>(){
                 { "token", confirmationToken},
             })).ToString();
 

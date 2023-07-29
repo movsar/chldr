@@ -1689,6 +1689,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your account is activated you can now log in.
+        /// </summary>
+        public static string Your_account_is_activated_you_can_now_log_in {
+            get {
+                return ResourceManager.GetString("Your_account_is_activated_you_can_now_log_in", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your password has been successfully updated.
         /// </summary>
         public static string Your_password_has_been_updated {
