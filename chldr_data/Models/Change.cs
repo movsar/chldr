@@ -27,11 +27,15 @@ namespace chldr_data.Models
                 var createdAt = nameof(IEntry.CreatedAt);
                 var updatedAt = nameof(IEntry.UpdatedAt);
                 var recordingB64 = nameof(SoundDto.RecordingB64);
+                
+                // Skip Rate field for security reasons
+                var rate = nameof(IEntry.Rate);
 
                 var propertiesToSkip = new string[] {
                     createdAt,
                     updatedAt,
-                    recordingB64
+                    recordingB64,
+                    rate
                 };
 
                 // Skip RecordingB64

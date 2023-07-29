@@ -35,7 +35,7 @@ namespace chldr_ui.ViewModels
         bool existingSoundsRendered;
         SoundDto latestSoundDto;
 
-        internal static bool CanEditEntry { get; private set; } = false;
+        internal static bool CanEditEntry { get; private set; } = true;
 
         private async Task RenderExistingSounds()
         {
@@ -60,6 +60,11 @@ namespace chldr_ui.ViewModels
 
         protected override async Task OnParametersSetAsync()
         {
+            if (UserStore.CurrentUser == null)
+            {
+                NavigationManager.NavigateTo("/");
+            }
+
             if (string.IsNullOrEmpty(EntryId))
             {
                 await NewTranslation();
@@ -133,8 +138,8 @@ namespace chldr_ui.ViewModels
         {
             isRecording = true;
             latestSoundDto = new SoundDto();
-
             latestSoundDto.EntryId = EntryDto.EntryId!;
+            latestSoundDto.Rate = UserStore.CurrentUser!.GetRateRange().Lower;
             latestSoundDto.UserId = UserStore.CurrentUser!.UserId;
 
             await JsInterop.StartRecording(latestSoundDto.SoundId);

@@ -29,6 +29,8 @@ namespace chldr_data.DatabaseObjects.Models
                 Notes = translation.Notes,
                 Rate = translation.Rate,
                 LanguageCode = translation.LanguageCode,
+                CreatedAt = translation.CreatedAt,
+                UpdatedAt = translation.UpdatedAt                
             };
         }
     }

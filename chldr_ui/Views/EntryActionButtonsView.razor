@@ -1,6 +1,7 @@
 ﻿@inherits EntryActionButtonsViewModel;
 
 <div class="chldr_entry_actions">
+    <i class="bi bi-share ms-2" @onclick="@ShareHandler"></i>
 
     @if (UserStore.IsLoggedIn)
     {
@@ -8,20 +9,21 @@
         @*<i class="bi bi-star" @onclick="AddToFavorites"></i>*@
 
         <span class="chldr_translation_actions ms-lg-1">
-            <i class="bi bi-hand-thumbs-up" @onclick="UpvoteHandler"></i>
+            <i class="bi bi-hand-thumbs-up ms-2" @onclick="UpvoteHandler"></i>
             <i class="bi bi-hand-thumbs-down" @onclick="DownvoteHandler"></i>
         </span>
 
-        @if (CanRemove())
-        {
-            <i class="bi bi-trash" @onclick="@RemoveHandler"></i>
-        }
 
         @if (CanEdit())
         {
-            <a href="/entry/edit/@Entry!.EntryId"><i class="bi bi-pencil ms-1"></i></a>
+            <a href="/entry/edit/@Entry!.EntryId"><i class="bi bi-pencil ms-2"></i></a>
+        }
+
+
+        @if (CanRemove())
+        {
+            <i class="bi bi-trash ms-2" @onclick="@RemoveHandler"></i>
         }
     }
 
-    <i class="bi bi-share ms-1" @onclick="@ShareHandler"></i>
 </div>

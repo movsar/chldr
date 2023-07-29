@@ -98,7 +98,7 @@ namespace chldr_data.DatabaseObjects.Models
                 return false;
             }
 
-            if (entry.SoundDtos.Where(s => s.Rate > MemberRateRange.Upper).Count() >= Constants.MaxSoundsPerEntry)
+            if (entry.SoundDtos.Where(s => s.Rate > 0).Count() >= Constants.MaxSoundsPerEntry)
             {
                 return false;
             }

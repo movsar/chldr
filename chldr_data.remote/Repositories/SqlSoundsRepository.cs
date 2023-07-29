@@ -60,14 +60,21 @@ namespace chldr_data.remote.Repositories
             var existing = await Get(dto.SoundId);
             var existingDto = SoundDto.FromModel(existing);
 
-            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
-            dto.Rate = user.GetRateRange().Lower;
-
             var changes = Change.GetChanges(dto, existingDto);
             if (changes.Count == 0)
             {
                 return new List<ChangeSetModel>();
             }
+
+            // This should be before checking for privileges, in case when input is existing entry and nothing has been changed
+            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
+            if (!user.CanEdit(existing.Rate, existing.UserId))
+            {
+                throw new InvalidOperationException("Error:Insufficient_privileges");
+            }
+
+            // Set rate, save
+            changes.Add(new Change() { Property = "Rate", OldValue = dto.Rate, NewValue = user.GetRateRange().Lower });
             ApplyChanges<SqlSound>(dto.SoundId, changes);
 
             var changeSet = CreateChangeSetEntity(Operation.Update, dto.SoundId);
@@ -83,6 +90,12 @@ namespace chldr_data.remote.Repositories
             if (sound == null)
             {
                 return new List<ChangeSetModel>();
+            }
+
+            var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId));
+            if (!user.CanRemove(sound.Rate, sound.UserId, sound.CreatedAt))
+            {
+                throw new InvalidOperationException();
             }
 
             _fileService.DeleteEntrySound(sound.FileName);

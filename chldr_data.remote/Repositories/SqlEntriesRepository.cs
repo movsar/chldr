@@ -253,26 +253,18 @@ namespace chldr_data.remote.Repositories
             {
                 var entry = await Get(updatedEntryDto.EntryId);
                 var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId));
-                var author = UserModel.FromEntity(await _dbContext.Users.FindAsync(entry.UserId));
-                if (user.Status != UserStatus.Active || user.GetUserRole() < author.GetUserRole())
-                {
-                    throw new InvalidOperationException();
-                }
-
-                updatedEntryDto.Rate = user.GetRateRange().Lower;
-                foreach (var translationDto in updatedEntryDto.TranslationsDtos)
-                {
-                    translationDto.Rate = updatedEntryDto.Rate;
-                }
 
                 var existingEntryDto = EntryDto.FromModel(entry);
 
                 // Update entry
                 var entryChanges = Change.GetChanges(updatedEntryDto, existingEntryDto);
-                if (entryChanges.Count != 0)
+                if (entryChanges.Count != 0 && user.CanEdit(entry.Rate, entry.UserId))
                 {
-                    // Save the changes, even if there are no changes to the entry, as there might be 
                     var updatedEntryEntity = SqlEntry.FromDto(updatedEntryDto, _dbContext);
+
+                    // Enforce proper Rate
+                    updatedEntryDto.Rate = user.GetRateRange().Lower;
+
                     _dbContext.Update(updatedEntryEntity);
 
                     var entryChangeSetDto = CreateChangeSetEntity(Operation.Update, updatedEntryDto.EntryId, entryChanges);
@@ -304,11 +296,25 @@ namespace chldr_data.remote.Repositories
             {
                 var entry = await Get(entryId);
                 var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId));
-                var author = UserModel.FromEntity(await _dbContext.Users.FindAsync(entry.UserId));
 
-                if (user.Status != UserStatus.Active || user.GetUserRole() < author.GetUserRole())
+                // Check whether the user has access to remove the entry with all its child items
+                if (!user.CanRemove(entry.Rate, entry.UserId, entry.CreatedAt))
                 {
                     throw new InvalidOperationException();
+                }
+                foreach (var item in entry.Translations)
+                {
+                    if (!user.CanRemove(item.Rate, item.UserId, item.CreatedAt))
+                    {
+                        throw new InvalidOperationException();
+                    }
+                }
+                foreach (var item in entry.Sounds)
+                {
+                    if (!user.CanRemove(item.Rate, item.UserId, item.CreatedAt))
+                    {
+                        throw new InvalidOperationException();
+                    }
                 }
 
                 var soundIds = entry.Sounds.Select(s => s.SoundId).ToArray();
@@ -350,26 +356,25 @@ namespace chldr_data.remote.Repositories
 
             var added = updatedEntryDto.SoundDtos.Where(t => !existingEntrySoundIds.Contains(t.SoundId));
             var deleted = existingEntryDto.SoundDtos.Where(t => !updatedEntrySoundIds.Contains(t.SoundId));
-            var updated = updatedEntryDto.SoundDtos.Where(t => existingEntrySoundIds.Contains(t.SoundId) && updatedEntrySoundIds.Contains(t.SoundId));
+            var existingAndUpdated = updatedEntryDto.SoundDtos.Where(t => existingEntrySoundIds.Contains(t.SoundId) && updatedEntrySoundIds.Contains(t.SoundId));
 
-            // Process removed translations
+            // Process added sounds
+            foreach (var sound in added)
+            {
+                var changeSet = await _sounds.Add(sound);
+                changeSets.AddRange(changeSet);
+            }
+
+            // Process removed sounds
             foreach (var sound in deleted)
             {
                 var changeSet = await _sounds.Remove(sound.SoundId);
                 changeSets.AddRange(changeSet);
             }
 
-            // Process updated translations
-            foreach (var sound in updated)
+            // Process updated sounds
+            foreach (var sound in existingAndUpdated)
             {
-                var existingDto = existingEntryDto.SoundDtos.First(t => t.SoundId.Equals(sound.SoundId));
-
-                var changes = Change.GetChanges(sound, existingDto);
-                if (changes.Count == 0)
-                {
-                    continue;
-                }
-
                 var changeSet = await _sounds.Update(sound);
                 changeSets.AddRange(changeSet);
             }
@@ -385,7 +390,14 @@ namespace chldr_data.remote.Repositories
 
             var added = updatedEntryDto.TranslationsDtos.Where(t => !existingEntryTranslationIds.Contains(t.TranslationId));
             var deleted = existingEntryDto.TranslationsDtos.Where(t => !updatedEntryTranslationIds.Contains(t.TranslationId));
-            var updated = updatedEntryDto.TranslationsDtos.Where(t => existingEntryTranslationIds.Contains(t.TranslationId) && updatedEntryTranslationIds.Contains(t.TranslationId));
+            var existingAndUpdated = updatedEntryDto.TranslationsDtos.Where(t => existingEntryTranslationIds.Contains(t.TranslationId) && updatedEntryTranslationIds.Contains(t.TranslationId));
+
+            // Process added translations
+            foreach (var translation in added)
+            {
+                var changeSet = await _translations.Add(translation);
+                changeSets.AddRange(changeSet);
+            }
 
             // Process removed translations
             foreach (var translation in deleted)
@@ -395,16 +407,8 @@ namespace chldr_data.remote.Repositories
             }
 
             // Process updated translations
-            foreach (var translation in updated)
+            foreach (var translation in existingAndUpdated)
             {
-                var existingTranslationDto = existingEntryDto.TranslationsDtos.First(t => t.TranslationId.Equals(translation.TranslationId));
-
-                var changes = Change.GetChanges(translation, existingTranslationDto);
-                if (changes.Count == 0)
-                {
-                    continue;
-                }
-
                 var changeSet = await _translations.Update(translation);
                 changeSets.AddRange(changeSet);
             }

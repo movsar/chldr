@@ -37,7 +37,9 @@ namespace chldr_data.DatabaseObjects.Dtos
                 LanguageCode = translation.LanguageCode,                
                 Content = translation.Content,
                 Notes = translation.Notes,
-                Rate = translation.Rate
+                Rate = translation.Rate,
+                CreatedAt = translation.CreatedAt,
+                UpdatedAt = translation.UpdatedAt
             };
         }
     }

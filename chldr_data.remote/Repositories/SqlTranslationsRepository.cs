@@ -57,16 +57,21 @@ namespace chldr_data.remote.Repositories
             var existing = await Get(dto.TranslationId);
             var existingDto = TranslationDto.FromModel(existing);
 
-            // Set rate
-            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
-            dto.Rate = user.GetRateRange().Lower;
-
+            // This should be before checking for privileges, in case when input is existing entry and nothing has been changed
             var changes = Change.GetChanges(dto, existingDto);
             if (changes.Count == 0)
             {
                 return new List<ChangeSetModel>();
             }
 
+            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
+            if (!user.CanEdit(existing.Rate, existing.UserId))
+            {
+                throw new InvalidOperationException("Error:Insufficient_privileges");
+            }
+          
+            // Set rate, save
+            changes.Add(new Change() { Property = "Rate", OldValue = dto.Rate, NewValue = user.GetRateRange().Lower });
             ApplyChanges<SqlTranslation>(dto.TranslationId, changes);
 
             var changeSet = CreateChangeSetEntity(Operation.Update, dto.TranslationId, changes);
@@ -77,5 +82,16 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
+        public override async Task<List<ChangeSetModel>> Remove(string entityId)
+        {
+            var existing = await Get(entityId);
+            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
+            if (!user.CanEdit(existing.Rate, existing.UserId))
+            {
+                throw new InvalidOperationException("Error:Insufficient_privileges");
+            }
+
+            return await base.Remove(entityId);
+        }
     }
 }

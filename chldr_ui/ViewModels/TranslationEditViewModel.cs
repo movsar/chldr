@@ -13,7 +13,7 @@ namespace chldr_ui.ViewModels
 
         [Parameter]
         public Action<string> OnDelete { get; set; }
-        public bool CanEditTranslation { get; private set; } = false;
+        public bool CanEditTranslation { get; private set; } = true;
         public bool CanRemoveTranslation { get; private set; }
 
         public void EditHandler()
@@ -27,12 +27,9 @@ namespace chldr_ui.ViewModels
 
         protected override async Task OnParametersSetAsync()
         {
-            if (TranslationDto.CreatedAt == DateTimeOffset.MinValue)
+            if (TranslationDto.CreatedAt != DateTimeOffset.MinValue)
             {
-                CanEditTranslation = true;
-            }
-            else
-            {
+                CanEditTranslation = false;
                 CanRemoveTranslation = UserStore.CurrentUser?.CanRemove(TranslationDto.Rate, TranslationDto.UserId, TranslationDto.CreatedAt) == true;
             }
             await base.OnParametersSetAsync();

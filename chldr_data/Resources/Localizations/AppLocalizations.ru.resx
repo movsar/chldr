@@ -618,7 +618,7 @@
     <value>Отмена</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Ok</value>
+    <value>Сохранить</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Удалить</value>

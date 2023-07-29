@@ -12,6 +12,7 @@ using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Realms;
+using Realms.Sync;
 
 namespace chldr_data.remote.Repositories
 {
@@ -38,6 +39,7 @@ namespace chldr_data.remote.Repositories
             {
                 throw new NullReferenceException();
             }
+
             _dbContext.Remove(entity);
 
             if (RecordType == RecordType.ChangeSet)
@@ -48,7 +50,7 @@ namespace chldr_data.remote.Repositories
             var changeSetEntity = CreateChangeSetEntity(Operation.Delete, entityId);
             _dbContext.ChangeSets.Add(changeSetEntity);
 
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSetEntity) };
         }

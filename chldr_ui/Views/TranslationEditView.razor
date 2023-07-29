@@ -4,9 +4,8 @@
 {
     return;
 }
-
 <div class="row">
-    <div class="col-10">
+    <div class="col-2">
         <select @bind="@TranslationDto.LanguageCode" class="form-select" disabled="@(!CanEditTranslation)">
             @foreach (var language in ContentStore.Languages)
             {
@@ -15,15 +14,22 @@
         </select>
     </div>
 
-    <TranslationActionButtonsView 
-        EditHandler="() => EditHandler()" 
-        RemoveHandler="() => RemoveHandler()"
-        TranslationDto="@TranslationDto">
-    </TranslationActionButtonsView>
+    <div class="col-10">
+        <input type="text" class="form-control" autocomplete="off" disabled="@(!CanEditTranslation)"
+               placeholder="@Localizer["Enter_translation_text"]" required @bind="TranslationDto.Content" />
+    </div>
 </div>
 
-<input type="text" class="form-control mt-2" autocomplete="off" disabled="@(!CanEditTranslation)"
-       placeholder="@Localizer["Enter_translation_text"]" required @bind="TranslationDto.Content" />
+<div class="row mt-2">
+    <div class="col-10">
+        <input type="text" class="form-control" autocomplete="off" disabled="@(!CanEditTranslation)"
+               placeholder="@Localizer["Enter_translation_notes"]" @bind="TranslationDto.Notes" />
+    </div>
 
-<input type="text" class="form-control mt-2" autocomplete="off" disabled="@(!CanEditTranslation)"
-       placeholder="@Localizer["Enter_translation_notes"]" @bind="TranslationDto.Notes" />
+    <div class="col-2 mt-2">
+        <TranslationActionButtonsView EditHandler="() => EditHandler()"
+                                      RemoveHandler="() => RemoveHandler()"
+                                      TranslationDto="@TranslationDto">
+        </TranslationActionButtonsView>
+    </div>
+</div>
