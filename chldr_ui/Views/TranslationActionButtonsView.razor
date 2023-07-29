@@ -1,0 +1,17 @@
+﻿@inherits TranslationActionButtonsViewModel;
+
+@if (UserStore.IsLoggedIn)
+{
+    <div class="chldr_entry_actions">
+
+        @if (CanRemove())
+        {
+            <i class="bi bi-trash ms-1" @onclick="@RemoveHandler"></i>
+        }
+
+        @if (CanEdit())
+        {
+            <i class="bi bi-pencil ms-1" @onclick="@EditHandler"></i>
+        }
+    </div>
+}

@@ -17,6 +17,7 @@ namespace chldr_ui.ViewModels
         [Inject] IDataProvider DataProvider { get; set; }
 
         [Parameter] public EntryDto EntryDto { get; set; }
+        [Parameter] public bool Disabled { get; set; }
         internal EntryModel? ParentEntry { get; set; }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

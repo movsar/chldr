@@ -16,7 +16,11 @@ namespace chldr_ui.ViewModels
         public bool CanEditTranslation { get; private set; }
         public bool CanRemoveTranslation { get; private set; }
 
-        public void Delete()
+        public void EditHandler()
+        {
+
+        }
+        public void RemoveHandler()
         {
             OnDelete?.Invoke(TranslationDto.TranslationId);
         }

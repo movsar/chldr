@@ -73,7 +73,7 @@
     @switch ((EntryType)EntryDto.Type)
     {
         case EntryType.Word:
-            <WordEditView EntryDto="@EntryDto"></WordEditView>
+            <WordEditView EntryDto="@EntryDto" Disabled="@(!CanEditEntry)"></WordEditView>
             break;
 
         case EntryType.Phrase:

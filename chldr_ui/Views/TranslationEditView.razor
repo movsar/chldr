@@ -7,7 +7,7 @@
 
 <div class="row">
     <div class="col-10">
-        <select @bind="@TranslationDto.LanguageCode" class="form-select">
+        <select @bind="@TranslationDto.LanguageCode" class="form-select" disabled="@(!CanEditTranslation)">
             @foreach (var language in ContentStore.Languages)
             {
                 <option value="@language.Code" class="form-control">@language.Name</option>
@@ -15,12 +15,11 @@
         </select>
     </div>
 
-    @if (@CanRemoveTranslation)
-    {
-        <div class="col-1">
-            <button class="btn btn-danger" type="button" @onclick="@Delete">@Localizer["Delete"]</button>
-        </div>
-    }
+    <TranslationActionButtonsView 
+        EditHandler="() => EditHandler()" 
+        RemoveHandler="() => RemoveHandler()"
+        TranslationDto="@TranslationDto">
+    </TranslationActionButtonsView>
 </div>
 
 <input type="text" class="form-control mt-2" autocomplete="off" disabled="@(!CanEditTranslation)"

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace chldr_ui.ViewModels
 {
-    public class ActionButtonsViewModel : ViewModelBase
+    public class EntryActionButtonsViewModel : ViewModelBase
     {
         [Parameter] public EntryModel Entry { get; set; }
         [Parameter] public Action ShareHandler { get; set; }
