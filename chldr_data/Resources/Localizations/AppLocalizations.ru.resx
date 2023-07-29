@@ -665,4 +665,7 @@
   <data name="Log_out" xml:space="preserve">
     <value>Выйти</value>
   </data>
+  <data name="Type" xml:space="preserve">
+    <value>Тип</value>
+  </data>
 </root>

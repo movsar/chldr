@@ -136,7 +136,7 @@ namespace chldr_data.DatabaseObjects.Models
                 return false;
             }
 
-            var timePassed = entityCreatedAt - DateTimeOffset.UtcNow;
+            var timePassed = DateTimeOffset.UtcNow - entityCreatedAt;
             if ((timePassed.Hours < Constants.TimeInHrsToAllowForEntryRemoval) || IsModerator)
             {
                 return true;

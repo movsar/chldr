@@ -164,6 +164,8 @@ public class SqlContext : DbContext
                 entity.Property(e => e.UserId)
                     .HasMaxLength(40)
                     .HasColumnName("user_id");
+                entity.Property(e => e.Rate)
+                    .HasColumnName("rate");
 
                 entity.HasOne(d => d.Entry).WithMany(p => p.Sounds)
                     .HasForeignKey(d => d.EntryId)

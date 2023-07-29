@@ -6,15 +6,13 @@ using chldr_data.Enums.WordDetails;
 using chldr_data.Helpers;
 using chldr_data.Interfaces;
 using chldr_data.local.Services;
-using chldr_shared;
 using chldr_ui.Components;
-using chldr_utils.Services;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 
 namespace chldr_ui.ViewModels
 {
-    public class WordEditViewModel : ViewModelBase
+    public class WordDetailsEditViewModel : ViewModelBase
     {
         [Inject] IDataProvider DataProvider { get; set; }
 

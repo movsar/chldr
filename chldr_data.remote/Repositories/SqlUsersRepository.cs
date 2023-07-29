@@ -34,7 +34,6 @@ namespace chldr_data.remote.Repositories
         public override async Task<List<ChangeSetModel>> Add(UserDto dto)
         {
             dto.Rate = 1;
-            dto.RateWeight = 1;
 
             var user = SqlUser.FromDto(dto);
             _dbContext.Users.Add(user);

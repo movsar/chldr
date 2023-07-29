@@ -1,5 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models.Words;
+using chldr_data.Enums;
 using chldr_data.Enums.WordDetails;
 using chldr_data.Interfaces;
 using Newtonsoft.Json;

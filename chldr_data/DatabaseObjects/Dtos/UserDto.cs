@@ -13,7 +13,6 @@ namespace chldr_data.DatabaseObjects.Dtos
         public string? Password { get; set; }
         [JsonIgnore]
         public string? PasswordConfirmation { get; set; }
-        public int RateWeight { get; set; } = 1;
         public int Rate { get; set; } = 1;
         public string? Patronymic { get; set; }
         public string? FirstName { get; set; }
@@ -27,11 +26,16 @@ namespace chldr_data.DatabaseObjects.Dtos
         {
             return new UserDto()
             {
+                CreatedAt = model.CreatedAt,
+                UpdatedAt = model.UpdatedAt,
+                ImagePath = model.ImagePath,
+                Patronymic = model.Patronymic,
                 UserId = model.UserId,
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Rate = model.Rate,
+                Status = model.Status
             };
         }
     }

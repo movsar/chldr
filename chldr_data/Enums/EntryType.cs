@@ -4,6 +4,6 @@
     {
         Word = 1,
         Phrase = 2,
-        Text = 3
+        Text = 3,
     };
 }

@@ -1,17 +1,44 @@
 ﻿using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
+using chldr_data.Enums;
 using Newtonsoft.Json;
 
 namespace chldr_data.DatabaseObjects.Dtos
 {
     public class EntryDto : IEntry
     {
+        private string content = string.Empty;
+
         public string EntryId { get; set; } = Guid.NewGuid().ToString();
         public string? UserId { get; set; }
         public string SourceId { get; set; }
         public string? ParentEntryId { get; set; }
         public int Rate { get; set; }
-        public string Content { get; set; } = string.Empty;
+        public string Content
+        {
+            get => content;
+
+            set
+            {
+                var trimmedValue = value.Trim();
+                if (trimmedValue.Contains(" ") || trimmedValue.Contains(".") || trimmedValue.Contains(","))
+                {
+                    if (trimmedValue.Length > 255)
+                    {
+                        Type = (int)EntryType.Text;
+                    }
+                    else
+                    {
+                        Type = (int)EntryType.Phrase;
+                    }
+                }
+                else
+                {
+                    Type = (int)EntryType.Word;
+                }
+                content = value;
+            }
+        }
         public string? Details { get; set; }
         public int Type { get; set; } = 1;
         public int EntrySubtype { get; set; } = 0;
@@ -40,7 +67,7 @@ namespace chldr_data.DatabaseObjects.Dtos
             entryDto.Translations.AddRange(entryModel.Translations.Select(t => TranslationDto.FromModel(t)));
 
             entryDto.Sounds.Clear();
-            entryDto.Sounds.AddRange(entryModel.Sounds.Select(s => SoundDto.FromModel(s)));          
+            entryDto.Sounds.AddRange(entryModel.Sounds.Select(s => SoundDto.FromModel(s)));
             return entryDto;
         }
     }

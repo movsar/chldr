@@ -34,17 +34,6 @@ namespace chldr_ui.ViewModels
         bool isRecording;
         bool existingSoundsRendered;
         SoundDto latestSoundDto;
-        internal void HandleEntryTypeChange(ChangeEventArgs e)
-        {
-            Enum.TryParse(e.Value?.ToString(), out EntryType selectedEntryType);
-
-            if (selectedEntryType == (EntryType)EntryDto.Type)
-            {
-                return;
-            }
-
-            EntryDto.Type = (int)selectedEntryType;
-        }
 
         private async Task RenderExistingSounds()
         {

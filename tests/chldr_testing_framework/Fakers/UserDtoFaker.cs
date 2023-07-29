@@ -12,7 +12,6 @@ namespace chldr_test_utils.Generators
             RuleFor(u => u.Email, f => f.Person.Email);
             RuleFor(u => u.Password, f => f.Internet.Password());
             RuleFor(u => u.PasswordConfirmation, (f, u) => u.Password);
-            RuleFor(u => u.RateWeight, f => f.Random.Int(1, 100));
             RuleFor(u => u.Rate, f => f.Random.Int(1, 5));
             RuleFor(u => u.Patronymic, f => f.Name.FirstName());
             RuleFor(u => u.FirstName, f => f.Name.FirstName());
