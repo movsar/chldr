@@ -35,6 +35,8 @@ namespace chldr_ui.ViewModels
         bool existingSoundsRendered;
         SoundDto latestSoundDto;
 
+        internal static bool CanEditEntry { get; private set; } = false;
+        
         private async Task RenderExistingSounds()
         {
             foreach (var soundDto in EntryDto.Sounds)
@@ -88,6 +90,8 @@ namespace chldr_ui.ViewModels
 
                 soundDto.RecordingB64 = File.ReadAllText(soundPath);
             }
+
+            CanEditEntry = UserStore.CurrentUser?.CanEdit(EntryDto.Rate, EntryDto.UserId!) == true;
 
             await base.OnParametersSetAsync();
         }

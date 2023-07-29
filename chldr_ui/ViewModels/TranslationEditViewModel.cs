@@ -1,7 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Validators;
 using Microsoft.AspNetCore.Components;
-using MongoDB.Bson;
 
 namespace chldr_ui.ViewModels
 {
@@ -9,27 +8,24 @@ namespace chldr_ui.ViewModels
     {
         #region Fields and Properties
         [Parameter]
-        public TranslationDto Translation { get; set; } = new TranslationDto();
+        public TranslationDto TranslationDto { get; set; } = new TranslationDto();
         #endregion
 
         [Parameter]
         public Action<string> OnDelete { get; set; }
+        public bool CanEditTranslation { get; private set; }
+        public bool CanRemoveTranslation { get; private set; }
 
         public void Delete()
         {
-            OnDelete?.Invoke(Translation.TranslationId);
+            OnDelete?.Invoke(TranslationDto.TranslationId);
         }
 
-        protected override void OnInitialized()
+        protected override async Task OnParametersSetAsync()
         {
-            base.OnInitialized();
-
-            if (Translation == null)
-            {
-                return;
-            }
-
-            // Init code
+            CanEditTranslation = UserStore.CurrentUser?.CanEdit(TranslationDto.Rate, TranslationDto.UserId!) == true;
+            CanRemoveTranslation = UserStore.CurrentUser?.CanRemove(TranslationDto.Rate, TranslationDto.UserId, TranslationDto.CreatedAt) == true;
+            await base.OnParametersSetAsync();
         }
     }
 }

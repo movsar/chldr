@@ -42,28 +42,30 @@
 </style>
 
 <div data-id="form_container">
-    <div class="form-group mt-2 mb-2">
-        <p>
-            @Localizer["Type"]:&nbsp;
-            @switch ((EntryType)EntryDto.Type)
-            {
-                case EntryType.Word:
-                    @Localizer["Word"]
-                    break;
-                case EntryType.Phrase:
-                    @Localizer["Phrase"]
-                    break;
-                case EntryType.Text:
-                    @Localizer["Text"]
-                    break;
-            }
+    @Localizer["Type"]:&nbsp;
+    @switch ((EntryType)EntryDto.Type)
+    {
+        case EntryType.Word:
+            @Localizer["Word"]
+            break;
+        case EntryType.Phrase:
+            @Localizer["Phrase"]
+            break;
+        case EntryType.Text:
+            @Localizer["Text"]
+            break;
+    }
+    <div class="row">
+        <div class="col-10">
             <div class="mt-2">
-                <input class="form-control" type="text" placeholder="@Localizer["EnterWord"]" @bind="EntryDto.Content" />
+                <textarea class="form-control" disabled="@(!CanEditEntry)" placeholder="@Localizer["EnterWord"]" @bind="EntryDto.Content"></textarea>
             </div>
-        </p>
+        </div>
 
-        <button class="col-3 btn btn-success" type="button" @onclick="@(() => NewTranslation())">+ @Localizer["Translation"]</button>
-        <button class="col-3 btn btn-warning" id="recordButton" @onclick="ToggleRecording">+ @Localizer["Pronunciation"]</button>
+        <div class="col-2">
+            <button class="form-control col-12 btn btn-success mt-2" type="button" @onclick="@(() => NewTranslation())">+ @Localizer["Translation"]</button>
+            <button class="form-control col-12 btn btn-warning mt-2" id="recordButton" @onclick="ToggleRecording">+ @Localizer["Pronunciation"]</button>
+        </div>
     </div>
 
 
@@ -93,7 +95,7 @@
         @foreach (var translation in EntryDto.Translations)
         {
             <div class="mb-4">
-                <TranslationEditView Translation="@translation" OnDelete="@(async (translationId) => await DeleteTranslation(translationId))"></TranslationEditView>
+                <TranslationEditView TranslationDto="@translation" OnDelete="@(async (translationId) => await DeleteTranslation(translationId))"></TranslationEditView>
                 @*<hr/>*@
             </div>
         }
