@@ -91,28 +91,28 @@ namespace chldr_data.DatabaseObjects.Models
             }
         }
         #region Permissions
-        public bool CanAddSound(EntryModel entry)
+        public bool CanAddSound(EntryDto entry)
         {
             if (Status != UserStatus.Active)
             {
                 return false;
             }
 
-            if (entry.Sounds.Where(s => s.Rate > MemberRateRange.Upper).Count() >= Constants.MaxSoundsPerEntry)
+            if (entry.SoundDtos.Where(s => s.Rate > MemberRateRange.Upper).Count() >= Constants.MaxSoundsPerEntry)
             {
                 return false;
             }
 
             return true;
         }
-        public bool CanAddTranslation(EntryModel entry, string languageCode)
+        public bool CanAddTranslation(EntryDto entry, string languageCode)
         {
             if (Status != UserStatus.Active)
             {
                 return false;
             }
 
-            if (entry.Translations.Where(t => t.LanguageCode.Equals(languageCode) && t.Rate > MemberRateRange.Upper).Count() >= Constants.MaxTranslationsPerEntry)
+            if (entry.TranslationsDtos.Where(t => t.LanguageCode.Equals(languageCode) && t.Rate > MemberRateRange.Upper).Count() >= Constants.MaxTranslationsPerEntry)
             {
                 return false;
             }

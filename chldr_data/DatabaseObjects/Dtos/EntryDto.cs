@@ -44,8 +44,8 @@ namespace chldr_data.DatabaseObjects.Dtos
         public int EntrySubtype { get; set; } = 0;
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
-        public virtual List<TranslationDto> Translations { get; set; } = new List<TranslationDto>();
-        public virtual List<SoundDto> Sounds { get; set; } = new List<SoundDto>();
+        public virtual List<TranslationDto> TranslationsDtos { get; set; } = new List<TranslationDto>();
+        public virtual List<SoundDto> SoundDtos { get; set; } = new List<SoundDto>();
         public static EntryDto FromModel(EntryModel entryModel)
         {
             var entryDto = new EntryDto()
@@ -63,11 +63,11 @@ namespace chldr_data.DatabaseObjects.Dtos
                 UpdatedAt = entryModel.UpdatedAt,
             };
 
-            entryDto.Translations.Clear();
-            entryDto.Translations.AddRange(entryModel.Translations.Select(t => TranslationDto.FromModel(t)));
+            entryDto.TranslationsDtos.Clear();
+            entryDto.TranslationsDtos.AddRange(entryModel.Translations.Select(t => TranslationDto.FromModel(t)));
 
-            entryDto.Sounds.Clear();
-            entryDto.Sounds.AddRange(entryModel.Sounds.Select(s => SoundDto.FromModel(s)));
+            entryDto.SoundDtos.Clear();
+            entryDto.SoundDtos.AddRange(entryModel.Sounds.Select(s => SoundDto.FromModel(s)));
             return entryDto;
         }
     }

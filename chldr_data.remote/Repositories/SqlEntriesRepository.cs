@@ -201,7 +201,7 @@ namespace chldr_data.remote.Repositories
 
             // Set rate
             newEntryDto.Rate = user.GetRateRange().Lower;
-            foreach (var translationDto in newEntryDto.Translations)
+            foreach (var translationDto in newEntryDto.TranslationsDtos)
             {
                 translationDto.Rate = newEntryDto.Rate;
             }
@@ -223,7 +223,7 @@ namespace chldr_data.remote.Repositories
                 };
 
                 // Process added sounds
-                foreach (var sound in newEntryDto.Sounds)
+                foreach (var sound in newEntryDto.SoundDtos)
                 {
                     if (string.IsNullOrEmpty(sound.RecordingB64))
                     {
@@ -260,7 +260,7 @@ namespace chldr_data.remote.Repositories
                 }
 
                 updatedEntryDto.Rate = user.GetRateRange().Lower;
-                foreach (var translationDto in updatedEntryDto.Translations)
+                foreach (var translationDto in updatedEntryDto.TranslationsDtos)
                 {
                     translationDto.Rate = updatedEntryDto.Rate;
                 }
@@ -345,12 +345,12 @@ namespace chldr_data.remote.Repositories
         {
             var changeSets = new List<ChangeSetModel>();
 
-            var existingEntrySoundIds = existingEntryDto.Sounds.Select(t => t.SoundId).ToHashSet();
-            var updatedEntrySoundIds = updatedEntryDto.Sounds.Select(t => t.SoundId).ToHashSet();
+            var existingEntrySoundIds = existingEntryDto.SoundDtos.Select(t => t.SoundId).ToHashSet();
+            var updatedEntrySoundIds = updatedEntryDto.SoundDtos.Select(t => t.SoundId).ToHashSet();
 
-            var added = updatedEntryDto.Sounds.Where(t => !existingEntrySoundIds.Contains(t.SoundId));
-            var deleted = existingEntryDto.Sounds.Where(t => !updatedEntrySoundIds.Contains(t.SoundId));
-            var updated = updatedEntryDto.Sounds.Where(t => existingEntrySoundIds.Contains(t.SoundId) && updatedEntrySoundIds.Contains(t.SoundId));
+            var added = updatedEntryDto.SoundDtos.Where(t => !existingEntrySoundIds.Contains(t.SoundId));
+            var deleted = existingEntryDto.SoundDtos.Where(t => !updatedEntrySoundIds.Contains(t.SoundId));
+            var updated = updatedEntryDto.SoundDtos.Where(t => existingEntrySoundIds.Contains(t.SoundId) && updatedEntrySoundIds.Contains(t.SoundId));
 
             // Process removed translations
             foreach (var sound in deleted)
@@ -362,7 +362,7 @@ namespace chldr_data.remote.Repositories
             // Process updated translations
             foreach (var sound in updated)
             {
-                var existingDto = existingEntryDto.Sounds.First(t => t.SoundId.Equals(sound.SoundId));
+                var existingDto = existingEntryDto.SoundDtos.First(t => t.SoundId.Equals(sound.SoundId));
 
                 var changes = Change.GetChanges(sound, existingDto);
                 if (changes.Count == 0)
@@ -380,12 +380,12 @@ namespace chldr_data.remote.Repositories
         {
             var changeSets = new List<ChangeSetModel>();
 
-            var existingEntryTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
-            var updatedEntryTranslationIds = updatedEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
+            var existingEntryTranslationIds = existingEntryDto.TranslationsDtos.Select(t => t.TranslationId).ToHashSet();
+            var updatedEntryTranslationIds = updatedEntryDto.TranslationsDtos.Select(t => t.TranslationId).ToHashSet();
 
-            var added = updatedEntryDto.Translations.Where(t => !existingEntryTranslationIds.Contains(t.TranslationId));
-            var deleted = existingEntryDto.Translations.Where(t => !updatedEntryTranslationIds.Contains(t.TranslationId));
-            var updated = updatedEntryDto.Translations.Where(t => existingEntryTranslationIds.Contains(t.TranslationId) && updatedEntryTranslationIds.Contains(t.TranslationId));
+            var added = updatedEntryDto.TranslationsDtos.Where(t => !existingEntryTranslationIds.Contains(t.TranslationId));
+            var deleted = existingEntryDto.TranslationsDtos.Where(t => !updatedEntryTranslationIds.Contains(t.TranslationId));
+            var updated = updatedEntryDto.TranslationsDtos.Where(t => existingEntryTranslationIds.Contains(t.TranslationId) && updatedEntryTranslationIds.Contains(t.TranslationId));
 
             // Process removed translations
             foreach (var translation in deleted)
@@ -397,7 +397,7 @@ namespace chldr_data.remote.Repositories
             // Process updated translations
             foreach (var translation in updated)
             {
-                var existingTranslationDto = existingEntryDto.Translations.First(t => t.TranslationId.Equals(translation.TranslationId));
+                var existingTranslationDto = existingEntryDto.TranslationsDtos.First(t => t.TranslationId.Equals(translation.TranslationId));
 
                 var changes = Change.GetChanges(translation, existingTranslationDto);
                 if (changes.Count == 0)

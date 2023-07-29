@@ -69,10 +69,12 @@
                 }
             </div>
 
-            <ActionButtonsView Entry="Word"
-                               ShareHandler="() => Share()"
-                               RemoveHandler="async() => await Remove()">
-            </ActionButtonsView>
+            <EntryActionButtonsView Entry="Word"
+                                    UpvoteHandler="() => Upvote()"
+                                    DownvoteHandler="() => Downvote()"
+                                    ShareHandler="() => Share()"
+                                    RemoveHandler="async() => await Remove()">
+            </EntryActionButtonsView>
         </div>
     </div>
 }

@@ -6,12 +6,12 @@
 
         @if (CanRemove())
         {
-            <i class="bi bi-trash ms-1" @onclick="@RemoveHandler"></i>
+            <i class="bi bi-trash ms-2" @onclick="@RemoveHandler"></i>
         }
 
         @if (CanEdit())
         {
-            <i class="bi bi-pencil ms-1" @onclick="@EditHandler"></i>
+            <i class="bi bi-pencil ms-2" @onclick="@EditHandler"></i>
         }
     </div>
 }

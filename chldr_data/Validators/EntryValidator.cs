@@ -18,7 +18,7 @@ namespace chldr_shared.Validators
             .NotEmpty()
             .WithMessage(stringLocalizer["Error:Content_must_be_set"]);
 
-            RuleFor(x => x.Translations)
+            RuleFor(x => x.TranslationsDtos)
                  .Cascade(CascadeMode.Stop)
                  .NotNull()
                  .Must(translations => translations.All(IsValidTranslation))

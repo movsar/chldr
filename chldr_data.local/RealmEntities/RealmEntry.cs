@@ -72,7 +72,7 @@ public class RealmEntry : RealmObject, IEntryEntity
 
         // Sounds
         entry.Sounds.Clear();
-        foreach (var soundDto in entryDto.Sounds)
+        foreach (var soundDto in entryDto.SoundDtos)
         {
             soundDto.EntryId = entry.EntryId;
 
@@ -82,7 +82,7 @@ public class RealmEntry : RealmObject, IEntryEntity
         
         // Translations
         entry.Translations.Clear();
-        foreach (var translationDto in entryDto.Translations)
+        foreach (var translationDto in entryDto.TranslationsDtos)
         {
             // If entry didn't exist, this will map its Id to translations
             translationDto.EntryId = entry.EntryId;

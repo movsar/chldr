@@ -17,13 +17,13 @@ namespace chldr_ui.ViewModels
         {
             JsInteropService.OnRemoveAudio = (recordingId) =>
             {
-                var removedSound = EntryDto.Sounds.FirstOrDefault(s => s.SoundId.Equals(recordingId));
+                var removedSound = EntryDto.SoundDtos.FirstOrDefault(s => s.SoundId.Equals(recordingId));
                 if (removedSound == null)
                 {
                     throw ExceptionHandler!.Error("Sound doesn't exist in the dto");
                 }
 
-                EntryDto.Sounds.Remove(removedSound);
+                EntryDto.SoundDtos.Remove(removedSound);
             };
         }
 
@@ -36,10 +36,10 @@ namespace chldr_ui.ViewModels
         SoundDto latestSoundDto;
 
         internal static bool CanEditEntry { get; private set; } = false;
-        
+
         private async Task RenderExistingSounds()
         {
-            foreach (var soundDto in EntryDto.Sounds)
+            foreach (var soundDto in EntryDto.SoundDtos)
             {
 
                 await JsInterop.AddExistingEntryRecording(soundDto);
@@ -79,7 +79,7 @@ namespace chldr_ui.ViewModels
             EntryDto = EntryDto.FromModel(existingEntry);
 
             // Load audio recordings, if any
-            foreach (var soundDto in EntryDto.Sounds)
+            foreach (var soundDto in EntryDto.SoundDtos)
             {
                 var soundPath = Path.Combine(FileService.EntrySoundsDirectory, soundDto.FileName);
                 if (!File.Exists(soundPath))
@@ -105,18 +105,24 @@ namespace chldr_ui.ViewModels
             // Needed to know which translations are new, in case they need to be removed
             _newTranslationIds.Add(translation.TranslationId);
 
-            EntryDto.Translations.Add(translation);
+            EntryDto.TranslationsDtos.Add(translation);
 
             await RefreshUi();
         }
         public async Task DeleteTranslation(string translationId)
         {
+            var translationDto = EntryDto.TranslationsDtos.Find(t => t.TranslationId.Equals(translationId))!;
+            if (!(UserStore.CurrentUser?.CanRemove(translationDto.Rate, translationDto.UserId, translationDto.CreatedAt) == true))
+            {
+                return;
+            }
+
             if (_newTranslationIds.Contains(translationId))
             {
                 _newTranslationIds.Remove(translationId);
             }
 
-            EntryDto.Translations.Remove(EntryDto.Translations.Find(t => t.TranslationId.Equals(translationId))!);
+            EntryDto.TranslationsDtos.Remove(translationDto);
             await RefreshUi();
         }
         #endregion
@@ -156,12 +162,12 @@ namespace chldr_ui.ViewModels
             }
 
             latestSoundDto.RecordingB64 = recording;
-            EntryDto.Sounds.Add(latestSoundDto);
+            EntryDto.SoundDtos.Add(latestSoundDto);
         }
 
         public async Task SaveClickHandler()
         {
-            if (EntryDto.Translations.Count() == 0)
+            if (EntryDto.TranslationsDtos.Count() == 0)
             {
                 if (await AskForConfirmation("Question:Do_you_really_want_to_add_new_entry_without_a_translation?") != true)
                 {

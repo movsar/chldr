@@ -7,6 +7,11 @@
         @*<i class="bi bi-flag" @onclick="Flag"></i>*@
         @*<i class="bi bi-star" @onclick="AddToFavorites"></i>*@
 
+        <span class="chldr_translation_actions ms-lg-1">
+            <i class="bi bi-hand-thumbs-up" @onclick="UpvoteHandler"></i>
+            <i class="bi bi-hand-thumbs-down" @onclick="DownvoteHandler"></i>
+        </span>
+
         @if (CanRemove())
         {
             <i class="bi bi-trash" @onclick="@RemoveHandler"></i>

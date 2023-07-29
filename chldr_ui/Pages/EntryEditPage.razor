@@ -64,7 +64,7 @@
 
         <div class="col-2">
             <button class="form-control col-12 btn btn-success mt-2" type="button" @onclick="@(() => NewTranslation())">+ @Localizer["Translation"]</button>
-            <button class="form-control col-12 btn btn-warning mt-2" id="recordButton" @onclick="ToggleRecording">+ @Localizer["Pronunciation"]</button>
+            <button class="form-control col-12 btn btn-warning mt-2" id="recordButton" @onclick="ToggleRecording" disabled="@(!UserStore.CurrentUser?.CanAddSound(EntryDto))">+ @Localizer["Pronunciation"]</button>
         </div>
     </div>
 
@@ -73,7 +73,7 @@
     @switch ((EntryType)EntryDto.Type)
     {
         case EntryType.Word:
-            <WordEditView EntryDto="@EntryDto" Disabled="@(!CanEditEntry)"></WordEditView>
+            <WordDetailsEditView EntryDto="@EntryDto" Disabled="@(!CanEditEntry)"></WordDetailsEditView>
             break;
 
         case EntryType.Phrase:
@@ -92,7 +92,7 @@
     </div>
 
     <div class="mt-2">
-        @foreach (var translation in EntryDto.Translations)
+        @foreach (var translation in EntryDto.TranslationsDtos)
         {
             <div class="mb-4">
                 <TranslationEditView TranslationDto="@translation" OnDelete="@(async (translationId) => await DeleteTranslation(translationId))"></TranslationEditView>

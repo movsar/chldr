@@ -45,7 +45,7 @@ namespace chldr_shared.tests
 
                 Assert.Equal(entryDto.Content, insertedEntry.Content);
                 Assert.Equal(userRateRange.Lower, insertedEntry.Rate);
-                Assert.Equal(entryDto.Sounds[0].SoundId, insertedEntry.Sounds[0].SoundId);
+                Assert.Equal(entryDto.SoundDtos[0].SoundId, insertedEntry.Sounds[0].SoundId);
 
                 await _entryService.Remove(entryDto.EntryId, user.UserId);
                 await Assert.ThrowsAsync<ArgumentException>(async () => await _entryService.Get(entryDto.EntryId));

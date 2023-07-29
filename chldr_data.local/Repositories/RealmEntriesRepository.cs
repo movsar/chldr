@@ -167,7 +167,7 @@ namespace chldr_data.Repositories
                 // Save audiofiles if any
                 foreach (var sound in entry.Sounds)
                 {
-                    var soundDto = newEntryDto.Sounds.FirstOrDefault<SoundDto>(s => s.SoundId == sound.SoundId && !string.IsNullOrEmpty(s.RecordingB64));
+                    var soundDto = newEntryDto.SoundDtos.FirstOrDefault<SoundDto>(s => s.SoundId == sound.SoundId && !string.IsNullOrEmpty(s.RecordingB64));
                     if (soundDto == null)
                     {
                         continue;
