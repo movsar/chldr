@@ -22,6 +22,7 @@ namespace chldr_api.GraphQL.MutationResolvers
         public async Task<RequestResult> AddEntryAsync(string userId, EntryDto entryDto)
         {
             using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
+            unitOfWork.BeginTransaction();
             try
             {
                 var changeSets = await unitOfWork.Entries.Add(entryDto);
@@ -52,6 +53,7 @@ namespace chldr_api.GraphQL.MutationResolvers
         public async Task<RequestResult> UpdateEntry(string userId, EntryDto entryDto)
         {
             using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
+            unitOfWork.BeginTransaction();
             try
             {
                 var changeSets = await unitOfWork.Entries.Update(entryDto);
@@ -81,6 +83,7 @@ namespace chldr_api.GraphQL.MutationResolvers
         public async Task<RequestResult> RemoveEntry(string userId, string entryId)
         {
             using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
+            unitOfWork.BeginTransaction();
             try
             {
                 var changeSets = await unitOfWork.Entries.Remove(entryId);
