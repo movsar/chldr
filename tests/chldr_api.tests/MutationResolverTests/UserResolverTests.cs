@@ -4,6 +4,7 @@ using chldr_data.remote.Services;
 using chldr_data.Resources.Localizations;
 using chldr_data.Services;
 using chldr_test_utils;
+using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
@@ -11,21 +12,25 @@ using System.Transactions;
 
 namespace chldr_api.tests.ServiceResolverTests
 {
-    public class RegisterUserResolverTests
+    public class UserResolverTests
     {
         private readonly IStringLocalizer<AppLocalizations> _localizer;
         private readonly EmailService _emailService;
         private readonly IDataProvider _dataProvider;
-        private static string _userId;
+        private readonly FileService _fileService;
+        private readonly ExceptionHandler _exceptionHandler;
+        private readonly EnvironmentService _environmentService;
+        private readonly UserResolver _userResolver;
 
-        public RegisterUserResolverTests()
+        public UserResolverTests()
         {
             _emailService = TestDataFactory.CreateFakeEmailService();
             _localizer = TestDataFactory.GetStringLocalizer();
             _dataProvider = TestDataFactory.CreateSqlDataProvider();
-
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
-            _userId = unitOfWork.Users.GetRandomsAsync(1).Result.First().UserId;
+            _fileService = new FileService(AppContext.BaseDirectory);
+            _exceptionHandler = new ExceptionHandler(_fileService);
+            _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Web, true);
+            _userResolver = new UserResolver(_dataProvider, _localizer, _emailService, _exceptionHandler, _fileService);
         }
 
         [Fact]
@@ -34,12 +39,9 @@ namespace chldr_api.tests.ServiceResolverTests
 
             // Arrange
             var newUser = TestDataFactory.CreateRandomUserDto();
-            var registerUserResolver = new RegisterUserResolver();
 
             // Act
-            var response = await registerUserResolver.ExecuteAsync(
-                (SqlDataProvider)_dataProvider, _localizer, _emailService,
-                newUser.Email!, newUser.Password, newUser.FirstName, newUser.LastName, newUser.Patronymic);
+            var response = await _userResolver.Register(newUser.Email!, newUser.Password, newUser.FirstName, newUser.LastName, newUser.Patronymic);
 
             // Assert
             Assert.True(response.Success);
@@ -60,12 +62,8 @@ namespace chldr_api.tests.ServiceResolverTests
             unitOfWork = _dataProvider.CreateUnitOfWork(actingUserId);
             await unitOfWork.Users.Add(testUser);
 
-            var registerUserResolver = new RegisterUserResolver();
-
             // Act
-            var response = await registerUserResolver.ExecuteAsync(
-                (SqlDataProvider)_dataProvider, _localizer, _emailService,
-                testUser.Email!, testUser.Password, testUser.FirstName, testUser.LastName, testUser.Patronymic);
+            var response = await _userResolver.Register(testUser.Email!, testUser.Password, testUser.FirstName, testUser.LastName, testUser.Patronymic);
 
             // Assert
             Assert.False(response.Success);

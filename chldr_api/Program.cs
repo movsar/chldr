@@ -1,3 +1,4 @@
+using chldr_api.GraphQL.MutationResolvers;
 using chldr_api.GraphQL.MutationServices;
 using chldr_data.Interfaces;
 using chldr_data.remote.Services;
@@ -35,11 +36,8 @@ namespace chldr_api
             builder.Services.AddScoped<FileService>();
             builder.Services.AddScoped<ExceptionHandler>();
 
-            builder.Services.AddScoped<PasswordResetResolver>();
-            builder.Services.AddScoped<UpdatePasswordResolver>();
-            builder.Services.AddScoped<RegisterUserResolver>();
-            builder.Services.AddScoped<ConfirmEmailResolver>();
-            builder.Services.AddScoped<LoginResolver>();
+            builder.Services.AddScoped<UserResolver>();
+            builder.Services.AddScoped<EntryResolver>();
 
             builder.Services.AddLocalization();
 

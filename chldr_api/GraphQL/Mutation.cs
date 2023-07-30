@@ -1,4 +1,5 @@
-﻿using chldr_api.GraphQL.MutationServices;
+﻿using chldr_api.GraphQL.MutationResolvers;
+using chldr_api.GraphQL.MutationServices;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Interfaces;
 using chldr_data.Models;
@@ -15,168 +16,60 @@ namespace chldr_api
 {
     public class Mutation
     {
-        private readonly PasswordResetResolver _passwordResetMutation;
-        private readonly UpdatePasswordResolver _updatePasswordMutation;
-        private readonly RegisterUserResolver _registerUserMutation;
-        private readonly ConfirmEmailResolver _confirmEmailResolver;
-        private readonly LoginResolver _loginUserMutation;
-        private readonly ExceptionHandler _exceptionHandler;
-        private readonly FileService _fileService;
-        private readonly IDataProvider _dataProvider;
+        private readonly UserResolver _userResolver;
+        private readonly EntryResolver _entryResolver;
 
-        protected readonly SqlContext _dbContext;
-        protected readonly IStringLocalizer<AppLocalizations> _localizer;
-        protected readonly EmailService _emailService;
-
-        public Mutation(
-            PasswordResetResolver passwordResetResolver,
-            UpdatePasswordResolver updatePasswordResolver,
-            RegisterUserResolver registerUserResolver,
-            ConfirmEmailResolver confirmEmailResolver,
-            LoginResolver loginUserResolver,
-
-            IDataProvider dataProvider,
-            IStringLocalizer<AppLocalizations> localizer,
-            EmailService emailService,
-            ExceptionHandler exceptionHandler,
-            FileService fileService
-            )
+        public Mutation(UserResolver userResolver, EntryResolver entryResolver)
         {
-            _passwordResetMutation = passwordResetResolver;
-            _updatePasswordMutation = updatePasswordResolver;
-            _registerUserMutation = registerUserResolver;
-            _confirmEmailResolver = confirmEmailResolver;
-            _loginUserMutation = loginUserResolver;
-            _exceptionHandler = exceptionHandler;
-            _fileService = fileService;
-            _dataProvider = dataProvider;
-            _localizer = localizer;
-            _emailService = emailService;
+            _userResolver = userResolver;
+            _entryResolver = entryResolver;
         }
 
+        // Entry mutations
         public async Task<RequestResult> AddEntry(string userId, EntryDto entryDto)
         {
-            using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
-            unitOfWork.BeginTransaction();
-            try
-            {
-                var changeSets = await unitOfWork.Entries.Add(entryDto);
-                unitOfWork.Commit();
-
-                return new RequestResult()
-                {
-                    Success = true,
-                    SerializedData = JsonConvert.SerializeObject(new InsertResponse
-                    {
-                        ChangeSets = changeSets.Select(ChangeSetDto.FromModel),
-                        CreatedAt = entryDto.CreatedAt
-                    })
-                };
-            }
-            catch (Exception ex)
-            {
-                unitOfWork.Rollback();
-                _exceptionHandler.LogError(ex);
-            }
-            finally
-            {
-                unitOfWork.Dispose();
-            }
-
-            return new RequestResult();
+            return await _entryResolver.AddEntryAsync(userId, entryDto);
         }
 
         public async Task<RequestResult> UpdateEntry(string userId, EntryDto entryDto)
         {
-            using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
-            unitOfWork.BeginTransaction();
-            try
-            {
-                var changeSets = await unitOfWork.Entries.Update(entryDto);
-                unitOfWork.Commit();
-
-                return new RequestResult()
-                {
-                    Success = true,
-                    SerializedData = JsonConvert.SerializeObject(new UpdateResponse()
-                    {
-                        ChangeSets = changeSets.Select(ChangeSetDto.FromModel)
-                    })
-                };
-            }
-            catch (Exception ex)
-            {
-                unitOfWork.Rollback();
-                _exceptionHandler.LogError(ex);
-            }
-            finally
-            {
-                unitOfWork.Dispose();
-            }
-
-            return new RequestResult();
+            return await _entryResolver.UpdateEntry(userId, entryDto);
         }
 
         public async Task<RequestResult> RemoveEntry(string userId, string entryId)
         {
-            using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
-            unitOfWork.BeginTransaction();
-            try
-            {
-                var changeSets = await unitOfWork.Entries.Remove(entryId);
-                unitOfWork.Commit();
-
-                return new RequestResult()
-                {
-                    Success = true,
-                    SerializedData = JsonConvert.SerializeObject(new UpdateResponse()
-                    {
-                        ChangeSets = changeSets.Select(ChangeSetDto.FromModel)
-                    })
-                };
-            }
-            catch (Exception ex)
-            {
-                unitOfWork.Rollback();
-                _exceptionHandler.LogError(ex);
-            }
-            finally
-            {
-                unitOfWork.Dispose();
-            }
-
-            return new RequestResult();
+            return await _entryResolver.RemoveEntry(userId, entryId);
         }
 
         // User mutations
         public async Task<RequestResult> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
-            return await _registerUserMutation.ExecuteAsync((SqlDataProvider)_dataProvider, _localizer, _emailService, email, password, firstName, lastName, patronymic);
+            return await _userResolver.Register(email, password, firstName, lastName, patronymic);
         }
 
         public async Task<RequestResult> ConfirmEmailAsync(string token)
         {
-            return await _confirmEmailResolver.ExecuteAsync((SqlDataProvider)_dataProvider, token);
+            return await _userResolver.Confirm(token);
         }
 
         public async Task<RequestResult> PasswordReset(string email)
         {
-            return await _passwordResetMutation.ExecuteAsync((SqlDataProvider)_dataProvider, _localizer, _emailService, email);
+            return await _userResolver.ResetPassword(email);
         }
 
         public async Task<RequestResult> UpdatePasswordAsync(string token, string newPassword)
         {
-            return await _updatePasswordMutation.ExecuteAsync((SqlDataProvider)_dataProvider, token, newPassword);
+            return await _userResolver.UpdatePassword(token, newPassword);
         }
 
         public async Task<RequestResult> LogInRefreshTokenAsync(string refreshToken)
         {
-            return await _loginUserMutation.ExecuteAsync((SqlDataProvider)_dataProvider, refreshToken);
+            return await _userResolver.RefreshAccessCode(refreshToken);
         }
 
         public async Task<RequestResult> LoginEmailPasswordAsync(string email, string password)
         {
-            return await _loginUserMutation.ExecuteAsync((SqlDataProvider)_dataProvider, email, password);
+            return await _userResolver.LogIn(email, password);
         }
     }
 
