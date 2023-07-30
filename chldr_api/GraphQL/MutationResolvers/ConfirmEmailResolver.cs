@@ -12,26 +12,35 @@ namespace chldr_api.GraphQL.MutationServices
         internal async Task<RequestResult> ExecuteAsync(SqlDataProvider dataProvider, string tokenValue)
         {
             using var unitOfWork = (SqlUnitOfWork)dataProvider.CreateUnitOfWork();
+            unitOfWork.BeginTransaction();
 
-            // Check if a user with this email already exists
-            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
-            var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
-
-            var token = await tokensRepository.FindByValueAsync(tokenValue);
-            if (token == null)
+            try
             {
-                return new RequestResult() { ErrorMessage = "Invalid token" };
-            }
+                // Check if a user with this email already exists
+                var usersRepository = (SqlUsersRepository)unitOfWork.Users;
+                var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
 
-            var isExpired = JwtService.IsTokenExpired(token.Value);
-            if (isExpired)
+                var token = await tokensRepository.FindByValueAsync(tokenValue);
+                if (token == null)
+                {
+                    return new RequestResult() { ErrorMessage = "Invalid token" };
+                }
+
+                var isExpired = JwtService.IsTokenExpired(token.Value);
+                if (isExpired)
+                {
+                    return new RequestResult() { ErrorMessage = "Token has expired " };
+                }
+
+                var user = usersRepository.SetStatus(token.UserId, UserStatus.Active);
+                unitOfWork.Commit();
+                return new RequestResult() { Success = true };
+            }
+            catch (Exception ex)
             {
-                return new RequestResult() { ErrorMessage = "Token has expired " };
+                unitOfWork.Rollback();
+                return new RequestResult() { ErrorMessage = ex.Message };
             }
-
-            var user = usersRepository.SetStatus(token.UserId, UserStatus.Active);
-
-            return new RequestResult();
         }
     }
 }

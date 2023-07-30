@@ -4,9 +4,33 @@ using GraphQL;
 using Newtonsoft.Json.Linq;
 using chldr_utils.Interfaces;
 using chldr_data;
+using Newtonsoft.Json;
 
 namespace chldr_utils.Services
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+
+    public class Location
+    {
+        public int Line { get; set; }
+        public int Column { get; set; }
+    }
+
+    public class Error
+    {
+        public string Message { get; set; }
+        public List<Location> Locations { get; set; }
+        public List<string> Path { get; set; }
+        public Dictionary<string, string> Extensions { get; set; }
+    }
+
+    public class ErrorResponse
+    {
+        public List<Error> Errors { get; set; }
+    }
     public class GraphQLClient : IGraphQlClient
     {
         private readonly GraphQLHttpClient _graphQLClient;
@@ -14,7 +38,7 @@ namespace chldr_utils.Services
 
         public GraphQLClient(ExceptionHandler exceptionHandler, EnvironmentService environmentService)
         {
-            _graphQLClient = new GraphQLHttpClient($"{Constants.ProdApiHost}/graphql", new NewtonsoftJsonSerializer());
+            _graphQLClient = new GraphQLHttpClient($"{Constants.DevApiHost}/graphql", new NewtonsoftJsonSerializer());
             _exceptionHandler = exceptionHandler;
         }
 
@@ -36,16 +60,36 @@ namespace chldr_utils.Services
             }
             catch (GraphQLHttpRequestException graphQlException)
             {
-                _exceptionHandler.LogError(graphQlException.Content!);
+                var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(graphQlException.Content);
 
-                if (graphQlException.Content!.Contains("Could not save changes"))
+                // Now you can access the deserialized data
+                foreach (var error in errorResponse.Errors)
                 {
-                    throw new Exception("Could not save changes", graphQlException);
+                    var messageParts = new List<string>();
+                    messageParts.Add(error.Message);
+
+                    var extensions = error.Extensions.Select(e => e.Value).ToArray();
+
+                    if (extensions.Count() > 0)
+                    {
+                        messageParts.Add(extensions[0]);
+                    }
+                    if (extensions.Count() > 1)
+                    {
+                        _exceptionHandler.LogError(extensions[1]);
+                    }
+
+                    var errorMessage = string.Join(", ", messageParts);
+
+                    Console.WriteLine(errorMessage);
+                    Console.WriteLine(messageParts[1]);
+
+                    _exceptionHandler.LogError(errorMessage);
+
+                    throw new Exception(errorMessage);
                 }
-                else
-                {
-                    throw new Exception("An error occurred while sending the request", graphQlException);
-                }
+
+                throw new Exception("An unhandled error occurred");
             }
             catch (Exception ex)
             {

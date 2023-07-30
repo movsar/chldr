@@ -73,7 +73,7 @@ namespace chldr_data.Services
                 var response = await _requestService.LogInEmailPasswordAsync(email, password);
                 if (!response.Success)
                 {
-                    throw new Exception("Error:Bad_request");
+                    throw new Exception(response.ErrorMessage);
                 }
 
                 var data = RequestResult.GetData<dynamic>(response);

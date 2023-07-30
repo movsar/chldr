@@ -49,7 +49,13 @@ namespace chldr_data.Services
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, "confirmEmail");
-            return response.Data;
+            var data = response.Data;
+
+            if (!data.Success)
+            {
+                throw new Exception(data.ErrorMessage);
+            }
+            return data;
         }
 
         internal async Task<RequestResult> LogInEmailPasswordAsync(string email, string password)
