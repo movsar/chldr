@@ -5,32 +5,10 @@ using Newtonsoft.Json.Linq;
 using chldr_utils.Interfaces;
 using chldr_data;
 using Newtonsoft.Json;
+using chldr_data.Models;
 
 namespace chldr_utils.Services
 {
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
-
-    public class Location
-    {
-        public int Line { get; set; }
-        public int Column { get; set; }
-    }
-
-    public class Error
-    {
-        public string Message { get; set; }
-        public List<Location> Locations { get; set; }
-        public List<string> Path { get; set; }
-        public Dictionary<string, string> Extensions { get; set; }
-    }
-
-    public class ErrorResponse
-    {
-        public List<Error> Errors { get; set; }
-    }
     public class GraphQLClient : IGraphQlClient
     {
         private readonly GraphQLHttpClient _graphQLClient;
@@ -38,7 +16,9 @@ namespace chldr_utils.Services
 
         public GraphQLClient(ExceptionHandler exceptionHandler, EnvironmentService environmentService)
         {
-            _graphQLClient = new GraphQLHttpClient($"{Constants.DevApiHost}/graphql", new NewtonsoftJsonSerializer());
+            var apiHost = environmentService.IsDevelopment ? Constants.DevApiHost : Constants.ProdApiHost;
+
+            _graphQLClient = new GraphQLHttpClient($"{apiHost}/graphql", new NewtonsoftJsonSerializer());
             _exceptionHandler = exceptionHandler;
         }
 
@@ -60,7 +40,7 @@ namespace chldr_utils.Services
             }
             catch (GraphQLHttpRequestException graphQlException)
             {
-                var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(graphQlException.Content);
+                var errorResponse = JsonConvert.DeserializeObject<GraphQlErrorResponse>(graphQlException.Content);
 
                 // Now you can access the deserialized data
                 foreach (var error in errorResponse.Errors)
