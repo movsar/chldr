@@ -13,7 +13,7 @@ namespace chldr_data.remote.Repositories
     {
         protected override RecordType RecordType => throw new Exception("Shouldn't be used");
 
-        public SqlChangeSetsRepository(SqlContext sqlContext, FileService fileService, string _userId) : base(sqlContext, fileService, _userId) { }
+        public SqlChangeSetsRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string _userId) : base(dbConfig, fileService, _userId) { }
 
         protected override ChangeSetModel FromEntityShortcut(SqlChangeSet entity)
         {

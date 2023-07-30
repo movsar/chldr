@@ -6,12 +6,14 @@ using chldr_data.remote.Repositories;
 using chldr_utils.Services;
 using chldr_utils;
 using chldr_data.remote.SqlEntities;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.Services
 {
     public class SqlUnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly string? _userId;
+        private readonly DbContextOptions<SqlContext> _dbConfig;
         private readonly SqlContext _context;
         private readonly FileService _fileService;
         private readonly ExceptionHandler _exceptionHandler;
@@ -25,9 +27,10 @@ namespace chldr_data.Services
         private SqlSoundsRepository _soundsRepository;
         private SqlTokensRepository? _tokensRepository;
 
-        public SqlUnitOfWork(SqlContext sqlContext, FileService fileService, ExceptionHandler exceptionHandler, string userId)
+        public SqlUnitOfWork(DbContextOptions<SqlContext> dbConfig, FileService fileService, ExceptionHandler exceptionHandler, string userId)
         {
-            _context = sqlContext;
+            _dbConfig = dbConfig;
+            _context = new SqlContext(_dbConfig);
             _fileService = fileService;
             _userId = userId;
             _exceptionHandler = exceptionHandler;
@@ -57,12 +60,12 @@ namespace chldr_data.Services
             _context.Dispose();
         }
 
-        public ITranslationsRepository Translations => _translationsRepository ??= new SqlTranslationsRepository(_context, _fileService, _userId);
-        public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new SqlChangeSetsRepository(_context, _fileService, _userId);
-        public IEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_context, _fileService, _exceptionHandler, Translations, Sounds, _userId);
-        public ISourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_context, _fileService, _userId);
-        public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_context, _fileService, _userId);
-        public ISoundsRepository Sounds => _soundsRepository ?? new SqlSoundsRepository(_context, _fileService, _userId);
-        public ITokensRepository Tokens => _tokensRepository ?? new SqlTokensRepository(_context, _fileService, _userId);
+        public ITranslationsRepository Translations => _translationsRepository ??= new SqlTranslationsRepository(_dbConfig, _fileService, _userId);
+        public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new SqlChangeSetsRepository(_dbConfig, _fileService, _userId);
+        public IEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_dbConfig, _fileService, _exceptionHandler, Translations, Sounds, _userId);
+        public ISourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_dbConfig, _fileService, _userId);
+        public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_dbConfig, _fileService, _userId);
+        public ISoundsRepository Sounds => _soundsRepository ?? new SqlSoundsRepository(_dbConfig, _fileService, _userId);
+        public ITokensRepository Tokens => _tokensRepository ?? new SqlTokensRepository(_dbConfig, _fileService, _userId);
     }
 }

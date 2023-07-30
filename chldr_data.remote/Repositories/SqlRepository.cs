@@ -21,13 +21,16 @@ namespace chldr_data.remote.Repositories
         where TModel : class
         where TEntity : class
     {
-        public SqlRepository(SqlContext context, FileService fileService, string userId)
+        private DbContextOptions<SqlContext> _dbConfig;
+
+        public SqlRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string userId)
         {
-            _dbContext = context;
+            _dbConfig = dbConfig;
+            _dbContext = new SqlContext(_dbConfig);
             _userId = userId;
             _fileService = fileService;
         }
-        protected readonly SqlContext _dbContext;
+        protected SqlContext _dbContext { get; set; }
         protected readonly FileService _fileService;
         protected readonly string _userId;
         public abstract Task<List<ChangeSetModel>> Add(TDto dto);

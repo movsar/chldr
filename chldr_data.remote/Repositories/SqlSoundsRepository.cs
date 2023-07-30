@@ -13,7 +13,7 @@ namespace chldr_data.remote.Repositories
 {
     public class SqlSoundsRepository : SqlRepository<SqlSound, SoundModel, SoundDto>, ISoundsRepository
     {
-        public SqlSoundsRepository(SqlContext context, FileService fileService, string userId) : base(context, fileService, userId) { }
+        public SqlSoundsRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string userId) : base(dbConfig, fileService, userId) { }
         protected override RecordType RecordType => RecordType.Sound;
         protected override SoundModel FromEntityShortcut(SqlSound entity)
         {

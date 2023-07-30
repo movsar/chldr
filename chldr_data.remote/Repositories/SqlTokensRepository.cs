@@ -15,7 +15,7 @@ namespace chldr_data.remote.Repositories
 {
     public class SqlTokensRepository : SqlRepository<SqlToken, TokenModel, TokenDto>, ITokensRepository
     {
-        public SqlTokensRepository(SqlContext context, FileService fileService, string userId) : base(context, fileService, userId) { }
+        public SqlTokensRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string userId) : base(dbConfig, fileService, userId) { }
 
         protected override RecordType RecordType => RecordType.Token;
 

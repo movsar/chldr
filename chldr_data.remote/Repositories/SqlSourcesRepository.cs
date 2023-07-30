@@ -13,7 +13,7 @@ namespace chldr_data.remote.Repositories
     public class SqlSourcesRepository : SqlRepository<SqlSource, SourceModel, SourceDto>, ISourcesRepository
     {
         protected override RecordType RecordType => RecordType.Source;
-        public SqlSourcesRepository(SqlContext context, FileService fileService, string _userId) : base(context, fileService, _userId) { }
+        public SqlSourcesRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string _userId) : base(dbConfig, fileService, _userId) { }
         public override async Task<List<SourceModel>> GetRandomsAsync(int limit)
         {
             var randomizer = new Random();

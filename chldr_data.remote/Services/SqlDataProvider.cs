@@ -44,8 +44,7 @@ namespace chldr_data.remote.Services
 
         public IUnitOfWork CreateUnitOfWork(string? userId = null)
         {
-            var context = new SqlContext(_options);
-            return new SqlUnitOfWork(context, _fileService, _exceptionHandler, userId);
+            return new SqlUnitOfWork(_options, _fileService, _exceptionHandler, userId);
         }
 
         public void Initialize()

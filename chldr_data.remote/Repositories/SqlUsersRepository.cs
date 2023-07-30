@@ -16,7 +16,7 @@ namespace chldr_data.remote.Repositories
 {
     public class SqlUsersRepository : SqlRepository<SqlUser, UserModel, UserDto>, IUsersRepository
     {
-        public SqlUsersRepository(SqlContext context, FileService fileService, string _userId) : base(context, fileService, _userId) { }
+        public SqlUsersRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string _userId) : base(dbConfig, fileService, _userId) { }
 
         protected override RecordType RecordType => RecordType.User;
         public async Task SetStatus(string userId, UserStatus newStatus)

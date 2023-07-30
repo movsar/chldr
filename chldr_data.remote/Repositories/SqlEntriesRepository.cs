@@ -27,12 +27,12 @@ namespace chldr_data.remote.Repositories
         public event Action<SearchResultModel>? GotNewSearchResult;
 
         public SqlEntriesRepository(
-            SqlContext context,
+            DbContextOptions<SqlContext> dbConfig,
             FileService fileService,
             ExceptionHandler exceptionHandler,
             ITranslationsRepository translationsRepository,
             ISoundsRepository soundsRepository,
-            string userId) : base(context, fileService, userId)
+            string userId) : base(dbConfig, fileService, userId)
         {
             _exceptionHandler = exceptionHandler;
             _translations = (SqlTranslationsRepository)translationsRepository;
