@@ -1,5 +1,9 @@
 ﻿using chldr_api.GraphQL.MutationServices;
+using chldr_data.DatabaseObjects.Models;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
+using chldr_data.Interfaces.Repositories;
+using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
 using chldr_data.Resources.Localizations;
 using chldr_data.Services;
@@ -7,6 +11,7 @@ using chldr_test_utils;
 using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.Extensions.Localization;
+using MongoDB.Bson.Serialization.Serializers;
 using Newtonsoft.Json;
 using System.Transactions;
 
@@ -34,9 +39,35 @@ namespace chldr_api.tests.ServiceResolverTests
         }
 
         [Fact]
-        public async Task ExecuteAsync_WithValidInput_ReturnsSuccessResponse()
+        public async Task Confirm_WithValidInput_ReturnsSuccessResponse()
         {
+            // Arrange
+            var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+            unitOfWork.BeginTransaction();
 
+            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
+            var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
+            var newUserInfo = TestDataFactory.CreateRandomUserDto();
+
+            // Act and Assert
+            var registrationResponse = await _userResolver.Register(newUserInfo.Email!, newUserInfo.Password, newUserInfo.FirstName, newUserInfo.LastName, newUserInfo.Patronymic);
+            Assert.True(registrationResponse.Success);
+
+            var confirmationToken = JsonConvert.DeserializeObject<string>(registrationResponse.SerializedData);
+            Assert.NotEmpty(confirmationToken);
+
+            var confirmationResponse = await _userResolver.Confirm(confirmationToken);
+            Assert.True(confirmationResponse.Success);
+
+            UserModel user = await usersRepository.GetByEmailAsync(newUserInfo.Email);
+            Assert.NotNull(user);
+            Assert.Equal(UserStatus.Active, user.Status);
+            unitOfWork.Rollback();
+        }
+
+        [Fact]
+        public async Task RegisterNew_WithValidInput_ReturnsSuccessResponse()
+        {
             // Arrange
             var newUser = TestDataFactory.CreateRandomUserDto();
 
@@ -52,7 +83,7 @@ namespace chldr_api.tests.ServiceResolverTests
         }
 
         [Fact]
-        public async Task ExecuteAsync_WithExistingEmail_ReturnsErrorResponse()
+        public async Task RegisterNew_WithExistingEmail_ReturnsErrorResponse()
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork();
             var actingUserId = unitOfWork.Users.GetRandomsAsync(1).Result.First().UserId;

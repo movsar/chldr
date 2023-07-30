@@ -53,11 +53,16 @@ namespace chldr_data.remote.Repositories
             return TokenModel.FromEntity(token);
         }
 
-        public IEnumerable<TokenModel> GetByUserId(string userId)
+        public IEnumerable<TokenModel> GetByUserId(string userId, TokenType type, bool ignoreExpired = true)
         {
             var tokens = _dbContext.Tokens
-                    .Where(t => t.Type == (int)TokenType.Refresh || t.Type == (int)TokenType.Access)
+                    .Where(t => t.Type == (int)type)
                     .Where(t => t.UserId.Equals(userId));
+
+            if (ignoreExpired)
+            {
+                tokens.Where(t => t.ExpiresIn > DateTimeOffset.UtcNow);
+            }
 
             return tokens.Select(t => TokenModel.FromEntity(t));
         }

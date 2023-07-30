@@ -19,7 +19,7 @@ namespace chldr_data.remote.Repositories
         public SqlUsersRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string _userId) : base(dbConfig, fileService, _userId) { }
 
         protected override RecordType RecordType => RecordType.User;
-        public async Task SetStatus(string userId, UserStatus newStatus)
+        public async Task SetStatusAsync(string userId, UserStatus newStatus)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
             if (user == null)
@@ -101,6 +101,17 @@ namespace chldr_data.remote.Repositories
 
             var models = entities.Select(FromEntityShortcut).ToList();
             return models;
+        }
+
+        public async Task<UserModel> GetByEmailAsync(string? email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentNullException();
+            }
+
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email!.ToLower().Equals(email.ToLower()));
+            return UserModel.FromEntity(user);
         }
     }
 }
