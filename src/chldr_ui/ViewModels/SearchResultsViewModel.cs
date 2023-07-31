@@ -7,7 +7,7 @@ namespace chldr_ui.ViewModels
     {
         private string _searchQuery = string.Empty;
         internal List<EntryModel> Entries { get; set; } = new();
-        
+
         static bool isInitialized = false;
         protected override Task OnInitializedAsync()
         {
@@ -41,23 +41,23 @@ namespace chldr_ui.ViewModels
             {
                 Console.WriteLine("GotNewSearchResults");
 
-                var logger = new ConsoleService("GotNewSearchResults", true);
-                logger.StartSpeedTest();
+                //var logger = new ConsoleService("GotNewSearchResults", true);
+                //logger.StartSpeedTest();
 
                 // ! Without this the page doesn't refresh
                 Entries = null;
                 await RefreshUi();
                 Entries = new List<EntryModel>();
 
-                logger.StopSpeedTest($"Finished setting up");
+                //logger.StopSpeedTest($"Finished setting up");
 
-                logger.StartSpeedTest();
+                //logger.StartSpeedTest();
                 Entries.AddRange(ContentStore.CachedSearchResult.Entries);
-                logger.StopSpeedTest($"Finished adding entries to the collection");
+                //logger.StopSpeedTest($"Finished adding entries to the collection");
 
-                logger.StartSpeedTest();
+                //logger.StartSpeedTest();
                 await RefreshUi();
-                logger.StopSpeedTest($"Finished rendering");
+                //logger.StopSpeedTest($"Finished rendering");
             }).Start();
         }
     }

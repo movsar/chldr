@@ -4,6 +4,8 @@ using chldr_utils.Services;
 using chldr_data.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
+using Microsoft.Extensions.Hosting;
 
 namespace chldr_data.remote.Services
 {
@@ -21,8 +23,14 @@ namespace chldr_data.remote.Services
             _fileService = fileService;
             _exceptionHandler = exceptionHandler;
 
+            var connectionString = configuration.GetConnectionString("SqlContext");
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new NullReferenceException("Connection string is empty");
+            }
+
             _options = new DbContextOptionsBuilder<SqlContext>()
-               .UseMySQL(configuration.GetConnectionString("SqlContext")!)
+               .UseMySQL(connectionString)
                .Options;
         }
         public SqlDataProvider(FileService fileService, ExceptionHandler exceptionHandler, string connectionString)

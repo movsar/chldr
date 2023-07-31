@@ -8,9 +8,7 @@ namespace chldr_ui.ViewModels
     public class EntryViewModel : ViewModelBase
     {
         #region Properties
-        [Parameter] public EntryModel? Entry { get; set; }
-        public string? Source { get; set; }
-        public List<TranslationModel> Translations { get; set; }
+        [Parameter] public EntryModel Entry { get; set; }
         #endregion
 
         #region Actions
@@ -56,7 +54,7 @@ namespace chldr_ui.ViewModels
         }
 
         public string? Header => Entry?.Content;
-        public string? Subheader => "";
+        public string? Subheader => ParseSource(Entry.Source.Name);
 
 
         public bool CanEdit()

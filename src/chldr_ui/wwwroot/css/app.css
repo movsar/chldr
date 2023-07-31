@@ -51,7 +51,7 @@
 .chldr_entry {
 }
 
-.chldr_entry_source {
+.chldr_entry_sub-header {
     color: brown;
     font-size: 10px;
     font-family: Arial;
@@ -76,7 +76,7 @@
     font-weight: bold;
 }
 
-.chldr_entry_sub-header {
+.chldr_entry_sub-header2 {
     font-size: 12px;
 }
 

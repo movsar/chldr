@@ -241,7 +241,7 @@ namespace chldr_data.remote.Repositories
             if (entryDto.ParentEntryId != null)
             {
                 var parent = await GetAsync(entryDto.ParentEntryId);
-                if (string.IsNullOrEmpty(parent.ParentEntryId))
+                if (!string.IsNullOrEmpty(parent.ParentEntryId))
                 {
                     return false;
                 }
@@ -333,6 +333,11 @@ namespace chldr_data.remote.Repositories
 
             try
             {
+                if (!(await ValidateParent(updatedEntryDto)))
+                {
+                    throw new InvalidArgumentsException("Error:Invalid_parent_entry");
+                }
+
                 var entry = await GetAsync(updatedEntryDto.EntryId);
                 var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId));
 

@@ -7,6 +7,7 @@ using chldr_utils;
 using chldr_utils.Models;
 using chldr_utils.Services;
 using chldr_shared.Services;
+using System.Net.Http.Headers;
 
 namespace chldr_shared.Stores
 {
@@ -191,10 +192,7 @@ namespace chldr_shared.Stores
         {
             await _entryService.AddEntry(entryDto, loggedInUser.UserId);
 
-            // Update UI
-            var added = await _entryService.Get(entryDto.EntryId);
-            CachedSearchResult.Entries.Add(added);
-            CachedResultsChanged?.Invoke();
+            LoadLatestEntries();
         }
     }
 }

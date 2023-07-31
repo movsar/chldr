@@ -24,13 +24,6 @@
                 </div>
             }
 
-            @if (!String.IsNullOrWhiteSpace(@Source))
-            {
-                <div class="chldr_entry_source">
-                    @Localizer["Source"]: @Source
-                </div>
-            }
-
             @if (Entry?.Subtype > 0)
             {
                 var partOfSpeech = (WordType)Entry.Subtype;
@@ -74,7 +67,7 @@
             }
 
             <div class="chldr_entry_translations mt-2">
-                @foreach (var translation in @Translations)
+                @foreach (var translation in @Entry.Translations)
                 {
                     <TranslationView Translation="@translation"></TranslationView>
                 }
