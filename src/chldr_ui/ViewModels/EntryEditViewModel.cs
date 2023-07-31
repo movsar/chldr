@@ -36,7 +36,7 @@ namespace chldr_ui.ViewModels
         bool existingSoundsRendered;
         SoundDto latestSoundDto;
 
-        internal static bool CanEditEntry { get; private set; } = true;
+        internal bool CanEditEntry { get; private set; } = true;
 
         private async Task RenderExistingSounds()
         {
@@ -61,11 +61,11 @@ namespace chldr_ui.ViewModels
 
         protected override async Task OnParametersSetAsync()
         {
-                if (UserStore.CurrentUser == null)
-                {
-                    ExceptionHandler?.LogError("EntryEditViewModel: OnParametersSetAsync - CurrentUser is null");
-                    NavigationManager.NavigateTo("/");
-                }
+            if (UserStore.CurrentUser == null)
+            {
+                ExceptionHandler?.LogError("EntryEditViewModel: OnParametersSetAsync - CurrentUser is null");
+                NavigationManager.NavigateTo("/");
+            }
 
             if (string.IsNullOrEmpty(EntryId))
             {

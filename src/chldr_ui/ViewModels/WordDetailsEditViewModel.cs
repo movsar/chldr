@@ -37,8 +37,7 @@ namespace chldr_ui.ViewModels
             // Restore Parent
             if (!string.IsNullOrEmpty(EntryDto.ParentEntryId))
             {
-
-                var unitOfWork = (RealmUnitOfWork)DataProvider.CreateUnitOfWork();
+                var unitOfWork = DataProvider.CreateUnitOfWork();
                 ParentEntry = await unitOfWork.Entries.Get(EntryDto.ParentEntryId);
             }
 
