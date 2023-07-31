@@ -1,21 +1,13 @@
-﻿using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.DatabaseObjects.Models;
+﻿using chldr_data.DatabaseObjects.Models;
 using chldr_data.local.RealmEntities;
-using chldr_data.Enums.WordDetails;
-using chldr_data.Models;
-using chldr_utils.Models;
-using chldr_utils.Services;
 using Realms;
 using System.Linq.Expressions;
-using chldr_data.Interfaces;
-using chldr_data.Services;
-using MySqlX.XDevAPI.Common;
 
 namespace chldr_data.local.Services
 {
-    public static class RealmSearchHelper
+    internal static class RealmSearchHelper
     {
-        public static EntryModel FromEntity(RealmEntry entry)
+        internal static EntryModel FromEntity(RealmEntry entry)
         {
             return EntryModel.FromEntity(
                 entry,

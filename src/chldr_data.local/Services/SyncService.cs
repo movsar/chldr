@@ -36,13 +36,13 @@ namespace chldr_data.local.Services
 
         static bool _isRunning = false;
 
-        private async Task<System.Collections.Generic.List<T>> RetrieveAll<T>(RecordType recordType) where T : class, new()
+        private async Task<List<T>> RetrieveAll<T>(RecordType recordType) where T : class, new()
         {
             // Best number for requests according to the measurements
             var limit = 13000;
             int offset = 0;
 
-            var combinedResults = new System.Collections.Generic.List<T>();
+            var combinedResults = new List<T>();
             IEnumerable<T> newResults;
             do
             {

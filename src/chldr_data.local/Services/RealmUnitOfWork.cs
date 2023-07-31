@@ -1,17 +1,14 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Interfaces.Repositories;
-using chldr_data.Models;
 using chldr_data.Repositories;
-using chldr_utils.Interfaces;
 using chldr_utils;
-using Realms;
 using chldr_data.local.Repositories;
 using chldr_utils.Services;
 using chldr_data.Services;
 
 namespace chldr_data.local.Services
 {
-    public class RealmUnitOfWork : IUnitOfWork
+    internal class RealmUnitOfWork : IUnitOfWork
     {
         private RealmChangeSetsRepository _changeSetsRepository;
         private RealmTranslationsRepository _translationsRepository;
@@ -25,7 +22,7 @@ namespace chldr_data.local.Services
         private readonly RequestService _requestService;
         private readonly string? _userId;
 
-        public RealmUnitOfWork(
+        internal RealmUnitOfWork(
             ExceptionHandler exceptionHandler,
             FileService fileService,
             RequestService requestService,
