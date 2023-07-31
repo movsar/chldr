@@ -1,9 +1,0 @@
-{
-    "app_id": "dosham-test-oaqel",
-    "config_version": 20210101,
-    "name": "Dosham-test",
-    "location": "DE-FF",
-    "provider_region": "azure-westeurope",
-    "deployment_model": "LOCAL",
-    "environment": "development"
-}
