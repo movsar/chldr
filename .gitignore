@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /chldr_data/Data/offline.datx.lock
 /chldr_api/appsettings.json
+/src/chldr_web/appsettings.json
+/src/chldr_api/appsettings.json
