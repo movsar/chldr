@@ -1,6 +1,6 @@
 ﻿@inherits EntryViewModel;
 
-@if (Word != null)
+@if (Entry != null)
 {
     <div class="chldr_entry">
         <div class="card card-body">
@@ -33,14 +33,14 @@
 
             @if (Entry?.Subtype > 0)
             {
-                var partOfSpeech = (WordType)Word.Subtype;
+                var partOfSpeech = (WordType)Entry.Subtype;
                 var partOfSpeechLocalizedTitle = Localizer[$"Word:{partOfSpeech}"].ToString();
 
                 <p class="small"><i>@partOfSpeechLocalizedTitle</i></p>
 
-                @if (Word.Details != null)
+                @if (Entry.Details != null)
                 {
-                    switch ((WordType)Word.Subtype)
+                    switch ((WordType)Entry.Subtype)
                     {
                         case WordType.Noun:
                             break;
@@ -80,7 +80,7 @@
                 }
             </div>
 
-            <EntryActionButtonsView Entry="Word"
+            <EntryActionButtonsView Entry="Entry"
                                     UpvoteHandler="() => Upvote()"
                                     DownvoteHandler="() => Downvote()"
                                     ShareHandler="() => Share()"

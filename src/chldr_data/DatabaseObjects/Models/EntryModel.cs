@@ -14,7 +14,6 @@ namespace chldr_data.DatabaseObjects.Models
         public string UserId { get; set; }
         public string? SourceId => Source.SourceId;
         public string? ParentEntryId { get; set; }
-        public List<EntryModel> SubEntries { get; set; } = new List<EntryModel>();
         public int Rate { get; set; }
         public EntryType Type { get; set; }
         public int Subtype { get; set; }
@@ -25,6 +24,8 @@ namespace chldr_data.DatabaseObjects.Models
         public List<SoundModel> Sounds { get; set; } = new List<SoundModel>();
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
+
+        public List<EntryModel> SubEntries { get; set; } = new List<EntryModel>();
 
         public static EntryModel FromEntity(IEntryEntity entry, ISourceEntity source, IEnumerable<ITranslationEntity> translations, IEnumerable<ISoundEntity> sounds)
         {

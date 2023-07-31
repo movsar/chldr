@@ -1,43 +1,69 @@
 ﻿using chldr_data.DatabaseObjects.Models;
-using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums;
+using chldr_shared.Stores;
 using Microsoft.AspNetCore.Components;
-using MongoDB.Bson;
 
 namespace chldr_ui.ViewModels
 {
-    public class EntryViewModel : EntryViewModelBase
+    public class EntryViewModel : ViewModelBase
     {
-        public EntryModel? Word { get; set; }
-        // Only for Words
-        public List<EntryModel> SubWords { get; set; }
+        #region Properties
+        [Parameter] public EntryModel? Entry { get; set; }
+        public string? Source { get; set; }
+        public List<TranslationModel> Translations { get; set; }
+        #endregion
 
-        public string? Header => Word?.Content;
-        public string? Subheader => CreateSubheader();
-
-        protected override void OnParametersSet()
+        #region Actions
+        public void ListenToPronunciation() { }
+        public void NewTranslation() { }
+        public void AddToFavorites() { }
+        public async Task Remove()
         {
-            base.OnParametersSet();
-            if (Word == null && Entry != null)
-            {
-                Word = Entry as EntryModel;
-
-                Translations = Entry.Translations;
-                Source = ParseSource(Entry.Source.Name);
-            }
+            await ContentStore.DeleteEntry(UserStore.CurrentUser!, Entry!.EntryId);
         }
+        public void Share() { }
+        public void Upvote() { }
+        public void Downvote() { }
+        public void Flag() { }
+
+        #endregion
+
+        protected static string ParseSource(string sourceName)
+        {
+            string sourceTitle = null;
+            switch (sourceName)
+            {
+                case "Maciev":
+                    sourceTitle = "Чеченско - русский словарь, А.Г.Мациева";
+                    break;
+                case "Karasaev":
+                    sourceTitle = "Русско - чеченский словарь, Карасаев А.Т., Мациев А.Г.";
+                    break;
+                case "User":
+                    sourceTitle = "Добавлено пользователем";
+                    break;
+                case "Malaev":
+                    sourceTitle = "Чеченско - русский словарь, Д.Б. Малаева";
+                    break;
+                case "Anatslovar":
+                    sourceTitle = "Чеченско-русский, русско-чеченский словарь анатомии человека, Р.У. Берсанова";
+                    break;
+                case "ikhasakhanov":
+                    sourceTitle = "Ислам Хасаханов";
+                    break;
+            }
+            return sourceTitle;
+        }
+
+        public string? Header => Entry?.Content;
+        public string? Subheader => "";
+
 
         public bool CanEdit()
         {
             // Anyone should be able to open an entry for edit mode, if they're logged in and active
             // However, they might not be able to change anything, that will be governed by CanEdit* methods
             return UserStore.IsLoggedIn && UserStore.CurrentUser!.Status == UserStatus.Active;
-        }
-
-
-        private string CreateSubheader()
-        {
-            return $"";
         }
 
         public static string ParseGrammaticalClass(List<int> grammaticalClasses)
