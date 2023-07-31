@@ -1,12 +1,11 @@
-﻿using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.DatabaseObjects.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using chldr_data.DatabaseObjects.Models;
+using System.Linq;
 
 namespace chldr_data.Services
 {
     public static class SearchServiceHelper
     {
-        public static IEnumerable<EntryModel> PostProcessing(string inputText, IEnumerable<EntryModel> entries)
+        private static List<EntryModel> Sort(string inputText, IEnumerable<EntryModel> entries)
         {
             // Entry.Content => Equal, StartsWith, Rest
             var equalTo = new List<EntryModel>();
@@ -35,7 +34,17 @@ namespace chldr_data.Services
             var orderedRest = rest.OrderBy(e => e.Content).ToList();
 
             var combined = equalTo.Union(orderedStartsWith.Union(orderedRest));
-            return combined;
+            return combined.ToList();
+        }
+
+        public static List<EntryModel> PostProcessing(string inputText, IEnumerable<EntryModel> entries)
+        {
+            var results = Sort(inputText, entries);
+            
+            // Remove duplicating entries from the output as subentries will be shown with their parents
+            results.RemoveAll(e => e.ParentEntryId != null);
+
+            return results;
         }
     }
 }

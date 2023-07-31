@@ -63,7 +63,7 @@ namespace chldr_data.remote.Repositories
         protected abstract RecordType RecordType { get; }
         protected abstract TModel FromEntityShortcut(TEntity entity);
 
-        public virtual async Task<TModel> Get(string entityId)
+        public virtual async Task<TModel> GetAsync(string entityId)
         {
             var entry = await _dbContext.FindAsync<TEntity>(entityId);
             if (entry == null)

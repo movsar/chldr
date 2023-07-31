@@ -16,7 +16,7 @@ namespace chldr_shared.Services
         public async Task<EntryModel> Get(string entryId)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork(null);
-            return await unitOfWork.Entries.Get(entryId);
+            return await unitOfWork.Entries.GetAsync(entryId);
         }
         public async Task AddEntry(EntryDto entryDto, string userId)
         {

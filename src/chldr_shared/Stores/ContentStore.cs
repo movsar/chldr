@@ -141,7 +141,7 @@ namespace chldr_shared.Stores
         public async Task<EntryModel> GetByEntryId(string entryId)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork(null);
-            return await unitOfWork.Entries.Get(entryId);
+            return await unitOfWork.Entries.GetAsync(entryId);
         }
         public void DataAccess_DatasourceInitialized()
         {

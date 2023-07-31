@@ -1,6 +1,6 @@
 ﻿namespace chldr_utils.Exceptions
 {
-    internal class InvalidArgumentsException : Exception
+    public class InvalidArgumentsException : Exception
     {
         // Default message for the exception
         private const string DefaultMessage = "Error:Invalid_arguments_check_your_input";

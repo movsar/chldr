@@ -7,7 +7,14 @@
 
             <div class="chldr_entry_header card-title">
                 @Header
-                @*<span class="oi oi-volume-high" @onclick="ViewModel.ListenToPronunciation"></span>*@
+                @if (Entry?.Sounds.Count() > 0)
+                {
+                    <span class="oi oi-volume-high" @onclick="ListenToPronunciation"></span>
+                }
+                @if (CanEdit())
+                {
+                    <a href="/entry/edit/@Entry!.EntryId"><i class="bi bi-pencil ms-2"></i></a>
+                }
             </div>
 
             @if (!String.IsNullOrWhiteSpace(Subheader))
@@ -24,7 +31,7 @@
                 </div>
             }
 
-            @if (Entry.Subtype != 0)
+            @if (Entry?.Subtype > 0)
             {
                 var partOfSpeech = (WordType)Word.Subtype;
                 var partOfSpeechLocalizedTitle = Localizer[$"Word:{partOfSpeech}"].ToString();
@@ -56,6 +63,10 @@
                     {
                         <span>
                             @subEntry.Content;
+                            @if (CanEdit())
+                            {
+                                <a href="/entry/edit/@subEntry!.EntryId"><i class="bi bi-pencil me-2"></i></a>
+                            }
                         </span>
                     }
                     ]
@@ -68,6 +79,7 @@
                     <TranslationView Translation="@translation"></TranslationView>
                 }
             </div>
+
             <EntryActionButtonsView Entry="Word"
                                     UpvoteHandler="() => Upvote()"
                                     DownvoteHandler="() => Downvote()"

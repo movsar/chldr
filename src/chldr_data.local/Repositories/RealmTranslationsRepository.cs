@@ -35,7 +35,7 @@ namespace chldr_data.Repositories
         }
         public override async Task<List<ChangeSetModel>> Update(TranslationDto dto)
         {
-            var existingEntity = await Get(dto.TranslationId);
+            var existingEntity = await GetAsync(dto.TranslationId);
             var existingDto = TranslationDto.FromModel(existingEntity);
 
             var changes = Change.GetChanges(dto, existingDto);

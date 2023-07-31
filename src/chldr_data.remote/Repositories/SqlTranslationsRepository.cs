@@ -54,7 +54,7 @@ namespace chldr_data.remote.Repositories
         public override async Task<List<ChangeSetModel>> Update(TranslationDto dto)
         {
             // Find out what has been changed
-            var existing = await Get(dto.TranslationId);
+            var existing = await GetAsync(dto.TranslationId);
             var existingDto = TranslationDto.FromModel(existing);
 
             // This should be before checking for privileges, in case when input is existing entry and nothing has been changed
@@ -84,7 +84,7 @@ namespace chldr_data.remote.Repositories
 
         public override async Task<List<ChangeSetModel>> Remove(string entityId)
         {
-            var existing = await Get(entityId);
+            var existing = await GetAsync(entityId);
             var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
             if (!user.CanEdit(existing.Rate, existing.UserId))
             {

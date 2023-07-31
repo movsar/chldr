@@ -14,6 +14,8 @@ using Realms.Sync;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_utils.Exceptions;
 using MongoDB.Bson.IO;
+using System.ComponentModel;
+using System.Collections.Immutable;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("chldr_data.remote.tests")]
 
@@ -42,7 +44,7 @@ namespace chldr_data.remote.Repositories
 
         protected override RecordType RecordType => RecordType.Entry;
 
-        public override async Task<EntryModel> Get(string entityId)
+        public override async Task<EntryModel> GetAsync(string entityId)
         {
             var entry = await _dbContext.Entries
                 .Include(e => e.Source)
@@ -99,7 +101,39 @@ namespace chldr_data.remote.Repositories
         }
         protected override EntryModel FromEntityShortcut(SqlEntry entry)
         {
-            return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
+            var subEntries = _dbContext.Entries
+                .Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entry.EntryId))
+                .Include(e => e.Source)
+                .Include(e => e.User)
+                .Include(e => e.Translations)
+                .Include(e => e.Sounds)
+                .ToImmutableList();
+
+            if (subEntries.Count() == 0)
+            {
+                return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
+            }
+            else
+            {
+                return FromEntityShortcut(entry, subEntries);
+            }
+        }
+        protected EntryModel FromEntityShortcut(SqlEntry entry, ImmutableList<SqlEntry> subEntries)
+        {
+            var subSources = subEntries.ToDictionary(e => e.EntryId, e => e.Source as ISourceEntity);
+            var subSounds = subEntries.ToDictionary(e => e.EntryId, e => e.Sounds.ToList().Cast<ISoundEntity>());
+            var subEntryTranslations = subEntries.ToDictionary(e => e.EntryId, e => e.Translations.ToList().Cast<ITranslationEntity>());
+
+            return EntryModel.FromEntity(
+                    entry,
+                    entry.Source,
+                    entry.Translations,
+                    entry.Sounds,
+                    subEntries.Cast<IEntryEntity>(),
+                    subSources,
+                    subEntryTranslations,
+                    subSounds
+                );
         }
 
         protected static async Task<List<string>> FinderAsync(IQueryable<IEntryEntity> query, string inputText)
@@ -151,7 +185,6 @@ namespace chldr_data.remote.Repositories
 
             // Sort etc
             SearchServiceHelper.PostProcessing(inputText, result);
-
             return result;
         }
 
@@ -202,6 +235,26 @@ namespace chldr_data.remote.Repositories
 
             return entries.Select(entry => FromEntityShortcut(entry)).ToList();
         }
+        private async Task<bool> ValidateParent(EntryDto entryDto)
+        {
+            // If Parent is specified, restrict to one level deep, parent child relationship, no hierarchies
+            if (entryDto.ParentEntryId != null)
+            {
+                var parent = await GetAsync(entryDto.ParentEntryId);
+                if (string.IsNullOrEmpty(parent.ParentEntryId))
+                {
+                    return false;
+                }
+
+                var children = await GetChildEntriesAsync(entryDto.EntryId);
+                if (children.Count() > 0)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         public override async Task<List<ChangeSetModel>> Add(EntryDto newEntryDto)
         {
@@ -214,6 +267,11 @@ namespace chldr_data.remote.Repositories
             if (user.Status != UserStatus.Active)
             {
                 throw new UnauthorizedException();
+            }
+
+            if (!(await ValidateParent(newEntryDto)))
+            {
+                throw new InvalidArgumentsException("Error:Invalid_parent_entry");
             }
 
             // Set rate
@@ -262,13 +320,20 @@ namespace chldr_data.remote.Repositories
                 throw _exceptionHandler.Error(ex);
             }
         }
+
+        private async Task<List<EntryModel>> GetChildEntriesAsync(string entryId)
+        {
+            var entries = _dbContext.Entries.Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entryId));
+            return await entries.Select(e => EntryModel.FromEntity(e, e.Source, e.Translations, e.Sounds)).ToListAsync();
+        }
+
         public override async Task<List<ChangeSetModel>> Update(EntryDto updatedEntryDto)
         {
             var resultingChangeSets = new List<ChangeSetModel>();
 
             try
             {
-                var entry = await Get(updatedEntryDto.EntryId);
+                var entry = await GetAsync(updatedEntryDto.EntryId);
                 var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId));
 
                 var existingEntryDto = EntryDto.FromModel(entry);
@@ -311,7 +376,7 @@ namespace chldr_data.remote.Repositories
 
             try
             {
-                var entry = await Get(entryId);
+                var entry = await GetAsync(entryId);
                 var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId));
 
                 // Check whether the user has access to remove the entry with all its child items

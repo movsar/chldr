@@ -40,7 +40,7 @@ namespace chldr_data.local.Repositories
         }
         public override async Task<List<ChangeSetModel>> Update(SoundDto dto)
         {
-            var existingEntity = await Get(dto.SoundId);
+            var existingEntity = await GetAsync(dto.SoundId);
             var existingDto = SoundDto.FromModel(existingEntity);
 
             var changes = Change.GetChanges(dto, existingDto);
@@ -62,7 +62,7 @@ namespace chldr_data.local.Repositories
         {
             // TODO: Remove remote entity
 
-            var sound = await Get(entityId);
+            var sound = await GetAsync(entityId);
             _fileService.DeleteEntrySound(sound.FileName);
 
             // Remove local entity

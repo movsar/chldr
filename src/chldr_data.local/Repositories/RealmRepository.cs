@@ -42,7 +42,7 @@ namespace chldr_data.Repositories
         public abstract Task<List<ChangeSetModel>> Add(TDto dto);
         public abstract Task<List<ChangeSetModel>> Update(TDto EntryDto);
         public abstract Task<List<ChangeSetModel>> Remove(string entityId);
-        public async Task<TModel> Get(string entityId)
+        public async Task<TModel> GetAsync(string entityId)
         {
             var entry = _dbContext.Find<TEntity>(entityId);
             if (entry == null)

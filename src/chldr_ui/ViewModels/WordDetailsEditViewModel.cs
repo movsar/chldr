@@ -38,7 +38,7 @@ namespace chldr_ui.ViewModels
             if (!string.IsNullOrEmpty(EntryDto.ParentEntryId))
             {
                 var unitOfWork = DataProvider.CreateUnitOfWork();
-                ParentEntry = await unitOfWork.Entries.Get(EntryDto.ParentEntryId);
+                ParentEntry = await unitOfWork.Entries.GetAsync(EntryDto.ParentEntryId);
             }
 
             await base.OnParametersSetAsync();

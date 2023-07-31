@@ -9,7 +9,7 @@ namespace chldr_data.Interfaces.Repositories
         Task<IEnumerable<TModel>> TakeAsync(int offset, int limit);
         Task<List<TModel>> GetRandomsAsync(int limit);
 
-        Task<TModel> Get(string entityId);
+        Task<TModel> GetAsync(string entityId);
 
         Task<List<ChangeSetModel>> Add(TDto dto);
         Task<List<ChangeSetModel>> Update(TDto dto);
