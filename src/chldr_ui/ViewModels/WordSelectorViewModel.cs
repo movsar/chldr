@@ -18,7 +18,7 @@ namespace chldr_ui.ViewModels
             SelectedEntryId = entry.EntryId;
             await OnEntrySelected.InvokeAsync(entry);
         }
-        public void Search(ChangeEventArgs evgentArgs)
+        public async Task Search(ChangeEventArgs evgentArgs)
         {
             string? inputText = evgentArgs.Value?.ToString();
             if (string.IsNullOrWhiteSpace(inputText))
@@ -26,7 +26,7 @@ namespace chldr_ui.ViewModels
                 return;
             }
 
-            Entries = ContentStore.Find(inputText).ToList();
+            Entries = (await ContentStore.FindAsync(inputText)).ToList();
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

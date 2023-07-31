@@ -27,6 +27,7 @@ namespace chldr_ui.ViewModels
             };
         }
 
+
         [Parameter] public string? EntryId { get; set; }
         [Inject] FileService FileService { get; set; }
         public EntryDto EntryDto { get; set; } = new EntryDto();
@@ -35,7 +36,7 @@ namespace chldr_ui.ViewModels
         bool existingSoundsRendered;
         SoundDto latestSoundDto;
 
-        internal static bool CanEditEntry { get; private set; } = true;
+        internal bool CanEditEntry { get; private set; } = true;
 
         private async Task RenderExistingSounds()
         {
@@ -62,6 +63,7 @@ namespace chldr_ui.ViewModels
         {
             if (UserStore.CurrentUser == null)
             {
+                ExceptionHandler?.LogError("EntryEditViewModel: OnParametersSetAsync - CurrentUser is null");
                 NavigationManager.NavigateTo("/");
             }
 
@@ -105,6 +107,12 @@ namespace chldr_ui.ViewModels
         List<string> _newTranslationIds = new List<string>();
         public async Task NewTranslation()
         {
+            if (UserStore.CurrentUser == null)
+            {
+                ExceptionHandler?.LogError("EntryEditViewModel: NewTranslation - CurrentUser is null");
+                NavigationManager.NavigateTo("/");
+            }
+
             var translation = new TranslationDto(EntryDto.EntryId, UserStore.CurrentUser!.UserId, ContentStore.Languages.First());
 
             // Needed to know which translations are new, in case they need to be removed

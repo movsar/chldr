@@ -9,7 +9,6 @@ namespace chldr_ui.ViewModels
     public abstract class EditFormViewModelBase<TFormDto, TFormValidator> : ViewModelBase, IEditFormViewModel<TFormDto, TFormValidator>
         where TFormValidator : AbstractValidator<TFormDto>
     {
-        [Inject] protected JsInteropService JsInterop { get; set; }
         [Inject] TFormValidator? DtoValidator { get; set; }
         public List<string> ErrorMessages { get; set; } = new();
         public bool FormSubmitted { get; set; }

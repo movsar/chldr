@@ -64,10 +64,10 @@ namespace chldr_shared.Stores
             _entryService = new EntryService(_dataProvider);
         }
 
-        public IEnumerable<EntryModel> Find(string inputText, int limit = 10)
+        public async Task<IEnumerable<EntryModel>> FindAsync(string inputText, int limit = 10)
         {
-            //return await _searchService.FindAsync(inputText, limit);
-            throw new NotImplementedException();
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            return (await unitOfWork.Entries.FindAsync(inputText, new FiltrationFlags())).ToList();
         }
 
         public async Task StartSearch(string inputText, FiltrationFlags filterationFlags)
@@ -123,7 +123,7 @@ namespace chldr_shared.Stores
 
             CachedResultsChanged?.Invoke();
         }
-     
+
         public void LoadEntriesOnModeration()
         {
             CachedSearchResult.Entries.Clear();
@@ -170,7 +170,7 @@ namespace chldr_shared.Stores
 
         public async Task DeleteEntry(UserModel loggedInUser, string entryId)
         {
-            await _entryService.Remove(entryId, loggedInUser.UserId);         
+            await _entryService.Remove(entryId, loggedInUser.UserId);
 
             // Update on UI
             CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));

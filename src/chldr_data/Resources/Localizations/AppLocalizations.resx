@@ -671,4 +671,10 @@
   <data name="Your_account_is_activated_you_can_now_log_in" xml:space="preserve">
     <value>Your account is activated you can now log in</value>
   </data>
+  <data name="Error:Invalid_arguments_check_your_input" xml:space="preserve">
+    <value>Invalid arguments, please check the input</value>
+  </data>
+  <data name="Error:You_are_not_authorized_for_this_operation" xml:space="preserve">
+    <value>You are not allowed to perform this operation</value>
+  </data>
 </root>

@@ -15,6 +15,7 @@ namespace chldr_ui.ViewModels
 {
     public class ViewModelBase : ComponentBase
     {
+        [Inject] protected JsInteropService JsInterop { get; set; }
         [Inject] protected CultureService CultureService { get; set; }
         [Inject] protected ContentStore ContentStore { get; set; }
         [Inject] protected UserStore UserStore { get; set; }
