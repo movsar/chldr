@@ -132,7 +132,7 @@ namespace chldr_data.Repositories
             }
 
             // Sort
-            SearchServiceHelper.SortDirectSearchEntries(inputText, result);
+            SearchServiceHelper.PostProcessing(inputText, result);
 
             return result;
         }

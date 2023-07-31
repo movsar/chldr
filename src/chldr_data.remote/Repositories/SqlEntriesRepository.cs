@@ -13,6 +13,7 @@ using chldr_data.Services;
 using Realms.Sync;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_utils.Exceptions;
+using MongoDB.Bson.IO;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("chldr_data.remote.tests")]
 
@@ -101,40 +102,55 @@ namespace chldr_data.remote.Repositories
             return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
         }
 
-        public async Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags filtrationFlags)
+        protected static async Task<List<string>> FinderAsync(IQueryable<IEntryEntity> query, string inputText)
         {
-            var result = new List<EntryModel>();
-            IQueryable<SqlEntry> query;
+            // This is the search algorythm, it will be exactly the same for both Sql and Realm databases
+            // It takes the entity interfaces and returns ids, no DB specific operations or fields
+
+            // @Nurmagomed - this is your domain :)
 
             if (string.IsNullOrEmpty(inputText) || inputText.Length <= 3)
             {
-                query = _dbContext.Entries
+                query = query
                     .Where(e => e.RawContents.Equals(inputText, StringComparison.OrdinalIgnoreCase));
             }
             else
             {
-                query = _dbContext.Entries
+                query = query
                     .Where(e => e.RawContents.StartsWith(inputText, StringComparison.OrdinalIgnoreCase));
             }
 
-            // Get matching entry IDs
-            var matchingEntryIds = await query
+            return await query
                 .Select(e => e.EntryId)
                 .ToListAsync();
+        }
 
-            // Apply the shortcut method to the matching entry IDs            
-            result = matchingEntryIds
-                .Select(id => FromEntityShortcut(_dbContext.Entries
-                    .Include(e => e.Source)
-                    .Include(e => e.User)
-                    .Include(e => e.Translations)
-                    .Include(e => e.Sounds)
-                    .AsNoTracking()
-                    .First(e => e.EntryId.Equals(id))))
-                .ToList();
+        public async Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags filtrationFlags)
+        {
+            var result = new List<EntryModel>();
 
-            // Sort
-            SearchServiceHelper.SortDirectSearchEntries(inputText, result);
+            try
+            {
+                var matchingEntryIds = await FinderAsync(_dbContext.Entries.Cast<IEntryEntity>(), inputText);
+
+                // Apply the shortcut method to the matching entry IDs            
+                result = matchingEntryIds
+                    .Select(id => FromEntityShortcut(_dbContext.Entries
+                        .Include(e => e.Source)
+                        .Include(e => e.User)
+                        .Include(e => e.Translations)
+                        .Include(e => e.Sounds)
+                        .AsNoTracking()
+                        .First(e => e.EntryId.Equals(id))))
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            // Sort etc
+            SearchServiceHelper.PostProcessing(inputText, result);
 
             return result;
         }

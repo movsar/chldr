@@ -1,4 +1,6 @@
-﻿using chldr_data.DatabaseObjects.Models;
+﻿using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.DatabaseObjects.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.Interfaces.Repositories
 {

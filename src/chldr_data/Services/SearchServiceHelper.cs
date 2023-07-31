@@ -1,10 +1,12 @@
-﻿using chldr_data.DatabaseObjects.Models;
+﻿using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.DatabaseObjects.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.Services
 {
     public static class SearchServiceHelper
     {
-        public static IEnumerable<EntryModel> SortDirectSearchEntries(string inputText, IEnumerable<EntryModel> entries)
+        public static IEnumerable<EntryModel> PostProcessing(string inputText, IEnumerable<EntryModel> entries)
         {
             // Entry.Content => Equal, StartsWith, Rest
             var equalTo = new List<EntryModel>();
