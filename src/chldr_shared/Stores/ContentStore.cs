@@ -183,7 +183,7 @@ namespace chldr_shared.Stores
             await _entryService.Update(entryDto, loggedInUser.UserId);
 
             // Update UI
-            var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId);
+            var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId || e.EntryId == entryDto.ParentEntryId);
             var entryIndex = CachedSearchResult.Entries.IndexOf(existingEntry);
             CachedSearchResult.Entries[entryIndex] = await _entryService.Get(entryDto.EntryId);
             CachedResultsChanged?.Invoke();
