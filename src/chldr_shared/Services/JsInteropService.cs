@@ -55,10 +55,17 @@ namespace chldr_shared
 
         public async ValueTask DisposeAsync()
         {
-            if (moduleTask.IsValueCreated)
+            if (moduleTask.IsValueCreated && moduleTask.Value != null)
             {
                 var module = await moduleTask.Value;
-                await module.DisposeAsync();
+                try
+                {
+                    await module.DisposeAsync();
+                }
+                catch (Exception ex)
+                {
+
+                }
             }
         }
         public async ValueTask Disable(string selector)

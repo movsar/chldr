@@ -357,6 +357,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid arguments, please check the input.
+        /// </summary>
+        public static string Error_Invalid_arguments_check_your_input {
+            get {
+                return ResourceManager.GetString("Error:Invalid_arguments_check_your_input", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid name.
         /// </summary>
         public static string Error_Invalid_name {
@@ -452,6 +461,15 @@ namespace chldr_data.Resources.Localizations {
         public static string Error_Word_content_must_be_set {
             get {
                 return ResourceManager.GetString("Error:Word_content_must_be_set", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are not allowed to perform this operation.
+        /// </summary>
+        public static string Error_You_are_not_authorized_for_this_operation {
+            get {
+                return ResourceManager.GetString("Error:You_are_not_authorized_for_this_operation", resourceCulture);
             }
         }
         
