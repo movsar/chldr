@@ -368,3 +368,6 @@ FodyWeavers.xsd
 .DS_Store
 .AppleDouble
 .LSOverride
+
+/src/chldr_web/appsettings.json
+/src/chldr_api/appsettings.json

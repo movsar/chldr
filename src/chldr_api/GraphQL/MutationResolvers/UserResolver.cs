@@ -213,7 +213,7 @@ namespace chldr_api.GraphQL.MutationServices
                     return new RequestResult() { ErrorMessage = "Refresh token has expired" };
                 }
 
-                var user = await usersRepository.Get(token.UserId);
+                var user = await usersRepository.GetAsync(token.UserId);
                 if (user == null)
                 {
                     return new RequestResult() { ErrorMessage = "No user has been found for the requested token" };
@@ -309,7 +309,7 @@ namespace chldr_api.GraphQL.MutationServices
                 return new RequestResult("Invalid token");
             }
 
-            var user = await unitOfWork.Users.Get(tokenInDatabase.UserId);
+            var user = await unitOfWork.Users.GetAsync(tokenInDatabase.UserId);
             if (user == null)
             {
                 return new RequestResult("User not found");

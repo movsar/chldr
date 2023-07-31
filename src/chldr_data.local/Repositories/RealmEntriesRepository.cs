@@ -132,7 +132,7 @@ namespace chldr_data.Repositories
             }
 
             // Sort
-            SearchServiceHelper.SortDirectSearchEntries(inputText, result);
+            SearchServiceHelper.PostProcessing(inputText, result);
 
             return result;
         }
@@ -188,7 +188,7 @@ namespace chldr_data.Repositories
         }
         public override async Task<List<ChangeSetModel>> Update(EntryDto updatedEntryDto)
         {
-            var existingEntry = await Get(updatedEntryDto.EntryId);
+            var existingEntry = await GetAsync(updatedEntryDto.EntryId);
             var existingEntryDto = EntryDto.FromModel(existingEntry);
 
             // Update remote entity

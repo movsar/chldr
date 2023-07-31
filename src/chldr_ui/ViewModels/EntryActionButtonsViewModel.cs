@@ -12,13 +12,6 @@ namespace chldr_ui.ViewModels
         [Parameter] public Action UpvoteHandler { get; set; }
         [Parameter] public Action DownvoteHandler { get; set; }
 
-        public bool CanEdit()
-        {
-            // Anyone should be able to open an entry for edit mode, if they're logged in and active
-            // However, they might not be able to change anything, that will be governed by CanEdit* methods
-            return UserStore.IsLoggedIn && UserStore.CurrentUser!.Status == UserStatus.Active;
-        }
-
         public bool CanRemove()
         {
             return UserStore.IsLoggedIn && UserStore.CurrentUser!.CanRemove(Entry.Rate, Entry.UserId, Entry.CreatedAt);

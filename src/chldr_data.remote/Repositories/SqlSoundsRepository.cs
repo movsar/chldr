@@ -57,7 +57,7 @@ namespace chldr_data.remote.Repositories
         public override async Task<List<ChangeSetModel>> Update(SoundDto dto)
         {
             // Find out what has been changed
-            var existing = await Get(dto.SoundId);
+            var existing = await GetAsync(dto.SoundId);
             var existingDto = SoundDto.FromModel(existing);
 
             var changes = Change.GetChanges(dto, existingDto);

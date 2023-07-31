@@ -81,7 +81,7 @@ namespace chldr_data.remote.Repositories
 
         public override async Task<List<ChangeSetModel>> Update(TokenDto dto)
         {
-            var existing = await Get(dto.TokenId);
+            var existing = await GetAsync(dto.TokenId);
             var existingDto = TokenDto.FromModel(existing);
 
             var changes = Change.GetChanges(dto, existingDto);
