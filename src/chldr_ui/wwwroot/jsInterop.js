@@ -5,32 +5,33 @@ let _lblRecord;
 let _lblStopRecording;
 let _latestRecordingId;
 export function addRecordingListItem(id, data, canPromote, canRemove) {
-    let audioContainer = document.getElementById("recordings-list");
+    const audioContainer = document.querySelector("#recordings-list");
     if (!audioContainer) {
-        console.error("audio container is null");
+        console.error("audio container not found");
         return;
     }
-    
-    let audioUrl = URL.createObjectURL(base64ToBlob(data));
-    let recordedAudio = createAudioElement(audioUrl, id);
+
+    const audioUrl = URL.createObjectURL(base64ToBlob(data));
+    const recordedAudio = createAudioElement(audioUrl, id);
 
     const listItem = document.createElement("div");
     listItem.classList.add("recording-list-item");
     listItem.id = `rli_${id}`;
     listItem.appendChild(recordedAudio);
 
-    if (canPromote) { 
-        let promoteButton = createPromoteButton(id);
+    if (canPromote) {
+        const promoteButton = createPromoteButton(id);
         listItem.appendChild(promoteButton);
     }
 
     if (canRemove) {
-        let removeButton = createRemoveButton(id);
+        const removeButton = createRemoveButton(id);
         listItem.appendChild(removeButton);
     }
 
     audioContainer.appendChild(listItem);
 }
+
 function base64ToBlob(base64String) {
     const byteCharacters = atob(base64String);
     const byteNumbers = new Array(byteCharacters.length);

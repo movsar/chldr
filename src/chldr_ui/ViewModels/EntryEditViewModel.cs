@@ -198,8 +198,6 @@ namespace chldr_ui.ViewModels
         {
             isRecording = false;
 
-            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(50));
-
             try
             {
                 var recording = await JsInterop.StopRecording();
@@ -210,11 +208,6 @@ namespace chldr_ui.ViewModels
 
                 latestSoundDto.RecordingB64 = recording;
                 EntryDto.SoundDtos.Add(latestSoundDto);
-            }
-            catch (TaskCanceledException)
-            {
-                throw new Exception("Time out!");
-                // Timed out
             }
             catch (Exception ex)
             {
