@@ -20,7 +20,7 @@ namespace chldr_ui.ViewModels
             await ContentStore.DeleteEntry(UserStore.CurrentUser!, Entry!.EntryId);
         }
         public void Share() { }
-        public void Upvote() { }
+        public void Promote() { }
         public void Downvote() { }
         public void Flag() { }
 

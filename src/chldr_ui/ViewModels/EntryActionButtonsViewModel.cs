@@ -9,12 +9,6 @@ namespace chldr_ui.ViewModels
         [Parameter] public EntryModel Entry { get; set; }
         [Parameter] public Action ShareHandler { get; set; }
         [Parameter] public Action RemoveHandler { get; set; }
-        [Parameter] public Action UpvoteHandler { get; set; }
-        [Parameter] public Action DownvoteHandler { get; set; }
-
-        public bool CanRemove()
-        {
-            return UserStore.IsLoggedIn && UserStore.CurrentUser!.CanRemove(Entry.Rate, Entry.UserId, Entry.CreatedAt);
-        }
+        [Parameter] public Action PromoteHandler { get; set; }
     }
 }

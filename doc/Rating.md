@@ -31,12 +31,14 @@ After the rate has been changed, they will no longer see the Remove button. The 
 
 When a user clicks on Remove, it doesn't get deleted immediately, instead its Rate is set to **-1** and it will go to the trash, which will be a special place with negative rate entities.
 
-### User Rate
+### Automatic changes to the User's Rate field
 
-New users shoould have Rate = **5** (middle of the Member's RR).
+Initially, new users shoould have Rate = **5** (middle of the Member's RR).
 
 Whenever an entity has been promoted, its author should get an increase in their Rate, according to the UserRole of the promoter. If they're a Member it's **1**, Enthusiast - **2** etc.
 
 Whenever an entity has been removed, author should get a decrease by **1** in their Rate value.
+
+Deleting from **Trash** will not affect the rate, as by that time it will be already decreased.
 
 A user's Status field must be set to Banned if the user's Rate reaches **0**.

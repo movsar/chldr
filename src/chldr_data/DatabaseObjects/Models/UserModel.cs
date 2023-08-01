@@ -178,5 +178,15 @@ namespace chldr_data.DatabaseObjects.Models
             userModel.Status = (UserStatus)userEntity.Status;
             return userModel;
         }
+
+        public bool CanPromote(int rate, string userId)
+        {
+            if (Status != UserStatus.Active || UserId.Equals(userId) || Role <= GetUserRole(rate))
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

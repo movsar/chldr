@@ -194,5 +194,14 @@ namespace chldr_shared.Stores
 
             LoadLatestEntries();
         }
+
+        public async Task PromoteEntryAsync(EntryDto entryDto, UserModel? currentUser)
+        {
+            throw new NotImplementedException();
+        }
+        public async Task PromoteTranslationAsync(TranslationDto translationDto, UserModel? currentUser)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

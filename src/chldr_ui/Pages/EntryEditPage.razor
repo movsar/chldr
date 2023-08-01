@@ -63,7 +63,7 @@
         </div>
 
         <div class="col-2">
-            <button class="form-control col-12 btn btn-success mt-2" type="button" @onclick="@(() => NewTranslation())">+ @Localizer["Translation"]</button>
+            <button class="form-control col-12 btn btn-success mt-2" type="button" @onclick="@(() => NewTranslationAsync())">+ @Localizer["Translation"]</button>
             <button class="form-control col-12 btn btn-warning mt-2" id="recordButton" @onclick="ToggleRecording" disabled="@(!UserStore.CurrentUser?.CanAddSound(EntryDto))">+ @Localizer["Pronunciation"]</button>
         </div>
     </div>
@@ -95,7 +95,13 @@
         @foreach (var translation in EntryDto.TranslationsDtos)
         {
             <div class="mb-4">
-                <TranslationEditView TranslationDto="@translation" OnDelete="@(async (translationId) => await DeleteTranslation(translationId))"></TranslationEditView>
+                <TranslationEditView 
+                    TranslationDto="@translation"
+                    Promote="@(async (translation) => await PromoteTranslationAsync(translation))"
+                    Remove="@(async (translationId) => await DeleteTranslationAsync(translationId))"                
+                >
+                
+                </TranslationEditView>
                 @*<hr/>*@
             </div>
         }

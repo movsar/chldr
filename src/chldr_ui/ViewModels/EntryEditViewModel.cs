@@ -69,7 +69,7 @@ namespace chldr_ui.ViewModels
 
             if (string.IsNullOrEmpty(EntryId))
             {
-                await NewTranslation();
+                await NewTranslationAsync();
                 return;
             }
 
@@ -105,7 +105,7 @@ namespace chldr_ui.ViewModels
 
         #region Translation Handlers
         List<string> _newTranslationIds = new List<string>();
-        public async Task NewTranslation()
+        public async Task NewTranslationAsync()
         {
             if (UserStore.CurrentUser == null)
             {
@@ -122,7 +122,12 @@ namespace chldr_ui.ViewModels
 
             await RefreshUi();
         }
-        public async Task DeleteTranslation(string translationId)
+        public async Task PromoteTranslationAsync(TranslationDto translationDto)
+        {
+            await ContentStore.PromoteTranslationAsync(translationDto, UserStore.CurrentUser);
+        }
+
+        public async Task DeleteTranslationAsync(string translationId)
         {
             var translationDto = EntryDto.TranslationsDtos.Find(t => t.TranslationId.Equals(translationId))!;
             if (!(UserStore.CurrentUser?.CanRemove(translationDto.Rate, translationDto.UserId, translationDto.CreatedAt) == true))

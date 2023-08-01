@@ -11,8 +11,8 @@ namespace chldr_ui.ViewModels
         public TranslationDto TranslationDto { get; set; } = new TranslationDto();
         #endregion
 
-        [Parameter]
-        public Action<string> OnDelete { get; set; }
+        [Parameter] public Action<string> Remove { get; set; }
+        [Parameter] public Action<TranslationDto> Promote { get; set; }
         public bool CanEditTranslation { get; private set; } = true;
         public bool CanRemoveTranslation { get; private set; }
 
@@ -20,9 +20,14 @@ namespace chldr_ui.ViewModels
         {
             CanEditTranslation = UserStore.CurrentUser?.CanEdit(TranslationDto.Rate, TranslationDto.UserId!) == true;
         }
+
+        public void PromoteHandler()
+        {
+            Promote?.Invoke(TranslationDto);
+        }
         public void RemoveHandler()
         {
-            OnDelete?.Invoke(TranslationDto.TranslationId);
+            Remove?.Invoke(TranslationDto.TranslationId);
         }
 
         protected override async Task OnParametersSetAsync()

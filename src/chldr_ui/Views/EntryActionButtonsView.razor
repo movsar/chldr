@@ -3,17 +3,19 @@
 <div class="chldr_entry_actions">
     <i class="bi bi-share ms-2" @onclick="@ShareHandler"></i>
 
-    @if (UserStore.IsLoggedIn)
+    @if (UserStore.IsLoggedIn && UserStore.CurrentUser != null)
     {
         @*<i class="bi bi-flag" @onclick="Flag"></i>*@
         @*<i class="bi bi-star" @onclick="AddToFavorites"></i>*@
 
-        <span class="chldr_translation_actions ms-lg-1">
-            <i class="bi bi-hand-thumbs-up ms-2" @onclick="UpvoteHandler"></i>
-            <i class="bi bi-hand-thumbs-down" @onclick="DownvoteHandler"></i>
-        </span>
+        @if (UserStore.CurrentUser!.CanPromote(Entry.Rate, Entry.UserId))
+        {
+            <span class="chldr_translation_actions ms-lg-1">
+                <i class="bi bi-bookmark-check" @onclick="PromoteHandler"></i>
+            </span>
+        }
 
-        @if (CanRemove())
+        @if (UserStore.CurrentUser!.CanRemove(Entry.Rate, Entry.UserId, Entry.CreatedAt))
         {
             <i class="bi bi-trash ms-2" @onclick="@RemoveHandler"></i>
         }
