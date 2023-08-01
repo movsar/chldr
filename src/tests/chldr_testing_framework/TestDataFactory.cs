@@ -135,5 +135,13 @@ namespace chldr_test_utils
         {
             return _sourceDtoFaker.Generate();
         }
+
+        public static TranslationDto CreateRandomTranslationDto(string entryId, string userId)
+        {
+            var translationDto = _translationDtoFaker.Generate();
+            translationDto.UserId = userId;
+            translationDto.EntryId = entryId;
+            return translationDto;
+        }
     }
 }

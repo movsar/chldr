@@ -8,6 +8,7 @@ using chldr_data.Models;
 using chldr_data.remote.Interfaces;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
+using chldr_utils.Exceptions;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -68,7 +69,7 @@ namespace chldr_data.remote.Repositories
             var entry = await _dbContext.FindAsync<TEntity>(entityId);
             if (entry == null)
             {
-                throw new Exception("There is no such word in the database");
+                throw new InvalidArgumentsException();
             }
 
             return FromEntityShortcut(entry);
