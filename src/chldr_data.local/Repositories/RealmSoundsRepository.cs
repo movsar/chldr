@@ -80,5 +80,10 @@ namespace chldr_data.local.Repositories
             // ! NOT IMPLEMENTED
             return new List<ChangeSetModel>();
         }
+
+        public Task<ChangeSetModel> Promote(ISound sound)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

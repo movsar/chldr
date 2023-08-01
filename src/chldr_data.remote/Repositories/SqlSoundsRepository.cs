@@ -74,7 +74,6 @@ namespace chldr_data.remote.Repositories
             }
 
             // Set rate, save
-            changes.Add(new Change() { Property = "Rate", OldValue = dto.Rate, NewValue = user.GetRateRange().Lower });
             ApplyChanges<SqlSound>(dto.SoundId, changes);
 
             var changeSet = CreateChangeSetEntity(Operation.Update, dto.SoundId);
@@ -101,6 +100,30 @@ namespace chldr_data.remote.Repositories
             _fileService.DeleteEntrySound(sound.FileName);
 
             return await base.Remove(entityId);
+        }
+
+        public async Task<ChangeSetModel> Promote(ISound soundInfo)
+        {
+            var soundEntity = await _dbContext.Sounds.FindAsync(soundInfo.SoundId);
+            if (soundEntity == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            var userEntity = await _dbContext.Users.FindAsync(_userId);
+            var user = UserModel.FromEntity(userEntity);
+
+            var newRate = user.GetRateRange().Lower;
+
+            soundEntity.Rate = newRate;
+            await _dbContext.SaveChangesAsync();
+
+            var changes = new List<Change>() { new Change() { OldValue = soundEntity.Rate, NewValue = newRate, Property = "Rate" } };
+            var changeSet = CreateChangeSetEntity(Operation.Update, soundEntity.SoundId, changes);
+            _dbContext.ChangeSets.Add(changeSet);
+            await _dbContext.SaveChangesAsync();
+
+            return ChangeSetModel.FromEntity(changeSet);
         }
     }
 }

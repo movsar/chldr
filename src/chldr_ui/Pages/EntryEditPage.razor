@@ -64,7 +64,7 @@
 
         <div class="col-2">
             <button class="form-control col-12 btn btn-success mt-2" type="button" @onclick="@(() => NewTranslationAsync())">+ @Localizer["Translation"]</button>
-            <button class="form-control col-12 btn btn-warning mt-2" id="recordButton" @onclick="ToggleRecording" disabled="@(!UserStore.CurrentUser?.CanAddSound(EntryDto))">+ @Localizer["Pronunciation"]</button>
+            @*<button class="form-control col-12 btn btn-warning mt-2" id="recordButton" @onclick="ToggleRecording" disabled="@(!UserStore.CurrentUser?.CanAddSound(EntryDto))">+ @Localizer["Pronunciation"]</button>*@
         </div>
     </div>
 

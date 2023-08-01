@@ -501,5 +501,39 @@ namespace chldr_data.remote.Repositories
             }
             return changeSets;
         }
+
+        public async Task<ChangeSetModel> Promote(IEntry entryInfo)
+        {
+            var entryEntity = await _dbContext.Entries
+                .Include(e => e.Translations)
+                .Include(e => e.Sounds)
+                .FirstOrDefaultAsync(e => e.EntryId.Equals(entryInfo.EntryId));
+
+            if (entryEntity == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            var userEntity = await _dbContext.Users.FindAsync(_userId);
+            var user = UserModel.FromEntity(userEntity);
+            var newRate = user.GetRateRange().Lower;
+
+            entryEntity.Rate = newRate;
+            await _dbContext.SaveChangesAsync();
+
+            var changes = new List<Change>() { new Change() { OldValue = entryEntity.Rate, NewValue = newRate, Property = "Rate" } };
+            var changeSet = CreateChangeSetEntity(Operation.Update, entryEntity.EntryId, changes);
+            _dbContext.ChangeSets.Add(changeSet);
+            await _dbContext.SaveChangesAsync();
+
+            foreach (var translation in entryEntity.Translations)
+            {
+                translation.Rate = newRate;
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+            return ChangeSetModel.FromEntity(changeSet);
+        }
     }
 }

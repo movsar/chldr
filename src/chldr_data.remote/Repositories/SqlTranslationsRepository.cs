@@ -9,6 +9,7 @@ using chldr_data.remote.SqlEntities;
 using chldr_data.remote.Services;
 using chldr_data.Models;
 using chldr_utils.Services;
+using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_data.remote.Repositories
 {
@@ -92,6 +93,29 @@ namespace chldr_data.remote.Repositories
             }
 
             return await base.Remove(entityId);
+        }
+        public async Task<ChangeSetModel> Promote(ITranslation translationInfo)
+        {
+            var translationEntity = await _dbContext.Translations.FindAsync(translationInfo.TranslationId);
+            if (translationEntity == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            var userEntity = await _dbContext.Users.FindAsync(_userId);
+            var user = UserModel.FromEntity(userEntity);
+
+            var newRate = user.GetRateRange().Lower;
+
+            translationEntity.Rate = newRate;
+            await _dbContext.SaveChangesAsync();
+
+            var changes = new List<Change>() { new Change() { OldValue = translationEntity.Rate, NewValue = newRate, Property = "Rate" } };
+            var changeSet = CreateChangeSetEntity(Operation.Update, translationEntity.TranslationId, changes);
+            _dbContext.ChangeSets.Add(changeSet);
+            await _dbContext.SaveChangesAsync();
+
+            return ChangeSetModel.FromEntity(changeSet);
         }
     }
 }

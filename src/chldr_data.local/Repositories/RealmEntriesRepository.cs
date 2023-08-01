@@ -248,5 +248,10 @@ namespace chldr_data.Repositories
 
             return responseData.ChangeSets.Select(ChangeSetModel.FromDto).ToList();
         }
+
+        public Task<ChangeSetModel> Promote(IEntry entry)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

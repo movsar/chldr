@@ -1,4 +1,5 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Models;
 using chldr_utils.Models;
@@ -12,5 +13,6 @@ namespace chldr_data.Interfaces.Repositories
         Task FindDeferredAsync(string inputText, FiltrationFlags filtrationFlags);
         List<EntryModel> GetEntriesOnModeration();
         List<EntryModel> GetLatestEntries();
+        Task<ChangeSetModel> Promote(IEntry entry);
     }
 }

@@ -10,6 +10,7 @@ using chldr_utils.Services;
 using chldr_data.Models;
 using System.Threading.Channels;
 using chldr_data.Services;
+using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_data.Repositories
 {
@@ -54,6 +55,11 @@ namespace chldr_data.Repositories
         }
 
         public override Task<List<ChangeSetModel>> Remove(string entityId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ChangeSetModel> Promote(ITranslation translation)
         {
             throw new NotImplementedException();
         }

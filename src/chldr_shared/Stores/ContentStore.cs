@@ -7,7 +7,6 @@ using chldr_utils;
 using chldr_utils.Models;
 using chldr_utils.Services;
 using chldr_shared.Services;
-using System.Net.Http.Headers;
 using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_shared.Stores
@@ -198,15 +197,18 @@ namespace chldr_shared.Stores
 
         public async Task PromoteEntryAsync(IEntry entry, UserModel? currentUser)
         {
-            throw new NotImplementedException();
+            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.UserId);
+            await unitOfWork.Entries.Promote(entry);
         }
         public async Task PromoteTranslationAsync(ITranslation translation, UserModel? currentUser)
         {
-            throw new NotImplementedException();
+            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.UserId);
+            await unitOfWork.Translations.Promote(translation);
         }
         public async Task PromoteSoundAsync(ISound sound, UserModel? currentUser)
         {
-            throw new NotImplementedException();
+            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.UserId);
+            await unitOfWork.Sounds.Promote(sound);
         }
     }
 }
