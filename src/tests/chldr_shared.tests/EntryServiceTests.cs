@@ -44,10 +44,10 @@ namespace chldr_shared.tests
                 var entryDto = TestDataFactory.CreateRandomEntryDto(user.UserId, source.SourceId);
 
                 // Act
-                await _entryService.AddEntry(entryDto, userDto.UserId);
+                await _entryService.AddAsync(entryDto, userDto.UserId);
 
                 // Assert
-                var insertedEntry = await _entryService.Get(entryDto.EntryId);
+                var insertedEntry = await _entryService.GetAsync(entryDto.EntryId);
                 var userRateRange = user.GetRateRange();
 
                 Assert.Equal(entryDto.Content, insertedEntry.Content);
@@ -58,8 +58,8 @@ namespace chldr_shared.tests
                 _dataProvider = TestDataFactory.CreateSqlDataProvider();
                 _entryService = new EntryService(_dataProvider);
 
-                await _entryService.Remove(entryDto.EntryId, userDto.UserId);
-                await Assert.ThrowsAsync<ArgumentException>(async () => await _entryService.Get(entryDto.EntryId));
+                await _entryService.RemoveAsync(entryDto.EntryId, userDto.UserId);
+                await Assert.ThrowsAsync<ArgumentException>(async () => await _entryService.GetAsync(entryDto.EntryId));
             }
         }
 
@@ -79,7 +79,7 @@ namespace chldr_shared.tests
                 var entryDto = TestDataFactory.CreateRandomEntryDto(user.UserId, source.SourceId);
 
                 // Act
-                await Assert.ThrowsAsync<UnauthorizedException>(async () => await _entryService.AddEntry(entryDto, user.UserId));
+                await Assert.ThrowsAsync<UnauthorizedException>(async () => await _entryService.AddAsync(entryDto, user.UserId));
             }
         }
 
@@ -92,7 +92,7 @@ namespace chldr_shared.tests
                 var entityId = "non_existing_entity_id";
 
                 // Act and Assert
-                await Assert.ThrowsAsync<ArgumentException>(async () => await _entryService.Get(entityId));
+                await Assert.ThrowsAsync<ArgumentException>(async () => await _entryService.GetAsync(entityId));
             }
         }
 

@@ -235,12 +235,16 @@ namespace chldr_ui.ViewModels
             {
                 throw new NullReferenceException("CurrentUser must not be null");
             }
+
             if (EntryDto.CreatedAt != DateTimeOffset.MinValue)
             {
                 await ContentStore.UpdateEntry(user, EntryDto);
             }
             else
             {
+                var userSourceId = "63a816205d1af0e432fba6de";
+                EntryDto.SourceId = userSourceId;
+                EntryDto.UserId = user.UserId;
                 await ContentStore.AddEntry(user, EntryDto);
             }
 

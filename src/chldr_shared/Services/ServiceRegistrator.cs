@@ -7,6 +7,7 @@ using FluentValidation;
 using chldr_utils.Interfaces;
 using chldr_shared;
 using Microsoft.Extensions.DependencyInjection;
+using chldr_shared.Services;
 
 namespace chldr_utils.Services
 {
@@ -25,7 +26,7 @@ namespace chldr_utils.Services
             services.AddScoped<UserInfoValidator>();
             services.AddScoped<IValidator<UserDto>, UserInfoValidator>();
 
-            return ;
+            return;
         }
         private static void RegisterAppServices(IServiceCollection services)
         {
@@ -37,6 +38,9 @@ namespace chldr_utils.Services
 
             // Shared
             services.AddScoped<ContentStore>();
+            services.AddScoped<EntryService>();
+            services.AddScoped<TranslationService>();
+            services.AddScoped<PronunciationService>();
             services.AddScoped<UserStore>();
             services.AddScoped<JsInteropService>();
             services.AddScoped<LocalStorageService>();

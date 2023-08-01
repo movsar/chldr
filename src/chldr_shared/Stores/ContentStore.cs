@@ -27,6 +27,8 @@ namespace chldr_shared.Stores
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
         public readonly List<LanguageModel> Languages = LanguageModel.GetAvailableLanguages();
         private EntryService _entryService;
+        private TranslationService _translationService;
+        private PronunciationService _pronunciationService;
         #endregion
 
         #region EventHandlers
@@ -50,7 +52,14 @@ namespace chldr_shared.Stores
         }
         #endregion
 
-        public ContentStore(ExceptionHandler exceptionHandler, IDataProvider dataProvider, EnvironmentService environmentService)
+        public ContentStore(
+            ExceptionHandler exceptionHandler,
+            IDataProvider dataProvider,
+            EnvironmentService environmentService,
+            EntryService entryService,
+            TranslationService translationService,
+            PronunciationService pronunciationService
+            )
         {
             _exceptionHandler = exceptionHandler;
             _dataProvider = dataProvider;
@@ -62,7 +71,9 @@ namespace chldr_shared.Stores
             _dataProvider.DatabaseInitialized += DataAccess_DatasourceInitialized;
             _dataProvider.Initialize();
 
-            _entryService = new EntryService(_dataProvider);
+            _entryService = entryService;
+            _translationService = translationService;
+            _pronunciationService = pronunciationService;
         }
 
         public async Task<IEnumerable<EntryModel>> FindAsync(string inputText, int limit = 10)
@@ -171,7 +182,7 @@ namespace chldr_shared.Stores
 
         public async Task DeleteEntry(UserModel loggedInUser, string entryId)
         {
-            await _entryService.Remove(entryId, loggedInUser.UserId);
+            await _entryService.RemoveAsync(entryId, loggedInUser.UserId);
 
             // Update on UI
             CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
@@ -180,35 +191,32 @@ namespace chldr_shared.Stores
 
         public async Task UpdateEntry(UserModel loggedInUser, EntryDto entryDto)
         {
-            await _entryService.Update(entryDto, loggedInUser.UserId);
+            await _entryService.UpdateAsync(entryDto, loggedInUser.UserId);
 
             // Update UI
             var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId || e.EntryId == entryDto.ParentEntryId);
             var entryIndex = CachedSearchResult.Entries.IndexOf(existingEntry);
-            CachedSearchResult.Entries[entryIndex] = await _entryService.Get(entryDto.EntryId);
+            CachedSearchResult.Entries[entryIndex] = await _entryService.GetAsync(entryDto.EntryId);
             CachedResultsChanged?.Invoke();
         }
         public async Task AddEntry(UserModel loggedInUser, EntryDto entryDto)
         {
-            await _entryService.AddEntry(entryDto, loggedInUser.UserId);
+            await _entryService.AddAsync(entryDto, loggedInUser.UserId);
 
             LoadLatestEntries();
         }
 
         public async Task PromoteEntryAsync(IEntry entry, UserModel? currentUser)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.UserId);
-            await unitOfWork.Entries.Promote(entry);
+            await _entryService.PromoteAsync(entry, currentUser);
         }
         public async Task PromoteTranslationAsync(ITranslation translation, UserModel? currentUser)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.UserId);
-            await unitOfWork.Translations.Promote(translation);
+            await _translationService.PromoteAsync(translation, currentUser);
         }
         public async Task PromoteSoundAsync(ISound sound, UserModel? currentUser)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.UserId);
-            await unitOfWork.Sounds.Promote(sound);
+            await _pronunciationService.PromoteAsync(sound, currentUser);
         }
     }
 }
