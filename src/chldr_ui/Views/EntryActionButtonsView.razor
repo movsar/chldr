@@ -1,7 +1,6 @@
 ﻿@inherits EntryActionButtonsViewModel;
 
 <div class="chldr_entry_actions">
-    <i class="bi bi-share ms-2" @onclick="@ShareHandler"></i>
 
     @if (UserStore.IsLoggedIn && UserStore.CurrentUser != null)
     {
@@ -11,7 +10,7 @@
         @if (UserStore.CurrentUser!.CanPromote(Entry.Rate, Entry.UserId))
         {
             <span class="chldr_translation_actions ms-lg-1">
-                <i class="bi bi-bookmark-check" @onclick="PromoteHandler"></i>
+                <i class="bi bi-check-lg" @onclick="PromoteHandler"></i>
             </span>
         }
 
@@ -19,6 +18,8 @@
         {
             <i class="bi bi-trash ms-2" @onclick="@RemoveHandler"></i>
         }
+
+        <i class="bi bi-share ms-2" @onclick="@ShareHandler"></i>
     }
 
 </div>

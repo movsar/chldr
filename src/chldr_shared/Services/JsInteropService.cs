@@ -17,6 +17,7 @@ namespace chldr_shared
         private readonly IStringLocalizer<AppLocalizations> _localizer;
 
         public static Action<string> OnRemoveAudio { get; set; }
+        public static Action<string> OnPromoteAudio { get; set; }
 
         public JsInteropService(IJSRuntime jsRuntime, IStringLocalizer<AppLocalizations> localizer)
         {
@@ -99,8 +100,22 @@ namespace chldr_shared
 
             string recordingId = jsonDocument.RootElement.GetProperty("id").GetString();
             string base64String = jsonDocument.RootElement.GetProperty("data").GetString();
+            if (string.IsNullOrEmpty(base64String))
+            {
+                throw new Exception("Pronunciation data is empty");
+            }
 
+            await module.InvokeVoidAsync("showStartButton");
+            await module.InvokeAsync<JsonDocument>("addRecordingListItem", recordingId, base64String, false, true);
+            
             return base64String;
+        }
+        
+
+        [JSInvokable]
+        public static void WordEdit_PromoteSound_ClickHandler(string recordingId)
+        {
+            OnPromoteAudio?.Invoke(recordingId);
         }
 
 
@@ -110,7 +125,7 @@ namespace chldr_shared
             OnRemoveAudio?.Invoke(recordingId);
         }
 
-        public async Task AddExistingEntryRecording(SoundDto soundDto)
+        public async Task AddExistingEntryRecording(SoundDto soundDto, bool canPromote, bool canRemove)
         {
             var module = await moduleTask.Value;
             await module.InvokeVoidAsync("addExistingEntryRecording", soundDto);

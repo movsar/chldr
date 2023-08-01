@@ -3,12 +3,6 @@
 @if (UserStore.IsLoggedIn && UserStore.CurrentUser != null)
 {
     <div class="chldr_entry_actions">
-
-        @if (UserStore.CurrentUser!.CanRemove(TranslationDto.Rate, TranslationDto.UserId, TranslationDto.CreatedAt))
-        {
-            <i class="bi bi-trash ms-2" @onclick="@RemoveHandler"></i>
-        }
-
         @if (UserStore.CurrentUser!.CanEdit(TranslationDto.Rate, TranslationDto.UserId))
         {
             <i class="bi bi-pencil ms-2" @onclick="@EditHandler"></i>
@@ -17,9 +11,13 @@
         @if (UserStore.CurrentUser!.CanPromote(TranslationDto.Rate, TranslationDto.UserId))
         {
             <span class="chldr_translation_actions ms-lg-1">
-                <i class="bi bi-bookmark-check" @onclick="PromoteHandler"></i>
+                <i class="bi bi-check-lg" @onclick="PromoteHandler"></i>
             </span>
         }
 
+        @if (UserStore.CurrentUser!.CanRemove(TranslationDto.Rate, TranslationDto.UserId, TranslationDto.CreatedAt))
+        {
+            <i class="bi bi-trash ms-2" @onclick="@RemoveHandler"></i>
+        }
     </div>
 }

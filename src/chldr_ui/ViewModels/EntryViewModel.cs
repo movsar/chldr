@@ -1,4 +1,6 @@
-﻿using chldr_data.DatabaseObjects.Models;
+﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_shared.Stores;
 using Microsoft.AspNetCore.Components;
@@ -20,12 +22,18 @@ namespace chldr_ui.ViewModels
             await ContentStore.DeleteEntry(UserStore.CurrentUser!, Entry!.EntryId);
         }
         public void Share() { }
-        public void Promote() { }
+        public async Task PromoteEntryAsync() {
+            await ContentStore.PromoteEntryAsync(Entry, UserStore.CurrentUser);
+        }
+        public async Task PromoteTranslationAsync(ITranslation translation)
+        {
+            await ContentStore.PromoteTranslationAsync(translation, UserStore.CurrentUser);
+        }
         public void Downvote() { }
         public void Flag() { }
 
         #endregion
-
+    
         protected static string ParseSource(string sourceName)
         {
             string sourceTitle = null;

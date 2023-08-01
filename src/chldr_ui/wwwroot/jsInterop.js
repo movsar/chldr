@@ -4,22 +4,30 @@ let recordedBlob;
 let _lblRecord;
 let _lblStopRecording;
 let _latestRecordingId;
-export function addRecordingListItem(id, data) {
+export function addRecordingListItem(id, data, canPromote, canRemove) {
     let audioContainer = document.getElementById("recordings-list");
     if (!audioContainer) {
         console.error("audio container is null");
         return;
     }
     
-    let audioUrl = URL.createObjectURL(data);
+    let audioUrl = URL.createObjectURL(base64ToBlob(data));
     let recordedAudio = createAudioElement(audioUrl, id);
-    let removeButton = createRemoveButton(id);
 
     const listItem = document.createElement("div");
     listItem.classList.add("recording-list-item");
     listItem.id = `rli_${id}`;
     listItem.appendChild(recordedAudio);
-    listItem.appendChild(removeButton);
+
+    if (canPromote) { 
+        let promoteButton = createPromoteButton(id);
+        listItem.appendChild(promoteButton);
+    }
+
+    if (canRemove) {
+        let removeButton = createRemoveButton(id);
+        listItem.appendChild(removeButton);
+    }
 
     audioContainer.appendChild(listItem);
 }
@@ -63,8 +71,6 @@ export function startRecording(recordingId, lblRecord, lblStopRecording) {
             mediaRecorder.addEventListener("stop", function () {
                 const audioBlob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
                 recordedBlob = audioBlob;
-
-                addRecordingListItem(recordingId, audioBlob);
             });
 
             mediaRecorder.start();
@@ -78,8 +84,6 @@ export function stopRecording() {
     if (!mediaRecorder) {
         return;
     }
-
-    showStartButton();
 
     return new Promise((resolve, reject) => {
         mediaRecorder.addEventListener("stop", function () {
@@ -128,6 +132,20 @@ export function createRemoveButton(recordingId) {
         let recordingListItem = document.querySelector(`#rli_${recordingId}`);
         recordingListItem.remove();
         DotNet.invokeMethodAsync("chldr_shared", "WordEdit_RemoveSound_ClickHandler", recordingId);
+    });
+
+    return button;
+}
+
+export function createPromoteButton(recordingId) {
+    var button = document.createElement('button');
+    button.classList.add('promote-button');
+    button.classList.add('bi');
+    button.classList.add('bi-check-lg');
+    button.addEventListener('click', () => {
+        let recordingListItem = document.querySelector(`#rli_${recordingId}`);
+        recordingListItem.remove();
+        DotNet.invokeMethodAsync("chldr_shared", "WordEdit_PromoteSound_ClickHandler", recordingId);
     });
 
     return button;

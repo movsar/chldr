@@ -6,13 +6,11 @@ using chldr_data.DatabaseObjects.Models;
 using Microsoft.AspNetCore.Components;
 using chldr_utils.Services;
 using chldr_shared;
-using chldr_data.Enums.WordDetails;
 
 namespace chldr_ui.ViewModels
 {
     public class EntryEditViewModel : EditFormViewModelBase<EntryDto, EntryValidator>
     {
-
         public EntryEditViewModel()
         {
             JsInteropService.OnRemoveAudio = (recordingId) =>
@@ -25,25 +23,40 @@ namespace chldr_ui.ViewModels
 
                 EntryDto.SoundDtos.Remove(removedSound);
             };
-        }
 
+            JsInteropService.OnPromoteAudio = (recordingId) =>
+            {
+                var pronunciation = EntryDto.SoundDtos.FirstOrDefault(s => s.SoundId.Equals(recordingId));
+                if (pronunciation == null)
+                {
+                    throw ExceptionHandler!.Error("Sound doesn't exist in the dto");
+                }
+
+                Task.Run(() => PromotePronunciationAsync(pronunciation));
+            };
+        }
 
         [Parameter] public string? EntryId { get; set; }
         [Inject] FileService FileService { get; set; }
         public EntryDto EntryDto { get; set; } = new EntryDto();
-        protected string SourceId { get; set; } = "63a816205d1af0e432fba6de";
         bool isRecording;
         bool existingSoundsRendered;
         SoundDto latestSoundDto;
-
+        List<string> _newTranslationIds = new List<string>();
         internal bool CanEditEntry { get; private set; } = true;
 
         private async Task RenderExistingSounds()
         {
+            if (UserStore?.CurrentUser == null)
+            {
+                throw new NullReferenceException("Current user should not be null");
+            }
             foreach (var soundDto in EntryDto.SoundDtos)
             {
+                bool canPromote = UserStore.CurrentUser.CanPromote(soundDto.Rate, soundDto.UserId);
+                bool canRemove = UserStore.CurrentUser.CanRemove(soundDto.Rate, soundDto.UserId, soundDto.CreatedAt);
 
-                await JsInterop.AddExistingEntryRecording(soundDto);
+                await JsInterop.AddExistingEntryRecording(soundDto, canPromote, canRemove);
             }
 
             existingSoundsRendered = true;
@@ -104,7 +117,7 @@ namespace chldr_ui.ViewModels
         }
 
         #region Translation Handlers
-        List<string> _newTranslationIds = new List<string>();
+
         public async Task NewTranslationAsync()
         {
             if (UserStore.CurrentUser == null)
@@ -122,9 +135,19 @@ namespace chldr_ui.ViewModels
 
             await RefreshUi();
         }
+        public async Task PromoteEntryAsync(EntryDto entryDto)
+        {
+            await ContentStore.PromoteEntryAsync(entryDto, UserStore.CurrentUser);
+        }
+
         public async Task PromoteTranslationAsync(TranslationDto translationDto)
         {
             await ContentStore.PromoteTranslationAsync(translationDto, UserStore.CurrentUser);
+        }
+
+        public async Task PromotePronunciationAsync(SoundDto soundDto)
+        {
+            await ContentStore.PromoteSoundAsync(soundDto, UserStore.CurrentUser);
         }
 
         public async Task DeleteTranslationAsync(string translationId)
@@ -147,16 +170,7 @@ namespace chldr_ui.ViewModels
 
         #region Form Actions
 
-        private async Task StartRecording()
-        {
-            isRecording = true;
-            latestSoundDto = new SoundDto();
-            latestSoundDto.EntryId = EntryDto.EntryId!;
-            latestSoundDto.Rate = UserStore.CurrentUser!.GetRateRange().Lower;
-            latestSoundDto.UserId = UserStore.CurrentUser!.UserId;
 
-            await JsInterop.StartRecording(latestSoundDto.SoundId);
-        }
         public async Task ToggleRecording()
         {
             if (isRecording)
@@ -167,20 +181,45 @@ namespace chldr_ui.ViewModels
             {
                 await StartRecording();
             }
-            await RefreshUi();
+            //await RefreshUi();
+        }
+        private async Task StartRecording()
+        {
+            isRecording = true;
+            latestSoundDto = new SoundDto();
+            latestSoundDto.EntryId = EntryDto.EntryId!;
+            latestSoundDto.Rate = UserStore.CurrentUser!.GetRateRange().Lower;
+            latestSoundDto.UserId = UserStore.CurrentUser!.UserId;
+
+            await JsInterop.StartRecording(latestSoundDto.SoundId);
         }
 
         private async Task StopRecording()
         {
             isRecording = false;
-            var recording = await JsInterop.StopRecording();
-            if (recording == null || string.IsNullOrEmpty(recording))
-            {
-                return;
-            }
 
-            latestSoundDto.RecordingB64 = recording;
-            EntryDto.SoundDtos.Add(latestSoundDto);
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(50));
+
+            try
+            {
+                var recording = await JsInterop.StopRecording();
+                if (recording == null || string.IsNullOrEmpty(recording))
+                {
+                    return;
+                }
+
+                latestSoundDto.RecordingB64 = recording;
+                EntryDto.SoundDtos.Add(latestSoundDto);
+            }
+            catch (TaskCanceledException)
+            {
+                throw new Exception("Time out!");
+                // Timed out
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error stopping recording: " + ex.Message);
+            }
         }
 
         public async Task SaveClickHandler()
@@ -199,9 +238,10 @@ namespace chldr_ui.ViewModels
         public async Task Save()
         {
             var user = UserStore.CurrentUser;
-            EntryDto.UserId = user.UserId;
-            EntryDto.SourceId = SourceId;
-
+            if (user == null)
+            {
+                throw new NullReferenceException("CurrentUser must not be null");
+            }
             if (EntryDto.CreatedAt != DateTimeOffset.MinValue)
             {
                 await ContentStore.UpdateEntry(user, EntryDto);

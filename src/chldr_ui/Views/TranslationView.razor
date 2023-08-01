@@ -1,19 +1,32 @@
 ﻿@inherits TranslationViewModel;
 
-<div class="chldr_translation card-subtitle">
-    <span class="chldr_translation_language-code">
-        @Translation?.LanguageCode
-    </span>
+@if (Translation != null)
+{
+    <div class="chldr_translation card-subtitle">
+        <span class="chldr_translation_language-code">
+            @Translation!.LanguageCode
+        </span>
 
-    <span class="chldr_translation_content" @onclick="DoSearch">
-        @Translation?.Content
-    </span>
+        <span class="chldr_translation_content" @onclick="DoSearch">
+            @Translation!.Content
 
-    @if (!String.IsNullOrWhiteSpace(@Translation?.Notes))
-    {
-        <div class="chldr_translation_notes">
-            (@Translation?.Notes)
-        </div>
-    }
+            @if (UserStore.CurrentUser != null)
+            {
+                @if (UserStore.CurrentUser!.CanPromote(Translation!.Rate, Translation.UserId))
+                {
+                    <span class="chldr_translation_actions ms-lg-1">
+                        <i class="bi bi-check-lg" @onclick="Promote"></i>
+                    </span>
+                }
+            }
+        </span>
 
-</div>
+        @if (!String.IsNullOrWhiteSpace(@Translation?.Notes))
+        {
+            <div class="chldr_translation_notes">
+                (@Translation!.Notes)
+            </div>
+        }
+
+    </div>
+}

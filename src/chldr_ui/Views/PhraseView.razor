@@ -24,12 +24,14 @@
         <div class="chldr_entry_translations mt-2">
             @foreach (var translation in @Entry.Translations)
             {
-                <TranslationView Translation="@translation"></TranslationView>
+                <TranslationView Translation="@translation"
+                                 Promote="@(async () => await PromoteTranslationAsync(translation))">
+                </TranslationView>
             }
         </div>
 
         <EntryActionButtonsView Entry="Entry"
-                                PromoteHandler="() => Promote()"                                
+                                PromoteHandler="() => PromoteEntryAsync()"                                
                                 ShareHandler="() => Share()"
                                 RemoveHandler="async() => await Remove()">
         </EntryActionButtonsView>
