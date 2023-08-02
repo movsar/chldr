@@ -37,7 +37,7 @@ namespace chldr_data.Repositories
                 SchemaVersion = Constants.RealmSchemaVersion
             };
         }
-        protected abstract TModel FromEntityShortcut(TEntity entity);
+        protected abstract TModel FromEntity(TEntity entity);
 
         public abstract Task<List<ChangeSetModel>> Add(TDto dto);
         public abstract Task<List<ChangeSetModel>> Update(TDto EntryDto);
@@ -50,16 +50,16 @@ namespace chldr_data.Repositories
                 throw new Exception("There is no such word in the database");
             }
 
-            return FromEntityShortcut(entry);
+            return FromEntity(entry);
         }
 
-        public async Task<IEnumerable<TModel>> TakeAsync(int offset, int limit)
+        public async Task<List<TModel>> TakeAsync(int offset, int limit)
         {
             var entities = await _dbContext.All<TEntity>()
                 .Skip(offset)
                 .Take(limit)
                 .ToListAsync();
-            return entities.Select(FromEntityShortcut).ToList();
+            return entities.Select(FromEntity).ToList();
         }
         public virtual async Task<List<TModel>> GetRandomsAsync(int limit)
         {
@@ -70,7 +70,7 @@ namespace chldr_data.Repositories
                   .OrderBy(entry => entry.GetHashCode())
                   .Take(limit)
                   .ToList()
-                  .Select(FromEntityShortcut)
+                  .Select(FromEntity)
                   .ToList());
 
             return entries;

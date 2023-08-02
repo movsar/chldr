@@ -25,7 +25,7 @@ namespace chldr_data.remote.Repositories
               .AsNoTracking()
               .ToListAsync();
 
-            var models = entities.Select(FromEntityShortcut).ToList();
+            var models = entities.Select(FromEntity).ToList();
             return models;
         }
         public override async Task<List<ChangeSetModel>> Update(SourceDto dto)
@@ -52,7 +52,7 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        protected override SourceModel FromEntityShortcut(SqlSource entity)
+        protected override SourceModel FromEntity(SqlSource entity)
         {
             return SourceModel.FromEntity(entity);
         }

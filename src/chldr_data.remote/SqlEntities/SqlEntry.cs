@@ -3,6 +3,7 @@ using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.Enums;
 using chldr_data.remote.Services;
+using chldr_utils.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Realms;
 
@@ -20,11 +21,16 @@ public class SqlEntry : IEntryEntity
         get => content;
         set
         {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new InvalidArgumentsException();
+            }
+
             content = value;
-            RawContents = string.IsNullOrEmpty(value) ? null : value.ToLower();
+            RawContents = value.ToLower();
         }
     }
-    public string? RawContents { get; private set; }
+    public string RawContents { get; private set; }
     public string? ParentEntryId { get; set; }
     public int Type { get; set; } = 0;
     public int Subtype { get; set; } = 0;

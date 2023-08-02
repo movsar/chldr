@@ -21,7 +21,7 @@ namespace chldr_ui.ViewModels
             await GetEntries(currentPage);
         }
 
-        public async Task SelectedPage(int page)
+        public async Task SelectPageAsync(int page)
         {
             currentPage = page;
             await GetEntries(page);
@@ -29,14 +29,18 @@ namespace chldr_ui.ViewModels
 
         private async Task GetEntries(int page)
         {
-            var batch = await ContentStore.TakeEntriesAsync((page - 1) * 50, 50);
+            var batch = await ContentStore.TakeEntriesAsync((page - 1) * 50, 50, true);
             Entries = batch.ToList();
             totalPages = await ContentStore.GetEntriesCount() / 50;
         }
 
         public async Task FilterByLetter(string letter)
         {
-            // TODO: Filter entries starting with letter
+            await SelectPageAsync(1);
+
+            var batch = await ContentStore.TakeEntriesAsync((currentPage - 1) * 50, 50, true, letter);
+            Entries = batch.ToList();
+            totalPages = await ContentStore.GetEntriesCount() / 50;
         }
 
     }

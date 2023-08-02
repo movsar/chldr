@@ -62,7 +62,7 @@ namespace chldr_data.remote.Repositories
         }
 
         protected abstract RecordType RecordType { get; }
-        protected abstract TModel FromEntityShortcut(TEntity entity);
+        protected abstract TModel FromEntity(TEntity entity);
 
         public virtual async Task<TModel> GetAsync(string entityId)
         {
@@ -72,7 +72,7 @@ namespace chldr_data.remote.Repositories
                 throw new InvalidArgumentsException();
             }
 
-            return FromEntityShortcut(entry);
+            return FromEntity(entry);
         }
 
         protected SqlChangeSet CreateChangeSetEntity(Operation operation, string recordId, List<Change>? changes = null)
@@ -117,7 +117,7 @@ namespace chldr_data.remote.Repositories
 
             _dbContext.SaveChanges();
         }
-        public virtual async Task<IEnumerable<TModel>> TakeAsync(int offset, int limit)
+        public virtual async Task<List<TModel>> TakeAsync(int offset, int limit)
         {
             var entities = await _dbContext.Set<TEntity>()
                 .Skip(offset)
@@ -125,7 +125,7 @@ namespace chldr_data.remote.Repositories
 
                 .ToListAsync();
 
-            return entities.Select(FromEntityShortcut).ToList();
+            return entities.Select(FromEntity).ToList();
         }
         public abstract Task<List<TModel>> GetRandomsAsync(int limit);
 

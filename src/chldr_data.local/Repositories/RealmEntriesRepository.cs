@@ -36,23 +36,16 @@ namespace chldr_data.Repositories
             _sounds = soundsRepository;
         }
         protected override RecordType RecordType => RecordType.Entry;
-        protected override EntryModel FromEntityShortcut(RealmEntry entry)
+        protected override EntryModel FromEntity(RealmEntry entry)
+        {
+            return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
+        }
+        protected EntryModel FromEntityWithSubEntries(RealmEntry entry)
         {
             var subEntries = _dbContext.All<RealmEntry>()
-                .Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entry.EntryId))
-                .ToImmutableList();
+                   .Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entry.EntryId))
+                   .ToImmutableList();
 
-            if (subEntries.Count() == 0)
-            {
-                return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
-            }
-            else
-            {
-                return FromEntityShortcut(entry, subEntries);
-            }
-        }
-        protected EntryModel FromEntityShortcut(RealmEntry entry, ImmutableList<RealmEntry> subEntries)
-        {
             var subSources = subEntries.ToDictionary(e => e.EntryId, e => e.Source as ISourceEntity);
             var subSounds = subEntries.ToDictionary(e => e.EntryId, e => e.Sounds.ToList().Cast<ISoundEntity>());
             var subEntryTranslations = subEntries.ToDictionary(e => e.EntryId, e => e.Translations.ToList().Cast<ITranslationEntity>());
@@ -82,7 +75,7 @@ namespace chldr_data.Repositories
                      .OrderBy(x => randomizer.Next(0, Constants.EntriesApproximateCoount))
                      .Take(limit);
 
-                return entries.Select(e => FromEntityShortcut(e)).ToList();
+                return entries.Select(FromEntityWithSubEntries).ToList();
             });
 
             return results;
@@ -91,7 +84,7 @@ namespace chldr_data.Repositories
         {
             var entries = _dbContext.All<RealmEntry>().AsEnumerable().OrderByDescending(e => e.CreatedAt).Take(100);
 
-            var entriesToReturn = entries.Select(entry => FromEntityShortcut(entry));
+            var entriesToReturn = entries.Select(FromEntityWithSubEntries);
 
             return entriesToReturn.ToList();
         }
@@ -100,7 +93,7 @@ namespace chldr_data.Repositories
             var entries = _dbContext.All<RealmEntry>().AsEnumerable()
                 .Where(entry => entry.Rate < UserModel.EnthusiastRateRange.Lower)
                 .Take(50)
-                .Select(entry => FromEntityShortcut(entry))
+                .Select(FromEntityWithSubEntries)
                 .ToList();
 
             return entries;
@@ -258,6 +251,33 @@ namespace chldr_data.Repositories
         public async Task<int> CountAsync()
         {
             return await _dbContext.All<RealmEntry>().CountAsync();
+        }
+
+        public async Task<List<EntryModel>> TakeAsync(int offset, int limit, bool groupWithSubEntries, string? startsWith = null)
+        {
+            var entries = _dbContext.All<RealmEntry>();
+            if (!string.IsNullOrWhiteSpace(startsWith))
+            {
+                entries = entries.Where(e => e.RawContents.StartsWith(startsWith));
+            }
+
+            if (groupWithSubEntries == false)
+            {
+                var ungroupedEntries = await entries
+                    .Skip(offset)
+                    .Take(limit)
+                    .ToListAsync();
+
+                return ungroupedEntries.Select(FromEntity).ToList();
+            }
+
+            var groupedEntries = await entries
+                .Where(e => e.ParentEntryId == null)
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
+
+            return groupedEntries.Select(FromEntityWithSubEntries).ToList();
         }
     }
 }

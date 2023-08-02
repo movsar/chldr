@@ -18,7 +18,7 @@ namespace chldr_data.Repositories
         public RealmUsersRepository(ExceptionHandler exceptionHandler, FileService fileService, RequestService requestService, string userId) : base(exceptionHandler, fileService, requestService, userId) { }
 
         protected override RecordType RecordType => RecordType.User;
-        protected override UserModel FromEntityShortcut(RealmUser entity)
+        protected override UserModel FromEntity(RealmUser entity)
         {
             return UserModel.FromEntity(entity);
         }

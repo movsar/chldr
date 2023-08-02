@@ -15,7 +15,7 @@ namespace chldr_data.remote.Repositories
 
         public SqlChangeSetsRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string _userId) : base(dbConfig, fileService, _userId) { }
 
-        protected override ChangeSetModel FromEntityShortcut(SqlChangeSet entity)
+        protected override ChangeSetModel FromEntity(SqlChangeSet entity)
         {
             return ChangeSetModel.FromEntity(entity);
         }

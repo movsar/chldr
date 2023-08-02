@@ -19,7 +19,7 @@ namespace chldr_data.local.Repositories
     {
         public RealmSoundsRepository(ExceptionHandler exceptionHandler, FileService fileService, RequestService requestService, string userId) : base(exceptionHandler, fileService, requestService, userId) { }
         protected override RecordType RecordType => RecordType.Sound;
-        protected override SoundModel FromEntityShortcut(RealmSound entity)
+        protected override SoundModel FromEntity(RealmSound entity)
         {
             return SoundModel.FromEntity(entity);
         }

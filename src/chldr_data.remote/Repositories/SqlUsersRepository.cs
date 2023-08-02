@@ -66,7 +66,7 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        protected override UserModel FromEntityShortcut(SqlUser entity)
+        protected override UserModel FromEntity(SqlUser entity)
         {
             return UserModel.FromEntity(entity);
         }
@@ -99,7 +99,7 @@ namespace chldr_data.remote.Repositories
               .AsNoTracking()
               .ToListAsync();
 
-            var models = entities.Select(FromEntityShortcut).ToList();
+            var models = entities.Select(FromEntity).ToList();
             return models;
         }
 

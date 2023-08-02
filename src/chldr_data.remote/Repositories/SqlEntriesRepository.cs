@@ -16,6 +16,7 @@ using chldr_utils.Exceptions;
 using MongoDB.Bson.IO;
 using System.ComponentModel;
 using System.Collections.Immutable;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("chldr_data.remote.tests")]
 
@@ -58,15 +59,23 @@ namespace chldr_data.remote.Repositories
                 throw new ArgumentException("There is no such word in the database");
             }
 
-            return FromEntityShortcut(entry);
+            return FromEntity(entry);
         }
-        public override async Task<IEnumerable<EntryModel>> TakeAsync(int offset, int limit)
+
+        public async Task<List<EntryModel>> TakeAsync(int offset, int limit, bool groupedWithSubEntries, string? startsWith = null)
         {
+            IQueryable<SqlEntry> entries = _dbContext.Entries;
+            if (!string.IsNullOrWhiteSpace(startsWith))
+            {
+                entries = entries.Where(e => e.RawContents.StartsWith(startsWith));
+            }
+
             // Fetch all EntryIds from the database
-            var ids = await _dbContext.Set<SqlEntry>().Where(e => e.ParentEntryId == null).Select(e => e.EntryId).ToListAsync();
+            var topLevelEntryIds = await _dbContext.Set<SqlEntry>().Where(e => e.ParentEntryId == null).Select(e => e.EntryId).ToListAsync();
 
             var entities = await _dbContext.Set<SqlEntry>()
-                      .Where(entry => ids.Contains(entry.EntryId))
+                      .OrderBy(e => e.RawContents)
+                      .Where(entry => groupedWithSubEntries ? topLevelEntryIds.Contains(entry.EntryId) : true)
                       .Include(e => e.Source)
                       .Include(e => e.User)
                       .Include(e => e.Translations)
@@ -77,7 +86,7 @@ namespace chldr_data.remote.Repositories
 
                       .ToListAsync();
 
-            return entities.Select(FromEntityShortcut).ToList();
+            return entities.Select(FromEntityWithSubEntries).ToList();
         }
         public override async Task<List<EntryModel>> GetRandomsAsync(int limit)
         {
@@ -100,30 +109,23 @@ namespace chldr_data.remote.Repositories
                 .ToListAsync();
 
             // Apply the projection (mapping to FromEntityShortcut) on the in-memory data
-            var models = entities.Select(FromEntityShortcut).ToList();
+            var models = entities.Select(FromEntity).ToList();
             return models;
         }
-        protected override EntryModel FromEntityShortcut(SqlEntry entry)
+        protected override EntryModel FromEntity(SqlEntry entry)
+        {
+            return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
+        }
+        protected EntryModel FromEntityWithSubEntries(SqlEntry entry)
         {
             var subEntries = _dbContext.Entries
-                .Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entry.EntryId))
-                .Include(e => e.Source)
-                .Include(e => e.User)
-                .Include(e => e.Translations)
-                .Include(e => e.Sounds)
-                .ToImmutableList();
+             .Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entry.EntryId))
+             .Include(e => e.Source)
+             .Include(e => e.User)
+             .Include(e => e.Translations)
+             .Include(e => e.Sounds)
+             .ToImmutableList();
 
-            if (subEntries.Count() == 0)
-            {
-                return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
-            }
-            else
-            {
-                return FromEntityShortcut(entry, subEntries);
-            }
-        }
-        protected EntryModel FromEntityShortcut(SqlEntry entry, ImmutableList<SqlEntry> subEntries)
-        {
             var subSources = subEntries.ToDictionary(e => e.EntryId, e => e.Source as ISourceEntity);
             var subSounds = subEntries.ToDictionary(e => e.EntryId, e => e.Sounds.ToList().Cast<ISoundEntity>());
             var subEntryTranslations = subEntries.ToDictionary(e => e.EntryId, e => e.Translations.ToList().Cast<ITranslationEntity>());
@@ -173,7 +175,7 @@ namespace chldr_data.remote.Repositories
 
                 // Apply the shortcut method to the matching entry IDs            
                 result = matchingEntryIds
-                    .Select(id => FromEntityShortcut(_dbContext.Entries
+                    .Select(id => FromEntityWithSubEntries(_dbContext.Entries
                         .Include(e => e.Source)
                         .Include(e => e.User)
                         .Include(e => e.Translations)
@@ -219,7 +221,7 @@ namespace chldr_data.remote.Repositories
                 .AsNoTracking()
                 .ToList();
 
-            return entries.Select(entry => FromEntityShortcut(entry)).ToList();
+            return entries.Select(FromEntityWithSubEntries).ToList();
         }
 
         public List<EntryModel> GetEntriesOnModeration()
@@ -237,7 +239,7 @@ namespace chldr_data.remote.Repositories
                 .AsNoTracking()
                 .ToList();
 
-            return entries.Select(entry => FromEntityShortcut(entry)).ToList();
+            return entries.Select(FromEntityWithSubEntries).ToList();
         }
         private async Task<bool> ValidateParent(EntryDto entryDto)
         {
@@ -544,5 +546,7 @@ namespace chldr_data.remote.Repositories
         {
             return await _dbContext.Entries.CountAsync();
         }
+
+
     }
 }

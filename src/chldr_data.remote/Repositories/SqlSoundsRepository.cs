@@ -15,7 +15,7 @@ namespace chldr_data.remote.Repositories
     {
         public SqlSoundsRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string userId) : base(dbConfig, fileService, userId) { }
         protected override RecordType RecordType => RecordType.Sound;
-        protected override SoundModel FromEntityShortcut(SqlSound entity)
+        protected override SoundModel FromEntity(SqlSound entity)
         {
             return SoundModel.FromEntity(entity);
         }
@@ -30,7 +30,7 @@ namespace chldr_data.remote.Repositories
               .AsNoTracking()
               .ToListAsync();
 
-            var models = entities.Select(FromEntityShortcut).ToList();
+            var models = entities.Select(FromEntity).ToList();
             return models;
         }
         public override async Task<List<ChangeSetModel>> Add(SoundDto soundDto)

@@ -17,7 +17,7 @@ namespace chldr_data.remote.Repositories
     {
         public SqlTranslationsRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string _userId) : base(dbConfig, fileService, _userId) { }
         protected override RecordType RecordType => RecordType.Translation;
-        protected override TranslationModel FromEntityShortcut(SqlTranslation translation)
+        protected override TranslationModel FromEntity(SqlTranslation translation)
         {
             return TranslationModel.FromEntity(translation);
         }
@@ -32,7 +32,7 @@ namespace chldr_data.remote.Repositories
               .AsNoTracking()
               .ToListAsync();
 
-            var models = entities.Select(FromEntityShortcut).ToList();
+            var models = entities.Select(FromEntity).ToList();
             return models;
         }
         public override async Task<List<ChangeSetModel>> Add(TranslationDto dto)

@@ -78,11 +78,7 @@ namespace chldr_shared.Stores
             _pronunciationService = pronunciationService;
         }
 
-        public async Task<List<EntryModel>> TakeEntriesAsync(int offset, int limit)
-        {
-            return await _entryService.TakeAsync(offset, limit);
-        }
-
+     
         public async Task<IEnumerable<EntryModel>> FindAsync(string inputText, int limit = 10)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork();
@@ -229,6 +225,10 @@ namespace chldr_shared.Stores
         public async Task<int> GetEntriesCount()
         {
             return await _entryService.CountEntriesAsync();
+        }
+        public async Task<List<EntryModel>> TakeEntriesAsync(int offset, int limit, bool groupWithSubEntries, string? startsWith = null)
+        {
+            return await _entryService.TakeAsync(offset, limit, groupWithSubEntries, startsWith);
         }
     }
 }

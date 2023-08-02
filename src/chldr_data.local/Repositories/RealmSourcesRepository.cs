@@ -19,7 +19,7 @@ namespace chldr_data.Repositories
     {
         public RealmSourcesRepository(ExceptionHandler exceptionHandler, FileService fileService, RequestService requestService, string userId) : base(exceptionHandler, fileService, requestService, userId) { }
         protected override RecordType RecordType => RecordType.Source;
-        protected override SourceModel FromEntityShortcut(RealmSource entry)
+        protected override SourceModel FromEntity(RealmSource entry)
         {
             return SourceModel.FromEntity(entry);
         }

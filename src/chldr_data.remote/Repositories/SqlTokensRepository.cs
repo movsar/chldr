@@ -30,7 +30,7 @@ namespace chldr_data.remote.Repositories
               .AsNoTracking()
               .ToListAsync();
 
-            var models = entities.Select(FromEntityShortcut).ToList();
+            var models = entities.Select(FromEntity).ToList();
             return models;
         }
         public override async Task<List<ChangeSetModel>> Add(TokenDto dto)
@@ -96,7 +96,7 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel>();
         }
 
-        protected override TokenModel FromEntityShortcut(SqlToken entity)
+        protected override TokenModel FromEntity(SqlToken entity)
         {
             return TokenModel.FromEntity(entity);
         }

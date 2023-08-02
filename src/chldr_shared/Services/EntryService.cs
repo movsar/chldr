@@ -43,10 +43,10 @@ namespace chldr_shared.Services
             await unitOfWork.Entries.Promote(entry);
         }
 
-        internal async Task<List<EntryModel>> TakeAsync(int offset, int limit)
+        internal async Task<List<EntryModel>> TakeAsync(int offset, int limit, bool groupWithSubEntries, string? startsWith = null)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork();
-            var entries = await unitOfWork.Entries.TakeAsync(offset, limit);
+            var entries = await unitOfWork.Entries.TakeAsync(offset, limit, groupWithSubEntries, startsWith);
             return entries.ToList();
         }
 
