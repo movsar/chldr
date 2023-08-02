@@ -14,6 +14,7 @@ using chldr_data.Services;
 using chldr_data.Enums.WordDetails;
 using chldr_utils.Models;
 using chldr_data.local.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.Repositories
 {
@@ -252,6 +253,11 @@ namespace chldr_data.Repositories
         public Task<ChangeSetModel> Promote(IEntry entry)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<int> CountAsync()
+        {
+            return await _dbContext.All<RealmEntry>().CountAsync();
         }
     }
 }

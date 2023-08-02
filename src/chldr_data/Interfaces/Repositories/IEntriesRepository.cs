@@ -9,6 +9,8 @@ namespace chldr_data.Interfaces.Repositories
     public interface IEntriesRepository : IRepository<EntryModel, EntryDto>
     {
         event Action<SearchResultModel>? GotNewSearchResult;
+
+        Task<int> CountAsync();
         Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags filtrationFlags);
         Task FindDeferredAsync(string inputText, FiltrationFlags filtrationFlags);
         List<EntryModel> GetEntriesOnModeration();

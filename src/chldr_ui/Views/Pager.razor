@@ -1,0 +1,28 @@
+﻿<button @onclick="() => OnPreviousPage()" disabled="@(CurrentPage == 1)">
+    Previous
+</button>
+
+<button @onclick="() => OnNextPage()" disabled="@(CurrentPage == TotalPages)">
+    Next
+</button>
+
+@code {
+    [Parameter]
+    public int CurrentPage { get; set; }
+
+    [Parameter]
+    public int TotalPages { get; set; }
+
+    [Parameter]
+    public EventCallback<int> SelectedPage { get; set; }
+    private async Task OnPreviousPage()
+    {
+        await SelectedPage.InvokeAsync(CurrentPage - 1);
+    }
+
+    private async Task OnNextPage()
+    {
+        await SelectedPage.InvokeAsync(CurrentPage + 1);
+    }
+
+}

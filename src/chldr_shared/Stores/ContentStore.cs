@@ -8,11 +8,13 @@ using chldr_utils.Models;
 using chldr_utils.Services;
 using chldr_shared.Services;
 using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.Services;
 
 namespace chldr_shared.Stores
 {
     public class ContentStore
     {
+
         #region Events
         public event Action? ContentInitialized;
         public event Action? CachedResultsChanged;
@@ -74,6 +76,11 @@ namespace chldr_shared.Stores
             _entryService = entryService;
             _translationService = translationService;
             _pronunciationService = pronunciationService;
+        }
+
+        public async Task<List<EntryModel>> TakeEntriesAsync(int offset, int limit)
+        {
+            return await _entryService.TakeAsync(offset, limit);
         }
 
         public async Task<IEnumerable<EntryModel>> FindAsync(string inputText, int limit = 10)
@@ -217,6 +224,11 @@ namespace chldr_shared.Stores
         public async Task PromoteSoundAsync(ISound sound, UserModel? currentUser)
         {
             await _pronunciationService.PromoteAsync(sound, currentUser);
+        }
+
+        public async Task<int> GetEntriesCount()
+        {
+            return await _entryService.CountEntriesAsync();
         }
     }
 }

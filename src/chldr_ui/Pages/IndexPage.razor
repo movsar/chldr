@@ -1,7 +1,32 @@
 ﻿@page "/index";
 
-<h3>IndexPage</h3>
+@inherits IndexPageViewModel;
 
-@code {
+<h1>Dictionary</h1>
 
+<div class="letters">
+    @foreach (var letter in Letters)
+    {
+        <button class="letter-button" @onclick="() => FilterByLetter(letter)">@letter</button>
+    }
+</div>
+
+<Pager CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPage" />
+
+@if (Entries == null)
+{
+    <p><em>Loading...</em></p>
 }
+else
+{
+    @foreach (var entry in Entries)
+    {
+        <h2>@entry.Content</h2>
+        @foreach (var translation in @entry.Translations)
+        {
+            <p>@translation.Content</p>
+        }
+    }
+}
+
+<Pager CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPage" />

@@ -42,5 +42,18 @@ namespace chldr_shared.Services
             var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.UserId);
             await unitOfWork.Entries.Promote(entry);
         }
+
+        internal async Task<List<EntryModel>> TakeAsync(int offset, int limit)
+        {
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var entries = await unitOfWork.Entries.TakeAsync(offset, limit);
+            return entries.ToList();
+        }
+
+        internal async Task<int> CountEntriesAsync()
+        {
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            return await unitOfWork.Entries.CountAsync();
+        }
     }
 }

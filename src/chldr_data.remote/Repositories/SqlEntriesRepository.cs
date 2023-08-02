@@ -535,5 +535,10 @@ namespace chldr_data.remote.Repositories
 
             return ChangeSetModel.FromEntity(changeSet);
         }
+
+        public async Task<int> CountAsync()
+        {
+            return await _dbContext.Entries.CountAsync();
+        }
     }
 }
