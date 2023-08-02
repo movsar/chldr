@@ -62,7 +62,11 @@ namespace chldr_data.remote.Repositories
         }
         public override async Task<IEnumerable<EntryModel>> TakeAsync(int offset, int limit)
         {
+            // Fetch all EntryIds from the database
+            var ids = await _dbContext.Set<SqlEntry>().Where(e => e.ParentEntryId == null).Select(e => e.EntryId).ToListAsync();
+
             var entities = await _dbContext.Set<SqlEntry>()
+                      .Where(entry => ids.Contains(entry.EntryId))
                       .Include(e => e.Source)
                       .Include(e => e.User)
                       .Include(e => e.Translations)
