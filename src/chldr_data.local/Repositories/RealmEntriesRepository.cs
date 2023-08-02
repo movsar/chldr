@@ -255,7 +255,7 @@ namespace chldr_data.Repositories
 
         public async Task<List<EntryModel>> TakeAsync(int offset, int limit, bool groupWithSubEntries, string? startsWith = null)
         {
-            var entries = _dbContext.All<RealmEntry>();
+            IQueryable<RealmEntry> entries = _dbContext.All<RealmEntry>().OrderBy(e => e.RawContents);
             if (!string.IsNullOrWhiteSpace(startsWith))
             {
                 entries = entries.Where(e => e.RawContents.StartsWith(startsWith));
