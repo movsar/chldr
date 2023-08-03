@@ -130,5 +130,17 @@ namespace chldr_shared
             var module = await moduleTask.Value;
             await module.InvokeVoidAsync("addExistingEntryRecording", soundDto);
         }
+
+        public async Task Expand(string selector)
+        {
+            var module = await moduleTask.Value;
+            await module.InvokeVoidAsync("removeClass", selector, "collapse");            
+        }
+
+        public async Task Collapse(string selector)
+        {
+            var module = await moduleTask.Value;
+            await module.InvokeVoidAsync("addClass", selector, "collapse");
+        }
     }
 }

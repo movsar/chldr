@@ -13,15 +13,15 @@
                     </select>
                 </div>
 
-                <div class="col-2">
+                @*<div class="col-2">
                     <button class="btn btn-secondary form-control" disabled="@((EntryDto.EntrySubtype == 0) || Disabled)" type="button" data-bs-toggle="collapse" data-bs-target=".word-details" aria-expanded="false">
                         @Localizer["Word:Characteristics"]
                     </button>
-                </div>
+                </div>*@
             </div>
 
 
-            <div class="collapse word-details mt-2">
+            <div data-id="word-details" class="word-details mt-2">
                 <div class="card card-body">
 
                     @if (EntryDto.EntrySubtype == (int)WordType.Verb)

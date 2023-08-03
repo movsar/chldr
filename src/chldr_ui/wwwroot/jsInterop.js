@@ -151,7 +151,20 @@ export function createPromoteButton(recordingId) {
 
     return button;
 }
-
+export function addClass(selector, className) {
+    var element = document.querySelector(selector);
+    if (element == null) {
+        return;
+    }
+    element.classList.add(className);
+}
+export function removeClass(selector, className) {
+    var element = document.querySelector(selector);
+    if (element == null) {
+        return;
+    }
+    element.classList.remove(className);
+}
 
 export function enable(selector) {
     var container = document.querySelector(selector);
