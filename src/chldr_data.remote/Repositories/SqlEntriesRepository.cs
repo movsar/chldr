@@ -547,13 +547,21 @@ namespace chldr_data.remote.Repositories
             return await _dbContext.Entries.CountAsync();
         }
 
-        public async Task<int> StartsWithCountAsync(string str)
+        public async Task<int> StartsWithCountAsync(string str, bool topLevelOnly)
         {
             str = str.ToLower();
 
-            return await _dbContext.Entries
+            IQueryable<SqlEntry> entries = _dbContext.Entries;
+            if (topLevelOnly)
+            {
+                entries = entries.Where(e => e.ParentEntryId == null);
+            }
+
+            var count = await entries
                 .Where(e => e.RawContents.StartsWith(str))
                 .CountAsync();
+
+            return count;
         }
     }
 }

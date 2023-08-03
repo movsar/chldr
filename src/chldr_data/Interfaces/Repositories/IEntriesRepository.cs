@@ -16,6 +16,6 @@ namespace chldr_data.Interfaces.Repositories
         List<EntryModel> GetEntriesOnModeration();
         List<EntryModel> GetLatestEntries();
         Task<ChangeSetModel> Promote(IEntry entry);
-        Task<int> StartsWithCountAsync(string str);
+        Task<int> StartsWithCountAsync(string str, bool topLevelOnly);
     }
 }

@@ -7,15 +7,17 @@
 <!-- Top controls -->
 @if (Entries != null)
 {
-    <div class="letters">
-        @foreach (var letter in Letters)
-        {
-            <button class="letter-button" @onclick="() => LetterSelectionHandlerAsync(letter)">@letter</button>
-        }
-    </div>
+    <div class="text-center">
+        <div class="letters">
+            @foreach (var letter in Letters)
+            {
+                <button class="letter-button" @onclick="() => LetterSelectionHandlerAsync(letter)">@letter</button>
+            }
+        </div>
 
-    <div class="text-center mt-2 mb-2">
-        <Pager CurrentPage="CurrentPage" TotalPages="TotalPages" SelectedPage="async (page) => await SelectPageAsync(page)" />
+        <div class="mt-2 mb-2">
+            <Pager CurrentPage="CurrentPage" TotalPages="TotalPages" SelectedPage="async (page) => await SelectPageAsync(page)" />
+        </div>
     </div>
 }
 
@@ -32,15 +34,17 @@ else
 <!-- Bottom controls -->
 @if (Entries != null)
 {
-    <div class="text-center mt-2 mb-2">
-        <Pager CurrentPage="CurrentPage" TotalPages="TotalPages" SelectedPage="async (page) => await SelectPageAsync(page)" />
-    </div>
+    <div class="text-center">
+        <div class="mt-2 mb-2">
+            <Pager CurrentPage="CurrentPage" TotalPages="TotalPages" SelectedPage="async (page) => await SelectPageAsync(page)" />
+        </div>
 
-    <div class="letters">
-        @foreach (var letter in Letters)
-        {
-            <button class="letter-button" @onclick="() => LetterSelectionHandlerAsync(letter)">@letter</button>
-        }
+        <div class="letters">
+            @foreach (var letter in Letters)
+            {
+                <button class="letter-button" @onclick="() => LetterSelectionHandlerAsync(letter)">@letter</button>
+            }
+        </div>
     </div>
 }
 

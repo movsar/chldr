@@ -19,6 +19,7 @@ namespace chldr_ui.ViewModels
 
         public async Task LetterSelectionHandlerAsync(string letter)
         {
+            CurrentPage = 1;
             CurrentLetter = letter;
 
             var count = await ContentStore.GetEntriesStartingWithCount(letter);

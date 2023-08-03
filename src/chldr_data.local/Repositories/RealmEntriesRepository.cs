@@ -280,9 +280,21 @@ namespace chldr_data.Repositories
             return groupedEntries.Select(FromEntityWithSubEntries).ToList();
         }
 
-        public async Task<int> StartsWithCountAsync(string str)
+        public async Task<int> StartsWithCountAsync(string str, bool topLevelOnly)
         {
-            return await _dbContext.All<RealmEntry>().Where(e => e.RawContents.StartsWith(str)).CountAsync();
+            str = str.ToLower();
+
+            IQueryable<RealmEntry> entries = _dbContext.All<RealmEntry>();
+            if (topLevelOnly)
+            {
+                entries = entries.Where(e => e.ParentEntryId == null);
+            }
+
+            var count = await entries
+                .Where(e => e.RawContents.StartsWith(str))
+                .CountAsync();
+
+            return count;
         }
     }
 }

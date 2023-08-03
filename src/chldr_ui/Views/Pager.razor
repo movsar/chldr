@@ -1,32 +1,11 @@
-﻿<button @onclick="() => OnPreviousPage()" disabled="@(CurrentPage == 1)">
-    Previous
-</button>
+﻿@inherits PagerViewModel
 
-<button @onclick="() => OnNextPage()" disabled="@(CurrentPage == TotalPages)">
-    Next
-</button>
+<div>
+    <button @onclick="() => OnPreviousPage()" disabled="@(CurrentPage == 1)">
+        Previous
+    </button>
 
-@code {
-    [Parameter] public int CurrentPage { get; set; }
-    [Parameter] public int TotalPages { get; set; }
-
-    [Parameter] public Action<int> SelectedPage { get; set; }
-
-    private void OnPreviousPage()
-    {
-        if (CurrentPage > 1)
-        {
-            CurrentPage -= 1;
-            SelectedPage?.Invoke(CurrentPage);
-        }
-    }
-
-    private void OnNextPage()
-    {
-        if (CurrentPage < TotalPages)
-        {
-            CurrentPage += 1;
-            SelectedPage?.Invoke(CurrentPage);
-        }
-    }
-}
+    <button @onclick="() => OnNextPage()" disabled="@(CurrentPage == TotalPages)">
+        Next
+    </button>
+</div>

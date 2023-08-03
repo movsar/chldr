@@ -53,7 +53,7 @@ namespace chldr_shared.Services
         internal async Task<int> GetEntriesStartingWithCount(string str)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork();
-            return await unitOfWork.Entries.StartsWithCountAsync(str);
+            return await unitOfWork.Entries.StartsWithCountAsync(str, true);
         }
     }
 }
