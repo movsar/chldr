@@ -62,20 +62,15 @@ namespace chldr_data.remote.Repositories
             return FromEntity(entry);
         }
 
-        public async Task<List<EntryModel>> TakeAsync(int offset, int limit, bool groupedWithSubEntries, string? startsWith = null)
+        public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
-            IQueryable<SqlEntry> entries = _dbContext.Entries;
-            if (!string.IsNullOrWhiteSpace(startsWith))
-            {
-                entries = entries.Where(e => e.RawContents.StartsWith(startsWith.ToLower()));
-            }
+            var entries = IEntriesRepository.GetFilteredEntries(_dbContext.Entries, filtrationFlags);
 
             // Fetch all EntryIds from the database
             var topLevelEntryIds = await entries.Where(e => e.ParentEntryId == null).Select(e => e.EntryId).ToListAsync();
 
             var entities = await entries
                       .OrderBy(e => e.RawContents)
-                      .Where(entry => groupedWithSubEntries ? topLevelEntryIds.Contains(entry.EntryId) : true)
                       .Include(e => e.Source)
                       .Include(e => e.User)
                       .Include(e => e.Translations)
@@ -542,24 +537,9 @@ namespace chldr_data.remote.Repositories
             return ChangeSetModel.FromEntity(changeSet);
         }
 
-        public async Task<int> CountAsync()
+        public async Task<int> CountAsync(FiltrationFlags filtrationFlags)
         {
-            return await _dbContext.Entries.CountAsync();
-        }
-
-        public async Task<int> StartsWithCountAsync(string str, bool topLevelOnly)
-        {
-            str = str.ToLower();
-
-            IQueryable<SqlEntry> entries = _dbContext.Entries;
-            if (topLevelOnly)
-            {
-                entries = entries.Where(e => e.ParentEntryId == null);
-            }
-
-            var count = await entries
-                .Where(e => e.RawContents.StartsWith(str))
-                .CountAsync();
+            var count = await IEntriesRepository.GetFilteredEntries(_dbContext.Entries, filtrationFlags).CountAsync();
 
             return count;
         }

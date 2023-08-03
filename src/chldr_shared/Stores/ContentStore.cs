@@ -222,13 +222,13 @@ namespace chldr_shared.Stores
             await _pronunciationService.PromoteAsync(sound, currentUser);
         }
 
-        public async Task<int> GetEntriesStartingWithCount(string str)
+        public async Task<int> GetEntriesStartingWithCount(FiltrationFlags filtrationFlags)
         {
-            return await _entryService.GetEntriesStartingWithCount(str);
+            return await _entryService.GetCountAsync(filtrationFlags);
         }
-        public async Task<List<EntryModel>> TakeEntriesAsync(int offset, int limit, bool groupWithSubEntries, string? startsWith = null)
+        public async Task<List<EntryModel>> TakeEntriesAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
-            return await _entryService.TakeAsync(offset, limit, groupWithSubEntries, startsWith);
+            return await _entryService.TakeAsync(offset, limit, filtrationFlags);
         }
     }
 }

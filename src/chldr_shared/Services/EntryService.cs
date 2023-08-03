@@ -2,6 +2,7 @@
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Interfaces;
+using chldr_utils.Models;
 
 namespace chldr_shared.Services
 {
@@ -43,17 +44,17 @@ namespace chldr_shared.Services
             await unitOfWork.Entries.Promote(entry);
         }
 
-        internal async Task<List<EntryModel>> TakeAsync(int offset, int limit, bool groupWithSubEntries, string? startsWith = null)
+        internal async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork();
-            var entries = await unitOfWork.Entries.TakeAsync(offset, limit, groupWithSubEntries, startsWith);
+            var entries = await unitOfWork.Entries.TakeAsync(offset, limit, filtrationFlags);
             return entries.ToList();
         }
 
-        internal async Task<int> GetEntriesStartingWithCount(string str)
+        internal async Task<int> GetCountAsync(FiltrationFlags filtrationFlags)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork();
-            return await unitOfWork.Entries.StartsWithCountAsync(str, true);
+            return await unitOfWork.Entries.CountAsync(filtrationFlags);
         }
     }
 }

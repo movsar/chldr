@@ -248,31 +248,12 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<int> CountAsync()
+        public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
-            return await _dbContext.All<RealmEntry>().CountAsync();
-        }
-
-        public async Task<List<EntryModel>> TakeAsync(int offset, int limit, bool groupWithSubEntries, string? startsWith = null)
-        {
-            IQueryable<RealmEntry> entries = _dbContext.All<RealmEntry>().OrderBy(e => e.RawContents);
-            if (!string.IsNullOrWhiteSpace(startsWith))
-            {
-                entries = entries.Where(e => e.RawContents.StartsWith(startsWith));
-            }
-
-            if (groupWithSubEntries == false)
-            {
-                var ungroupedEntries = await entries
-                    .Skip(offset)
-                    .Take(limit)
-                    .ToListAsync();
-
-                return ungroupedEntries.Select(FromEntity).ToList();
-            }
+            var entries = IEntriesRepository.GetFilteredEntries(_dbContext.All<RealmEntry>(), filtrationFlags);
 
             var groupedEntries = await entries
-                .Where(e => e.ParentEntryId == null)
+                .OrderBy(e => e.RawContents)
                 .Skip(offset)
                 .Take(limit)
                 .ToListAsync();
@@ -280,21 +261,11 @@ namespace chldr_data.Repositories
             return groupedEntries.Select(FromEntityWithSubEntries).ToList();
         }
 
-        public async Task<int> StartsWithCountAsync(string str, bool topLevelOnly)
+        public async Task<int> CountAsync(FiltrationFlags filtrationFlags)
         {
-            str = str.ToLower();
+            var entries = IEntriesRepository.GetFilteredEntries(_dbContext.All<RealmEntry>(), filtrationFlags);
 
-            IQueryable<RealmEntry> entries = _dbContext.All<RealmEntry>();
-            if (topLevelOnly)
-            {
-                entries = entries.Where(e => e.ParentEntryId == null);
-            }
-
-            var count = await entries
-                .Where(e => e.RawContents.StartsWith(str))
-                .CountAsync();
-
-            return count;
+            return await entries.CountAsync();
         }
     }
 }

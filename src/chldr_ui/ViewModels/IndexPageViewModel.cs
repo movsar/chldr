@@ -1,5 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Models;
 using chldr_shared.Stores;
+using chldr_utils.Models;
 
 namespace chldr_ui.ViewModels
 {
@@ -22,7 +23,7 @@ namespace chldr_ui.ViewModels
             CurrentPage = 1;
             CurrentLetter = letter;
 
-            var count = await ContentStore.GetEntriesStartingWithCount(letter);
+            var count = await ContentStore.GetEntriesStartingWithCount(new FiltrationFlags() { StartsWith = letter });
             TotalPages = (int)Math.Ceiling((double)count / 50);
 
             await GetEntries();
@@ -41,7 +42,12 @@ namespace chldr_ui.ViewModels
 
         public async Task GetEntries()
         {
-            var batch = await ContentStore.TakeEntriesAsync((CurrentPage - 1) * 50, 50, true, CurrentLetter);
+            var batch = await ContentStore.TakeEntriesAsync((CurrentPage - 1) * 50, 50, new FiltrationFlags()
+            {
+                OnModeration = true,
+                GroupWithSubEntries = true,
+                StartsWith = CurrentLetter
+            });
             Entries = batch.ToList();
 
             await RefreshUiAsync();
