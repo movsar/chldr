@@ -133,7 +133,7 @@ namespace chldr_ui.ViewModels
 
             EntryDto.TranslationsDtos.Add(translation);
 
-            await RefreshUi();
+            await RefreshUiAsync();
         }
         public async Task PromoteEntryAsync(EntryDto entryDto)
         {
@@ -164,7 +164,7 @@ namespace chldr_ui.ViewModels
             }
 
             EntryDto.TranslationsDtos.Remove(translationDto);
-            await RefreshUi();
+            await RefreshUiAsync();
         }
         #endregion
 

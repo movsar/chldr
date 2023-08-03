@@ -2,31 +2,46 @@
 
 @inherits IndexPageViewModel;
 
-<h1>Dictionary</h1>
+<h1>@Localizer["Index"]</h1>
 
-<div class="letters">
-    @foreach (var letter in Letters)
-    {
-        <button class="letter-button" @onclick="() => FilterByLetter(letter)">@letter</button>
-    }
-</div>
+<!-- Top controls -->
+@if (Entries != null)
+{
+    <div class="letters">
+        @foreach (var letter in Letters)
+        {
+            <button class="letter-button" @onclick="() => LetterSelectionHandlerAsync(letter)">@letter</button>
+        }
+    </div>
 
-<Pager CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectPageAsync" />
+    <div class="text-center mt-2 mb-2">
+        <Pager CurrentPage="CurrentPage" TotalPages="TotalPages" SelectedPage="async (page) => await SelectPageAsync(page)" />
+    </div>
+}
 
+<!-- Main content -->
 @if (Entries == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>@Localizer["Loading"]...</em></p>
 }
 else
 {
-    @foreach (var entry in Entries)
-    {
-        <h2>@entry.Content</h2>
-        @foreach (var translation in @entry.Translations)
-        {
-            <p>@translation.Content</p>
-        }
-    }
+    <EntriesPresenter Entries="Entries"></EntriesPresenter>
 }
 
-<Pager CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectPageAsync" />
+<!-- Bottom controls -->
+@if (Entries != null)
+{
+    <div class="text-center mt-2 mb-2">
+        <Pager CurrentPage="CurrentPage" TotalPages="TotalPages" SelectedPage="async (page) => await SelectPageAsync(page)" />
+    </div>
+
+    <div class="letters">
+        @foreach (var letter in Letters)
+        {
+            <button class="letter-button" @onclick="() => LetterSelectionHandlerAsync(letter)">@letter</button>
+        }
+    </div>
+}
+
+<div class="mb-4"></div>

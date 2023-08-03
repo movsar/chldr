@@ -43,7 +43,7 @@ namespace chldr_ui.ViewModels
         {
             return base.OnAfterRenderAsync(firstRender);
         }
-        protected async Task RefreshUi()
+        protected async Task RefreshUiAsync()
         {
             await InvokeAsync(StateHasChanged);
         }
@@ -75,7 +75,7 @@ namespace chldr_ui.ViewModels
 
         private async void UserStore_UserStateHasChanged()
         {
-            await RefreshUi();
+            await RefreshUiAsync();
         }
 
         protected void SetUiLanguage(string cultureCode)

@@ -67,13 +67,13 @@ namespace chldr_data.remote.Repositories
             IQueryable<SqlEntry> entries = _dbContext.Entries;
             if (!string.IsNullOrWhiteSpace(startsWith))
             {
-                entries = entries.Where(e => e.RawContents.StartsWith(startsWith));
+                entries = entries.Where(e => e.RawContents.StartsWith(startsWith.ToLower()));
             }
 
             // Fetch all EntryIds from the database
-            var topLevelEntryIds = await _dbContext.Set<SqlEntry>().Where(e => e.ParentEntryId == null).Select(e => e.EntryId).ToListAsync();
+            var topLevelEntryIds = await entries.Where(e => e.ParentEntryId == null).Select(e => e.EntryId).ToListAsync();
 
-            var entities = await _dbContext.Set<SqlEntry>()
+            var entities = await entries
                       .OrderBy(e => e.RawContents)
                       .Where(entry => groupedWithSubEntries ? topLevelEntryIds.Contains(entry.EntryId) : true)
                       .Include(e => e.Source)
@@ -547,6 +547,13 @@ namespace chldr_data.remote.Repositories
             return await _dbContext.Entries.CountAsync();
         }
 
+        public async Task<int> StartsWithCountAsync(string str)
+        {
+            str = str.ToLower();
 
+            return await _dbContext.Entries
+                .Where(e => e.RawContents.StartsWith(str))
+                .CountAsync();
+        }
     }
 }

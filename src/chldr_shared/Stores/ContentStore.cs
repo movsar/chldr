@@ -222,9 +222,9 @@ namespace chldr_shared.Stores
             await _pronunciationService.PromoteAsync(sound, currentUser);
         }
 
-        public async Task<int> GetEntriesCount()
+        public async Task<int> GetEntriesStartingWithCount(string str)
         {
-            return await _entryService.CountEntriesAsync();
+            return await _entryService.GetEntriesStartingWithCount(str);
         }
         public async Task<List<EntryModel>> TakeEntriesAsync(int offset, int limit, bool groupWithSubEntries, string? startsWith = null)
         {

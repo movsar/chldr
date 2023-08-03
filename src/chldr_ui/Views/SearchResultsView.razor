@@ -1,22 +1,3 @@
 ﻿@inherits SearchResultsViewModel;
 
-@if (Entries != null)
-{
-    <div class="chldr_entries">
-        @foreach (var entry in Entries)
-        {
-            @switch ((EntryType)entry.Type)
-            {
-                case EntryType.Word:
-                    <WordView Entry="entry" />
-                    break;
-                case EntryType.Phrase:
-                    <PhraseView Entry="entry" />
-                    break;
-                case EntryType.Text:
-                    <TextView Entry="entry" />
-                    break;
-            }
-        }
-    </div>
-}
+<EntriesPresenter Entries="Entries"></EntriesPresenter>

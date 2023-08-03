@@ -32,7 +32,7 @@ namespace chldr_ui.ViewModels
         private async void CultureService_CurrentCultureChanged(string cultureCode)
         {
             SetUiLanguage(cultureCode);
-            await RefreshUi();
+            await RefreshUiAsync();
         }
 
         public void ContentStore_CachedResultsChanged()
@@ -46,7 +46,7 @@ namespace chldr_ui.ViewModels
 
                 // ! Without this the page doesn't refresh
                 Entries = null;
-                await RefreshUi();
+                await RefreshUiAsync();
                 Entries = new List<EntryModel>();
 
                 //logger.StopSpeedTest($"Finished setting up");
@@ -56,7 +56,7 @@ namespace chldr_ui.ViewModels
                 //logger.StopSpeedTest($"Finished adding entries to the collection");
 
                 //logger.StartSpeedTest();
-                await RefreshUi();
+                await RefreshUiAsync();
                 //logger.StopSpeedTest($"Finished rendering");
             }).Start();
         }

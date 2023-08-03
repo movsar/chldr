@@ -50,10 +50,10 @@ namespace chldr_shared.Services
             return entries.ToList();
         }
 
-        internal async Task<int> CountEntriesAsync()
+        internal async Task<int> GetEntriesStartingWithCount(string str)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork();
-            return await unitOfWork.Entries.CountAsync();
+            return await unitOfWork.Entries.StartsWithCountAsync(str);
         }
     }
 }

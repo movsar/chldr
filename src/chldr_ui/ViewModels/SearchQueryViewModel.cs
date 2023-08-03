@@ -40,7 +40,7 @@ namespace chldr_ui.ViewModels
         private async void CultureService_CurrentCultureChanged(string cultureCode)
         {
             SetUiLanguage(cultureCode);
-            await RefreshUi();
+            await RefreshUiAsync();
         }
         // Called when something is typed into search input
         public async Task Search(ChangeEventArgs evgentArgs)

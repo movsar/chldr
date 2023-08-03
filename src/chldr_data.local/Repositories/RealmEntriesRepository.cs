@@ -279,5 +279,10 @@ namespace chldr_data.Repositories
 
             return groupedEntries.Select(FromEntityWithSubEntries).ToList();
         }
+
+        public async Task<int> StartsWithCountAsync(string str)
+        {
+            return await _dbContext.All<RealmEntry>().Where(e => e.RawContents.StartsWith(str)).CountAsync();
+        }
     }
 }

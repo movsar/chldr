@@ -91,7 +91,7 @@ namespace chldr_ui.ViewModels
             // Unblock controls
             await JsInterop.Enable("[data-id=form_container]");
 
-            await RefreshUi();
+            await RefreshUiAsync();
         }
     }
 }

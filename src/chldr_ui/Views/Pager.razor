@@ -7,22 +7,26 @@
 </button>
 
 @code {
-    [Parameter]
-    public int CurrentPage { get; set; }
+    [Parameter] public int CurrentPage { get; set; }
+    [Parameter] public int TotalPages { get; set; }
 
-    [Parameter]
-    public int TotalPages { get; set; }
+    [Parameter] public Action<int> SelectedPage { get; set; }
 
-    [Parameter]
-    public EventCallback<int> SelectedPage { get; set; }
-    private async Task OnPreviousPage()
+    private void OnPreviousPage()
     {
-        await SelectedPage.InvokeAsync(CurrentPage - 1);
+        if (CurrentPage > 1)
+        {
+            CurrentPage -= 1;
+            SelectedPage?.Invoke(CurrentPage);
+        }
     }
 
-    private async Task OnNextPage()
+    private void OnNextPage()
     {
-        await SelectedPage.InvokeAsync(CurrentPage + 1);
+        if (CurrentPage < TotalPages)
+        {
+            CurrentPage += 1;
+            SelectedPage?.Invoke(CurrentPage);
+        }
     }
-
 }
