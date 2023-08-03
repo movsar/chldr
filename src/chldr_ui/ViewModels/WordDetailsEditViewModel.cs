@@ -50,7 +50,14 @@ namespace chldr_ui.ViewModels
                 ParentEntry = await unitOfWork.Entries.GetAsync(EntryDto.ParentEntryId);
             }
 
-           
+            if (EntryDto.EntrySubtype != 0)
+            {
+                await JsInterop.Expand("[data-id=word-details]");
+            }
+            else
+            {
+                await JsInterop.Collapse("[data-id=word-details]");
+            }
 
             await base.OnParametersSetAsync();
         }

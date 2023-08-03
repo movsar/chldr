@@ -4,7 +4,7 @@
     <div class="row form-outline form-group mt-2">
         <div class="col-10">
             <div class="row">
-                <div class="col-10">
+                <div class="col-12">
                     <select @bind="EntryDto.EntrySubtype" class="form-select" disabled="@Disabled">
                         @foreach (WordType WordType in (WordType[])Enum.GetValues(typeof(WordType)))
                         {
@@ -14,9 +14,9 @@
                 </div>
 
                 @*<div class="col-2">
-                    <button class="btn btn-secondary form-control" disabled="@((EntryDto.EntrySubtype == 0) || Disabled)" type="button" data-bs-toggle="collapse" data-bs-target=".word-details" aria-expanded="false">
-                        @Localizer["Word:Characteristics"]
-                    </button>
+                <button class="btn btn-secondary form-control" disabled="@((EntryDto.EntrySubtype == 0) || Disabled)" type="button" data-bs-toggle="collapse" data-bs-target=".word-details" aria-expanded="false">
+                @Localizer["Word:Characteristics"]
+                </button>
                 </div>*@
             </div>
 
