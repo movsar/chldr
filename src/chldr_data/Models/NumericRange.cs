@@ -1,4 +1,4 @@
-﻿namespace chldr_shared.Models
+﻿namespace chldr_data.Models
 {
     public class NumericRange
     {

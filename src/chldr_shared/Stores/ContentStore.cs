@@ -4,11 +4,9 @@ using chldr_data.Models;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_utils;
-using chldr_utils.Models;
 using chldr_utils.Services;
 using chldr_shared.Services;
 using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.Services;
 
 namespace chldr_shared.Stores
 {

@@ -1,6 +1,7 @@
 ﻿using chldr_data.DatabaseObjects.Models;
+using chldr_data.Enums;
+using chldr_data.Models;
 using chldr_shared.Stores;
-using chldr_utils.Models;
 
 namespace chldr_ui.ViewModels
 {
@@ -23,7 +24,13 @@ namespace chldr_ui.ViewModels
             CurrentPage = 1;
             CurrentLetter = letter;
 
-            var count = await ContentStore.GetEntriesStartingWithCount(new FiltrationFlags() { StartsWith = letter });
+            var count = await ContentStore.GetEntriesStartingWithCount(new FiltrationFlags()
+            {
+                OnModeration = true,
+                GroupWithSubEntries = true,
+                StartsWith = CurrentLetter,
+                EntryTypes = new EntryType[] { EntryType.Word }
+            });
             TotalPages = (int)Math.Ceiling((double)count / 50);
 
             await GetEntries();
@@ -46,7 +53,8 @@ namespace chldr_ui.ViewModels
             {
                 OnModeration = true,
                 GroupWithSubEntries = true,
-                StartsWith = CurrentLetter
+                StartsWith = CurrentLetter,
+                EntryTypes = new EntryType[] { EntryType.Word }
             });
             Entries = batch.ToList();
 

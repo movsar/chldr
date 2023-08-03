@@ -1,8 +1,8 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
+using chldr_data.Enums;
 using chldr_data.Models;
-using chldr_utils.Models;
 
 namespace chldr_data.Interfaces.Repositories
 {
@@ -26,6 +26,9 @@ namespace chldr_data.Interfaces.Repositories
             {
                 entries = entries.Where(e => e.Rate > UserModel.MemberRateRange.Upper);
             }
+
+            var entryTypes = filtrationFlags.EntryTypes.Select(et => (int)et).ToArray();
+            entries = entries.Where(e => entryTypes.Contains(e.Type));
 
             return entries;
         }

@@ -2,7 +2,7 @@
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Interfaces;
-using chldr_utils.Models;
+using chldr_data.Models;
 
 namespace chldr_shared.Services
 {

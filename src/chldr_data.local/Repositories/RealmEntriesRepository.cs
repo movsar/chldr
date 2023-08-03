@@ -12,7 +12,6 @@ using System.Collections.Immutable;
 using chldr_data.Responses;
 using chldr_data.Services;
 using chldr_data.Enums.WordDetails;
-using chldr_utils.Models;
 using chldr_data.local.Services;
 using Microsoft.EntityFrameworkCore;
 

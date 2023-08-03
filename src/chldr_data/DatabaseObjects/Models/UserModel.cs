@@ -1,11 +1,8 @@
 ﻿using chldr_data.Enums;
 using chldr_data.DatabaseObjects.Dtos;
-using chldr_shared.Models;
-using Realms.Sync;
 using Newtonsoft.Json;
 using chldr_data.DatabaseObjects.Interfaces;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Microsoft.EntityFrameworkCore;
+using chldr_data.Models;
 
 namespace chldr_data.DatabaseObjects.Models
 {
