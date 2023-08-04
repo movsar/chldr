@@ -46,6 +46,11 @@ namespace chldr_data.DatabaseObjects.Dtos
         public DateTimeOffset UpdatedAt { get; set; }
         public virtual List<TranslationDto> TranslationsDtos { get; set; } = new List<TranslationDto>();
         public virtual List<SoundDto> SoundDtos { get; set; } = new List<SoundDto>();
+        public bool ExistsInDatabase()
+        {
+            return CreatedAt == DateTimeOffset.MinValue;
+        }
+
         public static EntryDto FromModel(EntryModel entryModel)
         {
             var entryDto = new EntryDto()

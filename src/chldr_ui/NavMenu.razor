@@ -1,18 +1,17 @@
 ﻿@inherits NavMenuViewModel;
 
 <div class="top-row ps-3 navbar navbar-dark">
-    <a class="navbar-brand" href="">
-        <img class="navbar-logo" src="_content/chldr_ui/images/logo.png">
-    </a>
-
     <div class="container-fluid">
+        <a class="navbar-brand" href="">
+            <img class="navbar-logo" src="_content/chldr_ui/images/logo.png">
+        </a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
     </div>
 </div>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
@@ -47,6 +46,7 @@
         }
     </nav>
 </div>
+
 @*
 <div class="chldr_navbar_dropdown px-3">
     <select name="language" class="chldr_navbar_dropdown" @onchange="SetCurrentLanguage">
