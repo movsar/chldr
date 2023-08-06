@@ -9,7 +9,6 @@ namespace chldr_data.Models
         {
             Direct,
             Reverse,
-            Random,
             Full
         }
 
