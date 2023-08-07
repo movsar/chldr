@@ -9,16 +9,15 @@ namespace chldr_data.DatabaseObjects.Dtos
     {
         public string UserId { get; set; } = Guid.NewGuid().ToString();
         public string? Email { get; set; }
-        [JsonIgnore]
-        public string? Password { get; set; }
-        [JsonIgnore]
-        public string? PasswordConfirmation { get; set; }
+        [JsonIgnore] public string? Password { get; set; }
+        [JsonIgnore] public string? PasswordConfirmation { get; set; }
         public int Rate { get; set; } = 1;
         public string? Patronymic { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
-        public UserStatus Status { get; set; } = UserStatus.Unconfirmed;
         public string? ImagePath { get; set; }
+        public UserStatus Status { get; set; } = UserStatus.Unconfirmed;
+        public UserType Type { get; set; } = UserType.Regular;
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
 

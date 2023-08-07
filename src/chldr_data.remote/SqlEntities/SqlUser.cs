@@ -18,9 +18,10 @@ public class SqlUser : IUserEntity
             Email = userDto.Email,
             Password = userDto.Password,
             Status = (int)userDto.Status,
+            Type = (int)userDto.Type,
             FirstName = userDto.FirstName,
             LastName = userDto.LastName,
-            Patronymic = userDto.Patronymic
+            Patronymic = userDto.Patronymic,
         };
     }
 
@@ -32,7 +33,7 @@ public class SqlUser : IUserEntity
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Patronymic { get; set; }
-    public int? IsModerator { get; set; }
+    public int? Type { get; set; }
     public int Status { get; set; } = 0;
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }

@@ -2,7 +2,7 @@
 {
     public interface IUserEntity : IUser, IEntity
     {
-        public int? IsModerator { get; set; }
+        public int Type { get; set; }
         public int Status { get; set; }
     }
 }

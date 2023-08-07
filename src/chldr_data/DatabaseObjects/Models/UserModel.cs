@@ -23,7 +23,7 @@ namespace chldr_data.DatabaseObjects.Models
         public string? LastName { get; set; }
         public string? Patronymic { get; set; }
         public string UserId { get; set; }
-        public bool IsModerator { get; set; }
+        public UserType Type { get; set; } = UserType.Regular;
         public UserStatus Status { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
@@ -134,7 +134,7 @@ namespace chldr_data.DatabaseObjects.Models
             }
 
             var timePassed = DateTimeOffset.UtcNow - entityCreatedAt;
-            if ((timePassed.Hours < Constants.TimeInHrsToAllowForEntryRemoval) || IsModerator)
+            if ((timePassed.Hours < Constants.TimeInHrsToAllowForEntryRemoval) || Type == UserType.Moderator)
             {
                 return true;
             }
@@ -158,21 +158,33 @@ namespace chldr_data.DatabaseObjects.Models
                 ImagePath = user.ImagePath,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Patronymic = user.Patronymic,
+                Patronymic = user.Patronymic,                
             };
         }
 
         public static UserModel FromDto(UserDto? userDto)
         {
+            if (userDto == null)
+            {
+                throw new NullReferenceException("UserDto is null");
+            }
+
             var userModel = FromBaseInterface(userDto);
             userModel.Status = userDto.Status;
+            userModel.Type = userDto.Type;
             return userModel;
         }
 
         public static UserModel FromEntity(IUserEntity? userEntity)
         {
+            if (userEntity == null)
+            {
+                throw new NullReferenceException("UserEntity is null");
+            }
+            
             var userModel = FromBaseInterface(userEntity);
             userModel.Status = (UserStatus)userEntity.Status;
+            userModel.Type = (UserType)userEntity.Type;
             return userModel;
         }
 

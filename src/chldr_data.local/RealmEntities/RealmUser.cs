@@ -13,7 +13,7 @@ public class RealmUser : RealmObject, IUserEntity
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Patronymic { get; set; }
-    public int? IsModerator { get; set; }
+    public int? Type { get; set; }
     public int Status { get; set; } = 0;
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
@@ -41,6 +41,7 @@ public class RealmUser : RealmObject, IUserEntity
         user.Rate = userDto.Rate;
         user.Email = userDto.Email;
         user.Status = (int)userDto.Status;
+        user.Type = (int)userDto.Type;
         user.FirstName = userDto.FirstName;
         user.LastName = userDto.LastName;
         user.Patronymic = userDto.Patronymic;

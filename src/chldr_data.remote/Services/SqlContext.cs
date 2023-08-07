@@ -296,7 +296,7 @@ public class SqlContext : DbContext
                 entity.Property(e => e.ImagePath)
                     .HasMaxLength(250)
                     .HasColumnName("image_path");
-                entity.Property(e => e.IsModerator).HasColumnName("is_moderator");
+                entity.Property(e => e.Type).HasColumnName("is_moderator");
                 entity.Property(e => e.LastName)
                     .HasMaxLength(100)
                     .HasColumnName("last_name");
