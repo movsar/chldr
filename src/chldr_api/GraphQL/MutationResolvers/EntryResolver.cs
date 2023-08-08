@@ -130,5 +130,39 @@ namespace chldr_api.GraphQL.MutationResolvers
             return new RequestResult();
         }
 
+        internal async Task<RequestResult> PromoteAsync(string userId, string entryId)
+        {
+            using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
+            unitOfWork.BeginTransaction();
+            var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
+
+            try
+            {
+                var entry = await entriesRepository.GetAsync(entryId);
+                var changeSet = await entriesRepository.Promote(entry);
+                unitOfWork.Commit();
+
+                return new RequestResult()
+                {
+                    Success = true,
+                    SerializedData = JsonConvert.SerializeObject(new UpdateResponse()
+                    {
+                        ChangeSets = new List<ChangeSetDto>() {
+                            ChangeSetDto.FromModel(changeSet)
+                        }
+                    })
+                };
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                _exceptionHandler.LogError(ex);
+                return new RequestResult();
+            }
+            finally
+            {
+                unitOfWork.Dispose();
+            }
+        }
     }
 }

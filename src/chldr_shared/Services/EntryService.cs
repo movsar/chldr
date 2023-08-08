@@ -1,6 +1,7 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.local.RealmEntities;
 using chldr_data.local.Repositories;
@@ -11,6 +12,7 @@ using chldr_data.Repositories;
 using chldr_data.Responses;
 using chldr_data.Services;
 using chldr_utils;
+using Realms.Sync;
 
 namespace chldr_shared.Services
 {
@@ -184,13 +186,24 @@ namespace chldr_shared.Services
         }
         #endregion
 
+        private async Task<UpdateResponse> PromoteRequestAsync(IEntry entry, UserModel? currentUser)
+        {
+            var response = await _requestService.PromoteAsync(RecordType.Entry, currentUser.UserId, entry.EntryId);
+            if (!response.Success)
+            {
+                throw _exceptionHandler.Error("Error:Request_failed");
+            }
+            var responseData = RequestResult.GetData<UpdateResponse>(response);
+
+            return responseData;
+        }
         public async Task PromoteAsync(IEntry entry, UserModel? currentUser)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.UserId);
-            await unitOfWork.Entries.Promote(entry);
+            await PromoteRequestAsync(entry, currentUser);
 
-            var updatedEntry = await unitOfWork.Entries.GetAsync(entry.EntryId);
-            EntryUpdated?.Invoke(updatedEntry);
+            // TODO: Upate local, if used
+
+            //EntryUpdated?.Invoke(entry);
         }
 
         public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
@@ -204,6 +217,13 @@ namespace chldr_shared.Services
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork();
             return await unitOfWork.Entries.CountAsync(filtrationFlags);
+        }
+
+        public async Task PromoteTranslationAsync(ITranslation translationInfo, UserModel? currentUser)
+        {
+            // TODO: Use requestService
+            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.UserId);
+            await unitOfWork.Translations.Promote(translationInfo);
         }
     }
 }

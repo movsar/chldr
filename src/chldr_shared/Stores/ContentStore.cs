@@ -28,7 +28,6 @@ namespace chldr_shared.Stores
         public readonly List<LanguageModel> Languages = LanguageModel.GetAvailableLanguages();
 
         public EntryService EntryService;
-        public TranslationService TranslationService;
         public PronunciationService PronunciationService;
         public UserService UserService;
         #endregion
@@ -59,7 +58,6 @@ namespace chldr_shared.Stores
             IDataProvider dataProvider,
             EnvironmentService environmentService,
             EntryService entryService,
-            TranslationService translationService,
             PronunciationService pronunciationService,
             UserService userService
             )
@@ -75,7 +73,6 @@ namespace chldr_shared.Stores
             _dataProvider.Initialize();
 
             EntryService = entryService;
-            TranslationService = translationService;
             PronunciationService = pronunciationService;
             UserService = userService;
 

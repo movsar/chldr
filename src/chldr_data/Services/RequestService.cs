@@ -240,5 +240,27 @@ namespace chldr_data.Services
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
             return response.Data;
         }
+
+        public async Task<RequestResult> PromoteAsync(RecordType recordType, string userId, string entityId)
+        {
+            var operation = "promote";
+            var request = new GraphQLRequest
+            {
+                Query = $@"
+                        mutation {operation}($recordTypeName: String!, $userId: String!, $entityId: String!) {{
+                          {operation}(recordTypeName: $recordTypeName, userId: $userId, entityId: $entityId) {{
+                            success
+                            errorMessage
+                            serializedData
+                          }}
+                        }}
+                        ",
+                // ! The names here must exactly match the names defined in the graphql schema
+                Variables = new { recordTypeName = recordType.ToString(), userId, entityId }
+            };
+
+            var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
+            return response.Data;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using chldr_api.GraphQL.MutationResolvers;
 using chldr_api.GraphQL.MutationServices;
 using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.remote.Services;
@@ -9,6 +10,7 @@ using chldr_data.Responses;
 using chldr_data.Services;
 using chldr_utils;
 using chldr_utils.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 
@@ -26,6 +28,22 @@ namespace chldr_api
         }
 
         // Entry mutations
+        public async Task<RequestResult> PromoteAsync(string recordTypeName, string userId, string entryId)
+        {
+            var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);
+            switch (recordType)
+            {
+                case RecordType.Entry:
+                    return await _entryResolver.PromoteAsync(userId, entryId);
+
+                case RecordType.Translation:
+                    throw new NotImplementedException();
+
+                default:
+                    return new RequestResult();
+            }
+        }
+
         public async Task<RequestResult> AddEntry(string userId, EntryDto entryDto)
         {
             return await _entryResolver.AddEntryAsync(userId, entryDto);
