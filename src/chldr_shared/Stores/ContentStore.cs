@@ -84,9 +84,23 @@ namespace chldr_shared.Stores
             EntryService.EntryRemoved += OnEntryRemoved;
         }
 
-        private void OnEntryUpdated(EntryModel entry) { }
-        private void OnEntryRemoved(EntryModel entry) { }
-        private void OnEntryInserted(EntryModel entry) { }
+        private async Task OnEntryUpdated(EntryModel entry)
+        {
+            var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entry.EntryId || e.EntryId == entry.ParentEntryId);
+            var entryIndex = CachedSearchResult.Entries.IndexOf(existingEntry);
+            CachedSearchResult.Entries[entryIndex] = await EntryService.GetAsync(entry.EntryId);
+            CachedResultsChanged?.Invoke();
+        }
+        private async Task OnEntryRemoved(EntryModel entry)
+        {
+            // Update on UI
+            CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entry.EntryId));
+            CachedResultsChanged?.Invoke();
+        }
+        private async Task OnEntryInserted(EntryModel entry)
+        {
+            LoadLatestEntries();
+        }
 
         public async Task<IEnumerable<EntryModel>> FindAsync(string inputText, int limit = 10)
         {
@@ -190,32 +204,6 @@ namespace chldr_shared.Stores
             }
 
             return phrase;
-        }
-
-        public async Task DeleteEntry(UserModel loggedInUser, EntryModel entry)
-        {
-            await EntryService.RemoveAsync(entry, loggedInUser.UserId);
-
-            // Update on UI
-            CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entry.EntryId));
-            //CachedResultsChanged?.Invoke();
-        }
-
-        public async Task UpdateEntry(UserModel loggedInUser, EntryDto entryDto)
-        {
-            await EntryService.UpdateAsync(entryDto, loggedInUser.UserId);
-
-            // Update UI
-            var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId || e.EntryId == entryDto.ParentEntryId);
-            var entryIndex = CachedSearchResult.Entries.IndexOf(existingEntry);
-            CachedSearchResult.Entries[entryIndex] = await EntryService.GetAsync(entryDto.EntryId);
-            //CachedResultsChanged?.Invoke();
-        }
-        public async Task AddEntry(UserModel loggedInUser, EntryDto entryDto)
-        {
-            await EntryService.AddAsync(entryDto, loggedInUser.UserId);
-
-            LoadLatestEntries();
         }
     }
 }

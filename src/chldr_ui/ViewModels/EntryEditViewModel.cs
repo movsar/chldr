@@ -238,14 +238,14 @@ namespace chldr_ui.ViewModels
 
             if (EntryDto.CreatedAt != DateTimeOffset.MinValue)
             {
-                await ContentStore.UpdateEntry(user, EntryDto);
+                await ContentStore.EntryService.UpdateAsync(EntryDto, user.UserId);
             }
             else
             {
                 var userSourceId = "63a816205d1af0e432fba6de";
                 EntryDto.SourceId = userSourceId;
                 EntryDto.UserId = user.UserId;
-                await ContentStore.AddEntry(user, EntryDto);
+                await ContentStore.EntryService.AddAsync(EntryDto, user.UserId);
             }
 
             NavigationManager.NavigateTo("/");

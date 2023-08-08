@@ -16,9 +16,9 @@ namespace chldr_shared.Services
 {
     public class EntryService : IDboService<EntryModel, EntryDto>
     {
-        public Action<EntryModel> EntryUpdated;
-        public Action<EntryModel> EntryInserted;
-        public Action<EntryModel> EntryRemoved;
+        public event Func<EntryModel, Task> EntryUpdated;
+        public event Func<EntryModel, Task> EntryInserted;
+        public event Func<EntryModel, Task> EntryRemoved;
 
         private readonly IDataProvider _dataProvider;
         private readonly RequestService _requestService;
