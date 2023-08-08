@@ -8,7 +8,7 @@ using chldr_data.Services;
 
 namespace chldr_data.local.Services
 {
-    internal class RealmUnitOfWork : IUnitOfWork
+    public class RealmUnitOfWork : IUnitOfWork
     {
         private RealmChangeSetsRepository _changeSetsRepository;
         private RealmTranslationsRepository _translationsRepository;
@@ -19,10 +19,9 @@ namespace chldr_data.local.Services
 
         private readonly FileService _fileService;
         private readonly ExceptionHandler _exceptionHandler;
-        private readonly RequestService _requestService;
         private readonly string? _userId;
 
-        internal RealmUnitOfWork(
+        public RealmUnitOfWork(
             ExceptionHandler exceptionHandler,
             FileService fileService,
             RequestService requestService,
@@ -31,16 +30,15 @@ namespace chldr_data.local.Services
         {
             _fileService = fileService;
             _exceptionHandler = exceptionHandler;
-            _requestService = requestService;
             _userId = userId;
         }
 
-        public ITranslationsRepository Translations => _translationsRepository ??= new RealmTranslationsRepository(_exceptionHandler, _fileService,_requestService, _userId);
-        public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new RealmChangeSetsRepository(_exceptionHandler, _fileService, _requestService, _userId);
-        public IEntriesRepository Entries => _entriesRepository ??= new RealmEntriesRepository(_exceptionHandler, _fileService, _requestService, _userId, Translations as RealmTranslationsRepository, Sounds as RealmSoundsRepository);
-        public ISourcesRepository Sources => _sourcesRepository ??= new RealmSourcesRepository(_exceptionHandler, _fileService, _requestService, _userId);
-        public IUsersRepository Users => _usersRepository ??= new RealmUsersRepository(_exceptionHandler, _fileService, _requestService, _userId);
-        public ISoundsRepository Sounds => _soundsRepository ?? new RealmSoundsRepository(_exceptionHandler, _fileService, _requestService, _userId);
+        public ITranslationsRepository Translations => _translationsRepository ??= new RealmTranslationsRepository(_exceptionHandler, _fileService, _userId);
+        public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new RealmChangeSetsRepository(_exceptionHandler, _fileService, _userId);
+        public IEntriesRepository Entries => _entriesRepository ??= new RealmEntriesRepository(_exceptionHandler, _fileService, _userId);
+        public ISourcesRepository Sources => _sourcesRepository ??= new RealmSourcesRepository(_exceptionHandler, _fileService, _userId);
+        public IUsersRepository Users => _usersRepository ??= new RealmUsersRepository(_exceptionHandler, _fileService, _userId);
+        public ISoundsRepository Sounds => _soundsRepository ?? new RealmSoundsRepository(_exceptionHandler, _fileService, _userId);
 
     }
 }

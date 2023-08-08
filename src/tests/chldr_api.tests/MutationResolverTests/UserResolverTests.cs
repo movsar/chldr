@@ -91,7 +91,8 @@ namespace chldr_api.tests.ServiceResolverTests
             // Arrange
             var testUser = TestDataFactory.CreateRandomUserDto();
             unitOfWork = _dataProvider.CreateUnitOfWork(actingUserId);
-            await unitOfWork.Users.Add(testUser);
+            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
+            await usersRepository.Add(testUser);
 
             // Act
             var response = await _userResolver.Register(testUser.Email!, testUser.Password, testUser.FirstName, testUser.LastName, testUser.Patronymic);

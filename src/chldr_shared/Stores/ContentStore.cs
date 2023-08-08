@@ -181,12 +181,12 @@ namespace chldr_shared.Stores
             return phrase;
         }
 
-        public async Task DeleteEntry(UserModel loggedInUser, string entryId)
+        public async Task DeleteEntry(UserModel loggedInUser, EntryModel entry)
         {
-            await _entryService.RemoveAsync(entryId, loggedInUser.UserId);
+            await _entryService.RemoveAsync(entry, loggedInUser.UserId);
 
             // Update on UI
-            CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entryId));
+            CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entry.EntryId));
             CachedResultsChanged?.Invoke();
         }
 

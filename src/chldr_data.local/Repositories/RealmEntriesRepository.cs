@@ -20,20 +20,12 @@ namespace chldr_data.Repositories
     public class RealmEntriesRepository : RealmRepository<RealmEntry, EntryModel, EntryDto>, IEntriesRepository
     {
         public event Action<SearchResultModel>? GotNewSearchResult;
-        private readonly RealmTranslationsRepository _translations;
-        private readonly RealmSoundsRepository _sounds;
 
         public RealmEntriesRepository(
             ExceptionHandler exceptionHandler,
             FileService fileService,
-            RequestService requestService,
-            string userId,
-            RealmTranslationsRepository translationsRepository,
-            RealmSoundsRepository soundsRepository) : base(exceptionHandler, fileService, requestService, userId)
-        {
-            _translations = translationsRepository;
-            _sounds = soundsRepository;
-        }
+            string userId) : base(exceptionHandler, fileService, userId){}
+
         protected override RecordType RecordType => RecordType.Entry;
         protected override EntryModel FromEntity(RealmEntry entry)
         {
@@ -129,31 +121,13 @@ namespace chldr_data.Repositories
 
             return result;
         }
-        public override async Task<List<ChangeSetModel>> Add(EntryDto newEntryDto)
+        public override async Task Add(EntryDto newEntryDto)
         {
-            if (newEntryDto == null || string.IsNullOrEmpty(newEntryDto.EntryId))
-            {
-                throw new NullReferenceException();
-            }
-
-            // Insert remote entity with translations
-            var response = await _requestService.AddEntry(_userId, newEntryDto);
-            if (!response.Success)
-            {
-                throw _exceptionHandler.Error("Error:Request_failed");
-            }
-            var responseData = RequestResult.GetData<InsertResponse>(response);
-            if (responseData.CreatedAt == DateTimeOffset.MinValue)
-            {
-                throw _exceptionHandler.Error("Error:Request_failed");
-            }
-
             // Insert Entry entity with translations
             RealmEntry entry = null!;
 
             _dbContext.Write((Action)(() =>
             {
-                newEntryDto.CreatedAt = responseData.CreatedAt;
                 entry = RealmEntry.FromDto(newEntryDto, _dbContext);
                 _dbContext.Add<RealmEntry>(entry);
 
@@ -169,77 +143,27 @@ namespace chldr_data.Repositories
                     var filePath = Path.Combine(_fileService.EntrySoundsDirectory, soundDto.FileName);
                     File.WriteAllText(filePath, soundDto.RecordingB64);
                 }
-
-                foreach (var changeSet in responseData.ChangeSets)
-                {
-                    var realmChangeSet = RealmChangeSet.FromDto((ChangeSetDto)changeSet, _dbContext);
-                    _dbContext.Add<RealmChangeSet>(realmChangeSet);
-                }
             }));
-
-            return responseData.ChangeSets.Select(ChangeSetModel.FromDto).ToList();
         }
-        public override async Task<List<ChangeSetModel>> Update(EntryDto updatedEntryDto)
+        public override async Task Update(EntryDto updatedEntryDto)
         {
-            var existingEntry = await GetAsync(updatedEntryDto.EntryId);
-            var existingEntryDto = EntryDto.FromModel(existingEntry);
-
-            // Update remote entity
-            var response = await _requestService.UpdateEntry(_userId, updatedEntryDto);
-            if (!response.Success)
-            {
-                throw _exceptionHandler.Error("Error:Request_failed");
-            }
-            var responseData = RequestResult.GetData<UpdateResponse>(response);
-
-            // Update local entity
             _dbContext.Write(() =>
             {
                 RealmEntry.FromDto(updatedEntryDto, _dbContext);
-
-                foreach (var changeSet in responseData.ChangeSets)
-                {
-                    var realmChangeSet = RealmChangeSet.FromDto(changeSet, _dbContext);
-                    _dbContext.Add(realmChangeSet);
-                }
             });
-
-            return responseData.ChangeSets.Select(ChangeSetModel.FromDto).ToList();
         }
-        public override async Task<List<ChangeSetModel>> Remove(string entityId)
+        public override async Task Remove(string entityId)
         {
-            // Remove remote entity
-            var response = await _requestService.RemoveEntry(_userId, entityId);
-            if (!response.Success)
-            {
-                throw _exceptionHandler.Error("Error:Request_failed");
-            }
-            var responseData = RequestResult.GetData<UpdateResponse>(response);
-
-            // Remove local entity
             var entry = _dbContext.Find<RealmEntry>(entityId);
             if (entry == null)
             {
-                return new List<ChangeSetModel>();
+                throw new NullReferenceException("No such entity could be found");
             }
-
-            var sounds = entry.Sounds.Select(s => s.SoundId).ToArray();
-            var translations = entry.Translations.Select(t => t.TranslationId).ToArray();
-
-            await _sounds.RemoveRange(sounds);
-            await _translations.RemoveRange(translations);
 
             _dbContext.Write(() =>
             {
                 _dbContext.Remove(entry);
-
-                foreach (var changeSet in responseData.ChangeSets)
-                {
-                    _dbContext.Add(RealmChangeSet.FromDto(changeSet, _dbContext));
-                }
             });
-
-            return responseData.ChangeSets.Select(ChangeSetModel.FromDto).ToList();
         }
 
         public Task<ChangeSetModel> Promote(IEntry entry)

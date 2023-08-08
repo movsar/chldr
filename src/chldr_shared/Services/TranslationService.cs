@@ -21,14 +21,10 @@ namespace chldr_shared.Services
         }
         public async Task AddAsync(TranslationDto translationDto, string userId)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
-            await unitOfWork.Translations.Add(translationDto);
         }
 
         public async Task RemoveAsync(string translationId, string userId)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
-            await unitOfWork.Translations.Remove(translationId);
         }
 
         internal async Task PromoteAsync(ITranslation translationInfo, UserModel? currentUser)

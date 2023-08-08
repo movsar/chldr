@@ -21,14 +21,12 @@ namespace chldr_data.Repositories
         protected Realm _dbContext => Realm.GetInstance(_dbConfig);
         protected readonly ExceptionHandler _exceptionHandler;
         protected readonly FileService _fileService;
-        protected readonly RequestService _requestService;
         protected readonly string _userId;
 
-        public RealmRepository(ExceptionHandler exceptionHandler, FileService fileService, RequestService requestService, string userId)
+        public RealmRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId)
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
-            _requestService = requestService;
 
             _userId = userId;
 
@@ -39,9 +37,9 @@ namespace chldr_data.Repositories
         }
         protected abstract TModel FromEntity(TEntity entity);
 
-        public abstract Task<List<ChangeSetModel>> Add(TDto dto);
-        public abstract Task<List<ChangeSetModel>> Update(TDto EntryDto);
-        public abstract Task<List<ChangeSetModel>> Remove(string entityId);
+        public abstract Task Add(TDto dto);
+        public abstract Task Update(TDto EntryDto);
+        public abstract Task Remove(string entityId);
         public async Task<TModel> GetAsync(string entityId)
         {
             var entry = _dbContext.Find<TEntity>(entityId);
@@ -76,36 +74,27 @@ namespace chldr_data.Repositories
             return entries;
         }
 
-        public async Task<List<ChangeSetModel>> AddRange(IEnumerable<TDto> added)
+        public async Task AddRange(IEnumerable<TDto> added)
         {
-            var result = new List<ChangeSetModel>();
             foreach (var dto in added)
             {
-                result.AddRange(await Add(dto));
+                await Add(dto);
             }
-
-            return result;
         }
-        public async Task<List<ChangeSetModel>> UpdateRange(IEnumerable<TDto> updated)
+        public async Task UpdateRange(IEnumerable<TDto> updated)
         {
-            var result = new List<ChangeSetModel>();
             foreach (var dto in updated)
             {
-                result.AddRange(await Update(dto));
+                await Update(dto);
 
             }
-
-            return result;
         }
-        public async Task<List<ChangeSetModel>> RemoveRange(IEnumerable<string> removed)
-        {
-            var result = new List<ChangeSetModel>();
+        public async Task RemoveRange(IEnumerable<string> removed)
+        {         
             foreach (var id in removed)
             {
-                result.AddRange(await Remove(id));
+                await Remove(id);
             }
-
-            return result;
         }
 
     }

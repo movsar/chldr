@@ -18,7 +18,7 @@ namespace chldr_shared.tests
             {
                 // Arrange
                 var dataProvider = TestDataFactory.CreateSqlDataProvider();
-                var entryService = new EntryService(dataProvider);
+                var entryService = TestDataFactory.CreateEntryService();
                 var translationService = new TranslationService(dataProvider);
 
                 var unitOfWork = dataProvider.CreateUnitOfWork();

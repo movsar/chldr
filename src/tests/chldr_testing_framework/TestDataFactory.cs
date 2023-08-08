@@ -23,6 +23,7 @@ using MailKit.Net.Smtp;
 using chldr_testing_framework.Generators;
 using chldr_utils.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
+using chldr_shared.Services;
 
 namespace chldr_test_utils
 {
@@ -142,6 +143,12 @@ namespace chldr_test_utils
             translationDto.UserId = userId;
             translationDto.EntryId = entryId;
             return translationDto;
+        }
+
+        public static EntryService CreateEntryService()
+        {
+            var dataProvider = CreateSqlDataProvider();
+            return new EntryService(dataProvider, _requestService, _exceptionHandler);
         }
     }
 }

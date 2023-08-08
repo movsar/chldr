@@ -3,6 +3,7 @@ using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
+using chldr_data.Interfaces.Repositories;
 using chldr_data.Models;
 using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
@@ -43,6 +44,7 @@ namespace chldr_api.GraphQL.MutationServices
         {
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
+            var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
 
             unitOfWork.BeginTransaction();
 
@@ -65,13 +67,13 @@ namespace chldr_api.GraphQL.MutationServices
                     LastName = lastName,
                     Patronymic = patronymic
                 };
-                await unitOfWork.Users.Add(user);
+                await usersRepository.Add(user);
 
                 var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
                 var confirmationToken = JwtService.GenerateToken(user.UserId, "confirmation-token-secretconfirmation-token-secretconfirmation-token-secret", confirmationTokenExpiration);
 
                 // Save the tokens to the database
-                await unitOfWork.Tokens.Add(new TokenDto
+                await tokensRepository.Add(new TokenDto
                 {
                     UserId = user.UserId,
                     Type = (int)TokenType.Confirmation,
@@ -108,6 +110,7 @@ namespace chldr_api.GraphQL.MutationServices
         {
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
+            var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
 
             var user = await usersRepository.FindByEmail(email);
             if (user == null)
@@ -128,7 +131,7 @@ namespace chldr_api.GraphQL.MutationServices
                 ExpiresIn = tokenExpiresIn,
             };
 
-            await unitOfWork.Tokens.Add(token);
+            await tokensRepository.Add(token);
 
             // Send the password reset link to the user's email
             var resetPasswordLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdFrontHost}/set-new-password", new Dictionary<string, string?>(){
@@ -149,6 +152,8 @@ namespace chldr_api.GraphQL.MutationServices
         }
         internal static async Task<RequestResult> SignInAsync(SqlUnitOfWork unitOfWork, UserModel user)
         {
+            var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
+
             // Generate a new access token and calculate expiration time
             var accessTokenExpiration = DateTime.UtcNow.AddMinutes(60);
             var refreshTokenExpiration = DateTime.UtcNow.AddDays(60);
@@ -173,8 +178,8 @@ namespace chldr_api.GraphQL.MutationServices
             };
 
             // Save the tokens to the database
-            await unitOfWork.Tokens.Add(accessTokenDto);
-            await unitOfWork.Tokens.Add(refreshTokenDto);
+            await tokensRepository.Add(accessTokenDto);
+            await tokensRepository.Add(refreshTokenDto);
 
             unitOfWork.Commit();
 
@@ -300,6 +305,7 @@ namespace chldr_api.GraphQL.MutationServices
         {
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
             var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
+            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
 
             unitOfWork.BeginTransaction();
 
@@ -319,10 +325,10 @@ namespace chldr_api.GraphQL.MutationServices
 
             // Hash the new password and update the user's password in the Users table
             userDto.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            await unitOfWork.Users.Update(userDto);
+            await usersRepository.Update(userDto);
 
             // Remove the used password reset token from the Tokens table
-            await unitOfWork.Tokens.Remove(tokenInDatabase.TokenId);
+            await tokensRepository.Remove(tokenInDatabase.TokenId);
 
             unitOfWork.Commit();
 

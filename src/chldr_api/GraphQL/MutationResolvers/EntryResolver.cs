@@ -1,6 +1,7 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Interfaces;
 using chldr_data.Models;
+using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
 using chldr_data.Responses;
 using chldr_data.Services;
@@ -21,11 +22,17 @@ namespace chldr_api.GraphQL.MutationResolvers
         }
         public async Task<RequestResult> AddEntryAsync(string userId, EntryDto entryDto)
         {
+            // UserId instead of object used for security reasons
+
+            // TODO: Check permissions
+            // TODO: Validate input
+
             using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
+            var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
             try
             {
-                var changeSets = await unitOfWork.Entries.Add(entryDto);
+                var changeSets = await entriesRepository.Add(entryDto);
                 unitOfWork.Commit();
 
                 return new RequestResult()
@@ -52,11 +59,17 @@ namespace chldr_api.GraphQL.MutationResolvers
 
         public async Task<RequestResult> UpdateEntry(string userId, EntryDto entryDto)
         {
+            // UserId instead of object used for security reasons
+
+            // TODO: Check permissions
+            // TODO: Validate input
+
             using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
+            var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
             try
             {
-                var changeSets = await unitOfWork.Entries.Update(entryDto);
+                var changeSets = await entriesRepository.Update(entryDto);
                 unitOfWork.Commit();
 
                 return new RequestResult()
@@ -82,11 +95,17 @@ namespace chldr_api.GraphQL.MutationResolvers
 
         public async Task<RequestResult> RemoveEntry(string userId, string entryId)
         {
+            // UserId instead of object used for security reasons
+
+            // TODO: Check permissions
+            // TODO: Validate input
+
             using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
+            var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
             try
             {
-                var changeSets = await unitOfWork.Entries.Remove(entryId);
+                var changeSets = await entriesRepository.Remove(entryId);
                 unitOfWork.Commit();
 
                 return new RequestResult()

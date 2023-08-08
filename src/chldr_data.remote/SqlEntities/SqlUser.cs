@@ -33,7 +33,7 @@ public class SqlUser : IUserEntity
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Patronymic { get; set; }
-    public int? Type { get; set; }
+    public int Type { get; set; }
     public int Status { get; set; } = 0;
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }

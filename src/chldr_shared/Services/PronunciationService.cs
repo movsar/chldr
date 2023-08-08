@@ -15,8 +15,6 @@ namespace chldr_shared.Services
 
         public async Task RemoveAsync(string soundId, string userId)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(userId);
-            await unitOfWork.Sounds.Remove(soundId);
         }
 
         internal async Task PromoteAsync(ISound soundInfo, UserModel? currentUser)

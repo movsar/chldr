@@ -19,7 +19,7 @@ namespace chldr_ui.ViewModels
         public void AddToFavorites() { }
         public async Task Remove()
         {
-            await ContentStore.DeleteEntry(UserStore.CurrentUser!, Entry!.EntryId);
+            await ContentStore.DeleteEntry(UserStore.CurrentUser!, Entry);
         }
         public void Share() { }
         public async Task PromoteEntryAsync() {

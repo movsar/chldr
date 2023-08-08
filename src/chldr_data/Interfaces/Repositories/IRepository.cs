@@ -10,13 +10,5 @@ namespace chldr_data.Interfaces.Repositories
         Task<List<TModel>> GetRandomsAsync(int limit);
 
         Task<TModel> GetAsync(string entityId);
-
-        Task<List<ChangeSetModel>> Add(TDto dto);
-        Task<List<ChangeSetModel>> Update(TDto dto);
-        Task<List<ChangeSetModel>> Remove(string entityId);
-
-        Task<List<ChangeSetModel>> AddRange(IEnumerable<TDto> added);
-        Task<List<ChangeSetModel>> UpdateRange(IEnumerable<TDto> updated);
-        Task<List<ChangeSetModel>> RemoveRange(IEnumerable<string> removed);
     }
 }
