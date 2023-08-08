@@ -24,7 +24,7 @@ namespace chldr_ui.ViewModels
             CurrentPage = 1;
             CurrentLetter = letter;
 
-            var count = await ContentStore.GetEntriesStartingWithCount(new FiltrationFlags()
+            var count = await ContentStore.EntryService.GetCountAsync(new FiltrationFlags()
             {
                 OnModeration = true,
                 GroupWithSubEntries = true,
@@ -49,7 +49,7 @@ namespace chldr_ui.ViewModels
 
         public async Task GetEntries()
         {
-            var batch = await ContentStore.TakeEntriesAsync((CurrentPage - 1) * 50, 50, new FiltrationFlags()
+            var batch = await ContentStore.EntryService.TakeAsync((CurrentPage - 1) * 50, 50, new FiltrationFlags()
             {
                 OnModeration = true,
                 GroupWithSubEntries = true,

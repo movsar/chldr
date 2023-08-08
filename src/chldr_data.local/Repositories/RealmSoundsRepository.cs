@@ -15,15 +15,15 @@ using System.Threading.Channels;
 
 namespace chldr_data.local.Repositories
 {
-    public class RealmSoundsRepository : RealmRepository<RealmSound, SoundModel, SoundDto>, ISoundsRepository
+    public class RealmSoundsRepository : RealmRepository<RealmSound, PronunciationModel, PronunciationDto>, ISoundsRepository
     {
         public RealmSoundsRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
         protected override RecordType RecordType => RecordType.Sound;
-        protected override SoundModel FromEntity(RealmSound entity)
+        protected override PronunciationModel FromEntity(RealmSound entity)
         {
-            return SoundModel.FromEntity(entity);
+            return PronunciationModel.FromEntity(entity);
         }
-        public override async Task<List<ChangeSetModel>> Add(SoundDto dto)
+        public override async Task<List<ChangeSetModel>> Add(PronunciationDto dto)
         {
             var entry = _dbContext.Find<RealmEntry>(dto.EntryId);
 
@@ -38,10 +38,10 @@ namespace chldr_data.local.Repositories
             // ! NOT IMPLEMENTED
             return new List<ChangeSetModel>();
         }
-        public override async Task<List<ChangeSetModel>> Update(SoundDto dto)
+        public override async Task<List<ChangeSetModel>> Update(PronunciationDto dto)
         {
             var existingEntity = await GetAsync(dto.SoundId);
-            var existingDto = SoundDto.FromModel(existingEntity);
+            var existingDto = PronunciationDto.FromModel(existingEntity);
 
             var changes = Change.GetChanges(dto, existingDto);
             if (changes.Count == 0)

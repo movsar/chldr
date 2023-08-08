@@ -12,8 +12,6 @@ using chldr_utils.Exceptions;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Realms;
-using Realms.Sync;
 
 namespace chldr_data.remote.Repositories
 {

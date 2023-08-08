@@ -3,17 +3,21 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
+using chldr_data.Services;
+using chldr_utils;
 using chldr_utils.Services;
 using Newtonsoft.Json;
 
-namespace chldr_data.Services
+namespace chldr_shared.Services
 {
-    public class UserService
+    public class UserService : IDboService<UserModel, UserDto>
     {
+        private readonly IDataProvider _dataProvider;
+        private readonly RequestService _requestService;
+        private readonly ExceptionHandler _exceptionHandler;
+
         public event Action<SessionInformation>? UserStateHasChanged;
 
-        private readonly RequestService _requestService;
-        private readonly IDataProvider _dataProvider;
         private readonly LocalStorageService _localStorageService;
         public SessionInformation CurrentSession = new SessionInformation();
 
@@ -147,5 +151,24 @@ namespace chldr_data.Services
             }
         }
 
+        public Task AddAsync(UserDto entryDto, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<UserModel> GetAsync(string entryId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveAsync(UserModel entry, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(UserDto entryDto, string userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

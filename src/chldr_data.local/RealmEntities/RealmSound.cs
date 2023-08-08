@@ -20,7 +20,7 @@ public class RealmSound : RealmObject, ISoundEntity
 
     public int Rate { get; set; }
 
-    internal static RealmSound FromDto(SoundDto soundDto, Realm context, RealmEntry? entry = null)
+    internal static RealmSound FromDto(PronunciationDto soundDto, Realm context, RealmEntry? entry = null)
     {
         var user = context.Find<RealmUser>(soundDto.UserId);
 

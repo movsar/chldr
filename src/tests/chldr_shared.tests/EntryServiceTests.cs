@@ -16,40 +16,30 @@ namespace chldr_shared.tests
         [Fact]
         public async Task AddRemoveEntry_ActiveMember_Success()
         {
-            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-            {
-            //    var dataProvider = TestDataFactory.CreateSqlDataProvider();
-            //    var entryService = TestDataFactory.CreateEntryService();
-
-            //    var unitOfWork = dataProvider.CreateUnitOfWork();
-            //    var actingUserId = unitOfWork.Users.GetRandomsAsync(1).Result.First().UserId;
+            //using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            //{
+            //    var contentStore = TestDataFactory.CreateContentStore();
 
             //    // Arrange
-
-            //    var userDto = TestDataFactory.CreateRandomUserDto();
-            //    userDto.Status = chldr_data.Enums.UserStatus.Active;
-            //    await unitOfWork.Users.Add(userDto);
-            //    unitOfWork = dataProvider.CreateUnitOfWork(userDto.UserId);
-            //    var user = UserModel.FromDto(userDto);
-
-            //    var source = (await unitOfWork.Sources.GetRandomsAsync(1)).First();
+            //    var user = await contentStore.UserService.GetRandomActiveUserAsync();
+            //    var source = await contentStore.SourceService.GetRandomSourceAsync();                
 
             //    var entryDto = TestDataFactory.CreateRandomEntryDto(user.UserId, source.SourceId);
 
             //    // Act
-            //    await entryService.AddAsync(entryDto, userDto.UserId);
+            //    await contentStore.AddEntry(user, entryDto);
 
             //    // Assert
-            //    var insertedEntry = await entryService.GetAsync(entryDto.EntryId);
+            //    var insertedEntry = await contentStore.GetByEntryId(entryDto.EntryId);
             //    var userRateRange = user.GetRateRange();
 
             //    Assert.Equal(entryDto.Content, insertedEntry.Content);
             //    Assert.Equal(userRateRange.Lower, insertedEntry.Rate);
             //    Assert.Equal(entryDto.SoundDtos[0].SoundId, insertedEntry.Sounds[0].SoundId);
 
-            //    await entryService.RemoveAsync(entryDto.EntryId, userDto.UserId);
-            //    await Assert.ThrowsAsync<ArgumentException>(async () => await entryService.GetAsync(entryDto.EntryId));
-            }
+            //    await contentStore.DeleteEntry(user, insertedEntry);
+            //    await Assert.ThrowsAsync<ArgumentException>(async () => await contentStore.GetByEntryId(entryDto.EntryId));
+            //}
         }
 
         [Fact]

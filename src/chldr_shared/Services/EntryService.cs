@@ -14,8 +14,12 @@ using chldr_utils;
 
 namespace chldr_shared.Services
 {
-    public class EntryService
+    public class EntryService : IDboService<EntryModel, EntryDto>
     {
+        public Action<EntryModel> EntryUpdated;
+        public Action<EntryModel> EntryInserted;
+        public Action<EntryModel> EntryRemoved;
+
         private readonly IDataProvider _dataProvider;
         private readonly RequestService _requestService;
         private readonly ExceptionHandler _exceptionHandler;
@@ -71,12 +75,14 @@ namespace chldr_shared.Services
             {
                 var insertResponse = await AddToRemmoteDatabase(entryDto, userId);
 
-                if (_dataProvider is SqlDataProvider)
+                if (_dataProvider is RealmDataProvider)
                 {
-                    return;
+                    await AddToLocalDatabase(entryDto, userId, insertResponse.ChangeSets);
                 }
 
-                await AddToLocalDatabase(entryDto, userId, insertResponse.ChangeSets);
+                var unitOfWork = _dataProvider.CreateUnitOfWork();
+                var entry = await unitOfWork.Entries.GetAsync(entryDto.EntryId);
+                EntryInserted?.Invoke(entry);
             }
             catch (Exception)
             {
@@ -114,12 +120,14 @@ namespace chldr_shared.Services
             {
                 var updateResponse = await UpdateInRemmoteDatabase(entryDto, userId);
 
-                if (_dataProvider is SqlDataProvider)
+                if (_dataProvider is RealmDataProvider)
                 {
-                    return;
+                    await UpdateInLocalDatabase(entryDto, userId, updateResponse.ChangeSets);
                 }
 
-                await UpdateInLocalDatabase(entryDto, userId, updateResponse.ChangeSets);
+                var unitOfWork = _dataProvider.CreateUnitOfWork();
+                var updatedEntry = await unitOfWork.Entries.GetAsync(entryDto.EntryId);
+                EntryUpdated?.Invoke(updatedEntry);
             }
             catch (Exception)
             {
@@ -162,12 +170,12 @@ namespace chldr_shared.Services
             {
                 var updateResponse = await RemoveFromRemmoteDatabase(entry, userId);
 
-                if (_dataProvider is SqlDataProvider)
+                if (_dataProvider is RealmDataProvider)
                 {
-                    return;
+                    await RemoveFromLocalDatabase(entry, userId, updateResponse.ChangeSets);
                 }
 
-                await RemoveFromLocalDatabase(entry, userId, updateResponse.ChangeSets);
+                EntryRemoved?.Invoke(entry);
             }
             catch (Exception)
             {
@@ -176,20 +184,23 @@ namespace chldr_shared.Services
         }
         #endregion
 
-        internal async Task PromoteAsync(IEntry entry, UserModel? currentUser)
+        public async Task PromoteAsync(IEntry entry, UserModel? currentUser)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.UserId);
             await unitOfWork.Entries.Promote(entry);
+
+            var updatedEntry = await unitOfWork.Entries.GetAsync(entry.EntryId);
+            EntryUpdated?.Invoke(updatedEntry);
         }
 
-        internal async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
+        public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork();
             var entries = await unitOfWork.Entries.TakeAsync(offset, limit, filtrationFlags);
             return entries.ToList();
         }
 
-        internal async Task<int> GetCountAsync(FiltrationFlags filtrationFlags)
+        public async Task<int> GetCountAsync(FiltrationFlags filtrationFlags)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork();
             return await unitOfWork.Entries.CountAsync(filtrationFlags);

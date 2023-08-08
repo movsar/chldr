@@ -3,7 +3,7 @@ using chldr_data.DatabaseObjects.Models;
 
 namespace chldr_data.DatabaseObjects.Dtos
 {
-    public class SoundDto : ISound
+    public class PronunciationDto : ISound
     {
         public string SoundId { get; set; } = Guid.NewGuid().ToString();
         public string FileName { get; set; } = Guid.NewGuid().ToString();
@@ -15,14 +15,14 @@ namespace chldr_data.DatabaseObjects.Dtos
         public DateTimeOffset UpdatedAt { get; set; }
 
 
-        public static SoundDto FromModel(SoundModel sound)
+        public static PronunciationDto FromModel(PronunciationModel sound)
         {
             if (sound == null || string.IsNullOrEmpty(sound.FileName))
             {
                 throw new Exception("Something went wrong");
             }
 
-            return new SoundDto()
+            return new PronunciationDto()
             {
                 SoundId = sound.SoundId,
                 EntryId = sound.EntryId,

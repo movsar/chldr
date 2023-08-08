@@ -24,6 +24,7 @@ using chldr_testing_framework.Generators;
 using chldr_utils.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
 using chldr_shared.Services;
+using chldr_shared.Stores;
 
 namespace chldr_test_utils
 {
@@ -149,6 +150,33 @@ namespace chldr_test_utils
         {
             var dataProvider = CreateSqlDataProvider();
             return new EntryService(dataProvider, _requestService, _exceptionHandler);
+        }
+        public static TranslationService CreateTranslationService()
+        {
+            var dataProvider = CreateSqlDataProvider();
+            return new TranslationService(dataProvider, _requestService, _exceptionHandler);
+        }
+        public static PronunciationService CreatePronunciationService()
+        {
+            var dataProvider = CreateSqlDataProvider();
+            return new PronunciationService(dataProvider, _requestService, _exceptionHandler);
+        }
+
+        public static ContentStore CreateContentStore()
+        {
+            return new ContentStore(_exceptionHandler,
+                CreateSqlDataProvider(),
+                _environmentService,
+                CreateEntryService(),
+                CreateTranslationService(),
+                CreatePronunciationService(),
+                CreateUserService());
+        }
+
+        private static UserService CreateUserService()
+        {
+            var localStorageService = new LocalStorageService(null, _exceptionHandler);
+            return new UserService(CreateSqlDataProvider(), _requestService, localStorageService);
         }
     }
 }

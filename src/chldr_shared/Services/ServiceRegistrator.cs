@@ -8,6 +8,7 @@ using chldr_utils.Interfaces;
 using chldr_shared;
 using Microsoft.Extensions.DependencyInjection;
 using chldr_shared.Services;
+using chldr_data.Interfaces;
 
 namespace chldr_utils.Services
 {

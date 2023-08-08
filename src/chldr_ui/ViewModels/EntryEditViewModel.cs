@@ -41,7 +41,7 @@ namespace chldr_ui.ViewModels
         public EntryDto EntryDto { get; set; } = new EntryDto();
         bool isRecording;
         bool existingSoundsRendered;
-        SoundDto latestSoundDto;
+        PronunciationDto latestSoundDto;
         List<string> _newTranslationIds = new List<string>();
         internal bool CanEditEntry { get; private set; } = true;
 
@@ -137,17 +137,17 @@ namespace chldr_ui.ViewModels
         }
         public async Task PromoteEntryAsync(EntryDto entryDto)
         {
-            await ContentStore.PromoteEntryAsync(entryDto, UserStore.CurrentUser);
+            await ContentStore.EntryService.PromoteAsync(entryDto, UserStore.CurrentUser);
         }
 
         public async Task PromoteTranslationAsync(TranslationDto translationDto)
         {
-            await ContentStore.PromoteTranslationAsync(translationDto, UserStore.CurrentUser);
+            await ContentStore.TranslationService.PromoteAsync(translationDto, UserStore.CurrentUser);
         }
 
-        public async Task PromotePronunciationAsync(SoundDto soundDto)
+        public async Task PromotePronunciationAsync(PronunciationDto soundDto)
         {
-            await ContentStore.PromoteSoundAsync(soundDto, UserStore.CurrentUser);
+            await ContentStore.PronunciationService.PromoteAsync(soundDto, UserStore.CurrentUser);
         }
 
         public async Task DeleteTranslationAsync(string translationId)
@@ -186,7 +186,7 @@ namespace chldr_ui.ViewModels
         private async Task StartRecording()
         {
             isRecording = true;
-            latestSoundDto = new SoundDto();
+            latestSoundDto = new PronunciationDto();
             latestSoundDto.EntryId = EntryDto.EntryId!;
             latestSoundDto.Rate = UserStore.CurrentUser!.GetRateRange().Lower;
             latestSoundDto.UserId = UserStore.CurrentUser!.UserId;

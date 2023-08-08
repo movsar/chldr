@@ -26,9 +26,11 @@ namespace chldr_shared.Stores
         // ! This shouldn't be normally used, but only to request models that have already been loaded 
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
         public readonly List<LanguageModel> Languages = LanguageModel.GetAvailableLanguages();
-        private EntryService _entryService;
-        private TranslationService _translationService;
-        private PronunciationService _pronunciationService;
+
+        public EntryService EntryService;
+        public TranslationService TranslationService;
+        public PronunciationService PronunciationService;
+        public UserService UserService;
         #endregion
 
         #region EventHandlers
@@ -58,7 +60,8 @@ namespace chldr_shared.Stores
             EnvironmentService environmentService,
             EntryService entryService,
             TranslationService translationService,
-            PronunciationService pronunciationService
+            PronunciationService pronunciationService,
+            UserService userService
             )
         {
             _exceptionHandler = exceptionHandler;
@@ -71,12 +74,20 @@ namespace chldr_shared.Stores
             _dataProvider.DatabaseInitialized += DataAccess_DatasourceInitialized;
             _dataProvider.Initialize();
 
-            _entryService = entryService;
-            _translationService = translationService;
-            _pronunciationService = pronunciationService;
+            EntryService = entryService;
+            TranslationService = translationService;
+            PronunciationService = pronunciationService;
+            UserService = userService;
+
+            EntryService.EntryUpdated += OnEntryUpdated;
+            EntryService.EntryInserted += OnEntryInserted;
+            EntryService.EntryRemoved += OnEntryRemoved;
         }
 
-     
+        private void OnEntryUpdated(EntryModel entry) { }
+        private void OnEntryRemoved(EntryModel entry) { }
+        private void OnEntryInserted(EntryModel entry) { }
+
         public async Task<IEnumerable<EntryModel>> FindAsync(string inputText, int limit = 10)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork();
@@ -183,50 +194,28 @@ namespace chldr_shared.Stores
 
         public async Task DeleteEntry(UserModel loggedInUser, EntryModel entry)
         {
-            await _entryService.RemoveAsync(entry, loggedInUser.UserId);
+            await EntryService.RemoveAsync(entry, loggedInUser.UserId);
 
             // Update on UI
             CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entry.EntryId));
-            CachedResultsChanged?.Invoke();
+            //CachedResultsChanged?.Invoke();
         }
 
         public async Task UpdateEntry(UserModel loggedInUser, EntryDto entryDto)
         {
-            await _entryService.UpdateAsync(entryDto, loggedInUser.UserId);
+            await EntryService.UpdateAsync(entryDto, loggedInUser.UserId);
 
             // Update UI
             var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entryDto.EntryId || e.EntryId == entryDto.ParentEntryId);
             var entryIndex = CachedSearchResult.Entries.IndexOf(existingEntry);
-            CachedSearchResult.Entries[entryIndex] = await _entryService.GetAsync(entryDto.EntryId);
-            CachedResultsChanged?.Invoke();
+            CachedSearchResult.Entries[entryIndex] = await EntryService.GetAsync(entryDto.EntryId);
+            //CachedResultsChanged?.Invoke();
         }
         public async Task AddEntry(UserModel loggedInUser, EntryDto entryDto)
         {
-            await _entryService.AddAsync(entryDto, loggedInUser.UserId);
+            await EntryService.AddAsync(entryDto, loggedInUser.UserId);
 
             LoadLatestEntries();
-        }
-
-        public async Task PromoteEntryAsync(IEntry entry, UserModel? currentUser)
-        {
-            await _entryService.PromoteAsync(entry, currentUser);
-        }
-        public async Task PromoteTranslationAsync(ITranslation translation, UserModel? currentUser)
-        {
-            await _translationService.PromoteAsync(translation, currentUser);
-        }
-        public async Task PromoteSoundAsync(ISound sound, UserModel? currentUser)
-        {
-            await _pronunciationService.PromoteAsync(sound, currentUser);
-        }
-
-        public async Task<int> GetEntriesStartingWithCount(FiltrationFlags filtrationFlags)
-        {
-            return await _entryService.GetCountAsync(filtrationFlags);
-        }
-        public async Task<List<EntryModel>> TakeEntriesAsync(int offset, int limit, FiltrationFlags filtrationFlags)
-        {
-            return await _entryService.TakeAsync(offset, limit, filtrationFlags);
         }
     }
 }

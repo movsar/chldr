@@ -21,7 +21,7 @@ namespace chldr_data.DatabaseObjects.Models
         public IDetails? Details { get; set; }
         public SourceModel Source { get; set; }
         public List<TranslationModel> Translations { get; set; } = new List<TranslationModel>();
-        public List<SoundModel> Sounds { get; set; } = new List<SoundModel>();
+        public List<PronunciationModel> Sounds { get; set; } = new List<PronunciationModel>();
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
 
@@ -60,7 +60,7 @@ namespace chldr_data.DatabaseObjects.Models
 
             foreach (var sound in sounds)
             {
-                entryModel.Sounds.Add(SoundModel.FromEntity(sound));
+                entryModel.Sounds.Add(PronunciationModel.FromEntity(sound));
             }
 
             return entryModel;

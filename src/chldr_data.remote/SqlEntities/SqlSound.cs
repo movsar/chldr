@@ -22,7 +22,7 @@ public class SqlSound : ISoundEntity
 
     public int Rate { get; set; }
 
-    internal static SqlSound FromDto(SoundDto soundDto, SqlContext context)
+    internal static SqlSound FromDto(PronunciationDto soundDto, SqlContext context)
     {
         //var user = context.Find<SqlUser>(soundDto.UserId);
 

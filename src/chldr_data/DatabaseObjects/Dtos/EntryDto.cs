@@ -45,7 +45,7 @@ namespace chldr_data.DatabaseObjects.Dtos
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
         public virtual List<TranslationDto> TranslationsDtos { get; set; } = new List<TranslationDto>();
-        public virtual List<SoundDto> SoundDtos { get; set; } = new List<SoundDto>();
+        public virtual List<PronunciationDto> SoundDtos { get; set; } = new List<PronunciationDto>();
         public bool ExistsInDatabase()
         {
             return CreatedAt == DateTimeOffset.MinValue;
@@ -72,7 +72,7 @@ namespace chldr_data.DatabaseObjects.Dtos
             entryDto.TranslationsDtos.AddRange(entryModel.Translations.Select(t => TranslationDto.FromModel(t)));
 
             entryDto.SoundDtos.Clear();
-            entryDto.SoundDtos.AddRange(entryModel.Sounds.Select(s => SoundDto.FromModel(s)));
+            entryDto.SoundDtos.AddRange(entryModel.Sounds.Select(s => PronunciationDto.FromModel(s)));
             return entryDto;
         }
     }

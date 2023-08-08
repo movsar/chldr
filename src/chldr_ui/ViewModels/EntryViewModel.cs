@@ -23,11 +23,11 @@ namespace chldr_ui.ViewModels
         }
         public void Share() { }
         public async Task PromoteEntryAsync() {
-            await ContentStore.PromoteEntryAsync(Entry, UserStore.CurrentUser);
+            await ContentStore.EntryService.PromoteAsync(Entry, UserStore.CurrentUser);
         }
         public async Task PromoteTranslationAsync(ITranslation translation)
         {
-            await ContentStore.PromoteTranslationAsync(translation, UserStore.CurrentUser);
+            await ContentStore.TranslationService.PromoteAsync(translation, UserStore.CurrentUser);
         }
         public void Downvote() { }
         public void Flag() { }

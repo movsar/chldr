@@ -58,7 +58,7 @@ namespace chldr_data.Services
             return data;
         }
 
-        internal async Task<RequestResult> LogInEmailPasswordAsync(string email, string password)
+        public async Task<RequestResult> LogInEmailPasswordAsync(string email, string password)
         {
             var request = new GraphQLRequest
             {
@@ -78,7 +78,7 @@ namespace chldr_data.Services
             return response.Data;
         }
 
-        internal async Task<RequestResult> RegisterUserAsync(string email, string password)
+        public async Task<RequestResult> RegisterUserAsync(string email, string password)
         {
             var request = new GraphQLRequest
             {
@@ -98,7 +98,7 @@ namespace chldr_data.Services
             return response.Data;
         }
 
-        internal async Task<RequestResult> RefreshTokens(string refreshToken)
+        public async Task<RequestResult> RefreshTokens(string refreshToken)
         {
             var request = new GraphQLRequest
             {

@@ -2,7 +2,7 @@
 
 namespace chldr_data.DatabaseObjects.Models
 {
-    public class SoundModel : ISound
+    public class PronunciationModel : ISound
     {
         public string FileName { get; set; }
         public string SoundId { get; set; }
@@ -12,9 +12,9 @@ namespace chldr_data.DatabaseObjects.Models
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
 
-        public static SoundModel FromEntity(ISoundEntity entity)
+        public static PronunciationModel FromEntity(ISoundEntity entity)
         {
-            return new SoundModel()
+            return new PronunciationModel()
             {
                 SoundId = entity.SoundId,
                 UserId = entity.UserId,

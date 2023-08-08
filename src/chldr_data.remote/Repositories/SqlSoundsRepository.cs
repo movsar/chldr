@@ -11,15 +11,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.remote.Repositories
 {
-    public class SqlSoundsRepository : SqlRepository<SqlSound, SoundModel, SoundDto>, ISoundsRepository
+    public class SqlSoundsRepository : SqlRepository<SqlSound, PronunciationModel, PronunciationDto>, ISoundsRepository
     {
         public SqlSoundsRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string userId) : base(dbConfig, fileService, userId) { }
         protected override RecordType RecordType => RecordType.Sound;
-        protected override SoundModel FromEntity(SqlSound entity)
+        protected override PronunciationModel FromEntity(SqlSound entity)
         {
-            return SoundModel.FromEntity(entity);
+            return PronunciationModel.FromEntity(entity);
         }
-        public override async Task<List<SoundModel>> GetRandomsAsync(int limit)
+        public override async Task<List<PronunciationModel>> GetRandomsAsync(int limit)
         {
             var randomizer = new Random();
             var ids = await _dbContext.Set<SqlSound>().Select(e => e.SoundId).ToListAsync();
@@ -33,7 +33,7 @@ namespace chldr_data.remote.Repositories
             var models = entities.Select(FromEntity).ToList();
             return models;
         }
-        public override async Task<List<ChangeSetModel>> Add(SoundDto soundDto)
+        public override async Task<List<ChangeSetModel>> Add(PronunciationDto soundDto)
         {
             if (string.IsNullOrEmpty(soundDto.RecordingB64))
             {
@@ -54,11 +54,11 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override async Task<List<ChangeSetModel>> Update(SoundDto dto)
+        public override async Task<List<ChangeSetModel>> Update(PronunciationDto dto)
         {
             // Find out what has been changed
             var existing = await GetAsync(dto.SoundId);
-            var existingDto = SoundDto.FromModel(existing);
+            var existingDto = PronunciationDto.FromModel(existing);
 
             var changes = Change.GetChanges(dto, existingDto);
             if (changes.Count == 0)
