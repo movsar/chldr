@@ -24,14 +24,14 @@ namespace chldr_ui.ViewModels
             // Update Details field, whenever something has changed
             EntryDto.Details = SerializeWordDetails((WordType)EntryDto.EntrySubtype);
 
-            if (EntryDto.EntrySubtype != 0)
-            {
-                await JsInterop.Expand("[data-id=word-details]");
-            }
-            else
-            {
-                await JsInterop.Collapse("[data-id=word-details]");
-            }
+            //if (EntryDto.EntrySubtype != 0)
+            //{
+            //    await JsInterop.Expand("[data-id=word-details]");
+            //}
+            //else
+            //{
+            //    await JsInterop.Collapse("[data-id=word-details]");
+            //}
 
             await base.OnAfterRenderAsync(firstRender);
         }

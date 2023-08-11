@@ -5,7 +5,7 @@
         Undefined = 0,
         PresentContinuous = 1,
         PresentSimple = 2,
-        FutureContinous = 3,
+        FutureContinuous = 3,
         FutureSimple = 4,
         PastImperfect = 5,
         PastPerfect = 6,

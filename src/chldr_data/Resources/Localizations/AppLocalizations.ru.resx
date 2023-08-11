@@ -415,11 +415,8 @@
   <data name="Word:Mood:UnrealDesiderative" xml:space="preserve">
     <value>Нереально-желательное наклонение</value>
   </data>
-  <data name="Word:Tense:FuturePossible" xml:space="preserve">
-    <value>Будущее возможное</value>
-  </data>
-  <data name="Word:Tense:FutureReal" xml:space="preserve">
-    <value>Будущее реальное</value>
+  <data name="Word:Tense:FutureContinuous" xml:space="preserve">
+    <value>Будущее продолжительное</value>
   </data>
   <data name="Word:Conjunction" xml:space="preserve">
     <value>Союз</value>
@@ -684,5 +681,17 @@
   </data>
   <data name="Error:You_are_not_authorized_for_this_operation" xml:space="preserve">
     <value>У вас нет привилегий для совершения данного действия</value>
+  </data>
+  <data name="Word:Tense:FutureSimple" xml:space="preserve">
+    <value>Будущее простое</value>
+  </data>
+  <data name="Word:Tense:Infinitive" xml:space="preserve">
+    <value>Инфинитив</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Предыдущая</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Следующая</value>
   </data>
 </root>

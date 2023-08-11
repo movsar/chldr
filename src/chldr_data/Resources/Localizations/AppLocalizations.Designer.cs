@@ -636,6 +636,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        public static string Next {
+            get {
+                return ResourceManager.GetString("Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No.
         /// </summary>
         public static string No {
@@ -713,6 +722,15 @@ namespace chldr_data.Resources.Localizations {
         public static string Phrase {
             get {
                 return ResourceManager.GetString("Phrase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous.
+        /// </summary>
+        public static string Previous {
+            get {
+                return ResourceManager.GetString("Previous", resourceCulture);
             }
         }
         
@@ -1563,20 +1581,29 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Future possible.
+        ///   Looks up a localized string similar to Future continuous.
         /// </summary>
-        public static string Word_Tense_FuturePossible {
+        public static string Word_Tense_FutureContinuous {
             get {
-                return ResourceManager.GetString("Word:Tense:FuturePossible", resourceCulture);
+                return ResourceManager.GetString("Word:Tense:FutureContinuous", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to FutureReal.
+        ///   Looks up a localized string similar to Future simple.
         /// </summary>
-        public static string Word_Tense_FutureReal {
+        public static string Word_Tense_FutureSimple {
             get {
-                return ResourceManager.GetString("Word:Tense:FutureReal", resourceCulture);
+                return ResourceManager.GetString("Word:Tense:FutureSimple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Infinitive.
+        /// </summary>
+        public static string Word_Tense_Infinitive {
+            get {
+                return ResourceManager.GetString("Word:Tense:Infinitive", resourceCulture);
             }
         }
         

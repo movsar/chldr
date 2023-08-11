@@ -67,6 +67,7 @@ namespace chldr_api.GraphQL.MutationResolvers
                 throw new UnauthorizedException();
             }
         }
+
         #region Add
         public async Task<RequestResult> AddEntryAsync(string userId, EntryDto entryDto)
         {
@@ -153,8 +154,8 @@ namespace chldr_api.GraphQL.MutationResolvers
         {
             // UserId instead of object used for security reasons
 
-            // TODO: Check permissions
-            // TODO: Validate input
+            await CheckLoggedInUser(userId);
+            await CheckRemovePermissions(userId, entryId);
 
             using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
@@ -184,6 +185,33 @@ namespace chldr_api.GraphQL.MutationResolvers
             }
 
             return new RequestResult();
+        }
+
+        private async Task CheckRemovePermissions(string userId, string entryId)
+        {
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var entry = await unitOfWork.Entries.GetAsync(entryId);
+            var user = await unitOfWork.Users.GetAsync(userId);
+
+            // Check whether the user has access to remove the entry with all its child items
+            if (!user.CanRemove(entry.Rate, entry.UserId, entry.CreatedAt))
+            {
+                throw new UnauthorizedException();
+            }
+            foreach (var item in entry.Translations)
+            {
+                if (!user.CanRemove(item.Rate, item.UserId, item.CreatedAt))
+                {
+                    throw new UnauthorizedException();
+                }
+            }
+            foreach (var item in entry.Sounds)
+            {
+                if (!user.CanRemove(item.Rate, item.UserId, item.CreatedAt))
+                {
+                    throw new UnauthorizedException();
+                }
+            }
         }
 
         internal async Task<RequestResult> PromoteAsync(string userId, string entryId)

@@ -2,10 +2,10 @@
 
 <div>
     <button @onclick="() => OnPreviousPage()" disabled="@(CurrentPage == 1)">
-        Previous
+        @Localizer["Previous"]
     </button>
 
     <button @onclick="() => OnNextPage()" disabled="@(CurrentPage == TotalPages)">
-        Next
+        @Localizer["Next"]
     </button>
 </div>

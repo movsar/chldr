@@ -389,11 +389,8 @@
   <data name="Word:Declension:Fourth" xml:space="preserve">
     <value>Fourth</value>
   </data>
-  <data name="Word:Tense:FuturePossible" xml:space="preserve">
-    <value>Future possible</value>
-  </data>
-  <data name="Word:Tense:FutureReal" xml:space="preserve">
-    <value>FutureReal</value>
+  <data name="Word:Tense:FutureContinuous" xml:space="preserve">
+    <value>Future continuous</value>
   </data>
   <data name="Word:Case:Genitive" xml:space="preserve">
     <value>Genitive</value>
@@ -676,5 +673,17 @@
   </data>
   <data name="Error:You_are_not_authorized_for_this_operation" xml:space="preserve">
     <value>You are not allowed to perform this operation</value>
+  </data>
+  <data name="Word:Tense:FutureSimple" xml:space="preserve">
+    <value>Future simple</value>
+  </data>
+  <data name="Word:Tense:Infinitive" xml:space="preserve">
+    <value>Infinitive</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
   </data>
 </root>

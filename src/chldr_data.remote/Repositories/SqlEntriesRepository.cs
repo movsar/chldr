@@ -296,28 +296,7 @@ namespace chldr_data.remote.Repositories
             try
             {
                 var entry = await GetAsync(entryId);
-                var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId));
-
-                // Check whether the user has access to remove the entry with all its child items
-                if (!user.CanRemove(entry.Rate, entry.UserId, entry.CreatedAt))
-                {
-                    throw new InvalidOperationException();
-                }
-                foreach (var item in entry.Translations)
-                {
-                    if (!user.CanRemove(item.Rate, item.UserId, item.CreatedAt))
-                    {
-                        throw new InvalidOperationException();
-                    }
-                }
-                foreach (var item in entry.Sounds)
-                {
-                    if (!user.CanRemove(item.Rate, item.UserId, item.CreatedAt))
-                    {
-                        throw new InvalidOperationException();
-                    }
-                }
-
+             
                 var soundIds = entry.Sounds.Select(s => s.SoundId).ToArray();
                 var translationIds = entry.Translations.Select(t => t.TranslationId).ToArray();
 
