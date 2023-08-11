@@ -12,13 +12,7 @@ namespace chldr_data.remote.Repositories
     public class SqlChangeSetsRepository : SqlRepository<SqlChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {
         protected override RecordType RecordType => throw new Exception("Shouldn't be used");
-
         public SqlChangeSetsRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string _userId) : base(dbConfig, fileService, _userId) { }
-
-        protected override ChangeSetModel FromEntity(SqlChangeSet entity)
-        {
-            return ChangeSetModel.FromEntity(entity);
-        }
 
         public async Task<List<ChangeSetModel>> TakeLastAsync(int count)
         {
@@ -70,12 +64,12 @@ namespace chldr_data.remote.Repositories
             return models;
         }
 
-        public override async Task<List<ChangeSetModel>> Update(ChangeSetDto dto)
+        public override async Task<List<ChangeSetModel>> UpdateAsync(ChangeSetDto dto)
         {
             throw new Exception("This method should never be called for ChangeSets, they're immutable");
         }
 
-        public override async Task<List<ChangeSetModel>> Add(ChangeSetDto dto)
+        public override async Task<List<ChangeSetModel>> AddAsync(ChangeSetDto dto)
         {
             var changeSet = SqlChangeSet.FromDto(dto);
             await _dbContext.AddAsync(changeSet);
@@ -86,6 +80,27 @@ namespace chldr_data.remote.Repositories
         public override Task<List<ChangeSetModel>> GetRandomsAsync(int limit)
         {
             throw new NotImplementedException();
+        }
+
+        public override async Task<ChangeSetModel> GetAsync(string entityId)
+        {
+            var changeSet = await _dbContext.ChangeSets.FirstOrDefaultAsync(t => t.ChangeSetId!.Equals(entityId));
+            if (changeSet == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            return ChangeSetModel.FromEntity(changeSet);
+        }
+
+        public override async Task<List<ChangeSetModel>> TakeAsync(int offset, int limit)
+        {
+            var entities = await _dbContext.ChangeSets
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
+
+            return entities.Select(ChangeSetModel.FromEntity).ToList();
         }
     }
 }

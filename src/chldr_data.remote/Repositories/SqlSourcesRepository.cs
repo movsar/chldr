@@ -25,10 +25,10 @@ namespace chldr_data.remote.Repositories
               .AsNoTracking()
               .ToListAsync();
 
-            var models = entities.Select(FromEntity).ToList();
+            var models = entities.Select(SourceModel.FromEntity).ToList();
             return models;
         }
-        public override async Task<List<ChangeSetModel>> Update(SourceDto dto)
+        public override async Task<List<ChangeSetModel>> UpdateAsync(SourceDto dto)
         {
             var source = SqlSource.FromDto(dto);
             _dbContext.Update(source);
@@ -40,7 +40,7 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override async Task<List<ChangeSetModel>> Add(SourceDto dto)
+        public override async Task<List<ChangeSetModel>> AddAsync(SourceDto dto)
         {
             var source = SqlSource.FromDto(dto);
             _dbContext.Add(source);
@@ -52,9 +52,25 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        protected override SourceModel FromEntity(SqlSource entity)
+        public override async Task<SourceModel> GetAsync(string entityId)
         {
-            return SourceModel.FromEntity(entity);
+            var token = await _dbContext.Sources.FirstOrDefaultAsync(t => t.SourceId!.Equals(entityId));
+            if (token == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            return SourceModel.FromEntity(token);
+        }
+
+        public override async Task<List<SourceModel>> TakeAsync(int offset, int limit)
+        {
+            var entities = await _dbContext.Sources
+                 .Skip(offset)
+                 .Take(limit)
+                 .ToListAsync();
+
+            return entities.Select(SourceModel.FromEntity).ToList();
         }
     }
 }

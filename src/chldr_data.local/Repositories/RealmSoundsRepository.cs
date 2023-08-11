@@ -15,7 +15,7 @@ using System.Threading.Channels;
 
 namespace chldr_data.local.Repositories
 {
-    public class RealmSoundsRepository : RealmRepository<RealmSound, PronunciationModel, PronunciationDto>, ISoundsRepository
+    public class RealmSoundsRepository : RealmRepository<RealmSound, PronunciationModel, PronunciationDto>, IPronunciationsRepository
     {
         public RealmSoundsRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
         protected override RecordType RecordType => RecordType.Sound;

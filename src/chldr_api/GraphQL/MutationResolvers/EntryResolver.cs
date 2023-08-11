@@ -62,7 +62,7 @@ namespace chldr_api.GraphQL.MutationResolvers
             var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
             try
             {
-                var changeSets = await entriesRepository.Add(entryDto);
+                var changeSets = await entriesRepository.AddAsync(entryDto);
                 unitOfWork.Commit();
 
                 return new RequestResult()
@@ -99,7 +99,7 @@ namespace chldr_api.GraphQL.MutationResolvers
             var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
             try
             {
-                var changeSets = await entriesRepository.Update(entryDto);
+                var changeSets = await entriesRepository.UpdateAsync(entryDto);
                 unitOfWork.Commit();
 
                 return new RequestResult()
@@ -135,7 +135,7 @@ namespace chldr_api.GraphQL.MutationResolvers
             var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
             try
             {
-                var changeSets = await entriesRepository.Remove(entryId);
+                var changeSets = await entriesRepository.RemoveAsync(entryId);
                 unitOfWork.Commit();
 
                 return new RequestResult()

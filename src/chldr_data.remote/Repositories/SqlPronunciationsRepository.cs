@@ -11,14 +11,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.remote.Repositories
 {
-    public class SqlSoundsRepository : SqlRepository<SqlSound, PronunciationModel, PronunciationDto>, ISoundsRepository
+    public class SqlPronunciationsRepository : SqlRepository<SqlSound, PronunciationModel, PronunciationDto>, IPronunciationsRepository
     {
-        public SqlSoundsRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string userId) : base(dbConfig, fileService, userId) { }
+        public SqlPronunciationsRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string userId) : base(dbConfig, fileService, userId) { }
         protected override RecordType RecordType => RecordType.Sound;
-        protected override PronunciationModel FromEntity(SqlSound entity)
-        {
-            return PronunciationModel.FromEntity(entity);
-        }
         public override async Task<List<PronunciationModel>> GetRandomsAsync(int limit)
         {
             var randomizer = new Random();
@@ -30,10 +26,10 @@ namespace chldr_data.remote.Repositories
               .AsNoTracking()
               .ToListAsync();
 
-            var models = entities.Select(FromEntity).ToList();
+            var models = entities.Select(PronunciationModel.FromEntity).ToList();
             return models;
         }
-        public override async Task<List<ChangeSetModel>> Add(PronunciationDto soundDto)
+        public override async Task<List<ChangeSetModel>> AddAsync(PronunciationDto soundDto)
         {
             if (string.IsNullOrEmpty(soundDto.RecordingB64))
             {
@@ -45,7 +41,7 @@ namespace chldr_data.remote.Repositories
             var sound = SqlSound.FromDto(soundDto, _dbContext);
             var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
             sound.Rate = user.GetRateRange().Lower;
-            _dbContext.Sounds.Add(sound);
+            _dbContext.Pronunciations.Add(sound);
 
             var changeSet = CreateChangeSetEntity(Operation.Insert, soundDto.SoundId);
             _dbContext.ChangeSets.Add(changeSet);
@@ -54,7 +50,7 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override async Task<List<ChangeSetModel>> Update(PronunciationDto dto)
+        public override async Task<List<ChangeSetModel>> UpdateAsync(PronunciationDto dto)
         {
             // Find out what has been changed
             var existing = await GetAsync(dto.SoundId);
@@ -83,9 +79,9 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override async Task<List<ChangeSetModel>> Remove(string entityId)
+        public override async Task<List<ChangeSetModel>> RemoveAsync(string entityId)
         {
-            var sound = await _dbContext.Sounds.FindAsync(entityId);
+            var sound = await _dbContext.Pronunciations.FindAsync(entityId);
             if (sound == null)
             {
                 return new List<ChangeSetModel>();
@@ -99,12 +95,12 @@ namespace chldr_data.remote.Repositories
 
             _fileService.DeleteEntrySound(sound.FileName);
 
-            return await base.Remove(entityId);
+            return await base.RemoveAsync(entityId);
         }
 
         public async Task<ChangeSetModel> Promote(ISound soundInfo)
         {
-            var soundEntity = await _dbContext.Sounds.FindAsync(soundInfo.SoundId);
+            var soundEntity = await _dbContext.Pronunciations.FindAsync(soundInfo.SoundId);
             if (soundEntity == null)
             {
                 throw new NullReferenceException();
@@ -124,6 +120,27 @@ namespace chldr_data.remote.Repositories
             await _dbContext.SaveChangesAsync();
 
             return ChangeSetModel.FromEntity(changeSet);
+        }
+
+        public override async Task<PronunciationModel> GetAsync(string entityId)
+        {
+            var pronunciation = await _dbContext.Pronunciations.FirstOrDefaultAsync(t => t.SoundId!.Equals(entityId));
+            if (pronunciation == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            return PronunciationModel.FromEntity(pronunciation);
+        }
+
+        public override async Task<List<PronunciationModel>> TakeAsync(int offset, int limit)
+        {
+            var entities = await _dbContext.Pronunciations
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
+
+            return entities.Select(PronunciationModel.FromEntity).ToList();
         }
     }
 }

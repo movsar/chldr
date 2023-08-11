@@ -67,13 +67,13 @@ namespace chldr_api.GraphQL.MutationServices
                     LastName = lastName,
                     Patronymic = patronymic
                 };
-                await usersRepository.Add(user);
+                await usersRepository.AddAsync(user);
 
                 var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
                 var confirmationToken = JwtService.GenerateToken(user.UserId, "confirmation-token-secretconfirmation-token-secretconfirmation-token-secret", confirmationTokenExpiration);
 
                 // Save the tokens to the database
-                await tokensRepository.Add(new TokenDto
+                await tokensRepository.AddAsync(new TokenDto
                 {
                     UserId = user.UserId,
                     Type = (int)TokenType.Confirmation,
@@ -131,7 +131,7 @@ namespace chldr_api.GraphQL.MutationServices
                 ExpiresIn = tokenExpiresIn,
             };
 
-            await tokensRepository.Add(token);
+            await tokensRepository.AddAsync(token);
 
             // Send the password reset link to the user's email
             var resetPasswordLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdFrontHost}/set-new-password", new Dictionary<string, string?>(){
@@ -178,8 +178,8 @@ namespace chldr_api.GraphQL.MutationServices
             };
 
             // Save the tokens to the database
-            await tokensRepository.Add(accessTokenDto);
-            await tokensRepository.Add(refreshTokenDto);
+            await tokensRepository.AddAsync(accessTokenDto);
+            await tokensRepository.AddAsync(refreshTokenDto);
 
             unitOfWork.Commit();
 
@@ -325,10 +325,10 @@ namespace chldr_api.GraphQL.MutationServices
 
             // Hash the new password and update the user's password in the Users table
             userDto.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            await usersRepository.Update(userDto);
+            await usersRepository.UpdateAsync(userDto);
 
             // Remove the used password reset token from the Tokens table
-            await tokensRepository.Remove(tokenInDatabase.TokenId);
+            await tokensRepository.RemoveAsync(tokenInDatabase.TokenId);
 
             unitOfWork.Commit();
 

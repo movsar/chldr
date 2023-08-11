@@ -15,7 +15,7 @@ public class SqlContext : DbContext
     public virtual DbSet<SqlChangeSet> ChangeSets { get; set; }
     public virtual DbSet<SqlEntry> Entries { get; set; }
     public virtual DbSet<SqlQuery> Queries { get; set; }
-    public virtual DbSet<SqlSound> Sounds { get; set; }
+    public virtual DbSet<SqlSound> Pronunciations { get; set; }
     public virtual DbSet<SqlSource> Sources { get; set; }
     public virtual DbSet<SqlTranslation> Translations { get; set; }
     public virtual DbSet<SqlUser> Users { get; set; }

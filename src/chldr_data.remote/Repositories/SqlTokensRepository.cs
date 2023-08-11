@@ -30,10 +30,10 @@ namespace chldr_data.remote.Repositories
               .AsNoTracking()
               .ToListAsync();
 
-            var models = entities.Select(FromEntity).ToList();
+            var models = entities.Select(TokenModel.FromEntity).ToList();
             return models;
         }
-        public override async Task<List<ChangeSetModel>> Add(TokenDto dto)
+        public override async Task<List<ChangeSetModel>> AddAsync(TokenDto dto)
         {
             var token = SqlToken.FromDto(dto);
             _dbContext.Add(token);
@@ -79,7 +79,7 @@ namespace chldr_data.remote.Repositories
             return tokenInDatabase == null ? null : TokenModel.FromEntity(tokenInDatabase);
         }
 
-        public override async Task<List<ChangeSetModel>> Update(TokenDto dto)
+        public override async Task<List<ChangeSetModel>> UpdateAsync(TokenDto dto)
         {
             var existing = await GetAsync(dto.TokenId);
             var existingDto = TokenDto.FromModel(existing);
@@ -96,9 +96,25 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel>();
         }
 
-        protected override TokenModel FromEntity(SqlToken entity)
+        public override async Task<TokenModel> GetAsync(string entityId)
         {
-            return TokenModel.FromEntity(entity);
+            var token = await _dbContext.Tokens.FirstOrDefaultAsync(t => t.TokenId!.Equals(entityId));
+            if (token == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            return TokenModel.FromEntity(token);
+        }
+
+        public override async Task<List<TokenModel>> TakeAsync(int offset, int limit)
+        {
+            var entities = await _dbContext.Tokens
+              .Skip(offset)
+              .Take(limit)
+              .ToListAsync();
+
+            return entities.Select(TokenModel.FromEntity).ToList();
         }
     }
 }

@@ -17,10 +17,7 @@ namespace chldr_data.remote.Repositories
     {
         public SqlTranslationsRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string _userId) : base(dbConfig, fileService, _userId) { }
         protected override RecordType RecordType => RecordType.Translation;
-        protected override TranslationModel FromEntity(SqlTranslation translation)
-        {
-            return TranslationModel.FromEntity(translation);
-        }
+     
         public override async Task<List<TranslationModel>> GetRandomsAsync(int limit)
         {
             var randomizer = new Random();
@@ -32,10 +29,10 @@ namespace chldr_data.remote.Repositories
               .AsNoTracking()
               .ToListAsync();
 
-            var models = entities.Select(FromEntity).ToList();
+            var models = entities.Select(TranslationModel.FromEntity).ToList();
             return models;
         }
-        public override async Task<List<ChangeSetModel>> Add(TranslationDto dto)
+        public override async Task<List<ChangeSetModel>> AddAsync(TranslationDto dto)
         {
             // Set rate
             var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
@@ -52,7 +49,7 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override async Task<List<ChangeSetModel>> Update(TranslationDto dto)
+        public override async Task<List<ChangeSetModel>> UpdateAsync(TranslationDto dto)
         {
             // Find out what has been changed
             var existing = await GetAsync(dto.TranslationId);
@@ -83,7 +80,7 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override async Task<List<ChangeSetModel>> Remove(string entityId)
+        public override async Task<List<ChangeSetModel>> RemoveAsync(string entityId)
         {
             var existing = await GetAsync(entityId);
             var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
@@ -92,7 +89,7 @@ namespace chldr_data.remote.Repositories
                 throw new InvalidOperationException("Error:Insufficient_privileges");
             }
 
-            return await base.Remove(entityId);
+            return await base.RemoveAsync(entityId);
         }
         public async Task<ChangeSetModel> Promote(ITranslation translationInfo)
         {
@@ -116,6 +113,27 @@ namespace chldr_data.remote.Repositories
             await _dbContext.SaveChangesAsync();
 
             return ChangeSetModel.FromEntity(changeSet);
+        }
+
+        public override async Task<TranslationModel> GetAsync(string entityId)
+        {
+            var translation = await _dbContext.Translations.FirstOrDefaultAsync(t => t.TranslationId!.Equals(entityId));
+            if (translation == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            return TranslationModel.FromEntity(translation);
+        }
+
+        public override async Task<List<TranslationModel>> TakeAsync(int offset, int limit)
+        {
+            var entities = await _dbContext.Translations
+             .Skip(offset)
+             .Take(limit)
+             .ToListAsync();
+
+            return entities.Select(TranslationModel.FromEntity).ToList();
         }
     }
 }

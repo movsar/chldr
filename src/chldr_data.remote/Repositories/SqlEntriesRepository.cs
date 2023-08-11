@@ -102,7 +102,7 @@ namespace chldr_data.remote.Repositories
                 var matchingEntries = await FinderAsync(_dbContext.Entries, inputText);
 
                 // Apply the shortcut method to the matching entry IDs            
-                result = matchingEntries.Select(e => FromEntityWithSubEntries(e.EntryId)).ToList();
+                result = matchingEntries.Select(e => FromSqlEntry(e.EntryId)).ToList();
             }
             catch (Exception ex)
             {
@@ -122,30 +122,19 @@ namespace chldr_data.remote.Repositories
              * Unlike other methods, it will not return its parent, rather only the specified entry
              */
 
-            var entry = await _dbContext.Entries
-                .Include(e => e.Source)
-                .Include(e => e.User)
-                .Include(e => e.Translations)
-                .Include(e => e.Sounds)
-                .FirstOrDefaultAsync(e => e.EntryId.Equals(entityId));
-
-            if (entry == null)
-            {
-                throw new ArgumentException("There is no such word in the database");
-            }
-
-            return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
+            return FromSqlEntry(entityId);
         }
 
         public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
             var filteredEntries = await ApplyFiltrationFlags(_dbContext.Entries, filtrationFlags);
-            var entities = await filteredEntries
+            filteredEntries = filteredEntries
+                      .OrderBy(e => e.RawContents)
                       .Skip(offset)
-                      .Take(limit)
-                      .ToListAsync();
+                      .Take(limit);
 
-            return entities.Select(e => FromEntityWithSubEntries(e.EntryId)).ToList();
+            var results = await GroupEntriesAsync(filteredEntries);
+            return results.Select(e => FromSqlEntry(e.EntryId)).ToList();
         }
         public override async Task<List<EntryModel>> GetRandomsAsync(int limit)
         {
@@ -158,14 +147,12 @@ namespace chldr_data.remote.Repositories
             var randomlySelectedIds = ids.OrderBy(x => randomizer.Next(1, Constants.EntriesApproximateCoount)).Take(limit).ToList();
 
             // Fetch entries with the selected EntryIds
-            var entities = await _dbContext.Set<SqlEntry>()
+            var filteredEntries = _dbContext.Entries
                 .Where(entry => randomlySelectedIds.Contains(entry.EntryId))
-                .AsNoTracking()
-                .ToListAsync();
+                .AsNoTracking();
 
-            // Apply the projection (mapping to FromEntityShortcut) on the in-memory data
-            var models = entities.Select(e => FromEntityWithSubEntries(e.EntryId)).ToList();
-            return models;
+            var results = await GroupEntriesAsync(filteredEntries);
+            return results.Select(e => FromSqlEntry(e.EntryId)).ToList();
         }
 
         public async Task<List<EntryModel>> GetLatestEntriesAsync()
@@ -173,11 +160,11 @@ namespace chldr_data.remote.Repositories
             var count = 50;
 
             var filteredEntries = _dbContext.Entries
-                .Take(count)
-                .OrderByDescending(e => e.CreatedAt);
+                .OrderByDescending(e => e.CreatedAt)
+                .Take(count);
 
-            List<SqlEntry> resultingEntries = await GroupEntriesAsync(filteredEntries);
-            return resultingEntries.Select(e => FromEntityWithSubEntries(e.EntryId)).ToList();
+            var results = await GroupEntriesAsync(filteredEntries);
+            return results.Select(e => FromSqlEntry(e.EntryId)).ToList();
         }
 
         public async Task<List<EntryModel>> GetEntriesOnModerationAsync()
@@ -185,24 +172,31 @@ namespace chldr_data.remote.Repositories
             var count = 50;
 
             var filteredEntries = _dbContext.Entries
-                .Take(count)
-                .Where(entry => entry.Rate < UserModel.MemberRateRange.Lower);
+                .Where(entry => entry.Rate < UserModel.MemberRateRange.Lower)
+                .Take(count);
 
-            var resultingEntries = await GroupEntriesAsync(filteredEntries);
-
-
-
-            return resultingEntries.Select(e => FromEntityWithSubEntries(e.EntryId)).ToList();
+            var results = await GroupEntriesAsync(filteredEntries);
+            return results.Select(e => FromSqlEntry(e.EntryId)).ToList();
         }
         private async Task<List<EntryModel>> GetChildEntriesAsync(string entryId)
         {
             var entries = _dbContext.Entries.Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entryId));
-            return await entries.Select(e => EntryModel.FromEntity(e, e.Source, e.Translations, e.Sounds)).ToListAsync();
+            return await entries.Select(e => FromSqlEntry(e.EntryId)).ToListAsync();
+        }
+        public override async Task<List<EntryModel>> TakeAsync(int offset, int limit)
+        {
+            var entries = await _dbContext.Entries
+                .OrderBy(e => e.RawContents)
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
+
+            return entries.Select(e => FromSqlEntry(e.EntryId)).ToList();
         }
         #endregion
 
         #region Update methods
-        public override async Task<List<ChangeSetModel>> Add(EntryDto newEntryDto)
+        public override async Task<List<ChangeSetModel>> AddAsync(EntryDto newEntryDto)
         {
             if (newEntryDto == null || string.IsNullOrEmpty(newEntryDto.EntryId))
             {
@@ -261,7 +255,7 @@ namespace chldr_data.remote.Repositories
                 throw _exceptionHandler.Error(ex);
             }
         }
-        public override async Task<List<ChangeSetModel>> Update(EntryDto updatedEntryDto)
+        public override async Task<List<ChangeSetModel>> UpdateAsync(EntryDto updatedEntryDto)
         {
             var resultingChangeSets = new List<ChangeSetModel>();
 
@@ -304,7 +298,7 @@ namespace chldr_data.remote.Repositories
                 throw _exceptionHandler.Error(ex);
             }
         }
-        public override async Task<List<ChangeSetModel>> Remove(string entryId)
+        public override async Task<List<ChangeSetModel>> RemoveAsync(string entryId)
         {
             var changeSets = new List<ChangeSetModel>();
 
@@ -339,7 +333,7 @@ namespace chldr_data.remote.Repositories
                 // Process removed translations
                 foreach (var translationId in translationIds)
                 {
-                    var translationChangeSet = await _translations.Remove(translationId);
+                    var translationChangeSet = await _translations.RemoveAsync(translationId);
                     changeSets.AddRange(translationChangeSet);
                 }
 
@@ -347,12 +341,12 @@ namespace chldr_data.remote.Repositories
                 foreach (var soundId in soundIds)
                 {
 
-                    var translationChangeSet = await _sounds.Remove(soundId);
+                    var translationChangeSet = await _sounds.RemoveAsync(soundId);
                     changeSets.AddRange(translationChangeSet);
                 }
 
                 // Process removed entry
-                var changeSet = await base.Remove(entryId);
+                var changeSet = await base.RemoveAsync(entryId);
                 changeSets.AddRange(changeSet);
 
                 return changeSets;
@@ -377,21 +371,21 @@ namespace chldr_data.remote.Repositories
             // Process added sounds
             foreach (var sound in added)
             {
-                var changeSet = await _sounds.Add(sound);
+                var changeSet = await _sounds.AddAsync(sound);
                 changeSets.AddRange(changeSet);
             }
 
             // Process removed sounds
             foreach (var sound in deleted)
             {
-                var changeSet = await _sounds.Remove(sound.SoundId);
+                var changeSet = await _sounds.RemoveAsync(sound.SoundId);
                 changeSets.AddRange(changeSet);
             }
 
             // Process updated sounds
             foreach (var sound in existingAndUpdated)
             {
-                var changeSet = await _sounds.Update(sound);
+                var changeSet = await _sounds.UpdateAsync(sound);
                 changeSets.AddRange(changeSet);
             }
 
@@ -411,21 +405,21 @@ namespace chldr_data.remote.Repositories
             // Process added translations
             foreach (var translation in added)
             {
-                var changeSet = await _translations.Add(translation);
+                var changeSet = await _translations.AddAsync(translation);
                 changeSets.AddRange(changeSet);
             }
 
             // Process removed translations
             foreach (var translation in deleted)
             {
-                var changeSet = await _translations.Remove(translation.TranslationId);
+                var changeSet = await _translations.RemoveAsync(translation.TranslationId);
                 changeSets.AddRange(changeSet);
             }
 
             // Process updated translations
             foreach (var translation in existingAndUpdated)
             {
-                var changeSet = await _translations.Update(translation);
+                var changeSet = await _translations.UpdateAsync(translation);
                 changeSets.AddRange(changeSet);
             }
             return changeSets;
@@ -474,23 +468,7 @@ namespace chldr_data.remote.Repositories
             return count;
         }
 
-        protected EntryModel FromEntity(string entryId)
-        {
-            /*
-             * Breaks down the related objects and passes them to the EntryModel's FromEntity, this is done
-             * to support working with data from different databases, like MySQL and Realm             
-             */
-
-            var entry = _dbContext.Entries
-                 .Include(e => e.Source)
-                 .Include(e => e.User)
-                 .Include(e => e.Translations)
-                 .Include(e => e.Sounds)
-                 .First(e => e.EntryId.Equals(entryId));
-
-            return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
-        }
-        protected EntryModel FromEntityWithSubEntries(string entryId)
+        private EntryModel FromSqlEntry(string entryId)
         {
             /*
              * This retrieves the entry with all its dependencies, because of the EF Core, we need to specify
@@ -514,6 +492,11 @@ namespace chldr_data.remote.Repositories
              .Include(e => e.Sounds)
              .ToImmutableList();
 
+            if (!subEntries.Any())
+            {
+                return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
+            }
+
             var subSources = subEntries.ToDictionary(e => e.EntryId, e => e.Source as ISourceEntity);
             var subSounds = subEntries.ToDictionary(e => e.EntryId, e => e.Sounds.ToList().Cast<ISoundEntity>());
             var subEntryTranslations = subEntries.ToDictionary(e => e.EntryId, e => e.Translations.ToList().Cast<ITranslationEntity>());
@@ -530,15 +513,9 @@ namespace chldr_data.remote.Repositories
                 );
         }
 
-        protected override EntryModel FromEntity(SqlEntry entity)
-        {
-            // TODO: Change the signature to accept Id instead, everywhere
-            throw new NotImplementedException();
-        }
-
         private readonly ExceptionHandler _exceptionHandler;
         private readonly SqlTranslationsRepository _translations;
-        private readonly SqlSoundsRepository _sounds;
+        private readonly SqlPronunciationsRepository _sounds;
         protected override RecordType RecordType => RecordType.Entry;
 
         public SqlEntriesRepository(
@@ -546,12 +523,12 @@ namespace chldr_data.remote.Repositories
             FileService fileService,
             ExceptionHandler exceptionHandler,
             ITranslationsRepository translationsRepository,
-            ISoundsRepository soundsRepository,
+            IPronunciationsRepository soundsRepository,
             string userId) : base(dbConfig, fileService, userId)
         {
             _exceptionHandler = exceptionHandler;
             _translations = (SqlTranslationsRepository)translationsRepository;
-            _sounds = (SqlSoundsRepository)soundsRepository;
+            _sounds = (SqlPronunciationsRepository)soundsRepository;
         }
     }
 }

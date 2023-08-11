@@ -33,9 +33,10 @@ namespace chldr_data.remote.Repositories
         protected SqlContext _dbContext { get; set; }
         protected readonly FileService _fileService;
         protected readonly string _userId;
-        public abstract Task<List<ChangeSetModel>> Add(TDto dto);
-        public abstract Task<List<ChangeSetModel>> Update(TDto dto);
-        public virtual async Task<List<ChangeSetModel>> Remove(string entityId)
+        public abstract Task<TModel> GetAsync(string entityId);
+        public abstract Task<List<ChangeSetModel>> AddAsync(TDto dto);
+        public abstract Task<List<ChangeSetModel>> UpdateAsync(TDto dto);
+        public virtual async Task<List<ChangeSetModel>> RemoveAsync(string entityId)
         {
             var entity = _dbContext.Set<TEntity>().Find(entityId);
             if (entity == null)
@@ -59,19 +60,6 @@ namespace chldr_data.remote.Repositories
         }
 
         protected abstract RecordType RecordType { get; }
-        protected abstract TModel FromEntity(TEntity entity);
-
-        public virtual async Task<TModel> GetAsync(string entityId)
-        {
-            var entry = await _dbContext.FindAsync<TEntity>(entityId);
-            if (entry == null)
-            {
-                throw new InvalidArgumentsException();
-            }
-
-            return FromEntity(entry);
-        }
-
         protected SqlChangeSet CreateChangeSetEntity(Operation operation, string recordId, List<Change>? changes = null)
         {
             var changeSet = new SqlChangeSet()
@@ -114,16 +102,7 @@ namespace chldr_data.remote.Repositories
 
             _dbContext.SaveChanges();
         }
-        public virtual async Task<List<TModel>> TakeAsync(int offset, int limit)
-        {
-            var entities = await _dbContext.Set<TEntity>()
-                .Skip(offset)
-                .Take(limit)
-
-                .ToListAsync();
-
-            return entities.Select(FromEntity).ToList();
-        }
+        public abstract Task<List<TModel>> TakeAsync(int offset, int limit);
         public abstract Task<List<TModel>> GetRandomsAsync(int limit);
 
         #region Bulk actions
@@ -132,7 +111,7 @@ namespace chldr_data.remote.Repositories
             var result = new List<ChangeSetModel>();
             foreach (var dto in added)
             {
-                result.AddRange(await Add(dto));
+                result.AddRange(await AddAsync(dto));
             }
 
             return result;
@@ -142,7 +121,7 @@ namespace chldr_data.remote.Repositories
             var result = new List<ChangeSetModel>();
             foreach (var dto in updated)
             {
-                result.AddRange(await Update(dto));
+                result.AddRange(await UpdateAsync(dto));
 
             }
 
@@ -153,7 +132,7 @@ namespace chldr_data.remote.Repositories
             var result = new List<ChangeSetModel>();
             foreach (var id in removed)
             {
-                result.AddRange(await Remove(id));
+                result.AddRange(await RemoveAsync(id));
             }
 
             return result;

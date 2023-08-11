@@ -31,7 +31,7 @@ namespace chldr_data.remote.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public override async Task<List<ChangeSetModel>> Add(UserDto dto)
+        public override async Task<List<ChangeSetModel>> AddAsync(UserDto dto)
         {
             dto.Rate = 1;
 
@@ -45,7 +45,7 @@ namespace chldr_data.remote.Repositories
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override async Task<List<ChangeSetModel>> Update(UserDto dto)
+        public override async Task<List<ChangeSetModel>> UpdateAsync(UserDto dto)
         {
             var existingEntity = await GetAsync(dto.UserId);
             var existingDto = UserDto.FromModel(existingEntity);
@@ -64,11 +64,6 @@ namespace chldr_data.remote.Repositories
 
             _dbContext.SaveChanges();
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
-        }
-
-        protected override UserModel FromEntity(SqlUser entity)
-        {
-            return UserModel.FromEntity(entity);
         }
 
         public async Task<UserModel?> FindByEmail(string email)
@@ -99,7 +94,7 @@ namespace chldr_data.remote.Repositories
               .AsNoTracking()
               .ToListAsync();
 
-            var models = entities.Select(FromEntity).ToList();
+            var models = entities.Select(UserModel.FromEntity).ToList();
             return models;
         }
 
@@ -112,6 +107,22 @@ namespace chldr_data.remote.Repositories
 
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email!.ToLower().Equals(email.ToLower()));
             return UserModel.FromEntity(user);
+        }
+
+        public override async Task<UserModel> GetAsync(string entityId)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId!.Equals(entityId));
+            return UserModel.FromEntity(user);
+        }
+
+        public override async Task<List<UserModel>> TakeAsync(int offset, int limit)
+        {
+            var entities = await _dbContext.Users
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
+
+            return entities.Select(UserModel.FromEntity).ToList();
         }
     }
 }
