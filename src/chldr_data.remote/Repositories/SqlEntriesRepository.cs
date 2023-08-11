@@ -102,7 +102,7 @@ namespace chldr_data.remote.Repositories
                 var matchingEntries = await FinderAsync(_dbContext.Entries, inputText);
 
                 // Apply the shortcut method to the matching entry IDs            
-                result = matchingEntries.Select(e => FromEntityWithSubEntries(e)).ToList();
+                result = matchingEntries.Select(e => FromEntityWithSubEntries(e.EntryId)).ToList();
             }
             catch (Exception ex)
             {
@@ -117,6 +117,11 @@ namespace chldr_data.remote.Repositories
         #region Get and Take
         public override async Task<EntryModel> GetAsync(string entityId)
         {
+            /*
+             * This method returns exact entry that was requested, even if that's a subentry without a translation
+             * Unlike other methods, it will not return its parent, rather only the specified entry
+             */
+
             var entry = await _dbContext.Entries
                 .Include(e => e.Source)
                 .Include(e => e.User)
@@ -129,7 +134,7 @@ namespace chldr_data.remote.Repositories
                 throw new ArgumentException("There is no such word in the database");
             }
 
-            return FromEntityWithSubEntries(entry);
+            return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
         }
 
         public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
@@ -140,7 +145,7 @@ namespace chldr_data.remote.Repositories
                       .Take(limit)
                       .ToListAsync();
 
-            return entities.Select(FromEntityWithSubEntries).ToList();
+            return entities.Select(e => FromEntityWithSubEntries(e.EntryId)).ToList();
         }
         public override async Task<List<EntryModel>> GetRandomsAsync(int limit)
         {
@@ -159,7 +164,7 @@ namespace chldr_data.remote.Repositories
                 .ToListAsync();
 
             // Apply the projection (mapping to FromEntityShortcut) on the in-memory data
-            var models = entities.Select(FromEntityWithSubEntries).ToList();
+            var models = entities.Select(e => FromEntityWithSubEntries(e.EntryId)).ToList();
             return models;
         }
 
@@ -172,7 +177,7 @@ namespace chldr_data.remote.Repositories
                 .OrderByDescending(e => e.CreatedAt);
 
             List<SqlEntry> resultingEntries = await GroupEntriesAsync(filteredEntries);
-            return resultingEntries.Select(FromEntityWithSubEntries).ToList();
+            return resultingEntries.Select(e => FromEntityWithSubEntries(e.EntryId)).ToList();
         }
 
         public async Task<List<EntryModel>> GetEntriesOnModerationAsync()
@@ -187,7 +192,7 @@ namespace chldr_data.remote.Repositories
 
 
 
-            return resultingEntries.Select(FromEntityWithSubEntries).ToList();
+            return resultingEntries.Select(e => FromEntityWithSubEntries(e.EntryId)).ToList();
         }
         private async Task<List<EntryModel>> GetChildEntriesAsync(string entryId)
         {
@@ -469,23 +474,23 @@ namespace chldr_data.remote.Repositories
             return count;
         }
 
-        protected override EntryModel FromEntity(SqlEntry entry)
+        protected EntryModel FromEntity(string entryId)
         {
             /*
              * Breaks down the related objects and passes them to the EntryModel's FromEntity, this is done
              * to support working with data from different databases, like MySQL and Realm             
              */
 
-            entry = _dbContext.Entries
-                .Include(e => e.Source)
-                .Include(e => e.User)
-                .Include(e => e.Translations)
-                .Include(e => e.Sounds)
-                .First(e => e.EntryId.Equals(entry.EntryId));
+            var entry = _dbContext.Entries
+                 .Include(e => e.Source)
+                 .Include(e => e.User)
+                 .Include(e => e.Translations)
+                 .Include(e => e.Sounds)
+                 .First(e => e.EntryId.Equals(entryId));
 
             return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
         }
-        protected EntryModel FromEntityWithSubEntries(SqlEntry entry)
+        protected EntryModel FromEntityWithSubEntries(string entryId)
         {
             /*
              * This retrieves the entry with all its dependencies, because of the EF Core, we need to specify
@@ -494,12 +499,12 @@ namespace chldr_data.remote.Repositories
              * relationships and passes all the related objects to EntryMode.FromEntity method
              */
 
-            entry = _dbContext.Entries
+            var entry = _dbContext.Entries
                 .Include(e => e.Source)
                 .Include(e => e.User)
                 .Include(e => e.Translations)
                 .Include(e => e.Sounds)
-                .First(e => e.EntryId.Equals(entry.EntryId));
+                .First(e => e.EntryId.Equals(entryId));
 
             var subEntries = _dbContext.Entries
              .Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entry.EntryId))
@@ -523,6 +528,12 @@ namespace chldr_data.remote.Repositories
                     subEntryTranslations,
                     subSounds
                 );
+        }
+
+        protected override EntryModel FromEntity(SqlEntry entity)
+        {
+            // TODO: Change the signature to accept Id instead, everywhere
+            throw new NotImplementedException();
         }
 
         private readonly ExceptionHandler _exceptionHandler;
