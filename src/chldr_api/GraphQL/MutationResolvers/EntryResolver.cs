@@ -1,5 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.remote.Repositories;
@@ -23,39 +24,55 @@ namespace chldr_api.GraphQL.MutationResolvers
             _dataProvider = dataProvider;
             _exceptionHandler = exceptionHandler;
         }
+        private async Task CheckParentEntryId(EntryDto entryDto)
+        {
+            // If Parent is specified, restrict to one level deep, parent child relationship, no hierarchies
+            if (entryDto.ParentEntryId != null)
+            {
+                var unitOfWork = _dataProvider.CreateUnitOfWork();
+                var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
 
-        //private async Task<bool> ValidateParent(EntryDto entryDto)
-        //{
-        //    // If Parent is specified, restrict to one level deep, parent child relationship, no hierarchies
-        //    if (entryDto.ParentEntryId != null)
-        //    {
-        //        var parent = await GetAsync(entryDto.ParentEntryId);
-        //        if (!string.IsNullOrEmpty(parent.ParentEntryId))
-        //        {
-        //            return false;
-        //        }
+                var parent = await entriesRepository.GetAsync(entryDto.ParentEntryId);
+                if (!string.IsNullOrEmpty(parent.ParentEntryId))
+                {
+                    throw new InvalidArgumentsException();
+                }
 
-        //        var children = await GetChildEntriesAsync(entryDto.EntryId);
-        //        if (children.Count() > 0)
-        //        {
-        //            return false;
-        //        }
-        //    }
+                var children = await entriesRepository.GetChildEntriesAsync(entryDto.EntryId);
+                if (children.Count() > 0)
+                {
+                    throw new InvalidArgumentsException();
+                }
+            }
+        }
+        private async Task CheckEntryDto(EntryDto entryDto)
+        {
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
 
-        //    return true;
-        //}
+            if (entryDto == null || string.IsNullOrEmpty(entryDto.EntryId))
+            {
+                throw new NullReferenceException();
+            }
 
+            await CheckParentEntryId(entryDto);
+        }
+        private async Task CheckLoggedInUser(string userId)
+        {
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
+
+            var user = await usersRepository.GetAsync(userId);
+            if (user.Status != UserStatus.Active || user.Rate < 1)
+            {
+                throw new UnauthorizedException();
+            }
+        }
+        #region Add
         public async Task<RequestResult> AddEntryAsync(string userId, EntryDto entryDto)
         {
             // UserId instead of object used for security reasons
-
-            // TODO: Check permissions
-            // TODO: Validate input
-
-            //if (!(await ValidateParent(newEntryDto)))
-            //{
-            //    throw new InvalidArgumentsException("Error:Invalid_parent_entry");
-            //}
+            await CheckLoggedInUser(userId);
+            await CheckEntryDto(entryDto);
 
             using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
@@ -86,13 +103,21 @@ namespace chldr_api.GraphQL.MutationResolvers
             }
             return new RequestResult();
         }
+        #endregion
+
+        #region Update
+        private async Task CheckUpdatePermissions(EntryDto entryDto, string userId)
+        {
+
+        }
 
         public async Task<RequestResult> UpdateEntry(string userId, EntryDto entryDto)
         {
             // UserId instead of object used for security reasons
 
-            // TODO: Check permissions
-            // TODO: Validate input
+            await CheckLoggedInUser(userId);
+            await CheckEntryDto(entryDto);
+            await CheckUpdatePermissions(entryDto, userId);
 
             using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
@@ -123,6 +148,7 @@ namespace chldr_api.GraphQL.MutationResolvers
             return new RequestResult();
         }
 
+        #endregion
         public async Task<RequestResult> RemoveEntry(string userId, string entryId)
         {
             // UserId instead of object used for security reasons

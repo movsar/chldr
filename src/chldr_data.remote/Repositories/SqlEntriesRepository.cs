@@ -178,7 +178,7 @@ namespace chldr_data.remote.Repositories
             var results = await GroupEntriesAsync(filteredEntries);
             return results.Select(e => FromSqlEntry(e.EntryId)).ToList();
         }
-        private async Task<List<EntryModel>> GetChildEntriesAsync(string entryId)
+        public async Task<List<EntryModel>> GetChildEntriesAsync(string entryId)
         {
             var entries = _dbContext.Entries.Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entryId));
             return await entries.Select(e => FromSqlEntry(e.EntryId)).ToListAsync();
@@ -198,17 +198,8 @@ namespace chldr_data.remote.Repositories
         #region Update methods
         public override async Task<List<ChangeSetModel>> AddAsync(EntryDto newEntryDto)
         {
-            if (newEntryDto == null || string.IsNullOrEmpty(newEntryDto.EntryId))
-            {
-                throw new NullReferenceException();
-            }
-
             var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId));
-            if (user.Status != UserStatus.Active)
-            {
-                throw new UnauthorizedException();
-            }
-
+         
             // Set rate
             newEntryDto.Rate = user.GetRateRange().Lower;
             foreach (var translationDto in newEntryDto.TranslationsDtos)
