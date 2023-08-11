@@ -125,6 +125,7 @@ namespace chldr_data.remote.Repositories
             return FromSqlEntry(entityId);
         }
 
+
         public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
             var filteredEntries = await ApplyFiltrationFlags(_dbContext.Entries, filtrationFlags);
