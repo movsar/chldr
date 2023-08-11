@@ -1,5 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
+using chldr_data.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace chldr_ui.ViewModels
@@ -26,7 +27,7 @@ namespace chldr_ui.ViewModels
                 return;
             }
 
-            Entries = (await ContentStore.FindAsync(inputText)).ToList();
+            Entries = (await ContentStore.EntryService.FindAsync(inputText, new FiltrationFlags())).ToList();
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

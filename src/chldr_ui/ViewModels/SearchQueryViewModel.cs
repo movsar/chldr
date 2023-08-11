@@ -51,7 +51,7 @@ namespace chldr_ui.ViewModels
                 return;
             }
 
-            await ContentStore.StartSearch(inputText, FiltrationFlags);
+            await ContentStore.EntryService.FindDeferredAsync(inputText, FiltrationFlags);
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

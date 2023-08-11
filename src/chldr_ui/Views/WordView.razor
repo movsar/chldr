@@ -1,4 +1,5 @@
-﻿@inherits EntryViewModel;
+﻿@using chldr_data.Helpers;
+@inherits EntryViewModel;
 
 @if (Entry != null)
 {
@@ -26,7 +27,7 @@
 
             @if (Entry?.Subtype > 0)
             {
-                var partOfSpeech = (WordType)Entry.Subtype;
+               @* var partOfSpeech = (WordType)Entry.Subtype;
                 var partOfSpeechLocalizedTitle = Localizer[$"Word:{partOfSpeech}"].ToString();
 
                 <p class="small"><i>@partOfSpeechLocalizedTitle</i></p>
@@ -35,7 +36,7 @@
                 {
                     switch ((WordType)Entry.Subtype)
                     {
-                        case WordType.Noun:
+                        case WordType.Noun:                         
                             break;
 
                         case WordType.Verb:
@@ -45,7 +46,7 @@
                             Console.WriteLine("no handler for the details of this type");
                             break;
                     }
-                }
+                }*@
             }
 
             @if (Entry.SubEntries?.Count() > 0)

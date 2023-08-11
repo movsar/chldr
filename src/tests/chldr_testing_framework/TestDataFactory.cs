@@ -151,15 +151,10 @@ namespace chldr_test_utils
             var dataProvider = CreateSqlDataProvider();
             return new EntryService(dataProvider, _requestService, _exceptionHandler);
         }
-        public static TranslationService CreateTranslationService()
+        public static SourceService CreateSourceService()
         {
             var dataProvider = CreateSqlDataProvider();
-            return new TranslationService(dataProvider, _requestService, _exceptionHandler);
-        }
-        public static PronunciationService CreatePronunciationService()
-        {
-            var dataProvider = CreateSqlDataProvider();
-            return new PronunciationService(dataProvider, _requestService, _exceptionHandler);
+            return new SourceService(dataProvider, _requestService, _exceptionHandler);
         }
 
         public static ContentStore CreateContentStore()
@@ -167,9 +162,8 @@ namespace chldr_test_utils
             return new ContentStore(_exceptionHandler,
                 CreateSqlDataProvider(),
                 _environmentService,
+                CreateSourceService(),
                 CreateEntryService(),
-                CreateTranslationService(),
-                CreatePronunciationService(),
                 CreateUserService());
         }
 

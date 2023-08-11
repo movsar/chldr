@@ -23,8 +23,6 @@ namespace chldr_data.remote.Repositories
         private readonly SqlTranslationsRepository _translations;
         private readonly SqlSoundsRepository _sounds;
 
-        public event Action<SearchResultModel>? GotNewSearchResult;
-
         public SqlEntriesRepository(
             DbContextOptions<SqlContext> dbConfig,
             FileService fileService,
@@ -184,18 +182,6 @@ namespace chldr_data.remote.Repositories
             return result;
         }
 
-        public async Task FindDeferredAsync(string inputText, FiltrationFlags filtrationFlags)
-        {
-            var result = new List<EntryModel>();
-
-            await Task.Run(async () =>
-            {
-                result = await FindAsync(inputText, filtrationFlags);
-            });
-
-            var args = new SearchResultModel(inputText, result, SearchResultModel.Mode.Full);
-            GotNewSearchResult?.Invoke(args);
-        }
         public List<EntryModel> GetLatestEntries()
         {
             var count = 50;

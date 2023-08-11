@@ -28,12 +28,12 @@ namespace chldr_shared.Stores
         public readonly List<LanguageModel> Languages = LanguageModel.GetAvailableLanguages();
 
         public EntryService EntryService;
-        public PronunciationService PronunciationService;
         public UserService UserService;
+        public SourceService SourceService;
         #endregion
 
         #region EventHandlers
-        private void DataAccess_GotNewSearchResults(SearchResultModel searchResult)
+        private void EntryService_OnNewSearchResults(SearchResultModel searchResult)
         {
             if (CachedSearchResult.SearchQuery == searchResult?.SearchQuery)
             {
@@ -57,8 +57,9 @@ namespace chldr_shared.Stores
             ExceptionHandler exceptionHandler,
             IDataProvider dataProvider,
             EnvironmentService environmentService,
+
+            SourceService sourceService,
             EntryService entryService,
-            PronunciationService pronunciationService,
             UserService userService
             )
         {
@@ -67,18 +68,18 @@ namespace chldr_shared.Stores
             _environmentService = environmentService;
 
             var unitOfWork = _dataProvider.CreateUnitOfWork(null);
-            unitOfWork.Entries.GotNewSearchResult += DataAccess_GotNewSearchResults;
 
             _dataProvider.DatabaseInitialized += DataAccess_DatasourceInitialized;
             _dataProvider.Initialize();
 
             EntryService = entryService;
-            PronunciationService = pronunciationService;
+            SourceService = sourceService;
             UserService = userService;
 
             EntryService.EntryUpdated += OnEntryUpdated;
             EntryService.EntryInserted += OnEntryInserted;
             EntryService.EntryRemoved += OnEntryRemoved;
+            EntryService.NewDeferredSearchResult += EntryService_OnNewSearchResults;
         }
 
         private async Task OnEntryUpdated(EntryModel entry)
@@ -97,37 +98,6 @@ namespace chldr_shared.Stores
         private async Task OnEntryInserted(EntryModel entry)
         {
             LoadLatestEntries();
-        }
-
-        public async Task<IEnumerable<EntryModel>> FindAsync(string inputText, int limit = 10)
-        {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
-            return (await unitOfWork.Entries.FindAsync(inputText, new FiltrationFlags())).ToList();
-        }
-
-        public async Task StartSearch(string inputText, FiltrationFlags filterationFlags)
-        {
-            var query = inputText.Replace("1", "Ӏ").ToLower();
-
-            var unitOfWork = _dataProvider.CreateUnitOfWork(null);
-
-            if (_environmentService.CurrentPlatform == Enums.Platforms.Web)
-            {
-                var results = await unitOfWork.Entries.FindAsync(query, filterationFlags);
-
-                CachedSearchResult.Entries.Clear();
-
-                foreach (var entry in results)
-                {
-                    CachedSearchResult.Entries.Add(entry);
-                }
-
-                CachedResultsChanged?.Invoke();
-            }
-            else
-            {
-                await unitOfWork.Entries.FindDeferredAsync(query, filterationFlags);
-            }
         }
 
         public async Task LoadRandomEntries()
@@ -173,20 +143,12 @@ namespace chldr_shared.Stores
 
             CachedResultsChanged?.Invoke();
         }
-        public async Task<EntryModel> GetByEntryId(string entryId)
-        {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(null);
-            return await unitOfWork.Entries.GetAsync(entryId);
-        }
+      
         public void DataAccess_DatasourceInitialized()
         {
             ContentInitialized?.Invoke();
         }
-
-        public async Task Search(string query)
-        {
-            await StartSearch(query, new FiltrationFlags());
-        }
+             
         public EntryModel GetCachedEntryById(string phraseId)
         {
             // Get current Phrase from cached results

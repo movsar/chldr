@@ -13,7 +13,7 @@ namespace chldr_data.Models
     public class FiltrationFlags
     {
         public bool OnModeration { get; set; } = false;
-        public bool GroupWithSubEntries { get; set; } = false;
+        public bool GroupWithSubEntries { get; set; } = true;
         public string? StartsWith { get; set; } = null;
         public EntryType[] EntryTypes { get; set; } = new EntryType[] {
             EntryType.Text,

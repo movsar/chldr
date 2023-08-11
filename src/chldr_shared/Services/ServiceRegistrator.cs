@@ -39,10 +39,11 @@ namespace chldr_utils.Services
 
             // Shared
             services.AddScoped<ContentStore>();
+
             services.AddScoped<EntryService>();
-            services.AddScoped<TranslationService>();
-            services.AddScoped<PronunciationService>();
+            services.AddScoped<SourceService>();
             services.AddScoped<UserStore>();
+
             services.AddScoped<JsInteropService>();
             services.AddScoped<LocalStorageService>();
 

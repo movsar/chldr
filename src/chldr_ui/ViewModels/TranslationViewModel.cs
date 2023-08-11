@@ -1,5 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
+using chldr_data.Models;
 using chldr_shared.Stores;
 using Microsoft.AspNetCore.Components;
 using System.Text.RegularExpressions;
@@ -33,7 +34,7 @@ namespace chldr_ui.ViewModels
 
         #endregion
 
-        public void DoSearch()
+        public async Task DoSearch()
         {
             var translationText = Translation?.Content.ToLower();
 
@@ -53,7 +54,7 @@ namespace chldr_ui.ViewModels
 
                 if (match.Success)
                 {
-                    ContentStore.Search(match.ToString());
+                    await ContentStore.EntryService.FindAsync(match.ToString(), new FiltrationFlags());
                     return;
                 }
             }

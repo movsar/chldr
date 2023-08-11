@@ -12,15 +12,15 @@ using chldr_data.Repositories;
 using chldr_data.Responses;
 using chldr_data.Services;
 using chldr_utils;
-using Realms.Sync;
 
 namespace chldr_shared.Services
 {
     public class EntryService : IDboService<EntryModel, EntryDto>
     {
-        public event Func<EntryModel, Task> EntryUpdated;
-        public event Func<EntryModel, Task> EntryInserted;
-        public event Func<EntryModel, Task> EntryRemoved;
+        internal event Func<EntryModel, Task> EntryUpdated;
+        internal event Func<EntryModel, Task> EntryInserted;
+        internal event Func<EntryModel, Task> EntryRemoved;
+        internal event Action<SearchResultModel>? NewDeferredSearchResult;
 
         private readonly IDataProvider _dataProvider;
         private readonly RequestService _requestService;
@@ -33,11 +33,34 @@ namespace chldr_shared.Services
             _exceptionHandler = exceptionHandler;
         }
 
+        #region Get
+        public async Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags filtrationFlags)
+        {
+            var query = inputText.Replace("1", "Ӏ").ToLower();
+
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            return (await unitOfWork.Entries.FindAsync(query, filtrationFlags)).ToList();
+        }
+
+        public async Task FindDeferredAsync(string inputText, FiltrationFlags filtrationFlags)
+        {
+            var result = new List<EntryModel>();
+
+            await Task.Run(async () =>
+            {
+                result = await FindAsync(inputText, filtrationFlags);
+            });
+
+            var args = new SearchResultModel(inputText, result, SearchResultModel.Mode.Full);
+            NewDeferredSearchResult?.Invoke(args);
+        }
+
         public async Task<EntryModel> GetAsync(string entryId)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork();
             return await unitOfWork.Entries.GetAsync(entryId);
         }
+        #endregion
 
         #region Add
         private async Task AddToLocalDatabase(EntryDto newEntryDto, string userId, IEnumerable<ChangeSetDto> changeSets)
@@ -224,6 +247,12 @@ namespace chldr_shared.Services
             // TODO: Use requestService
             var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.UserId);
             await unitOfWork.Translations.Promote(translationInfo);
+        }
+
+        public async Task PromotePronunciationAsync(ISound soundInfo, UserModel? currentUser)
+        {
+            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.UserId);
+            await unitOfWork.Sounds.Promote(soundInfo);
         }
     }
 }

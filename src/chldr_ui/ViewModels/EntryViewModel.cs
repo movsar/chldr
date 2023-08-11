@@ -1,9 +1,14 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
+using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums;
+using chldr_data.Enums.WordDetails;
+using chldr_data.Interfaces;
 using chldr_shared.Stores;
 using Microsoft.AspNetCore.Components;
+using System;
+using System.Security.Claims;
 
 namespace chldr_ui.ViewModels
 {
@@ -22,18 +27,19 @@ namespace chldr_ui.ViewModels
             await ContentStore.EntryService.RemoveAsync(Entry, UserStore.CurrentUser.UserId!);
         }
         public void Share() { }
-        public async Task PromoteEntryAsync() {
+        public async Task PromoteEntryAsync()
+        {
             await ContentStore.EntryService.PromoteAsync(Entry, UserStore.CurrentUser);
         }
         public async Task PromoteTranslationAsync(ITranslation translation)
         {
-            await ContentStore.TranslationService.PromoteAsync(translation, UserStore.CurrentUser);
+            await ContentStore.EntryService.PromoteTranslationAsync(translation, UserStore.CurrentUser);
         }
         public void Downvote() { }
         public void Flag() { }
 
         #endregion
-    
+
         protected static string ParseSource(string sourceName)
         {
             string sourceTitle = null;
@@ -60,8 +66,40 @@ namespace chldr_ui.ViewModels
             }
             return sourceTitle;
         }
+        private string GetHeader()
+        {
+            string header = Entry?.Content!;
+            string className = string.Empty;
 
-        public string? Header => Entry?.Content;
+            if (Entry!.Details != null)
+            {
+                switch ((WordType)Entry.Subtype)
+                {
+
+                    case WordType.Noun:
+                        var details = Entry.Details as NounDetails;
+                        if (details?.Class != 0)
+                        {
+                            className = @GrammaticalClassToString(details!.Class);
+                        }
+                        break;
+
+                    case WordType.Verb:
+                        break;
+
+                    default:
+                        Console.WriteLine("no handler for the details of this type");
+                        break;
+                }
+                if (!string.IsNullOrEmpty(className))
+                {
+                    header = string.Join(" ", header, className);
+                }
+            }
+            return header;
+        }
+        public string? Header => GetHeader();
+
         public string? Subheader => ParseSource(Entry.Source.Name);
 
 
@@ -72,7 +110,8 @@ namespace chldr_ui.ViewModels
             return UserStore.IsLoggedIn && UserStore.CurrentUser!.Status == UserStatus.Active;
         }
 
-        public static string ParseGrammaticalClass(List<int> grammaticalClasses)
+
+        public static string GrammaticalClassToString(int grammaticalClass)
         {
             var ClassesMap = new Dictionary<int, string>()
             {
@@ -84,13 +123,14 @@ namespace chldr_ui.ViewModels
                 { 6 ,"б, д"},
             };
 
-            //if (grammaticalClass == 0)
-            //{
-            //    return null;
-            //}
-
-            //return ClassesMap[grammaticalClass];
-            return "";
+            if (ClassesMap.TryGetValue(grammaticalClass, out string? classString))
+            {
+                return classString;
+            }
+            else
+            {
+                return "";
+            }
         }
     }
 }

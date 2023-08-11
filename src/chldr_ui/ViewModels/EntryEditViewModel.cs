@@ -94,7 +94,7 @@ namespace chldr_ui.ViewModels
 
             if (existingEntry == null)
             {
-                existingEntry = await ContentStore.GetByEntryId(EntryId);
+                existingEntry = await ContentStore.EntryService.GetAsync(EntryId);
             }
             EntryDto = EntryDto.FromModel(existingEntry);
 
@@ -142,12 +142,12 @@ namespace chldr_ui.ViewModels
 
         public async Task PromoteTranslationAsync(TranslationDto translationDto)
         {
-            await ContentStore.TranslationService.PromoteAsync(translationDto, UserStore.CurrentUser);
+            await ContentStore.EntryService.PromoteTranslationAsync(translationDto, UserStore.CurrentUser);
         }
 
         public async Task PromotePronunciationAsync(PronunciationDto soundDto)
         {
-            await ContentStore.PronunciationService.PromoteAsync(soundDto, UserStore.CurrentUser);
+            await ContentStore.EntryService.PromotePronunciationAsync(soundDto, UserStore.CurrentUser);
         }
 
         public async Task DeleteTranslationAsync(string translationId)

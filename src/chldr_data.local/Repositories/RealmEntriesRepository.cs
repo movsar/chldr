@@ -19,8 +19,6 @@ namespace chldr_data.Repositories
 {
     public class RealmEntriesRepository : RealmRepository<RealmEntry, EntryModel, EntryDto>, IEntriesRepository
     {
-        public event Action<SearchResultModel>? GotNewSearchResult;
-
         public RealmEntriesRepository(
             ExceptionHandler exceptionHandler,
             FileService fileService,
@@ -89,19 +87,7 @@ namespace chldr_data.Repositories
 
             return entries;
         }
-        public async Task FindDeferredAsync(string inputText, FiltrationFlags filtrationFlags)
-        {
-            var result = new List<EntryModel>();
-
-            await Task.Run(async () =>
-            {
-                result = await FindAsync(inputText, filtrationFlags);
-            });
-
-            var args = new SearchResultModel(inputText, result, SearchResultModel.Mode.Full);
-            GotNewSearchResult?.Invoke(args);
-        }
-
+  
         public async Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags filtrationFlags)
         {
             var result = new List<EntryModel>();
