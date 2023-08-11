@@ -5,15 +5,13 @@ namespace chldr_data.Models
     public class FiltrationFlagsDto
     {
         public bool? OnModeration {get;set;}
-        public bool? GroupWithSubEntries {get;set;}
         public string? StartsWith {get;set;}
         public int[]? EntryTypes { get; set; }
     }
 
     public class FiltrationFlags
     {
-        public bool OnModeration { get; set; } = false;
-        public bool GroupWithSubEntries { get; set; } = true;
+        public bool IncludeOnModeration { get; set; } = false;
         public string? StartsWith { get; set; } = null;
         public EntryType[] EntryTypes { get; set; } = new EntryType[] {
             EntryType.Text,
@@ -29,12 +27,7 @@ namespace chldr_data.Models
             {
                 if (dto.OnModeration.HasValue)
                 {
-                    flags.OnModeration = dto.OnModeration.Value;
-                }
-
-                if (dto.GroupWithSubEntries.HasValue)
-                {
-                    flags.GroupWithSubEntries = dto.GroupWithSubEntries.Value;
+                    flags.IncludeOnModeration = dto.OnModeration.Value;
                 }
 
                 if (dto.StartsWith != null)

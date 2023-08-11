@@ -3,41 +3,19 @@ using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.Interfaces.Repositories
 {
     public interface IEntriesRepository : IRepository<EntryModel, EntryDto>
     {
-        protected static IQueryable<TEntity> GetFilteredEntries<TEntity>(IQueryable<TEntity> entries, FiltrationFlags filtrationFlags)
-            where TEntity : IEntryEntity
-        {
-            if (!string.IsNullOrWhiteSpace(filtrationFlags.StartsWith))
-            {
-                var str = filtrationFlags.StartsWith.ToLower();
-                entries = entries.Where(e => e.RawContents.StartsWith(str));
-            }
-
-            if (filtrationFlags.GroupWithSubEntries)
-            {
-                entries = entries.Where(e => e.ParentEntryId == null);
-            }
-
-            if (filtrationFlags.OnModeration)
-            {
-                entries = entries.Where(e => e.Rate > UserModel.MemberRateRange.Upper);
-            }
-
-            var entryTypes = filtrationFlags.EntryTypes.Select(et => (int)et).ToArray();
-            entries = entries.Where(e => entryTypes.Contains(e.Type));
-
-            return entries;
-        }
+      
 
         Task<int> CountAsync(FiltrationFlags filtrationFlags);
         Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags);
-        Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags filtrationFlags);
-        List<EntryModel> GetEntriesOnModeration();
-        List<EntryModel> GetLatestEntries();
+        Task<List<EntryModel>> FindAsync(string inputText);
+        Task<List<EntryModel>> GetEntriesOnModerationAsync();
+        Task<List<EntryModel>> GetLatestEntriesAsync();
         Task<ChangeSetModel> Promote(IEntry entry);
     }
 }

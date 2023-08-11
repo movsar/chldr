@@ -8,8 +8,6 @@ namespace chldr_ui.ViewModels
     {
         internal string? SearchQuery { get; set; }
         internal ElementReference SearchInputReference { get; set; }
-        internal FiltrationFlags FiltrationFlags = new FiltrationFlags();
-
         internal void ToggleOnModerationFlag()
         {
             ContentStore.LoadEntriesOnModeration();
@@ -51,7 +49,7 @@ namespace chldr_ui.ViewModels
                 return;
             }
 
-            await ContentStore.EntryService.FindDeferredAsync(inputText, FiltrationFlags);
+            await ContentStore.EntryService.FindDeferredAsync(inputText);
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

@@ -19,25 +19,102 @@ namespace chldr_data.remote.Repositories
 {
     public class SqlEntriesRepository : SqlRepository<SqlEntry, EntryModel, EntryDto>, IEntriesRepository
     {
-        private readonly ExceptionHandler _exceptionHandler;
-        private readonly SqlTranslationsRepository _translations;
-        private readonly SqlSoundsRepository _sounds;
-
-        public SqlEntriesRepository(
-            DbContextOptions<SqlContext> dbConfig,
-            FileService fileService,
-            ExceptionHandler exceptionHandler,
-            ITranslationsRepository translationsRepository,
-            ISoundsRepository soundsRepository,
-            string userId) : base(dbConfig, fileService, userId)
+        private async Task<List<SqlEntry>> GroupEntriesAsync(IQueryable<SqlEntry> entries)
         {
-            _exceptionHandler = exceptionHandler;
-            _translations = (SqlTranslationsRepository)translationsRepository;
-            _sounds = (SqlSoundsRepository)soundsRepository;
+            /*
+             * This method looks for entries that have parents, and takes the parents instead
+             * with children added as subentries.
+             * 
+             * Should be called only on results after all the filtration has been done.
+             * 
+             * @param entries = all entries from database
+             * @param resultingEntries = those that have already been filtered by some criteria
+            */
+
+            var subEntryParentIds = await entries.Where(e => e.ParentEntryId != null).Select(e => e.ParentEntryId).ToArrayAsync();
+
+            // Add subEntry parents
+            var parents = _dbContext.Entries.Where(e => subEntryParentIds.Contains(e.EntryId));
+            var resultingEntries = await entries.Union(parents).ToListAsync();
+
+            // Get standalone entry ids
+            var subEntryIds = resultingEntries.Where(e => e.ParentEntryId != null).Select(e => e.EntryId).ToList();
+
+            // Remove standalone sub entries
+            resultingEntries.RemoveAll(e => subEntryIds.Contains(e.EntryId));
+
+            return resultingEntries;
         }
 
-        protected override RecordType RecordType => RecordType.Entry;
+        private async Task<IQueryable<TEntity>> ApplyFiltrationFlags<TEntity>(IQueryable<TEntity> sourceEntries, FiltrationFlags filtrationFlags)
+            where TEntity : IEntryEntity
+        {
+            // Leave only selected entry types
+            var entryTypes = filtrationFlags.EntryTypes.Select(et => (int)et).ToArray();
+            var resultingEntries = sourceEntries.Where(e => entryTypes.Contains(e.Type));
 
+            // If StartsWith specified, remove all that don't start with that string
+            if (!string.IsNullOrWhiteSpace(filtrationFlags.StartsWith))
+            {
+                var str = filtrationFlags.StartsWith.ToLower();
+                resultingEntries = resultingEntries.Where(e => e.RawContents.StartsWith(str));
+            }
+
+            // Don't include entries on moderation, if not specified otherwise
+            if (!filtrationFlags.IncludeOnModeration)
+            {
+                resultingEntries = resultingEntries.Where(e => e.Rate > UserModel.MemberRateRange.Upper);
+            }
+
+            return resultingEntries;
+        }
+
+        #region Search
+        protected async Task<List<SqlEntry>> FinderAsync(IQueryable<SqlEntry> query, string inputText)
+        {
+            // This is the search algorythm, it will be exactly the same for both Sql and Realm databases
+            // It takes the entity interfaces and returns ids, no DB specific operations or fields
+
+            // @Nurmagomed - this is your domain :)
+
+            IQueryable<SqlEntry> resultingQuery;
+            if (string.IsNullOrEmpty(inputText) || inputText.Length <= 3)
+            {
+                resultingQuery = query
+                    .Where(e => e.RawContents.Equals(inputText, StringComparison.OrdinalIgnoreCase));
+            }
+            else
+            {
+                resultingQuery = query
+                    .Where(e => e.RawContents.StartsWith(inputText, StringComparison.OrdinalIgnoreCase));
+            }
+
+            var resultingEntries = await GroupEntriesAsync(resultingQuery);
+            return resultingEntries;
+        }
+
+        public async Task<List<EntryModel>> FindAsync(string inputText)
+        {
+            var result = new List<EntryModel>();
+
+            try
+            {
+                var matchingEntries = await FinderAsync(_dbContext.Entries, inputText);
+
+                // Apply the shortcut method to the matching entry IDs            
+                result = matchingEntries.Select(e => FromEntityWithSubEntries(e)).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region Get and Take
         public override async Task<EntryModel> GetAsync(string entityId)
         {
             var entry = await _dbContext.Entries
@@ -52,26 +129,15 @@ namespace chldr_data.remote.Repositories
                 throw new ArgumentException("There is no such word in the database");
             }
 
-            return FromEntity(entry);
+            return FromEntityWithSubEntries(entry);
         }
 
         public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
-            var entries = IEntriesRepository.GetFilteredEntries(_dbContext.Entries, filtrationFlags);
-
-            // Fetch all EntryIds from the database
-            var topLevelEntryIds = await entries.Where(e => e.ParentEntryId == null).Select(e => e.EntryId).ToListAsync();
-
-            var entities = await entries
-                      .OrderBy(e => e.RawContents)
-                      .Include(e => e.Source)
-                      .Include(e => e.User)
-                      .Include(e => e.Translations)
-                      .Include(e => e.Sounds)
-
+            var filteredEntries = await ApplyFiltrationFlags(_dbContext.Entries, filtrationFlags);
+            var entities = await filteredEntries
                       .Skip(offset)
                       .Take(limit)
-
                       .ToListAsync();
 
             return entities.Select(FromEntityWithSubEntries).ToList();
@@ -89,155 +155,48 @@ namespace chldr_data.remote.Repositories
             // Fetch entries with the selected EntryIds
             var entities = await _dbContext.Set<SqlEntry>()
                 .Where(entry => randomlySelectedIds.Contains(entry.EntryId))
-                .Include(e => e.Source)
-                .Include(e => e.User)
-                .Include(e => e.Translations)
-                .Include(e => e.Sounds)
                 .AsNoTracking()
                 .ToListAsync();
 
             // Apply the projection (mapping to FromEntityShortcut) on the in-memory data
-            var models = entities.Select(FromEntity).ToList();
+            var models = entities.Select(FromEntityWithSubEntries).ToList();
             return models;
         }
-        protected override EntryModel FromEntity(SqlEntry entry)
-        {
-            return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
-        }
-        protected EntryModel FromEntityWithSubEntries(SqlEntry entry)
-        {
-            var subEntries = _dbContext.Entries
-             .Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entry.EntryId))
-             .Include(e => e.Source)
-             .Include(e => e.User)
-             .Include(e => e.Translations)
-             .Include(e => e.Sounds)
-             .ToImmutableList();
 
-            var subSources = subEntries.ToDictionary(e => e.EntryId, e => e.Source as ISourceEntity);
-            var subSounds = subEntries.ToDictionary(e => e.EntryId, e => e.Sounds.ToList().Cast<ISoundEntity>());
-            var subEntryTranslations = subEntries.ToDictionary(e => e.EntryId, e => e.Translations.ToList().Cast<ITranslationEntity>());
-
-            return EntryModel.FromEntity(
-                    entry,
-                    entry.Source,
-                    entry.Translations,
-                    entry.Sounds,
-                    subEntries.Cast<IEntryEntity>(),
-                    subSources,
-                    subEntryTranslations,
-                    subSounds
-                );
-        }
-
-        protected static async Task<List<string>> FinderAsync(IQueryable<IEntryEntity> query, string inputText)
-        {
-            // This is the search algorythm, it will be exactly the same for both Sql and Realm databases
-            // It takes the entity interfaces and returns ids, no DB specific operations or fields
-
-            // @Nurmagomed - this is your domain :)
-
-            if (string.IsNullOrEmpty(inputText) || inputText.Length <= 3)
-            {
-                query = query
-                    .Where(e => e.RawContents.Equals(inputText, StringComparison.OrdinalIgnoreCase));
-            }
-            else
-            {
-                query = query
-                    .Where(e => e.RawContents.StartsWith(inputText, StringComparison.OrdinalIgnoreCase));
-            }
-
-            return await query
-                .Select(e => e.EntryId)
-                .ToListAsync();
-        }
-
-        public async Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags filtrationFlags)
-        {
-            var result = new List<EntryModel>();
-
-            try
-            {
-                var matchingEntryIds = await FinderAsync(_dbContext.Entries.Cast<IEntryEntity>(), inputText);
-
-                // Apply the shortcut method to the matching entry IDs            
-                result = matchingEntryIds
-                    .Select(id => FromEntityWithSubEntries(_dbContext.Entries
-                        .Include(e => e.Source)
-                        .Include(e => e.User)
-                        .Include(e => e.Translations)
-                        .Include(e => e.Sounds)
-                        .AsNoTracking()
-                        .First(e => e.EntryId.Equals(id))))
-                    .ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
-            // Sort etc
-            SearchServiceHelper.PostProcessing(inputText, result);
-            return result;
-        }
-
-        public List<EntryModel> GetLatestEntries()
+        public async Task<List<EntryModel>> GetLatestEntriesAsync()
         {
             var count = 50;
 
-            var entries = _dbContext.Entries
-                .Where(e => e.ParentEntryId == null)
-                .OrderByDescending(e => e.CreatedAt)
+            var filteredEntries = _dbContext.Entries
                 .Take(count)
-                .Include(e => e.Source)
-                .Include(e => e.User)
-                .Include(e => e.Translations)
-                .Include(e => e.Sounds)
-                .AsNoTracking()
-                .ToList();
+                .OrderByDescending(e => e.CreatedAt);
 
-            return entries.Select(FromEntityWithSubEntries).ToList();
+            List<SqlEntry> resultingEntries = await GroupEntriesAsync(filteredEntries);
+            return resultingEntries.Select(FromEntityWithSubEntries).ToList();
         }
 
-        public List<EntryModel> GetEntriesOnModeration()
+        public async Task<List<EntryModel>> GetEntriesOnModerationAsync()
         {
             var count = 50;
 
-            var entries = _dbContext.Entries
-                .Where(e => e.ParentEntryId == null)
-                .Where(entry => entry.Rate < UserModel.MemberRateRange.Lower)
+            var filteredEntries = _dbContext.Entries
                 .Take(count)
-                .Include(e => e.Source)
-                .Include(e => e.User)
-                .Include(e => e.Translations)
-                .Include(e => e.Sounds)
-                .AsNoTracking()
-                .ToList();
+                .Where(entry => entry.Rate < UserModel.MemberRateRange.Lower);
 
-            return entries.Select(FromEntityWithSubEntries).ToList();
+            var resultingEntries = await GroupEntriesAsync(filteredEntries);
+
+
+
+            return resultingEntries.Select(FromEntityWithSubEntries).ToList();
         }
-        private async Task<bool> ValidateParent(EntryDto entryDto)
+        private async Task<List<EntryModel>> GetChildEntriesAsync(string entryId)
         {
-            // If Parent is specified, restrict to one level deep, parent child relationship, no hierarchies
-            if (entryDto.ParentEntryId != null)
-            {
-                var parent = await GetAsync(entryDto.ParentEntryId);
-                if (!string.IsNullOrEmpty(parent.ParentEntryId))
-                {
-                    return false;
-                }
-
-                var children = await GetChildEntriesAsync(entryDto.EntryId);
-                if (children.Count() > 0)
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            var entries = _dbContext.Entries.Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entryId));
+            return await entries.Select(e => EntryModel.FromEntity(e, e.Source, e.Translations, e.Sounds)).ToListAsync();
         }
+        #endregion
 
+        #region Update methods
         public override async Task<List<ChangeSetModel>> Add(EntryDto newEntryDto)
         {
             if (newEntryDto == null || string.IsNullOrEmpty(newEntryDto.EntryId))
@@ -249,11 +208,6 @@ namespace chldr_data.remote.Repositories
             if (user.Status != UserStatus.Active)
             {
                 throw new UnauthorizedException();
-            }
-
-            if (!(await ValidateParent(newEntryDto)))
-            {
-                throw new InvalidArgumentsException("Error:Invalid_parent_entry");
             }
 
             // Set rate
@@ -302,24 +256,12 @@ namespace chldr_data.remote.Repositories
                 throw _exceptionHandler.Error(ex);
             }
         }
-
-        private async Task<List<EntryModel>> GetChildEntriesAsync(string entryId)
-        {
-            var entries = _dbContext.Entries.Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entryId));
-            return await entries.Select(e => EntryModel.FromEntity(e, e.Source, e.Translations, e.Sounds)).ToListAsync();
-        }
-
         public override async Task<List<ChangeSetModel>> Update(EntryDto updatedEntryDto)
         {
             var resultingChangeSets = new List<ChangeSetModel>();
 
             try
             {
-                if (!(await ValidateParent(updatedEntryDto)))
-                {
-                    throw new InvalidArgumentsException("Error:Invalid_parent_entry");
-                }
-
                 var entry = await GetAsync(updatedEntryDto.EntryId);
                 var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId));
 
@@ -517,12 +459,88 @@ namespace chldr_data.remote.Repositories
 
             return ChangeSetModel.FromEntity(changeSet);
         }
+        #endregion
 
         public async Task<int> CountAsync(FiltrationFlags filtrationFlags)
         {
-            var count = await IEntriesRepository.GetFilteredEntries(_dbContext.Entries, filtrationFlags).CountAsync();
+            var entries = await ApplyFiltrationFlags(_dbContext.Entries, filtrationFlags);
+            var count = await entries.CountAsync();
 
             return count;
+        }
+
+        protected override EntryModel FromEntity(SqlEntry entry)
+        {
+            /*
+             * Breaks down the related objects and passes them to the EntryModel's FromEntity, this is done
+             * to support working with data from different databases, like MySQL and Realm             
+             */
+
+            entry = _dbContext.Entries
+                .Include(e => e.Source)
+                .Include(e => e.User)
+                .Include(e => e.Translations)
+                .Include(e => e.Sounds)
+                .First(e => e.EntryId.Equals(entry.EntryId));
+
+            return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
+        }
+        protected EntryModel FromEntityWithSubEntries(SqlEntry entry)
+        {
+            /*
+             * This retrieves the entry with all its dependencies, because of the EF Core, we need to specify
+             * which related objects are going to be retrieved, so this method basically fills the entity
+             * After that, it goes on to build a model, to allow multiple database implementations it breaks down the
+             * relationships and passes all the related objects to EntryMode.FromEntity method
+             */
+
+            entry = _dbContext.Entries
+                .Include(e => e.Source)
+                .Include(e => e.User)
+                .Include(e => e.Translations)
+                .Include(e => e.Sounds)
+                .First(e => e.EntryId.Equals(entry.EntryId));
+
+            var subEntries = _dbContext.Entries
+             .Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entry.EntryId))
+             .Include(e => e.Source)
+             .Include(e => e.User)
+             .Include(e => e.Translations)
+             .Include(e => e.Sounds)
+             .ToImmutableList();
+
+            var subSources = subEntries.ToDictionary(e => e.EntryId, e => e.Source as ISourceEntity);
+            var subSounds = subEntries.ToDictionary(e => e.EntryId, e => e.Sounds.ToList().Cast<ISoundEntity>());
+            var subEntryTranslations = subEntries.ToDictionary(e => e.EntryId, e => e.Translations.ToList().Cast<ITranslationEntity>());
+
+            return EntryModel.FromEntity(
+                    entry,
+                    entry.Source,
+                    entry.Translations,
+                    entry.Sounds,
+                    subEntries.Cast<IEntryEntity>(),
+                    subSources,
+                    subEntryTranslations,
+                    subSounds
+                );
+        }
+
+        private readonly ExceptionHandler _exceptionHandler;
+        private readonly SqlTranslationsRepository _translations;
+        private readonly SqlSoundsRepository _sounds;
+        protected override RecordType RecordType => RecordType.Entry;
+
+        public SqlEntriesRepository(
+            DbContextOptions<SqlContext> dbConfig,
+            FileService fileService,
+            ExceptionHandler exceptionHandler,
+            ITranslationsRepository translationsRepository,
+            ISoundsRepository soundsRepository,
+            string userId) : base(dbConfig, fileService, userId)
+        {
+            _exceptionHandler = exceptionHandler;
+            _translations = (SqlTranslationsRepository)translationsRepository;
+            _sounds = (SqlSoundsRepository)soundsRepository;
         }
     }
 }

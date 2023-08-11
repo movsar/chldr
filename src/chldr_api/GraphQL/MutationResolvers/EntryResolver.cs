@@ -1,4 +1,5 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Models;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.remote.Repositories;
@@ -6,6 +7,8 @@ using chldr_data.remote.Services;
 using chldr_data.Responses;
 using chldr_data.Services;
 using chldr_utils;
+using chldr_utils.Exceptions;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace chldr_api.GraphQL.MutationResolvers
@@ -20,12 +23,39 @@ namespace chldr_api.GraphQL.MutationResolvers
             _dataProvider = dataProvider;
             _exceptionHandler = exceptionHandler;
         }
+
+        //private async Task<bool> ValidateParent(EntryDto entryDto)
+        //{
+        //    // If Parent is specified, restrict to one level deep, parent child relationship, no hierarchies
+        //    if (entryDto.ParentEntryId != null)
+        //    {
+        //        var parent = await GetAsync(entryDto.ParentEntryId);
+        //        if (!string.IsNullOrEmpty(parent.ParentEntryId))
+        //        {
+        //            return false;
+        //        }
+
+        //        var children = await GetChildEntriesAsync(entryDto.EntryId);
+        //        if (children.Count() > 0)
+        //        {
+        //            return false;
+        //        }
+        //    }
+
+        //    return true;
+        //}
+
         public async Task<RequestResult> AddEntryAsync(string userId, EntryDto entryDto)
         {
             // UserId instead of object used for security reasons
 
             // TODO: Check permissions
             // TODO: Validate input
+
+            //if (!(await ValidateParent(newEntryDto)))
+            //{
+            //    throw new InvalidArgumentsException("Error:Invalid_parent_entry");
+            //}
 
             using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();

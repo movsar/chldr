@@ -18,13 +18,13 @@ namespace chldr_api
             _dataProvider = dataProvider;
         }
 
-        public async Task<RequestResult> FindAsync(string inputText, FiltrationFlagsDto filtrationFlagsDto)
+        public async Task<RequestResult> FindAsync(string inputText)
         {
             try
             {
                 using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
 
-                var foundEntries = await unitOfWork.Entries.FindAsync(inputText, FiltrationFlags.FromDto(filtrationFlagsDto));
+                var foundEntries = await unitOfWork.Entries.FindAsync(inputText);
 
                 return new RequestResult()
                 {

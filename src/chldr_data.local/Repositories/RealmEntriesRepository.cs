@@ -19,37 +19,7 @@ namespace chldr_data.Repositories
 {
     public class RealmEntriesRepository : RealmRepository<RealmEntry, EntryModel, EntryDto>, IEntriesRepository
     {
-        public RealmEntriesRepository(
-            ExceptionHandler exceptionHandler,
-            FileService fileService,
-            string userId) : base(exceptionHandler, fileService, userId){}
-
-        protected override RecordType RecordType => RecordType.Entry;
-        protected override EntryModel FromEntity(RealmEntry entry)
-        {
-            return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
-        }
-        protected EntryModel FromEntityWithSubEntries(RealmEntry entry)
-        {
-            var subEntries = _dbContext.All<RealmEntry>()
-                   .Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entry.EntryId))
-                   .ToImmutableList();
-
-            var subSources = subEntries.ToDictionary(e => e.EntryId, e => e.Source as ISourceEntity);
-            var subSounds = subEntries.ToDictionary(e => e.EntryId, e => e.Sounds.ToList().Cast<ISoundEntity>());
-            var subEntryTranslations = subEntries.ToDictionary(e => e.EntryId, e => e.Translations.ToList().Cast<ITranslationEntity>());
-
-            return EntryModel.FromEntity(
-                    entry,
-                    entry.Source,
-                    entry.Translations,
-                    entry.Sounds,
-                    subEntries.Cast<IEntryEntity>(),
-                    subSources,
-                    subEntryTranslations,
-                    subSounds
-                );
-        }
+        #region Get and Take
         public override async Task<List<EntryModel>> GetRandomsAsync(int limit)
         {
             var randomizer = new Random(DateTime.Now.Millisecond);
@@ -69,7 +39,7 @@ namespace chldr_data.Repositories
 
             return results;
         }
-        public List<EntryModel> GetLatestEntries()
+        public async Task<List<EntryModel>> GetLatestEntriesAsync()
         {
             var entries = _dbContext.All<RealmEntry>().AsEnumerable().OrderByDescending(e => e.CreatedAt).Take(100);
 
@@ -77,7 +47,7 @@ namespace chldr_data.Repositories
 
             return entriesToReturn.ToList();
         }
-        public List<EntryModel> GetEntriesOnModeration()
+        public async Task<List<EntryModel>> GetEntriesOnModerationAsync()
         {
             var entries = _dbContext.All<RealmEntry>().AsEnumerable()
                 .Where(entry => entry.Rate < UserModel.EnthusiastRateRange.Lower)
@@ -87,8 +57,8 @@ namespace chldr_data.Repositories
 
             return entries;
         }
-  
-        public async Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags filtrationFlags)
+
+        public async Task<List<EntryModel>> FindAsync(string inputText)
         {
             var result = new List<EntryModel>();
 
@@ -107,6 +77,24 @@ namespace chldr_data.Repositories
 
             return result;
         }
+        public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
+        {
+            //var entries = await ApplyFiltrationFlags(_dbContext.All<RealmEntry>(), filtrationFlags);
+
+            //var groupedEntries = await entries
+            //    .OrderBy(e => e.RawContents)
+            //    .Skip(offset)
+            //    .Take(limit)
+            //    .ToListAsync();
+
+            //return groupedEntries.Select(FromEntityWithSubEntries).ToList();
+
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Update
         public override async Task Add(EntryDto newEntryDto)
         {
             // Insert Entry entity with translations
@@ -156,25 +144,48 @@ namespace chldr_data.Repositories
         {
             throw new NotImplementedException();
         }
-
-        public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
-        {
-            var entries = IEntriesRepository.GetFilteredEntries(_dbContext.All<RealmEntry>(), filtrationFlags);
-
-            var groupedEntries = await entries
-                .OrderBy(e => e.RawContents)
-                .Skip(offset)
-                .Take(limit)
-                .ToListAsync();
-
-            return groupedEntries.Select(FromEntityWithSubEntries).ToList();
-        }
+        #endregion
 
         public async Task<int> CountAsync(FiltrationFlags filtrationFlags)
         {
-            var entries = IEntriesRepository.GetFilteredEntries(_dbContext.All<RealmEntry>(), filtrationFlags);
+            //var entries = await IEntriesRepository.ApplyFiltrationFlags(_dbContext.All<RealmEntry>(), filtrationFlags);
+            //return await entries.CountAsync();
 
-            return await entries.CountAsync();
+            throw new NotImplementedException();
         }
+
+        protected override EntryModel FromEntity(RealmEntry entry)
+        {
+            return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
+        }
+        protected EntryModel FromEntityWithSubEntries(RealmEntry entry)
+        {
+            var subEntries = _dbContext.All<RealmEntry>()
+                   .Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entry.EntryId))
+                   .ToImmutableList();
+
+            var subSources = subEntries.ToDictionary(e => e.EntryId, e => e.Source as ISourceEntity);
+            var subSounds = subEntries.ToDictionary(e => e.EntryId, e => e.Sounds.ToList().Cast<ISoundEntity>());
+            var subEntryTranslations = subEntries.ToDictionary(e => e.EntryId, e => e.Translations.ToList().Cast<ITranslationEntity>());
+
+            return EntryModel.FromEntity(
+                    entry,
+                    entry.Source,
+                    entry.Translations,
+                    entry.Sounds,
+                    subEntries.Cast<IEntryEntity>(),
+                    subSources,
+                    subEntryTranslations,
+                    subSounds
+                );
+        }
+        protected override RecordType RecordType => RecordType.Entry;
+
+        public RealmEntriesRepository(
+            ExceptionHandler exceptionHandler,
+            FileService fileService,
+            string userId) : base(exceptionHandler, fileService, userId) { }
+
+
     }
 }

@@ -54,7 +54,7 @@ namespace chldr_ui.ViewModels
 
                 if (match.Success)
                 {
-                    await ContentStore.EntryService.FindAsync(match.ToString(), new FiltrationFlags());
+                    await ContentStore.EntryService.FindAsync(match.ToString());
                     return;
                 }
             }

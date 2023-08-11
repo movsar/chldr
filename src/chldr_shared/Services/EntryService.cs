@@ -34,21 +34,21 @@ namespace chldr_shared.Services
         }
 
         #region Get
-        public async Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags filtrationFlags)
+        public async Task<List<EntryModel>> FindAsync(string inputText)
         {
             var query = inputText.Replace("1", "Ӏ").ToLower();
 
             var unitOfWork = _dataProvider.CreateUnitOfWork();
-            return (await unitOfWork.Entries.FindAsync(query, filtrationFlags)).ToList();
+            return (await unitOfWork.Entries.FindAsync(query)).ToList();
         }
 
-        public async Task FindDeferredAsync(string inputText, FiltrationFlags filtrationFlags)
+        public async Task FindDeferredAsync(string inputText)
         {
             var result = new List<EntryModel>();
 
             await Task.Run(async () =>
             {
-                result = await FindAsync(inputText, filtrationFlags);
+                result = await FindAsync(inputText);
             });
 
             var args = new SearchResultModel(inputText, result, SearchResultModel.Mode.Full);

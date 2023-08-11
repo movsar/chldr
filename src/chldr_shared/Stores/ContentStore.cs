@@ -114,11 +114,11 @@ namespace chldr_shared.Stores
 
             CachedResultsChanged?.Invoke();
         }
-        public void LoadLatestEntries()
+        public async void LoadLatestEntries()
         {
             CachedSearchResult.Entries.Clear();
             var unitOfWork = _dataProvider.CreateUnitOfWork(null);
-            var entries = unitOfWork.Entries.GetLatestEntries();
+            var entries = await unitOfWork.Entries.GetLatestEntriesAsync();
 
             CachedSearchResult.Entries.Clear();
             foreach (var entry in entries)
@@ -129,11 +129,11 @@ namespace chldr_shared.Stores
             CachedResultsChanged?.Invoke();
         }
 
-        public void LoadEntriesOnModeration()
+        public async void LoadEntriesOnModeration()
         {
             CachedSearchResult.Entries.Clear();
             var unitOfWork = _dataProvider.CreateUnitOfWork(null);
-            var entries = unitOfWork.Entries.GetEntriesOnModeration();
+            var entries = await unitOfWork.Entries.GetEntriesOnModerationAsync();
 
             CachedSearchResult.Entries.Clear();
             foreach (var entry in entries)

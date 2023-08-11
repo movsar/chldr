@@ -27,7 +27,7 @@ namespace chldr_ui.ViewModels
                 return;
             }
 
-            Entries = (await ContentStore.EntryService.FindAsync(inputText, new FiltrationFlags())).ToList();
+            Entries = (await ContentStore.EntryService.FindAsync(inputText)).ToList();
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
