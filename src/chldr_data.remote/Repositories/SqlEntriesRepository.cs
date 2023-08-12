@@ -17,73 +17,20 @@ namespace chldr_data.remote.Repositories
 {
     public class SqlEntriesRepository : SqlRepository<SqlEntry, EntryModel, EntryDto>, IEntriesRepository
     {
-        private async Task<List<EntryModel>> ToModels(IQueryable<IEntryEntity> sourceEntries, IQueryable<IEntryEntity> filteredEntries)
-        {
-            /*
-             * This method looks for entries that have parents, and takes the parents instead
-             * with children added as subentries.
-             * 
-             * Should be called only on results after all the filtration has been done.
-             * 
-             * @param entries = all entries from database
-             * @param resultingEntries = those that have already been filtered by some criteria
-            */
-
-            var subEntryParentIds = await filteredEntries.Where(e => e.ParentEntryId != null).Select(e => e.ParentEntryId).ToArrayAsync();
-
-            // Add subEntry parents
-            var parents = sourceEntries.Where(e => subEntryParentIds.Contains(e.EntryId));
-            var resultingEntries = await filteredEntries.Union(parents).ToListAsync();
-
-            // Get standalone entry ids
-            var subEntryIds = resultingEntries.Where(e => e.ParentEntryId != null).Select(e => e.EntryId).ToList();
-
-            // Remove standalone sub entries
-            resultingEntries.RemoveAll(e => subEntryIds.Contains(e.EntryId));
-
-            return resultingEntries.Select(e => FromSqlEntry(e.EntryId)).ToList();
-        }
-
-        #region Search
-        protected async Task<List<EntryModel>> FinderAsync(IQueryable<IEntryEntity> query, string inputText)
-        {
-            // This is the search algorythm, it will be exactly the same for both Sql and Realm databases
-            // It takes the entity interfaces and returns ids, no DB specific operations or fields
-
-            // @Nurmagomed - this is your domain :)
-
-            IQueryable<IEntryEntity> resultingQuery;
-            if (string.IsNullOrEmpty(inputText) || inputText.Length <= 3)
-            {
-                resultingQuery = query
-                    .Where(e => e.RawContents.Equals(inputText, StringComparison.OrdinalIgnoreCase));
-            }
-            else
-            {
-                resultingQuery = query
-                    .Where(e => e.RawContents.StartsWith(inputText, StringComparison.OrdinalIgnoreCase));
-            }
-
-            return await ToModels(_dbContext.Entries, resultingQuery);
-        }
-
         public async Task<List<EntryModel>> FindAsync(string inputText)
         {
-            var result = new List<EntryModel>();
-
             try
             {
-                result = await FinderAsync(_dbContext.Entries, inputText);
+                var filteredEntries = IEntriesRepository.Find(_dbContext.Entries, inputText);
+
+                return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries)
+                    .Select(e => FromSqlEntry(e.EntryId)).ToList();
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-
-            return result;
         }
-
-        #endregion
 
         #region Get and Take
         public override async Task<EntryModel> GetAsync(string entityId)
@@ -102,34 +49,26 @@ namespace chldr_data.remote.Repositories
                 .Skip(offset)
                 .Take(limit);
 
-            return await ToModels(_dbContext.Entries, filteredEntries);
+            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries)
+                    .Select(e => FromSqlEntry(e.EntryId)).ToList();
         }
         public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
-            var filteredEntries = await IEntriesRepository.ApplyFiltrationFlags(_dbContext.Entries, filtrationFlags);
+            var filteredEntries = IEntriesRepository.ApplyFiltrationFlags(_dbContext.Entries, filtrationFlags);
             filteredEntries = filteredEntries
                       .OrderBy(e => e.RawContents)
                       .Skip(offset)
                       .Take(limit);
 
-            return await ToModels(_dbContext.Entries, filteredEntries);
+            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries)
+                    .Select(e => FromSqlEntry(e.EntryId)).ToList();
         }
         public override async Task<List<EntryModel>> GetRandomsAsync(int limit)
         {
-            var randomizer = new Random();
+            var filteredEntries = IEntriesRepository.GetRandomEntries(_dbContext.Entries, limit);
 
-            // Fetch all EntryIds from the database
-            var ids = await _dbContext.Set<SqlEntry>().Where(e => e.ParentEntryId == null).Select(e => e.EntryId).ToListAsync();
-
-            // Shuffle the ids and take what's needed
-            var randomlySelectedIds = ids.OrderBy(x => randomizer.Next(1, Constants.EntriesApproximateCoount)).Take(limit).ToList();
-
-            // Fetch entries with the selected EntryIds
-            var filteredEntries = _dbContext.Entries
-                .Where(entry => randomlySelectedIds.Contains(entry.EntryId))
-                .AsNoTracking();
-
-            return await ToModels(_dbContext.Entries, filteredEntries);
+            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries)
+                    .Select(e => FromSqlEntry(e.EntryId)).ToList();
         }
 
         public async Task<List<EntryModel>> GetLatestEntriesAsync()
@@ -140,7 +79,8 @@ namespace chldr_data.remote.Repositories
                 .OrderByDescending(e => e.CreatedAt)
                 .Take(count);
 
-            return await ToModels(_dbContext.Entries, filteredEntries);
+            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries)
+                    .Select(e => FromSqlEntry(e.EntryId)).ToList();
         }
 
         public async Task<List<EntryModel>> GetEntriesOnModerationAsync()
@@ -151,7 +91,8 @@ namespace chldr_data.remote.Repositories
                 .Where(entry => entry.Rate < UserModel.MemberRateRange.Lower)
                 .Take(count);
 
-            return await ToModels(_dbContext.Entries, filteredEntries);
+            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries)
+                    .Select(e => FromSqlEntry(e.EntryId)).ToList();
         }
         public async Task<List<EntryModel>> GetChildEntriesAsync(string entryId)
         {
@@ -398,7 +339,7 @@ namespace chldr_data.remote.Repositories
 
         public async Task<int> CountAsync(FiltrationFlags filtrationFlags)
         {
-            var entries = await IEntriesRepository.ApplyFiltrationFlags(_dbContext.Entries, filtrationFlags);
+            var entries = IEntriesRepository.ApplyFiltrationFlags(_dbContext.Entries, filtrationFlags);
             var count = await entries.CountAsync();
 
             return count;
