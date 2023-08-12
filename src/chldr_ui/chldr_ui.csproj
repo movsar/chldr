@@ -14,11 +14,9 @@
 	<ItemGroup>
 		<PackageReference Include="banditoth.MAUI.Multilanguage" Version="1.0.5" />
 		<PackageReference Include="Blazored.Modal" Version="7.1.0" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
-		<PackageReference Include="FluentValidation" Version="11.5.2" />
-		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.2" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.5" />
-		<PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.5" />
+		<PackageReference Include="FluentValidation" Version="11.7.0" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.7.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.10" />
 	</ItemGroup>
 
 	<ItemGroup>

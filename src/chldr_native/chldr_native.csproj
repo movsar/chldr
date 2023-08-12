@@ -54,13 +54,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
-        <PackageReference Include="FluentValidation" Version="11.5.2" />
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.5" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\chldr_data.local\chldr_data.local.csproj" />
       <ProjectReference Include="..\chldr_ui\chldr_ui.csproj" />
     </ItemGroup>

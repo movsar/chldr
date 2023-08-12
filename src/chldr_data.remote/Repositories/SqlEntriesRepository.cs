@@ -10,7 +10,6 @@ using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using chldr_data.DatabaseObjects.Interfaces;
 using System.Collections.Immutable;
-using MySqlX.XDevAPI.Common;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("chldr_data.remote.tests")]
 
@@ -43,29 +42,6 @@ namespace chldr_data.remote.Repositories
             resultingEntries.RemoveAll(e => subEntryIds.Contains(e.EntryId));
 
             return resultingEntries.Select(e => FromSqlEntry(e.EntryId)).ToList();
-        }
-
-        private async Task<IQueryable<TEntity>> ApplyFiltrationFlags<TEntity>(IQueryable<TEntity> sourceEntries, FiltrationFlags filtrationFlags)
-            where TEntity : IEntryEntity
-        {
-            // Leave only selected entry types
-            var entryTypes = filtrationFlags.EntryTypes.Select(et => (int)et).ToArray();
-            var resultingEntries = sourceEntries.Where(e => entryTypes.Contains(e.Type));
-
-            // If StartsWith specified, remove all that don't start with that string
-            if (!string.IsNullOrWhiteSpace(filtrationFlags.StartsWith))
-            {
-                var str = filtrationFlags.StartsWith.ToLower();
-                resultingEntries = resultingEntries.Where(e => e.RawContents.StartsWith(str));
-            }
-
-            // Don't include entries on moderation, if not specified otherwise
-            if (!filtrationFlags.IncludeOnModeration)
-            {
-                resultingEntries = resultingEntries.Where(e => e.Rate > UserModel.MemberRateRange.Upper);
-            }
-
-            return resultingEntries;
         }
 
         #region Search
@@ -130,7 +106,7 @@ namespace chldr_data.remote.Repositories
         }
         public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
-            var filteredEntries = await ApplyFiltrationFlags(_dbContext.Entries, filtrationFlags);
+            var filteredEntries = await IEntriesRepository.ApplyFiltrationFlags(_dbContext.Entries, filtrationFlags);
             filteredEntries = filteredEntries
                       .OrderBy(e => e.RawContents)
                       .Skip(offset)
@@ -422,7 +398,7 @@ namespace chldr_data.remote.Repositories
 
         public async Task<int> CountAsync(FiltrationFlags filtrationFlags)
         {
-            var entries = await ApplyFiltrationFlags(_dbContext.Entries, filtrationFlags);
+            var entries = await IEntriesRepository.ApplyFiltrationFlags(_dbContext.Entries, filtrationFlags);
             var count = await entries.CountAsync();
 
             return count;

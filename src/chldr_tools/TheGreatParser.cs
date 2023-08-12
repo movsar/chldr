@@ -437,7 +437,7 @@ namespace chldr_maintenance
 
             // fifth - future continuous
             var futureContinuous = CreateSubEntry(entry, forms[4]);
-            verbDetails.Tense = VerbTense.FutureContinous;
+            verbDetails.Tense = VerbTense.FutureContinuous;
             presentSimple.Details = JsonConvert.SerializeObject(verbDetails);
             _context.Entries.Add(futureContinuous);
         }
