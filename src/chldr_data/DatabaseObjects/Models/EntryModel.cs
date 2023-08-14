@@ -1,4 +1,5 @@
-﻿using chldr_data.DatabaseObjects.Interfaces;
+﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums;
 using chldr_data.Enums.WordDetails;
@@ -26,7 +27,7 @@ namespace chldr_data.DatabaseObjects.Models
         public DateTimeOffset UpdatedAt { get; set; }
 
         public List<EntryModel> SubEntries { get; set; } = new List<EntryModel>();
-
+       
         public static EntryModel FromEntity(IEntryEntity entry, ISourceEntity source, IEnumerable<ITranslationEntity> translations, IEnumerable<ISoundEntity> sounds)
         {
             var entryModel = new EntryModel()

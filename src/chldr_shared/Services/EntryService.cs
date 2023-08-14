@@ -12,6 +12,7 @@ using chldr_data.Repositories;
 using chldr_data.Responses;
 using chldr_data.Services;
 using chldr_utils;
+using Realms.Sync;
 
 namespace chldr_shared.Services
 {
@@ -81,7 +82,7 @@ namespace chldr_shared.Services
             }
 
             // Insert remote entity with translations
-            var response = await _requestService.AddEntry(userId, newEntryDto);
+            var response = await _requestService.AddEntryAsync(userId, newEntryDto);
             if (!response.Success)
             {
                 throw _exceptionHandler.Error("Error:Request_failed");
@@ -249,7 +250,7 @@ namespace chldr_shared.Services
             await unitOfWork.Translations.Promote(translationInfo);
         }
 
-        public async Task PromotePronunciationAsync(ISound soundInfo, UserModel? currentUser)
+        public async Task PromotePronunciationAsync(IPronunciation soundInfo, UserModel? currentUser)
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.UserId);
             await unitOfWork.Sounds.Promote(soundInfo);

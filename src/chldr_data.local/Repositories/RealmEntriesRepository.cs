@@ -34,7 +34,7 @@ namespace chldr_data.Repositories
                      .OrderBy(x => randomizer.Next(0, Constants.EntriesApproximateCoount))
                      .Take(limit);
 
-                return entries.Select(FromEntityWithSubEntries).ToList();
+                return entries.Select(FromEntity).ToList();
             });
 
             return results;
@@ -43,7 +43,7 @@ namespace chldr_data.Repositories
         {
             var entries = _dbContext.All<RealmEntry>().AsEnumerable().OrderByDescending(e => e.CreatedAt).Take(100);
 
-            var entriesToReturn = entries.Select(FromEntityWithSubEntries);
+            var entriesToReturn = entries.Select(FromEntity);
 
             return entriesToReturn.ToList();
         }
@@ -52,7 +52,7 @@ namespace chldr_data.Repositories
             var entries = _dbContext.All<RealmEntry>().AsEnumerable()
                 .Where(entry => entry.Rate < UserModel.EnthusiastRateRange.Lower)
                 .Take(50)
-                .Select(FromEntityWithSubEntries)
+                .Select(FromEntity)
                 .ToList();
 
             return entries;
@@ -154,15 +154,16 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
-        protected override EntryModel FromEntity(RealmEntry entry)
-        {
-            return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
-        }
-        protected EntryModel FromEntityWithSubEntries(RealmEntry entry)
+        public override EntryModel FromEntity(RealmEntry entry)
         {
             var subEntries = _dbContext.All<RealmEntry>()
                    .Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entry.EntryId))
                    .ToImmutableList();
+
+            if (!subEntries.Any())
+            {
+                return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
+            }
 
             var subSources = subEntries.ToDictionary(e => e.EntryId, e => e.Source as ISourceEntity);
             var subSounds = subEntries.ToDictionary(e => e.EntryId, e => e.Sounds.ToList().Cast<ISoundEntity>());
@@ -179,6 +180,12 @@ namespace chldr_data.Repositories
                     subSounds
                 );
         }
+
+        public EntryModel FromEntry(string entryId)
+        {
+            return FromEntity(_dbContext.All<RealmEntry>().First(e => e.EntryId.Equals(entryId)));
+        }
+
         protected override RecordType RecordType => RecordType.Entry;
 
         public RealmEntriesRepository(

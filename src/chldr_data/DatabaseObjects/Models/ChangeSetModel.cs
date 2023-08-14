@@ -31,22 +31,5 @@ namespace chldr_data.DatabaseObjects.Models
                 CreatedAt = entity.CreatedAt,
             };
         }
-
-        public static ChangeSetModel FromDto(ChangeSetDto entity)
-        {
-            // To be used when receiving objects from the API
-
-            return new ChangeSetModel()
-            {
-                ChangeSetIndex = entity.ChangeSetIndex,
-                ChangeSetId = entity.ChangeSetId,
-                UserId = entity.UserId,
-                Operation = entity.Operation,
-                RecordType = entity.RecordType,
-                RecordId = entity.RecordId,
-                RecordChanges = entity.RecordChanges,
-                CreatedAt = entity.CreatedAt,
-            };
-        }
     }
 }

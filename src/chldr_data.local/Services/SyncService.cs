@@ -46,7 +46,7 @@ namespace chldr_data.local.Services
             IEnumerable<T> newResults;
             do
             {
-                var response = await _requestService.Take<T>(recordType, offset, limit);
+                var response = await _requestService.TakeAsync(recordType, offset, limit);
                 if (!response.Success)
                 {
                     throw new Exception(response.ErrorMessage);
@@ -95,6 +95,11 @@ namespace chldr_data.local.Services
                 foreach (var dto in entryDtos)
                 {
                     _dbContext.Add(RealmEntry.FromDto(dto, _dbContext));
+
+                    foreach (var subEntryDto in dto.SubEntries)
+                    {
+                        _dbContext.Add(RealmEntry.FromDto(subEntryDto, _dbContext));
+                    }
                 }
 
                 foreach (var dto in changeSetDtos)
@@ -125,7 +130,7 @@ namespace chldr_data.local.Services
                 await _syncLock.WaitAsync();
 
                 // Return if there are no changesets available on remote server
-                var response = await _requestService.TakeLast<ChangeSetDto>(RecordType.ChangeSet, Constants.ChangeSetsToApply);
+                var response = await _requestService.TakeLastAsync(RecordType.ChangeSet, Constants.ChangeSetsToApply);
                 if (!response.Success)
                 {
                     throw new Exception(response.ErrorMessage);

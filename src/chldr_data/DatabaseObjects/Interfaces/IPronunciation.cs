@@ -1,6 +1,6 @@
 ﻿namespace chldr_data.DatabaseObjects.Interfaces
 {
-    public interface ISound
+    public interface IPronunciation
     {
         string SoundId { get; set; }
         string EntryId { get; }

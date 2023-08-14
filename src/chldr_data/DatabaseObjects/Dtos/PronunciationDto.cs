@@ -3,7 +3,7 @@ using chldr_data.DatabaseObjects.Models;
 
 namespace chldr_data.DatabaseObjects.Dtos
 {
-    public class PronunciationDto : ISound
+    public class PronunciationDto : IPronunciation
     {
         public string SoundId { get; set; } = Guid.NewGuid().ToString();
         public string FileName { get; set; } = Guid.NewGuid().ToString();

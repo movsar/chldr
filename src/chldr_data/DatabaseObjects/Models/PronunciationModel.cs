@@ -1,8 +1,9 @@
-﻿using chldr_data.DatabaseObjects.Interfaces;
+﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_data.DatabaseObjects.Models
 {
-    public class PronunciationModel : ISound
+    public class PronunciationModel : IPronunciation
     {
         public string FileName { get; set; }
         public string SoundId { get; set; }

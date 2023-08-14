@@ -42,6 +42,7 @@ namespace chldr_data.DatabaseObjects.Dtos
         public string? Details { get; set; }
         public int Type { get; set; } = 1;
         public int EntrySubtype { get; set; } = 0;
+        public List<EntryDto> SubEntries { get; set; } = new List<EntryDto>();
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
         public virtual List<TranslationDto> TranslationsDtos { get; set; } = new List<TranslationDto>();
@@ -59,6 +60,7 @@ namespace chldr_data.DatabaseObjects.Dtos
                 UserId = entryModel.UserId,
                 SourceId = entryModel.SourceId!,
                 ParentEntryId = entryModel.ParentEntryId,
+                SubEntries = entryModel.SubEntries.Select(FromModel).ToList(),
                 Type = (int)entryModel.Type,
                 EntrySubtype = entryModel.Subtype,
                 Rate = entryModel.Rate,

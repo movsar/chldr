@@ -16,7 +16,7 @@ namespace chldr_data.Repositories
     {
         public RealmChangeSetsRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
         protected override RecordType RecordType => RecordType.ChangeSet;
-        protected override ChangeSetModel FromEntity(RealmChangeSet entity)
+        public override ChangeSetModel FromEntity(RealmChangeSet entity)
         {
             return ChangeSetModel.FromEntity(entity);
         }

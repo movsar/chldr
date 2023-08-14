@@ -23,8 +23,7 @@ namespace chldr_data.remote.Repositories
             {
                 var filteredEntries = IEntriesRepository.Find(_dbContext.Entries, inputText);
 
-                return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries)
-                    .Select(e => FromSqlEntry(e.EntryId)).ToList();
+                return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries, FromEntry);
             }
             catch (Exception ex)
             {
@@ -40,7 +39,7 @@ namespace chldr_data.remote.Repositories
              * Unlike other methods, it will not return its parent, rather only the specified entry
              */
 
-            return FromSqlEntry(entityId);
+            return FromEntry(entityId);
         }
         public override async Task<List<EntryModel>> TakeAsync(int offset, int limit)
         {
@@ -49,8 +48,7 @@ namespace chldr_data.remote.Repositories
                 .Skip(offset)
                 .Take(limit);
 
-            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries)
-                    .Select(e => FromSqlEntry(e.EntryId)).ToList();
+            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries, FromEntry);
         }
         public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
@@ -60,15 +58,13 @@ namespace chldr_data.remote.Repositories
                       .Skip(offset)
                       .Take(limit);
 
-            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries)
-                    .Select(e => FromSqlEntry(e.EntryId)).ToList();
+            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries, FromEntry);
         }
         public override async Task<List<EntryModel>> GetRandomsAsync(int limit)
         {
             var filteredEntries = IEntriesRepository.GetRandomEntries(_dbContext.Entries, limit);
 
-            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries)
-                    .Select(e => FromSqlEntry(e.EntryId)).ToList();
+            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries, FromEntry);
         }
 
         public async Task<List<EntryModel>> GetLatestEntriesAsync()
@@ -79,8 +75,7 @@ namespace chldr_data.remote.Repositories
                 .OrderByDescending(e => e.CreatedAt)
                 .Take(count);
 
-            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries)
-                    .Select(e => FromSqlEntry(e.EntryId)).ToList();
+            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries, FromEntry);
         }
 
         public async Task<List<EntryModel>> GetEntriesOnModerationAsync()
@@ -91,13 +86,12 @@ namespace chldr_data.remote.Repositories
                 .Where(entry => entry.Rate < UserModel.MemberRateRange.Lower)
                 .Take(count);
 
-            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries)
-                    .Select(e => FromSqlEntry(e.EntryId)).ToList();
+            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries, FromEntry);
         }
         public async Task<List<EntryModel>> GetChildEntriesAsync(string entryId)
         {
             var entries = _dbContext.Entries.Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entryId));
-            return await entries.Select(e => FromSqlEntry(e.EntryId)).ToListAsync();
+            return await entries.Select(e => FromEntry(e.EntryId)).ToListAsync();
         }
 
         #endregion
@@ -345,7 +339,7 @@ namespace chldr_data.remote.Repositories
             return count;
         }
 
-        private EntryModel FromSqlEntry(string entryId)
+        public EntryModel FromEntry(string entryId)
         {
             /*
              * This retrieves the entry with all its dependencies, because of the EF Core, we need to specify

@@ -46,27 +46,25 @@ namespace chldr_utils.Services
                 foreach (var error in errorResponse.Errors)
                 {
                     var messageParts = new List<string>();
-                    messageParts.Add(error.Message);
 
                     var extensions = error.Extensions.Select(e => e.Value).ToArray();
 
-                    if (extensions.Count() > 0)
+                    if (extensions.Count() == 0)
+                    {
+                        messageParts.Add(error.Message);
+                    }
+                    else if (extensions.Count() > 0)
                     {
                         messageParts.Add(extensions[0]);
                     }
-                    if (extensions.Count() > 1)
+                    else if (extensions.Count() > 1)
                     {
                         _exceptionHandler.LogError(extensions[1]);
                     }
 
                     var errorMessage = string.Join(", ", messageParts);
 
-                    Console.WriteLine(errorMessage);
-                    Console.WriteLine(messageParts[1]);
-
-                    _exceptionHandler.LogError(errorMessage);
-
-                    throw new Exception(errorMessage);
+                    throw _exceptionHandler.Error(errorMessage);
                 }
 
                 throw new Exception("An unhandled error occurred");
@@ -81,7 +79,7 @@ namespace chldr_utils.Services
                 }
                 else
                 {
-                    throw new Exception("Unexpected error occurred", ex);
+                    throw new Exception(ex.Message);
                 }
             }
         }

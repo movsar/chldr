@@ -1,4 +1,5 @@
-﻿using chldr_data.DatabaseObjects.Interfaces;
+﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.Models;
 using Newtonsoft.Json;
 
@@ -18,19 +19,19 @@ namespace chldr_data.DatabaseObjects.Models
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
 
-        public static TranslationModel FromEntity(ITranslationEntity translation)
+        public static TranslationModel FromEntity(ITranslationEntity entity)
         {
             return new TranslationModel()
             {
-                TranslationId = translation.TranslationId,
-                EntryId = translation.EntryId,
-                Content = translation.Content,
-                UserId = translation.UserId,
-                Notes = translation.Notes,
-                Rate = translation.Rate,
-                LanguageCode = translation.LanguageCode,
-                CreatedAt = translation.CreatedAt,
-                UpdatedAt = translation.UpdatedAt                
+                TranslationId = entity.TranslationId,
+                EntryId = entity.EntryId,
+                Content = entity.Content,
+                UserId = entity.UserId,
+                Notes = entity.Notes,
+                Rate = entity.Rate,
+                LanguageCode = entity.LanguageCode,
+                CreatedAt = entity.CreatedAt,
+                UpdatedAt = entity.UpdatedAt                
             };
         }
     }

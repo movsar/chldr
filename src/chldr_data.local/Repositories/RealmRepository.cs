@@ -35,7 +35,7 @@ namespace chldr_data.Repositories
                 SchemaVersion = Constants.RealmSchemaVersion
             };
         }
-        protected abstract TModel FromEntity(TEntity entity);
+        public abstract TModel FromEntity(TEntity entity);
 
         public abstract Task Add(TDto dto);
         public abstract Task Update(TDto EntryDto);

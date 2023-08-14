@@ -28,7 +28,7 @@ namespace chldr_data.Interfaces.Repositories
             return filteredEntries;
         }
 
-        public static List<IEntryEntity> GroupWithSubentries(IQueryable<IEntryEntity> sourceEntries, IQueryable<IEntryEntity> filteredEntries)
+        public static List<EntryModel> GroupWithSubentries(IQueryable<IEntryEntity> sourceEntries, IQueryable<IEntryEntity> filteredEntries, Func<string, EntryModel> fromEntity)
         {
             // Must not initiate any asynchronous operations!
 
@@ -54,7 +54,8 @@ namespace chldr_data.Interfaces.Repositories
             // Remove standalone sub entries
             resultingEntries.RemoveAll(e => subEntryIds.Contains(e.EntryId));
 
-            return resultingEntries;
+            var models = resultingEntries.Select(e => fromEntity(e.EntryId)).ToList();
+            return models;
         }
 
         public static IQueryable<IEntryEntity> Find(IQueryable<IEntryEntity> sourceEntries, string inputText)
@@ -106,6 +107,7 @@ namespace chldr_data.Interfaces.Repositories
             return resultingEntries;
         }
 
+        EntryModel FromEntry(string entryId);
         Task<int> CountAsync(FiltrationFlags filtrationFlags);
         Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags);
         Task<List<EntryModel>> FindAsync(string inputText);

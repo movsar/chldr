@@ -6,12 +6,8 @@ using chldr_data.Interfaces.Repositories;
 using chldr_data.local.RealmEntities;
 using chldr_data.Models;
 using chldr_data.Repositories;
-using chldr_data.Services;
 using chldr_utils;
-using chldr_utils.Interfaces;
 using chldr_utils.Services;
-using Realms;
-using System.Threading.Channels;
 
 namespace chldr_data.local.Repositories
 {
@@ -19,7 +15,7 @@ namespace chldr_data.local.Repositories
     {
         public RealmSoundsRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
         protected override RecordType RecordType => RecordType.Sound;
-        protected override PronunciationModel FromEntity(RealmSound entity)
+        public override PronunciationModel FromEntity(RealmSound entity)
         {
             return PronunciationModel.FromEntity(entity);
         }
@@ -81,7 +77,7 @@ namespace chldr_data.local.Repositories
             return new List<ChangeSetModel>();
         }
 
-        public Task<ChangeSetModel> Promote(ISound sound)
+        public Task<ChangeSetModel> Promote(IPronunciation sound)
         {
             throw new NotImplementedException();
         }

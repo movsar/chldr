@@ -135,7 +135,7 @@ namespace chldr_data.Services
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, "passwordReset");
             return response.Data;
         }
-        public async Task<RequestResult> TakeLast<T>(RecordType recordType, int count)
+        public async Task<RequestResult> TakeLastAsync(RecordType recordType, int count)
         {
             var operation = "takeLast";
             var request = new GraphQLRequest
@@ -155,7 +155,7 @@ namespace chldr_data.Services
             return response.Data;
         }
 
-        public async Task<RequestResult> Take<T>(RecordType recordType, int offset, int limit)
+        public async Task<RequestResult> TakeAsync(RecordType recordType, int offset, int limit)
         {
             var operation = "take";
             var request = new GraphQLRequest
@@ -175,7 +175,7 @@ namespace chldr_data.Services
             return response.Data;
         }
 
-        public async Task<RequestResult> AddEntry(string userId, EntryDto entryDto)
+        public async Task<RequestResult> AddEntryAsync(string userId, EntryDto entryDto)
         {
             var operation = "addEntry";
             var request = new GraphQLRequest

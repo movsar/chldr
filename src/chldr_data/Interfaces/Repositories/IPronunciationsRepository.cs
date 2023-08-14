@@ -6,6 +6,6 @@ namespace chldr_data.Interfaces.Repositories
 {
     public interface IPronunciationsRepository : IRepository<PronunciationModel, PronunciationDto>
     {
-        Task<ChangeSetModel> Promote(ISound sound);
+        Task<ChangeSetModel> Promote(IPronunciation sound);
     }
 }

@@ -98,7 +98,7 @@ namespace chldr_data.remote.Repositories
             return await base.RemoveAsync(entityId);
         }
 
-        public async Task<ChangeSetModel> Promote(ISound soundInfo)
+        public async Task<ChangeSetModel> Promote(IPronunciation soundInfo)
         {
             var soundEntity = await _dbContext.Pronunciations.FindAsync(soundInfo.SoundId);
             if (soundEntity == null)
