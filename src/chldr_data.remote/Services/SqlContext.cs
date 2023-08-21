@@ -20,7 +20,7 @@ public class SqlContext : DbContext
     public virtual DbSet<SqlTranslation> Translations { get; set; }
     public virtual DbSet<SqlUser> Users { get; set; }
     public virtual DbSet<SqlToken> Tokens { get; set; }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         try
@@ -42,10 +42,11 @@ public class SqlContext : DbContext
                 entity.ToTable("entry");
 
                 entity.HasIndex(e => e.SourceId, "fk_entry_source_id");
-
                 entity.HasIndex(e => e.UserId, "fk_entry_user_id");
-
                 entity.HasIndex(e => e.ParentEntryId, "entry_parent_id_idx");
+                entity.HasIndex(e => e.RawContents, "entry_rawcontents_idx");
+                entity.HasIndex(e => e.Rate, "entry_rate_idx");
+                entity.HasIndex(e => e.Type, "entry_type_idx");
 
                 entity.Property(e => e.EntryId)
                     .HasMaxLength(40)
@@ -261,6 +262,8 @@ public class SqlContext : DbContext
                 entity.HasIndex(e => e.EntryId, "fk_translation_entry_id");
                 entity.HasIndex(e => e.LanguageCode, "fk_translation_language_id");
                 entity.HasIndex(e => e.UserId, "fk_translation_user_id");
+                entity.HasIndex(e => e.RawContents, "translation_rawcontents_idx");
+                entity.HasIndex(e => e.Rate, "translation_rate_idx");
 
                 entity.HasOne(d => d.Entry).WithMany(p => p.Translations)
                     .HasForeignKey(d => d.EntryId)
@@ -320,6 +323,7 @@ public class SqlContext : DbContext
                 entity.ToTable("tokens");
 
                 entity.HasIndex(e => e.UserId, "fk_tokens_user_id_idx");
+                entity.HasIndex(e => e.Value, "token_value_idx");
 
                 entity.Property(e => e.TokenId)
                     .HasMaxLength(40)
