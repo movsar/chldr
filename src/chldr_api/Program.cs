@@ -74,6 +74,7 @@ namespace chldr_api
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
+                app.UseHsts();
                 app.UseHttpsRedirection();
                 app.UseForwardedHeaders(new ForwardedHeadersOptions
                 {
