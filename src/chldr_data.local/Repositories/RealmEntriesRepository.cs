@@ -186,6 +186,11 @@ namespace chldr_data.Repositories
             return FromEntity(_dbContext.All<RealmEntry>().First(e => e.EntryId.Equals(entryId)));
         }
 
+        public Task<List<EntryModel>> GetByIdsAsync(List<string> entryIds, FiltrationFlags? filtrationFlags = null)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override RecordType RecordType => RecordType.Entry;
 
         public RealmEntriesRepository(

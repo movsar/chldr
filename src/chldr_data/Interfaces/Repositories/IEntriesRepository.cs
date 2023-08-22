@@ -114,5 +114,6 @@ namespace chldr_data.Interfaces.Repositories
         Task<List<EntryModel>> GetEntriesOnModerationAsync();
         Task<List<EntryModel>> GetLatestEntriesAsync();
         Task<ChangeSetModel> Promote(IEntry entry);
+        Task<List<EntryModel>> GetByIdsAsync(List<string> entryIds, FiltrationFlags? filtrationFlags = null);
     }
 }

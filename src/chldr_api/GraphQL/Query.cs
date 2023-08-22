@@ -18,6 +18,30 @@ namespace chldr_api
             _dataProvider = dataProvider;
         }
 
+        public async Task<RequestResult> GetEntriesAsync(List<string> entryIds, FiltrationFlags filtrationFlags)
+        {
+            try
+            {
+                using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+                var foundEntries = await unitOfWork.Entries.GetByIdsAsync(entryIds, filtrationFlags);
+                return new RequestResult()
+                {
+                    Success = true,
+                    SerializedData = JsonConvert.SerializeObject(foundEntries)
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new RequestResult()
+                {
+                    Success = false,
+                    ErrorMessage = ex.Message,
+                    SerializedData = string.Empty
+                };
+            }
+        }
+
         public async Task<RequestResult> FindAsync(string inputText)
         {
             try

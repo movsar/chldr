@@ -41,6 +41,26 @@ namespace chldr_data.remote.Repositories
 
             return FromEntry(entityId);
         }
+
+        public async Task<List<EntryModel>> GetByIdsAsync(List<string> entryIds, FiltrationFlags? filtrationFlags = null)
+        {
+            IQueryable<SqlEntry> entries = _dbContext.Entries;
+            if (filtrationFlags != null)
+            {
+                entries = IEntriesRepository.ApplyFiltrationFlags(_dbContext.Entries, filtrationFlags);
+            }
+
+            var filteredEntries = entries.Where(e => entryIds.Contains(e.EntryId));
+
+            var models = IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries, FromEntry);
+            foreach (var model in models)
+            {
+                model.Translations.RemoveAll(t => !t.LanguageCode.Equals("RUS"));
+            }
+
+            return models;
+        }
+
         public override async Task<List<EntryModel>> TakeAsync(int offset, int limit)
         {
             var filteredEntries = _dbContext.Entries
