@@ -18,7 +18,7 @@ namespace chldr_api
             _dataProvider = dataProvider;
         }
 
-        public async Task<RequestResult> GetEntriesAsync(List<string> entryIds, FiltrationFlags filtrationFlags)
+        public async Task<RequestResult> GetEntriesAsync(List<string> entryIds, FiltrationFlags? filtrationFlags)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace chldr_api
             }
         }
 
-        public async Task<RequestResult> FindAsync(string inputText)
+        public async Task<RequestResult> FindAsync(string inputText, FiltrationFlags? filtrationFlags)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace chldr_api
             }
         }
 
-        public async Task<RequestResult> TakeAsync(string recordTypeName, int offset, int limit)
+        public async Task<RequestResult> TakeAsync(string recordTypeName, int offset, int limit, FiltrationFlags? filtrationFlags)
         {
             try
             {
@@ -119,7 +119,7 @@ namespace chldr_api
                 };
             }
         }
-        public async Task<RequestResult> TakeLastAsync(string recordTypeName, int count)
+        public async Task<RequestResult> TakeLastAsync(string recordTypeName, int count, FiltrationFlags? filtrationFlags)
         {
             try
             {

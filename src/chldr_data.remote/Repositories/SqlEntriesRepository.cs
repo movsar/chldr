@@ -45,17 +45,23 @@ namespace chldr_data.remote.Repositories
         public async Task<List<EntryModel>> GetByIdsAsync(List<string> entryIds, FiltrationFlags? filtrationFlags = null)
         {
             IQueryable<SqlEntry> entries = _dbContext.Entries;
-            if (filtrationFlags != null)
+            if (filtrationFlags != null && filtrationFlags.EntryFilters != null)
             {
-                entries = IEntriesRepository.ApplyFiltrationFlags(_dbContext.Entries, filtrationFlags);
+                entries = IEntriesRepository.ApplyEntryFilters(_dbContext.Entries, filtrationFlags.EntryFilters);
             }
 
             var filteredEntries = entries.Where(e => entryIds.Contains(e.EntryId));
 
             var models = IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries, FromEntry);
+
+            // TODO: Move to a new ApplyTranslationFilters method
             foreach (var model in models)
             {
                 model.Translations.RemoveAll(t => !t.LanguageCode.Equals("RUS"));
+                foreach (var submodel in model.SubEntries)
+                {
+                    submodel.Translations.RemoveAll(t => !t.LanguageCode.Equals("RUS"));
+                }
             }
 
             return models;
@@ -72,7 +78,7 @@ namespace chldr_data.remote.Repositories
         }
         public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
-            var filteredEntries = IEntriesRepository.ApplyFiltrationFlags(_dbContext.Entries, filtrationFlags);
+            var filteredEntries = IEntriesRepository.ApplyEntryFilters(_dbContext.Entries, filtrationFlags?.EntryFilters);
             filteredEntries = filteredEntries
                       .OrderBy(e => e.RawContents)
                       .Skip(offset)
@@ -353,7 +359,7 @@ namespace chldr_data.remote.Repositories
 
         public async Task<int> CountAsync(FiltrationFlags filtrationFlags)
         {
-            var entries = IEntriesRepository.ApplyFiltrationFlags(_dbContext.Entries, filtrationFlags);
+            var entries = IEntriesRepository.ApplyEntryFilters(_dbContext.Entries, filtrationFlags?.EntryFilters);
             var count = await entries.CountAsync();
 
             return count;

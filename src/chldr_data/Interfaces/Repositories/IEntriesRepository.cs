@@ -82,24 +82,33 @@ namespace chldr_data.Interfaces.Repositories
             return resultingQuery;
         }
 
-        public static IQueryable<TEntity> ApplyFiltrationFlags<TEntity>(IQueryable<TEntity> sourceEntries, FiltrationFlags filtrationFlags)
+        public static IQueryable<TEntity> ApplyEntryFilters<TEntity>(IQueryable<TEntity> sourceEntries, EntryFilters? entryFilters)
          where TEntity : IEntryEntity
         {
+            if (entryFilters == null)
+            {
+                return sourceEntries;
+            }
+
             // Must not initiate any asynchronous operations!
 
             // Leave only selected entry types
-            var entryTypes = filtrationFlags.EntryTypes.Select(et => (int)et).ToArray();
-            var resultingEntries = sourceEntries.Where(e => entryTypes.Contains(e.Type));
+            var resultingEntries = sourceEntries;
+            if (entryFilters.EntryTypes != null && entryFilters.EntryTypes.Length > 0)
+            {
+                var entryTypes = entryFilters.EntryTypes.Select(et => (int)et).ToArray();
+                resultingEntries = sourceEntries.Where(e => entryTypes.Contains(e.Type));
+            }
 
             // If StartsWith specified, remove all that don't start with that string
-            if (!string.IsNullOrWhiteSpace(filtrationFlags.StartsWith))
+            if (!string.IsNullOrWhiteSpace(entryFilters.StartsWith))
             {
-                var str = filtrationFlags.StartsWith.ToLower();
+                var str = entryFilters.StartsWith.ToLower();
                 resultingEntries = resultingEntries.Where(e => e.RawContents.StartsWith(str));
             }
 
             // Don't include entries on moderation, if not specified otherwise
-            if (!filtrationFlags.IncludeOnModeration)
+            if (entryFilters.IncludeOnModeration != null && entryFilters.IncludeOnModeration == false)
             {
                 resultingEntries = resultingEntries.Where(e => e.Rate > UserModel.MemberRateRange.Upper);
             }

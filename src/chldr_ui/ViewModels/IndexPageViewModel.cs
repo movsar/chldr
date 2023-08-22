@@ -24,12 +24,17 @@ namespace chldr_ui.ViewModels
             CurrentPage = 1;
             CurrentLetter = letter;
 
-            var count = await ContentStore.EntryService.GetCountAsync(new FiltrationFlags()
+            var filtrationFlags = new FiltrationFlags()
             {
-                IncludeOnModeration = true,
-                StartsWith = CurrentLetter,
-                EntryTypes = new EntryType[] { EntryType.Word }
-            });
+                EntryFilters = new EntryFilters()
+                {
+                    IncludeOnModeration = true,
+                    StartsWith = CurrentLetter,
+                    EntryTypes = new EntryType[] { EntryType.Word }
+                }
+            };
+
+            var count = await ContentStore.EntryService.GetCountAsync(filtrationFlags);
             TotalPages = (int)Math.Ceiling((double)count / 50);
 
             await GetEntries();
@@ -48,12 +53,17 @@ namespace chldr_ui.ViewModels
 
         public async Task GetEntries()
         {
-            var batch = await ContentStore.EntryService.TakeAsync((CurrentPage - 1) * 50, 50, new FiltrationFlags()
+            var filtrationFlags = new FiltrationFlags()
             {
-                IncludeOnModeration = true,
-                StartsWith = CurrentLetter,
-                EntryTypes = new EntryType[] { EntryType.Word }
-            });
+                EntryFilters = new EntryFilters()
+                {
+                    IncludeOnModeration = true,
+                    StartsWith = CurrentLetter,
+                    EntryTypes = new EntryType[] { EntryType.Word }
+                }
+            };
+
+            var batch = await ContentStore.EntryService.TakeAsync((CurrentPage - 1) * 50, 50, filtrationFlags);
             Entries = batch.ToList();
 
             await RefreshUiAsync();
