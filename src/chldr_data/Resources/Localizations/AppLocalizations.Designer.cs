@@ -241,7 +241,7 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;h2&gt;&lt;span style=&apos;font-family:Lucida Sans Unicode,Lucida Grande,sans-serif&apos;&gt;Hello and Welcome!&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;&lt;span style=&apos;font-size:14px&apos;&gt;We&amp;#39;re delighted to have you on board with us! Let&amp;#39;s make Chechen great again!&lt;br /&gt;\r\nTo activate your account, please follow &lt;a href=&apos;{0}&apos;&gt;this link&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&apos;font-size:12px&apos;&gt;This email is auto-generated, do not reply to it, you can always reach us via team@nohchiyn-mott.com&lt;/span&gt;&lt;/p&gt;.
+        ///   Looks up a localized string similar to &lt;h2&gt;&lt;span style=&apos;font-family:Lucida Sans Unicode,Lucida Grande,sans-serif&apos;&gt;Hello and Welcome!&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;&lt;span style=&apos;font-size:14px&apos;&gt;We&amp;#39;re delighted to have you on board with us! Let&amp;#39;s make Chechen great again!&lt;br /&gt;\r\nTo activate your account, please follow &lt;a href=&apos;{0}&apos;&gt;this link&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&apos;font-size:12px&apos;&gt;This email is auto-generated, do not reply to it, you can always reach us via support@dosham.app&lt;/span&gt;&lt;/p&gt;.
         /// </summary>
         public static string Email_Confirm_email_html {
             get {

@@ -94,7 +94,7 @@ namespace chldr_test_utils
             smtpClientMock.Setup(c => c.Connect("mail.hosting.reg.ru", 465, true));
 
             // Configure the Authenticate method
-            smtpClientMock.Setup(c => c.Authenticate("no-reply@nohchiyn-mott.com", "6MsyThgtYWiFTND"));
+            smtpClientMock.Setup(c => c.Authenticate("support@dosham.app", "6MsyThgtYWiFTND"));
 
             // Configure the Send method to do nothing (successful)
             smtpClientMock.Setup(c => c.Send(It.IsAny<MimeMessage>()));

@@ -16,9 +16,9 @@
         }
 
         public const string DevApiHost = "https://localhost:7065";
-        public const string ProdApiHost = "https://api.nohchiyn-mott.com";
+        public const string ProdApiHost = "https://api.dosham.app";
 
-        public const string ProdFrontHost = "https://nohchiyn-mott.com";
+        public const string ProdFrontHost = "https://dosham.app";
 
         public const int ChangeSetsToApply = 1000;
         public const int RealmSchemaVersion = 17;
