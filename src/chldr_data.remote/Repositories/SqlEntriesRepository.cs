@@ -17,13 +17,56 @@ namespace chldr_data.remote.Repositories
 {
     public class SqlEntriesRepository : SqlRepository<SqlEntry, EntryModel, EntryDto>, IEntriesRepository
     {
-        public async Task<List<EntryModel>> FindAsync(string inputText)
+        public void ApplyTranslationFilters(List<EntryModel> entryModels, TranslationFilters filters)
+        {
+            // Filter by language codes
+            var languageCodes = new List<string>();
+            if (filters.LanguageCodes != null)
+            {
+                languageCodes = filters.LanguageCodes.Select(lc => lc.ToLower().Trim()).ToList();
+            }
+            foreach (var entry in entryModels)
+            {
+                var translationsToFilterOut = new List<string>();
+
+                foreach (var translation in entry.Translations)
+                {
+                    // If language codes are specified - filter by them
+                    if (languageCodes.Any() && !languageCodes.Contains(translation.LanguageCode))
+                    {
+                        translationsToFilterOut.Add(translation.TranslationId);
+                    }
+
+                    if (filters.IncludeOnModeration == false && translation.Rate <= UserModel.MemberRateRange.Upper)
+                    {
+                        translationsToFilterOut.Add(translation.TranslationId);
+                    }
+                }
+
+                entry.Translations.RemoveAll(t => translationsToFilterOut.Contains(t.TranslationId));
+            }
+        }
+
+        public async Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags? filtrationFlags = null)
         {
             try
             {
-                var filteredEntries = IEntriesRepository.Find(_dbContext.Entries, inputText);
+                IQueryable<SqlEntry> entries = _dbContext.Entries;
+                if (filtrationFlags != null && filtrationFlags.EntryFilters != null)
+                {
+                    entries = IEntriesRepository.ApplyEntryFilters(_dbContext.Entries, filtrationFlags.EntryFilters);
+                }
 
-                return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries, FromEntry);
+                var foundEntries = IEntriesRepository.Find(entries, inputText);
+
+                var entryModels = IEntriesRepository.GroupWithSubentries(_dbContext.Entries, foundEntries, FromEntry);
+
+                if (filtrationFlags != null && filtrationFlags.TranslationFilters != null)
+                {
+                    ApplyTranslationFilters(entryModels, filtrationFlags.TranslationFilters);
+                }
+
+                return entryModels;
             }
             catch (Exception ex)
             {

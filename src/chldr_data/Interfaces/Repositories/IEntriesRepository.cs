@@ -116,13 +116,13 @@ namespace chldr_data.Interfaces.Repositories
             return resultingEntries;
         }
 
+        Task<int> CountAsync(FiltrationFlags? filtrationFlags = null);
+        Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags? filtrationFlags = null);
+        Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags? filtrationFlags = null);
+        Task<List<EntryModel>> GetByIdsAsync(List<string> entryIds, FiltrationFlags? filtrationFlags = null);
         EntryModel FromEntry(string entryId);
-        Task<int> CountAsync(FiltrationFlags filtrationFlags);
-        Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags);
-        Task<List<EntryModel>> FindAsync(string inputText);
         Task<List<EntryModel>> GetEntriesOnModerationAsync();
         Task<List<EntryModel>> GetLatestEntriesAsync();
         Task<ChangeSetModel> Promote(IEntry entry);
-        Task<List<EntryModel>> GetByIdsAsync(List<string> entryIds, FiltrationFlags? filtrationFlags = null);
     }
 }

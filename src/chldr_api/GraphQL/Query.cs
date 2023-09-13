@@ -5,7 +5,6 @@ using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Services;
 using Newtonsoft.Json;
-using Realms.Sync;
 
 namespace chldr_api
 {
@@ -48,7 +47,7 @@ namespace chldr_api
             {
                 using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
 
-                var foundEntries = await unitOfWork.Entries.FindAsync(inputText);
+                var foundEntries = await unitOfWork.Entries.FindAsync(inputText, filtrationFlags);
 
                 return new RequestResult()
                 {
