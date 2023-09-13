@@ -391,7 +391,12 @@ namespace chldr_data.remote.Repositories
                 .Include(e => e.User)
                 .Include(e => e.Translations)
                 .Include(e => e.Sounds)
-                .First(e => e.EntryId.Equals(entryId));
+                .FirstOrDefault(e => e.EntryId.Equals(entryId));
+
+            if (entry == null)
+            {
+                throw new NullReferenceException();
+            }
 
             var subEntries = _dbContext.Entries
              .Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entry.EntryId))

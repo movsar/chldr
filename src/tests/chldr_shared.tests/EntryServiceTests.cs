@@ -78,7 +78,7 @@ namespace chldr_shared.tests
                 var entityId = "non_existing_entity_id";
 
                 // Act and Assert
-                await Assert.ThrowsAsync<ArgumentException>(async () => await entryService.GetAsync(entityId));
+                await Assert.ThrowsAsync<NullReferenceException>(async () => await entryService.GetAsync(entityId));
             }
         }
 
