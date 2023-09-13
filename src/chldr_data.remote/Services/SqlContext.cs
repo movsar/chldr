@@ -1,5 +1,6 @@
 ﻿using chldr_data.remote.SqlEntities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MySql.EntityFrameworkCore.Extensions;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
@@ -395,5 +396,15 @@ public class SqlContext : DbContext
             throw;
         }
 
+    }
+
+    public static readonly Microsoft.Extensions.Logging.LoggerFactory _myLoggerFactory =
+    new LoggerFactory(new[] {
+        new Microsoft.Extensions.Logging.Debug.DebugLoggerProvider()
+    });
+    
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseLoggerFactory(_myLoggerFactory);
     }
 }
