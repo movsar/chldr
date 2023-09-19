@@ -8,5 +8,6 @@ A project to build an interactive Chechen language dictionary. Started form scra
 ## Roadmap
 1. Enable Api accounts with Add, Update, Remove operations
 3. Reenable sound recording for the web version
-4. Get a new design for the web version
-5. Fix all the bugs
+4. Add donation page
+6. Get a new design for the web version
+7. Fix all the bugs
