@@ -24,6 +24,18 @@
             </NavLink>
         </div>
 
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="donate">
+                <span class="oi oi-dollar" aria-hidden="true"></span> @Localizer["Donate"]
+            </NavLink>
+        </div>
+
+
+        <div class="nav-item px-3">
+            <hr style="color:gray; border: 2px solid gray;" />
+        </div>
+
         @if (UserStore?.IsLoggedIn == true)
         {
             <div class="nav-item px-3">
@@ -44,6 +56,7 @@
                 </NavLink>
             </div>
         }
+
     </nav>
 </div>
 

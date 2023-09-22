@@ -1,0 +1,25 @@
+﻿@page "/donate"
+@inherits DonationsPageViewModel;
+
+<p>
+    Move the slider to explore your options.
+</p>
+
+<div class="slidecontainer">
+    <input type="range" min="2" max="1024" value="2" class="slider" name="amount" id="slider" @oninput="SetNewAmountChanged" />
+</div>
+
+<div class="col">
+    <h3>
+        You get:
+    </h3>
+    <ul>
+        <li>Something</li>
+    </ul>
+</div>
+<div class="col">
+    <h3>We get:</h3>
+    <p align="center">
+        <br><span>@SelectedItem</span>
+    </p>
+</div>
