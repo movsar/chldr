@@ -15,18 +15,18 @@ namespace chldr_api.Migrations
             migrationBuilder.AlterDatabase()
                 .Annotation("MySQL:Charset", "utf8mb4");
 
-            migrationBuilder.CreateTable(
-                name: "__efmigrationshistory",
-                columns: table => new
-                {
-                    MigrationId = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false),
-                    ProductVersion = table.Column<string>(type: "varchar(32)", maxLength: 32, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PRIMARY", x => x.MigrationId);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
+            //migrationBuilder.CreateTable(
+            //    name: "__efmigrationshistory",
+            //    columns: table => new
+            //    {
+            //        MigrationId = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false),
+            //        ProductVersion = table.Column<string>(type: "varchar(32)", maxLength: 32, nullable: false)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PRIMARY", x => x.MigrationId);
+            //    })
+            //    .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
@@ -307,7 +307,7 @@ namespace chldr_api.Migrations
                     user_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     source_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     content = table.Column<string>(type: "text", nullable: true),
-                    raw_contents = table.Column<string>(type: "varchar(1500)", maxLength: 1500, nullable: false),
+                    raw_contents = table.Column<string>(type: "varchar(900)", maxLength: 900, nullable: false),
                     parent_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: true),
                     type = table.Column<int>(type: "int", nullable: false),
                     subtype = table.Column<int>(type: "int", nullable: false),
@@ -369,8 +369,8 @@ namespace chldr_api.Migrations
                     language_code = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     entry_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     user_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
-                    content = table.Column<string>(type: "varchar(10000)", maxLength: 10000, nullable: true),
-                    raw_contents = table.Column<string>(type: "varchar(10000)", maxLength: 10000, nullable: true),
+                    content = table.Column<string>(type: "longtext", nullable: true),
+                    raw_contents = table.Column<string>(type: "longtext", nullable: true),
                     notes = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true),
                     rate = table.Column<int>(type: "int", nullable: false),
                     created_at = table.Column<DateTimeOffset>(type: "datetime", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
@@ -450,10 +450,10 @@ namespace chldr_api.Migrations
                 table: "entry",
                 column: "rate");
 
-            migrationBuilder.CreateIndex(
-                name: "entry_rawcontents_idx",
-                table: "entry",
-                column: "raw_contents");
+            //migrationBuilder.CreateIndex(
+            //    name: "entry_rawcontents_idx",
+            //    table: "entry",
+            //    column: "raw_contents");
 
             migrationBuilder.CreateIndex(
                 name: "entry_type_idx",
@@ -520,10 +520,10 @@ namespace chldr_api.Migrations
                 table: "translation",
                 column: "rate");
 
-            migrationBuilder.CreateIndex(
-                name: "translation_rawcontents_idx",
-                table: "translation",
-                column: "raw_contents");
+            //migrationBuilder.CreateIndex(
+            //    name: "translation_rawcontents_idx",
+            //    table: "translation",
+            //    column: "raw_contents");
         }
 
         /// <inheritdoc />

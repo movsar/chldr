@@ -2,6 +2,7 @@
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.remote.Services;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chldr_data.remote.SqlEntities;
@@ -9,6 +10,7 @@ namespace chldr_data.remote.SqlEntities;
 
 public class SqlSound : ISoundEntity
 {
+    [Key]
     public string SoundId { get; set; }
     public string UserId { get; set; } = null!;
     public string EntryId { get; set; } = null!;

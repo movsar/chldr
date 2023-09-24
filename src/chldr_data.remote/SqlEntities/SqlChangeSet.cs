@@ -1,10 +1,7 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using Newtonsoft.Json;
 using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.Enums;
-using Realms.Sync;
-using Realms;
-using chldr_data.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace chldr_data.remote.SqlEntities
 {
@@ -12,6 +9,7 @@ namespace chldr_data.remote.SqlEntities
     [JsonObject("changeSet")]
     public class SqlChangeSet : IChangeSetEntity
     {
+        [Key]
         public long ChangeSetIndex { get; set; }
         public string ChangeSetId { get; set; } = Guid.NewGuid().ToString();
         public string UserId { get; set; } = null!;

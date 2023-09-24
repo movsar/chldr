@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.Enums;
@@ -12,7 +13,7 @@ namespace chldr_data.remote.SqlEntities;
 public class SqlEntry : IEntryEntity
 {
     private string? content;
-
+    [Key]
     public string EntryId { get; set; }
     public string UserId { get; set; } = null!;
     public string SourceId { get; set; } = null!;

@@ -3,11 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.remote.Services;
 using Realms;
+using System.ComponentModel.DataAnnotations;
 
 namespace chldr_data.remote.SqlEntities;
 public class SqlTranslation : ITranslationEntity
 {
     private string? content;
+    [Key]
     public string TranslationId { get; set; }
     public string LanguageCode { get; set; } = null!;
     public string EntryId { get; set; } = null!;

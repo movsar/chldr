@@ -1,12 +1,14 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using System.ComponentModel.DataAnnotations.Schema;
 using chldr_data.DatabaseObjects.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace chldr_data.remote.SqlEntities;
 
 [Table("Source")]
 public class SqlSource : ISourceEntity
 {
+    [Key]
     public string SourceId { get; set; } 
     public string? UserId { get; set; }
     public string Name { get; set; } = null!;
