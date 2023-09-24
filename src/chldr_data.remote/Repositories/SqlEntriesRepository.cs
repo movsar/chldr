@@ -137,7 +137,7 @@ namespace chldr_data.remote.Repositories
         #region Update methods
         public override async Task<List<ChangeSetModel>> AddAsync(EntryDto newEntryDto)
         {
-            var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId));
+            var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId) as SqlUser);
 
             // Set rate
             newEntryDto.Rate = user.GetRateRange().Lower;
@@ -192,7 +192,7 @@ namespace chldr_data.remote.Repositories
             try
             {
                 var entry = await GetAsync(updatedEntryDto.EntryId);
-                var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId));
+                var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId) as SqlUser);
 
                 var existingEntryDto = EntryDto.FromModel(entry);
 
@@ -347,7 +347,7 @@ namespace chldr_data.remote.Repositories
             }
 
             var userEntity = await _dbContext.Users.FindAsync(_userId);
-            var user = UserModel.FromEntity(userEntity);
+            var user = UserModel.FromEntity(userEntity as SqlUser);
             var newRate = user.GetRateRange().Lower;
 
             entryEntity.Rate = newRate;

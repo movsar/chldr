@@ -21,7 +21,7 @@ namespace chldr_data.remote.Repositories
         protected override RecordType RecordType => RecordType.User;
         public async Task SetStatusAsync(string userId, UserStatus newStatus)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId) as SqlUser;
             if (user == null)
             {
                 throw new NullReferenceException();
@@ -38,7 +38,7 @@ namespace chldr_data.remote.Repositories
             var user = SqlUser.FromDto(dto);
             await _dbContext.Users.AddAsync(user);
 
-            var changeSet = CreateChangeSetEntity(Operation.Insert, dto.UserId);
+            var changeSet = CreateChangeSetEntity(Operation.Insert, dto.Id);
             await _dbContext.ChangeSets.AddAsync(changeSet);
 
             _dbContext.SaveChanges();
@@ -47,7 +47,7 @@ namespace chldr_data.remote.Repositories
 
         public override async Task<List<ChangeSetModel>> UpdateAsync(UserDto dto)
         {
-            var existingEntity = await GetAsync(dto.UserId);
+            var existingEntity = await GetAsync(dto.Id);
             var existingDto = UserDto.FromModel(existingEntity);
 
             var changes = Change.GetChanges(dto, existingDto);
@@ -59,7 +59,7 @@ namespace chldr_data.remote.Repositories
             var user = SqlUser.FromDto(dto);
             _dbContext.Users.Update(user);
 
-            var changeSet = CreateChangeSetEntity(Operation.Update, dto.UserId, changes);
+            var changeSet = CreateChangeSetEntity(Operation.Update, dto.Id, changes);
             _dbContext.ChangeSets.Add(changeSet);
 
             _dbContext.SaveChanges();
@@ -68,13 +68,13 @@ namespace chldr_data.remote.Repositories
 
         public async Task<UserModel?> FindByEmail(string email)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email!.Equals(email));
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email!.Equals(email)) as SqlUser;
             return user == null ? null : UserModel.FromEntity(user);
         }
 
         public async Task<bool> VerifyAsync(string userId, string password)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId.Equals(userId));
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId)) as SqlUser;
             if (user == null)
             {
                 throw new NullReferenceException();
@@ -86,11 +86,11 @@ namespace chldr_data.remote.Repositories
         public override async Task<List<UserModel>> GetRandomsAsync(int limit)
         {
             var randomizer = new Random();
-            var ids = await _dbContext.Set<SqlUser>().Select(e => e.UserId).ToListAsync();
+            var ids = await _dbContext.Set<SqlUser>().Select(e => e.Id).ToListAsync();
             var randomlySelectedIds = ids.OrderBy(x => randomizer.Next(1, Constants.EntriesApproximateCoount)).Take(limit).ToList();
 
             var entities = await _dbContext.Set<SqlUser>()
-              .Where(e => randomlySelectedIds.Contains(e.UserId))
+              .Where(e => randomlySelectedIds.Contains(e.Id))
               .AsNoTracking()
               .ToListAsync();
 
@@ -105,13 +105,13 @@ namespace chldr_data.remote.Repositories
                 throw new ArgumentNullException();
             }
 
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email!.ToLower().Equals(email.ToLower()));
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email!.ToLower().Equals(email.ToLower())) as SqlUser;
             return UserModel.FromEntity(user);
         }
 
         public override async Task<UserModel> GetAsync(string entityId)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId!.Equals(entityId));
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id!.Equals(entityId)) as SqlUser;
             return UserModel.FromEntity(user);
         }
 
@@ -120,6 +120,7 @@ namespace chldr_data.remote.Repositories
             var entities = await _dbContext.Users
                 .Skip(offset)
                 .Take(limit)
+                .Cast<SqlUser>()
                 .ToListAsync();
 
             return entities.Select(UserModel.FromEntity).ToList();

@@ -22,7 +22,7 @@ namespace chldr_data.DatabaseObjects.Models
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Patronymic { get; set; }
-        public string UserId { get; set; }
+        public string Id { get; set; }
         public UserType Type { get; set; } = UserType.Regular;
         public UserStatus Status { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
@@ -118,7 +118,7 @@ namespace chldr_data.DatabaseObjects.Models
         }
         public bool CanEdit(int entityRate, string entityUserId)
         {
-            if (Status != UserStatus.Active || (Role <= GetUserRole(entityRate) && !UserId.Equals(entityUserId)))
+            if (Status != UserStatus.Active || (Role <= GetUserRole(entityRate) && !Id.Equals(entityUserId)))
             {
                 return false;
             }
@@ -128,7 +128,7 @@ namespace chldr_data.DatabaseObjects.Models
         public bool CanRemove(int entityRate, string entityUserId, DateTimeOffset entityCreatedAt)
         {
             // Removal is allowed only for the authors and only within X hours and for moderators
-            if (Status != UserStatus.Active || (Role <= GetUserRole(entityRate) && !UserId.Equals(entityUserId)))
+            if (Status != UserStatus.Active || (Role <= GetUserRole(entityRate) && !Id.Equals(entityUserId)))
             {
                 return false;
             }
@@ -145,14 +145,14 @@ namespace chldr_data.DatabaseObjects.Models
 
         private static UserModel FromBaseInterface(IUser user)
         {
-            if (string.IsNullOrWhiteSpace(user.UserId))
+            if (string.IsNullOrWhiteSpace(user.Id))
             {
                 throw new NullReferenceException("UserId is null");
             }
 
             return new UserModel()
             {
-                UserId = user.UserId,
+                Id = user.Id,
                 Email = user.Email,
                 Rate = user.Rate,
                 ImagePath = user.ImagePath,
@@ -190,7 +190,7 @@ namespace chldr_data.DatabaseObjects.Models
 
         public bool CanPromote(int rate, string userId)
         {
-            if (Status != UserStatus.Active || UserId.Equals(userId) || Role <= GetUserRole(rate))
+            if (Status != UserStatus.Active || Id.Equals(userId) || Role <= GetUserRole(rate))
             {
                 return false;
             }

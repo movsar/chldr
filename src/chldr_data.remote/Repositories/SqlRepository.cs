@@ -26,7 +26,7 @@ namespace chldr_data.remote.Repositories
         {
             _dbConfig = dbConfig;
             _dbContext = new SqlContext(_dbConfig);
-            _userId = userId ?? _dbContext.Users.First().UserId;
+            _userId = userId ?? _dbContext.Users.First().Id;
 
             _fileService = fileService;
         }

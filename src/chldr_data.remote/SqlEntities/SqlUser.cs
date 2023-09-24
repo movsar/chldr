@@ -2,37 +2,21 @@
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 using chldr_data.DatabaseObjects.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace chldr_data.remote.SqlEntities;
 
 [Table("User")]
-public class SqlUser : IUserEntity
+public class SqlUser : IdentityUser, IUserEntity
 {
     public SqlUser() { }
-    public static SqlUser FromDto(UserDto userDto)
-    {
-        return new SqlUser()
-        {
-            UserId = userDto.UserId,
-            Rate = userDto.Rate,
-            Email = userDto.Email,
-            Password = userDto.Password,
-            Status = (int)userDto.Status,
-            Type = (int)userDto.Type,
-            FirstName = userDto.FirstName,
-            LastName = userDto.LastName,
-            Patronymic = userDto.Patronymic,
-        };
-    }
-
-    public string UserId { get; set; }
-    public string? Email { get; set; }
+  
     public string? Password { get; set; }
-    public int Rate { get; set; } = 0;
     public string? ImagePath { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Patronymic { get; set; }
+    public int Rate { get; set; } = 0;
     public int Type { get; set; } = 0;
     public int Status { get; set; } = 0;
     public DateTimeOffset CreatedAt { get; set; }
@@ -44,4 +28,21 @@ public class SqlUser : IUserEntity
     public virtual ICollection<SqlTranslation> Translations { get; set; } = new List<SqlTranslation>();
     public virtual ICollection<SqlToken> Tokens { get; set; } = new List<SqlToken>();
     public virtual ICollection<SqlChangeSet> ChangeSets { get; set; } = new List<SqlChangeSet>();
+
+    public static SqlUser FromDto(UserDto userDto)
+    {
+        return new SqlUser()
+        {
+            Id = userDto.Id,
+            Rate = userDto.Rate,
+            Email = userDto.Email,
+            Password = userDto.Password,
+            Status = (int)userDto.Status,
+            Type = (int)userDto.Type,
+            FirstName = userDto.FirstName,
+            LastName = userDto.LastName,
+            Patronymic = userDto.Patronymic,
+        };
+    }
+
 }

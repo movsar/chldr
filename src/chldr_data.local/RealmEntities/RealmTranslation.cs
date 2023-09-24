@@ -30,7 +30,7 @@ public class RealmTranslation : RealmObject, ITranslationEntity
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
 
     [Ignored] public string EntryId => Entry.EntryId;
-    [Ignored] public string UserId => User.UserId;
+    [Ignored] public string UserId => User.Id;
 
     internal static RealmTranslation FromDto(TranslationDto translationDto, Realm context, RealmEntry? entry = null)
     {

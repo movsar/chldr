@@ -39,7 +39,7 @@ namespace chldr_data.remote.Repositories
             _fileService.AddEntrySound(soundDto.FileName, soundDto.RecordingB64!);
 
             var sound = SqlSound.FromDto(soundDto, _dbContext);
-            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
+            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId) as SqlUser);
             sound.Rate = user.GetRateRange().Lower;
             _dbContext.Pronunciations.Add(sound);
 
@@ -63,7 +63,7 @@ namespace chldr_data.remote.Repositories
             }
 
             // This should be before checking for privileges, in case when input is existing entry and nothing has been changed
-            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
+            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId) as SqlUser);
             if (!user.CanEdit(existing.Rate, existing.UserId))
             {
                 throw new InvalidOperationException("Error:Insufficient_privileges");
@@ -87,7 +87,7 @@ namespace chldr_data.remote.Repositories
                 return new List<ChangeSetModel>();
             }
 
-            var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId));
+            var user = UserModel.FromEntity(await _dbContext.Users.FindAsync(_userId) as SqlUser);
             if (!user.CanRemove(sound.Rate, sound.UserId, sound.CreatedAt))
             {
                 throw new InvalidOperationException();
@@ -107,7 +107,7 @@ namespace chldr_data.remote.Repositories
             }
 
             var userEntity = await _dbContext.Users.FindAsync(_userId);
-            var user = UserModel.FromEntity(userEntity);
+            var user = UserModel.FromEntity(userEntity as SqlUser);
 
             var newRate = user.GetRateRange().Lower;
 

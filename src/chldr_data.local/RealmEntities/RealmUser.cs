@@ -6,7 +6,7 @@ namespace chldr_data.local.RealmEntities;
 [MapTo("User")]
 public class RealmUser : RealmObject, IUserEntity
 {
-    [PrimaryKey] public string UserId { get; set; }
+    [PrimaryKey] public string Id { get; set; }
     public string? Email { get; set; }
     public int Rate { get; set; } = 0;
     public string? ImagePath { get; set; }
@@ -25,19 +25,19 @@ public class RealmUser : RealmObject, IUserEntity
 
     internal static RealmUser FromDto(UserDto userDto, Realm context)
     {
-        if (string.IsNullOrEmpty(userDto.UserId) || context == null)
+        if (string.IsNullOrEmpty(userDto.Id) || context == null)
         {
             throw new NullReferenceException();
         }
 
         // Translation
-        var user = context.Find<RealmUser>(userDto.UserId);
+        var user = context.Find<RealmUser>(userDto.Id);
         if (user == null)
         {
             user = new RealmUser();
         }
 
-        user.UserId = userDto.UserId;
+        user.Id = userDto.Id;
         user.Rate = userDto.Rate;
         user.Email = userDto.Email;
         user.Status = (int)userDto.Status;

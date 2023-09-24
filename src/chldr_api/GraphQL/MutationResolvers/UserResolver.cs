@@ -70,12 +70,12 @@ namespace chldr_api.GraphQL.MutationServices
                 await usersRepository.AddAsync(user);
 
                 var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
-                var confirmationToken = JwtService.GenerateToken(user.UserId, "confirmation-token-secretconfirmation-token-secretconfirmation-token-secret", confirmationTokenExpiration);
+                var confirmationToken = JwtService.GenerateToken(user.Id, "confirmation-token-secretconfirmation-token-secretconfirmation-token-secret", confirmationTokenExpiration);
 
                 // Save the tokens to the database
                 await tokensRepository.AddAsync(new TokenDto
                 {
-                    UserId = user.UserId,
+                    UserId = user.Id,
                     Type = (int)TokenType.Confirmation,
                     Value = confirmationToken,
                     ExpiresIn = confirmationTokenExpiration
@@ -120,12 +120,12 @@ namespace chldr_api.GraphQL.MutationServices
 
             // Generate a password reset token with a short expiration time
             var tokenExpiresIn = DateTime.UtcNow.AddMinutes(60);
-            var tokenValue = JwtService.GenerateToken(user.UserId, "password-reset-secret", tokenExpiresIn);
+            var tokenValue = JwtService.GenerateToken(user.Id, "password-reset-secret", tokenExpiresIn);
 
             // Store the token in the Tokens table
             var token = new TokenDto
             {
-                UserId = user.UserId,
+                UserId = user.Id,
                 Type = (int)TokenType.PasswordReset,
                 Value = tokenValue,
                 ExpiresIn = tokenExpiresIn,
@@ -158,12 +158,12 @@ namespace chldr_api.GraphQL.MutationServices
             var accessTokenExpiration = DateTime.UtcNow.AddMinutes(60);
             var refreshTokenExpiration = DateTime.UtcNow.AddDays(60);
 
-            var accessToken = JwtService.GenerateToken(user.UserId, "access-token-secretaccess-token-secretaccess-token-secret", accessTokenExpiration);
-            var refreshToken = JwtService.GenerateToken(user.UserId, "refresh-token-secretrefresh-token-secretrefresh-token-secret", refreshTokenExpiration);
+            var accessToken = JwtService.GenerateToken(user.Id, "access-token-secretaccess-token-secretaccess-token-secret", accessTokenExpiration);
+            var refreshToken = JwtService.GenerateToken(user.Id, "refresh-token-secretrefresh-token-secretrefresh-token-secret", refreshTokenExpiration);
 
             var accessTokenDto = new TokenDto
             {
-                UserId = user.UserId,
+                UserId = user.Id,
                 Type = (int)TokenType.Access,
                 Value = accessToken,
                 ExpiresIn = accessTokenExpiration
@@ -171,7 +171,7 @@ namespace chldr_api.GraphQL.MutationServices
 
             var refreshTokenDto = new TokenDto
             {
-                UserId = user.UserId,
+                UserId = user.Id,
                 Type = (int)TokenType.Refresh,
                 Value = refreshToken,
                 ExpiresIn = refreshTokenExpiration
@@ -225,8 +225,8 @@ namespace chldr_api.GraphQL.MutationServices
                 }
 
                 // Remove previous tokens related to this user (in future this can be done in a batch job to increase efficiency)
-                var previousAccessTokens = tokensRepository.GetByUserId(user.UserId, TokenType.Access);
-                var previousRefreshTokens = tokensRepository.GetByUserId(user.UserId, TokenType.Refresh);
+                var previousAccessTokens = tokensRepository.GetByUserId(user.Id, TokenType.Access);
+                var previousRefreshTokens = tokensRepository.GetByUserId(user.Id, TokenType.Refresh);
 
                 await tokensRepository.RemoveRange(previousAccessTokens.Select(t => t.TokenId));
                 await tokensRepository.RemoveRange(previousRefreshTokens.Select(t => t.TokenId));
@@ -258,7 +258,7 @@ namespace chldr_api.GraphQL.MutationServices
 
             // Check if the password is correct
 
-            var isVerified = await usersRepository.VerifyAsync(user.UserId, password);
+            var isVerified = await usersRepository.VerifyAsync(user.Id, password);
 
             if (!isVerified)
             {

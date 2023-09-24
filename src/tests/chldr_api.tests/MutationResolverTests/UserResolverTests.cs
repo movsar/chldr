@@ -86,7 +86,7 @@ namespace chldr_api.tests.ServiceResolverTests
         public async Task RegisterNew_WithExistingEmail_ReturnsErrorResponse()
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork();
-            var actingUserId = unitOfWork.Users.GetRandomsAsync(1).Result.First().UserId;
+            var actingUserId = unitOfWork.Users.GetRandomsAsync(1).Result.First().Id;
 
             // Arrange
             var testUser = TestDataFactory.CreateRandomUserDto();

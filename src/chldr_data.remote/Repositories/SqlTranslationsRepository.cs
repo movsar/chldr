@@ -35,7 +35,7 @@ namespace chldr_data.remote.Repositories
         public override async Task<List<ChangeSetModel>> AddAsync(TranslationDto dto)
         {
             // Set rate
-            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
+            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId) as SqlUser);
             dto.Rate = user.GetRateRange().Lower;
 
             var entity = SqlTranslation.FromDto(dto, _dbContext);
@@ -62,7 +62,7 @@ namespace chldr_data.remote.Repositories
                 return new List<ChangeSetModel>();
             }
 
-            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
+            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId) as SqlUser);
             if (!user.CanEdit(existing.Rate, existing.UserId))
             {
                 throw new InvalidOperationException("Error:Insufficient_privileges");
@@ -83,7 +83,7 @@ namespace chldr_data.remote.Repositories
         public override async Task<List<ChangeSetModel>> RemoveAsync(string entityId)
         {
             var existing = await GetAsync(entityId);
-            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId));
+            var user = UserModel.FromEntity(_dbContext.Users.Find(_userId) as SqlUser);
             if (!user.CanEdit(existing.Rate, existing.UserId))
             {
                 throw new InvalidOperationException("Error:Insufficient_privileges");
@@ -100,7 +100,7 @@ namespace chldr_data.remote.Repositories
             }
 
             var userEntity = await _dbContext.Users.FindAsync(_userId);
-            var user = UserModel.FromEntity(userEntity);
+            var user = UserModel.FromEntity(userEntity as SqlUser);
 
             var newRate = user.GetRateRange().Lower;
 

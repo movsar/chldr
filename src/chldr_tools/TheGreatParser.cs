@@ -61,8 +61,8 @@ namespace chldr_maintenance
                     entry.SourceId = entry.Source.SourceId;
                     entry.Rate = 10;
                     entry.EntryId = Guid.NewGuid().ToString();
-                    entry.User = _context.Users.First();
-                    entry.UserId = entry.User.UserId;
+                    entry.User = _context.Users.First() as SqlUser;
+                    entry.UserId = entry.User.Id;
 
                     var matches = Regex.Matches(translationText, @"\[.*?\]");
                     if (matches.Count() == 0)

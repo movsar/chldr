@@ -212,7 +212,7 @@ namespace chldr_shared.Services
 
         private async Task<UpdateResponse> PromoteRequestAsync(IEntry entry, UserModel? currentUser)
         {
-            var response = await _requestService.PromoteAsync(RecordType.Entry, currentUser.UserId, entry.EntryId);
+            var response = await _requestService.PromoteAsync(RecordType.Entry, currentUser.Id, entry.EntryId);
             if (!response.Success)
             {
                 throw _exceptionHandler.Error("Error:Request_failed");
@@ -246,13 +246,13 @@ namespace chldr_shared.Services
         public async Task PromoteTranslationAsync(ITranslation translationInfo, UserModel? currentUser)
         {
             // TODO: Use requestService
-            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.UserId);
+            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.Id);
             await unitOfWork.Translations.Promote(translationInfo);
         }
 
         public async Task PromotePronunciationAsync(IPronunciation soundInfo, UserModel? currentUser)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.UserId);
+            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.Id);
             await unitOfWork.Sounds.Promote(soundInfo);
         }
     }

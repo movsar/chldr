@@ -8,7 +8,7 @@ namespace chldr_test_utils.Generators
     {
         public UserDtoFaker()
         {
-            RuleFor(u => u.UserId, f => Guid.NewGuid().ToString());
+            RuleFor(u => u.Id, f => Guid.NewGuid().ToString());
             RuleFor(u => u.Email, f => f.Person.Email);
             RuleFor(u => u.Password, f => f.Internet.Password());
             RuleFor(u => u.PasswordConfirmation, (f, u) => u.Password);

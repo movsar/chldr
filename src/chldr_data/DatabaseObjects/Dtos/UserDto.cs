@@ -7,7 +7,7 @@ namespace chldr_data.DatabaseObjects.Dtos
 {
     public class UserDto : IUser
     {
-        public string UserId { get; set; } = Guid.NewGuid().ToString();
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string? Email { get; set; }
         [JsonIgnore] public string? Password { get; set; }
         [JsonIgnore] public string? PasswordConfirmation { get; set; }
@@ -29,7 +29,7 @@ namespace chldr_data.DatabaseObjects.Dtos
                 UpdatedAt = model.UpdatedAt,
                 ImagePath = model.ImagePath,
                 Patronymic = model.Patronymic,
-                UserId = model.UserId,
+                Id = model.Id,
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,

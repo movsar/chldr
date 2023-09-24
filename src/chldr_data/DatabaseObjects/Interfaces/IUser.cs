@@ -2,7 +2,7 @@
 {
     public interface IUser
     {
-        string UserId { get; set; }
+        string Id { get; set; }
         string? Email { get; set; }
         string? ImagePath { get; set; }
         string? FirstName { get; set; }

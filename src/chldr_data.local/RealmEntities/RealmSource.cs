@@ -16,7 +16,7 @@ public class RealmSource : RealmObject, ISourceEntity
     public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
     public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
     public IList<RealmEntry> Entries { get; }
-    [Ignored] public string? UserId => User?.UserId;
+    [Ignored] public string? UserId => User?.Id;
 
     internal static RealmSource FromDto(SourceDto dto, Realm dbContext)
     {

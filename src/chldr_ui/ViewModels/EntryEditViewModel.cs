@@ -126,7 +126,7 @@ namespace chldr_ui.ViewModels
                 NavigationManager.NavigateTo("/");
             }
 
-            var translation = new TranslationDto(EntryDto.EntryId, UserStore.CurrentUser!.UserId, ContentStore.Languages.First());
+            var translation = new TranslationDto(EntryDto.EntryId, UserStore.CurrentUser!.Id, ContentStore.Languages.First());
 
             // Needed to know which translations are new, in case they need to be removed
             _newTranslationIds.Add(translation.TranslationId);
@@ -189,7 +189,7 @@ namespace chldr_ui.ViewModels
             latestSoundDto = new PronunciationDto();
             latestSoundDto.EntryId = EntryDto.EntryId!;
             latestSoundDto.Rate = UserStore.CurrentUser!.GetRateRange().Lower;
-            latestSoundDto.UserId = UserStore.CurrentUser!.UserId;
+            latestSoundDto.UserId = UserStore.CurrentUser!.Id;
 
             await JsInterop.StartRecording(latestSoundDto.SoundId);
         }
@@ -238,14 +238,14 @@ namespace chldr_ui.ViewModels
 
             if (EntryDto.CreatedAt != DateTimeOffset.MinValue)
             {
-                await ContentStore.EntryService.UpdateAsync(EntryDto, user.UserId);
+                await ContentStore.EntryService.UpdateAsync(EntryDto, user.Id);
             }
             else
             {
                 var userSourceId = "63a816205d1af0e432fba6de";
                 EntryDto.SourceId = userSourceId;
-                EntryDto.UserId = user.UserId;
-                await ContentStore.EntryService.AddAsync(EntryDto, user.UserId);
+                EntryDto.UserId = user.Id;
+                await ContentStore.EntryService.AddAsync(EntryDto, user.Id);
             }
 
             NavigationManager.NavigateTo("/");
