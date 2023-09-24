@@ -1,4 +1,5 @@
 ﻿using chldr_data.remote.SqlEntities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,6 +23,8 @@ public class SqlContext : IdentityDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<SqlEfmigrationshistory>(entity =>
         {
             entity.HasKey(e => e.MigrationId).HasName("PRIMARY");
@@ -273,13 +276,12 @@ public class SqlContext : IdentityDbContext
                 .HasConstraintName("fk_translation_user_id");
         });
 
-        //modelBuilder.Entity<SqlUser>(entity =>
-        //{
-        //    entity.HasKey(e => e.UserId).HasName("PRIMARY");
 
-        //    entity.ToTable("users");
 
-        //    entity.Property(e => e.UserId)
+        //    modelBuilder.Entity<SqlUser>(entity =>
+        //    {
+
+        //    entity.Property(e => e.Id)
         //        .HasMaxLength(40)
         //        .HasColumnName("user_id");
         //    entity.Property(e => e.Status).HasColumnName("status");
@@ -396,5 +398,6 @@ public class SqlContext : IdentityDbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseLoggerFactory(_myLoggerFactory);
+
     }
 }

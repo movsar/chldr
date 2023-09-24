@@ -2,11 +2,14 @@ using chldr_api.GraphQL.MutationResolvers;
 using chldr_api.GraphQL.MutationServices;
 using chldr_data.Interfaces;
 using chldr_data.remote.Services;
+using chldr_data.remote.SqlEntities;
 using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 using System.Text;
@@ -31,8 +34,14 @@ namespace chldr_api
             }
 
             builder.Services.AddTransient<IDataProvider, SqlDataProvider>();
-            
-            builder.Services.AddDbContext<SqlContext>(options => options.UseMySQL(connectionString), ServiceLifetime.Transient);
+
+            builder.Services.AddDbContext<SqlContext>(options => options
+                .UseMySQL(connectionString, b => b.MigrationsAssembly("chldr_api")), ServiceLifetime.Transient);
+
+            builder.Services
+                .AddDefaultIdentity<SqlUser>()
+                .AddEntityFrameworkStores<SqlContext>();
+            //    .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 
             builder.Services.AddScoped<EmailService>();
             builder.Services.AddScoped<FileService>();
