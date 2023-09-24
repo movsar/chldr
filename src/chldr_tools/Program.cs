@@ -73,14 +73,11 @@ namespace chldr_tools
         }
         static SqlDataProvider GetSqlDataProvider()
         {
-            var configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string>
-                {
-                        //{ "ConnectionStrings:SqlContext", ""}
-                }!).Build();
+            var connectionString = "My Mega Connection String";
 
-            var sqlContext = new SqlDataProvider(_fileService, _exceptionHandler, configuration);
+            var sqlContext = new SqlDataProvider(_fileService, _exceptionHandler, connectionString);
             sqlContext.Initialize();
+
             return sqlContext;
         }
         static void LanguageCodeLocal(Realm realmDatabase)

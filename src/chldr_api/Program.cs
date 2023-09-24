@@ -31,6 +31,8 @@ namespace chldr_api
             }
 
             builder.Services.AddTransient<IDataProvider, SqlDataProvider>();
+            
+            builder.Services.AddDbContext<SqlContext>(options => options.UseMySQL(connectionString), ServiceLifetime.Transient);
 
             builder.Services.AddScoped<EmailService>();
             builder.Services.AddScoped<FileService>();
@@ -61,7 +63,6 @@ namespace chldr_api
             });
 
             builder.Services.AddAuthorization();
-
             builder.Services.AddGraphQLServer()
                 .AddQueryType<Query>()
                 .AddMutationType<Mutation>()

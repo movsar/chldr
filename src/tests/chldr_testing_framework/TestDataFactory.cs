@@ -67,11 +67,7 @@ namespace chldr_test_utils
         public static IDataProvider CreateSqlDataProvider()
         {
             // Remove sql database
-            var options = new DbContextOptionsBuilder<SqlContext>()
-             .UseMySQL(Constants.TestingDatabaseConnectionString)
-             .Options;
-
-            var dataProvider = new SqlDataProvider(_fileService, _exceptionHandler, options);
+            var dataProvider = new SqlDataProvider(_fileService, _exceptionHandler, Constants.TestingDatabaseConnectionString);
             return dataProvider;
         }
         public static IDataProvider CreatRealmDataProvider()

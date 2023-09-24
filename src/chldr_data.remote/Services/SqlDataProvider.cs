@@ -43,13 +43,6 @@ namespace chldr_data.remote.Services
                .Options;
         }
 
-        public SqlDataProvider(FileService fileService, ExceptionHandler exceptionHandler, DbContextOptions<SqlContext> dbContextOptionsBuilder)
-        {
-            _fileService = fileService;
-            _exceptionHandler = exceptionHandler;
-            _options = dbContextOptionsBuilder;
-        }
-
         public IUnitOfWork CreateUnitOfWork(string? userId = null)
         {
             return new SqlUnitOfWork(_options, _fileService, _exceptionHandler, userId);
