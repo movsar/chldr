@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace chldr_api.Migrations
 {
     /// <inheritdoc />
-    public partial class identity : Migration
+    public partial class Identity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,39 +15,20 @@ namespace chldr_api.Migrations
             migrationBuilder.AlterDatabase()
                 .Annotation("MySQL:Charset", "utf8mb4");
 
-            //migrationBuilder.CreateTable(
-            //    name: "__efmigrationshistory",
-            //    columns: table => new
-            //    {
-            //        MigrationId = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false),
-            //        ProductVersion = table.Column<string>(type: "varchar(32)", maxLength: 32, nullable: false)
-            //    },
-            //    constraints: table =>
-            //    {
-            //        table.PrimaryKey("PRIMARY", x => x.MigrationId);
-            //    })
-            //    .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "AspNetRoles",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
             migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(255)", nullable: false),
+                    ImagePath = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: true),
+                    FirstName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    LastName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    Patronymic = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    Rate = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Created_at = table.Column<DateTimeOffset>(type: "datetime", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    Updated_at = table.Column<DateTimeOffset>(type: "datetime", nullable: false),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
@@ -66,28 +47,6 @@ namespace chldr_api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    RoleId = table.Column<string>(type: "varchar(255)", nullable: false),
-                    ClaimType = table.Column<string>(type: "longtext", nullable: true),
-                    ClaimValue = table.Column<string>(type: "longtext", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -135,31 +94,6 @@ namespace chldr_api.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: false),
-                    RoleId = table.Column<string>(type: "varchar(255)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
@@ -174,34 +108,6 @@ namespace chldr_api.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Password = table.Column<string>(type: "longtext", nullable: true),
-                    ImagePath = table.Column<string>(type: "longtext", nullable: true),
-                    FirstName = table.Column<string>(type: "longtext", nullable: true),
-                    LastName = table.Column<string>(type: "longtext", nullable: true),
-                    Patronymic = table.Column<string>(type: "longtext", nullable: true),
-                    Rate = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_User_AspNetUsers_Id",
-                        column: x => x.Id,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -228,7 +134,7 @@ namespace chldr_api.Migrations
                     table.ForeignKey(
                         name: "fk_changesets_user_id",
                         column: x => x.user_id,
-                        principalTable: "User",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
@@ -249,7 +155,7 @@ namespace chldr_api.Migrations
                     table.ForeignKey(
                         name: "fk_query_user_id",
                         column: x => x.user_id,
-                        principalTable: "User",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
@@ -271,7 +177,7 @@ namespace chldr_api.Migrations
                     table.ForeignKey(
                         name: "fk_source_user_id",
                         column: x => x.user_id,
-                        principalTable: "User",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
@@ -293,7 +199,7 @@ namespace chldr_api.Migrations
                     table.ForeignKey(
                         name: "fk_tokens_user_id",
                         column: x => x.user_id,
-                        principalTable: "User",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -307,7 +213,7 @@ namespace chldr_api.Migrations
                     user_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     source_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     content = table.Column<string>(type: "text", nullable: true),
-                    raw_contents = table.Column<string>(type: "varchar(900)", maxLength: 900, nullable: false),
+                    raw_contents = table.Column<string>(type: "varchar(1500)", maxLength: 1500, nullable: false),
                     parent_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: true),
                     type = table.Column<int>(type: "int", nullable: false),
                     subtype = table.Column<int>(type: "int", nullable: false),
@@ -327,7 +233,7 @@ namespace chldr_api.Migrations
                     table.ForeignKey(
                         name: "fk_entry_user_id",
                         column: x => x.user_id,
-                        principalTable: "User",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
@@ -356,7 +262,7 @@ namespace chldr_api.Migrations
                     table.ForeignKey(
                         name: "fk_sound_user_id",
                         column: x => x.user_id,
-                        principalTable: "User",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
@@ -369,8 +275,8 @@ namespace chldr_api.Migrations
                     language_code = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     entry_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     user_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
-                    content = table.Column<string>(type: "longtext", nullable: true),
-                    raw_contents = table.Column<string>(type: "longtext", nullable: true),
+                    content = table.Column<string>(type: "varchar(10000)", maxLength: 10000, nullable: true),
+                    raw_contents = table.Column<string>(type: "varchar(10000)", maxLength: 10000, nullable: true),
                     notes = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true),
                     rate = table.Column<int>(type: "int", nullable: false),
                     created_at = table.Column<DateTimeOffset>(type: "datetime", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
@@ -388,21 +294,10 @@ namespace chldr_api.Migrations
                     table.ForeignKey(
                         name: "fk_translation_user_id",
                         column: x => x.user_id,
-                        principalTable: "User",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetRoleClaims_RoleId",
-                table: "AspNetRoleClaims",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "RoleNameIndex",
-                table: "AspNetRoles",
-                column: "NormalizedName",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -413,11 +308,6 @@ namespace chldr_api.Migrations
                 name: "IX_AspNetUserLogins_UserId",
                 table: "AspNetUserLogins",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserRoles_RoleId",
-                table: "AspNetUserRoles",
-                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -450,10 +340,10 @@ namespace chldr_api.Migrations
                 table: "entry",
                 column: "rate");
 
-            //migrationBuilder.CreateIndex(
-            //    name: "entry_rawcontents_idx",
-            //    table: "entry",
-            //    column: "raw_contents");
+            migrationBuilder.CreateIndex(
+                name: "entry_rawcontents_idx",
+                table: "entry",
+                column: "raw_contents");
 
             migrationBuilder.CreateIndex(
                 name: "entry_type_idx",
@@ -520,10 +410,10 @@ namespace chldr_api.Migrations
                 table: "translation",
                 column: "rate");
 
-            //migrationBuilder.CreateIndex(
-            //    name: "translation_rawcontents_idx",
-            //    table: "translation",
-            //    column: "raw_contents");
+            migrationBuilder.CreateIndex(
+                name: "translation_rawcontents_idx",
+                table: "translation",
+                column: "raw_contents");
         }
 
         /// <inheritdoc />
@@ -533,16 +423,10 @@ namespace chldr_api.Migrations
                 name: "__efmigrationshistory");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoleClaims");
-
-            migrationBuilder.DropTable(
                 name: "AspNetUserClaims");
 
             migrationBuilder.DropTable(
                 name: "AspNetUserLogins");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
@@ -563,16 +447,10 @@ namespace chldr_api.Migrations
                 name: "translation");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
                 name: "entry");
 
             migrationBuilder.DropTable(
                 name: "source");
-
-            migrationBuilder.DropTable(
-                name: "User");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

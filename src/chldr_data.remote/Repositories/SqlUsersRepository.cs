@@ -80,7 +80,7 @@ namespace chldr_data.remote.Repositories
                 throw new NullReferenceException();
             }
 
-            return BCrypt.Net.BCrypt.Verify(password, user.Password);
+            return BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
         }
 
         public override async Task<List<UserModel>> GetRandomsAsync(int limit)

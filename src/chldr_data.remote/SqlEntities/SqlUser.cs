@@ -6,12 +6,10 @@ using Microsoft.AspNetCore.Identity;
 
 namespace chldr_data.remote.SqlEntities;
 
-[Table("User")]
 public class SqlUser : IdentityUser, IUserEntity
 {
     public SqlUser() { }
   
-    public string? Password { get; set; }
     public string? ImagePath { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
@@ -36,7 +34,7 @@ public class SqlUser : IdentityUser, IUserEntity
             Id = userDto.Id,
             Rate = userDto.Rate,
             Email = userDto.Email,
-            Password = userDto.Password,
+            PasswordHash = userDto.Password,
             Status = (int)userDto.Status,
             Type = (int)userDto.Type,
             FirstName = userDto.FirstName,
