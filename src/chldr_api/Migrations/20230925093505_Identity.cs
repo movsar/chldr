@@ -275,8 +275,8 @@ namespace chldr_api.Migrations
                     language_code = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     entry_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     user_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
-                    content = table.Column<string>(type: "varchar(10000)", maxLength: 10000, nullable: true),
-                    raw_contents = table.Column<string>(type: "varchar(10000)", maxLength: 10000, nullable: true),
+                    content = table.Column<string>(type: "longtext", nullable: true),
+                    raw_contents = table.Column<string>(type: "longtext", nullable: true),
                     notes = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true),
                     rate = table.Column<int>(type: "int", nullable: false),
                     created_at = table.Column<DateTimeOffset>(type: "datetime", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
@@ -340,10 +340,10 @@ namespace chldr_api.Migrations
                 table: "entry",
                 column: "rate");
 
-            migrationBuilder.CreateIndex(
-                name: "entry_rawcontents_idx",
-                table: "entry",
-                column: "raw_contents");
+            //migrationBuilder.CreateIndex(
+            //    name: "entry_rawcontents_idx",
+            //    table: "entry",
+            //    column: "raw_contents");
 
             migrationBuilder.CreateIndex(
                 name: "entry_type_idx",
@@ -409,11 +409,6 @@ namespace chldr_api.Migrations
                 name: "translation_rate_idx",
                 table: "translation",
                 column: "rate");
-
-            migrationBuilder.CreateIndex(
-                name: "translation_rawcontents_idx",
-                table: "translation",
-                column: "raw_contents");
         }
 
         /// <inheritdoc />
