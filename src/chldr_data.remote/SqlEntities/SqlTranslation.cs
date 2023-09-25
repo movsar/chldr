@@ -11,7 +11,6 @@ public class SqlTranslation : ITranslationEntity
     private string? content;
     [Key]
     public string TranslationId { get; set; }
-    public string LanguageCode { get; set; } = null!;
     public string EntryId { get; set; } = null!;
     public string UserId { get; set; } = null!;
     public string? Content
@@ -23,8 +22,8 @@ public class SqlTranslation : ITranslationEntity
             RawContents = string.IsNullOrEmpty(value) ? null : value.ToLower();
         }
     }
-
     public string? RawContents { get; private set; }
+    public string LanguageCode { get; set; } = null!;
     public string? Notes { get; set; }
     public int Rate { get; set; } = 0;
     public virtual SqlEntry Entry { get; set; } = null!;

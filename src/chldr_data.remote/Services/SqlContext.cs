@@ -50,35 +50,38 @@ public class SqlContext : IdentityUserContext<SqlUser>
                 .HasMaxLength(40)
                 .HasColumnName("entry_id");
 
-            entity.Property(e => e.UserId)
-                .HasMaxLength(40)
-                .HasColumnName("user_id");
-
             entity.Property(e => e.ParentEntryId)
                .HasMaxLength(40)
                .HasColumnName("parent_id");
 
-            entity.Property(e => e.Rate)
-                .HasColumnName("rate");
-
-            entity.Property(e => e.RawContents)
-                .HasMaxLength(1500)
-                .HasColumnName("raw_contents");
-
-            entity.Property(e => e.Content)
-                .HasColumnType("text")
-                .HasColumnName("content");
-
-            entity.Property(e => e.Details)
-                .HasColumnType("text")
-                .HasColumnName("details");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(40)
+                .HasColumnName("user_id");
 
             entity.Property(e => e.SourceId)
                 .HasMaxLength(40)
                 .HasColumnName("source_id");
 
-            entity.Property(e => e.Type).HasColumnName("type");
-            entity.Property(e => e.Subtype).HasColumnName("subtype");
+            entity.Property(e => e.Type)
+                .HasColumnName("type");
+
+            entity.Property(e => e.Rate)
+                .HasColumnName("rate");
+
+            entity.Property(e => e.Subtype)
+                .HasColumnName("subtype");
+
+            entity.Property(e => e.Content)
+                .HasColumnType("text")
+                .HasColumnName("content");
+
+            entity.Property(e => e.RawContents)
+                .HasMaxLength(1500)
+                .HasColumnName("raw_contents");
+
+            entity.Property(e => e.Details)
+                .HasColumnType("text")
+                .HasColumnName("details");
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -146,25 +149,31 @@ public class SqlContext : IdentityUserContext<SqlUser>
             entity.Property(e => e.SoundId)
                 .HasMaxLength(40)
                 .HasColumnName("sound_id");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
+
+            entity.Property(e => e.UserId)
+                .HasMaxLength(40)
+                .HasColumnName("user_id");
+
             entity.Property(e => e.EntryId)
                 .HasMaxLength(40)
                 .HasColumnName("entry_id");
+
+            entity.Property(e => e.Rate)
+              .HasColumnName("rate");
+
             entity.Property(e => e.FileName)
                 .HasMaxLength(250)
                 .HasColumnName("file_name");
+
+            entity.Property(e => e.CreatedAt)
+             .HasDefaultValueSql("CURRENT_TIMESTAMP")
+             .HasColumnType("datetime")
+             .HasColumnName("created_at");
+
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
-            entity.Property(e => e.UserId)
-                .HasMaxLength(40)
-                .HasColumnName("user_id");
-            entity.Property(e => e.Rate)
-                .HasColumnName("rate");
 
             entity.HasOne(d => d.Entry).WithMany(p => p.Sounds)
                 .HasForeignKey(d => d.EntryId)
@@ -221,10 +230,6 @@ public class SqlContext : IdentityUserContext<SqlUser>
                 .HasMaxLength(40)
                 .HasColumnName("translation_id");
 
-            entity.Property(e => e.LanguageCode)
-                .HasMaxLength(40)
-                .HasColumnName("language_code");
-
             entity.Property(e => e.EntryId)
                 .HasMaxLength(40)
                 .HasColumnName("entry_id");
@@ -241,6 +246,10 @@ public class SqlContext : IdentityUserContext<SqlUser>
                 .HasColumnName("raw_contents")
                 .HasColumnType("text")
                 .HasMaxLength(1500);
+
+            entity.Property(e => e.LanguageCode)
+                .HasMaxLength(40)
+                .HasColumnName("language_code");
 
             entity.Property(e => e.Notes)
                 .HasMaxLength(1000)
@@ -284,11 +293,11 @@ public class SqlContext : IdentityUserContext<SqlUser>
             entity.Property(e => e.CreatedAt)
                     .HasDefaultValueSql("CURRENT_TIMESTAMP")
                     .HasColumnType("datetime")
-                    .HasColumnName("Created_at");
+                    .HasColumnName("CreatedAt");
 
             entity.Property(e => e.UpdatedAt)
                     .HasColumnType("datetime")
-                    .HasColumnName("Updated_at");
+                    .HasColumnName("UpdatedAt");
 
             entity.Property(e => e.FirstName)
                     .HasMaxLength(100)
@@ -363,23 +372,29 @@ public class SqlContext : IdentityUserContext<SqlUser>
                 .HasMaxLength(40)
                 .HasColumnName("changeset_id");
 
+            entity.Property(e => e.UserId)
+              .HasMaxLength(40)
+              .HasColumnName("user_id");
+
+            entity.Property(e => e.RecordId)
+                .HasMaxLength(40)
+                .HasColumnName("record_id");
+
+            entity.Property(e => e.RecordType)
+                .HasColumnName("record_type");
+
+            entity.Property(e => e.RecordChanges)
+                .HasColumnType("text")
+                .HasColumnName("record_changes");
+
+            entity.Property(e => e.Operation)
+                .HasColumnName("operation");
+
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
 
-            entity.Property(e => e.Operation)
-                .HasColumnName("operation");
-            entity.Property(e => e.RecordChanges)
-                .HasColumnType("text")
-                .HasColumnName("record_changes");
-            entity.Property(e => e.RecordId)
-                .HasMaxLength(40)
-                .HasColumnName("record_id");
-            entity.Property(e => e.RecordType).HasColumnName("record_type");
-            entity.Property(e => e.UserId)
-                .HasMaxLength(40)
-                .HasColumnName("user_id");
 
             entity.HasOne(d => d.User).WithMany(p => p.ChangeSets)
                 .HasForeignKey(d => d.UserId)

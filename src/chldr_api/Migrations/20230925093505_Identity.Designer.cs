@@ -503,7 +503,7 @@ namespace chldr_api.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
-                        .HasColumnName("Created_at")
+                        .HasColumnName("CreatedAt")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Email")
@@ -576,7 +576,7 @@ namespace chldr_api.Migrations
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("datetime")
-                        .HasColumnName("Updated_at");
+                        .HasColumnName("UpdatedAt");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)

@@ -27,8 +27,8 @@ namespace chldr_api.Migrations
                     Rate = table.Column<int>(type: "int", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    Created_at = table.Column<DateTimeOffset>(type: "datetime", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    Updated_at = table.Column<DateTimeOffset>(type: "datetime", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "datetime", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "datetime", nullable: false),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
@@ -122,10 +122,10 @@ namespace chldr_api.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     changeset_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     user_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
-                    operation = table.Column<int>(type: "int", nullable: false),
                     record_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     record_type = table.Column<int>(type: "int", nullable: false),
                     record_changes = table.Column<string>(type: "text", nullable: true),
+                    operation = table.Column<int>(type: "int", nullable: false),
                     created_at = table.Column<DateTimeOffset>(type: "datetime", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
                 },
                 constraints: table =>
@@ -210,14 +210,14 @@ namespace chldr_api.Migrations
                 columns: table => new
                 {
                     entry_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
+                    parent_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: true),
                     user_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     source_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
+                    type = table.Column<int>(type: "int", nullable: false),
+                    rate = table.Column<int>(type: "int", nullable: false),
+                    subtype = table.Column<int>(type: "int", nullable: false),
                     content = table.Column<string>(type: "text", nullable: true),
                     raw_contents = table.Column<string>(type: "varchar(1500)", maxLength: 1500, nullable: false),
-                    parent_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: true),
-                    type = table.Column<int>(type: "int", nullable: false),
-                    subtype = table.Column<int>(type: "int", nullable: false),
-                    rate = table.Column<int>(type: "int", nullable: false),
                     details = table.Column<string>(type: "text", nullable: true),
                     created_at = table.Column<DateTimeOffset>(type: "datetime", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                     updated_at = table.Column<DateTimeOffset>(type: "datetime", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
@@ -245,10 +245,10 @@ namespace chldr_api.Migrations
                     sound_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     user_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     entry_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
+                    rate = table.Column<int>(type: "int", nullable: false),
                     file_name = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false),
-                    updated_at = table.Column<DateTimeOffset>(type: "datetime", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                     created_at = table.Column<DateTimeOffset>(type: "datetime", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    rate = table.Column<int>(type: "int", nullable: false)
+                    updated_at = table.Column<DateTimeOffset>(type: "datetime", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                 },
                 constraints: table =>
                 {
@@ -272,11 +272,11 @@ namespace chldr_api.Migrations
                 columns: table => new
                 {
                     translation_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
-                    language_code = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     entry_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     user_id = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     content = table.Column<string>(type: "longtext", nullable: true),
                     raw_contents = table.Column<string>(type: "longtext", nullable: true),
+                    language_code = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
                     notes = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true),
                     rate = table.Column<int>(type: "int", nullable: false),
                     created_at = table.Column<DateTimeOffset>(type: "datetime", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),

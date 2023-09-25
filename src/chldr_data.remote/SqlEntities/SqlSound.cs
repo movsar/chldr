@@ -14,15 +14,14 @@ public class SqlSound : ISoundEntity
     public string SoundId { get; set; }
     public string UserId { get; set; } = null!;
     public string EntryId { get; set; } = null!;
+    public int Rate { get; set; }
     public string FileName { get; set; } = null!;
-
-    public DateTimeOffset UpdatedAt { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
     
     public virtual SqlEntry Entry { get; set; } = null!;
     public virtual SqlUser User { get; set; } = null!;
 
-    public int Rate { get; set; }
 
     internal static SqlSound FromDto(PronunciationDto soundDto, SqlContext context)
     {

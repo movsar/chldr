@@ -15,8 +15,12 @@ public class SqlEntry : IEntryEntity
     private string? content;
     [Key]
     public string EntryId { get; set; }
+    public string? ParentEntryId { get; set; }
     public string UserId { get; set; } = null!;
     public string SourceId { get; set; } = null!;
+    public int Type { get; set; } = 0;
+    public int Rate { get; set; } = 0;
+    public int Subtype { get; set; } = 0;
     public string? Content
     {
         get => content;
@@ -32,12 +36,7 @@ public class SqlEntry : IEntryEntity
         }
     }
     public string RawContents { get; private set; }
-    public string? ParentEntryId { get; set; }
-    public int Type { get; set; } = 0;
-    public int Subtype { get; set; } = 0;
-    public int Rate { get; set; } = 0;
     public string? Details { get; set; }
-
     public virtual ICollection<SqlSound> Sounds { get; set; } = new List<SqlSound>();
     public virtual SqlSource Source { get; set; } = null!;
     public virtual SqlUser User { get; set; } = null!;
