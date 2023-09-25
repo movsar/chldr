@@ -43,7 +43,6 @@ public class SqlContext : IdentityUserContext<SqlUser>
             entity.HasIndex(e => e.SourceId, "fk_entry_source_id");
             entity.HasIndex(e => e.UserId, "fk_entry_user_id");
             entity.HasIndex(e => e.ParentEntryId, "entry_parent_id_idx");
-            entity.HasIndex(e => e.RawContents, "entry_rawcontents_idx");
             entity.HasIndex(e => e.Rate, "entry_rate_idx");
             entity.HasIndex(e => e.Type, "entry_type_idx");
 
@@ -235,11 +234,14 @@ public class SqlContext : IdentityUserContext<SqlUser>
                 .HasColumnName("user_id");
 
             entity.Property(e => e.Content)
-                .HasMaxLength(10000)
-                .HasColumnName("content");
+                .HasColumnName("content")
+                .HasColumnType("longtext");
+
             entity.Property(e => e.RawContents)
-                .HasMaxLength(10000)
-                .HasColumnName("raw_contents");
+                .HasColumnName("raw_contents")
+                .HasColumnType("text")
+                .HasMaxLength(1500);
+
             entity.Property(e => e.Notes)
                 .HasMaxLength(1000)
                 .HasColumnName("notes");
@@ -261,7 +263,6 @@ public class SqlContext : IdentityUserContext<SqlUser>
             entity.HasIndex(e => e.EntryId, "fk_translation_entry_id");
             entity.HasIndex(e => e.LanguageCode, "fk_translation_language_id");
             entity.HasIndex(e => e.UserId, "fk_translation_user_id");
-            entity.HasIndex(e => e.RawContents, "translation_rawcontents_idx");
             entity.HasIndex(e => e.Rate, "translation_rate_idx");
 
             entity.HasOne(d => d.Entry).WithMany(p => p.Translations)
