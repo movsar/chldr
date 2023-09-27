@@ -55,6 +55,7 @@ namespace chldr_api.GraphQL.MutationServices
             _configuration = configuration;
             _userManager = userManager;
             _signInManager = signInManager;
+
         }
         internal async Task<RequestResult> RegisterAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
@@ -64,33 +65,28 @@ namespace chldr_api.GraphQL.MutationServices
 
             try
             {
-
-
                 // Create the new user
                 var user = new SqlUser
                 {
                     Email = email,
+                    UserName = email,
                     FirstName = firstName,
                     LastName = lastName,
                     Patronymic = patronymic,
-                    UserName = "movsar32"
                 };
 
-                // TODO: Send confirmation Email using Identity
+                var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
+                var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                //    var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
-                //    var confirmationToken = JwtService.GenerateToken(user.Id, "confirmation-token-secretconfirmation-token-secretconfirmation-token-secret", confirmationTokenExpiration);
+                var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdFrontHost}/login", new Dictionary<string, string?>(){
+                    { "token", confirmationToken},
+                })).ToString();
 
-                //    var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdFrontHost}/login", new Dictionary<string, string?>(){
-                //    { "token", confirmationToken},
-                //})).ToString();
+                var message = new EmailMessage(new string[] { email },
+                    _localizer["Email:Confirm_email_subject"],
+                    _localizer["Email:Confirm_email_html", confirmEmailLink]);
 
-                //    var message = new EmailMessage(new string[] { email },
-                //        _localizer["Email:Confirm_email_subject"],
-                //        _localizer["Email:Confirm_email_html", confirmEmailLink]);
-
-
-                //    _emailService.Send(message);
+                _emailService.Send(message);
 
                 var result = await _userManager.CreateAsync(user, password);
                 if (result.Succeeded)
