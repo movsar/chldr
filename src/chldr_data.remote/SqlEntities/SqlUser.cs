@@ -24,7 +24,6 @@ public class SqlUser : IdentityUser, IUserEntity
     public virtual ICollection<SqlSound> Sounds { get; set; } = new List<SqlSound>();
     public virtual ICollection<SqlSource> Sources { get; set; } = new List<SqlSource>();
     public virtual ICollection<SqlTranslation> Translations { get; set; } = new List<SqlTranslation>();
-    public virtual ICollection<SqlToken> Tokens { get; set; } = new List<SqlToken>();
     public virtual ICollection<SqlChangeSet> ChangeSets { get; set; } = new List<SqlChangeSet>();
 
     public static SqlUser FromDto(UserDto userDto)

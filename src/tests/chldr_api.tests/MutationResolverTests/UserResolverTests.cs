@@ -46,11 +46,10 @@ namespace chldr_api.tests.ServiceResolverTests
             unitOfWork.BeginTransaction();
 
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
-            var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
             var newUserInfo = TestDataFactory.CreateRandomUserDto();
 
             // Act and Assert
-            var registrationResponse = await _userResolver.Register(newUserInfo.Email!, newUserInfo.Password, newUserInfo.FirstName, newUserInfo.LastName, newUserInfo.Patronymic);
+            var registrationResponse = await _userResolver.RegisterAsync(newUserInfo.Email!, newUserInfo.Password, newUserInfo.FirstName, newUserInfo.LastName, newUserInfo.Patronymic);
             Assert.True(registrationResponse.Success);
 
             var confirmationToken = JsonConvert.DeserializeObject<string>(registrationResponse.SerializedData);
@@ -72,7 +71,7 @@ namespace chldr_api.tests.ServiceResolverTests
             var newUser = TestDataFactory.CreateRandomUserDto();
 
             // Act
-            var response = await _userResolver.Register(newUser.Email!, newUser.Password, newUser.FirstName, newUser.LastName, newUser.Patronymic);
+            var response = await _userResolver.RegisterAsync(newUser.Email!, newUser.Password, newUser.FirstName, newUser.LastName, newUser.Patronymic);
 
             // Assert
             Assert.True(response.Success);
@@ -95,7 +94,7 @@ namespace chldr_api.tests.ServiceResolverTests
             await usersRepository.AddAsync(testUser);
 
             // Act
-            var response = await _userResolver.Register(testUser.Email!, testUser.Password, testUser.FirstName, testUser.LastName, testUser.Patronymic);
+            var response = await _userResolver.RegisterAsync(testUser.Email!, testUser.Password, testUser.FirstName, testUser.LastName, testUser.Patronymic);
 
             // Assert
             Assert.False(response.Success);

@@ -2,17 +2,7 @@
 using chldr_api.GraphQL.MutationServices;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Enums;
-using chldr_data.Interfaces;
 using chldr_data.Models;
-using chldr_data.remote.Services;
-using chldr_data.Resources.Localizations;
-using chldr_data.Responses;
-using chldr_data.Services;
-using chldr_utils;
-using chldr_utils.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.Extensions.Localization;
-using Newtonsoft.Json;
 
 namespace chldr_api
 {
@@ -62,32 +52,32 @@ namespace chldr_api
         // User mutations
         public async Task<RequestResult> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
-            return await _userResolver.Register(email, password, firstName, lastName, patronymic);
+            return await _userResolver.RegisterAsync(email, password, firstName, lastName, patronymic);
         }
 
         public async Task<RequestResult> ConfirmEmailAsync(string token)
         {
-            return await _userResolver.Confirm(token);
+            throw new NotImplementedException();
         }
 
         public async Task<RequestResult> PasswordReset(string email)
         {
-            return await _userResolver.ResetPassword(email);
+            throw new NotImplementedException();
         }
 
         public async Task<RequestResult> UpdatePasswordAsync(string token, string newPassword)
         {
-            return await _userResolver.UpdatePassword(token, newPassword);
+            throw new NotImplementedException();
         }
 
         public async Task<RequestResult> LogInRefreshTokenAsync(string refreshToken)
         {
-            return await _userResolver.RefreshAccessCode(refreshToken);
+            throw new NotImplementedException();
         }
 
         public async Task<RequestResult> LoginEmailPasswordAsync(string email, string password)
         {
-            return await _userResolver.LogIn(email, password);
+            throw new NotImplementedException();
         }
     }
 

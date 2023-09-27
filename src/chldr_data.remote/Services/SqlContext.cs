@@ -18,8 +18,6 @@ public class SqlContext : IdentityUserContext<SqlUser>
     public virtual DbSet<SqlSound> Pronunciations { get; set; }
     public virtual DbSet<SqlSource> Sources { get; set; }
     public virtual DbSet<SqlTranslation> Translations { get; set; }
-    public virtual DbSet<SqlToken> Tokens { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -320,40 +318,6 @@ public class SqlContext : IdentityUserContext<SqlUser>
 
             entity.Property(e => e.Rate)
                     .HasColumnName("Rate");
-        });
-
-        modelBuilder.Entity<SqlToken>(entity =>
-        {
-            entity.HasKey(e => e.TokenId).HasName("PRIMARY");
-
-            entity.ToTable("tokens");
-
-            entity.HasIndex(e => e.UserId, "fk_tokens_user_id_idx");
-            entity.HasIndex(e => e.Value, "token_value_idx");
-
-            entity.Property(e => e.TokenId)
-                .HasMaxLength(40)
-                .HasColumnName("token_id");
-            entity.Property(e => e.CreatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.ExpiresIn)
-                .HasColumnType("datetime")
-                .HasColumnName("expires_in");
-            entity.Property(e => e.Type)
-                .HasDefaultValueSql("'0'")
-                .HasColumnName("type");
-            entity.Property(e => e.UserId)
-                .HasMaxLength(40)
-                .HasColumnName("user_id");
-            entity.Property(e => e.Value)
-                .HasMaxLength(300)
-                .HasColumnName("value");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Tokens)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("fk_tokens_user_id");
         });
 
         modelBuilder.Entity<SqlChangeSet>(entity =>

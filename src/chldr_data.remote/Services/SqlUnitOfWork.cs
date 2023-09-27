@@ -25,8 +25,6 @@ namespace chldr_data.Services
         private SqlSourcesRepository _sourcesRepository;
         private SqlUsersRepository _usersRepository;
         private SqlPronunciationsRepository _soundsRepository;
-        private SqlTokensRepository? _tokensRepository;
-
         public SqlUnitOfWork(DbContextOptions<SqlContext> dbConfig, FileService fileService, ExceptionHandler exceptionHandler, string userId)
         {
             _dbConfig = dbConfig;
@@ -66,6 +64,5 @@ namespace chldr_data.Services
         public ISourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_dbConfig, _fileService, _userId);
         public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_dbConfig, _fileService, _userId);
         public IPronunciationsRepository Sounds => _soundsRepository ?? new SqlPronunciationsRepository(_dbConfig, _fileService, _userId);
-        public ITokensRepository Tokens => _tokensRepository ?? new SqlTokensRepository(_dbConfig, _fileService, _userId);
     }
 }

@@ -39,9 +39,8 @@ namespace chldr_api
                 .UseMySQL(connectionString, b => b.MigrationsAssembly("chldr_api")), ServiceLifetime.Transient);
 
             builder.Services
-                .AddDefaultIdentity<SqlUser>()
+                .AddDefaultIdentity<SqlUser>(/*options => options.SignIn.RequireConfirmedAccount = true*/)
                 .AddEntityFrameworkStores<SqlContext>();
-            //    .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 
             builder.Services.AddScoped<EmailService>();
             builder.Services.AddScoped<FileService>();
@@ -57,18 +56,23 @@ namespace chldr_api
 
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingSecret));
 
-            builder.Services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(options =>
             {
-                options.TokenValidationParameters =
-                    new TokenValidationParameters
-                    {
-                        ValidIssuer = "https://auth.chillicream.com",
-                        ValidAudience = "https://graphql.chillicream.com",
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = signingKey
-                    };
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "Dosham",
+                    ValidAudience = "dosham.app",
+                    IssuerSigningKey = signingKey
+                };
             });
 
             builder.Services.AddAuthorization();
@@ -84,15 +88,18 @@ namespace chldr_api
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
-                app.UseHsts();
-                app.UseHttpsRedirection();
                 app.UseForwardedHeaders(new ForwardedHeadersOptions
                 {
                     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
                 });
+
+                app.UseHsts();
             }
 
             app.UseHttpsRedirection();
+
+            app.UseRouting();
+            
             app.UseAuthentication();
             app.UseAuthorization();
 

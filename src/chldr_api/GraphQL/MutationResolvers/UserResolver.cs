@@ -7,15 +7,21 @@ using chldr_data.Interfaces.Repositories;
 using chldr_data.Models;
 using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
+using chldr_data.remote.SqlEntities;
 using chldr_data.Resources.Localizations;
 using chldr_data.Services;
 using chldr_shared.Models;
 using chldr_tools;
 using chldr_utils;
 using chldr_utils.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Localization;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace chldr_api.GraphQL.MutationServices
 {
@@ -26,79 +32,99 @@ namespace chldr_api.GraphQL.MutationServices
         private readonly ExceptionHandler _exceptionHandler;
         private readonly EmailService _emailService;
         private readonly FileService _fileService;
+        private readonly IConfiguration _configuration;
+        private readonly UserManager<SqlUser> _userManager;
+        private readonly SignInManager<SqlUser> _signInManager;
 
         public UserResolver(
             IDataProvider dataProvider,
             IStringLocalizer<AppLocalizations> localizer,
             EmailService emailService,
             ExceptionHandler exceptionHandler,
-            FileService fileService)
+            FileService fileService,
+            IConfiguration configuration,
+            UserManager<SqlUser> userManager,
+            SignInManager<SqlUser> signInManager
+            )
         {
             _dataProvider = dataProvider;
             _localizer = localizer;
             _exceptionHandler = exceptionHandler;
             _emailService = emailService;
             _fileService = fileService;
+            _configuration = configuration;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
-        internal async Task<RequestResult> Register(string email, string password, string? firstName, string? lastName, string? patronymic)
+        internal async Task<RequestResult> RegisterAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
-            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
-            var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
 
             unitOfWork.BeginTransaction();
 
             try
             {
-                // Check if a user with this email already exists
-                var existingUser = await usersRepository.FindByEmail(email);
-                if (existingUser != null)
-                {
-                    return new RequestResult() { ErrorMessage = "A user with this email already exists" };
-                }
+
 
                 // Create the new user
-                var user = new UserDto
+                var user = new SqlUser
                 {
                     Email = email,
-                    Password = BCrypt.Net.BCrypt.HashPassword(password),
-                    Status = UserStatus.Unconfirmed,
                     FirstName = firstName,
                     LastName = lastName,
-                    Patronymic = patronymic
+                    Patronymic = patronymic,
+                    UserName = "movsar32"
                 };
-                await usersRepository.AddAsync(user);
 
-                var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
-                var confirmationToken = JwtService.GenerateToken(user.Id, "confirmation-token-secretconfirmation-token-secretconfirmation-token-secret", confirmationTokenExpiration);
+                // TODO: Send confirmation Email using Identity
 
-                // Save the tokens to the database
-                await tokensRepository.AddAsync(new TokenDto
+                //    var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
+                //    var confirmationToken = JwtService.GenerateToken(user.Id, "confirmation-token-secretconfirmation-token-secretconfirmation-token-secret", confirmationTokenExpiration);
+
+                //    var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdFrontHost}/login", new Dictionary<string, string?>(){
+                //    { "token", confirmationToken},
+                //})).ToString();
+
+                //    var message = new EmailMessage(new string[] { email },
+                //        _localizer["Email:Confirm_email_subject"],
+                //        _localizer["Email:Confirm_email_html", confirmEmailLink]);
+
+
+                //    _emailService.Send(message);
+
+                var result = await _userManager.CreateAsync(user, password);
+                if (result.Succeeded)
                 {
-                    UserId = user.Id,
-                    Type = (int)TokenType.Confirmation,
-                    Value = confirmationToken,
-                    ExpiresIn = confirmationTokenExpiration
-                });
+                    // Sign in the user
+                    await _signInManager.SignInAsync(user, isPersistent: false);
 
+                    // Generate JWT token
+                    var tokenHandler = new JwtSecurityTokenHandler();
 
-                var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdFrontHost}/login", new Dictionary<string, string?>(){
-                { "token", confirmationToken},
-            })).ToString();
+                    var signingSecret = _configuration.GetValue<string>("ApiJwtSigningKey");
+                    var key = Encoding.UTF8.GetBytes(signingSecret);
+                    var tokenDescriptor = new SecurityTokenDescriptor
+                    {
+                        Subject = new ClaimsIdentity(new Claim[]
+                        {
+                            new Claim(ClaimTypes.Name, user.Id.ToString())
+                            // Add other claims as needed
+                        }),
+                        Expires = DateTime.UtcNow.AddDays(7), // Token expiration, adjust as needed
+                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                    };
 
-                var message = new EmailMessage(new string[] { email },
-                    _localizer["Email:Confirm_email_subject"],
-                    _localizer["Email:Confirm_email_html", confirmEmailLink]);
+                    var token = tokenHandler.CreateToken(tokenDescriptor);
+                    var tokenString = tokenHandler.WriteToken(token);
 
+                    unitOfWork.Commit();
 
-                _emailService.Send(message);
-                unitOfWork.Commit();
-
-                return new RequestResult()
+                    return new RequestResult { Success = true, SerializedData = JsonConvert.SerializeObject(tokenString) };
+                }
+                else
                 {
-                    Success = true,
-                    SerializedData = JsonConvert.SerializeObject(confirmationToken)
-                };
+                    return new RequestResult { Success = false, ErrorMessage = result.Errors.First().Description };
+                }
             }
             catch (Exception ex)
             {
@@ -110,7 +136,6 @@ namespace chldr_api.GraphQL.MutationServices
         {
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
-            var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
 
             var user = await usersRepository.FindByEmail(email);
             if (user == null)
@@ -123,15 +148,6 @@ namespace chldr_api.GraphQL.MutationServices
             var tokenValue = JwtService.GenerateToken(user.Id, "password-reset-secret", tokenExpiresIn);
 
             // Store the token in the Tokens table
-            var token = new TokenDto
-            {
-                UserId = user.Id,
-                Type = (int)TokenType.PasswordReset,
-                Value = tokenValue,
-                ExpiresIn = tokenExpiresIn,
-            };
-
-            await tokensRepository.AddAsync(token);
 
             // Send the password reset link to the user's email
             var resetPasswordLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdFrontHost}/set-new-password", new Dictionary<string, string?>(){
@@ -152,34 +168,12 @@ namespace chldr_api.GraphQL.MutationServices
         }
         internal static async Task<RequestResult> SignInAsync(SqlUnitOfWork unitOfWork, UserModel user)
         {
-            var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
-
             // Generate a new access token and calculate expiration time
             var accessTokenExpiration = DateTime.UtcNow.AddMinutes(60);
             var refreshTokenExpiration = DateTime.UtcNow.AddDays(60);
 
             var accessToken = JwtService.GenerateToken(user.Id, "access-token-secretaccess-token-secretaccess-token-secret", accessTokenExpiration);
             var refreshToken = JwtService.GenerateToken(user.Id, "refresh-token-secretrefresh-token-secretrefresh-token-secret", refreshTokenExpiration);
-
-            var accessTokenDto = new TokenDto
-            {
-                UserId = user.Id,
-                Type = (int)TokenType.Access,
-                Value = accessToken,
-                ExpiresIn = accessTokenExpiration
-            };
-
-            var refreshTokenDto = new TokenDto
-            {
-                UserId = user.Id,
-                Type = (int)TokenType.Refresh,
-                Value = refreshToken,
-                ExpiresIn = refreshTokenExpiration
-            };
-
-            // Save the tokens to the database
-            await tokensRepository.AddAsync(accessTokenDto);
-            await tokensRepository.AddAsync(refreshTokenDto);
 
             unitOfWork.Commit();
 
@@ -194,52 +188,6 @@ namespace chldr_api.GraphQL.MutationServices
                     Success = true
                 })
             };
-        }
-
-        internal async Task<RequestResult> RefreshAccessCode(string refreshToken)
-        {
-            try
-            {
-                var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
-                var usersRepository = (SqlUsersRepository)unitOfWork.Users;
-                var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
-
-                unitOfWork.BeginTransaction();
-
-                // Check if a user with this email exists
-                var token = await tokensRepository.GetByValueAsync(refreshToken);
-                if (token == null)
-                {
-                    return new RequestResult() { ErrorMessage = "Invalid refresh token" };
-                }
-
-                if (DateTime.UtcNow > token.ExpiresIn)
-                {
-                    return new RequestResult() { ErrorMessage = "Refresh token has expired" };
-                }
-
-                var user = await usersRepository.GetAsync(token.UserId);
-                if (user == null)
-                {
-                    return new RequestResult() { ErrorMessage = "No user has been found for the requested token" };
-                }
-
-                // Remove previous tokens related to this user (in future this can be done in a batch job to increase efficiency)
-                var previousAccessTokens = tokensRepository.GetByUserId(user.Id, TokenType.Access);
-                var previousRefreshTokens = tokensRepository.GetByUserId(user.Id, TokenType.Refresh);
-
-                await tokensRepository.RemoveRange(previousAccessTokens.Select(t => t.TokenId));
-                await tokensRepository.RemoveRange(previousRefreshTokens.Select(t => t.TokenId));
-
-                return await SignInAsync(unitOfWork, user);
-            }
-            catch (Exception ex)
-            {
-                return new RequestResult()
-                {
-                    ErrorMessage = ex.Message
-                };
-            }
         }
 
         internal async Task<RequestResult> LogIn(string email, string password)
@@ -276,21 +224,7 @@ namespace chldr_api.GraphQL.MutationServices
             {
                 // Check if a user with this email already exists
                 var usersRepository = (SqlUsersRepository)unitOfWork.Users;
-                var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
 
-                var token = await tokensRepository.FindByValueAsync(tokenValue);
-                if (token == null)
-                {
-                    return new RequestResult() { ErrorMessage = "Invalid token" };
-                }
-
-                var isExpired = JwtService.IsTokenExpired(token.Value);
-                if (isExpired)
-                {
-                    return new RequestResult() { ErrorMessage = "Token has expired " };
-                }
-
-                await usersRepository.SetStatusAsync(token.UserId, UserStatus.Active);
 
                 unitOfWork.Commit();
                 return new RequestResult() { Success = true };
@@ -304,31 +238,10 @@ namespace chldr_api.GraphQL.MutationServices
         internal async Task<RequestResult> UpdatePassword(string tokenValue, string newPassword)
         {
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
-            var tokensRepository = (SqlTokensRepository)unitOfWork.Tokens;
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
 
             unitOfWork.BeginTransaction();
 
-            var tokenInDatabase = await tokensRepository.GetPasswordResetTokenAsync(tokenValue);
-            if (tokenInDatabase == null)
-            {
-                return new RequestResult("Invalid token");
-            }
-
-            var user = await unitOfWork.Users.GetAsync(tokenInDatabase.UserId);
-            if (user == null)
-            {
-                return new RequestResult("User not found");
-            }
-
-            var userDto = UserDto.FromModel(user);
-
-            // Hash the new password and update the user's password in the Users table
-            userDto.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            await usersRepository.UpdateAsync(userDto);
-
-            // Remove the used password reset token from the Tokens table
-            await tokensRepository.RemoveAsync(tokenInDatabase.TokenId);
 
             unitOfWork.Commit();
 
