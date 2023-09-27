@@ -8,15 +8,40 @@ using chldr_data.Interfaces.Repositories;
 using chldr_utils.Services;
 using chldr_data.Models;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Crypto.Generators;
+using System.Text;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using chldr_shared.Models;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Localization;
+using chldr_data.Resources.Localizations;
 using Realms.Sync;
-using chldr_data.DatabaseObjects.Interfaces;
 
 namespace chldr_data.remote.Repositories
 {
     public class SqlUsersRepository : SqlRepository<SqlUser, UserModel, UserDto>, IUsersRepository
     {
-        public SqlUsersRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string _userId) : base(dbConfig, fileService, _userId) { }
+        private readonly SignInManager<SqlUser> _signInManager;
+        private readonly UserManager<SqlUser> _userManager;
+        private readonly EmailService _emailService;
+        private readonly IStringLocalizer<AppLocalizations> _localizer;
+
+        public SqlUsersRepository(
+            DbContextOptions<SqlContext> dbConfig,
+            FileService fileService,
+            UserManager<SqlUser> userManager,
+            SignInManager<SqlUser> signInManager,
+            EmailService emailService,
+            IStringLocalizer<AppLocalizations> localizer,
+            string _userId) : base(dbConfig, fileService, _userId)
+        {
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _emailService = emailService;
+            _localizer = localizer;
+        }
 
         protected override RecordType RecordType => RecordType.User;
         public async Task SetStatusAsync(string userId, UserStatus newStatus)
@@ -68,13 +93,96 @@ namespace chldr_data.remote.Repositories
 
         public async Task<UserModel?> FindByEmail(string email)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email!.Equals(email)) as SqlUser;
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email!.Equals(email));
             return user == null ? null : UserModel.FromEntity(user);
         }
+        public async Task RegisterAsync(UserDto newUserDto)
+        {
+            var user = new SqlUser
+            {
+                Email = newUserDto.Email,
+                UserName = newUserDto.Email,
+                FirstName = newUserDto.FirstName,
+                LastName = newUserDto.LastName,
+                Patronymic = newUserDto.Patronymic,
+            };
 
+            var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
+            var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdFrontHost}/login",
+                new Dictionary<string, string?>() { { "token", confirmationToken }, })).ToString();
+
+            var message = new EmailMessage(new string[] { newUserDto.Email! },
+                _localizer["Email:Confirm_email_subject"],
+                _localizer["Email:Confirm_email_html", confirmEmailLink]);
+
+            _emailService.Send(message);
+
+            var result = await _userManager.CreateAsync(user, newUserDto.Password);
+            if (!result.Succeeded)
+            {
+                throw new Exception(result.Errors.First().Description);
+            }
+        }
+        private string GenerateToken(string userId, string signingKeyAsText)
+        {
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKeyAsText));
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                 new Claim(ClaimTypes.Name, userId.ToString())
+                    // Add other claims as needed
+                }),
+                Expires = DateTime.UtcNow.AddDays(7), // Token expiration, adjust as needed
+                SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return tokenString;
+        }
+        public async Task<string> SignInAsync(string email, string signingKeyAsText)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email!.Equals(email));
+            if (user == null)
+            {
+                throw new NullReferenceException("User not found");
+            }
+
+            // Sign in the user
+            await _signInManager.SignInAsync(user, isPersistent: false);
+
+            // Generate JWT token
+            var accessToken = GenerateToken(user.Id, signingKeyAsText);
+            return accessToken;
+        }
+        public async Task<string> SignInAsync(string email, string password, string signingKeyAsText)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email!.Equals(email));
+            if (user == null)
+            {
+                throw new NullReferenceException("User not found");
+            }
+
+            // Sign in the user
+            var result = await _signInManager.PasswordSignInAsync(user, password, isPersistent: false, lockoutOnFailure: false);
+            if (!result.Succeeded)
+            {
+                throw new Exception("Invalid credentials");
+            }
+
+            // Generate JWT token
+            var accessToken = GenerateToken(user.Id, signingKeyAsText);
+            return accessToken;
+        }
         public async Task<bool> VerifyAsync(string userId, string password)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId)) as SqlUser;
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
             if (user == null)
             {
                 throw new NullReferenceException();
@@ -105,13 +213,13 @@ namespace chldr_data.remote.Repositories
                 throw new ArgumentNullException();
             }
 
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email!.ToLower().Equals(email.ToLower())) as SqlUser;
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email!.ToLower().Equals(email.ToLower()));
             return UserModel.FromEntity(user);
         }
 
         public override async Task<UserModel> GetAsync(string entityId)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id!.Equals(entityId)) as SqlUser;
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id!.Equals(entityId));
             return UserModel.FromEntity(user);
         }
 
@@ -125,5 +233,7 @@ namespace chldr_data.remote.Repositories
 
             return entities.Select(UserModel.FromEntity).ToList();
         }
+
+
     }
 }

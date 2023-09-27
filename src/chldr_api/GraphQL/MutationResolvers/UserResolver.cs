@@ -32,9 +32,10 @@ namespace chldr_api.GraphQL.MutationServices
         private readonly ExceptionHandler _exceptionHandler;
         private readonly EmailService _emailService;
         private readonly FileService _fileService;
-        private readonly IConfiguration _configuration;
         private readonly UserManager<SqlUser> _userManager;
         private readonly SignInManager<SqlUser> _signInManager;
+        private readonly string _signingSecret;
+        private readonly SymmetricSecurityKey _signingKey;
 
         public UserResolver(
             IDataProvider dataProvider,
@@ -52,12 +53,12 @@ namespace chldr_api.GraphQL.MutationServices
             _exceptionHandler = exceptionHandler;
             _emailService = emailService;
             _fileService = fileService;
-            _configuration = configuration;
             _userManager = userManager;
             _signInManager = signInManager;
 
+            _signingSecret = configuration.GetValue<string>("ApiJwtSigningKey")!;
         }
-        internal async Task<RequestResult> RegisterAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
+        internal async Task<RequestResult> RegisterAndLogInAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
 
@@ -65,62 +66,25 @@ namespace chldr_api.GraphQL.MutationServices
 
             try
             {
-                // Create the new user
-                var user = new SqlUser
+                var usersRepository = (SqlUsersRepository)unitOfWork.Users;
+
+                // Register
+                await usersRepository.RegisterAsync(new UserDto()
                 {
                     Email = email,
-                    UserName = email,
+                    Password = password,
                     FirstName = firstName,
                     LastName = lastName,
                     Patronymic = patronymic,
-                };
+                });
 
-                var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
-                var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                // Sign In
+                var accessToken = await usersRepository.SignInAsync(email, _signingSecret);
 
-                var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdFrontHost}/login", new Dictionary<string, string?>(){
-                    { "token", confirmationToken},
-                })).ToString();
+                unitOfWork.Commit();
 
-                var message = new EmailMessage(new string[] { email },
-                    _localizer["Email:Confirm_email_subject"],
-                    _localizer["Email:Confirm_email_html", confirmEmailLink]);
+                return new RequestResult { Success = true, SerializedData = JsonConvert.SerializeObject(accessToken) };
 
-                _emailService.Send(message);
-
-                var result = await _userManager.CreateAsync(user, password);
-                if (result.Succeeded)
-                {
-                    // Sign in the user
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-
-                    // Generate JWT token
-                    var tokenHandler = new JwtSecurityTokenHandler();
-
-                    var signingSecret = _configuration.GetValue<string>("ApiJwtSigningKey");
-                    var key = Encoding.UTF8.GetBytes(signingSecret);
-                    var tokenDescriptor = new SecurityTokenDescriptor
-                    {
-                        Subject = new ClaimsIdentity(new Claim[]
-                        {
-                            new Claim(ClaimTypes.Name, user.Id.ToString())
-                            // Add other claims as needed
-                        }),
-                        Expires = DateTime.UtcNow.AddDays(7), // Token expiration, adjust as needed
-                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                    };
-
-                    var token = tokenHandler.CreateToken(tokenDescriptor);
-                    var tokenString = tokenHandler.WriteToken(token);
-
-                    unitOfWork.Commit();
-
-                    return new RequestResult { Success = true, SerializedData = JsonConvert.SerializeObject(tokenString) };
-                }
-                else
-                {
-                    return new RequestResult { Success = false, ErrorMessage = result.Errors.First().Description };
-                }
             }
             catch (Exception ex)
             {
@@ -162,54 +126,19 @@ namespace chldr_api.GraphQL.MutationServices
                 SerializedData = JsonConvert.SerializeObject(tokenValue)
             };
         }
-        internal static async Task<RequestResult> SignInAsync(SqlUnitOfWork unitOfWork, UserModel user)
-        {
-            // Generate a new access token and calculate expiration time
-            var accessTokenExpiration = DateTime.UtcNow.AddMinutes(60);
-            var refreshTokenExpiration = DateTime.UtcNow.AddDays(60);
-
-            var accessToken = JwtService.GenerateToken(user.Id, "access-token-secretaccess-token-secretaccess-token-secret", accessTokenExpiration);
-            var refreshToken = JwtService.GenerateToken(user.Id, "refresh-token-secretrefresh-token-secretrefresh-token-secret", refreshTokenExpiration);
-
-            unitOfWork.Commit();
-
-            return new RequestResult()
-            {
-                SerializedData = JsonConvert.SerializeObject(new
-                {
-                    User = UserDto.FromModel(user),
-                    AccessToken = accessToken,
-                    RefreshToken = refreshToken,
-                    AccessTokenExpiresIn = accessTokenExpiration,
-                    Success = true
-                })
-            };
-        }
 
         internal async Task<RequestResult> LogIn(string email, string password)
         {
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
 
-            unitOfWork.BeginTransaction();
+            var accessToken = await usersRepository.SignInAsync(email, password, _signingSecret);
 
-            // Check if a user with this email exists
-            var user = await usersRepository.FindByEmail(email);
-            if (user == null)
+            return new RequestResult()
             {
-                return new RequestResult() { ErrorMessage = "No user found with this email" };
-            }
-
-            // Check if the password is correct
-
-            var isVerified = await usersRepository.VerifyAsync(user.Id, password);
-
-            if (!isVerified)
-            {
-                return new RequestResult() { ErrorMessage = "Incorrect Password" };
-            }
-
-            return await SignInAsync(unitOfWork, user);
+                Success = true,
+                SerializedData = JsonConvert.SerializeObject(accessToken)
+            };
         }
         internal async Task<RequestResult> Confirm(string tokenValue)
         {

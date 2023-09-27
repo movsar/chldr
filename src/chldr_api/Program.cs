@@ -32,6 +32,7 @@ namespace chldr_api
             {
                 throw new Exception("Connection string is not set");
             }
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingSecret));
 
             builder.Services.AddTransient<IDataProvider, SqlDataProvider>();
 
@@ -75,7 +76,6 @@ namespace chldr_api
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-RU");
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("ru-RU");
 
-            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingSecret));
 
             builder.Services.AddAuthentication(options =>
             {

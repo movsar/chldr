@@ -52,7 +52,7 @@ namespace chldr_api
         // User mutations
         public async Task<RequestResult> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
-            return await _userResolver.RegisterAsync(email, password, firstName, lastName, patronymic);
+            return await _userResolver.RegisterAndLogInAsync(email, password, firstName, lastName, patronymic);
         }
 
         public async Task<RequestResult> ConfirmEmailAsync(string token)

@@ -6,6 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Identity;
+using chldr_data.remote.SqlEntities;
+using chldr_data.Resources.Localizations;
+using Microsoft.Extensions.Localization;
 
 namespace chldr_data.remote.Services
 {
@@ -14,14 +18,29 @@ namespace chldr_data.remote.Services
         public bool IsInitialized { get; set; }
         public event Action? DatabaseInitialized;
 
-        private readonly FileService _fileService;
         private DbContextOptions<SqlContext> _options;
+        private readonly FileService _fileService;
         private readonly ExceptionHandler _exceptionHandler;
+        private readonly IStringLocalizer<AppLocalizations> _localizer;
+        private readonly UserManager<SqlUser> _userManager;
+        private readonly EmailService _emailService;
+        private readonly SignInManager<SqlUser> _signInManager;
 
-        public SqlDataProvider(FileService fileService, ExceptionHandler exceptionHandler, IConfiguration configuration)
+        public SqlDataProvider(
+            FileService fileService,
+            ExceptionHandler exceptionHandler,
+            IConfiguration configuration,
+            UserManager<SqlUser> userManager,
+            SignInManager<SqlUser> signInManager,
+            EmailService emailService,
+            IStringLocalizer<AppLocalizations> localizer)
         {
             _fileService = fileService;
             _exceptionHandler = exceptionHandler;
+            _localizer = localizer;
+            _userManager = userManager;
+            _emailService = emailService;
+            _signInManager = signInManager;
 
             var connectionString = configuration.GetConnectionString("SqlContext");
             if (string.IsNullOrEmpty(connectionString))
@@ -45,7 +64,7 @@ namespace chldr_data.remote.Services
 
         public IUnitOfWork CreateUnitOfWork(string? userId = null)
         {
-            return new SqlUnitOfWork(_options, _fileService, _exceptionHandler, userId);
+            return new SqlUnitOfWork(_options, _fileService, _exceptionHandler, _userManager, _signInManager, _emailService, _localizer, userId);
         }
 
         public void Initialize()

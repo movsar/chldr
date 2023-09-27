@@ -7,6 +7,9 @@ using chldr_utils.Services;
 using chldr_utils;
 using chldr_data.remote.SqlEntities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Localization;
+using chldr_data.Resources.Localizations;
 
 namespace chldr_data.Services
 {
@@ -17,6 +20,10 @@ namespace chldr_data.Services
         private readonly SqlContext _context;
         private readonly FileService _fileService;
         private readonly ExceptionHandler _exceptionHandler;
+        private readonly IStringLocalizer<AppLocalizations> _localizer;
+        private readonly UserManager<SqlUser> _userManager;
+        private readonly EmailService _emailService;
+        private readonly SignInManager<SqlUser> _signInManager;
         private IDbContextTransaction _transaction;
 
         private SqlChangeSetsRepository _changeSetsRepository;
@@ -25,13 +32,25 @@ namespace chldr_data.Services
         private SqlSourcesRepository _sourcesRepository;
         private SqlUsersRepository _usersRepository;
         private SqlPronunciationsRepository _soundsRepository;
-        public SqlUnitOfWork(DbContextOptions<SqlContext> dbConfig, FileService fileService, ExceptionHandler exceptionHandler, string userId)
+        public SqlUnitOfWork(
+            DbContextOptions<SqlContext> dbConfig,
+            FileService fileService,
+            ExceptionHandler exceptionHandler,
+            UserManager<SqlUser> userManager,
+            SignInManager<SqlUser> signInManager,
+            EmailService emailService,
+            IStringLocalizer<AppLocalizations> localizer,
+            string userId)
         {
             _dbConfig = dbConfig;
             _context = new SqlContext(_dbConfig);
             _fileService = fileService;
             _userId = userId;
             _exceptionHandler = exceptionHandler;
+            _localizer = localizer;
+            _userManager = userManager;
+            _emailService = emailService;
+            _signInManager = signInManager;
         }
 
         public void BeginTransaction()
@@ -62,7 +81,7 @@ namespace chldr_data.Services
         public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new SqlChangeSetsRepository(_dbConfig, _fileService, _userId);
         public IEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_dbConfig, _fileService, _exceptionHandler, Translations, Sounds, _userId);
         public ISourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_dbConfig, _fileService, _userId);
-        public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_dbConfig, _fileService, _userId);
+        public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_dbConfig, _fileService, _userManager, _signInManager, _emailService, _localizer, _userId);
         public IPronunciationsRepository Sounds => _soundsRepository ?? new SqlPronunciationsRepository(_dbConfig, _fileService, _userId);
     }
 }

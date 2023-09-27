@@ -2,8 +2,6 @@
 using chldr_shared.Models;
 using chldr_utils.Interfaces;
 using Microsoft.Extensions.Configuration;
-using static Org.BouncyCastle.Math.EC.ECCurve;
-using MailKit.Security;
 
 namespace chldr_utils.Services
 {
