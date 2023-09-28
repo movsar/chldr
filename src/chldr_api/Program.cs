@@ -34,13 +34,22 @@ namespace chldr_api
             }
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingSecret));
 
-            builder.Services.AddTransient<IDataProvider, SqlDataProvider>();
+            builder.Services.AddScoped<EmailService>();
+            builder.Services.AddScoped<FileService>();
+            builder.Services.AddScoped<ExceptionHandler>();
 
+            builder.Services.AddScoped<UserResolver>();
+            builder.Services.AddScoped<EntryResolver>();
+
+            builder.Services.AddLocalization();
+
+            // SQL Services **************************************************************
             builder.Services.AddDbContext<SqlContext>(options => options
-                .UseMySQL(connectionString, b => b.MigrationsAssembly("chldr_api")), ServiceLifetime.Transient);
-
+                         .UseMySQL(connectionString, b => b.MigrationsAssembly("chldr_api")), ServiceLifetime.Singleton);
+            
+            builder.Services.AddScoped<IDataProvider, SqlDataProvider>();
             builder.Services
-                .AddDefaultIdentity<SqlUser>(/*options => options.SignIn.RequireConfirmedAccount = true*/)
+                .AddDefaultIdentity<SqlUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<SqlContext>();
 
             builder.Services.Configure<IdentityOptions>(options =>
@@ -63,15 +72,7 @@ namespace chldr_api
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
                 options.User.RequireUniqueEmail = true;
             });
-
-            builder.Services.AddScoped<EmailService>();
-            builder.Services.AddScoped<FileService>();
-            builder.Services.AddScoped<ExceptionHandler>();
-
-            builder.Services.AddScoped<UserResolver>();
-            builder.Services.AddScoped<EntryResolver>();
-
-            builder.Services.AddLocalization();
+            // *****************************************************************************
 
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-RU");
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("ru-RU");

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -16,5 +16,4 @@
     <ProjectReference Include="..\chldr_data.remote\chldr_data.remote.csproj" />
     <ProjectReference Include="..\chldr_data\chldr_data.csproj" />
   </ItemGroup>
-
 </Project>

@@ -9,11 +9,15 @@ using chldr_shared;
 using Microsoft.Extensions.DependencyInjection;
 using chldr_shared.Services;
 using chldr_data.Interfaces;
+using chldr_data.remote.Services;
+using chldr_data.remote.SqlEntities;
+using Microsoft.AspNetCore.Identity;
 
 namespace chldr_utils.Services
 {
     public static class ServiceRegistrator
     {
+   
         public static void RegisterCommonServices(IServiceCollection services)
         {
             RegisterValidators(services);

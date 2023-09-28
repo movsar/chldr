@@ -5,11 +5,14 @@ using chldr_data.Interfaces;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
+using chldr_data.remote.SqlEntities;
 using chldr_data.Resources.Localizations;
 using chldr_data.Services;
 using chldr_test_utils;
 using chldr_utils;
 using chldr_utils.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using MongoDB.Bson.Serialization.Serializers;
 using Newtonsoft.Json;
@@ -20,22 +23,26 @@ namespace chldr_api.tests.ServiceResolverTests
     public class UserResolverTests
     {
         private readonly IStringLocalizer<AppLocalizations> _localizer;
+        private readonly IConfiguration _configuration;
         private readonly EmailService _emailService;
         private readonly IDataProvider _dataProvider;
         private readonly FileService _fileService;
         private readonly ExceptionHandler _exceptionHandler;
         private readonly EnvironmentService _environmentService;
         private readonly UserResolver _userResolver;
+        private readonly UserManager<SqlUser> _userManager;
+        private readonly SignInManager<SqlUser> _signInManager;
 
         public UserResolverTests()
         {
+            _configuration = new ConfigurationBuilder().Build();
             _emailService = TestDataFactory.CreateFakeEmailService();
             _localizer = TestDataFactory.GetStringLocalizer();
             _dataProvider = TestDataFactory.CreateSqlDataProvider();
             _fileService = new FileService(AppContext.BaseDirectory);
             _exceptionHandler = new ExceptionHandler(_fileService);
             _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Web, true);
-            _userResolver = new UserResolver(_dataProvider, _localizer, _emailService, _exceptionHandler, _fileService);
+            _userResolver = new UserResolver(_dataProvider, _localizer, _emailService, _exceptionHandler, _fileService, _configuration, _userManager, _signInManager);
         }
 
         [Fact]

@@ -21,25 +21,26 @@ namespace chldr_data.remote.Services
         private DbContextOptions<SqlContext> _options;
         private readonly FileService _fileService;
         private readonly ExceptionHandler _exceptionHandler;
+        private readonly EmailService _emailService;
         private readonly IStringLocalizer<AppLocalizations> _localizer;
         private readonly UserManager<SqlUser> _userManager;
-        private readonly EmailService _emailService;
         private readonly SignInManager<SqlUser> _signInManager;
 
         public SqlDataProvider(
             FileService fileService,
             ExceptionHandler exceptionHandler,
             IConfiguration configuration,
+            EmailService emailService,
             UserManager<SqlUser> userManager,
             SignInManager<SqlUser> signInManager,
-            EmailService emailService,
-            IStringLocalizer<AppLocalizations> localizer)
+            IStringLocalizer<AppLocalizations> localizer
+            )
         {
             _fileService = fileService;
             _exceptionHandler = exceptionHandler;
+            _emailService = emailService;
             _localizer = localizer;
             _userManager = userManager;
-            _emailService = emailService;
             _signInManager = signInManager;
 
             var connectionString = configuration.GetConnectionString("SqlContext");

@@ -34,30 +34,24 @@ namespace chldr_ui.ViewModels
         {
             await base.OnInitializedAsync();
 
-            // Skip the first run (OnInitialized runs twice)
-            if (PageInitialized == false)
-            {
-                PageInitialized = true;
-                return;
-            }
-            // Reset for the page reload
-            PageInitialized = false;
-
-            if (EmailConfirmationCompleted == true)
-            {
-                return;
-            }
-
             // Check whether this page has been opened from the email confirmation link
             var queryParams = HttpUtility.ParseQueryString(new Uri(NavigationManager!.Uri).Query);
             var token = queryParams.Get("token");
 
-            if (string.IsNullOrWhiteSpace(token))
+            // Skip the first run (OnInitialized runs twice)
+            if (PageInitialized == false && (string.IsNullOrEmpty(token) || EmailConfirmationCompleted))
             {
+                PageInitialized = true;
                 return;
             }
 
-            await ExecuteSafelyAsync(() => ConfirmEmail(token!));
+            // Reset for the page reload
+            PageInitialized = false;
+
+            if (!string.IsNullOrWhiteSpace(token) && EmailConfirmationCompleted == false)
+            {
+                await ExecuteSafelyAsync(() => ConfirmEmail(token!));
+            }
         }
 
         public async Task ValidateAndSubmitAsync()

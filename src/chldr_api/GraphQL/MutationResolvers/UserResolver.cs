@@ -132,26 +132,35 @@ namespace chldr_api.GraphQL.MutationServices
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
 
-            var accessToken = await usersRepository.SignInAsync(email, password, _signingSecret);
-
-            return new RequestResult()
+            try
             {
-                Success = true,
-                SerializedData = JsonConvert.SerializeObject(accessToken)
+                var accessToken = await usersRepository.SignInAsync(email, password, _signingSecret);
+
+                return new RequestResult()
+                {
+                    Success = true,
+                    SerializedData = JsonConvert.SerializeObject(accessToken)
+                };
+            }
+            catch (Exception ex)
+            {
+
+                return new RequestResult()
+                {
+                    ErrorMessage = ex.Message
+                };
             };
         }
         internal async Task<RequestResult> Confirm(string tokenValue)
         {
-            using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
-            unitOfWork.BeginTransaction();
+            var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
 
             try
             {
                 // Check if a user with this email already exists
                 var usersRepository = (SqlUsersRepository)unitOfWork.Users;
+                await usersRepository.ConfirmEmailAsync(tokenValue);
 
-
-                unitOfWork.Commit();
                 return new RequestResult() { Success = true };
             }
             catch (Exception ex)

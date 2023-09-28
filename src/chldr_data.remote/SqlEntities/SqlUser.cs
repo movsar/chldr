@@ -14,6 +14,7 @@ public class SqlUser : IdentityUser, IUserEntity
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Patronymic { get; set; }
+    public string EmailConfirmationToken { get; set; }
     public int Rate { get; set; } = 0;
     public int Type { get; set; } = 0;
     public int Status { get; set; } = 0;

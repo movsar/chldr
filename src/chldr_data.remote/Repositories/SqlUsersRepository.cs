@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Localization;
 using chldr_data.Resources.Localizations;
 using Realms.Sync;
+using GraphQLParser;
 
 namespace chldr_data.remote.Repositories
 {
@@ -43,7 +44,27 @@ namespace chldr_data.remote.Repositories
             _localizer = localizer;
         }
 
+
         protected override RecordType RecordType => RecordType.User;
+        public async Task ConfirmEmailAsync(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new Exception("Token is required.");
+            }
+
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.EmailConfirmationToken == token);
+            if (user == null)
+            {
+                throw new Exception("Invalid or expired token.");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded)
+            {
+                throw new Exception("Error confirming email." + result.Errors.First().Description);
+            }
+        }
         public async Task SetStatusAsync(string userId, UserStatus newStatus)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId) as SqlUser;
@@ -107,7 +128,6 @@ namespace chldr_data.remote.Repositories
                 Patronymic = newUserDto.Patronymic,
             };
 
-            var confirmationTokenExpiration = DateTime.UtcNow.AddDays(30);
             var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
             var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdFrontHost}/login",
@@ -118,6 +138,8 @@ namespace chldr_data.remote.Repositories
                 _localizer["Email:Confirm_email_html", confirmEmailLink]);
 
             _emailService.Send(message);
+
+            user.EmailConfirmationToken = confirmationToken;
 
             var result = await _userManager.CreateAsync(user, newUserDto.Password);
             if (!result.Succeeded)
@@ -233,7 +255,5 @@ namespace chldr_data.remote.Repositories
 
             return entities.Select(UserModel.FromEntity).ToList();
         }
-
-
     }
 }
