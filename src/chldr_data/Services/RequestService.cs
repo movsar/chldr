@@ -98,23 +98,23 @@ namespace chldr_data.Services
             return response.Data;
         }
 
-        public async Task<RequestResult> RefreshTokens(string refreshToken)
+        public async Task<RequestResult> RefreshTokens(string accessToken, string refreshToken)
         {
             var request = new GraphQLRequest
             {
                 Query = @"
-                        mutation($refreshToken: String!) {
-                            logInRefreshToken(refreshToken: $refreshToken) {
+                        mutation($accessToken: String!, $refreshToken: String!) {
+                            refreshTokens(accessToken: $accessToken,refreshToken: $refreshToken) {
                                 success
                                 errorMessage
                                 serializedData
                             }
                         }",
 
-                Variables = new { refreshToken }
+                Variables = new { accessToken, refreshToken }
             };
 
-            var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, "logInRefreshToken");
+            var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, "refreshTokens");
             return response.Data;
         }
         public async Task<RequestResult> PasswordResetRequestAsync(string email)

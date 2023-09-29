@@ -19,6 +19,9 @@ using Microsoft.Extensions.Localization;
 using chldr_data.Resources.Localizations;
 using Realms.Sync;
 using GraphQLParser;
+using chldr_data.DatabaseObjects.Interfaces;
+using System.Reactive.Subjects;
+using System.Security.Cryptography;
 
 namespace chldr_data.remote.Repositories
 {
@@ -164,27 +167,7 @@ namespace chldr_data.remote.Repositories
             }
 
         }
-        private string GenerateToken(string userId, string signingKeyAsText)
-        {
-            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKeyAsText));
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                 new Claim(ClaimTypes.Name, userId.ToString())
-                    // Add other claims as needed
-                }),
-                Expires = DateTime.UtcNow.AddDays(7), // Token expiration, adjust as needed
-                SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
-
-            return tokenString;
-        }
+    
         public async Task<string> SignInAsync(string email, string signingKeyAsText)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email!.Equals(email));
@@ -197,7 +180,10 @@ namespace chldr_data.remote.Repositories
             await _signInManager.SignInAsync(user, isPersistent: false);
 
             // Generate JWT token
-            var accessToken = GenerateToken(user.Id, signingKeyAsText);
+            var accessToken = JwtService.GenerateAccessToken(user.Id, signingKeyAsText);
+            var refreshToken = JwtService.GenerateRefreshToken();
+            await _userManager.SetAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken", refreshToken);
+
             return accessToken;
         }
         public async Task<string> SignInAsync(string email, string password, string signingKeyAsText)
@@ -216,7 +202,7 @@ namespace chldr_data.remote.Repositories
             }
 
             // Generate JWT token
-            var accessToken = GenerateToken(user.Id, signingKeyAsText);
+            var accessToken = JwtService.GenerateAccessToken(user.Id, signingKeyAsText);
             return accessToken;
         }
         public async Task<bool> VerifyAsync(string userId, string password)

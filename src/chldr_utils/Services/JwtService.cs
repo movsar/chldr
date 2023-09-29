@@ -2,12 +2,47 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace chldr_tools
 {
     public static class JwtService
     {
+        public static string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+        }
+
+        public static string GenerateAccessToken(string userId, string signingKeyAsText)
+        {
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKeyAsText));
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, userId.ToString()),
+                }),
+
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256Signature),
+                Issuer = "Dosham",
+                Audience = "dosham.app"
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return tokenString;
+        }
+
         public static string GenerateToken(string userId, string secret, DateTime expiresAt)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

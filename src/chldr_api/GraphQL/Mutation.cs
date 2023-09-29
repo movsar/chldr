@@ -70,9 +70,9 @@ namespace chldr_api
             throw new NotImplementedException();
         }
 
-        public async Task<RequestResult> LogInRefreshTokenAsync(string refreshToken)
+        public async Task<RequestResult> RefreshTokens(string accessToken, string refreshToken)
         {
-            throw new NotImplementedException();
+            return await _userResolver.RefreshTokens(accessToken, refreshToken);
         }
 
         public async Task<RequestResult> LoginEmailPasswordAsync(string email, string password)

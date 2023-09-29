@@ -6,7 +6,12 @@ using chldr_data.Models;
 using chldr_data.Services;
 using chldr_utils;
 using chldr_utils.Services;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace chldr_shared.Services
 {
@@ -118,9 +123,9 @@ namespace chldr_shared.Services
             UserStateHasChanged?.Invoke(CurrentSession);
         }
 
-        public async Task<SessionInformation> RefreshTokens(string refreshToken)
+        public async Task<SessionInformation> RefreshTokens(string accessToken, string refreshToken)
         {
-            var response = await _requestService.RefreshTokens(refreshToken);
+            var response = await _requestService.RefreshTokens(accessToken, refreshToken);
 
             if (!response.Success)
             {
@@ -133,12 +138,24 @@ namespace chldr_shared.Services
             {
                 AccessToken = data.AccessToken!,
                 RefreshToken = data.RefreshToken!,
-                //AccessTokenExpiresIn = data.AccessTokenExpiresIn!,
                 Status = SessionStatus.LoggedIn,
                 UserDto = JsonConvert.DeserializeObject<UserDto>(data.User.ToString())
             };
         }
+        public bool IsTokenExpired(string accessToken)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(accessToken);
 
+            var expirationClaim = jwtToken.Claims.First(claim => claim.Type == "exp");
+            if (expirationClaim == null)
+            {
+                throw new InvalidOperationException("The token does not have an expiration claim.");
+            }
+
+            var expirationTime = DateTimeOffset.FromUnixTimeSeconds(long.Parse(expirationClaim.Value));
+            return expirationTime.UtcDateTime <= DateTime.UtcNow;
+        }
         public async Task RestoreLastSession()
         {
             // Get last session info from the local storage
@@ -149,14 +166,14 @@ namespace chldr_shared.Services
                 UserStateHasChanged?.Invoke(CurrentSession);
             }
 
-            //var expired = DateTimeOffset.UtcNow > CurrentSession.AccessTokenExpiresIn;
-            //if (expired && !string.IsNullOrWhiteSpace(CurrentSession.RefreshToken))
-            //{
-            //    // Try to refresh Access Token
-            //    CurrentSession = await RefreshTokens(CurrentSession.RefreshToken);
-            //    await SaveActiveSession();
-            //    UserStateHasChanged?.Invoke(CurrentSession);
-            //}
+            var expired = IsTokenExpired(CurrentSession.AccessToken);
+            if (expired && !string.IsNullOrWhiteSpace(CurrentSession.RefreshToken))
+            {
+                // Try to refresh Access Token
+                CurrentSession = await RefreshTokens(CurrentSession.AccessToken, CurrentSession.RefreshToken);
+                await SaveActiveSession();
+                UserStateHasChanged?.Invoke(CurrentSession);
+            }
         }
 
         public Task AddAsync(UserDto entryDto, string userId)
