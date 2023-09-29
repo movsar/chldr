@@ -12,7 +12,7 @@ namespace chldr_data.remote.Repositories
     public class SqlChangeSetsRepository : SqlRepository<SqlChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {
         protected override RecordType RecordType => throw new Exception("Shouldn't be used");
-        public SqlChangeSetsRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string _userId) : base(dbConfig, fileService, _userId) { }
+        public SqlChangeSetsRepository(SqlContext context, FileService fileService, string _userId) : base(context, fileService, _userId) { }
 
         public async Task<List<ChangeSetModel>> TakeLastAsync(int count)
         {

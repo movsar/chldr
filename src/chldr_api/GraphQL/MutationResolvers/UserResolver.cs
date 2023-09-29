@@ -153,7 +153,7 @@ namespace chldr_api.GraphQL.MutationServices
         }
         internal async Task<RequestResult> Confirm(string tokenValue)
         {
-            var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+            using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
 
             try
             {

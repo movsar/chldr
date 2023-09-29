@@ -13,7 +13,7 @@ namespace chldr_data.remote.Repositories
 {
     public class SqlPronunciationsRepository : SqlRepository<SqlSound, PronunciationModel, PronunciationDto>, IPronunciationsRepository
     {
-        public SqlPronunciationsRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string userId) : base(dbConfig, fileService, userId) { }
+        public SqlPronunciationsRepository(SqlContext context, FileService fileService, string userId) : base(context, fileService, userId) { }
         protected override RecordType RecordType => RecordType.Sound;
         public override async Task<List<PronunciationModel>> GetRandomsAsync(int limit)
         {

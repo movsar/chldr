@@ -16,7 +16,6 @@ namespace chldr_data.Services
     public class SqlUnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly string? _userId;
-        private readonly DbContextOptions<SqlContext> _dbConfig;
         private readonly SqlContext _context;
         private readonly FileService _fileService;
         private readonly ExceptionHandler _exceptionHandler;
@@ -33,7 +32,7 @@ namespace chldr_data.Services
         private SqlUsersRepository _usersRepository;
         private SqlPronunciationsRepository _soundsRepository;
         public SqlUnitOfWork(
-            DbContextOptions<SqlContext> dbConfig,
+            SqlContext context,
             FileService fileService,
             ExceptionHandler exceptionHandler,
             UserManager<SqlUser> userManager,
@@ -42,8 +41,7 @@ namespace chldr_data.Services
             IStringLocalizer<AppLocalizations> localizer,
             string userId)
         {
-            _dbConfig = dbConfig;
-            _context = new SqlContext(_dbConfig);
+            _context = context;
             _fileService = fileService;
             _userId = userId;
             _exceptionHandler = exceptionHandler;
@@ -77,11 +75,11 @@ namespace chldr_data.Services
             _context.Dispose();
         }
 
-        public ITranslationsRepository Translations => _translationsRepository ??= new SqlTranslationsRepository(_dbConfig, _fileService, _userId);
-        public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new SqlChangeSetsRepository(_dbConfig, _fileService, _userId);
-        public IEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_dbConfig, _fileService, _exceptionHandler, Translations, Sounds, _userId);
-        public ISourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_dbConfig, _fileService, _userId);
-        public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_dbConfig, _fileService, _userManager, _signInManager, _emailService, _localizer, _userId);
-        public IPronunciationsRepository Sounds => _soundsRepository ?? new SqlPronunciationsRepository(_dbConfig, _fileService, _userId);
+        public ITranslationsRepository Translations => _translationsRepository ??= new SqlTranslationsRepository(_context, _fileService, _userId);
+        public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new SqlChangeSetsRepository(_context, _fileService, _userId);
+        public IEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_context, _fileService, _exceptionHandler, Translations, Sounds, _userId);
+        public ISourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_context, _fileService, _userId);
+        public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_context, _fileService, _userManager, _signInManager, _emailService, _localizer, _userId);
+        public IPronunciationsRepository Sounds => _soundsRepository ?? new SqlPronunciationsRepository(_context, _fileService, _userId);
     }
 }

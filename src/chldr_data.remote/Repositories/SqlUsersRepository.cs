@@ -30,13 +30,13 @@ namespace chldr_data.remote.Repositories
         private readonly IStringLocalizer<AppLocalizations> _localizer;
 
         public SqlUsersRepository(
-            DbContextOptions<SqlContext> dbConfig,
+            SqlContext context,
             FileService fileService,
             UserManager<SqlUser> userManager,
             SignInManager<SqlUser> signInManager,
             EmailService emailService,
             IStringLocalizer<AppLocalizations> localizer,
-            string _userId) : base(dbConfig, fileService, _userId)
+            string _userId) : base(context, fileService, _userId)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -62,7 +62,7 @@ namespace chldr_data.remote.Repositories
             var result = await _userManager.ConfirmEmailAsync(user, token);
             if (!result.Succeeded)
             {
-                throw new Exception("Error confirming email." + result.Errors.First().Description);
+                throw new Exception("Error confirming email: " + result.Errors.First().Description);
             }
         }
         public async Task SetStatusAsync(string userId, UserStatus newStatus)

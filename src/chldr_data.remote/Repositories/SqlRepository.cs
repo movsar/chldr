@@ -20,12 +20,9 @@ namespace chldr_data.remote.Repositories
         where TModel : class
         where TEntity : class
     {
-        private DbContextOptions<SqlContext> _dbConfig;
-
-        public SqlRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string userId)
+        public SqlRepository(SqlContext context, FileService fileService, string userId)
         {
-            _dbConfig = dbConfig;
-            _dbContext = new SqlContext(_dbConfig);
+            _dbContext = context;
             _userId = userId ?? _dbContext.Users.First().Id;
 
             _fileService = fileService;

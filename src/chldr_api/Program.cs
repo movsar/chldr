@@ -38,16 +38,16 @@ namespace chldr_api
             builder.Services.AddScoped<FileService>();
             builder.Services.AddScoped<ExceptionHandler>();
 
-            builder.Services.AddScoped<UserResolver>();
-            builder.Services.AddScoped<EntryResolver>();
+            builder.Services.AddTransient<UserResolver>();
+            builder.Services.AddTransient<EntryResolver>();
 
             builder.Services.AddLocalization();
 
             // SQL Services **************************************************************
             builder.Services.AddDbContext<SqlContext>(options => options
-                         .UseMySQL(connectionString, b => b.MigrationsAssembly("chldr_api")), ServiceLifetime.Singleton);
+                         .UseMySQL(connectionString, b => b.MigrationsAssembly("chldr_api")), ServiceLifetime.Transient);
             
-            builder.Services.AddScoped<IDataProvider, SqlDataProvider>();
+            builder.Services.AddTransient<IDataProvider, SqlDataProvider>();
             builder.Services
                 .AddDefaultIdentity<SqlUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<SqlContext>();
@@ -98,6 +98,8 @@ namespace chldr_api
             });
 
             builder.Services.AddAuthorization();
+            
+            builder.Services.AddTransient<Mutation>();
             builder.Services.AddGraphQLServer()
                 .AddQueryType<Query>()
                 .AddMutationType<Mutation>()

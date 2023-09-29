@@ -35,9 +35,9 @@ namespace chldr_web
             // SQL Services **************************************************************
             var connectionString = builder.Configuration.GetConnectionString("SqlContext");
             builder.Services.AddDbContext<SqlContext>(options => options
-                       .UseMySQL(connectionString, b => b.MigrationsAssembly("chldr_api")), ServiceLifetime.Singleton);
+                       .UseMySQL(connectionString, b => b.MigrationsAssembly("chldr_api")), ServiceLifetime.Transient);
 
-            builder.Services.AddScoped<IDataProvider, SqlDataProvider>();
+            builder.Services.AddTransient<IDataProvider, SqlDataProvider>();
             builder.Services
                 .AddDefaultIdentity<SqlUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<SqlContext>();

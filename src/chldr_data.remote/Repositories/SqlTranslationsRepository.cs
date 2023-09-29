@@ -15,7 +15,7 @@ namespace chldr_data.remote.Repositories
 {
     public class SqlTranslationsRepository : SqlRepository<SqlTranslation, TranslationModel, TranslationDto>, ITranslationsRepository
     {
-        public SqlTranslationsRepository(DbContextOptions<SqlContext> dbConfig, FileService fileService, string _userId) : base(dbConfig, fileService, _userId) { }
+        public SqlTranslationsRepository(SqlContext context, FileService fileService, string _userId) : base(context, fileService, _userId) { }
         protected override RecordType RecordType => RecordType.Translation;
      
         public override async Task<List<TranslationModel>> GetRandomsAsync(int limit)

@@ -433,12 +433,12 @@ namespace chldr_data.remote.Repositories
         protected override RecordType RecordType => RecordType.Entry;
 
         public SqlEntriesRepository(
-            DbContextOptions<SqlContext> dbConfig,
+           SqlContext context,
             FileService fileService,
             ExceptionHandler exceptionHandler,
             ITranslationsRepository translationsRepository,
             IPronunciationsRepository soundsRepository,
-            string userId) : base(dbConfig, fileService, userId)
+            string userId) : base(context, fileService, userId)
         {
             _exceptionHandler = exceptionHandler;
             _translations = (SqlTranslationsRepository)translationsRepository;
