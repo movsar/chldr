@@ -42,13 +42,22 @@ namespace chldr_shared.Services
                 throw new Exception(response.ErrorMessage);
             }
 
-            var token = RequestResult.GetData<string>(response);
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                throw new Exception("Token shouldn't be null");
-            }
+            var data = RequestResult.GetData<dynamic>(response);
 
-            return token;
+            CurrentSession = new SessionInformation()
+            {
+                AccessToken = data.AccessToken!,
+                //AccessTokenExpiresIn = data.AccessTokenExpiresIn!,
+                Status = SessionStatus.LoggedIn,
+                UserDto = JsonConvert.DeserializeObject<UserDto>(data.User.ToString())
+            };
+
+            await SaveActiveSession();
+
+            UserStateHasChanged?.Invoke(CurrentSession);
+
+            // TODO: Improve this
+            return "";
         }
 
         public async Task SendPasswordResetRequestAsync(string email)
@@ -85,8 +94,7 @@ namespace chldr_shared.Services
                 CurrentSession = new SessionInformation()
                 {
                     AccessToken = data.AccessToken!,
-                    RefreshToken = data.RefreshToken!,
-                    AccessTokenExpiresIn = data.AccessTokenExpiresIn!,
+                    //AccessTokenExpiresIn = data.AccessTokenExpiresIn!,
                     Status = SessionStatus.LoggedIn,
                     UserDto = JsonConvert.DeserializeObject<UserDto>(data.User.ToString())
                 };
@@ -125,7 +133,7 @@ namespace chldr_shared.Services
             {
                 AccessToken = data.AccessToken!,
                 RefreshToken = data.RefreshToken!,
-                AccessTokenExpiresIn = data.AccessTokenExpiresIn!,
+                //AccessTokenExpiresIn = data.AccessTokenExpiresIn!,
                 Status = SessionStatus.LoggedIn,
                 UserDto = JsonConvert.DeserializeObject<UserDto>(data.User.ToString())
             };
@@ -141,14 +149,14 @@ namespace chldr_shared.Services
                 UserStateHasChanged?.Invoke(CurrentSession);
             }
 
-            var expired = DateTimeOffset.UtcNow > CurrentSession.AccessTokenExpiresIn;
-            if (expired && !string.IsNullOrWhiteSpace(CurrentSession.RefreshToken))
-            {
-                // Try to refresh Access Token
-                CurrentSession = await RefreshTokens(CurrentSession.RefreshToken);
-                await SaveActiveSession();
-                UserStateHasChanged?.Invoke(CurrentSession);
-            }
+            //var expired = DateTimeOffset.UtcNow > CurrentSession.AccessTokenExpiresIn;
+            //if (expired && !string.IsNullOrWhiteSpace(CurrentSession.RefreshToken))
+            //{
+            //    // Try to refresh Access Token
+            //    CurrentSession = await RefreshTokens(CurrentSession.RefreshToken);
+            //    await SaveActiveSession();
+            //    UserStateHasChanged?.Invoke(CurrentSession);
+            //}
         }
 
         public Task AddAsync(UserDto entryDto, string userId)

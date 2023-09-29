@@ -16,9 +16,8 @@ public class SqlSound : ISoundEntity
     public string EntryId { get; set; } = null!;
     public int Rate { get; set; }
     public string FileName { get; set; } = null!;
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
-    
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
     public virtual SqlEntry Entry { get; set; } = null!;
     public virtual SqlUser User { get; set; } = null!;
 

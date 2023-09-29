@@ -37,7 +37,7 @@ namespace chldr_utils.Services
             builder.HtmlBody = message.Content;
 
             var emailMessage = new MimeMessage();
-            emailMessage.From.Add(new MailboxAddress("Movsar Bekaev", Username));
+            emailMessage.From.Add(new MailboxAddress("Dosham", Username));
             emailMessage.To.AddRange(message.To);
             emailMessage.Subject = message.Subject;
             emailMessage.Body = builder.ToMessageBody();

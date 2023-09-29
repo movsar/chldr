@@ -14,12 +14,12 @@ public class SqlUser : IdentityUser, IUserEntity
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Patronymic { get; set; }
-    public string EmailConfirmationToken { get; set; }
+    public string EmailConfirmationToken { get; set; } = string.Empty;
     public int Rate { get; set; } = 0;
     public int Type { get; set; } = 0;
     public int Status { get; set; } = 0;
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
     public virtual ICollection<SqlEntry> Entries { get; set; } = new List<SqlEntry>();
     public virtual ICollection<SqlQuery> Queries { get; set; } = new List<SqlQuery>();
     public virtual ICollection<SqlSound> Sounds { get; set; } = new List<SqlSound>();

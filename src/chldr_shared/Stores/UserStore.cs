@@ -46,9 +46,9 @@ namespace chldr_shared.Stores
             UserStateHasChanged?.Invoke();
         }
 
-        public async Task<string> RegisterNewUser(string email, string password)
+        public async Task RegisterNewUser(string email, string password)
         {
-            return await _userService.RegisterNewUserAsync(email, password);
+            var accessToken = await _userService.RegisterNewUserAsync(email, password);
         }
 
         public async Task LogInEmailPasswordAsync(string email, string password)

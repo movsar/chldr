@@ -1,5 +1,6 @@
 ﻿using chldr_data;
 using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
@@ -19,6 +20,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Realms.Sync;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -61,13 +63,11 @@ namespace chldr_api.GraphQL.MutationServices
         internal async Task<RequestResult> RegisterAndLogInAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
-
+            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
             unitOfWork.BeginTransaction();
 
             try
             {
-                var usersRepository = (SqlUsersRepository)unitOfWork.Users;
-
                 // Register
                 await usersRepository.RegisterAsync(new UserDto()
                 {
@@ -78,17 +78,33 @@ namespace chldr_api.GraphQL.MutationServices
                     Patronymic = patronymic,
                 });
 
-                // Sign In
-                var accessToken = await usersRepository.SignInAsync(email, _signingSecret);
-
                 unitOfWork.Commit();
 
-                return new RequestResult { Success = true, SerializedData = JsonConvert.SerializeObject(accessToken) };
+                // Sign In
+                var accessToken = await usersRepository.SignInAsync(email, _signingSecret);
+                var user = await usersRepository.GetByEmailAsync(email);
 
+                return new RequestResult
+                {
+                    Success = true,
+                    SerializedData = JsonConvert.SerializeObject(new
+                    {
+                        User = UserDto.FromModel(user),
+                        AccessToken = accessToken,
+                    }),
+                };
             }
             catch (Exception ex)
             {
                 unitOfWork.Rollback();
+                try
+                {
+                    var user = await usersRepository.GetByEmailAsync(email);
+                    await usersRepository.RemoveAsync(user.Id);
+                    unitOfWork.Commit();
+                }
+                catch (Exception) { }
+
                 return new RequestResult() { ErrorMessage = ex.Message };
             }
         }
@@ -135,11 +151,16 @@ namespace chldr_api.GraphQL.MutationServices
             try
             {
                 var accessToken = await usersRepository.SignInAsync(email, password, _signingSecret);
+                var user = await usersRepository.GetByEmailAsync(email);
 
                 return new RequestResult()
                 {
                     Success = true,
-                    SerializedData = JsonConvert.SerializeObject(accessToken)
+                    SerializedData = JsonConvert.SerializeObject(new
+                    {
+                        User = UserDto.FromModel(user),
+                        AccessToken = accessToken,
+                    }),
                 };
             }
             catch (Exception ex)

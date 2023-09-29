@@ -17,7 +17,7 @@ namespace chldr_data.remote.SqlEntities
         public int RecordType { get; set; }
         public string? RecordChanges { get; set; }
         public int Operation { get; set; }
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
         public virtual SqlUser User { get; set; } = null!;
 
         public static IChangeSetEntity FromDto(ChangeSetDto entity)

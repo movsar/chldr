@@ -10,7 +10,7 @@ namespace chldr_data.Models
         public string AccessToken { get; set; } = string.Empty;
         public string RefreshToken { get; set; } = string.Empty;
         public SessionStatus Status { get; set; } = SessionStatus.Anonymous;
-        public DateTimeOffset AccessTokenExpiresIn { get; set; }
+        //public DateTimeOffset AccessTokenExpiresIn { get; set; }
         public UserDto? UserDto { get; set; } = null;
         public SessionInformation() { }
         public void Clear()
@@ -18,7 +18,7 @@ namespace chldr_data.Models
             AccessToken = string.Empty;
             RefreshToken = string.Empty;
             Status = SessionStatus.Anonymous;
-            AccessTokenExpiresIn = DateTimeOffset.MinValue;
+            //AccessTokenExpiresIn = DateTimeOffset.MinValue;
             UserDto = null;
         }
     }

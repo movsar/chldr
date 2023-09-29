@@ -41,9 +41,8 @@ public class SqlEntry : IEntryEntity
     public virtual SqlSource Source { get; set; } = null!;
     public virtual SqlUser User { get; set; } = null!;
     public virtual ICollection<SqlTranslation> Translations { get; set; } = new List<SqlTranslation>();
-
-    public DateTimeOffset CreatedAt { get; set; } = DateTime.Now;
-    public DateTimeOffset UpdatedAt { get; set; } = DateTime.Now;
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
     public static bool ValidateParentId(EntryDto entryDto, SqlContext context)
     {

@@ -128,6 +128,19 @@ namespace chldr_data.remote.Repositories
                 Patronymic = newUserDto.Patronymic,
             };
 
+            if (string.IsNullOrEmpty(newUserDto.Password))
+            {
+                throw new NullReferenceException("Password is empty");
+            }
+
+            // Create the user
+            var result = await _userManager.CreateAsync(user, newUserDto.Password);
+            if (!result.Succeeded)
+            {
+                throw new Exception(result.Errors.First().Description);
+            }
+
+            // Send email confirmation link
             var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
             var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdFrontHost}/login",
@@ -137,15 +150,19 @@ namespace chldr_data.remote.Repositories
                 _localizer["Email:Confirm_email_subject"],
                 _localizer["Email:Confirm_email_html", confirmEmailLink]);
 
-            _emailService.Send(message);
-
-            user.EmailConfirmationToken = confirmationToken;
-
-            var result = await _userManager.CreateAsync(user, newUserDto.Password);
-            if (!result.Succeeded)
+            try
             {
-                throw new Exception(result.Errors.First().Description);
+                _emailService.Send(message);
+
+                // Write the token to the user object
+                user.EmailConfirmationToken = confirmationToken;
+                await _userManager.UpdateAsync(user);
             }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
         }
         private string GenerateToken(string userId, string signingKeyAsText)
         {
@@ -170,7 +187,7 @@ namespace chldr_data.remote.Repositories
         }
         public async Task<string> SignInAsync(string email, string signingKeyAsText)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email!.Equals(email));
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email!.Equals(email));
             if (user == null)
             {
                 throw new NullReferenceException("User not found");

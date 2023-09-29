@@ -28,9 +28,8 @@ public class SqlTranslation : ITranslationEntity
     public int Rate { get; set; } = 0;
     public virtual SqlEntry Entry { get; set; } = null!;
     public virtual SqlUser User { get; set; } = null!;
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
-
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
     public static SqlTranslation FromDto(TranslationDto translationDto, SqlContext context)
     {
         var user = context.Find<SqlUser>(translationDto.UserId);

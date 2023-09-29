@@ -46,10 +46,10 @@ namespace chldr_api
             // SQL Services **************************************************************
             builder.Services.AddDbContext<SqlContext>(options => options
                          .UseMySQL(connectionString, b => b.MigrationsAssembly("chldr_api")), ServiceLifetime.Transient);
-            
+
             builder.Services.AddTransient<IDataProvider, SqlDataProvider>();
             builder.Services
-                .AddDefaultIdentity<SqlUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddDefaultIdentity<SqlUser>()
                 .AddEntityFrameworkStores<SqlContext>();
 
             builder.Services.Configure<IdentityOptions>(options =>
@@ -98,7 +98,7 @@ namespace chldr_api
             });
 
             builder.Services.AddAuthorization();
-            
+
             builder.Services.AddTransient<Mutation>();
             builder.Services.AddGraphQLServer()
                 .AddQueryType<Query>()
@@ -123,7 +123,7 @@ namespace chldr_api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
 
