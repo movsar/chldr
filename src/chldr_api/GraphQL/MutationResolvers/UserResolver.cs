@@ -190,22 +190,7 @@ namespace chldr_api.GraphQL.MutationServices
                 }
 
                 // Generate JWT tokens
-                var accessToken = JwtService.GenerateSignedToken(user.Id, _signingSecret);
-                var refreshToken = JwtService.GenerateRefreshToken();
-                await _userManager.SetAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken", refreshToken);
-
-                var userModel = await usersRepository.GetByEmailAsync(email);
-
-                return new RequestResult()
-                {
-                    Success = true,
-                    SerializedData = JsonConvert.SerializeObject(new
-                    {
-                        User = UserDto.FromModel(userModel),
-                        AccessToken = accessToken,
-                        RefreshToken = refreshToken
-                    }),
-                };
+                return await GenerateSignInResponse(user);
             }
             catch (Exception ex)
             {
@@ -303,28 +288,11 @@ namespace chldr_api.GraphQL.MutationServices
                 }
 
                 unitOfWork.Commit();
-
-                // Sign In
+                
                 await _signInManager.SignInAsync(user, isPersistent: false);
 
-                // Generate JWT tokens
-                var signingKeyAsText = _configuration.GetValue<string>("ApiJwtSigningKey");
-                var accessToken = JwtService.GenerateSignedToken(user.Id, signingKeyAsText);
-                var refreshToken = JwtService.GenerateRefreshToken();
-                await _userManager.SetAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken", refreshToken);
-
-                var userModel = await usersRepository.GetByEmailAsync(email);
-
-                return new RequestResult
-                {
-                    Success = true,
-                    SerializedData = JsonConvert.SerializeObject(new
-                    {
-                        User = UserDto.FromModel(userModel),
-                        AccessToken = accessToken,
-                        RefreshToken = refreshToken
-                    }),
-                };
+                return await GenerateSignInResponse(user);
+                
             }
             catch (Exception ex)
             {
@@ -339,6 +307,29 @@ namespace chldr_api.GraphQL.MutationServices
 
                 return new RequestResult() { ErrorMessage = ex.Message };
             }
+        }
+        private async Task<RequestResult> GenerateSignInResponse(SqlUser user)
+        {
+            // Generate JWT tokens
+            var signingKeyAsText = _configuration.GetValue<string>("ApiJwtSigningKey");
+            var accessToken = JwtService.GenerateSignedToken(user.Id, signingKeyAsText);
+            var refreshToken = JwtService.GenerateRefreshToken();
+            await _userManager.SetAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken", refreshToken);
+
+            var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
+            var userModel = await usersRepository.GetByEmailAsync(user.Email);
+
+            return new RequestResult
+            {
+                Success = true,
+                SerializedData = JsonConvert.SerializeObject(new
+                {
+                    User = UserDto.FromModel(userModel),
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken
+                }),
+            };
         }
         private ClaimsPrincipal GetPrincipalFromAccessToken(string token)
         {
