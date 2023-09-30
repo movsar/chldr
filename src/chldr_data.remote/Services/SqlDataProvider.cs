@@ -40,11 +40,6 @@ namespace chldr_data.remote.Services
             _userManager = userManager;
             _signInManager = signInManager;
         }
-        public SqlDataProvider(FileService fileService, ExceptionHandler exceptionHandler, string connectionString)
-        {
-            _fileService = fileService;
-            _exceptionHandler = exceptionHandler;
-        }
 
         public IUnitOfWork CreateUnitOfWork(string? userId = null)
         {

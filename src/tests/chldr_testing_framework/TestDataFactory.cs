@@ -66,8 +66,17 @@ namespace chldr_test_utils
         }
         public static IDataProvider CreateSqlDataProvider()
         {
+            // Constants.TestingDatabaseConnectionString
             // Remove sql database
-            var dataProvider = new SqlDataProvider(_fileService, _exceptionHandler, Constants.TestingDatabaseConnectionString);
+            var dataProvider = new SqlDataProvider(
+                null, 
+                _fileService, 
+                _exceptionHandler, 
+                null,
+                null,
+                null,
+                null
+                );
             return dataProvider;
         }
         public static IDataProvider CreatRealmDataProvider()
