@@ -19,7 +19,7 @@ namespace chldr_tools
             }
         }
 
-        public static string GenerateAccessToken(string userId, string signingKeyAsText)
+        public static string GenerateSignedToken(string userId, string signingKeyAsText)
         {
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKeyAsText));
 
@@ -41,25 +41,6 @@ namespace chldr_tools
             var tokenString = tokenHandler.WriteToken(token);
 
             return tokenString;
-        }
-
-        public static string GenerateToken(string userId, string secret, DateTime expiresAt)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(secret);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                new Claim(ClaimTypes.NameIdentifier, userId)
-                }),
-                Expires = expiresAt,
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
         }
 
         public static bool IsTokenExpired(string token)

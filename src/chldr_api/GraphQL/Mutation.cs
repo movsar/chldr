@@ -50,34 +50,29 @@ namespace chldr_api
         }
 
         // User mutations
-        public async Task<RequestResult> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
+        public async Task<RequestResult> UpdatePasswordAsync(string email, string token, string newPassword)
         {
-            return await _userResolver.RegisterAndLogInAsync(email, password, firstName, lastName, patronymic);
+            return await _userResolver.SetNewPassword(email, token, newPassword);
         }
-
-        public async Task<RequestResult> ConfirmEmailAsync(string token)
-        {
-            return await _userResolver.ConfirmEmailAsync(token);
-        }
-
         public async Task<RequestResult> PasswordReset(string email)
         {
-            throw new NotImplementedException();
+            return await _userResolver.ResetPassword(email);
         }
-
-        public async Task<RequestResult> UpdatePasswordAsync(string token, string newPassword)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<RequestResult> RefreshTokens(string accessToken, string refreshToken)
         {
             return await _userResolver.RefreshTokens(accessToken, refreshToken);
         }
-
         public async Task<RequestResult> LoginEmailPasswordAsync(string email, string password)
         {
             return await _userResolver.SignInAsync(email, password);
+        }
+        public async Task<RequestResult> ConfirmEmailAsync(string token)
+        {
+            return await _userResolver.ConfirmEmailAsync(token);
+        }
+        public async Task<RequestResult> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
+        {
+            return await _userResolver.RegisterAndLogInAsync(email, password, firstName, lastName, patronymic);
         }
     }
 

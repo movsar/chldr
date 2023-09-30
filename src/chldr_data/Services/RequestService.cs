@@ -13,19 +13,19 @@ namespace chldr_data.Services
             _graphQLRequestSender = graphQLRequestSender;
         }
         private IGraphQlClient _graphQLRequestSender;
-        public async Task<RequestResult> UpdatePasswordAsync(string token, string newPassword)
+        public async Task<RequestResult> UpdatePasswordAsync(string email, string token, string newPassword)
         {
             var request = new GraphQLRequest
             {
                 Query = @"
-                    mutation($token: String!, $newPassword: String!) {
-                    updatePassword(token: $token, newPassword: $newPassword) {
+                    mutation($email: String!, $token: String!, $newPassword: String!) {
+                    updatePassword(email: $email, token: $token, newPassword: $newPassword) {
                         success
                         errorMessage
                         serializedData
                     }
                 }",
-                Variables = new { token, newPassword }
+                Variables = new { email, token, newPassword }
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, "updatePassword");

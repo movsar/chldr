@@ -42,7 +42,6 @@ namespace chldr_api.GraphQL.MutationServices
         private readonly SignInManager<SqlUser> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly string _signingSecret;
-        private readonly SymmetricSecurityKey _signingKey;
 
         public UserResolver(
             IDataProvider dataProvider,
@@ -66,39 +65,54 @@ namespace chldr_api.GraphQL.MutationServices
             _signingSecret = configuration.GetValue<string>("ApiJwtSigningKey")!;
         }
 
-        internal async Task<RequestResult> UpdatePassword(string tokenValue, string newPassword)
+        internal async Task<RequestResult> SetNewPassword(string email, string token, string newPassword)
         {
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
-            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
 
-            unitOfWork.BeginTransaction();
+            // Find the user
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return new RequestResult()
+                {
+                    ErrorMessage = $"User with email {email} does not exist."
+                };
+            }
 
+            // Reset the password
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
 
-            unitOfWork.Commit();
+            if (!result.Succeeded)
+            {
+                return new RequestResult()
+                {
+                    ErrorMessage = "Error resetting password: " + string.Join(", ", result.Errors.Select(x => x.Description))
+                };
+            }
 
-            return new RequestResult() { Success = true };
+            return new RequestResult()
+            {
+                Success = true
+            };
         }
-
         internal async Task<RequestResult> ResetPassword(string email)
         {
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
 
-            var user = await usersRepository.FindByEmail(email);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email!.Equals(email));
             if (user == null)
             {
-                throw new ArgumentException($"User with email {email} does not exist.");
+                throw new NullReferenceException("User not found");
             }
 
             // Generate a password reset token with a short expiration time
-            var tokenExpiresIn = DateTime.UtcNow.AddMinutes(60);
-            var tokenValue = JwtService.GenerateToken(user.Id, "password-reset-secret", tokenExpiresIn);
-
-            // Store the token in the Tokens table
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
             // Send the password reset link to the user's email
             var resetPasswordLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdFrontHost}/set-new-password", new Dictionary<string, string?>(){
-                { "token", tokenValue }
+                { "email", user.Email},
+                { "token", token }
             })).ToString();
 
             var message = new EmailMessage(new string[] { email },
@@ -110,14 +124,12 @@ namespace chldr_api.GraphQL.MutationServices
             return new RequestResult()
             {
                 Success = true,
-                SerializedData = JsonConvert.SerializeObject(tokenValue)
+                SerializedData = JsonConvert.SerializeObject(token)
             };
         }
-
         internal async Task<RequestResult> RefreshTokens(string accessToken, string refreshToken)
         {
-            var signingKeyAsText = _configuration.GetValue<string>("ApiJwtSigningKey");
-            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKeyAsText));
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_signingSecret));
 
             var principal = GetPrincipalFromAccessToken(accessToken);
             var userId = principal.Identity.Name;
@@ -135,7 +147,7 @@ namespace chldr_api.GraphQL.MutationServices
             }
 
             // Generate new tokens
-            var newAccessToken = JwtService.GenerateAccessToken(userId, signingKeyAsText);
+            var newAccessToken = JwtService.GenerateSignedToken(userId, _signingSecret);
             var newRefreshToken = JwtService.GenerateRefreshToken();
 
             await _userManager.RemoveAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken");
@@ -178,8 +190,7 @@ namespace chldr_api.GraphQL.MutationServices
                 }
 
                 // Generate JWT tokens
-                var signingKeyAsText = _configuration.GetValue<string>("ApiJwtSigningKey");
-                var accessToken = JwtService.GenerateAccessToken(user.Id, signingKeyAsText);
+                var accessToken = JwtService.GenerateSignedToken(user.Id, _signingSecret);
                 var refreshToken = JwtService.GenerateRefreshToken();
                 await _userManager.SetAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken", refreshToken);
 
@@ -298,7 +309,7 @@ namespace chldr_api.GraphQL.MutationServices
 
                 // Generate JWT tokens
                 var signingKeyAsText = _configuration.GetValue<string>("ApiJwtSigningKey");
-                var accessToken = JwtService.GenerateAccessToken(user.Id, signingKeyAsText);
+                var accessToken = JwtService.GenerateSignedToken(user.Id, signingKeyAsText);
                 var refreshToken = JwtService.GenerateRefreshToken();
                 await _userManager.SetAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken", refreshToken);
 

@@ -68,9 +68,9 @@ namespace chldr_shared.Services
             await _requestService.PasswordResetRequestAsync(email);
         }
 
-        public async Task UpdatePasswordAsync(string token, string newPassword)
+        public async Task UpdatePasswordAsync(string email, string token, string newPassword)
         {
-            await _requestService.UpdatePasswordAsync(token, newPassword);
+            await _requestService.UpdatePasswordAsync(email, token, newPassword);
         }
 
         public async Task ConfirmUserAsync(string token)
