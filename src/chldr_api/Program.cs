@@ -100,6 +100,7 @@ namespace chldr_api
             builder.Services.AddAuthorization();
 
             builder.Services.AddTransient<Mutation>();
+            builder.Services.AddTransient<Query>();
             builder.Services.AddGraphQLServer()
                 .AddQueryType<Query>()
                 .AddMutationType<Mutation>()

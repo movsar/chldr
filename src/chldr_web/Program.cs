@@ -1,16 +1,12 @@
 ﻿using Blazored.Modal;
 using chldr_data.Interfaces;
-using chldr_data.local.Services;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
 using chldr_shared.Enums;
 using chldr_utils.Services;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
-using System.Reflection.PortableExecutable;
 
 namespace chldr_web
 {
@@ -30,7 +26,7 @@ namespace chldr_web
             builder.Services.AddLocalization();
             builder.Services.AddBlazoredModal();
 
-            builder.Services.AddSingleton(x => new EnvironmentService(Platforms.Web, builder.Environment.IsDevelopment()));
+            builder.Services.AddTransient(x => new EnvironmentService(Platforms.Web, builder.Environment.IsDevelopment()));
 
             // SQL Services **************************************************************
             var connectionString = builder.Configuration.GetConnectionString("SqlContext");
