@@ -62,7 +62,7 @@ namespace chldr_api.tests.ServiceResolverTests
             var confirmationToken = JsonConvert.DeserializeObject<string>(registrationResponse.SerializedData);
             Assert.NotEmpty(confirmationToken);
 
-            var confirmationResponse = await _userResolver.Confirm(confirmationToken);
+            var confirmationResponse = await _userResolver.ConfirmEmailAsync(confirmationToken);
             Assert.True(confirmationResponse.Success);
 
             UserModel user = await usersRepository.GetByEmailAsync(newUserInfo.Email);

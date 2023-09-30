@@ -57,7 +57,7 @@ namespace chldr_api
 
         public async Task<RequestResult> ConfirmEmailAsync(string token)
         {
-            return await _userResolver.Confirm(token);
+            return await _userResolver.ConfirmEmailAsync(token);
         }
 
         public async Task<RequestResult> PasswordReset(string email)
@@ -77,7 +77,7 @@ namespace chldr_api
 
         public async Task<RequestResult> LoginEmailPasswordAsync(string email, string password)
         {
-            return await _userResolver.LogIn(email, password);
+            return await _userResolver.SignInAsync(email, password);
         }
     }
 

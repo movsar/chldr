@@ -52,7 +52,7 @@ namespace chldr_shared.Services
             CurrentSession = new SessionInformation()
             {
                 AccessToken = data.AccessToken!,
-                //AccessTokenExpiresIn = data.AccessTokenExpiresIn!,
+                RefreshToken = data.RefreshToken!,
                 Status = SessionStatus.LoggedIn,
                 UserDto = JsonConvert.DeserializeObject<UserDto>(data.User.ToString())
             };
