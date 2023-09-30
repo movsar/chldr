@@ -48,7 +48,7 @@ namespace chldr_shared.Stores
 
         public async Task RegisterNewUser(string email, string password)
         {
-            var accessToken = await _userService.RegisterNewUserAsync(email, password);
+            await _userService.RegisterNewUserAsync(email, password);
         }
 
         public async Task LogInEmailPasswordAsync(string email, string password)

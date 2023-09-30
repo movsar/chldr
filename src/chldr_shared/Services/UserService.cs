@@ -39,7 +39,7 @@ namespace chldr_shared.Services
             // If there are things to be done after local database is initialized, do them here
         }
 
-        public async Task<string> RegisterNewUserAsync(string email, string password)
+        public async Task RegisterNewUserAsync(string email, string password)
         {
             var response = await _requestService.RegisterUserAsync(email, password);
             if (!response.Success)
@@ -60,9 +60,6 @@ namespace chldr_shared.Services
             await SaveActiveSession();
 
             UserStateHasChanged?.Invoke(CurrentSession);
-
-            // TODO: Improve this
-            return "";
         }
 
         public async Task SendPasswordResetRequestAsync(string email)
@@ -86,32 +83,25 @@ namespace chldr_shared.Services
 
         public async Task LogInEmailPasswordAsync(string email, string password)
         {
-            try
+            var response = await _requestService.LogInEmailPasswordAsync(email, password);
+            if (!response.Success)
             {
-                var response = await _requestService.LogInEmailPasswordAsync(email, password);
-                if (!response.Success)
-                {
-                    throw new Exception(response.ErrorMessage);
-                }
-
-                var data = RequestResult.GetData<dynamic>(response);
-
-                CurrentSession = new SessionInformation()
-                {
-                    AccessToken = data.AccessToken!,
-                    //AccessTokenExpiresIn = data.AccessTokenExpiresIn!,
-                    Status = SessionStatus.LoggedIn,
-                    UserDto = JsonConvert.DeserializeObject<UserDto>(data.User.ToString())
-                };
-
-                await SaveActiveSession();
-
-                UserStateHasChanged?.Invoke(CurrentSession);
+                throw new Exception(response.ErrorMessage);
             }
-            catch (Exception)
+
+            var data = RequestResult.GetData<dynamic>(response);
+
+            CurrentSession = new SessionInformation()
             {
-                throw;
-            }
+                AccessToken = data.AccessToken!,
+                RefreshToken = data.RefreshToken!,
+                Status = SessionStatus.LoggedIn,
+                UserDto = JsonConvert.DeserializeObject<UserDto>(data.User.ToString())
+            };
+
+            await SaveActiveSession();
+
+            UserStateHasChanged?.Invoke(CurrentSession);
         }
 
         public async Task LogOutAsync()
