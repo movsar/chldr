@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace chldr_shared.Services
 {
@@ -116,7 +117,6 @@ namespace chldr_shared.Services
         public async Task<SessionInformation> RefreshTokens(string accessToken, string refreshToken)
         {
             var response = await _requestService.RefreshTokens(accessToken, refreshToken);
-
             if (!response.Success)
             {
                 return new SessionInformation();
@@ -124,13 +124,15 @@ namespace chldr_shared.Services
 
             var data = RequestResult.GetData<dynamic>(response);
 
-            return new SessionInformation()
+            var session = new SessionInformation()
             {
                 AccessToken = data.AccessToken!,
                 RefreshToken = data.RefreshToken!,
                 Status = SessionStatus.LoggedIn,
                 UserDto = JsonConvert.DeserializeObject<UserDto>(data.User.ToString())
             };
+
+            return session;
         }
         public bool IsTokenExpired(string accessToken)
         {
@@ -156,13 +158,24 @@ namespace chldr_shared.Services
                 UserStateHasChanged?.Invoke(CurrentSession);
             }
 
+            if (string.IsNullOrEmpty(CurrentSession.AccessToken))
+            {
+                return;
+            }
+
             var expired = IsTokenExpired(CurrentSession.AccessToken);
             if (expired && !string.IsNullOrWhiteSpace(CurrentSession.RefreshToken))
             {
                 // Try to refresh Access Token
-                CurrentSession = await RefreshTokens(CurrentSession.AccessToken, CurrentSession.RefreshToken);
-                await SaveActiveSession();
-                UserStateHasChanged?.Invoke(CurrentSession);
+                try
+                {
+                    CurrentSession = await RefreshTokens(CurrentSession.AccessToken, CurrentSession.RefreshToken);
+                    await SaveActiveSession();
+                    UserStateHasChanged?.Invoke(CurrentSession);
+                }
+                catch (Exception ex)
+                {
+                }
             }
         }
 

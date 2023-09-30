@@ -66,72 +66,18 @@ namespace chldr_api.GraphQL.MutationServices
             _signingSecret = configuration.GetValue<string>("ApiJwtSigningKey")!;
         }
 
-
-        public async Task<RequestResult> RefreshTokens(string accessToken, string refreshToken)
+        internal async Task<RequestResult> UpdatePassword(string tokenValue, string newPassword)
         {
-            var signingKeyAsText = _configuration.GetValue<string>("ApiJwtSigningKey");
-            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKeyAsText));
-
-            var principal = GetPrincipalFromExpiredToken(accessToken);
-            var userId = principal.Identity.Name;
-
-            var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
-
-            var storedRefreshToken = await _userManager.GetAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken");
-            if (storedRefreshToken != refreshToken)
-                throw new Exception("Invalid token");
-
-            // Generate new tokens
-            var newAccessToken = JwtService.GenerateAccessToken(userId, signingKeyAsText);
-            var newRefreshToken = JwtService.GenerateRefreshToken();
-
-            await _userManager.RemoveAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken");
-            await _userManager.SetAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken", newRefreshToken);
-
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
-            var userModel = await usersRepository.GetAsync(user.Id);
 
-            return new RequestResult
-            {
-                Success = true,
-                SerializedData = JsonConvert.SerializeObject(
-                    new
-                    {
-                        AccessToken = newAccessToken,
-                        RefreshToken = newRefreshToken,
-                        UserDto = UserDto.FromModel(userModel)
-                    })
-            };
+            unitOfWork.BeginTransaction();
+
+
+            unitOfWork.Commit();
+
+            return new RequestResult() { Success = true };
         }
-        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
-        {
-            var signingSecret = _configuration.GetValue<string>("ApiJwtSigningKey");
-            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingSecret));
-
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateAudience = true,
-                ValidateIssuer = true,
-                ValidateIssuerSigningKey = true,
-                ValidateLifetime = false,
-                ValidIssuer = "Dosham",
-                ValidAudience = "dosham.app",
-                IssuerSigningKey = signingKey
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken securityToken;
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
-            var jwtSecurityToken = securityToken as JwtSecurityToken;
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-            {
-                throw new SecurityTokenException("Invalid token");
-            }
-
-            return principal;
-        }
-
 
         internal async Task<RequestResult> ResetPassword(string email)
         {
@@ -165,6 +111,50 @@ namespace chldr_api.GraphQL.MutationServices
             {
                 Success = true,
                 SerializedData = JsonConvert.SerializeObject(tokenValue)
+            };
+        }
+
+        internal async Task<RequestResult> RefreshTokens(string accessToken, string refreshToken)
+        {
+            var signingKeyAsText = _configuration.GetValue<string>("ApiJwtSigningKey");
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKeyAsText));
+
+            var principal = GetPrincipalFromAccessToken(accessToken);
+            var userId = principal.Identity.Name;
+
+            var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
+
+            var storedRefreshToken = await _userManager.GetAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken");
+            if (storedRefreshToken != refreshToken)
+            {
+                return new RequestResult()
+                {
+                    Success = false,
+                    ErrorMessage = "Invalid token"
+                };
+            }
+
+            // Generate new tokens
+            var newAccessToken = JwtService.GenerateAccessToken(userId, signingKeyAsText);
+            var newRefreshToken = JwtService.GenerateRefreshToken();
+
+            await _userManager.RemoveAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken");
+            await _userManager.SetAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken", newRefreshToken);
+
+            var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
+            var userModel = await usersRepository.GetAsync(user.Id);
+
+            return new RequestResult
+            {
+                Success = true,
+                SerializedData = JsonConvert.SerializeObject(
+                    new
+                    {
+                        AccessToken = newAccessToken,
+                        RefreshToken = newRefreshToken,
+                        User = UserDto.FromModel(userModel)
+                    })
             };
         }
         internal async Task<RequestResult> SignInAsync(string email, string password)
@@ -215,18 +205,6 @@ namespace chldr_api.GraphQL.MutationServices
                 };
             };
         }
-        internal async Task<RequestResult> UpdatePassword(string tokenValue, string newPassword)
-        {
-            var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
-            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
-
-            unitOfWork.BeginTransaction();
-
-
-            unitOfWork.Commit();
-
-            return new RequestResult() { Success = true };
-        }
         internal async Task<RequestResult> ConfirmEmailAsync(string token)
         {
             using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
@@ -261,7 +239,6 @@ namespace chldr_api.GraphQL.MutationServices
                 return new RequestResult() { ErrorMessage = ex.Message };
             }
         }
-
         internal async Task<RequestResult> RegisterAndLogInAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
@@ -351,6 +328,33 @@ namespace chldr_api.GraphQL.MutationServices
 
                 return new RequestResult() { ErrorMessage = ex.Message };
             }
+        }
+        private ClaimsPrincipal GetPrincipalFromAccessToken(string token)
+        {
+            var signingSecret = _configuration.GetValue<string>("ApiJwtSigningKey");
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingSecret));
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = false,
+                ValidIssuer = "Dosham",
+                ValidAudience = "dosham.app",
+                IssuerSigningKey = signingKey
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException("Invalid token");
+            }
+
+            return principal;
         }
     }
 }
