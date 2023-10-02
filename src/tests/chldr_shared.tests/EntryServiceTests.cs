@@ -71,7 +71,7 @@ namespace chldr_shared.tests
         {
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                var dataProvider = TestDataFactory.CreateSqlDataProvider();
+                var dataProvider = TestDataFactory.CreateTestSqlDataProvider();
                 var entryService = TestDataFactory.CreateEntryService();
 
                 // Arrange

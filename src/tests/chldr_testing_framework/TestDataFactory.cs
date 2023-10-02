@@ -25,6 +25,7 @@ using chldr_utils.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
 using chldr_shared.Services;
 using chldr_shared.Stores;
+using Microsoft.AspNetCore.Identity;
 
 namespace chldr_test_utils
 {
@@ -41,6 +42,7 @@ namespace chldr_test_utils
         private static readonly SoundDtoFaker _soundDtoFaker;
         private static readonly UserDtoFaker _userDtoFaker;
         private static readonly SourceDtoFaker _sourceDtoFaker;
+        private static readonly UserFaker _userFaker;
 
         static TestDataFactory()
         {
@@ -64,14 +66,53 @@ namespace chldr_test_utils
             var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
             return new StringLocalizer<AppLocalizations>(factory);
         }
-        public static IDataProvider CreateSqlDataProvider()
+
+        static Mock<UserManager<SqlUser>> CreateUserManagerMock(List<SqlUser> listOfUsers)
+        {
+            var store = new Mock<IUserStore<SqlUser>>();
+            var userManager = new Mock<UserManager<SqlUser>>(store.Object, null, null, null, null, null, null, null, null);
+            userManager.Object.UserValidators.Add(new UserValidator<SqlUser>());
+            userManager.Object.PasswordValidators.Add(new PasswordValidator<SqlUser>());
+
+            userManager.Setup(x => x.DeleteAsync(It.IsAny<SqlUser>())).ReturnsAsync(IdentityResult.Success);
+            userManager.Setup(x => x.CreateAsync(It.IsAny<SqlUser>(), It.IsAny<string>())).ReturnsAsync(IdentityResult.Success).Callback<SqlUser, string>((x, y) => listOfUsers.Add(x));
+            userManager.Setup(x => x.UpdateAsync(It.IsAny<SqlUser>())).ReturnsAsync(IdentityResult.Success);
+
+            return userManager;
+        }
+
+        public static IDataProvider CreateMockDataProvider()
+        {
+            var listOfUsers = _userDtoFaker.Generate();
+
+            var mockContext = new Mock<SqlContext>();
+            var mockFileService = new Mock<FileService>();
+            var mockExceptionHandler = new Mock<ExceptionHandler>();
+            var mockEmailService = CreateFakeEmailService();
+            var mockUserManager = CreateUserManagerMock();
+            var mockSignInManager = new Mock<SignInManager<SqlUser>>();
+            var mockLocalizer = new Mock<IStringLocalizer<AppLocalizations>>();
+
+            var dataProvider = new SqlDataProvider(
+                    mockContext.Object,
+                    mockFileService.Object,
+                    mockExceptionHandler.Object,
+                    mockEmailService,
+                    mockUserManager.Object,
+                    mockSignInManager.Object,
+                    mockLocalizer.Object
+                );
+
+            return dataProvider;
+        }
+        public static IDataProvider CreateTestSqlDataProvider()
         {
             // Constants.TestingDatabaseConnectionString
             // Remove sql database
             var dataProvider = new SqlDataProvider(
-                null, 
-                _fileService, 
-                _exceptionHandler, 
+                null,
+                _fileService,
+                _exceptionHandler,
                 null,
                 null,
                 null,
@@ -153,19 +194,19 @@ namespace chldr_test_utils
 
         public static EntryService CreateEntryService()
         {
-            var dataProvider = CreateSqlDataProvider();
+            var dataProvider = CreateTestSqlDataProvider();
             return new EntryService(dataProvider, _requestService, _exceptionHandler);
         }
         public static SourceService CreateSourceService()
         {
-            var dataProvider = CreateSqlDataProvider();
+            var dataProvider = CreateTestSqlDataProvider();
             return new SourceService(dataProvider, _requestService, _exceptionHandler);
         }
 
         public static ContentStore CreateContentStore()
         {
             return new ContentStore(_exceptionHandler,
-                CreateSqlDataProvider(),
+                CreateTestSqlDataProvider(),
                 _environmentService,
                 CreateSourceService(),
                 CreateEntryService(),
@@ -175,7 +216,7 @@ namespace chldr_test_utils
         private static UserService CreateUserService()
         {
             var localStorageService = new LocalStorageService(null, _exceptionHandler);
-            return new UserService(CreateSqlDataProvider(), _requestService, localStorageService);
+            return new UserService(CreateTestSqlDataProvider(), _requestService, localStorageService);
         }
     }
 }

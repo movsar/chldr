@@ -30,6 +30,7 @@ namespace chldr_api.tests.ServiceResolverTests
         private readonly ExceptionHandler _exceptionHandler;
         private readonly EnvironmentService _environmentService;
         private readonly UserResolver _userResolver;
+        private readonly IDataProvider _mockDataProvider;
         private readonly UserManager<SqlUser> _userManager;
         private readonly SignInManager<SqlUser> _signInManager;
 
@@ -38,18 +39,20 @@ namespace chldr_api.tests.ServiceResolverTests
             _configuration = new ConfigurationBuilder().Build();
             _emailService = TestDataFactory.CreateFakeEmailService();
             _localizer = TestDataFactory.GetStringLocalizer();
-            _dataProvider = TestDataFactory.CreateSqlDataProvider();
+            _dataProvider = TestDataFactory.CreateTestSqlDataProvider();
             _fileService = new FileService(AppContext.BaseDirectory);
             _exceptionHandler = new ExceptionHandler(_fileService);
             _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Web, true);
             _userResolver = new UserResolver(_dataProvider, _localizer, _emailService, _exceptionHandler, _fileService, _configuration, _userManager, _signInManager);
+
+            _mockDataProvider = TestDataFactory.CreateMockDataProvider();
         }
 
         [Fact]
         public async Task Confirm_WithValidInput_ReturnsSuccessResponse()
         {
             // Arrange
-            var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+            var unitOfWork = (SqlUnitOfWork)_mockDataProvider.CreateUnitOfWork();
             unitOfWork.BeginTransaction();
 
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
