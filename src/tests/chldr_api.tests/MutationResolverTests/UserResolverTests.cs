@@ -22,38 +22,20 @@ namespace chldr_api.tests.ServiceResolverTests
 {
     public class UserResolverTests
     {
-        private readonly IStringLocalizer<AppLocalizations> _localizer;
-        private readonly IConfiguration _configuration;
-        private readonly EmailService _emailService;
-        private readonly IDataProvider _dataProvider;
-        private readonly FileService _fileService;
-        private readonly ExceptionHandler _exceptionHandler;
-        private readonly EnvironmentService _environmentService;
         private readonly UserResolver _userResolver;
-        private readonly IDataProvider _mockDataProvider;
-        private readonly UserManager<SqlUser> _userManager;
-        private readonly SignInManager<SqlUser> _signInManager;
+        private readonly IDataProvider _testDataProvider;
 
         public UserResolverTests()
         {
-            _configuration = new ConfigurationBuilder().Build();
-            _emailService = TestDataFactory.CreateFakeEmailService();
-            _localizer = TestDataFactory.GetStringLocalizer();
-            _dataProvider = TestDataFactory.CreateTestSqlDataProvider();
-            _fileService = new FileService(AppContext.BaseDirectory);
-            _exceptionHandler = new ExceptionHandler(_fileService);
-            _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Web, true);
-            _userResolver = new UserResolver(_dataProvider, _localizer, _emailService, _exceptionHandler, _fileService, _configuration, _userManager, _signInManager);
-
-            _mockDataProvider = TestDataFactory.CreateMockDataProvider();
+            _testDataProvider = TestDataFactory.CreateMockDataProvider();
+            _userResolver = TestDataFactory.CreateFakeUserResolver(_testDataProvider);
         }
 
         [Fact]
         public async Task Confirm_WithValidInput_ReturnsSuccessResponse()
         {
             // Arrange
-            var unitOfWork = (SqlUnitOfWork)_mockDataProvider.CreateUnitOfWork();
-            unitOfWork.BeginTransaction();
+            var unitOfWork = (SqlUnitOfWork)_testDataProvider.CreateUnitOfWork();
 
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
             var newUserInfo = TestDataFactory.CreateRandomUserDto();
@@ -94,12 +76,12 @@ namespace chldr_api.tests.ServiceResolverTests
         [Fact]
         public async Task RegisterNew_WithExistingEmail_ReturnsErrorResponse()
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _testDataProvider.CreateUnitOfWork();
             var actingUserId = unitOfWork.Users.GetRandomsAsync(1).Result.First().Id;
 
             // Arrange
             var testUser = TestDataFactory.CreateRandomUserDto();
-            unitOfWork = _dataProvider.CreateUnitOfWork(actingUserId);
+            unitOfWork = _testDataProvider.CreateUnitOfWork(actingUserId);
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
             await usersRepository.AddAsync(testUser);
 

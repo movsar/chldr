@@ -1,10 +1,7 @@
 ﻿using chldr_data;
 using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
-using chldr_data.Interfaces.Repositories;
 using chldr_data.Models;
 using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
@@ -17,17 +14,14 @@ using chldr_utils;
 using chldr_utils.Services;
 using GraphQLParser;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using Realms.Sync;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using static HotChocolate.ErrorCodes;
 
 namespace chldr_api.GraphQL.MutationServices
 {
@@ -239,7 +233,6 @@ namespace chldr_api.GraphQL.MutationServices
         {
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
-            unitOfWork.BeginTransaction();
 
             try
             {
@@ -274,29 +267,21 @@ namespace chldr_api.GraphQL.MutationServices
                     _localizer["Email:Confirm_email_subject"],
                     _localizer["Email:Confirm_email_html", confirmEmailLink]);
 
-                try
-                {
-                    _emailService.Send(message);
+                _emailService.Send(message);
 
-                    // Write the token to the user object
-                    user.EmailConfirmationToken = confirmationToken;
-                    await _userManager.UpdateAsync(user);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(ex.Message);
-                }
+                // Write the token to the user object
+                user.EmailConfirmationToken = confirmationToken;
+                await _userManager.UpdateAsync(user);
 
                 unitOfWork.Commit();
                 
                 await _signInManager.SignInAsync(user, isPersistent: false);
 
-                return await GenerateSignInResponse(user);
-                
+                var response = await GenerateSignInResponse(user);
+                return response;
             }
             catch (Exception ex)
             {
-                unitOfWork.Rollback();
                 try
                 {
                     var user = await usersRepository.GetByEmailAsync(email);

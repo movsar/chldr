@@ -17,33 +17,20 @@ namespace chldr_data.remote.Services
         private readonly SqlContext _context;
         private readonly FileService _fileService;
         private readonly ExceptionHandler _exceptionHandler;
-        private readonly EmailService _emailService;
-        private readonly IStringLocalizer<AppLocalizations> _localizer;
-        private readonly UserManager<SqlUser> _userManager;
-        private readonly SignInManager<SqlUser> _signInManager;
 
         public SqlDataProvider(
             SqlContext context,
             FileService fileService,
-            ExceptionHandler exceptionHandler,
-            EmailService emailService,
-            UserManager<SqlUser> userManager,
-            SignInManager<SqlUser> signInManager,
-            IStringLocalizer<AppLocalizations> localizer
-            )
+            ExceptionHandler exceptionHandler)
         {
             _context = context;
             _fileService = fileService;
             _exceptionHandler = exceptionHandler;
-            _emailService = emailService;
-            _localizer = localizer;
-            _userManager = userManager;
-            _signInManager = signInManager;
         }
 
         public IUnitOfWork CreateUnitOfWork(string? userId = null)
         {
-            return new SqlUnitOfWork(_context, _fileService, _exceptionHandler, _userManager, _signInManager, _emailService, _localizer, userId);
+            return new SqlUnitOfWork(_context, _fileService, _exceptionHandler, userId);
         }
 
         public void Initialize()

@@ -19,10 +19,6 @@ namespace chldr_data.Services
         private readonly SqlContext _context;
         private readonly FileService _fileService;
         private readonly ExceptionHandler _exceptionHandler;
-        private readonly IStringLocalizer<AppLocalizations> _localizer;
-        private readonly UserManager<SqlUser> _userManager;
-        private readonly EmailService _emailService;
-        private readonly SignInManager<SqlUser> _signInManager;
         private IDbContextTransaction _transaction;
 
         private SqlChangeSetsRepository _changeSetsRepository;
@@ -35,20 +31,12 @@ namespace chldr_data.Services
             SqlContext context,
             FileService fileService,
             ExceptionHandler exceptionHandler,
-            UserManager<SqlUser> userManager,
-            SignInManager<SqlUser> signInManager,
-            EmailService emailService,
-            IStringLocalizer<AppLocalizations> localizer,
             string userId)
         {
             _context = context;
             _fileService = fileService;
             _userId = userId;
             _exceptionHandler = exceptionHandler;
-            _localizer = localizer;
-            _userManager = userManager;
-            _emailService = emailService;
-            _signInManager = signInManager;
         }
 
         public void BeginTransaction()
@@ -58,7 +46,7 @@ namespace chldr_data.Services
 
         public void Commit()
         {
-            _transaction.Commit();
+            
         }
 
         public void Rollback()
@@ -79,7 +67,7 @@ namespace chldr_data.Services
         public IChangeSetsRepository ChangeSets => _changeSetsRepository ??= new SqlChangeSetsRepository(_context, _fileService, _userId);
         public IEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_context, _fileService, _exceptionHandler, Translations, Sounds, _userId);
         public ISourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_context, _fileService, _userId);
-        public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_context, _fileService, _userManager, _signInManager, _emailService, _localizer, _userId);
+        public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_context, _fileService, _userId);
         public IPronunciationsRepository Sounds => _soundsRepository ?? new SqlPronunciationsRepository(_context, _fileService, _userId);
     }
 }

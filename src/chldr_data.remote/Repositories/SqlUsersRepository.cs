@@ -27,32 +27,17 @@ namespace chldr_data.remote.Repositories
 {
     public class SqlUsersRepository : SqlRepository<SqlUser, UserModel, UserDto>, IUsersRepository
     {
-        private readonly SignInManager<SqlUser> _signInManager;
-        private readonly UserManager<SqlUser> _userManager;
-        private readonly EmailService _emailService;
-        private readonly IStringLocalizer<AppLocalizations> _localizer;
-
         public SqlUsersRepository(
             SqlContext context,
             FileService fileService,
-            UserManager<SqlUser> userManager,
-            SignInManager<SqlUser> signInManager,
-            EmailService emailService,
-            IStringLocalizer<AppLocalizations> localizer,
-            string _userId) : base(context, fileService, _userId)
-        {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _emailService = emailService;
-            _localizer = localizer;
-        }
+            string _userId) : base(context, fileService, _userId){}
 
 
         protected override RecordType RecordType => RecordType.User;
    
         public async Task SetStatusAsync(string userId, UserStatus newStatus)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId) as SqlUser;
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null)
             {
                 throw new NullReferenceException();
@@ -126,6 +111,10 @@ namespace chldr_data.remote.Repositories
             }
 
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email!.ToLower().Equals(email.ToLower()));
+            if (user == null)
+            {
+                throw new NullReferenceException("No such user");
+            }
             return UserModel.FromEntity(user);
         }
 

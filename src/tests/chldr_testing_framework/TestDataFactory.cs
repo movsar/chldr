@@ -26,6 +26,12 @@ using Microsoft.EntityFrameworkCore.Storage;
 using chldr_shared.Services;
 using chldr_shared.Stores;
 using Microsoft.AspNetCore.Identity;
+using Bogus;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
+using chldr_data.DatabaseObjects.Interfaces;
+using chldr_api.GraphQL.MutationServices;
 
 namespace chldr_test_utils
 {
@@ -43,12 +49,17 @@ namespace chldr_test_utils
         private static readonly UserDtoFaker _userDtoFaker;
         private static readonly SourceDtoFaker _sourceDtoFaker;
         private static readonly UserFaker _userFaker;
+        private static readonly IStringLocalizer<AppLocalizations> _localizer;
+        private static readonly IConfigurationRoot _configuration;
+        private static readonly EmailService _emailService;
+        private static readonly UserManager<SqlUser> _userManager;
+        private static readonly SignInManager<SqlUser> _signInManager;
 
         static TestDataFactory()
         {
             _fileService = new FileService(Path.Combine(AppContext.BaseDirectory, Constants.TestsFileServicePath));
             _exceptionHandler = new ExceptionHandler(_fileService);
-            _environmentService = new EnvironmentService(Platforms.Windows, true);
+            _environmentService = new EnvironmentService(Platforms.Web, true);
             _requestService = new RequestService(new GraphQLClient(_exceptionHandler, _environmentService));
 
             _entryDtoFaker = new EntryDtoFaker();
@@ -56,6 +67,17 @@ namespace chldr_test_utils
             _soundDtoFaker = new SoundDtoFaker();
             _userDtoFaker = new UserDtoFaker();
             _sourceDtoFaker = new SourceDtoFaker();
+            _userFaker = new UserFaker();
+
+            var listOfUsers = _userFaker.GenerateBetween(2, 5);
+
+            //var mockExceptionHandler = new Mock<ExceptionHandler>();
+            _localizer = GetStringLocalizer();
+
+            _configuration = new ConfigurationBuilder().Build();
+            _emailService = CreateFakeEmailService();
+            _userManager = CreateFakeUserManager(listOfUsers);
+            _signInManager = CreateFakeSignInManager(_userManager);
 
             Constants.EntriesApproximateCoount = 5000;
         }
@@ -67,7 +89,7 @@ namespace chldr_test_utils
             return new StringLocalizer<AppLocalizations>(factory);
         }
 
-        static Mock<UserManager<SqlUser>> CreateUserManagerMock(List<SqlUser> listOfUsers)
+        static UserManager<SqlUser> CreateFakeUserManager(List<SqlUser> listOfUsers)
         {
             var store = new Mock<IUserStore<SqlUser>>();
             var userManager = new Mock<UserManager<SqlUser>>(store.Object, null, null, null, null, null, null, null, null);
@@ -78,29 +100,74 @@ namespace chldr_test_utils
             userManager.Setup(x => x.CreateAsync(It.IsAny<SqlUser>(), It.IsAny<string>())).ReturnsAsync(IdentityResult.Success).Callback<SqlUser, string>((x, y) => listOfUsers.Add(x));
             userManager.Setup(x => x.UpdateAsync(It.IsAny<SqlUser>())).ReturnsAsync(IdentityResult.Success);
 
-            return userManager;
+            return userManager.Object;
         }
+        private static Mock<IAuthenticationService> MockAuth(HttpContext context)
+        {
+            var auth = new Mock<IAuthenticationService>();
+            context.RequestServices = new ServiceCollection().AddSingleton(auth.Object).BuildServiceProvider();
+            return auth;
+        }
+
+        static SignInManager<SqlUser> CreateFakeSignInManager(UserManager<SqlUser> manager)
+        {
+            // Setup
+            var context = new DefaultHttpContext();
+            var auth = MockAuth(context);
+
+            // REVIEW: auth changes we lost the ability to mock is persistent
+            //var properties = new AuthenticationProperties { IsPersistent = isPersistent };
+            var authResult = AuthenticateResult.NoResult();
+            auth.Setup(a => a.AuthenticateAsync(context, IdentityConstants.ApplicationScheme))
+                .Returns(Task.FromResult(authResult)).Verifiable();
+
+            var signInManager = new Mock<SignInManager<SqlUser>>(manager,
+                new HttpContextAccessor { HttpContext = context },
+                new Mock<IUserClaimsPrincipalFactory<SqlUser>>().Object,
+                null, null, new Mock<IAuthenticationSchemeProvider>().Object, null);
+
+            return signInManager.Object;
+        }
+        static SqlContext CreateInMemoryContext()
+        {
+            var options = new DbContextOptionsBuilder<SqlContext>()
+                .UseInMemoryDatabase(databaseName: "whatever")
+                .Options;
+
+            var context = new SqlContext(options);
+
+            var user = new SqlUser
+            {
+                Id = "63a816205d1af0e432fba6dd",
+                Email = "movsar.dev@gmail.com"
+            };
+
+            var source = new SqlSource
+            {
+                SourceId = "63a816205d1af0e432fba6de",
+                UserId = "63a816205d1af0e432fba6dd",
+                Name = "User",
+                Notes = null,
+                CreatedAt = new DateTime(2023, 1, 13, 7, 44, 53),
+                UpdatedAt = new DateTime(2023, 1, 13, 7, 44, 53)
+            };
+
+            context.Users.Add(user);
+            context.Sources.Add(source);
+            context.SaveChanges();
+
+            return context;
+        }
+
 
         public static IDataProvider CreateMockDataProvider()
         {
-            var listOfUsers = _userDtoFaker.Generate();
 
-            var mockContext = new Mock<SqlContext>();
-            var mockFileService = new Mock<FileService>();
-            var mockExceptionHandler = new Mock<ExceptionHandler>();
-            var mockEmailService = CreateFakeEmailService();
-            var mockUserManager = CreateUserManagerMock();
-            var mockSignInManager = new Mock<SignInManager<SqlUser>>();
-            var mockLocalizer = new Mock<IStringLocalizer<AppLocalizations>>();
 
             var dataProvider = new SqlDataProvider(
-                    mockContext.Object,
-                    mockFileService.Object,
-                    mockExceptionHandler.Object,
-                    mockEmailService,
-                    mockUserManager.Object,
-                    mockSignInManager.Object,
-                    mockLocalizer.Object
+                    CreateInMemoryContext(),
+                    _fileService,
+                    _exceptionHandler
                 );
 
             return dataProvider;
@@ -112,11 +179,7 @@ namespace chldr_test_utils
             var dataProvider = new SqlDataProvider(
                 null,
                 _fileService,
-                _exceptionHandler,
-                null,
-                null,
-                null,
-                null
+                _exceptionHandler
                 );
             return dataProvider;
         }
@@ -217,6 +280,21 @@ namespace chldr_test_utils
         {
             var localStorageService = new LocalStorageService(null, _exceptionHandler);
             return new UserService(CreateTestSqlDataProvider(), _requestService, localStorageService);
+        }
+
+        public static UserResolver CreateFakeUserResolver(IDataProvider testDataProvider)
+        {
+            var userResolver = new UserResolver(
+                testDataProvider,
+                _localizer,
+                _emailService,
+                _exceptionHandler,
+                _fileService,
+                _configuration,
+                _userManager,
+                _signInManager);
+
+            return userResolver;
         }
     }
 }
