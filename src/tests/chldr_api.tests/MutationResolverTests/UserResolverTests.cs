@@ -29,24 +29,25 @@ namespace chldr_api.tests.ServiceResolverTests
 
         public UserResolverTests()
         {
+            // ! You shouldn't use unitOfWork in the tests at all!
+          
             _testDataProvider = TestDataFactory.CreateSqliteDataProvider();
             _userResolver = TestDataFactory.CreateFakeUserResolver(_testDataProvider);
         }
 
         [Fact]
-        public async Task Confirm_WithValidInput_ReturnsSuccessResponse()
+        public async Task RegisterAndLogIn_WithValidInput_ReturnsSuccess()
         {
-            // ! You shouldn't use unitOfWork in the tests at all!
-
             // Arrange
             var newUserInfo = TestDataFactory.CreateRandomUserDto();
 
-            // Act and Assert
+            // Act
             var registrationResponse = await _userResolver.RegisterAndLogInAsync(newUserInfo.Email!, newUserInfo.Password, newUserInfo.FirstName, newUserInfo.LastName, newUserInfo.Patronymic);
+          
+            // Assert
             Assert.True(registrationResponse.Success);
 
             var data = RequestResult.GetData<dynamic>(registrationResponse);
-
             var sessionInformation = new SessionInformation()
             {
                 AccessToken = data.AccessToken!,
@@ -61,42 +62,18 @@ namespace chldr_api.tests.ServiceResolverTests
         }
 
         [Fact]
-        public async Task RegisterNew_WithValidInput_ReturnsSuccessResponse()
+        public async Task RegisterAndLogIn_WithExistingUser_ReturnsError()
         {
             // Arrange
-            var newUser = TestDataFactory.CreateRandomUserDto();
+            var newUserInfo = TestDataFactory.CreateRandomUserDto();
 
             // Act
-            var response = await _userResolver.RegisterAndLogInAsync(newUser.Email!, newUser.Password, newUser.FirstName, newUser.LastName, newUser.Patronymic);
-
+            var registrationResponse1 = await _userResolver.RegisterAndLogInAsync(newUserInfo.Email!, newUserInfo.Password, newUserInfo.FirstName, newUserInfo.LastName, newUserInfo.Patronymic);
+            var registrationResponse2 = await _userResolver.RegisterAndLogInAsync(newUserInfo.Email!, newUserInfo.Password, newUserInfo.FirstName, newUserInfo.LastName, newUserInfo.Patronymic);
+          
             // Assert
-            Assert.True(response.Success);
-
-            var token = JsonConvert.DeserializeObject(response.SerializedData!);
-
-            Assert.NotNull(token);
+            Assert.True(registrationResponse1.Success);
+            Assert.False(registrationResponse2.Success);           
         }
-
-        [Fact]
-        public async Task RegisterNew_WithExistingEmail_ReturnsErrorResponse()
-        {
-            var unitOfWork = _testDataProvider.CreateUnitOfWork();
-            var actingUserId = unitOfWork.Users.GetRandomsAsync(1).Result.First().Id;
-
-            // Arrange
-            var testUser = TestDataFactory.CreateRandomUserDto();
-            unitOfWork = _testDataProvider.CreateUnitOfWork(actingUserId);
-            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
-            await usersRepository.AddAsync(testUser);
-
-            // Act
-            var response = await _userResolver.RegisterAndLogInAsync(testUser.Email!, testUser.Password, testUser.FirstName, testUser.LastName, testUser.Patronymic);
-
-            // Assert
-            Assert.False(response.Success);
-            Assert.Equal("A user with this email already exists", response.ErrorMessage);
-        }
-
     }
-
 }

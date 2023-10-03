@@ -234,8 +234,6 @@ namespace chldr_api.GraphQL.MutationServices
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
             unitOfWork.BeginTransaction();
 
-            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
-
             try
             {
                 var user = new SqlUser
@@ -252,11 +250,20 @@ namespace chldr_api.GraphQL.MutationServices
                     throw new NullReferenceException("Password is empty");
                 }
 
+                var existing = _userManager.Users.FirstOrDefault(u => u.Email.Equals(email));
+                if (existing != null)
+                {
+                    return new RequestResult()
+                    {
+                        ErrorMessage = "User already exists"
+                    };
+                }
+
                 // Create the user
                 var result = await _userManager.CreateAsync(user, password);
                 if (!result.Succeeded)
                 {
-                    throw new Exception(result.Errors.First().Description);
+                    return new RequestResult() { ErrorMessage = result.Errors.First().Description };
                 }
 
                 // Send email confirmation link
@@ -269,7 +276,14 @@ namespace chldr_api.GraphQL.MutationServices
                     _localizer["Email:Confirm_email_subject"],
                     _localizer["Email:Confirm_email_html", confirmEmailLink]);
 
-                _emailService.Send(message);
+                try
+                {
+                    _emailService.Send(message);
+                }
+                catch (Exception)
+                {
+                    return new RequestResult() { ErrorMessage = "Error while sending the confirmation email" };
+                }
 
                 // Write the token to the user object
                 user.EmailConfirmationToken = confirmationToken;
