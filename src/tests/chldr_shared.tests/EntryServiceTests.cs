@@ -52,7 +52,7 @@ namespace chldr_shared.tests
 
             //    var unitOfWork = dataProvider.CreateUnitOfWork();
             //    var actingUserId = unitOfWork.Users.GetRandomsAsync(1).Result.First().UserId;
-                
+
             //    // Arrange
             //    var user = TestDataFactory.CreateRandomUserDto();
             //    user.Status = chldr_data.Enums.UserStatus.Banned;
@@ -69,17 +69,13 @@ namespace chldr_shared.tests
         [Fact]
         public async Task Get_NonExistingEntity_ThrowsException()
         {
-            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-            {
-                var dataProvider = TestDataFactory.CreateTestSqlDataProvider();
-                var entryService = TestDataFactory.CreateEntryService();
+            var entryService = TestDataFactory.CreateEntryService();
 
-                // Arrange
-                var entityId = "non_existing_entity_id";
+            // Arrange
+            var entityId = "non_existing_entity_id";
 
-                // Act and Assert
-                await Assert.ThrowsAsync<NullReferenceException>(async () => await entryService.GetAsync(entityId));
-            }
+            // Act and Assert
+            await Assert.ThrowsAsync<NullReferenceException>(async () => await entryService.GetAsync(entityId));
         }
 
         //[Fact]

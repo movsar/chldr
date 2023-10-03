@@ -247,22 +247,20 @@ namespace chldr_api.GraphQL.MutationServices
 
                 if (string.IsNullOrEmpty(password))
                 {
-                    throw new NullReferenceException("Password is empty");
+                    return new RequestResult() { ErrorMessage = "Password is empty" };
                 }
 
                 var existing = _userManager.Users.FirstOrDefault(u => u.Email.Equals(email));
                 if (existing != null)
                 {
-                    return new RequestResult()
-                    {
-                        ErrorMessage = "User already exists"
-                    };
+                    return new RequestResult() { ErrorMessage = "User already exists" };
                 }
 
                 // Create the user
                 var result = await _userManager.CreateAsync(user, password);
                 if (!result.Succeeded)
                 {
+                    unitOfWork.Rollback();
                     return new RequestResult() { ErrorMessage = result.Errors.First().Description };
                 }
 
@@ -282,6 +280,7 @@ namespace chldr_api.GraphQL.MutationServices
                 }
                 catch (Exception)
                 {
+                    unitOfWork.Rollback();
                     return new RequestResult() { ErrorMessage = "Error while sending the confirmation email" };
                 }
 
