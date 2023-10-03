@@ -46,7 +46,7 @@ namespace chldr_data.Services
 
         public void Commit()
         {
-            
+            _transaction.Commit();
         }
 
         public void Rollback()

@@ -27,7 +27,7 @@ namespace chldr_api.tests.ServiceResolverTests
 
         public UserResolverTests()
         {
-            _testDataProvider = TestDataFactory.CreateMockDataProvider();
+            _testDataProvider = TestDataFactory.CreateSqliteDataProvider();
             _userResolver = TestDataFactory.CreateFakeUserResolver(_testDataProvider);
         }
 

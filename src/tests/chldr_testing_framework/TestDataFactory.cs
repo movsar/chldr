@@ -128,14 +128,8 @@ namespace chldr_test_utils
 
             return signInManager.Object;
         }
-        static SqlContext CreateInMemoryContext()
+        static void AddInitialData(SqlContext context)
         {
-            var options = new DbContextOptionsBuilder<SqlContext>()
-                .UseInMemoryDatabase(databaseName: "whatever")
-                .Options;
-
-            var context = new SqlContext(options);
-
             var user = new SqlUser
             {
                 Id = "63a816205d1af0e432fba6dd",
@@ -155,10 +149,47 @@ namespace chldr_test_utils
             context.Users.Add(user);
             context.Sources.Add(source);
             context.SaveChanges();
+        }
+        static SqlContext CreateInMemoryContext()
+        {
+            var options = new DbContextOptionsBuilder<SqlContext>()
+                .UseInMemoryDatabase(databaseName: "whatever")
+                .Options;
+
+            var context = new SqlContext(options);
+
+            AddInitialData(context);
 
             return context;
         }
+        public static IDataProvider CreateSqliteDataProvider()
+        {
 
+
+            var dataProvider = new SqlDataProvider(
+                    CreateSqliteContext(),
+                    _fileService,
+                    _exceptionHandler
+                );
+
+            return dataProvider;
+        }
+
+        private static SqlContext CreateSqliteContext()
+        {
+            var connectionString = "Data Source=:memory:;";
+
+            // Apply migrations
+            var options = new DbContextOptionsBuilder<SqlContext>()
+                  .UseSqlite(connectionString)
+                  .Options;
+
+            var context = new SqlContext(options);
+
+            AddInitialData(context);
+
+            return context;
+        }
 
         public static IDataProvider CreateMockDataProvider()
         {
