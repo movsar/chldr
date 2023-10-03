@@ -32,6 +32,8 @@ using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_api.GraphQL.MutationServices;
+using HotChocolate.Types.Descriptors.Definitions;
+using SQLitePCL;
 
 namespace chldr_test_utils
 {
@@ -49,8 +51,9 @@ namespace chldr_test_utils
         private static readonly UserDtoFaker _userDtoFaker;
         private static readonly SourceDtoFaker _sourceDtoFaker;
         private static readonly UserFaker _userFaker;
+        private static readonly SqlContext _context;
         private static readonly IStringLocalizer<AppLocalizations> _localizer;
-        private static readonly IConfigurationRoot _configuration;
+        private static readonly IConfiguration _configuration;
         private static readonly EmailService _emailService;
         private static readonly UserManager<SqlUser> _userManager;
         private static readonly SignInManager<SqlUser> _signInManager;
@@ -68,18 +71,30 @@ namespace chldr_test_utils
             _userDtoFaker = new UserDtoFaker();
             _sourceDtoFaker = new SourceDtoFaker();
             _userFaker = new UserFaker();
-
-            var listOfUsers = _userFaker.GenerateBetween(2, 5);
+            _context = CreateSqliteContext();
 
             //var mockExceptionHandler = new Mock<ExceptionHandler>();
             _localizer = GetStringLocalizer();
 
-            _configuration = new ConfigurationBuilder().Build();
+            _configuration = CreateMockConfiguration();
             _emailService = CreateFakeEmailService();
-            _userManager = CreateFakeUserManager(listOfUsers);
+            _userManager = CreateMockUserManager();
             _signInManager = CreateFakeSignInManager(_userManager);
 
             Constants.EntriesApproximateCoount = 5000;
+        }
+
+        private static IConfiguration CreateMockConfiguration()
+        {
+            var inMemorySettings = new Dictionary<string, string> {
+            {"ApiJwtSigningKey", "YourJwtSigningKeyValueYourJwtSigningKeyValueYourJwtSigningKeyValueYourJwtSigningKeyValue"}
+        };
+
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(inMemorySettings)
+                .Build();
+
+            return configuration;
         }
 
         public static IStringLocalizer<AppLocalizations> GetStringLocalizer()
@@ -89,19 +104,56 @@ namespace chldr_test_utils
             return new StringLocalizer<AppLocalizations>(factory);
         }
 
-        static UserManager<SqlUser> CreateFakeUserManager(List<SqlUser> listOfUsers)
+        static UserManager<SqlUser> CreateMockUserManager()
         {
             var store = new Mock<IUserStore<SqlUser>>();
             var userManager = new Mock<UserManager<SqlUser>>(store.Object, null, null, null, null, null, null, null, null);
+
             userManager.Object.UserValidators.Add(new UserValidator<SqlUser>());
             userManager.Object.PasswordValidators.Add(new PasswordValidator<SqlUser>());
 
-            userManager.Setup(x => x.DeleteAsync(It.IsAny<SqlUser>())).ReturnsAsync(IdentityResult.Success);
-            userManager.Setup(x => x.CreateAsync(It.IsAny<SqlUser>(), It.IsAny<string>())).ReturnsAsync(IdentityResult.Success).Callback<SqlUser, string>((x, y) => listOfUsers.Add(x));
-            userManager.Setup(x => x.UpdateAsync(It.IsAny<SqlUser>())).ReturnsAsync(IdentityResult.Success);
+            userManager.Setup(x => x.DeleteAsync(It.IsAny<SqlUser>()))
+                .ReturnsAsync((SqlUser user) =>
+                {
+                    _context.Users.Remove(user);
+                    _context.SaveChanges(); // Using synchronous SaveChanges to avoid possible deadlocks
+                    return IdentityResult.Success;
+                });
+
+            userManager.Setup(x => x.CreateAsync(It.IsAny<SqlUser>(), It.IsAny<string>()))
+                .ReturnsAsync((SqlUser user, string password) =>
+                {
+                    _context.Users.Add(user);
+                    _context.SaveChanges(); // Using synchronous SaveChanges to avoid possible deadlocks
+                    return IdentityResult.Success;
+                });
+
+            userManager.Setup(x => x.UpdateAsync(It.IsAny<SqlUser>()))
+                .ReturnsAsync((SqlUser user) =>
+                {
+                    _context.Users.Update(user);
+                    _context.SaveChanges(); // Using synchronous SaveChanges to avoid possible deadlocks
+                    return IdentityResult.Success;
+                });
+
+            userManager.Setup(x => x.GenerateEmailConfirmationTokenAsync(It.IsAny<SqlUser>()))
+                .ReturnsAsync("dummyToken-dummyToken-dummyToken-dummyToken-dummyToken");
+
+            userManager.Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync((string email) =>
+                {
+                    return _context.Users.Find(email);
+                });
+
+            userManager.Setup(x => x.ResetPasswordAsync(It.IsAny<SqlUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            userManager.Setup(x => x.Users)
+                .Returns(_context.Users);
 
             return userManager.Object;
         }
+
         private static Mock<IAuthenticationService> MockAuth(HttpContext context)
         {
             var auth = new Mock<IAuthenticationService>();
@@ -133,6 +185,9 @@ namespace chldr_test_utils
             var user = new SqlUser
             {
                 Id = "63a816205d1af0e432fba6dd",
+                UserName = "movsar.dev@gmail.com",
+                FirstName = "Movsar",
+                LastName = "Bekaev",
                 Email = "movsar.dev@gmail.com"
             };
 
@@ -147,27 +202,16 @@ namespace chldr_test_utils
             };
 
             context.Users.Add(user);
+            context.SaveChanges();
+
             context.Sources.Add(source);
             context.SaveChanges();
-        }
-        static SqlContext CreateInMemoryContext()
-        {
-            var options = new DbContextOptionsBuilder<SqlContext>()
-                .UseInMemoryDatabase(databaseName: "whatever")
-                .Options;
 
-            var context = new SqlContext(options);
-
-            AddInitialData(context);
-
-            return context;
         }
         public static IDataProvider CreateSqliteDataProvider()
         {
-
-
             var dataProvider = new SqlDataProvider(
-                    CreateSqliteContext(),
+                    _context,
                     _fileService,
                     _exceptionHandler
                 );
@@ -177,43 +221,25 @@ namespace chldr_test_utils
 
         private static SqlContext CreateSqliteContext()
         {
-            var connectionString = "Data Source=:memory:;";
+            //var connectionString = "Data Source=:memory:;";
 
             // Apply migrations
             var options = new DbContextOptionsBuilder<SqlContext>()
-                  .UseSqlite(connectionString)
+                  .UseSqlite(@"Data Source=test.db")
                   .Options;
 
+            // Ensure to create a new scope for the DbContext, so resources are released after the operation
             var context = new SqlContext(options);
 
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+
+            context.SaveChanges();
             AddInitialData(context);
 
             return context;
         }
 
-        public static IDataProvider CreateMockDataProvider()
-        {
-
-
-            var dataProvider = new SqlDataProvider(
-                    CreateInMemoryContext(),
-                    _fileService,
-                    _exceptionHandler
-                );
-
-            return dataProvider;
-        }
-        public static IDataProvider CreateTestSqlDataProvider()
-        {
-            // Constants.TestingDatabaseConnectionString
-            // Remove sql database
-            var dataProvider = new SqlDataProvider(
-                null,
-                _fileService,
-                _exceptionHandler
-                );
-            return dataProvider;
-        }
         public static IDataProvider CreatRealmDataProvider()
         {
             if (File.Exists(_fileService.OfflineDatabaseFilePath))
@@ -288,19 +314,19 @@ namespace chldr_test_utils
 
         public static EntryService CreateEntryService()
         {
-            var dataProvider = CreateTestSqlDataProvider();
+            var dataProvider = CreateSqliteDataProvider();
             return new EntryService(dataProvider, _requestService, _exceptionHandler);
         }
         public static SourceService CreateSourceService()
         {
-            var dataProvider = CreateTestSqlDataProvider();
+            var dataProvider = CreateSqliteDataProvider();
             return new SourceService(dataProvider, _requestService, _exceptionHandler);
         }
 
         public static ContentStore CreateContentStore()
         {
             return new ContentStore(_exceptionHandler,
-                CreateTestSqlDataProvider(),
+                CreateSqliteDataProvider(),
                 _environmentService,
                 CreateSourceService(),
                 CreateEntryService(),
@@ -310,7 +336,7 @@ namespace chldr_test_utils
         private static UserService CreateUserService()
         {
             var localStorageService = new LocalStorageService(null, _exceptionHandler);
-            return new UserService(CreateTestSqlDataProvider(), _requestService, localStorageService);
+            return new UserService(CreateSqliteDataProvider(), _requestService, localStorageService);
         }
 
         public static UserResolver CreateFakeUserResolver(IDataProvider testDataProvider)

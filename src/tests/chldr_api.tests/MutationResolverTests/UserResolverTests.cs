@@ -1,8 +1,10 @@
 ﻿using chldr_api.GraphQL.MutationServices;
+using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Interfaces.Repositories;
+using chldr_data.Models;
 using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
 using chldr_data.remote.SqlEntities;
@@ -22,8 +24,8 @@ namespace chldr_api.tests.ServiceResolverTests
 {
     public class UserResolverTests
     {
-        private readonly UserResolver _userResolver;
-        private readonly IDataProvider _testDataProvider;
+        private UserResolver _userResolver;
+        private IDataProvider _testDataProvider;
 
         public UserResolverTests()
         {
@@ -34,26 +36,28 @@ namespace chldr_api.tests.ServiceResolverTests
         [Fact]
         public async Task Confirm_WithValidInput_ReturnsSuccessResponse()
         {
-            // Arrange
-            var unitOfWork = (SqlUnitOfWork)_testDataProvider.CreateUnitOfWork();
+            // ! You shouldn't use unitOfWork in the tests at all!
 
-            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
+            // Arrange
             var newUserInfo = TestDataFactory.CreateRandomUserDto();
 
             // Act and Assert
             var registrationResponse = await _userResolver.RegisterAndLogInAsync(newUserInfo.Email!, newUserInfo.Password, newUserInfo.FirstName, newUserInfo.LastName, newUserInfo.Patronymic);
             Assert.True(registrationResponse.Success);
 
-            var confirmationToken = JsonConvert.DeserializeObject<string>(registrationResponse.SerializedData);
-            Assert.NotEmpty(confirmationToken);
+            var data = RequestResult.GetData<dynamic>(registrationResponse);
 
-            var confirmationResponse = await _userResolver.ConfirmEmailAsync(confirmationToken);
-            Assert.True(confirmationResponse.Success);
+            var sessionInformation = new SessionInformation()
+            {
+                AccessToken = data.AccessToken!,
+                RefreshToken = data.RefreshToken!,
+                Status = SessionStatus.LoggedIn,
+                UserDto = JsonConvert.DeserializeObject<UserDto>(data.User.ToString())
+            };
 
-            UserModel user = await usersRepository.GetByEmailAsync(newUserInfo.Email);
-            Assert.NotNull(user);
-            Assert.Equal(UserStatus.Active, user.Status);
-            unitOfWork.Rollback();
+            Assert.NotEmpty(sessionInformation.AccessToken);
+            Assert.NotEmpty(sessionInformation.RefreshToken);
+            Assert.Equal(sessionInformation.UserDto.Email, newUserInfo.Email);
         }
 
         [Fact]

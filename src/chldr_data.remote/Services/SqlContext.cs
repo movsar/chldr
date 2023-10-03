@@ -375,6 +375,5 @@ public class SqlContext : IdentityUserContext<SqlUser>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseLoggerFactory(_myLoggerFactory);
-
     }
 }

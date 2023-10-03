@@ -232,6 +232,8 @@ namespace chldr_api.GraphQL.MutationServices
         internal async Task<RequestResult> RegisterAndLogInAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
             var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+            unitOfWork.BeginTransaction();
+
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
 
             try
@@ -274,7 +276,7 @@ namespace chldr_api.GraphQL.MutationServices
                 await _userManager.UpdateAsync(user);
 
                 unitOfWork.Commit();
-                
+
                 await _signInManager.SignInAsync(user, isPersistent: false);
 
                 var response = await GenerateSignInResponse(user);
@@ -282,13 +284,7 @@ namespace chldr_api.GraphQL.MutationServices
             }
             catch (Exception ex)
             {
-                try
-                {
-                    var user = await usersRepository.GetByEmailAsync(email);
-                    await usersRepository.RemoveAsync(user.Id);
-                    unitOfWork.Commit();
-                }
-                catch (Exception) { }
+                unitOfWork.Rollback();
 
                 return new RequestResult() { ErrorMessage = ex.Message };
             }
@@ -296,8 +292,7 @@ namespace chldr_api.GraphQL.MutationServices
         private async Task<RequestResult> GenerateSignInResponse(SqlUser user)
         {
             // Generate JWT tokens
-            var signingKeyAsText = _configuration.GetValue<string>("ApiJwtSigningKey");
-            var accessToken = JwtService.GenerateSignedToken(user.Id, signingKeyAsText);
+            var accessToken = JwtService.GenerateSignedToken(user.Id, _signingSecret);
             var refreshToken = JwtService.GenerateRefreshToken();
             await _userManager.SetAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken", refreshToken);
 
@@ -318,8 +313,7 @@ namespace chldr_api.GraphQL.MutationServices
         }
         private ClaimsPrincipal GetPrincipalFromAccessToken(string token)
         {
-            var signingSecret = _configuration.GetValue<string>("ApiJwtSigningKey");
-            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingSecret));
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_signingSecret));
 
             var tokenValidationParameters = new TokenValidationParameters
             {
