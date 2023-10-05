@@ -6,6 +6,7 @@ using chldr_data.Models;
 using chldr_data.Services;
 using chldr_utils;
 using chldr_utils.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
@@ -25,14 +26,20 @@ namespace chldr_shared.Services
         public event Action<SessionInformation>? UserStateHasChanged;
 
         private readonly LocalStorageService _localStorageService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public SessionInformation CurrentSession = new SessionInformation();
 
-        public UserService(IDataProvider dataProvider, RequestService requestService, LocalStorageService localStorageService)
+        public UserService(
+            IDataProvider dataProvider, 
+            RequestService requestService,
+            LocalStorageService localStorageService,
+            IHttpContextAccessor httpContextAccessor
+            )
         {
             _requestService = requestService;
             _dataProvider = dataProvider;
             _localStorageService = localStorageService;
-
+            _httpContextAccessor = httpContextAccessor;
             _dataProvider.DatabaseInitialized += RealmService_DatasourceInitialized;
         }
         private void RealmService_DatasourceInitialized()
@@ -152,31 +159,19 @@ namespace chldr_shared.Services
         {
             // Get last session info from the local storage
             var session = await _localStorageService.GetItem<SessionInformation>("session");
-            if (session != null)
-            {
-                CurrentSession = session;
-                UserStateHasChanged?.Invoke(CurrentSession);
-            }
-
-            if (string.IsNullOrEmpty(CurrentSession.AccessToken))
+            if (session == null || string.IsNullOrEmpty(session.AccessToken))
             {
                 return;
             }
 
-            var expired = IsTokenExpired(CurrentSession.AccessToken);
-            if (expired && !string.IsNullOrWhiteSpace(CurrentSession.RefreshToken))
-            {
-                // Try to refresh Access Token
-                try
-                {
-                    CurrentSession = await RefreshTokens(CurrentSession.AccessToken, CurrentSession.RefreshToken);
-                    await SaveActiveSession();
-                    UserStateHasChanged?.Invoke(CurrentSession);
-                }
-                catch (Exception ex)
-                {
-                }
-            }
+            CurrentSession = session;
+            UserStateHasChanged?.Invoke(CurrentSession);
+
+            CurrentSession = await RefreshTokens(CurrentSession.AccessToken, CurrentSession.RefreshToken);
+            await SaveActiveSession();
+            UserStateHasChanged?.Invoke(CurrentSession);
+
+            var id = _httpContextAccessor.HttpContext.User.Identity.Name;
         }
 
         public Task AddAsync(UserDto entryDto, string userId)

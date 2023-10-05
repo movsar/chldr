@@ -12,6 +12,7 @@ using chldr_data.Repositories;
 using chldr_data.Responses;
 using chldr_data.Services;
 using chldr_utils;
+using Microsoft.AspNetCore.Http;
 using Realms.Sync;
 
 namespace chldr_shared.Services
@@ -26,12 +27,18 @@ namespace chldr_shared.Services
         private readonly IDataProvider _dataProvider;
         private readonly RequestService _requestService;
         private readonly ExceptionHandler _exceptionHandler;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public EntryService(IDataProvider dataProvider, RequestService requestService, ExceptionHandler exceptionHandler)
+        public EntryService(
+            IDataProvider dataProvider, 
+            RequestService requestService, 
+            ExceptionHandler exceptionHandler,
+            IHttpContextAccessor httpContextAccessor)
         {
             _dataProvider = dataProvider;
             _requestService = requestService;
             _exceptionHandler = exceptionHandler;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         #region Get
@@ -76,6 +83,8 @@ namespace chldr_shared.Services
 
         private async Task<InsertResponse> AddToRemmoteDatabase(EntryDto newEntryDto, string userId)
         {
+            var user = _httpContextAccessor.HttpContext.User.Identity.Name;
+
             if (newEntryDto == null || string.IsNullOrEmpty(newEntryDto.EntryId))
             {
                 throw new NullReferenceException();
@@ -85,12 +94,12 @@ namespace chldr_shared.Services
             var response = await _requestService.AddEntryAsync(userId, newEntryDto);
             if (!response.Success)
             {
-                throw _exceptionHandler.Error("Error:Request_failed");
+                throw _exceptionHandler.Error(response.ErrorMessage);
             }
             var responseData = RequestResult.GetData<InsertResponse>(response);
             if (responseData.CreatedAt == DateTimeOffset.MinValue)
             {
-                throw _exceptionHandler.Error("Error:Request_failed");
+                throw _exceptionHandler.Error(response.ErrorMessage);
             }
             return responseData;
         }
@@ -133,7 +142,7 @@ namespace chldr_shared.Services
             var response = await _requestService.UpdateEntry(userId, updatedEntryDto);
             if (!response.Success)
             {
-                throw _exceptionHandler.Error("Error:Request_failed");
+                throw _exceptionHandler.Error(response.ErrorMessage);
             }
             var responseData = RequestResult.GetData<UpdateResponse>(response);
 
@@ -168,7 +177,7 @@ namespace chldr_shared.Services
             var response = await _requestService.RemoveEntry(userId, entry.EntryId);
             if (!response.Success)
             {
-                throw _exceptionHandler.Error("Error:Request_failed");
+                throw _exceptionHandler.Error(response.ErrorMessage);
             }
             var responseData = RequestResult.GetData<UpdateResponse>(response);
             return responseData;
@@ -215,7 +224,7 @@ namespace chldr_shared.Services
             var response = await _requestService.PromoteAsync(RecordType.Entry, currentUser.Id, entry.EntryId);
             if (!response.Success)
             {
-                throw _exceptionHandler.Error("Error:Request_failed");
+                throw _exceptionHandler.Error(response.ErrorMessage);
             }
             var responseData = RequestResult.GetData<UpdateResponse>(response);
 

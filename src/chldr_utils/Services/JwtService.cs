@@ -9,6 +9,32 @@ namespace chldr_tools
 {
     public static class JwtService
     {
+        public static ClaimsPrincipal GetPrincipalFromAccessToken(string token, string signingKeyAsText)
+        {
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKeyAsText));
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = false,
+                ValidIssuer = "Dosham",
+                ValidAudience = "dosham.app",
+                IssuerSigningKey = signingKey
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException("Invalid token");
+            }
+
+            return principal;
+        }
         public static string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];

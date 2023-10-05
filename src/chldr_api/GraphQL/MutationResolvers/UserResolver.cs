@@ -123,9 +123,7 @@ namespace chldr_api.GraphQL.MutationServices
         }
         internal async Task<RequestResult> RefreshTokens(string accessToken, string refreshToken)
         {
-            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_signingSecret));
-
-            var principal = GetPrincipalFromAccessToken(accessToken);
+            var principal = JwtService.GetPrincipalFromAccessToken(accessToken, _signingSecret);
             var userId = principal.Identity.Name;
 
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
@@ -140,28 +138,10 @@ namespace chldr_api.GraphQL.MutationServices
                 };
             }
 
-            // Generate new tokens
-            var newAccessToken = JwtService.GenerateSignedToken(userId, _signingSecret);
-            var newRefreshToken = JwtService.GenerateRefreshToken();
-
             await _userManager.RemoveAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken");
-            await _userManager.SetAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken", newRefreshToken);
 
-            var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
-            var usersRepository = (SqlUsersRepository)unitOfWork.Users;
-            var userModel = await usersRepository.GetAsync(user.Id);
-
-            return new RequestResult
-            {
-                Success = true,
-                SerializedData = JsonConvert.SerializeObject(
-                    new
-                    {
-                        AccessToken = newAccessToken,
-                        RefreshToken = newRefreshToken,
-                        User = UserDto.FromModel(userModel)
-                    })
-            };
+            await _signInManager.SignInAsync(user, true);
+            return await GenerateSignInResponse(user);
         }
         internal async Task<RequestResult> SignInAsync(string email, string password)
         {
@@ -324,31 +304,6 @@ namespace chldr_api.GraphQL.MutationServices
                 }),
             };
         }
-        private ClaimsPrincipal GetPrincipalFromAccessToken(string token)
-        {
-            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_signingSecret));
 
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateAudience = true,
-                ValidateIssuer = true,
-                ValidateIssuerSigningKey = true,
-                ValidateLifetime = false,
-                ValidIssuer = "Dosham",
-                ValidAudience = "dosham.app",
-                IssuerSigningKey = signingKey
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken securityToken;
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
-            var jwtSecurityToken = securityToken as JwtSecurityToken;
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-            {
-                throw new SecurityTokenException("Invalid token");
-            }
-
-            return principal;
-        }
     }
 }

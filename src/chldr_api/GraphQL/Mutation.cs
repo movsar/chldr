@@ -3,6 +3,8 @@ using chldr_api.GraphQL.MutationServices;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Enums;
 using chldr_data.Models;
+using chldr_tools;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace chldr_api
 {
@@ -10,11 +12,30 @@ namespace chldr_api
     {
         private readonly UserResolver _userResolver;
         private readonly EntryResolver _entryResolver;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IConfiguration _configuration;
 
-        public Mutation(UserResolver userResolver, EntryResolver entryResolver)
+        public Mutation(
+            IHttpContextAccessor httpContextAccessor,
+            IConfiguration configuration,
+            UserResolver userResolver,
+            EntryResolver entryResolver)
         {
             _userResolver = userResolver;
             _entryResolver = entryResolver;
+            _httpContextAccessor = httpContextAccessor;
+            _configuration = configuration;
+        }
+
+        public string GetBearerToken()
+        {
+            string authHeader = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+            {
+                // Handle missing Bearer token appropriately
+                throw new Exception("Missing or invalid Authorization header");
+            }
+            return authHeader.Split(' ')[1];
         }
 
         // Entry mutations
@@ -24,7 +45,7 @@ namespace chldr_api
             switch (recordType)
             {
                 case RecordType.Entry:
-                    return await _entryResolver.PromoteAsync(userId, entryId);
+                    return await Execute(() => _entryResolver.PromoteAsync(userId, entryId));
 
                 case RecordType.Translation:
                     throw new NotImplementedException();
@@ -36,43 +57,64 @@ namespace chldr_api
 
         public async Task<RequestResult> AddEntry(string userId, EntryDto entryDto)
         {
-            return await _entryResolver.AddEntryAsync(userId, entryDto);
+         
+                var accessToken = GetBearerToken();
+                var signingKeyAsText = _configuration.GetValue<string>("ApiJwtSigningKey")!;
+                var principal = JwtService.GetPrincipalFromAccessToken(accessToken, signingKeyAsText);
+
+                return await Execute(() => _entryResolver.AddEntryAsync(userId, entryDto));
+           
         }
 
         public async Task<RequestResult> UpdateEntry(string userId, EntryDto entryDto)
         {
-            return await _entryResolver.UpdateEntry(userId, entryDto);
+            return await Execute(() => _entryResolver.UpdateEntry(userId, entryDto));
         }
 
         public async Task<RequestResult> RemoveEntry(string userId, string entryId)
         {
-            return await _entryResolver.RemoveEntry(userId, entryId);
+            return await Execute(() => _entryResolver.RemoveEntry(userId, entryId));
         }
 
         // User mutations
         public async Task<RequestResult> UpdatePasswordAsync(string email, string token, string newPassword)
         {
-            return await _userResolver.SetNewPassword(email, token, newPassword);
+            return await Execute(() => _userResolver.SetNewPassword(email, token, newPassword));
         }
         public async Task<RequestResult> PasswordReset(string email)
         {
-            return await _userResolver.ResetPassword(email);
+            return await Execute(() => _userResolver.ResetPassword(email));
         }
         public async Task<RequestResult> RefreshTokens(string accessToken, string refreshToken)
         {
-            return await _userResolver.RefreshTokens(accessToken, refreshToken);
+            return await Execute(() => _userResolver.RefreshTokens(accessToken, refreshToken));
         }
         public async Task<RequestResult> LoginEmailPasswordAsync(string email, string password)
         {
-            return await _userResolver.SignInAsync(email, password);
+            return await Execute(() => _userResolver.SignInAsync(email, password));
         }
         public async Task<RequestResult> ConfirmEmailAsync(string token)
         {
-            return await _userResolver.ConfirmEmailAsync(token);
+            return await Execute(() => _userResolver.ConfirmEmailAsync(token));
         }
         public async Task<RequestResult> RegisterUserAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
-            return await _userResolver.RegisterAndLogInAsync(email, password, firstName, lastName, patronymic);
+            return await Execute(() => _userResolver.RegisterAndLogInAsync(email, password, firstName, lastName, patronymic));
+        }
+
+        private async Task<RequestResult> Execute(Func<Task<RequestResult>> action)
+        {
+            try
+            {
+                return await action();
+            }
+            catch (Exception ex)
+            {
+                return new RequestResult()
+                {
+                    ErrorMessage = ex.Message
+                };
+            }
         }
     }
 
