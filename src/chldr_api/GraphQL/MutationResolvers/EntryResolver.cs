@@ -7,6 +7,7 @@ using chldr_data.remote.Repositories;
 using chldr_data.remote.Services;
 using chldr_data.Responses;
 using chldr_data.Services;
+using chldr_tools;
 using chldr_utils;
 using chldr_utils.Exceptions;
 using Microsoft.EntityFrameworkCore;
@@ -71,6 +72,12 @@ namespace chldr_api.GraphQL.MutationResolvers
         #region Add
         public async Task<RequestResult> AddEntryAsync(string userId, EntryDto entryDto)
         {
+
+            //var accessToken = GetBearerToken();
+            //var signingKeyAsText = _configuration.GetValue<string>("ApiJwtSigningKey")!;
+            //var principal = JwtService.GetPrincipalFromAccessToken(accessToken, signingKeyAsText);
+
+
             // UserId instead of object used for security reasons
             await CheckLoggedInUser(userId);
             await CheckEntryDto(entryDto);

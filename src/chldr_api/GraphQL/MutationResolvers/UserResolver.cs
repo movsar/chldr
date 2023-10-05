@@ -12,16 +12,11 @@ using chldr_shared.Models;
 using chldr_tools;
 using chldr_utils;
 using chldr_utils.Services;
-using GraphQLParser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace chldr_api.GraphQL.MutationServices
 {
@@ -35,6 +30,7 @@ namespace chldr_api.GraphQL.MutationServices
         private readonly UserManager<SqlUser> _userManager;
         private readonly SignInManager<SqlUser> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string _signingSecret;
 
         public UserResolver(
@@ -45,10 +41,12 @@ namespace chldr_api.GraphQL.MutationServices
             FileService fileService,
             IConfiguration configuration,
             UserManager<SqlUser> userManager,
-            SignInManager<SqlUser> signInManager
+            SignInManager<SqlUser> signInManager,
+            IHttpContextAccessor httpContextAccessor
             )
         {
             _dataProvider = dataProvider;
+            _httpContextAccessor = httpContextAccessor;
             _localizer = localizer;
             _exceptionHandler = exceptionHandler;
             _emailService = emailService;
@@ -141,6 +139,9 @@ namespace chldr_api.GraphQL.MutationServices
             await _userManager.RemoveAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken");
 
             await _signInManager.SignInAsync(user, true);
+            
+            var id = _httpContextAccessor.HttpContext.User.Identity.Name;
+
             return await GenerateSignInResponse(user);
         }
         internal async Task<RequestResult> SignInAsync(string email, string password)
@@ -304,6 +305,15 @@ namespace chldr_api.GraphQL.MutationServices
                 }),
             };
         }
-
+        public string GetBearerToken()
+        {
+            string authHeader = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+            {
+                // Handle missing Bearer token appropriately
+                throw new Exception("Missing or invalid Authorization header");
+            }
+            return authHeader.Split(' ')[1];
+        }
     }
 }

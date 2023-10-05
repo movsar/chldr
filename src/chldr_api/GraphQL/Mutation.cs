@@ -12,30 +12,16 @@ namespace chldr_api
     {
         private readonly UserResolver _userResolver;
         private readonly EntryResolver _entryResolver;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
 
         public Mutation(
-            IHttpContextAccessor httpContextAccessor,
             IConfiguration configuration,
             UserResolver userResolver,
             EntryResolver entryResolver)
         {
             _userResolver = userResolver;
             _entryResolver = entryResolver;
-            _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
-        }
-
-        public string GetBearerToken()
-        {
-            string authHeader = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"];
-            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-            {
-                // Handle missing Bearer token appropriately
-                throw new Exception("Missing or invalid Authorization header");
-            }
-            return authHeader.Split(' ')[1];
         }
 
         // Entry mutations
@@ -57,13 +43,7 @@ namespace chldr_api
 
         public async Task<RequestResult> AddEntry(string userId, EntryDto entryDto)
         {
-         
-                var accessToken = GetBearerToken();
-                var signingKeyAsText = _configuration.GetValue<string>("ApiJwtSigningKey")!;
-                var principal = JwtService.GetPrincipalFromAccessToken(accessToken, signingKeyAsText);
-
-                return await Execute(() => _entryResolver.AddEntryAsync(userId, entryDto));
-           
+            return await Execute(() => _entryResolver.AddEntryAsync(userId, entryDto));
         }
 
         public async Task<RequestResult> UpdateEntry(string userId, EntryDto entryDto)
