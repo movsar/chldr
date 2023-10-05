@@ -175,14 +175,14 @@ namespace chldr_data.Services
             return response.Data;
         }
 
-        public async Task<RequestResult> AddEntryAsync(string userId, EntryDto entryDto)
+        public async Task<RequestResult> AddEntryAsync(EntryDto entryDto)
         {
             var operation = "addEntry";
             var request = new GraphQLRequest
             {
                 Query = $@"
-                        mutation {operation}($userId: String!, $entryDto: EntryDtoInput!) {{
-                          {operation}(userId: $userId, entryDto: $entryDto) {{
+                        mutation {operation}($entryDto: EntryDtoInput!) {{
+                          {operation}( entryDto: $entryDto) {{
                             success
                             errorMessage
                             serializedData
@@ -190,21 +190,21 @@ namespace chldr_data.Services
                         }}
                         ",
                 // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new { userId, entryDto }
+                Variables = new {  entryDto }
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
             return response.Data;
         }
 
-        public async Task<RequestResult> RemoveEntry(string userId, string entityId)
+        public async Task<RequestResult> RemoveEntry(string entityId)
         {
             var operation = "removeEntry";
             var request = new GraphQLRequest
             {
                 Query = $@"
-                        mutation {operation}($userId: String!, $entryId: String!) {{
-                          {operation}(userId: $userId, entryId: $entryId) {{
+                        mutation {operation}( $entryId: String!) {{
+                          {operation}( entryId: $entryId) {{
                             success
                             errorMessage
                             serializedData
@@ -212,21 +212,21 @@ namespace chldr_data.Services
                         }}
                         ",
                 // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new { userId, entryId = entityId }
+                Variables = new { entryId = entityId }
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
             return response.Data;
         }
 
-        public async Task<RequestResult> UpdateEntry(string userId, EntryDto entryDto)
+        public async Task<RequestResult> UpdateEntry( EntryDto entryDto)
         {
             var operation = "updateEntry";
             var request = new GraphQLRequest
             {
                 Query = $@"
-                        mutation {operation}($userId: String!, $entryDto: EntryDtoInput!) {{
-                          {operation}(userId: $userId, entryDto: $entryDto) {{
+                        mutation {operation}( $entryDto: EntryDtoInput!) {{
+                          {operation}( entryDto: $entryDto) {{
                             success
                             errorMessage
                             serializedData
@@ -234,21 +234,21 @@ namespace chldr_data.Services
                         }}
                         ",
                 // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new { userId, entryDto }
+                Variables = new { entryDto }
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
             return response.Data;
         }
 
-        public async Task<RequestResult> PromoteAsync(RecordType recordType, string userId, string entityId)
+        public async Task<RequestResult> PromoteAsync(RecordType recordType, string entityId)
         {
             var operation = "promote";
             var request = new GraphQLRequest
             {
                 Query = $@"
-                        mutation {operation}($recordTypeName: String!, $userId: String!, $entityId: String!) {{
-                          {operation}(recordTypeName: $recordTypeName, userId: $userId, entityId: $entityId) {{
+                        mutation {operation}($recordTypeName: String!,  $entityId: String!) {{
+                          {operation}(recordTypeName: $recordTypeName,  entityId: $entityId) {{
                             success
                             errorMessage
                             serializedData
@@ -256,7 +256,7 @@ namespace chldr_data.Services
                         }}
                         ",
                 // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new { recordTypeName = recordType.ToString(), userId, entityId }
+                Variables = new { recordTypeName = recordType.ToString(), entityId }
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);

@@ -1,5 +1,6 @@
 ﻿using chldr_data;
 using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
@@ -139,7 +140,7 @@ namespace chldr_api.GraphQL.MutationServices
             await _userManager.RemoveAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken");
 
             await _signInManager.SignInAsync(user, true);
-            
+
             var id = _httpContextAccessor.HttpContext.User.Identity.Name;
 
             return await GenerateSignInResponse(user);
@@ -202,6 +203,11 @@ namespace chldr_api.GraphQL.MutationServices
                     throw new Exception("Error confirming email: " + result.Errors.First().Description);
                 }
 
+                // Activate user
+                user.Status = (int)UserStatus.Active;
+                user.Rate = UserModel.MemberRateRange.Lower;
+                await _userManager.UpdateAsync(user);
+
                 return new RequestResult() { Success = true };
             }
             catch (Exception ex)
@@ -224,6 +230,8 @@ namespace chldr_api.GraphQL.MutationServices
                     FirstName = firstName,
                     LastName = lastName,
                     Patronymic = patronymic,
+                    Status = (int)UserStatus.Unconfirmed,
+                    Rate = 0
                 };
 
                 if (string.IsNullOrEmpty(password))
@@ -304,16 +312,6 @@ namespace chldr_api.GraphQL.MutationServices
                     RefreshToken = refreshToken
                 }),
             };
-        }
-        public string GetBearerToken()
-        {
-            string authHeader = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"];
-            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-            {
-                // Handle missing Bearer token appropriately
-                throw new Exception("Missing or invalid Authorization header");
-            }
-            return authHeader.Split(' ')[1];
         }
     }
 }

@@ -5,6 +5,7 @@ using chldr_data.Enums;
 using chldr_data.Models;
 using chldr_tools;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace chldr_api
 {
@@ -13,25 +14,34 @@ namespace chldr_api
         private readonly UserResolver _userResolver;
         private readonly EntryResolver _entryResolver;
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly string? _currentUserId;
 
         public Mutation(
             IConfiguration configuration,
             UserResolver userResolver,
-            EntryResolver entryResolver)
+            EntryResolver entryResolver,
+            IHttpContextAccessor httpContextAccessor)
         {
             _userResolver = userResolver;
             _entryResolver = entryResolver;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
+
+            var accessToken = GetBearerToken();
+            var signingKeyAsText = _configuration.GetValue<string>("ApiJwtSigningKey")!;
+            var principal = JwtService.GetPrincipalFromAccessToken(accessToken, signingKeyAsText);
+            _currentUserId = principal.Identity?.Name;
         }
 
         // Entry mutations
-        public async Task<RequestResult> PromoteAsync(string recordTypeName, string userId, string entryId)
+        public async Task<RequestResult> PromoteAsync(string recordTypeName, string entryId)
         {
             var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);
             switch (recordType)
             {
                 case RecordType.Entry:
-                    return await Execute(() => _entryResolver.PromoteAsync(userId, entryId));
+                    return await Execute(() => _entryResolver.PromoteAsync(_currentUserId, entryId));
 
                 case RecordType.Translation:
                     throw new NotImplementedException();
@@ -41,19 +51,19 @@ namespace chldr_api
             }
         }
 
-        public async Task<RequestResult> AddEntry(string userId, EntryDto entryDto)
+        public async Task<RequestResult> AddEntry(EntryDto entryDto)
         {
-            return await Execute(() => _entryResolver.AddEntryAsync(userId, entryDto));
+            return await Execute(() => _entryResolver.AddEntryAsync(_currentUserId, entryDto));
         }
 
-        public async Task<RequestResult> UpdateEntry(string userId, EntryDto entryDto)
+        public async Task<RequestResult> UpdateEntry(EntryDto entryDto)
         {
-            return await Execute(() => _entryResolver.UpdateEntry(userId, entryDto));
+            return await Execute(() => _entryResolver.UpdateEntry(_currentUserId, entryDto));
         }
 
-        public async Task<RequestResult> RemoveEntry(string userId, string entryId)
+        public async Task<RequestResult> RemoveEntry(string entryId)
         {
-            return await Execute(() => _entryResolver.RemoveEntry(userId, entryId));
+            return await Execute(() => _entryResolver.RemoveEntry(_currentUserId, entryId));
         }
 
         // User mutations
@@ -95,6 +105,17 @@ namespace chldr_api
                     ErrorMessage = ex.Message
                 };
             }
+        }
+
+        public string GetBearerToken()
+        {
+            string authHeader = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+            {
+                // Handle missing Bearer token appropriately
+                throw new Exception("Missing or invalid Authorization header");
+            }
+            return authHeader.Split(' ')[1];
         }
     }
 

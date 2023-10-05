@@ -77,7 +77,7 @@ namespace chldr_api
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-RU");
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("ru-RU");
 
-
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

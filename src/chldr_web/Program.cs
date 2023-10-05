@@ -37,6 +37,7 @@ namespace chldr_web
             builder.Services
                 .AddDefaultIdentity<SqlUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<SqlContext>();
+            builder.Services.AddHttpContextAccessor();
 
             builder.Services.Configure<IdentityOptions>(options =>
             {

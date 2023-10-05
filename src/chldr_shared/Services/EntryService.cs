@@ -91,7 +91,7 @@ namespace chldr_shared.Services
             }
 
             // Insert remote entity with translations
-            var response = await _requestService.AddEntryAsync(userId, newEntryDto);
+            var response = await _requestService.AddEntryAsync(newEntryDto);
             if (!response.Success)
             {
                 throw _exceptionHandler.Error(response.ErrorMessage);
@@ -139,7 +139,7 @@ namespace chldr_shared.Services
 
         private async Task<UpdateResponse> UpdateInRemmoteDatabase(EntryDto updatedEntryDto, string userId)
         {
-            var response = await _requestService.UpdateEntry(userId, updatedEntryDto);
+            var response = await _requestService.UpdateEntry(updatedEntryDto);
             if (!response.Success)
             {
                 throw _exceptionHandler.Error(response.ErrorMessage);
@@ -174,7 +174,7 @@ namespace chldr_shared.Services
         #region Remove
         private async Task<UpdateResponse> RemoveFromRemmoteDatabase(EntryModel entry, string userId)
         {
-            var response = await _requestService.RemoveEntry(userId, entry.EntryId);
+            var response = await _requestService.RemoveEntry(entry.EntryId);
             if (!response.Success)
             {
                 throw _exceptionHandler.Error(response.ErrorMessage);
@@ -221,7 +221,7 @@ namespace chldr_shared.Services
 
         private async Task<UpdateResponse> PromoteRequestAsync(IEntry entry, UserModel? currentUser)
         {
-            var response = await _requestService.PromoteAsync(RecordType.Entry, currentUser.Id, entry.EntryId);
+            var response = await _requestService.PromoteAsync(RecordType.Entry, entry.EntryId);
             if (!response.Success)
             {
                 throw _exceptionHandler.Error(response.ErrorMessage);

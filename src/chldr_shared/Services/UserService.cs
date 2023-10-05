@@ -108,7 +108,6 @@ namespace chldr_shared.Services
             };
 
             await SaveActiveSession();
-
             UserStateHasChanged?.Invoke(CurrentSession);
         }
 
