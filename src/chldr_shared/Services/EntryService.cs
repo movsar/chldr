@@ -27,18 +27,15 @@ namespace chldr_shared.Services
         private readonly IDataProvider _dataProvider;
         private readonly RequestService _requestService;
         private readonly ExceptionHandler _exceptionHandler;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public EntryService(
             IDataProvider dataProvider, 
             RequestService requestService, 
-            ExceptionHandler exceptionHandler,
-            IHttpContextAccessor httpContextAccessor)
+            ExceptionHandler exceptionHandler)
         {
             _dataProvider = dataProvider;
             _requestService = requestService;
             _exceptionHandler = exceptionHandler;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         #region Get
@@ -83,8 +80,6 @@ namespace chldr_shared.Services
 
         private async Task<InsertResponse> AddToRemmoteDatabase(EntryDto newEntryDto, string userId)
         {
-            var user = _httpContextAccessor.HttpContext.User.Identity.Name;
-
             if (newEntryDto == null || string.IsNullOrEmpty(newEntryDto.EntryId))
             {
                 throw new NullReferenceException();

@@ -31,7 +31,6 @@ namespace chldr_api.GraphQL.MutationServices
         private readonly UserManager<SqlUser> _userManager;
         private readonly SignInManager<SqlUser> _signInManager;
         private readonly IConfiguration _configuration;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string _signingSecret;
 
         public UserResolver(
@@ -42,12 +41,9 @@ namespace chldr_api.GraphQL.MutationServices
             FileService fileService,
             IConfiguration configuration,
             UserManager<SqlUser> userManager,
-            SignInManager<SqlUser> signInManager,
-            IHttpContextAccessor httpContextAccessor
-            )
+            SignInManager<SqlUser> signInManager)
         {
             _dataProvider = dataProvider;
-            _httpContextAccessor = httpContextAccessor;
             _localizer = localizer;
             _exceptionHandler = exceptionHandler;
             _emailService = emailService;
@@ -140,8 +136,6 @@ namespace chldr_api.GraphQL.MutationServices
             await _userManager.RemoveAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken");
 
             await _signInManager.SignInAsync(user, true);
-
-            var id = _httpContextAccessor.HttpContext.User.Identity.Name;
 
             return await GenerateSignInResponse(user);
         }

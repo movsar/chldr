@@ -34,6 +34,7 @@ using chldr_data.DatabaseObjects.Interfaces;
 using chldr_api.GraphQL.MutationServices;
 using HotChocolate.Types.Descriptors.Definitions;
 using SQLitePCL;
+using Microsoft.JSInterop;
 
 namespace chldr_test_utils
 {
@@ -63,8 +64,13 @@ namespace chldr_test_utils
             _fileService = new FileService(Path.Combine(AppContext.BaseDirectory, Constants.TestsFileServicePath));
             _exceptionHandler = new ExceptionHandler(_fileService);
             _environmentService = new EnvironmentService(Platforms.Web, true);
-            _requestService = new RequestService(new GraphQLClient(_exceptionHandler, _environmentService));
 
+            var jsRuntimeMock = new Mock<IJSRuntime>();
+
+            var localStorageService = new LocalStorageService(jsRuntimeMock.Object, _exceptionHandler);
+            var graphQl = new GraphQLClient(_exceptionHandler, _environmentService, localStorageService);
+
+            _requestService = new RequestService(graphQl);
             _entryDtoFaker = new EntryDtoFaker();
             _translationDtoFaker = new TranslationDtoFaker();
             _soundDtoFaker = new SoundDtoFaker();

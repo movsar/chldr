@@ -6,14 +6,8 @@ using chldr_data.Models;
 using chldr_data.Services;
 using chldr_utils;
 using chldr_utils.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace chldr_shared.Services
 {
@@ -26,20 +20,16 @@ namespace chldr_shared.Services
         public event Action<SessionInformation>? UserStateHasChanged;
 
         private readonly LocalStorageService _localStorageService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         public SessionInformation CurrentSession = new SessionInformation();
 
         public UserService(
             IDataProvider dataProvider, 
             RequestService requestService,
-            LocalStorageService localStorageService,
-            IHttpContextAccessor httpContextAccessor
-            )
+            LocalStorageService localStorageService)
         {
             _requestService = requestService;
-            _dataProvider = dataProvider;
             _localStorageService = localStorageService;
-            _httpContextAccessor = httpContextAccessor;
+            _dataProvider = dataProvider;
             _dataProvider.DatabaseInitialized += RealmService_DatasourceInitialized;
         }
         private void RealmService_DatasourceInitialized()
@@ -169,8 +159,6 @@ namespace chldr_shared.Services
             CurrentSession = await RefreshTokens(CurrentSession.AccessToken, CurrentSession.RefreshToken);
             await SaveActiveSession();
             UserStateHasChanged?.Invoke(CurrentSession);
-
-            var id = _httpContextAccessor.HttpContext.User.Identity.Name;
         }
 
         public Task AddAsync(UserDto entryDto, string userId)
