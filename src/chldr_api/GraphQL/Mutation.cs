@@ -15,7 +15,6 @@ namespace chldr_api
         private readonly EntryResolver _entryResolver;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly string? _currentUserId;
 
         public Mutation(
             IConfiguration configuration,
@@ -27,21 +26,26 @@ namespace chldr_api
             _entryResolver = entryResolver;
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
+        }
 
+        private string GetCurrentUserId()
+        {
             var accessToken = GetBearerToken();
             var signingKeyAsText = _configuration.GetValue<string>("ApiJwtSigningKey")!;
             var principal = JwtService.GetPrincipalFromAccessToken(accessToken, signingKeyAsText);
-            _currentUserId = principal.Identity?.Name;
+            return principal.Identity?.Name!;
         }
 
         // Entry mutations
         public async Task<RequestResult> PromoteAsync(string recordTypeName, string entryId)
         {
+            var currentUserId = GetCurrentUserId();
+
             var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);
             switch (recordType)
             {
                 case RecordType.Entry:
-                    return await Execute(() => _entryResolver.PromoteAsync(_currentUserId, entryId));
+                    return await Execute(() => _entryResolver.PromoteAsync(currentUserId, entryId));
 
                 case RecordType.Translation:
                     throw new NotImplementedException();
@@ -53,17 +57,20 @@ namespace chldr_api
 
         public async Task<RequestResult> AddEntry(EntryDto entryDto)
         {
-            return await Execute(() => _entryResolver.AddEntryAsync(_currentUserId, entryDto));
+            var currentUserId = GetCurrentUserId();
+            return await Execute(() => _entryResolver.AddEntryAsync(currentUserId, entryDto));
         }
 
         public async Task<RequestResult> UpdateEntry(EntryDto entryDto)
         {
-            return await Execute(() => _entryResolver.UpdateEntry(_currentUserId, entryDto));
+            var currentUserId = GetCurrentUserId();
+            return await Execute(() => _entryResolver.UpdateEntry(currentUserId, entryDto));
         }
 
         public async Task<RequestResult> RemoveEntry(string entryId)
         {
-            return await Execute(() => _entryResolver.RemoveEntry(_currentUserId, entryId));
+            var currentUserId = GetCurrentUserId();
+            return await Execute(() => _entryResolver.RemoveEntry(currentUserId, entryId));
         }
 
         // User mutations

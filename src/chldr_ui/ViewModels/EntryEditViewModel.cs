@@ -181,7 +181,7 @@ namespace chldr_ui.ViewModels
             {
                 await StartRecording();
             }
-            //await RefreshUi();
+            await RefreshUiAsync();
         }
         private async Task StartRecording()
         {
