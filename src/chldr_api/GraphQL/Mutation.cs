@@ -22,9 +22,9 @@ namespace chldr_api
             EntryResolver entryResolver,
             IHttpContextAccessor httpContextAccessor)
         {
+            _configuration = configuration;
             _userResolver = userResolver;
             _entryResolver = entryResolver;
-            _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
         }
 
