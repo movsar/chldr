@@ -44,6 +44,7 @@ namespace chldr_ui.ViewModels
         PronunciationDto latestSoundDto;
         List<string> _newTranslationIds = new List<string>();
         internal bool CanEditEntry { get; private set; } = true;
+        public bool IsStoppingRecording { get; private set; }
 
         private async Task RenderExistingSounds()
         {
@@ -196,23 +197,16 @@ namespace chldr_ui.ViewModels
 
         private async Task StopRecording()
         {
-            isRecording = false;
+            await JsInterop.StopRecording(EntryId!);
+            _ = Task.Run(() => WaitForNewRecording());
 
-            try
-            {
-                var recording = await JsInterop.StopRecording();
-                if (recording == null || string.IsNullOrEmpty(recording))
-                {
-                    return;
-                }
+            //latestSoundDto.RecordingB64 = recording;
+            //EntryDto.SoundDtos.Add(latestSoundDto);
+        }
 
-                latestSoundDto.RecordingB64 = recording;
-                EntryDto.SoundDtos.Add(latestSoundDto);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error stopping recording: " + ex.Message);
-            }
+        private async Task WaitForNewRecording()
+        {
+            IsStoppingRecording = true;
         }
 
         public async Task SaveClickHandler()

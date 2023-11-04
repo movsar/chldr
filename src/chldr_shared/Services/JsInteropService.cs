@@ -88,36 +88,17 @@ namespace chldr_shared
             await module.InvokeVoidAsync("startRecording", recordingId, lblPronunciation, lblStopRecording);
         }
 
-        public async Task<string?> StopRecording()
+        public async Task StopRecording(string entryId)
         {
             var module = await moduleTask.Value;
-            var jsonDocument = await module.InvokeAsync<JsonDocument>("stopRecording");
-            if (jsonDocument == null)
-            {
-                // Happens when recording is too quickly stopped
-                return null;
-            }
-
-            string recordingId = jsonDocument.RootElement.GetProperty("id").GetString();
-            string base64String = jsonDocument.RootElement.GetProperty("data").GetString();
-            if (string.IsNullOrEmpty(base64String))
-            {
-                throw new Exception("Pronunciation data is empty");
-            }
-
-            await module.InvokeVoidAsync("showStartButton");
-            await module.InvokeAsync<JsonDocument>("addRecordingListItem", recordingId, base64String, false, true);
-            
-            return base64String;
+            await module.InvokeVoidAsync("stopRecording", entryId);
         }
-        
 
         [JSInvokable]
         public static void WordEdit_PromoteSound_ClickHandler(string recordingId)
         {
             OnPromoteAudio?.Invoke(recordingId);
         }
-
 
         [JSInvokable]
         public static void WordEdit_RemoveSound_ClickHandler(string recordingId)

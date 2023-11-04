@@ -12,6 +12,7 @@ using chldr_utils;
 using chldr_utils.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Realms.Sync;
 
 namespace chldr_api.GraphQL.MutationResolvers
 {
@@ -235,6 +236,39 @@ namespace chldr_api.GraphQL.MutationResolvers
                         ChangeSets = new List<ChangeSetDto>() {
                             ChangeSetDto.FromModel(changeSet)
                         }
+                    })
+                };
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                _exceptionHandler.LogError(ex);
+                return new RequestResult();
+            }
+            finally
+            {
+                unitOfWork.Dispose();
+            }
+        }
+
+        internal async Task<RequestResult> AddSoundAsync(string currentUserId, PronunciationDto pronunciation)
+        {
+            using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(currentUserId);
+            unitOfWork.BeginTransaction();
+            var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
+            var soundsRepository = (SqlPronunciationsRepository)unitOfWork.Sounds;
+
+            try
+            {
+                var changeSets = await soundsRepository.AddAsync(pronunciation);
+                unitOfWork.Commit();
+
+                return new RequestResult()
+                {
+                    Success = true,
+                    SerializedData = JsonConvert.SerializeObject(new UpdateResponse()
+                    {
+                        ChangeSets = changeSets.Select(ChangeSetDto.FromModel)
                     })
                 };
             }

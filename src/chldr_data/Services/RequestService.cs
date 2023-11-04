@@ -8,11 +8,29 @@ namespace chldr_data.Services
 {
     public class RequestService
     {
-        public RequestService(IGraphQlClient graphQLRequestSender)
+        public async Task<RequestResult> AddSoundAsync(PronunciationDto pronunciation)
         {
-            _graphQLRequestSender = graphQLRequestSender;
+            var operation = "addSound";
+            var request = new GraphQLRequest
+            {
+                Query = $@"
+                        mutation {operation}($pronunciation: PronunciationDto!) {{
+                          {operation}(pronunciation: $pronunciation) {{
+                            success
+                            errorMessage
+                            serializedData
+                          }}
+                        }}
+                        ",
+
+                // ! The names here must exactly match the names defined in the graphql schema
+                Variables = new { pronunciation }
+            };
+
+            var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
+            return response.Data;
         }
-        private IGraphQlClient _graphQLRequestSender;
+
         public async Task<RequestResult> UpdatePasswordAsync(string email, string token, string newPassword)
         {
             var request = new GraphQLRequest
@@ -262,5 +280,11 @@ namespace chldr_data.Services
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
             return response.Data;
         }
+
+        public RequestService(IGraphQlClient graphQLRequestSender)
+        {
+            _graphQLRequestSender = graphQLRequestSender;
+        }
+        private IGraphQlClient _graphQLRequestSender;
     }
 }

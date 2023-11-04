@@ -1,6 +1,7 @@
 ﻿using chldr_api.GraphQL.MutationResolvers;
 using chldr_api.GraphQL.MutationServices;
 using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.Enums;
 using chldr_data.Models;
 using chldr_tools;
@@ -37,6 +38,12 @@ namespace chldr_api
         }
 
         // Entry mutations
+        public async Task<RequestResult> AddSoundAsync(PronunciationDto pronunciation)
+        {
+            var currentUserId = GetCurrentUserId();
+            return await Execute(() => _entryResolver.AddSoundAsync(currentUserId, pronunciation));
+        }
+
         public async Task<RequestResult> PromoteAsync(string recordTypeName, string entryId)
         {
             var currentUserId = GetCurrentUserId();

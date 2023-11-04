@@ -214,6 +214,18 @@ namespace chldr_shared.Services
         }
         #endregion
 
+        private async Task<UpdateResponse> AddSoundRequestAsync(PronunciationDto pronunciation)
+        {
+            var response = await _requestService.AddSoundAsync(pronunciation);
+            if (!response.Success)
+            {
+                throw _exceptionHandler.Error(response.ErrorMessage);
+            }
+            var responseData = RequestResult.GetData<UpdateResponse>(response);
+
+            return responseData;
+        }
+
         private async Task<UpdateResponse> PromoteRequestAsync(IEntry entry, UserModel? currentUser)
         {
             var response = await _requestService.PromoteAsync(RecordType.Entry, entry.EntryId);
