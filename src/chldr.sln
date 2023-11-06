@@ -37,8 +37,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_utils.tests", "tests\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_shared.tests", "tests\chldr_shared.tests\chldr_shared.tests.csproj", "{F487CD89-57DB-4E01-9DE2-498F271B1E78}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_web", "chldr_web\chldr_web.csproj", "{67FA08E2-4318-4606-BE03-0C28FBFF50CC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_data.sql", "chldr_data.sql\chldr_data.sql.csproj", "{2EE93212-E940-445B-A255-D42FD82D8892}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_data.realm", "chldr_data.realm\chldr_data.realm.csproj", "{AD695F36-5FB8-4E13-8E82-3A2307ED956F}"
@@ -99,10 +97,6 @@ Global
 		{F487CD89-57DB-4E01-9DE2-498F271B1E78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F487CD89-57DB-4E01-9DE2-498F271B1E78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F487CD89-57DB-4E01-9DE2-498F271B1E78}.Release|Any CPU.Build.0 = Release|Any CPU
-		{67FA08E2-4318-4606-BE03-0C28FBFF50CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67FA08E2-4318-4606-BE03-0C28FBFF50CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{67FA08E2-4318-4606-BE03-0C28FBFF50CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{67FA08E2-4318-4606-BE03-0C28FBFF50CC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2EE93212-E940-445B-A255-D42FD82D8892}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2EE93212-E940-445B-A255-D42FD82D8892}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EE93212-E940-445B-A255-D42FD82D8892}.Release|Any CPU.ActiveCfg = Release|Any CPU
