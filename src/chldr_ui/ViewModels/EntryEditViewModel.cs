@@ -34,6 +34,12 @@ namespace chldr_ui.ViewModels
 
                 Task.Run(() => PromotePronunciationAsync(pronunciation));
             };
+
+            JsInteropService.OnAudioRecorded = async (entryId, soundId, soundB64) =>
+            {
+                isRecording = false;
+                await RefreshUiAsync();
+            };
         }
 
         [Parameter] public string? EntryId { get; set; }
@@ -125,6 +131,7 @@ namespace chldr_ui.ViewModels
             {
                 ExceptionHandler?.LogError("EntryEditViewModel: NewTranslation - CurrentUser is null");
                 NavigationManager.NavigateTo("/");
+                return;
             }
 
             var translation = new TranslationDto(EntryDto.EntryId, UserStore.CurrentUser!.Id, ContentStore.Languages.First());
@@ -197,9 +204,9 @@ namespace chldr_ui.ViewModels
 
         private async Task StopRecording()
         {
+            isRecording = false;
             await JsInterop.StopRecording(EntryId!);
-            _ = Task.Run(() => WaitForNewRecording());
-
+            await RefreshUiAsync();
             //latestSoundDto.RecordingB64 = recording;
             //EntryDto.SoundDtos.Add(latestSoundDto);
         }

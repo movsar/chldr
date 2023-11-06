@@ -9,8 +9,8 @@ using chldr_shared;
 using Microsoft.Extensions.DependencyInjection;
 using chldr_shared.Services;
 using chldr_data.Interfaces;
-using chldr_data.remote.Services;
-using chldr_data.remote.SqlEntities;
+using chldr_data.sql.Services;
+using chldr_data.sql.SqlEntities;
 using Microsoft.AspNetCore.Identity;
 
 namespace chldr_utils.Services

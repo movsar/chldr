@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using chldr_data.remote.SqlEntities;
+using chldr_data.sql.SqlEntities;
 
 namespace chldr_test_utils.Generators
 {

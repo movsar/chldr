@@ -4,9 +4,9 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
-using chldr_data.remote.Repositories;
-using chldr_data.remote.Services;
-using chldr_data.remote.SqlEntities;
+using chldr_data.sql.Repositories;
+using chldr_data.sql.Services;
+using chldr_data.sql.SqlEntities;
 using chldr_data.Resources.Localizations;
 using chldr_data.Services;
 using chldr_shared.Models;
@@ -56,7 +56,7 @@ namespace chldr_api.GraphQL.MutationServices
 
         internal async Task<RequestResult> SetNewPassword(string email, string token, string newPassword)
         {
-            var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+            var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
 
             // Find the user
             var user = await _userManager.FindByEmailAsync(email);
@@ -86,7 +86,7 @@ namespace chldr_api.GraphQL.MutationServices
         }
         internal async Task<RequestResult> ResetPassword(string email)
         {
-            var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+            var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
 
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email!.Equals(email));
@@ -141,7 +141,7 @@ namespace chldr_api.GraphQL.MutationServices
         }
         internal async Task<RequestResult> SignInAsync(string email, string password)
         {
-            var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+            var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
 
             try
@@ -173,7 +173,7 @@ namespace chldr_api.GraphQL.MutationServices
         }
         internal async Task<RequestResult> ConfirmEmailAsync(string token)
         {
-            using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
 
             try
             {
@@ -212,7 +212,7 @@ namespace chldr_api.GraphQL.MutationServices
         }
         internal async Task<RequestResult> RegisterAndLogInAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
         {
-            var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+            var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
             unitOfWork.BeginTransaction();
 
             try
@@ -292,7 +292,7 @@ namespace chldr_api.GraphQL.MutationServices
             var refreshToken = JwtService.GenerateRefreshToken();
             await _userManager.SetAuthenticationTokenAsync(user, "RefreshTokenProvider", "RefreshToken", refreshToken);
 
-            var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+            var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
             var userModel = await usersRepository.GetByEmailAsync(user.Email);
 

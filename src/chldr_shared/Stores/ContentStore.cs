@@ -102,10 +102,8 @@ namespace chldr_shared.Stores
 
         public async Task LoadRandomEntries()
         {
-            CachedSearchResult.Entries.Clear();
-            var unitOfWork = _dataProvider.CreateUnitOfWork(null);
-            var entries = await unitOfWork.Entries.GetRandomsAsync(50);
-
+            var entries = await EntryService.GetRandomsAsync(50);
+            
             CachedSearchResult.Entries.Clear();
             foreach (var entry in entries)
             {

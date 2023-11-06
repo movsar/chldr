@@ -18,6 +18,7 @@ namespace chldr_shared
 
         public static Action<string> OnRemoveAudio { get; set; }
         public static Action<string> OnPromoteAudio { get; set; }
+        public static Action<string, string, string> OnAudioRecorded { get; set; }
 
         public JsInteropService(IJSRuntime jsRuntime, IStringLocalizer<AppLocalizations> localizer)
         {
@@ -95,6 +96,12 @@ namespace chldr_shared
         }
 
         [JSInvokable]
+        public static void WordEdit_StopRecording_ClickHandler(string entryId, string soundId, string soundB64)
+        {
+            OnAudioRecorded?.Invoke(entryId, soundId, soundB64);
+        }
+
+        [JSInvokable]
         public static void WordEdit_PromoteSound_ClickHandler(string recordingId)
         {
             OnPromoteAudio?.Invoke(recordingId);
@@ -115,7 +122,7 @@ namespace chldr_shared
         public async Task Expand(string selector)
         {
             var module = await moduleTask.Value;
-            await module.InvokeVoidAsync("removeClass", selector, "collapse");            
+            await module.InvokeVoidAsync("removeClass", selector, "collapse");
         }
 
         public async Task Collapse(string selector)

@@ -16,12 +16,22 @@ namespace chldr_api
         {
             _dataProvider = dataProvider;
         }
+        public async Task<RequestResult> GetRandomEntriesAsync(int count)
+        {
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
+            var foundEntries = await unitOfWork.Entries.GetRandomsAsync(count);
+            return new RequestResult()
+            {
+                Success = true,
+                SerializedData = JsonConvert.SerializeObject(foundEntries)
+            };
+        }
 
         public async Task<RequestResult> GetEntriesAsync(List<string> entryIds, FiltrationFlags? filtrationFlags)
         {
             try
             {
-                using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+                using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
                 var foundEntries = await unitOfWork.Entries.GetByIdsAsync(entryIds, filtrationFlags);
                 return new RequestResult()
                 {
@@ -45,7 +55,7 @@ namespace chldr_api
         {
             try
             {
-                using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+                using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
 
                 var foundEntries = await unitOfWork.Entries.FindAsync(inputText, filtrationFlags);
 
@@ -70,7 +80,7 @@ namespace chldr_api
         {
             try
             {
-                using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+                using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
 
                 object? dtos = null;
                 var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);
@@ -122,7 +132,7 @@ namespace chldr_api
         {
             try
             {
-                using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork();
+                using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
 
                 object? dtos = null;
                 var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);

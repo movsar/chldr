@@ -3,17 +3,18 @@ using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
-using chldr_data.local.RealmEntities;
-using chldr_data.local.Repositories;
-using chldr_data.local.Services;
+using chldr_data.realm.RealmEntities;
+using chldr_data.realm.Repositories;
+using chldr_data.realm.Services;
 using chldr_data.Models;
-using chldr_data.remote.Services;
+using chldr_data.sql.Services;
 using chldr_data.Repositories;
 using chldr_data.Responses;
 using chldr_data.Services;
 using chldr_utils;
 using Microsoft.AspNetCore.Http;
 using Realms.Sync;
+using chldr_utils.Services;
 
 namespace chldr_shared.Services
 {
@@ -27,18 +28,33 @@ namespace chldr_shared.Services
         private readonly IDataProvider _dataProvider;
         private readonly RequestService _requestService;
         private readonly ExceptionHandler _exceptionHandler;
+        private readonly EnvironmentService _environmentService;
 
         public EntryService(
-            IDataProvider dataProvider, 
-            RequestService requestService, 
-            ExceptionHandler exceptionHandler)
+            IDataProvider dataProvider,
+            RequestService requestService,
+            ExceptionHandler exceptionHandler,
+            EnvironmentService environmentService)
         {
             _dataProvider = dataProvider;
             _requestService = requestService;
             _exceptionHandler = exceptionHandler;
+            _environmentService = environmentService;
         }
 
         #region Get
+        public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
+        {
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var entries = await unitOfWork.Entries.TakeAsync(offset, limit, filtrationFlags);
+            return entries.ToList();
+        }
+
+        public async Task<int> GetCountAsync(FiltrationFlags filtrationFlags)
+        {
+            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            return await unitOfWork.Entries.CountAsync(filtrationFlags);
+        }
         public async Task<List<EntryModel>> FindAsync(string inputText)
         {
             var query = inputText.Replace("1", "Ӏ").ToLower();
@@ -70,7 +86,7 @@ namespace chldr_shared.Services
         #region Add
         private async Task AddToLocalDatabase(EntryDto newEntryDto, string userId, IEnumerable<ChangeSetDto> changeSets)
         {
-            var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
+            var unitOfWork = (RealmDataAccessor)_dataProvider.CreateUnitOfWork(userId);
             var entriesRepository = (RealmEntriesRepository)unitOfWork.Entries;
             var changeSetsRepository = (RealmChangeSetsRepository)unitOfWork.ChangeSets;
 
@@ -122,9 +138,41 @@ namespace chldr_shared.Services
         #endregion
 
         #region Update
+        public async Task PromoteTranslationAsync(ITranslation translationInfo, UserModel? currentUser)
+        {
+            // TODO: Use requestService
+            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.Id);
+            await unitOfWork.Translations.Promote(translationInfo);
+        }
+
+        public async Task PromotePronunciationAsync(IPronunciation soundInfo, UserModel? currentUser)
+        {
+            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.Id);
+            await unitOfWork.Sounds.Promote(soundInfo);
+        }
+        private async Task<UpdateResponse> PromoteRequestAsync(IEntry entry, UserModel? currentUser)
+        {
+            var response = await _requestService.PromoteAsync(RecordType.Entry, entry.EntryId);
+            if (!response.Success)
+            {
+                throw _exceptionHandler.Error(response.ErrorMessage);
+            }
+            var responseData = RequestResult.GetData<UpdateResponse>(response);
+
+            return responseData;
+        }
+        public async Task PromoteAsync(IEntry entry, UserModel? currentUser)
+        {
+            await PromoteRequestAsync(entry, currentUser);
+
+            // TODO: Upate local, if used
+
+            //EntryUpdated?.Invoke(entry);
+        }
+
         private async Task UpdateInLocalDatabase(EntryDto newEntryDto, string userId, IEnumerable<ChangeSetDto> changeSets)
         {
-            var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
+            var unitOfWork = (RealmDataAccessor)_dataProvider.CreateUnitOfWork(userId);
             var entriesRepository = (RealmEntriesRepository)unitOfWork.Entries;
             var changeSetsRepository = (RealmChangeSetsRepository)unitOfWork.ChangeSets;
 
@@ -179,7 +227,7 @@ namespace chldr_shared.Services
         }
         private async Task RemoveFromLocalDatabase(EntryModel entry, string userId, IEnumerable<ChangeSetDto> changeSets)
         {
-            var unitOfWork = (RealmUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
+            var unitOfWork = (RealmDataAccessor)_dataProvider.CreateUnitOfWork(userId);
             var entriesRepository = (RealmEntriesRepository)unitOfWork.Entries;
             var soundsRepository = (RealmSoundsRepository)unitOfWork.Sounds;
             var translationsRepository = (RealmTranslationsRepository)unitOfWork.Translations;
@@ -214,62 +262,25 @@ namespace chldr_shared.Services
         }
         #endregion
 
-        private async Task<UpdateResponse> AddSoundRequestAsync(PronunciationDto pronunciation)
+        public async Task<List<EntryModel>> GetRandomsAsync(int count)
         {
-            var response = await _requestService.AddSoundAsync(pronunciation);
-            if (!response.Success)
+            var entries = new List<EntryModel>();
+            if (_environmentService.CurrentPlatform == Enums.Platforms.Web)
             {
-                throw _exceptionHandler.Error(response.ErrorMessage);
+                var response = await _requestService.GetRandomsAsync(count);
+                if (!response.Success)
+                {
+                    throw _exceptionHandler.Error(response.ErrorMessage);
+                }
+                entries = RequestResult.GetData<List<EntryModel>>(response);
             }
-            var responseData = RequestResult.GetData<UpdateResponse>(response);
-
-            return responseData;
-        }
-
-        private async Task<UpdateResponse> PromoteRequestAsync(IEntry entry, UserModel? currentUser)
-        {
-            var response = await _requestService.PromoteAsync(RecordType.Entry, entry.EntryId);
-            if (!response.Success)
+            else
             {
-                throw _exceptionHandler.Error(response.ErrorMessage);
+                var unitOfWork = _dataProvider.CreateUnitOfWork(null);
+                entries = await unitOfWork.Entries.GetRandomsAsync(50);
             }
-            var responseData = RequestResult.GetData<UpdateResponse>(response);
 
-            return responseData;
-        }
-        public async Task PromoteAsync(IEntry entry, UserModel? currentUser)
-        {
-            await PromoteRequestAsync(entry, currentUser);
-
-            // TODO: Upate local, if used
-
-            //EntryUpdated?.Invoke(entry);
-        }
-
-        public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
-        {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
-            var entries = await unitOfWork.Entries.TakeAsync(offset, limit, filtrationFlags);
-            return entries.ToList();
-        }
-
-        public async Task<int> GetCountAsync(FiltrationFlags filtrationFlags)
-        {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
-            return await unitOfWork.Entries.CountAsync(filtrationFlags);
-        }
-
-        public async Task PromoteTranslationAsync(ITranslation translationInfo, UserModel? currentUser)
-        {
-            // TODO: Use requestService
-            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.Id);
-            await unitOfWork.Translations.Promote(translationInfo);
-        }
-
-        public async Task PromotePronunciationAsync(IPronunciation soundInfo, UserModel? currentUser)
-        {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.Id);
-            await unitOfWork.Sounds.Promote(soundInfo);
+            return entries;
         }
     }
 }

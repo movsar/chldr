@@ -81,12 +81,12 @@ export function startRecording(recordingId, lblRecord, lblStopRecording) {
         });
 }
 
-export function stopRecording(entryId) {
+export async function stopRecording(entryId) {
     if (!mediaRecorder) {
         return;
-    }
+    }       
 
-    let result = new Promise((resolve, reject) => {
+    let result = await new Promise((resolve, reject) => {
         mediaRecorder.addEventListener("stop", function () {
             const reader = new FileReader();
             reader.onloadend = function () {
@@ -95,47 +95,12 @@ export function stopRecording(entryId) {
             };
             reader.readAsDataURL(recordedBlob);
         });
-        mediaRecorder.stop();
+        await mediaRecorder.stop();
     });
 
-    AddSoundRequest(entryId, result.id, result.data);
-}
+    showStartButton();
 
-function AddSoundRequest(entryId, soundId, soundBase64String) {
-    const session = localStorage.getItem("session");
-
-    const operation = "addSound";
-    const requestBody = {
-        query: `
-            mutation ${operation}($entryId: String!, $soundId: String!,$soundBase64String: String!) {
-                ${operation}(entryId: $entryId, soundId: $soundId, soundBase64String: $soundBase64String) {
-                    success
-                    errorMessage
-                    serializedData
-                }
-            }
-        `,
-        variables: {
-            entryId, soundId, soundBase64String
-        }
-    };
-
-    const response = await fetch('YOUR_GRAPHQL_ENDPOINT_HERE', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session}`
-        },
-        body: JSON.stringify(requestBody)
-    });
-
-    const responseData = await response.json();
-
-    if (!response.ok) {
-        throw new Error(`Error: ${responseData.errors[0].message}`);
-    }
-
-    return responseData.data;
+    DotNet.invokeMethodAsync("chldr_shared", "WordEdit_StopRecording_ClickHandler", entryId, result.id, result.data);
 }
 
 export function showStopButton() {

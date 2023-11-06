@@ -1,4 +1,5 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Models;
 using chldr_utils.Interfaces;
@@ -275,6 +276,28 @@ namespace chldr_data.Services
                         ",
                 // ! The names here must exactly match the names defined in the graphql schema
                 Variables = new { recordTypeName = recordType.ToString(), entityId }
+            };
+
+            var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
+            return response.Data;
+        }
+
+        public async Task<RequestResult> GetRandomsAsync(int count)
+        {
+            var operation = "getRandoms";
+            var request = new GraphQLRequest
+            {
+                Query = $@"
+                        mutation {operation}($count: Int!) {{
+                          {operation}(count: $count) {{
+                            success
+                            errorMessage
+                            serializedData
+                          }}
+                        }}
+                        ",
+                // ! The names here must exactly match the names defined in the graphql schema
+                Variables = new { count }
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);

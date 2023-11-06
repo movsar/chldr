@@ -1,8 +1,8 @@
 using chldr_api.GraphQL.MutationResolvers;
 using chldr_api.GraphQL.MutationServices;
 using chldr_data.Interfaces;
-using chldr_data.remote.Services;
-using chldr_data.remote.SqlEntities;
+using chldr_data.sql.Services;
+using chldr_data.sql.SqlEntities;
 using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

@@ -1,12 +1,11 @@
-﻿@using System.Globalization;
-<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new []{typeof(chldr_ui.MainLayout).Assembly}">
+﻿<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new []{typeof(chldr_ui.MainLayout).Assembly}">
     <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(chldr_ui.MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
     </Found>
     <NotFound>
         <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)">
+        <LayoutView Layout="@typeof(chldr_ui.MainLayout)">
             <p role="alert">Sorry, there's nothing at this address.</p>
         </LayoutView>
     </NotFound>

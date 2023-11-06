@@ -3,8 +3,8 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
-using chldr_data.remote.Repositories;
-using chldr_data.remote.Services;
+using chldr_data.sql.Repositories;
+using chldr_data.sql.Services;
 using chldr_data.Responses;
 using chldr_data.Services;
 using chldr_tools;
@@ -77,7 +77,7 @@ namespace chldr_api.GraphQL.MutationResolvers
             await CheckLoggedInUser(userId);
             await CheckEntryDto(entryDto);
 
-            using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
             try
@@ -122,7 +122,7 @@ namespace chldr_api.GraphQL.MutationResolvers
             await CheckEntryDto(entryDto);
             await CheckUpdatePermissions(entryDto, userId);
 
-            using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
             try
@@ -159,7 +159,7 @@ namespace chldr_api.GraphQL.MutationResolvers
             await CheckLoggedInUser(userId);
             await CheckRemovePermissions(userId, entryId);
 
-            using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
             try
@@ -218,7 +218,7 @@ namespace chldr_api.GraphQL.MutationResolvers
 
         internal async Task<RequestResult> PromoteAsync(string userId, string entryId)
         {
-            using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(userId);
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork(userId);
             unitOfWork.BeginTransaction();
             var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
 
@@ -253,7 +253,7 @@ namespace chldr_api.GraphQL.MutationResolvers
 
         internal async Task<RequestResult> AddSoundAsync(string currentUserId, PronunciationDto pronunciation)
         {
-            using var unitOfWork = (SqlUnitOfWork)_dataProvider.CreateUnitOfWork(currentUserId);
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork(currentUserId);
             unitOfWork.BeginTransaction();
             var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
             var soundsRepository = (SqlPronunciationsRepository)unitOfWork.Sounds;

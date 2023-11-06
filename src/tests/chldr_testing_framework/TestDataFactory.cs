@@ -5,8 +5,8 @@ using chldr_data.Interfaces;
 using chldr_data;
 using chldr_data.Services;
 using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.remote.Services;
-using chldr_data.local.Services;
+using chldr_data.sql.Services;
+using chldr_data.realm.Services;
 using chldr_shared.Enums;
 using chldr_test_utils.Generators;
 using chldr_data.Resources.Localizations;
@@ -17,7 +17,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Google.Protobuf.WellKnownTypes;
-using chldr_data.remote.SqlEntities;
+using chldr_data.sql.SqlEntities;
 using MimeKit;
 using MailKit.Net.Smtp;
 using chldr_testing_framework.Generators;
@@ -246,7 +246,7 @@ namespace chldr_test_utils
             return context;
         }
 
-        public static IDataProvider CreatRealmDataProvider()
+        public static IDataProvider CreatClientDataProvider()
         {
             if (File.Exists(_fileService.OfflineDatabaseFilePath))
             {
@@ -321,7 +321,7 @@ namespace chldr_test_utils
         public static EntryService CreateEntryService()
         {
             var dataProvider = CreateSqliteDataProvider();
-            return new EntryService(dataProvider, _requestService, _exceptionHandler);
+            return new EntryService(dataProvider, _requestService, _exceptionHandler, _environmentService);
         }
         public static SourceService CreateSourceService()
         {

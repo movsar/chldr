@@ -1,7 +1,7 @@
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Interfaces;
-using chldr_data.remote.Repositories;
+using chldr_data.sql.Repositories;
 using chldr_data.Services;
 using chldr_shared.Services;
 using chldr_test_utils;

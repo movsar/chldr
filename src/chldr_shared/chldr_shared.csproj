@@ -12,8 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\chldr_data.local\chldr_data.local.csproj" />
-    <ProjectReference Include="..\chldr_data.remote\chldr_data.remote.csproj" />
-    <ProjectReference Include="..\chldr_data\chldr_data.csproj" />
+    <ProjectReference Include="..\chldr_data.realm\chldr_data.realm.csproj" />
+    <ProjectReference Include="..\chldr_data.sql\chldr_data.sql.csproj" />
   </ItemGroup>
 </Project>

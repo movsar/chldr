@@ -5,7 +5,7 @@ using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums.WordDetails;
 using chldr_data.Helpers;
 using chldr_data.Interfaces;
-using chldr_data.local.Services;
+using chldr_data.realm.Services;
 using chldr_ui.Components;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;

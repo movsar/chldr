@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using chldr_data.remote.Services;
+using chldr_data.sql.Services;
 
 #nullable disable
 
@@ -87,7 +87,7 @@ namespace chldr_api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlChangeSet", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlChangeSet", b =>
                 {
                     b.Property<long>("ChangeSetIndex")
                         .ValueGeneratedOnAdd()
@@ -140,7 +140,7 @@ namespace chldr_api.Migrations
                     b.ToTable("changesets", (string)null);
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlEfmigrationshistory", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlEfmigrationshistory", b =>
                 {
                     b.Property<string>("MigrationId")
                         .HasMaxLength(150)
@@ -157,7 +157,7 @@ namespace chldr_api.Migrations
                     b.ToTable("__efmigrationshistory", (string)null);
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlEntry", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlEntry", b =>
                 {
                     b.Property<string>("EntryId")
                         .HasMaxLength(40)
@@ -235,7 +235,7 @@ namespace chldr_api.Migrations
                     b.ToTable("entry", (string)null);
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlQuery", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlQuery", b =>
                 {
                     b.Property<string>("QueryId")
                         .HasMaxLength(40)
@@ -274,7 +274,7 @@ namespace chldr_api.Migrations
                     b.ToTable("query", (string)null);
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlSound", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlSound", b =>
                 {
                     b.Property<string>("SoundId")
                         .HasMaxLength(40)
@@ -325,7 +325,7 @@ namespace chldr_api.Migrations
                     b.ToTable("sound", (string)null);
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlSource", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlSource", b =>
                 {
                     b.Property<string>("SourceId")
                         .HasMaxLength(40)
@@ -368,7 +368,7 @@ namespace chldr_api.Migrations
                     b.ToTable("source", (string)null);
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlTranslation", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlTranslation", b =>
                 {
                     b.Property<string>("TranslationId")
                         .HasMaxLength(40)
@@ -437,7 +437,7 @@ namespace chldr_api.Migrations
                     b.ToTable("translation", (string)null);
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlUser", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
@@ -549,7 +549,7 @@ namespace chldr_api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("chldr_data.remote.SqlEntities.SqlUser", null)
+                    b.HasOne("chldr_data.sql.SqlEntities.SqlUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -558,7 +558,7 @@ namespace chldr_api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("chldr_data.remote.SqlEntities.SqlUser", null)
+                    b.HasOne("chldr_data.sql.SqlEntities.SqlUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -567,16 +567,16 @@ namespace chldr_api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("chldr_data.remote.SqlEntities.SqlUser", null)
+                    b.HasOne("chldr_data.sql.SqlEntities.SqlUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlChangeSet", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlChangeSet", b =>
                 {
-                    b.HasOne("chldr_data.remote.SqlEntities.SqlUser", "User")
+                    b.HasOne("chldr_data.sql.SqlEntities.SqlUser", "User")
                         .WithMany("ChangeSets")
                         .HasForeignKey("UserId")
                         .IsRequired()
@@ -585,15 +585,15 @@ namespace chldr_api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlEntry", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlEntry", b =>
                 {
-                    b.HasOne("chldr_data.remote.SqlEntities.SqlSource", "Source")
+                    b.HasOne("chldr_data.sql.SqlEntities.SqlSource", "Source")
                         .WithMany("Entries")
                         .HasForeignKey("SourceId")
                         .IsRequired()
                         .HasConstraintName("fk_entry_source_id");
 
-                    b.HasOne("chldr_data.remote.SqlEntities.SqlUser", "User")
+                    b.HasOne("chldr_data.sql.SqlEntities.SqlUser", "User")
                         .WithMany("Entries")
                         .HasForeignKey("UserId")
                         .IsRequired()
@@ -604,9 +604,9 @@ namespace chldr_api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlQuery", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlQuery", b =>
                 {
-                    b.HasOne("chldr_data.remote.SqlEntities.SqlUser", "User")
+                    b.HasOne("chldr_data.sql.SqlEntities.SqlUser", "User")
                         .WithMany("Queries")
                         .HasForeignKey("UserId")
                         .IsRequired()
@@ -615,16 +615,16 @@ namespace chldr_api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlSound", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlSound", b =>
                 {
-                    b.HasOne("chldr_data.remote.SqlEntities.SqlEntry", "Entry")
+                    b.HasOne("chldr_data.sql.SqlEntities.SqlEntry", "Entry")
                         .WithMany("Sounds")
                         .HasForeignKey("EntryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_sound_entry_id");
 
-                    b.HasOne("chldr_data.remote.SqlEntities.SqlUser", "User")
+                    b.HasOne("chldr_data.sql.SqlEntities.SqlUser", "User")
                         .WithMany("Sounds")
                         .HasForeignKey("UserId")
                         .IsRequired()
@@ -635,9 +635,9 @@ namespace chldr_api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlSource", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlSource", b =>
                 {
-                    b.HasOne("chldr_data.remote.SqlEntities.SqlUser", "User")
+                    b.HasOne("chldr_data.sql.SqlEntities.SqlUser", "User")
                         .WithMany("Sources")
                         .HasForeignKey("UserId")
                         .HasConstraintName("fk_source_user_id");
@@ -645,16 +645,16 @@ namespace chldr_api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlTranslation", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlTranslation", b =>
                 {
-                    b.HasOne("chldr_data.remote.SqlEntities.SqlEntry", "Entry")
+                    b.HasOne("chldr_data.sql.SqlEntities.SqlEntry", "Entry")
                         .WithMany("Translations")
                         .HasForeignKey("EntryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_translation_entry_id");
 
-                    b.HasOne("chldr_data.remote.SqlEntities.SqlUser", "User")
+                    b.HasOne("chldr_data.sql.SqlEntities.SqlUser", "User")
                         .WithMany("Translations")
                         .HasForeignKey("UserId")
                         .IsRequired()
@@ -665,19 +665,19 @@ namespace chldr_api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlEntry", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlEntry", b =>
                 {
                     b.Navigation("Sounds");
 
                     b.Navigation("Translations");
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlSource", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlSource", b =>
                 {
                     b.Navigation("Entries");
                 });
 
-            modelBuilder.Entity("chldr_data.remote.SqlEntities.SqlUser", b =>
+            modelBuilder.Entity("chldr_data.sql.SqlEntities.SqlUser", b =>
                 {
                     b.Navigation("ChangeSets");
 
