@@ -13,7 +13,11 @@ namespace chldr_data.Repositories
 {
     public class ApiChangeSetsRepository : ApiRepository<ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {
-        public ApiChangeSetsRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
+        public ApiChangeSetsRepository(
+            ExceptionHandler exceptionHandler, 
+            FileService fileService,
+            RequestService requestService
+            ) : base(exceptionHandler, fileService, requestService) { }
         protected override RecordType RecordType => RecordType.ChangeSet;
    
         public IEnumerable<ChangeSetModel> Get(string[] changeSetIds)

@@ -1,5 +1,7 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Services;
+using chldr_utils;
+using chldr_utils.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,23 +12,35 @@ namespace chldr_data.api.Services
 {
     public class ApiDataProvider : IDataProvider
     {
-        public ApiDataProvider(RequestService requestService)
-        {
+        private readonly RequestService _requestService;
+        private readonly EnvironmentService _environmentService;
+        private readonly ExceptionHandler _exceptionHandler;
+        private readonly FileService _fileService;
 
+        public ApiDataProvider(
+            RequestService requestService,
+            EnvironmentService environmentService,
+            ExceptionHandler exceptionHandler,
+            FileService fileService)
+        {
+            _requestService = requestService;
+            _environmentService = environmentService;
+            _exceptionHandler = exceptionHandler;
+            _fileService = fileService;
         }
 
-        public bool IsInitialized { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool IsInitialized { get; set; } = true;
 
         public event Action? DatabaseInitialized;
 
         public IDataAccessor CreateUnitOfWork(string? userId = null)
         {
-            throw new NotImplementedException();
+            return new ApiDataAccessor(_exceptionHandler, _environmentService, _fileService, _requestService);
         }
 
         public void Initialize()
         {
-            throw new NotImplementedException();
+            DatabaseInitialized?.Invoke();
         }
 
         public void TruncateDatabase()

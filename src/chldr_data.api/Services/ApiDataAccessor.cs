@@ -1,25 +1,42 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.Interfaces.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using chldr_data.realm.Repositories;
+using chldr_data.Repositories;
+using chldr_data.Services;
+using chldr_utils;
+using chldr_utils.Services;
 
 namespace chldr_data.api.Services
 {
-    internal class ApiDataAccessor : IDataAccessor
+    public class ApiDataAccessor : IDataAccessor
     {
-        public IPronunciationsRepository Sounds => throw new NotImplementedException();
+        private readonly ExceptionHandler _exceptionHandler;
+        private readonly EnvironmentService _environmentService;
+        private readonly FileService _fileService;
+        private readonly RequestService _requestService;
 
-        public IChangeSetsRepository ChangeSets => throw new NotImplementedException();
+        public ApiDataAccessor(
+            ExceptionHandler exceptionHandler,
+            EnvironmentService environmentService,
+            FileService fileService,
+            RequestService requestService
+            )
+        {
+            _exceptionHandler = exceptionHandler;
+            _environmentService = environmentService;
+            _fileService = fileService;
+            _requestService = requestService;
+        }
+        public IPronunciationsRepository Sounds => new ApiSoundsRepository(_exceptionHandler, _fileService, _requestService);
 
-        public IEntriesRepository Entries => throw new NotImplementedException();
+        public IChangeSetsRepository ChangeSets => new ApiChangeSetsRepository(_exceptionHandler, _fileService, _requestService);
 
-        public ITranslationsRepository Translations => throw new NotImplementedException();
+        public IEntriesRepository Entries => new ApiEntriesRepository(_exceptionHandler, _fileService, _requestService);
 
-        public ISourcesRepository Sources => throw new NotImplementedException();
+        public ITranslationsRepository Translations => new ApiTranslationsRepository(_exceptionHandler, _fileService, _requestService);
 
-        public IUsersRepository Users => throw new NotImplementedException();
+        public ISourcesRepository Sources => new ApiSourcesRepository(_exceptionHandler, _fileService, _requestService);
+
+        public IUsersRepository Users => new ApiUsersRepository(_exceptionHandler, _fileService, _requestService);
     }
 }

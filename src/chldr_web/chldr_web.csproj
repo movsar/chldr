@@ -20,7 +20,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\chldr_data.realm\chldr_data.realm.csproj" />
 		<ProjectReference Include="..\chldr_ui\chldr_ui.csproj" />
 	</ItemGroup>
 </Project>

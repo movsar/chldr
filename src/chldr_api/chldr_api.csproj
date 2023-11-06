@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\chldr_data.remote\chldr_data.sql.csproj" />
     <ProjectReference Include="..\chldr_data.sql\chldr_data.sql.csproj" />
     <ProjectReference Include="..\chldr_utils\chldr_utils.csproj" />
   </ItemGroup>

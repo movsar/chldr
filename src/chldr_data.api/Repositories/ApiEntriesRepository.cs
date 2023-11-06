@@ -3,23 +3,17 @@ using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
-using chldr_data.realm.RealmEntities;
 using chldr_data.Models;
 using chldr_utils;
 using chldr_utils.Services;
-using chldr_data.realm.Repositories;
-using System.Collections.Immutable;
-using chldr_data.Responses;
 using chldr_data.Services;
-using chldr_data.Enums.WordDetails;
-using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.Repositories
 {
     public class ApiEntriesRepository : ApiRepository<EntryModel, EntryDto>, IEntriesRepository
     {
         #region Get and Take
-        public override async Task<List<EntryModel>> GetRandomsAsync(int limit)
+        public async Task<List<EntryModel>> GetRandomsAsync(int limit)
         {
             throw new NotImplementedException();
 
@@ -87,8 +81,13 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
 
-      
+
         public Task<List<EntryModel>> GetByIdsAsync(List<string> entryIds, FiltrationFlags? filtrationFlags = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public EntryModel FromEntry(string entryId)
         {
             throw new NotImplementedException();
         }
@@ -98,7 +97,8 @@ namespace chldr_data.Repositories
         public ApiEntriesRepository(
             ExceptionHandler exceptionHandler,
             FileService fileService,
-            string userId) : base(exceptionHandler, fileService, userId) { }
+            RequestService requestService
+            ) : base(exceptionHandler, fileService, requestService) { }
 
 
     }

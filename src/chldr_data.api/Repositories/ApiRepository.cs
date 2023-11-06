@@ -2,6 +2,7 @@
 using chldr_data.Enums;
 using chldr_utils.Services;
 using chldr_data.realm.Interfaces;
+using chldr_data.Services;
 
 namespace chldr_data.Repositories
 {
@@ -12,14 +13,16 @@ namespace chldr_data.Repositories
         protected abstract RecordType RecordType { get; }
         protected readonly ExceptionHandler _exceptionHandler;
         protected readonly FileService _fileService;
-        protected readonly string _userId;
+        protected readonly RequestService _requestService;
 
-        public ApiRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId)
+        public ApiRepository(
+            ExceptionHandler exceptionHandler, 
+            FileService fileService,
+            RequestService requestService)
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
-
-            _userId = userId;
+            _requestService = requestService;
         }
         public abstract Task Add(TDto dto);
         public abstract Task Update(TDto EntryDto);

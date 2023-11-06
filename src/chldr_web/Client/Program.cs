@@ -7,6 +7,7 @@ using chldr_web;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Globalization;
+using chldr_data.api.Services;
 
 namespace chldr_web
 {
@@ -24,7 +25,7 @@ namespace chldr_web
             builder.Services.AddBlazoredModal();
             builder.Services.AddTransient(x => new EnvironmentService(Platforms.Web, false));
             
-            builder.Services.AddTransient<IDataProvider, RealmDataProvider>();
+            builder.Services.AddTransient<IDataProvider, ApiDataProvider>();
             
             // Localization
             builder.Services.AddLocalization();

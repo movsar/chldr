@@ -16,7 +16,10 @@ namespace chldr_data.Repositories
 {
     public class ApiSourcesRepository : ApiRepository< SourceModel, SourceDto>, ISourcesRepository
     {
-        public ApiSourcesRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
+        public ApiSourcesRepository(
+            ExceptionHandler exceptionHandler, 
+            FileService fileService,
+            RequestService requestService) : base(exceptionHandler, fileService, requestService) { }
         protected override RecordType RecordType => RecordType.Source;
 
 

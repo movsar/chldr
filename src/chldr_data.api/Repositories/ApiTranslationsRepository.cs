@@ -15,7 +15,10 @@ namespace chldr_data.Repositories
 {
     public class ApiTranslationsRepository : ApiRepository< TranslationModel, TranslationDto>, ITranslationsRepository
     {
-        public ApiTranslationsRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
+        public ApiTranslationsRepository(
+            ExceptionHandler exceptionHandler, 
+            FileService fileService,
+            RequestService requestService) : base(exceptionHandler, fileService, requestService) { }
 
         protected override RecordType RecordType => RecordType.Translation;
     
