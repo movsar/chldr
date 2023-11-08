@@ -4,6 +4,8 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Models;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
+using System.Diagnostics;
 
 namespace chldr_data.Interfaces.Repositories
 {
@@ -41,12 +43,17 @@ namespace chldr_data.Interfaces.Repositories
              * @param entries = all entries from database
              * @param resultingEntries = those that have already been filtered by some criteria
             */
-
-            var subEntryParentIds = filteredEntries.Where(e => e.ParentEntryId != null).Select(e => e.ParentEntryId).ToArray();
+            var sw = Stopwatch.StartNew();
+            var subEntryParentIds = filteredEntries.Where(e => e.ParentEntryId != null)
+                .Select(e => e.ParentEntryId)
+                .ToArray();//81
+            var a = sw.ElapsedMilliseconds;
 
             // Add subEntry parents
             var parents = sourceEntries.Where(e => subEntryParentIds.Contains(e.EntryId));
-            var resultingEntries = filteredEntries.Union(parents).ToList();
+
+            var resultingEntries = filteredEntries.Union(parents).ToList();//216
+            var c = sw.ElapsedMilliseconds;
 
             // Get standalone entry ids
             var subEntryIds = resultingEntries.Where(e => e.ParentEntryId != null).Select(e => e.EntryId).ToList();
@@ -54,7 +61,9 @@ namespace chldr_data.Interfaces.Repositories
             // Remove standalone sub entries
             resultingEntries.RemoveAll(e => subEntryIds.Contains(e.EntryId));
 
-            var models = resultingEntries.Select(e => fromEntity(e.EntryId)).ToList();
+            var models = resultingEntries.Select(e => fromEntity(e.EntryId)).ToList();//300ms
+            var f = sw.ElapsedMilliseconds;
+            sw.Stop();
             return models;
         }
 
@@ -71,12 +80,12 @@ namespace chldr_data.Interfaces.Repositories
             if (string.IsNullOrEmpty(inputText) || inputText.Length <= 3)
             {
                 resultingQuery = sourceEntries
-                    .Where(e => e.RawContents.Equals(inputText, StringComparison.OrdinalIgnoreCase));
+                    .Where(e => e.RawContents.StartsWith(inputText, StringComparison.OrdinalIgnoreCase)).Take(20);
             }
             else
             {
                 resultingQuery = sourceEntries
-                    .Where(e => e.RawContents.StartsWith(inputText, StringComparison.OrdinalIgnoreCase));
+                    .Where(e => e.RawContents.StartsWith(inputText, StringComparison.OrdinalIgnoreCase)).Take(30);
             }
 
             return resultingQuery;

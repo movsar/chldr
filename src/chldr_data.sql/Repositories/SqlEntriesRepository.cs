@@ -10,6 +10,7 @@ using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using chldr_data.DatabaseObjects.Interfaces;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("chldr_data.sql.tests")]
 
@@ -28,13 +29,14 @@ namespace chldr_data.sql.Repositories
                 }
 
                 var foundEntries = IEntriesRepository.Find(entries, inputText);
+
+                // TODO: Optimize this method
                 var entryModels = IEntriesRepository.GroupWithSubentries(_dbContext.Entries, foundEntries, FromEntry);
 
                 if (filtrationFlags != null && filtrationFlags.TranslationFilters != null)
                 {
                     entryModels = ITranslationsRepository.ApplyTranslationFilters(entryModels, filtrationFlags.TranslationFilters);
                 }
-
                 return entryModels;
             }
             catch (Exception ex)
