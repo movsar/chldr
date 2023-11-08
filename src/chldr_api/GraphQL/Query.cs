@@ -56,8 +56,10 @@ namespace chldr_api
         {
             try
             {
+                var query = inputText.Replace("1", "Ӏ").ToLower();
+
                 using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
-                var foundEntries = await unitOfWork.Entries.FindAsync(inputText, filtrationFlags);
+                var foundEntries = await unitOfWork.Entries.FindAsync(query, filtrationFlags);
                 return new RequestResult()
                 {
                     Success = true,

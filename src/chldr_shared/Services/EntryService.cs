@@ -57,10 +57,8 @@ namespace chldr_shared.Services
         }
         public async Task<List<EntryModel>> FindAsync(string inputText)
         {
-            var query = inputText.Replace("1", "Ӏ").ToLower();
-
             var unitOfWork = _dataProvider.CreateUnitOfWork();
-            return (await unitOfWork.Entries.FindAsync(query)).ToList();
+            return (await unitOfWork.Entries.FindAsync(inputText)).ToList();
         }
 
         public async Task FindDeferredAsync(string inputText)
