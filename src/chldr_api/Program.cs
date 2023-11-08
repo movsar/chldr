@@ -113,6 +113,7 @@ namespace chldr_api
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
+                app.UseHttpsRedirection();
                 app.UseForwardedHeaders(new ForwardedHeadersOptions
                 {
                     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
@@ -121,7 +122,8 @@ namespace chldr_api
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
 
             app.UseRouting();
 
