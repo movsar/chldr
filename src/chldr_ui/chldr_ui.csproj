@@ -24,9 +24,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Update="Pages\DonationsPage.razor">
-		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-		</Content>
 		<Content Update="wwwroot\images\logo.png">
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</Content>
