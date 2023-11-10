@@ -5,7 +5,6 @@ using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Services;
 using Newtonsoft.Json;
-using System.Diagnostics;
 
 namespace chldr_api
 {
@@ -16,6 +15,26 @@ namespace chldr_api
         public Query(IDataProvider dataProvider)
         {
             _dataProvider = dataProvider;
+        }
+
+        public async Task<RequestResult> CountAsync(string recordTypeName, FiltrationFlags? filtrationFlags)
+        {
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
+            var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);
+
+            int count = 0;
+
+            switch (recordType)
+            {
+                case RecordType.Entry:
+                    count = await unitOfWork.Entries.CountAsync(filtrationFlags);
+                    break;
+            }
+            return new RequestResult()
+            {
+                Success = true,
+                SerializedData = JsonConvert.SerializeObject(count)
+            };
         }
         public async Task<RequestResult> GetRandomEntriesAsync(int count)
         {
@@ -99,7 +118,7 @@ namespace chldr_api
                         break;
 
                     case RecordType.Entry:
-                        var entries = await unitOfWork.Entries.TakeAsync(offset, limit);
+                        var entries = await unitOfWork.Entries.TakeAsync(offset, limit, filtrationFlags);
                         dtos = entries.Select(EntryDto.FromModel);
                         break;
 
