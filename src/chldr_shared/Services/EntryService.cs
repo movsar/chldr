@@ -121,7 +121,7 @@ namespace chldr_shared.Services
 
                 if (_dataProvider is RealmDataProvider)
                 {
-                    await AddToLocalDatabase(entryDto, userId, insertResponse.ChangeSets);
+                    await AddToLocalDatabase(entryDto, userId, insertResponse.ChangeSets.Select(ChangeSetDto.FromModel));
                 }
 
                 var unitOfWork = _dataProvider.CreateUnitOfWork();
@@ -198,7 +198,7 @@ namespace chldr_shared.Services
 
                 if (_dataProvider is RealmDataProvider)
                 {
-                    await UpdateInLocalDatabase(entryDto, userId, updateResponse.ChangeSets);
+                    await UpdateInLocalDatabase(entryDto, userId, updateResponse.ChangeSets.Select(ChangeSetDto.FromModel));
                 }
 
                 var unitOfWork = _dataProvider.CreateUnitOfWork();
@@ -248,7 +248,7 @@ namespace chldr_shared.Services
 
                 if (_dataProvider is RealmDataProvider)
                 {
-                    await RemoveFromLocalDatabase(entry, userId, updateResponse.ChangeSets);
+                    await RemoveFromLocalDatabase(entry, userId, updateResponse.ChangeSets.Select(ChangeSetDto.FromModel));
                 }
 
                 EntryRemoved?.Invoke(entry);

@@ -90,7 +90,7 @@ namespace chldr_api.GraphQL.MutationResolvers
                     Success = true,
                     SerializedData = JsonConvert.SerializeObject(new InsertResponse
                     {
-                        ChangeSets = changeSets.Select(ChangeSetDto.FromModel),
+                        ChangeSets = changeSets,
                         CreatedAt = entryDto.CreatedAt
                     })
                 };
@@ -135,7 +135,7 @@ namespace chldr_api.GraphQL.MutationResolvers
                     Success = true,
                     SerializedData = JsonConvert.SerializeObject(new UpdateResponse()
                     {
-                        ChangeSets = changeSets.Select(ChangeSetDto.FromModel)
+                        ChangeSets = changeSets
                     })
                 };
             }
@@ -172,7 +172,7 @@ namespace chldr_api.GraphQL.MutationResolvers
                     Success = true,
                     SerializedData = JsonConvert.SerializeObject(new UpdateResponse()
                     {
-                        ChangeSets = changeSets.Select(ChangeSetDto.FromModel)
+                        ChangeSets = changeSets
                     })
                 };
             }
@@ -233,9 +233,7 @@ namespace chldr_api.GraphQL.MutationResolvers
                     Success = true,
                     SerializedData = JsonConvert.SerializeObject(new UpdateResponse()
                     {
-                        ChangeSets = new List<ChangeSetDto>() {
-                            ChangeSetDto.FromModel(changeSet)
-                        }
+                        ChangeSets = new List<ChangeSetModel>() { changeSet }
                     })
                 };
             }
@@ -268,7 +266,7 @@ namespace chldr_api.GraphQL.MutationResolvers
                     Success = true,
                     SerializedData = JsonConvert.SerializeObject(new UpdateResponse()
                     {
-                        ChangeSets = changeSets.Select(ChangeSetDto.FromModel)
+                        ChangeSets = changeSets
                     })
                 };
             }

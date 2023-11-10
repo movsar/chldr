@@ -1,8 +1,9 @@
-﻿using chldr_data.DatabaseObjects.Dtos;
+﻿using chldr_data.DatabaseObjects.Models;
+
 namespace chldr_data.Responses
 {
     public class UpdateResponse
     {
-        public IEnumerable<ChangeSetDto> ChangeSets { get; set; }
+        public IEnumerable<ChangeSetModel> ChangeSets { get; set; }
     }
 }

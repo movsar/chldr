@@ -102,29 +102,25 @@ namespace chldr_api
             {
                 using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
 
-                object? dtos = null;
+                object? models = null;
                 var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);
 
                 switch (recordType)
                 {
                     case RecordType.User:
-                        var users = await unitOfWork.Users.TakeAsync(offset, limit);
-                        dtos = users.Select(UserDto.FromModel);
+                        models = await unitOfWork.Users.TakeAsync(offset, limit);
                         break;
 
                     case RecordType.Source:
-                        var sources = await unitOfWork.Sources.TakeAsync(offset, limit);
-                        dtos = sources.Select(SourceDto.FromModel);
+                        models = await unitOfWork.Sources.TakeAsync(offset, limit);
                         break;
 
                     case RecordType.Entry:
-                        var entries = await unitOfWork.Entries.TakeAsync(offset, limit, filtrationFlags);
-                        dtos = entries.Select(EntryDto.FromModel);
+                        models = await unitOfWork.Entries.TakeAsync(offset, limit, filtrationFlags);                        
                         break;
 
                     case RecordType.ChangeSet:
-                        var changeSets = await unitOfWork.ChangeSets.TakeAsync(offset, limit);
-                        dtos = changeSets.Select(ChangeSetDto.FromModel);
+                        models = await unitOfWork.ChangeSets.TakeAsync(offset, limit);                        
                         break;
 
 
@@ -135,7 +131,7 @@ namespace chldr_api
                 return new RequestResult()
                 {
                     Success = true,
-                    SerializedData = JsonConvert.SerializeObject(dtos)
+                    SerializedData = JsonConvert.SerializeObject(models)
                 };
             }
             catch (Exception ex)
@@ -154,7 +150,7 @@ namespace chldr_api
             {
                 using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
 
-                object? dtos = null;
+                object? models = null;
                 var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);
 
                 switch (recordType)
@@ -162,9 +158,8 @@ namespace chldr_api
                     case RecordType.ChangeSet:
 
                         List<ChangeSetModel> changeSets = null!;
-                        changeSets = await unitOfWork.ChangeSets.TakeLastAsync(count);
+                        models = await unitOfWork.ChangeSets.TakeLastAsync(count);
 
-                        dtos = changeSets.Select(ChangeSetDto.FromModel);
 
                         break;
 
@@ -175,7 +170,7 @@ namespace chldr_api
                 return new RequestResult()
                 {
                     Success = true,
-                    SerializedData = JsonConvert.SerializeObject(dtos)
+                    SerializedData = JsonConvert.SerializeObject(models)
                 };
             }
             catch (Exception ex)
