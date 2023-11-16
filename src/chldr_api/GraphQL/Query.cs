@@ -36,6 +36,18 @@ namespace chldr_api
                 SerializedData = JsonConvert.SerializeObject(count)
             };
         }
+        
+        public async Task<RequestResult> GetLatestEntriesAsync(int count)
+        {
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
+            var foundEntries = await unitOfWork.Entries.GetLatestEntriesAsync(count);
+            return new RequestResult()
+            {
+                Success = true,
+                SerializedData = JsonConvert.SerializeObject(foundEntries)
+            };
+        }
+
         public async Task<RequestResult> GetRandomEntriesAsync(int count)
         {
             using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();

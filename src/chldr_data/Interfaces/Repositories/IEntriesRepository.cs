@@ -130,8 +130,8 @@ namespace chldr_data.Interfaces.Repositories
         Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags? filtrationFlags = null);
         Task<List<EntryModel>> GetByIdsAsync(List<string> entryIds, FiltrationFlags? filtrationFlags = null);
         EntryModel FromEntry(string entryId);
-        Task<List<EntryModel>> GetEntriesOnModerationAsync();
-        Task<List<EntryModel>> GetLatestEntriesAsync();
         Task<ChangeSetModel> Promote(IEntry entry);
+        Task<List<EntryModel>> GetEntriesOnModerationAsync();
+        Task<List<EntryModel>> GetLatestEntriesAsync(int count);
     }
 }

@@ -39,9 +39,9 @@ namespace chldr_data.Repositories
 
             return results;
         }
-        public async Task<List<EntryModel>> GetLatestEntriesAsync()
+        public async Task<List<EntryModel>> GetLatestEntriesAsync(int count)
         {
-            var entries = _dbContext.All<RealmEntry>().AsEnumerable().OrderByDescending(e => e.CreatedAt).Take(100);
+            var entries = _dbContext.All<RealmEntry>().AsEnumerable().OrderByDescending(e => e.CreatedAt).Take(count);
 
             var entriesToReturn = entries.Select(FromEntity);
 

@@ -115,7 +115,7 @@ namespace chldr_shared.Stores
         public async void LoadLatestEntries()
         {
             var unitOfWork = _dataProvider.CreateUnitOfWork();
-            var entries = await unitOfWork.Entries.GetLatestEntriesAsync();
+            var entries = await unitOfWork.Entries.GetLatestEntriesAsync(50);
 
             CachedSearchResult.Entries.Clear();
             foreach (var entry in entries)

@@ -107,10 +107,8 @@ namespace chldr_data.sql.Repositories
             return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries, FromEntry);
         }
 
-        public async Task<List<EntryModel>> GetLatestEntriesAsync()
+        public async Task<List<EntryModel>> GetLatestEntriesAsync(int count)
         {
-            var count = 50;
-
             var filteredEntries = _dbContext.Entries
                 .OrderByDescending(e => e.CreatedAt)
                 .Take(count);
