@@ -34,7 +34,7 @@ namespace chldr_native
             appBuilder.Services.AddLocalization();
             //appBuilder.Services.AddBlazoredModal();
 
-            // Data    
+            // Data
             //appBuilder.Services.AddScoped<IDataProvider, RealmDataProvider>();
             //appBuilder.Services.AddScoped<SyncService>();
 
