@@ -21,7 +21,7 @@ namespace dosham.Stores
         #region Fields and Properties
         private readonly ExceptionHandler _exceptionHandler;
         private readonly IDataProvider _dataProvider;
-        private readonly EnvironmentService _environmentService;
+        private readonly IEnvironmentService _environmentService;
 
         // ! This shouldn't be normally used, but only to request models that have already been loaded 
         public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
@@ -56,7 +56,7 @@ namespace dosham.Stores
         public ContentStore(
             ExceptionHandler exceptionHandler,
             IDataProvider dataProvider,
-            EnvironmentService environmentService,
+            IEnvironmentService environmentService,
 
             SourceService sourceService,
             EntryService entryService,

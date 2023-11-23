@@ -43,7 +43,6 @@ namespace dosham.Services
             services.AddScoped<SourceService>();
             services.AddScoped<UserStore>();
 
-            services.AddScoped<JsInteropService>();
             services.AddScoped<LocalStorageService>();
 
             services.AddScoped<EmailService>();

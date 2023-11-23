@@ -15,7 +15,7 @@ namespace dosham
         protected override void OnHandlerChanged()
         {
             base.OnHandlerChanged();
-            _contentStore = (ContentStore)this.Handler.MauiContext.Services.GetServices<ContentStore>();
+            _contentStore = this.Handler.MauiContext.Services.GetRequiredService<ContentStore>();
         }
 
         private void OnCounterClicked(object sender, EventArgs e)

@@ -27,13 +27,13 @@ namespace dosham.Services
         private readonly IDataProvider _dataProvider;
         private readonly RequestService _requestService;
         private readonly ExceptionHandler _exceptionHandler;
-        private readonly EnvironmentService _environmentService;
+        private readonly IEnvironmentService _environmentService;
 
         public EntryService(
             IDataProvider dataProvider,
             RequestService requestService,
             ExceptionHandler exceptionHandler,
-            EnvironmentService environmentService)
+            IEnvironmentService environmentService)
         {
             _dataProvider = dataProvider;
             _requestService = requestService;

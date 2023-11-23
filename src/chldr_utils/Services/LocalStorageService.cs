@@ -1,5 +1,5 @@
-﻿using Microsoft.JSInterop;
-using System.Text.Json;
+﻿using System.Text.Json;
+using Xamarin.Essentials;
 
 namespace chldr_utils.Services
 {
@@ -12,23 +12,21 @@ namespace chldr_utils.Services
 
     public class LocalStorageService : ILocalStorageService
     {
-        private IJSRuntime _jsRuntime;
         private ExceptionHandler _exceptionHandler;
 
-        public LocalStorageService(IJSRuntime jsRuntime, ExceptionHandler exceptionHandler)
+        public LocalStorageService(ExceptionHandler exceptionHandler)
         {
-            _jsRuntime = jsRuntime;
             _exceptionHandler = exceptionHandler;
         }
 
         public async Task<T> GetItem<T>(string key)
         {
-            var json = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", key);
-
-            if (json == null)
-                return default;
             try
             {
+                var json = Preferences.Get(key, null);
+
+                if (json == null)
+                    return default;
 
                 return JsonSerializer.Deserialize<T>(json);
             }
@@ -41,12 +39,20 @@ namespace chldr_utils.Services
 
         public async Task SetItem<T>(string key, T value)
         {
-            await _jsRuntime.InvokeVoidAsync("localStorage.setItem", key, JsonSerializer.Serialize(value));
+            try
+            {
+                var json = JsonSerializer.Serialize(value);
+                Preferences.Set(key, json);
+            }
+            catch (Exception ex)
+            {
+                _exceptionHandler.LogDebug(ex.Message);
+            }
         }
 
         public async Task RemoveItem(string key)
         {
-            await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", key);
+            Preferences.Remove(key);
         }
     }
 }
