@@ -61,8 +61,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-      <ProjectReference Include="..\chldr_data.local\chldr_data.local.csproj" />
-      <ProjectReference Include="..\chldr_ui\chldr_ui.csproj" />
+      <ProjectReference Include="..\chldr_data.realm\chldr_data.realm.csproj" />
     </ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\" />
+	</ItemGroup>
 
 </Project>

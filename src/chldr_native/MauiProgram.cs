@@ -1,9 +1,5 @@
-﻿using Blazored.Modal;
-using chldr_data.Interfaces;
-using chldr_data.local.Services;
-using chldr_shared.Enums;
+﻿using chldr_shared.Enums;
 using chldr_utils.Services;
-using Microsoft.Extensions.Logging;
 
 namespace chldr_native
 {
@@ -30,17 +26,17 @@ namespace chldr_native
 
         internal static MauiAppBuilder RegisterAppServices(this MauiAppBuilder appBuilder)
         {
-            ServiceRegistrator.RegisterCommonServices(appBuilder.Services);
+            //ServiceRegistrator.RegisterCommonServices(appBuilder.Services);
 
             appBuilder.Services.AddMauiBlazorWebView();
             appBuilder.Services.AddBlazorWebViewDeveloperTools();
 
             appBuilder.Services.AddLocalization();
-            appBuilder.Services.AddBlazoredModal();
+            //appBuilder.Services.AddBlazoredModal();
 
             // Data    
-            appBuilder.Services.AddScoped<IDataProvider, RealmDataProvider>();
-            appBuilder.Services.AddScoped<SyncService>();
+            //appBuilder.Services.AddScoped<IDataProvider, RealmDataProvider>();
+            //appBuilder.Services.AddScoped<SyncService>();
 
             appBuilder.Services.AddSingleton(x => new EnvironmentService(CurrentPlatform, IsDevelopment));
 
