@@ -44,19 +44,19 @@ namespace dosham.Services
         #region Get
         public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.Repositories();
             var entries = await unitOfWork.Entries.TakeAsync(offset, limit, filtrationFlags);
             return entries.ToList();
         }
 
         public async Task<int> GetCountAsync(FiltrationFlags filtrationFlags)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.Repositories();
             return await unitOfWork.Entries.CountAsync(filtrationFlags);
         }
         public async Task<List<EntryModel>> FindAsync(string inputText)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.Repositories();
             return (await unitOfWork.Entries.FindAsync(inputText)).ToList();
         }
 
@@ -75,7 +75,7 @@ namespace dosham.Services
 
         public async Task<EntryModel> GetAsync(string entryId)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.Repositories();
             return await unitOfWork.Entries.GetAsync(entryId);
         }
         #endregion
@@ -83,7 +83,7 @@ namespace dosham.Services
         #region Add
         private async Task AddToLocalDatabase(EntryDto newEntryDto, string userId, IEnumerable<ChangeSetDto> changeSets)
         {
-            var unitOfWork = (RealmDataAccessor)_dataProvider.CreateUnitOfWork(userId);
+            var unitOfWork = (RealmDataAccessor)_dataProvider.Repositories(userId);
             var entriesRepository = (RealmEntriesRepository)unitOfWork.Entries;
             var changeSetsRepository = (RealmChangeSetsRepository)unitOfWork.ChangeSets;
 
@@ -123,7 +123,7 @@ namespace dosham.Services
                     await AddToLocalDatabase(entryDto, userId, insertResponse.ChangeSets.Select(ChangeSetDto.FromModel));
                 }
 
-                var unitOfWork = _dataProvider.CreateUnitOfWork();
+                var unitOfWork = _dataProvider.Repositories();
                 var entry = await unitOfWork.Entries.GetAsync(entryDto.EntryId);
                 EntryInserted?.Invoke(entry);
             }
@@ -138,13 +138,13 @@ namespace dosham.Services
         public async Task PromoteTranslationAsync(ITranslation translationInfo, UserModel? currentUser)
         {
             // TODO: Use requestService
-            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.Id);
+            var unitOfWork = _dataProvider.Repositories(currentUser.Id);
             await unitOfWork.Translations.Promote(translationInfo);
         }
 
         public async Task PromotePronunciationAsync(IPronunciation soundInfo, UserModel? currentUser)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork(currentUser.Id);
+            var unitOfWork = _dataProvider.Repositories(currentUser.Id);
             await unitOfWork.Sounds.Promote(soundInfo);
         }
         private async Task<UpdateResponse> PromoteRequestAsync(IEntry entry, UserModel? currentUser)
@@ -169,7 +169,7 @@ namespace dosham.Services
 
         private async Task UpdateInLocalDatabase(EntryDto newEntryDto, string userId, IEnumerable<ChangeSetDto> changeSets)
         {
-            var unitOfWork = (RealmDataAccessor)_dataProvider.CreateUnitOfWork(userId);
+            var unitOfWork = (RealmDataAccessor)_dataProvider.Repositories(userId);
             var entriesRepository = (RealmEntriesRepository)unitOfWork.Entries;
             var changeSetsRepository = (RealmChangeSetsRepository)unitOfWork.ChangeSets;
 
@@ -200,7 +200,7 @@ namespace dosham.Services
                     await UpdateInLocalDatabase(entryDto, userId, updateResponse.ChangeSets.Select(ChangeSetDto.FromModel));
                 }
 
-                var unitOfWork = _dataProvider.CreateUnitOfWork();
+                var unitOfWork = _dataProvider.Repositories();
                 var updatedEntry = await unitOfWork.Entries.GetAsync(entryDto.EntryId);
                 EntryUpdated?.Invoke(updatedEntry);
             }
@@ -224,7 +224,7 @@ namespace dosham.Services
         }
         private async Task RemoveFromLocalDatabase(EntryModel entry, string userId, IEnumerable<ChangeSetDto> changeSets)
         {
-            var unitOfWork = (RealmDataAccessor)_dataProvider.CreateUnitOfWork(userId);
+            var unitOfWork = (RealmDataAccessor)_dataProvider.Repositories(userId);
             var entriesRepository = (RealmEntriesRepository)unitOfWork.Entries;
             var soundsRepository = (RealmSoundsRepository)unitOfWork.Sounds;
             var translationsRepository = (RealmTranslationsRepository)unitOfWork.Translations;
@@ -273,7 +273,7 @@ namespace dosham.Services
             }
             else
             {
-                var unitOfWork = _dataProvider.CreateUnitOfWork(null);
+                var unitOfWork = _dataProvider.Repositories(null);
                 entries = await unitOfWork.Entries.GetRandomsAsync(50);
             }
 

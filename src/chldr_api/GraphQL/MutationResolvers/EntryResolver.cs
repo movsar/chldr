@@ -31,7 +31,7 @@ namespace chldr_api.GraphQL.MutationResolvers
             // If Parent is specified, restrict to one level deep, parent child relationship, no hierarchies
             if (entryDto.ParentEntryId != null)
             {
-                var unitOfWork = _dataProvider.CreateUnitOfWork();
+                var unitOfWork = _dataProvider.Repositories();
                 var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
 
                 var parent = await entriesRepository.GetAsync(entryDto.ParentEntryId);
@@ -49,7 +49,7 @@ namespace chldr_api.GraphQL.MutationResolvers
         }
         private async Task CheckEntryDto(EntryDto entryDto)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.Repositories();
 
             if (entryDto == null || string.IsNullOrEmpty(entryDto.EntryId))
             {
@@ -60,7 +60,7 @@ namespace chldr_api.GraphQL.MutationResolvers
         }
         private async Task CheckLoggedInUser(string userId)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.Repositories();
             var usersRepository = (SqlUsersRepository)unitOfWork.Users;
 
             var user = await usersRepository.GetAsync(userId);
@@ -77,7 +77,7 @@ namespace chldr_api.GraphQL.MutationResolvers
             await CheckLoggedInUser(userId);
             await CheckEntryDto(entryDto);
 
-            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork(userId);
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.Repositories(userId);
             unitOfWork.BeginTransaction();
             var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
             try
@@ -122,7 +122,7 @@ namespace chldr_api.GraphQL.MutationResolvers
             await CheckEntryDto(entryDto);
             await CheckUpdatePermissions(entryDto, userId);
 
-            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork(userId);
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.Repositories(userId);
             unitOfWork.BeginTransaction();
             var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
             try
@@ -159,7 +159,7 @@ namespace chldr_api.GraphQL.MutationResolvers
             await CheckLoggedInUser(userId);
             await CheckRemovePermissions(userId, entryId);
 
-            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork(userId);
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.Repositories(userId);
             unitOfWork.BeginTransaction();
             var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
             try
@@ -191,7 +191,7 @@ namespace chldr_api.GraphQL.MutationResolvers
 
         private async Task CheckRemovePermissions(string userId, string entryId)
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.Repositories();
             var entry = await unitOfWork.Entries.GetAsync(entryId);
             var user = await unitOfWork.Users.GetAsync(userId);
 
@@ -218,7 +218,7 @@ namespace chldr_api.GraphQL.MutationResolvers
 
         internal async Task<RequestResult> PromoteAsync(string userId, string entryId)
         {
-            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork(userId);
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.Repositories(userId);
             unitOfWork.BeginTransaction();
             var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
 
@@ -251,7 +251,7 @@ namespace chldr_api.GraphQL.MutationResolvers
 
         internal async Task<RequestResult> AddSoundAsync(string currentUserId, PronunciationDto pronunciation)
         {
-            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork(currentUserId);
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.Repositories(currentUserId);
             unitOfWork.BeginTransaction();
             var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
             var soundsRepository = (SqlPronunciationsRepository)unitOfWork.Sounds;

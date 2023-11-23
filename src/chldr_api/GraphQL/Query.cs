@@ -19,7 +19,7 @@ namespace chldr_api
 
         public async Task<RequestResult> CountAsync(string recordTypeName, FiltrationFlags? filtrationFlags)
         {
-            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.Repositories();
             var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);
 
             int count = 0;
@@ -39,7 +39,7 @@ namespace chldr_api
         
         public async Task<RequestResult> GetLatestEntriesAsync(int count)
         {
-            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.Repositories();
             var foundEntries = await unitOfWork.Entries.GetLatestEntriesAsync(count);
             return new RequestResult()
             {
@@ -50,7 +50,7 @@ namespace chldr_api
 
         public async Task<RequestResult> GetRandomEntriesAsync(int count)
         {
-            using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
+            using var unitOfWork = (SqlDataAccessor)_dataProvider.Repositories();
             var foundEntries = await unitOfWork.Entries.GetRandomsAsync(count);
             return new RequestResult()
             {
@@ -63,7 +63,7 @@ namespace chldr_api
         {
             try
             {
-                using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
+                using var unitOfWork = (SqlDataAccessor)_dataProvider.Repositories();
                 var foundEntries = await unitOfWork.Entries.GetByIdsAsync(entryIds, filtrationFlags);
                 return new RequestResult()
                 {
@@ -89,7 +89,7 @@ namespace chldr_api
             {
                 var query = inputText.Replace("1", "Ӏ").ToLower();
 
-                using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
+                using var unitOfWork = (SqlDataAccessor)_dataProvider.Repositories();
                 var foundEntries = await unitOfWork.Entries.FindAsync(query, filtrationFlags);
                 return new RequestResult()
                 {
@@ -112,7 +112,7 @@ namespace chldr_api
         {
             try
             {
-                using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
+                using var unitOfWork = (SqlDataAccessor)_dataProvider.Repositories();
 
                 object? models = null;
                 var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);
@@ -160,7 +160,7 @@ namespace chldr_api
         {
             try
             {
-                using var unitOfWork = (SqlDataAccessor)_dataProvider.CreateUnitOfWork();
+                using var unitOfWork = (SqlDataAccessor)_dataProvider.Repositories();
 
                 object? models = null;
                 var recordType = (RecordType)Enum.Parse(typeof(RecordType), recordTypeName);

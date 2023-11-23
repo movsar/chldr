@@ -28,7 +28,7 @@ namespace chldr_data.sql.Services
             _exceptionHandler = exceptionHandler;
         }
 
-        public IDataAccessor CreateUnitOfWork(string? userId = null)
+        public IDataAccessor Repositories(string? userId = null)
         {
             return new SqlDataAccessor(_context, _fileService, _exceptionHandler, userId);
         }

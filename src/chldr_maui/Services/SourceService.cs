@@ -30,7 +30,7 @@ namespace dosham.Services
 
         public async Task<SourceModel> GetRandomSource()
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.Repositories();
             var randomSources = await unitOfWork.Sources.GetRandomsAsync(1);
             return randomSources.First();
         }

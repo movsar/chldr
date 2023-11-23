@@ -67,7 +67,7 @@ namespace dosham.Stores
             _dataProvider = dataProvider;
             _environmentService = environmentService;
 
-            var unitOfWork = _dataProvider.CreateUnitOfWork(null);
+            var unitOfWork = _dataProvider.Repositories(null);
 
             _dataProvider.DatabaseInitialized += DataAccess_DatasourceInitialized;
             _dataProvider.Initialize();
@@ -114,7 +114,7 @@ namespace dosham.Stores
         }
         public async void LoadLatestEntries()
         {
-            var unitOfWork = _dataProvider.CreateUnitOfWork();
+            var unitOfWork = _dataProvider.Repositories();
             var entries = await unitOfWork.Entries.GetLatestEntriesAsync(50);
 
             CachedSearchResult.Entries.Clear();
@@ -129,7 +129,7 @@ namespace dosham.Stores
         public async void LoadEntriesOnModeration()
         {
             CachedSearchResult.Entries.Clear();
-            var unitOfWork = _dataProvider.CreateUnitOfWork(null);
+            var unitOfWork = _dataProvider.Repositories(null);
             var entries = await unitOfWork.Entries.GetEntriesOnModerationAsync();
 
             CachedSearchResult.Entries.Clear();

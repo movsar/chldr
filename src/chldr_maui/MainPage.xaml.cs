@@ -1,12 +1,21 @@
-﻿namespace dosham
+﻿using dosham.Stores;
+
+namespace dosham
 {
     public partial class MainPage : ContentPage
     {
+        private  ContentStore _contentStore;
         int count = 0;
 
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        protected override void OnHandlerChanged()
+        {
+            base.OnHandlerChanged();
+            _contentStore = (ContentStore)this.Handler.MauiContext.Services.GetServices<ContentStore>();
         }
 
         private void OnCounterClicked(object sender, EventArgs e)

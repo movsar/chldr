@@ -20,7 +20,7 @@ namespace dosham
             builder.Services.AddScoped<IDataProvider, RealmDataProvider>();
             builder.Services.AddScoped<SyncService>();
 
-            builder.Services.AddSingleton(x => new EnvironmentService(CurrentPlatform, IsDevelopment));
+            builder.Services.AddSingleton<IEnvironmentService>(x => new EnvironmentService(CurrentPlatform, IsDevelopment));
 
             builder
                 .UseMauiApp<App>()

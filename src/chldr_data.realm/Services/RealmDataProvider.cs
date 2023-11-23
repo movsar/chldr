@@ -84,7 +84,7 @@ namespace chldr_data.realm.Services
                 database.RemoveAll<RealmTranslation>();
             });
         }
-        public IDataAccessor CreateUnitOfWork(string? userId)
+        public IDataAccessor Repositories(string? userId)
         {          
             return new RealmDataAccessor(_exceptionHandler, _fileService, _requestService, userId);
         }
