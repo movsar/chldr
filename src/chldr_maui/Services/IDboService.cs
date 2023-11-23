@@ -1,6 +1,4 @@
-﻿using chldr_data.DatabaseObjects.Dtos;
-
-namespace chldr_shared.Services
+﻿namespace dosham.Services
 {
     public interface IDboService<TModel, TDto>
     {

@@ -9,7 +9,7 @@ using chldr_utils.Services;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace chldr_shared.Services
+namespace dosham.Services
 {
     public class UserService : IDboService<UserModel, UserDto>
     {

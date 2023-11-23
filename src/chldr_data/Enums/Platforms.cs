@@ -1,4 +1,4 @@
-﻿namespace chldr_shared.Enums
+﻿namespace dosham.Enums
 {
     public enum Platforms
     {

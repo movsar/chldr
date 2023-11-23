@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using chldr_data.Interfaces;
+using chldr_data.realm.Services;
+using dosham.Enums;
+using dosham.Services;
+using Microsoft.Extensions.Logging;
 
 namespace dosham
 {
@@ -7,6 +11,17 @@ namespace dosham
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
+
+            ServiceRegistrator.RegisterCommonServices(builder.Services);
+
+            builder.Services.AddLocalization();
+
+            // Data    
+            builder.Services.AddScoped<IDataProvider, RealmDataProvider>();
+            builder.Services.AddScoped<SyncService>();
+
+            builder.Services.AddSingleton(x => new EnvironmentService(CurrentPlatform, IsDevelopment));
+
             builder
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
@@ -20,6 +35,35 @@ namespace dosham
 #endif
 
             return builder.Build();
+        }
+
+        private static Platforms CurrentPlatform
+        {
+            get
+            {
+
+#if ANDROID
+                return Platforms.Android;
+#elif IOS
+            return Platforms.IOS;
+#elif WINDOWS
+            return Platforms.Windows;
+#elif MACCATALYST
+                return Platforms.MacCatalyst;
+#endif
+            }
+        }
+
+        private static bool IsDevelopment
+        {
+            get
+            {
+#if RELEASE
+                return false;
+#else
+                return true;
+#endif
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Interfaces;
-using chldr_shared.Services;
 using chldr_test_utils;
 using chldr_utils.Exceptions;
 using Moq;

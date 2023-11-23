@@ -5,10 +5,10 @@ using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_utils;
 using chldr_utils.Services;
-using chldr_shared.Services;
+using dosham.Services;
 using chldr_data.DatabaseObjects.Interfaces;
 
-namespace chldr_shared.Stores
+namespace dosham.Stores
 {
     public class ContentStore
     {

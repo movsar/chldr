@@ -7,6 +7,7 @@ using chldr_data;
 using Newtonsoft.Json;
 using chldr_data.Models;
 using System.Net.Http.Headers;
+using chldr_data.Interfaces;
 
 namespace chldr_utils.Services
 {
@@ -18,7 +19,7 @@ namespace chldr_utils.Services
 
         public GraphQLClient(
             ExceptionHandler exceptionHandler,
-            EnvironmentService environmentService,
+            IEnvironmentService environmentService,
             LocalStorageService localStorageService
             )
         {

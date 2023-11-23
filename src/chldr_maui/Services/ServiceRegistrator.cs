@@ -1,19 +1,14 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Services;
 using chldr_data.Validators;
-using chldr_shared.Stores;
 using chldr_shared.Validators;
 using FluentValidation;
 using chldr_utils.Interfaces;
-using chldr_shared;
-using Microsoft.Extensions.DependencyInjection;
-using chldr_shared.Services;
-using chldr_data.Interfaces;
-using chldr_data.sql.Services;
-using chldr_data.sql.SqlEntities;
-using Microsoft.AspNetCore.Identity;
+using chldr_utils.Services;
+using dosham.Stores;
+using chldr_utils;
 
-namespace chldr_utils.Services
+namespace dosham.Services
 {
     public static class ServiceRegistrator
     {

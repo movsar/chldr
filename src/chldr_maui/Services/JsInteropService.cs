@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Reflection.Metadata;
 using System.Text.Json;
 
-namespace chldr_shared
+namespace dosham
 {
     public class JsInteropService : IAsyncDisposable
     {

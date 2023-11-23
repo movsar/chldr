@@ -7,7 +7,6 @@ using chldr_data.realm.RealmEntities;
 using chldr_data.realm.Repositories;
 using chldr_data.realm.Services;
 using chldr_data.Models;
-using chldr_data.sql.Services;
 using chldr_data.Repositories;
 using chldr_data.Responses;
 using chldr_data.Services;
@@ -15,8 +14,8 @@ using chldr_utils;
 using Microsoft.AspNetCore.Http;
 using Realms.Sync;
 using chldr_utils.Services;
-
-namespace chldr_shared.Services
+using IEntry = chldr_data.DatabaseObjects.Interfaces.IEntry;
+namespace dosham.Services
 {
     public class EntryService : IDboService<EntryModel, EntryDto>
     {

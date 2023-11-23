@@ -1,8 +1,9 @@
-﻿using chldr_shared.Enums;
+﻿using chldr_data.Interfaces;
+using dosham.Enums;
 
-namespace chldr_utils.Services
+namespace dosham.Services
 {
-    public class EnvironmentService
+    public class EnvironmentService : IEnvironmentService
     {
         public EnvironmentService(Platforms platform, bool isDevelopment)
         {

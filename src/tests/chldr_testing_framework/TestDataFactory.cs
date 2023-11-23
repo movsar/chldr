@@ -6,7 +6,6 @@ using chldr_data;
 using chldr_data.Services;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.sql.Services;
-using chldr_data.realm.Services;
 using chldr_shared.Enums;
 using chldr_test_utils.Generators;
 using chldr_data.Resources.Localizations;
@@ -23,8 +22,6 @@ using MailKit.Net.Smtp;
 using chldr_testing_framework.Generators;
 using chldr_utils.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
-using chldr_shared.Services;
-using chldr_shared.Stores;
 using Microsoft.AspNetCore.Identity;
 using Bogus;
 using Microsoft.AspNetCore.Http;
@@ -44,7 +41,7 @@ namespace chldr_test_utils
 
         private static readonly FileService _fileService;
         private static readonly ExceptionHandler _exceptionHandler;
-        private static readonly EnvironmentService _environmentService;
+        private static readonly IEnvironmentService _environmentService;
         private static readonly RequestService _requestService;
         private static readonly EntryDtoFaker _entryDtoFaker;
         private static readonly TranslationDtoFaker _translationDtoFaker;
@@ -63,7 +60,7 @@ namespace chldr_test_utils
         {
             _fileService = new FileService(Path.Combine(AppContext.BaseDirectory, Constants.TestsFileServicePath));
             _exceptionHandler = new ExceptionHandler(_fileService);
-            _environmentService = new EnvironmentService(Platforms.Web, true);
+            //_environmentService = EnvironmentService(Platforms.Web, true);
 
             var jsRuntimeMock = new Mock<IJSRuntime>();
 
@@ -253,9 +250,10 @@ namespace chldr_test_utils
                 File.Delete(_fileService.OfflineDatabaseFilePath);
             }
 
-            var syncService = new SyncService(_requestService, _fileService);
-            var dataProvider = new RealmDataProvider(_fileService, _exceptionHandler, _requestService, syncService);
-            return dataProvider;
+            //var syncService = new SyncService(_requestService, _fileService);
+            //var dataProvider = new RealmDataProvider(_fileService, _exceptionHandler, _requestService, syncService);
+            //return dataProvider;
+            return null;
         }
         public static EmailService CreateFakeEmailService()
         {
@@ -318,32 +316,32 @@ namespace chldr_test_utils
             return translationDto;
         }
 
-        public static EntryService CreateEntryService()
-        {
-            var dataProvider = CreateSqliteDataProvider();
-            return new EntryService(dataProvider, _requestService, _exceptionHandler, _environmentService);
-        }
-        public static SourceService CreateSourceService()
-        {
-            var dataProvider = CreateSqliteDataProvider();
-            return new SourceService(dataProvider, _requestService, _exceptionHandler);
-        }
+        //public static EntryService CreateEntryService()
+        //{
+        //    var dataProvider = CreateSqliteDataProvider();
+        //    return new EntryService(dataProvider, _requestService, _exceptionHandler, _environmentService);
+        //}
+        //public static SourceService CreateSourceService()
+        //{
+        //    var dataProvider = CreateSqliteDataProvider();
+        //    return new SourceService(dataProvider, _requestService, _exceptionHandler);
+        //}
 
-        public static ContentStore CreateContentStore()
-        {
-            return new ContentStore(_exceptionHandler,
-                CreateSqliteDataProvider(),
-                _environmentService,
-                CreateSourceService(),
-                CreateEntryService(),
-                CreateUserService());
-        }
+        //public static ContentStore CreateContentStore()
+        //{
+        //    return new ContentStore(_exceptionHandler,
+        //        CreateSqliteDataProvider(),
+        //        _environmentService,
+        //        CreateSourceService(),
+        //        CreateEntryService(),
+        //        CreateUserService());
+        //}
 
-        private static UserService CreateUserService()
-        {
-            var localStorageService = new LocalStorageService(null, _exceptionHandler);
-            return new UserService(CreateSqliteDataProvider(), _requestService, localStorageService);
-        }
+        //private static UserService CreateUserService()
+        //{
+        //    var localStorageService = new LocalStorageService(null, _exceptionHandler);
+        //    return new UserService(CreateSqliteDataProvider(), _requestService, localStorageService);
+        //}
 
         public static UserResolver CreateFakeUserResolver(IDataProvider testDataProvider)
         {

@@ -1,8 +1,9 @@
-﻿using System.Net.NetworkInformation;
+﻿using chldr_data.Interfaces;
+using System.Net.NetworkInformation;
 
-namespace chldr_utils.Services
+namespace dosham.Services
 {
-    internal class NetworkService
+    internal class NetworkService : INetworkService
     {
         public event Action NetworkStateHasChanged;
         public bool IsNetworUp => PingHost("8.8.8.8") || PingHost("168.63.129.16");

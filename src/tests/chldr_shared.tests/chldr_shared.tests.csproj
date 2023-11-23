@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\chldr_shared\chldr_shared.csproj" />
     <ProjectReference Include="..\chldr_testing_framework\chldr_testing_framework.csproj" />
   </ItemGroup>
 

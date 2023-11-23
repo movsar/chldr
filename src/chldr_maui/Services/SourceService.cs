@@ -4,7 +4,7 @@ using chldr_data.Interfaces;
 using chldr_data.Services;
 using chldr_utils;
 
-namespace chldr_shared.Services
+namespace dosham.Services
 {
     public class SourceService : IDboService<SourceModel, SourceDto>
     {

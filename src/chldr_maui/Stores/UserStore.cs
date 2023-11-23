@@ -3,11 +3,11 @@ using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Services;
-using chldr_shared.Services;
+using dosham.Services;
 using chldr_utils;
 using chldr_utils.Services;
 
-namespace chldr_shared.Stores
+namespace dosham.Stores
 {
     public class UserStore
     {
