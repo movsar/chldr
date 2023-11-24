@@ -7,6 +7,7 @@ using chldr_utils.Services;
 using Newtonsoft.Json;
 using Realms;
 using System.Diagnostics;
+using chldr_data.DatabaseObjects.Models;
 
 namespace chldr_data.realm.Services
 {
@@ -39,7 +40,7 @@ namespace chldr_data.realm.Services
         private async Task<List<T>> RetrieveAll<T>(RecordType recordType) where T : class, new()
         {
             // Best number for requests according to the measurements
-            var limit = 13000;
+            var limit = 100;
             int offset = 0;
 
             var combinedResults = new List<T>();
@@ -72,40 +73,40 @@ namespace chldr_data.realm.Services
             var sw = Stopwatch.StartNew();
 
             // Get users
-            var userDtos = await RetrieveAll<UserDto>(RecordType.User);
-            var sourceDtos = await RetrieveAll<SourceDto>(RecordType.Source);
-            var entryDtos = await RetrieveAll<EntryDto>(RecordType.Entry);
-            var changeSetDtos = await RetrieveAll<ChangeSetDto>(RecordType.ChangeSet);
+            var users = await RetrieveAll<UserModel>(RecordType.User);
+            var sources = await RetrieveAll<SourceModel>(RecordType.Source);
+            var entries = await RetrieveAll<EntryModel>(RecordType.Entry);
+            var changeSets = await RetrieveAll<ChangeSetModel>(RecordType.ChangeSet);
 
             var downloadedIn = sw.ElapsedMilliseconds;
             sw.Restart();
 
             _dbContext.Write(() =>
             {
-                foreach (var dto in userDtos)
-                {
-                    _dbContext.Add(RealmUser.FromDto(dto, _dbContext));
-                }
+                //foreach (var dto in users)
+                //{
+                //    _dbContext.Add(RealmUser.FromDto(dto, _dbContext));
+                //}
 
-                foreach (var dto in sourceDtos)
-                {
-                    _dbContext.Add(RealmSource.FromDto(dto, _dbContext));
-                }
+                //foreach (var dto in sources)
+                //{
+                //    _dbContext.Add(RealmSource.FromDto(dto, _dbContext));
+                //}
 
-                foreach (var dto in entryDtos)
-                {
-                    _dbContext.Add(RealmEntry.FromDto(dto, _dbContext));
+                //foreach (var dto in entries)
+                //{
+                //    _dbContext.Add(RealmEntry.FromDto(dto, _dbContext));
 
-                    foreach (var subEntryDto in dto.SubEntries)
-                    {
-                        _dbContext.Add(RealmEntry.FromDto(subEntryDto, _dbContext));
-                    }
-                }
+                //    foreach (var subEntryDto in dto.SubEntries)
+                //    {
+                //        _dbContext.Add(RealmEntry.FromDto(subEntryDto, _dbContext));
+                //    }
+                //}
 
-                foreach (var dto in changeSetDtos)
-                {
-                    _dbContext.Add(RealmChangeSet.FromDto(dto, _dbContext));
-                }
+                //foreach (var dto in changeSets)
+                //{
+                //    _dbContext.Add(RealmChangeSet.FromDto(dto, _dbContext));
+                //}
             });
 
             Realm.Compact(RealmDataProvider.OfflineDatabaseConfiguration);

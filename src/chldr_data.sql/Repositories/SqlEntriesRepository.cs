@@ -141,7 +141,7 @@ namespace chldr_data.sql.Repositories
 
             // Set rate
             newEntryDto.Rate = user.GetRateRange().Lower;
-            foreach (var translationDto in newEntryDto.TranslationsDtos)
+            foreach (var translationDto in newEntryDto.Translations)
             {
                 translationDto.Rate = newEntryDto.Rate;
             }
@@ -163,7 +163,7 @@ namespace chldr_data.sql.Repositories
                 };
 
                 // Process added sounds
-                foreach (var sound in newEntryDto.SoundDtos)
+                foreach (var sound in newEntryDto.Sounds)
                 {
                     if (string.IsNullOrEmpty(sound.RecordingB64))
                     {
@@ -270,12 +270,12 @@ namespace chldr_data.sql.Repositories
         {
             var changeSets = new List<ChangeSetModel>();
 
-            var existingEntrySoundIds = existingEntryDto.SoundDtos.Select(t => t.SoundId).ToHashSet();
-            var updatedEntrySoundIds = updatedEntryDto.SoundDtos.Select(t => t.SoundId).ToHashSet();
+            var existingEntrySoundIds = existingEntryDto.Sounds.Select(t => t.SoundId).ToHashSet();
+            var updatedEntrySoundIds = updatedEntryDto.Sounds.Select(t => t.SoundId).ToHashSet();
 
-            var added = updatedEntryDto.SoundDtos.Where(t => !existingEntrySoundIds.Contains(t.SoundId));
-            var deleted = existingEntryDto.SoundDtos.Where(t => !updatedEntrySoundIds.Contains(t.SoundId));
-            var existingAndUpdated = updatedEntryDto.SoundDtos.Where(t => existingEntrySoundIds.Contains(t.SoundId) && updatedEntrySoundIds.Contains(t.SoundId));
+            var added = updatedEntryDto.Sounds.Where(t => !existingEntrySoundIds.Contains(t.SoundId));
+            var deleted = existingEntryDto.Sounds.Where(t => !updatedEntrySoundIds.Contains(t.SoundId));
+            var existingAndUpdated = updatedEntryDto.Sounds.Where(t => existingEntrySoundIds.Contains(t.SoundId) && updatedEntrySoundIds.Contains(t.SoundId));
 
             // Process added sounds
             foreach (var sound in added)
@@ -304,12 +304,12 @@ namespace chldr_data.sql.Repositories
         {
             var changeSets = new List<ChangeSetModel>();
 
-            var existingEntryTranslationIds = existingEntryDto.TranslationsDtos.Select(t => t.TranslationId).ToHashSet();
-            var updatedEntryTranslationIds = updatedEntryDto.TranslationsDtos.Select(t => t.TranslationId).ToHashSet();
+            var existingEntryTranslationIds = existingEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
+            var updatedEntryTranslationIds = updatedEntryDto.Translations.Select(t => t.TranslationId).ToHashSet();
 
-            var added = updatedEntryDto.TranslationsDtos.Where(t => !existingEntryTranslationIds.Contains(t.TranslationId));
-            var deleted = existingEntryDto.TranslationsDtos.Where(t => !updatedEntryTranslationIds.Contains(t.TranslationId));
-            var existingAndUpdated = updatedEntryDto.TranslationsDtos.Where(t => existingEntryTranslationIds.Contains(t.TranslationId) && updatedEntryTranslationIds.Contains(t.TranslationId));
+            var added = updatedEntryDto.Translations.Where(t => !existingEntryTranslationIds.Contains(t.TranslationId));
+            var deleted = existingEntryDto.Translations.Where(t => !updatedEntryTranslationIds.Contains(t.TranslationId));
+            var existingAndUpdated = updatedEntryDto.Translations.Where(t => existingEntryTranslationIds.Contains(t.TranslationId) && updatedEntryTranslationIds.Contains(t.TranslationId));
 
             // Process added translations
             foreach (var translation in added)

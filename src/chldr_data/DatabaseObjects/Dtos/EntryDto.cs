@@ -41,12 +41,12 @@ namespace chldr_data.DatabaseObjects.Dtos
         }
         public string? Details { get; set; }
         public int Type { get; set; } = 1;
-        public int EntrySubtype { get; set; } = 0;
+        public int Subtype { get; set; } = 0;
         public List<EntryDto> SubEntries { get; set; } = new List<EntryDto>();
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
-        public virtual List<TranslationDto> TranslationsDtos { get; set; } = new List<TranslationDto>();
-        public virtual List<PronunciationDto> SoundDtos { get; set; } = new List<PronunciationDto>();
+        public virtual List<TranslationDto> Translations { get; set; } = new List<TranslationDto>();
+        public virtual List<PronunciationDto> Sounds { get; set; } = new List<PronunciationDto>();
         public bool ExistsInDatabase()
         {
             return CreatedAt == DateTimeOffset.MinValue;
@@ -62,7 +62,7 @@ namespace chldr_data.DatabaseObjects.Dtos
                 ParentEntryId = entryModel.ParentEntryId,
                 SubEntries = entryModel.SubEntries.Select(FromModel).ToList(),
                 Type = (int)entryModel.Type,
-                EntrySubtype = entryModel.Subtype,
+                Subtype = entryModel.Subtype,
                 Rate = entryModel.Rate,
                 Content = entryModel.Content,
                 Details = (entryModel.Details == null) ? null : JsonConvert.SerializeObject(entryModel.Details),
@@ -70,11 +70,11 @@ namespace chldr_data.DatabaseObjects.Dtos
                 UpdatedAt = entryModel.UpdatedAt,
             };
 
-            entryDto.TranslationsDtos.Clear();
-            entryDto.TranslationsDtos.AddRange(entryModel.Translations.Select(t => TranslationDto.FromModel(t)));
+            entryDto.Translations.Clear();
+            entryDto.Translations.AddRange(entryModel.Translations.Select(t => TranslationDto.FromModel(t)));
 
-            entryDto.SoundDtos.Clear();
-            entryDto.SoundDtos.AddRange(entryModel.Sounds.Select(s => PronunciationDto.FromModel(s)));
+            entryDto.Sounds.Clear();
+            entryDto.Sounds.AddRange(entryModel.Sounds.Select(s => PronunciationDto.FromModel(s)));
             return entryDto;
         }
     }

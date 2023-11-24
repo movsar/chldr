@@ -6,6 +6,7 @@ namespace chldr_data.DatabaseObjects.Models
 {
     public class ChangeSetModel : IChangeSet
     {
+        public ChangeSetModel() { }
         public long ChangeSetIndex { get; set; }
         public string ChangeSetId { get; set; }
         public RecordType RecordType { get; set; }
@@ -14,7 +15,6 @@ namespace chldr_data.DatabaseObjects.Models
         public string RecordChanges { get; set; }
         public Operation Operation { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
-        private ChangeSetModel() { }
         public static ChangeSetModel FromEntity(IChangeSetEntity entity)
         {
             // To be used when retrieving objects from the database

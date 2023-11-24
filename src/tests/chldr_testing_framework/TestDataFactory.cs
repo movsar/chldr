@@ -297,8 +297,8 @@ namespace chldr_test_utils
             soundDto.EntryId = entryDto.EntryId;
             soundDto.UserId = userId;
 
-            entryDto.TranslationsDtos.Add(translationDto);
-            entryDto.SoundDtos.Add(soundDto);
+            entryDto.Translations.Add(translationDto);
+            entryDto.Sounds.Add(soundDto);
 
             return entryDto;
         }

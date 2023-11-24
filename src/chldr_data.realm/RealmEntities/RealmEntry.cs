@@ -61,7 +61,7 @@ public class RealmEntry : RealmObject, IEntryEntity
         entry.Content = entryDto.Content;
 
         entry.Type = entryDto.Type;
-        entry.Subtype = entryDto.EntrySubtype;
+        entry.Subtype = entryDto.Subtype;
 
         entry.Rate = entryDto.Rate;
 
@@ -72,7 +72,7 @@ public class RealmEntry : RealmObject, IEntryEntity
 
         // Sounds
         entry.Sounds.Clear();
-        foreach (var soundDto in entryDto.SoundDtos)
+        foreach (var soundDto in entryDto.Sounds)
         {
             soundDto.EntryId = entry.EntryId;
 
@@ -82,7 +82,7 @@ public class RealmEntry : RealmObject, IEntryEntity
         
         // Translations
         entry.Translations.Clear();
-        foreach (var translationDto in entryDto.TranslationsDtos)
+        foreach (var translationDto in entryDto.Translations)
         {
             // If entry didn't exist, this will map its Id to translations
             translationDto.EntryId = entry.EntryId;

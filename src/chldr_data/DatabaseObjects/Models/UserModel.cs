@@ -8,8 +8,7 @@ namespace chldr_data.DatabaseObjects.Models
 {
     public class UserModel : IUser
     {
-        [JsonConstructor]
-        private UserModel() { }
+        public UserModel() { }
         // Members can only add new entries and translations they'll get their rate increased when moders approve their entries
         public static NumericRange MemberRateRange = new NumericRange(1, 10);
         public static NumericRange EnthusiastRateRange = new NumericRange(10, 100);
@@ -95,7 +94,7 @@ namespace chldr_data.DatabaseObjects.Models
                 return false;
             }
 
-            if (entry.SoundDtos.Where(s => s.Rate > 0).Count() >= Constants.MaxSoundsPerEntry)
+            if (entry.Sounds.Where(s => s.Rate > 0).Count() >= Constants.MaxSoundsPerEntry)
             {
                 return false;
             }
@@ -109,7 +108,7 @@ namespace chldr_data.DatabaseObjects.Models
                 return false;
             }
 
-            if (entry.TranslationsDtos.Where(t => t.LanguageCode.Equals(languageCode) && t.Rate > MemberRateRange.Upper).Count() >= Constants.MaxTranslationsPerEntry)
+            if (entry.Translations.Where(t => t.LanguageCode.Equals(languageCode) && t.Rate > MemberRateRange.Upper).Count() >= Constants.MaxTranslationsPerEntry)
             {
                 return false;
             }

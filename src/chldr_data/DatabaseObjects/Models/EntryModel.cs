@@ -11,7 +11,7 @@ namespace chldr_data.DatabaseObjects.Models
 {
     public class EntryModel : IEntry
     {
-        public string EntryId { get; internal set; }
+        public string EntryId { get; set; }
         public string UserId { get; set; }
         public string? SourceId => Source.SourceId;
         public string? ParentEntryId { get; set; }
@@ -19,7 +19,7 @@ namespace chldr_data.DatabaseObjects.Models
         public EntryType Type { get; set; }
         public int Subtype { get; set; }
         public string Content { get; set; }
-        public IDetails? Details { get; set; }
+        public object? Details { get; set; }
         public SourceModel Source { get; set; }
         public List<TranslationModel> Translations { get; set; } = new List<TranslationModel>();
         public List<PronunciationModel> Sounds { get; set; } = new List<PronunciationModel>();
