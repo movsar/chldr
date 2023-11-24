@@ -10,6 +10,11 @@ namespace chldr_api
 {
     public class Query
     {
+        /*
+         * Returns models, as we need to serialize data and there is no point 
+         * in converting models first to DTOs if they too are going to be serialized.
+         * By doing this we save on unecessary conversions and increase performance
+         */
         private readonly IDataProvider _dataProvider;
 
         public Query(IDataProvider dataProvider)
