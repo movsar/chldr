@@ -2,6 +2,7 @@
 using Realms;
 using chldr_data.DatabaseObjects.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using chldr_data.DatabaseObjects.Models;
 
 namespace chldr_data.realm.RealmEntities
 {
@@ -45,6 +46,26 @@ namespace chldr_data.realm.RealmEntities
             changeSet.CreatedAt = dto.CreatedAt;
             return changeSet;
 
+        }
+
+        internal static RealmChangeSet FromModel(ChangeSetModel dto)
+        {
+            if (string.IsNullOrEmpty(dto.ChangeSetId))
+            {
+                throw new NullReferenceException();
+            }
+
+            var changeSet = new RealmChangeSet();
+
+            changeSet.ChangeSetIndex = dto.ChangeSetIndex;
+            changeSet.ChangeSetId = dto.ChangeSetId;
+            changeSet.UserId = dto.UserId;
+            changeSet.Operation = (int)dto.Operation;
+            changeSet.RecordType = (int)dto.RecordType;
+            changeSet.RecordId = dto.RecordId;
+            changeSet.RecordChanges = dto.RecordChanges;
+            changeSet.CreatedAt = dto.CreatedAt;
+            return changeSet;
         }
     }
 }

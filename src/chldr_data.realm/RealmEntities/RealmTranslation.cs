@@ -1,5 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.DatabaseObjects.Models;
 using Realms;
 
 namespace chldr_data.realm.RealmEntities;
@@ -57,6 +58,30 @@ public class RealmTranslation : RealmObject, ITranslationEntity
         {
             translation = new RealmTranslation();
         }
+
+        translation.TranslationId = translationDto.TranslationId;
+        translation.LanguageCode = translationDto.LanguageCode;
+        translation.Entry = entry;
+        translation.User = user;
+        translation.Content = translationDto.Content;
+        translation.RawContents = translationDto.Content.ToLower();
+        translation.Notes = translationDto.Notes;
+        translation.Rate = translationDto.Rate;
+        translation.CreatedAt = translationDto.CreatedAt;
+        translation.UpdatedAt = translationDto.UpdatedAt;
+
+        return translation;
+    }
+
+    internal static RealmTranslation FromModel(TranslationModel translationDto, RealmUser user, RealmEntry entry)
+    {
+        if (string.IsNullOrEmpty(translationDto.LanguageCode) || user == null || entry == null || string.IsNullOrEmpty(translationDto.EntryId))
+        {
+            throw new NullReferenceException();
+        }
+
+        // Translation
+        var translation = new RealmTranslation();        
 
         translation.TranslationId = translationDto.TranslationId;
         translation.LanguageCode = translationDto.LanguageCode;

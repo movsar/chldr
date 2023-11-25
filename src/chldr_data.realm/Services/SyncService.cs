@@ -55,7 +55,6 @@ namespace chldr_data.realm.Services
 
                 newResults = RequestResult.GetData<IEnumerable<T>>(response);
                 combinedResults.AddRange(newResults);
-
                 offset += limit;
             } while (newResults.Any());
 
@@ -83,31 +82,34 @@ namespace chldr_data.realm.Services
 
             _dbContext.Write(() =>
             {
-                //foreach (var dto in users)
-                //{
-                //    _dbContext.Add(RealmUser.FromDto(dto, _dbContext));
-                //}
+                foreach (var user in users)
+                {
+                    _dbContext.Add(RealmUser.FromModel(user));
+                }
 
-                //foreach (var dto in sources)
-                //{
-                //    _dbContext.Add(RealmSource.FromDto(dto, _dbContext));
-                //}
+                foreach (var source in sources)
+                {
+                    _dbContext.Add(RealmSource.FromModel(source));
+                }
 
-                //foreach (var dto in entries)
-                //{
-                //    _dbContext.Add(RealmEntry.FromDto(dto, _dbContext));
+                foreach (var entry in entries)
+                {
+                    var user = _dbContext.Find<RealmUser>(entry.UserId);
+                    var source = _dbContext.Find<RealmSource>(entry.SourceId);
 
-                //    foreach (var subEntryDto in dto.SubEntries)
-                //    {
-                //        _dbContext.Add(RealmEntry.FromDto(subEntryDto, _dbContext));
-                //    }
-                //}
+                    _dbContext.Add(RealmEntry.FromModel(entry, user, source));
+                }
 
-                //foreach (var dto in changeSets)
-                //{
-                //    _dbContext.Add(RealmChangeSet.FromDto(dto, _dbContext));
-                //}
+                foreach (var changeSet in changeSets)
+                {
+                    _dbContext.Add(RealmChangeSet.FromModel(changeSet));
+                }
             });
+
+            var entry = _dbContext.All<RealmEntry>().ToList()[0];
+
+            var entryModels = EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
+            
 
             Realm.Compact(RealmDataProvider.OfflineDatabaseConfiguration);
             _dbContext.WriteCopy(new RealmConfiguration(_fileService.OfflineDatabaseFilePath + ".new"));

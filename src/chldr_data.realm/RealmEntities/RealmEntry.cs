@@ -1,6 +1,8 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
+using Newtonsoft.Json;
 using Realms;
 
 namespace chldr_data.realm.RealmEntities;
@@ -79,7 +81,7 @@ public class RealmEntry : RealmObject, IEntryEntity
             var sound = RealmSound.FromDto(soundDto, realm, entry);
             entry.Sounds.Add(sound);
         }
-        
+
         // Translations
         entry.Translations.Clear();
         foreach (var translationDto in entryDto.Translations)
@@ -88,6 +90,57 @@ public class RealmEntry : RealmObject, IEntryEntity
             translationDto.EntryId = entry.EntryId;
 
             var translation = RealmTranslation.FromDto(translationDto, realm, entry);
+            entry.Translations.Add(translation);
+        }
+
+        return entry;
+    }
+
+    internal static RealmEntry FromModel(EntryModel entryModel, RealmUser user, RealmSource source)
+    {
+        if (string.IsNullOrEmpty(entryModel.UserId) || string.IsNullOrEmpty(entryModel.SourceId))
+        {
+            throw new NullReferenceException();
+        }
+
+        // Entry
+        var entry = new RealmEntry();
+
+        entry.EntryId = entryModel.EntryId;
+        entry.User = user;
+        entry.Source = source;
+        entry.ParentEntryId = entryModel.ParentEntryId;
+
+        entry.Content = entryModel.Content;
+
+        entry.Type = (int)entryModel.Type;
+        entry.Subtype = entryModel.Subtype;
+
+        entry.Rate = entryModel.Rate;
+
+        entry.Details = JsonConvert.SerializeObject(entryModel.Details);
+
+        entry.CreatedAt = entryModel.CreatedAt;
+        entry.UpdatedAt = entryModel.UpdatedAt;
+
+        // Sounds
+        entry.Sounds.Clear();
+        foreach (var soundModel in entryModel.Sounds)
+        {
+            soundModel.EntryId = entry.EntryId;
+
+            var sound = RealmSound.FromModel(soundModel, user, entry);
+            entry.Sounds.Add(sound);
+        }
+
+        // Translations
+        entry.Translations.Clear();
+        foreach (var translationDto in entryModel.Translations)
+        {
+            // If entry didn't exist, this will map its Id to translations
+            translationDto.EntryId = entry.EntryId;
+
+            var translation = RealmTranslation.FromModel(translationDto, user, entry);
             entry.Translations.Add(translation);
         }
 

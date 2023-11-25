@@ -1,5 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.DatabaseObjects.Models;
 using Realms;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,21 @@ public class RealmSource : RealmObject, ISourceEntity
         source.Name = dto.Name;
         source.CreatedAt = dto.CreatedAt;
         source.UpdatedAt = dto.UpdatedAt;
+
+        return source;
+    }
+
+    internal static RealmSource FromModel(SourceModel sourceModel)
+    {
+        if (string.IsNullOrEmpty(sourceModel.SourceId))
+        {
+            throw new NullReferenceException();
+        }
+
+        var source = new RealmSource();
+
+        source.SourceId = sourceModel.SourceId;
+        source.Name = sourceModel.Name;
 
         return source;
     }

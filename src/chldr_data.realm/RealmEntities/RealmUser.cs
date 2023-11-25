@@ -1,5 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.DatabaseObjects.Models;
 using Realms;
 
 namespace chldr_data.realm.RealmEntities;
@@ -47,6 +48,29 @@ public class RealmUser : RealmObject, IUserEntity
         user.Patronymic = userDto.Patronymic;
         user.CreatedAt = userDto.CreatedAt;
         user.UpdatedAt = userDto.UpdatedAt;
+
+        return user;
+    }
+
+    internal static RealmUser FromModel(UserModel userModel)
+    {
+        if (string.IsNullOrEmpty(userModel.Id))
+        {
+            throw new NullReferenceException();
+        }
+
+        var user = new RealmUser();
+
+        user.Id = userModel.Id;
+        user.Rate = userModel.Rate;
+        user.Email = userModel.Email;
+        user.Status = (int)userModel.Status;
+        user.Type = (int)userModel.Type;
+        user.FirstName = userModel.FirstName;
+        user.LastName = userModel.LastName;
+        user.Patronymic = userModel.Patronymic;
+        user.CreatedAt = userModel.CreatedAt;
+        user.UpdatedAt = userModel.UpdatedAt;
 
         return user;
     }

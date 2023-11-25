@@ -1,5 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.DatabaseObjects.Models;
 using Realms;
 
 namespace chldr_data.realm.RealmEntities;
@@ -51,6 +52,25 @@ public class RealmSound : RealmObject, ISoundEntity
         soundEntity.SoundId = soundDto.SoundId;
         soundEntity.FileName = soundDto.FileName;
         soundEntity.Rate = soundDto.Rate;
+
+        return soundEntity;
+    }
+
+    internal static RealmSound FromModel(PronunciationModel soundModel, RealmUser user, RealmEntry entry)
+    {
+        if (string.IsNullOrEmpty(soundModel.EntryId) || user == null || entry == null)
+        {
+            throw new NullReferenceException();
+        }
+
+        // Sound
+        var soundEntity = new RealmSound();
+
+        soundEntity.Entry = entry;
+        soundEntity.User = user;
+        soundEntity.SoundId = soundModel.SoundId;
+        soundEntity.FileName = soundModel.FileName;
+        soundEntity.Rate = soundModel.Rate;
 
         return soundEntity;
     }
