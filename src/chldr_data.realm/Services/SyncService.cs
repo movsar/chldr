@@ -97,6 +97,11 @@ namespace chldr_data.realm.Services
                     var user = _dbContext.Find<RealmUser>(entry.UserId);
                     var source = _dbContext.Find<RealmSource>(entry.SourceId);
 
+                    if (_dbContext.Find<RealmEntry>(entry.EntryId) != null)
+                    {
+                        continue;
+                    }
+
                     _dbContext.Add(RealmEntry.FromModel(entry, user, source));
                 }
 
