@@ -1,11 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:vm="clr-namespace:dosham.ViewModels"          
              x:Class="dosham.MainPage">
 
     <StackLayout>
         <!-- Search Box -->
-        <Entry x:Name="SearchBox" Placeholder="Search..."/>
+        <Entry x:Name="SearchBox" Text="{Binding SearchText, Mode=TwoWay}" Placeholder="Search..."/>
 
         <!-- List View for Entries -->
         <ListView x:Name="EntriesListView" ItemsSource="{Binding FilteredEntries}">

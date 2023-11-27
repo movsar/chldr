@@ -61,6 +61,10 @@ namespace chldr_data.Repositories
         public async Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags? filtrationFlags = null)
         {
             var result = new List<EntryModel>();
+            if (inputText == null)
+            {
+                return result;
+            }
 
             if (inputText.Length <= 3)
             {
