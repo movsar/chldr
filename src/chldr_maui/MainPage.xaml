@@ -2,21 +2,40 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:vm="clr-namespace:dosham.ViewModels"          
+             xmlns:vm="clr-namespace:dosham.ViewModels"
              x:Class="dosham.MainPage">
 
-    <StackLayout>
+    <StackLayout Padding="10">
         <!-- Search Box -->
-        <Entry x:Name="SearchBox" Text="{Binding SearchText, Mode=TwoWay}" Placeholder="Search..."/>
+        <Entry x:Name="SearchBox" Text="{Binding SearchText, Mode=TwoWay}" Placeholder="Search..." Margin="0,0,0,10" />
 
-        <!-- List View for Entries -->
-        <ListView x:Name="EntriesListView" ItemsSource="{Binding FilteredEntries}">
-            <ListView.ItemTemplate>
+        <!-- Collection View for Entries -->
+        <CollectionView x:Name="EntriesCollectionView" ItemsSource="{Binding FilteredEntries}">
+            <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Content}"/>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </StackLayout>
+                    <Frame CornerRadius="10" Margin="5" Padding="10" BorderColor="#CCCCCC" BackgroundColor="#F9F9F9">
+                        <StackLayout Orientation="Vertical" Spacing="5">
+                            <!-- Entry Content -->
+                            <Label Text="{Binding Content}" FontSize="Medium" FontAttributes="Bold" TextColor="#333333" />
 
+                            <!-- Source Name -->
+                            <Label Text="{Binding Source.Name}" FontSize="Small" TextColor="#007ACC" />
+
+                            <!-- Translations -->
+                            <StackLayout>
+                                <Label Text="Translations:" FontSize="Small" FontAttributes="Italic" TextColor="#666666" />
+                                <StackLayout BindableLayout.ItemsSource="{Binding Translations}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Label Text="{Binding Content}" FontSize="Small" TextColor="#666666" />
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+                            </StackLayout>
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>
 </ContentPage>
