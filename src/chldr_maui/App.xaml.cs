@@ -1,4 +1,6 @@
-﻿namespace dosham
+﻿using dosham.Services;
+
+namespace dosham
 {
     public partial class App : Application
     {

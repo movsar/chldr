@@ -2,11 +2,8 @@
 using dosham.Stores;
 using ReactiveUI;
 using System.Reactive.Linq;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace dosham.ViewModels
+namespace dosham.Pages
 {
     public class MainPageViewModel : ReactiveObject
     {

@@ -1,4 +1,4 @@
-﻿namespace dosham
+﻿namespace dosham.Services
 {
     internal class DatabaseInitializer
     {

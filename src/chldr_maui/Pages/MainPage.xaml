@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:vm="clr-namespace:dosham.ViewModels"
+             x:Class="dosham.Pages.MainPage">
+
+    <Grid Padding="10">
+        <!-- Define the rows -->
+        <Grid.RowDefinitions>
+            <!-- For CollectionView, takes remaining space -->
+            <RowDefinition Height="*"/>
+            <!-- For Search Box -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Collection View for Entries -->
+        <CollectionView x:Name="EntriesCollectionView" Grid.Row="0"
+                        ItemsSource="{Binding FilteredEntries}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame CornerRadius="10" Margin="5" Padding="10" BorderColor="#CACCaa" BackgroundColor="#f9F9F9">
+                        <StackLayout Orientation="Vertical" Spacing="5">
+                            <!-- Entry Content -->
+                            <Label Text="{Binding Header}" FontSize="Medium" FontAttributes="Bold" TextColor="#000" />
+
+                            <!-- Source Name -->
+                            <Label Text="{Binding Subheader}" FontSize="Micro" TextColor="#cba" />
+
+                            <StackLayout BindableLayout.ItemsSource="{Binding Translations}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <!-- Use a Grid or another layout container if you need more control over the layout -->
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Language Code Label -->
+                                            <Label Grid.Column="0"
+                                                Text="{Binding LanguageCode, StringFormat='{0}:'}" 
+                                                FontSize="Small" 
+                                                FontAttributes="Italic" 
+                                                TextColor="#AA6666" />
+
+                                            <!-- Content Label -->
+                                            <Label Grid.Column="1"
+                                                Text="{Binding Content, StringFormat=' {0}'}" 
+                                                FontSize="Small" 
+                                                TextColor="#666666" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Search Box -->
+        <Entry x:Name="SearchBox" Grid.Row="1"
+         Text="{Binding SearchText, Mode=TwoWay}" 
+         Placeholder="Начните писать..." 
+         Margin="0,0,0,10" />
+    </Grid>
+</ContentPage>

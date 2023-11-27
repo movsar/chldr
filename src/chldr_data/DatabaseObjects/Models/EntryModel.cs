@@ -27,7 +27,90 @@ namespace chldr_data.DatabaseObjects.Models
         public DateTimeOffset UpdatedAt { get; set; }
 
         public List<EntryModel> SubEntries { get; set; } = new List<EntryModel>();
-       
+
+        protected static string ParseSource(string sourceName)
+        {
+            string sourceTitle = null;
+            switch (sourceName)
+            {
+                case "Maciev":
+                    sourceTitle = "Чеченско - русский словарь, А.Г.Мациева";
+                    break;
+                case "Karasaev":
+                    sourceTitle = "Русско - чеченский словарь, Карасаев А.Т., Мациев А.Г.";
+                    break;
+                case "User":
+                    sourceTitle = "Добавлено пользователем";
+                    break;
+                case "Malaev":
+                    sourceTitle = "Чеченско - русский словарь, Д.Б. Малаева";
+                    break;
+                case "Anatslovar":
+                    sourceTitle = "Чеченско-русский, русско-чеченский словарь анатомии человека, Р.У. Берсанова";
+                    break;
+                case "ikhasakhanov":
+                    sourceTitle = "Ислам Хасаханов";
+                    break;
+            }
+            return sourceTitle;
+        }
+        private string GetHeader()
+        {
+            string header = Content!;
+            string className = string.Empty;
+
+            if (Details != null)
+            {
+                switch ((WordType)Subtype)
+                {
+
+                    case WordType.Noun:
+                        var details = Details as NounDetails;
+                        if (details?.Class != 0)
+                        {
+                            className = GrammaticalClassToString(details!.Class);
+                        }
+                        break;
+
+                    case WordType.Verb:
+                        break;
+
+                    default:
+                        Console.WriteLine("no handler for the details of this type");
+                        break;
+                }
+                if (!string.IsNullOrEmpty(className))
+                {
+                    header = string.Join(" ", header, className);
+                }
+            }
+            return header;
+        }
+        public string? Header => GetHeader();
+
+        public string? Subheader => ParseSource(Source.Name);
+        public static string GrammaticalClassToString(int grammaticalClass)
+        {
+            var ClassesMap = new Dictionary<int, string>()
+            {
+                { 1 ,"в, б/д"},
+                { 2 ,"й, б/д"},
+                { 3 ,"й, й"},
+                { 4 ,"д, д"},
+                { 5 ,"б, б/й"},
+                { 6 ,"б, д"},
+            };
+
+            if (ClassesMap.TryGetValue(grammaticalClass, out string? classString))
+            {
+                return classString;
+            }
+            else
+            {
+                return "";
+            }
+        }
+
         public static EntryModel FromEntity(IEntryEntity entry, ISourceEntity source, IEnumerable<ITranslationEntity> translations, IEnumerable<ISoundEntity> sounds)
         {
             var entryModel = new EntryModel()
