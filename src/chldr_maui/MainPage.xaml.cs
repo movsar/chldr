@@ -3,6 +3,7 @@ using dosham.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Maui;
 using System.Reactive.Disposables;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace dosham
 {
@@ -22,32 +23,27 @@ namespace dosham
             get => ViewModel;
             set => ViewModel = (MainPageViewModel)value;
         }
-        private ContentStore _contentStore;
-        int count = 0;
 
         public MainPage()
         {
             InitializeComponent();
-            ViewModel = new MainPageViewModel();
-
-            this.WhenActivated(disposables =>
-            {
-                this.BindCommand(ViewModel, vm => vm.CounterCommand, v => v.CounterBtn)
-                    .DisposeWith(disposables);
-
-                this.OneWayBind(ViewModel, vm => vm.Count, v => v.CounterBtn.Text,
-                                count => $"Clicked {count} " + (count == 1 ? "time" : "times"))
-                    .DisposeWith(disposables);
-            });
+            this.WhenActivated(SetupBindings);
         }
 
         protected override void OnHandlerChanged()
         {
             base.OnHandlerChanged();
-            _contentStore = Handler.MauiContext.Services.GetRequiredService<ContentStore>();
+            var serviceProvider = Handler.MauiContext.Services;
+            ViewModel = serviceProvider.GetRequiredService<MainPageViewModel>();
         }
 
+        private void SetupBindings(CompositeDisposable disposables)
+        {
+            this.OneWayBind(ViewModel, vm => vm.FilteredEntries, v => v.EntriesListView.ItemsSource)
+                .DisposeWith(disposables);
 
+            this.Bind(ViewModel, vm => vm.SearchText, v => v.SearchBox.Text)
+               .DisposeWith(disposables);
+        }
     }
-
 }

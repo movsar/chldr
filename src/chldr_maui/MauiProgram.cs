@@ -2,6 +2,8 @@
 using chldr_data.realm.Services;
 using dosham.Enums;
 using dosham.Services;
+using dosham.Stores;
+using dosham.ViewModels;
 using Microsoft.Extensions.Logging;
 
 namespace dosham
@@ -19,6 +21,8 @@ namespace dosham
             // Data    
             builder.Services.AddScoped<IDataProvider, RealmDataProvider>();
             builder.Services.AddScoped<SyncService>();
+            builder.Services.AddScoped<MainPageViewModel>();
+            builder.Services.AddScoped<ContentStore>();
 
             builder.Services.AddSingleton<IEnvironmentService>(x => new EnvironmentService(CurrentPlatform, IsDevelopment));
 

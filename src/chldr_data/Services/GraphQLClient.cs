@@ -23,7 +23,7 @@ namespace chldr_utils.Services
             LocalStorageService localStorageService
             )
         {
-            var apiHost = environmentService.IsDevelopment ? Constants.DevApiHost : Constants.ProdApiHost;
+            var apiHost = Constants.ProdApiHost;// environmentService.IsDevelopment ? Constants.DevApiHost : Constants.ProdApiHost;
 
             _graphQLClient = new GraphQLHttpClient($"{apiHost}/graphql", new NewtonsoftJsonSerializer());
             _exceptionHandler = exceptionHandler;

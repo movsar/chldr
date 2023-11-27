@@ -1,27 +1,56 @@
-﻿using ReactiveUI;
+﻿using chldr_data.DatabaseObjects.Models;
+using dosham.Stores;
+using ReactiveUI;
+using System;
+using System.Collections.Generic;
 using System.Reactive;
+using System.Reactive.Linq;
 
 namespace dosham.ViewModels
 {
     public class MainPageViewModel : ReactiveObject
     {
-        private int _count;
-        public int Count
+        private const int SearchThrottleTime = 800;
+        private string _searchText;
+        private readonly ObservableAsPropertyHelper<IEnumerable<EntryModel>> _filteredEntries;
+        private readonly ContentStore _contentStore;
+
+        public MainPageViewModel(ContentStore contentStore)
         {
-            get => _count;
-            set => this.RaiseAndSetIfChanged(ref _count, value);
+            _contentStore = contentStore;
+            _contentStore = contentStore;
+            var searchCommand = ReactiveCommand.CreateFromTask<string, IEnumerable<EntryModel>>(SearchEntriesAsync);
+
+            _filteredEntries = this.WhenAnyValue(x => x.SearchText)
+                                  .Throttle(TimeSpan.FromMilliseconds(SearchThrottleTime))
+                                  .Select(term => term?.Trim())
+                                  .DistinctUntilChanged()
+                                  .SelectMany(searchTerm => searchCommand.Execute(searchTerm).Catch(Observable.Return(new List<EntryModel>())))
+                                  .ToProperty(this, x => x.FilteredEntries, out _filteredEntries);
         }
 
-        public ReactiveCommand<Unit, Unit> CounterCommand { get; }
-
-        public MainPageViewModel()
+        public string SearchText
         {
-            CounterCommand = ReactiveCommand.Create(IncrementCount);
+            get => _searchText;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _searchText, value);
+            }
         }
 
-        private void IncrementCount()
+        public IEnumerable<EntryModel> FilteredEntries => _filteredEntries.Value;
+
+        private async Task<IEnumerable<EntryModel>> SearchEntriesAsync(string searchTerm)
         {
-            Count++;
+            // Replace with actual async search logic
+            await Task.Delay(100); // Simulating async operation
+            return new List<EntryModel>
+            {
+                new EntryModel
+                {
+                    Content = "Sample Entry"
+                }
+            };
         }
     }
 }
