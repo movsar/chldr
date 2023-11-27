@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson;
-
-namespace chldr_data.Enums.WordDetails
+﻿namespace chldr_data.Enums.WordDetails
 {
     public enum Case
     {
