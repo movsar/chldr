@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Xamarin.Essentials;
 
 namespace chldr_utils.Services
 {
@@ -6,7 +7,7 @@ namespace chldr_utils.Services
     {
 
         #region Fields
-        private const string DataDirName = "data";
+        private const string DataDirName = "Data";
         private const string OfflineDatabaseFileName = "local.datx";
 
         public string AppBaseDirectory;
@@ -20,23 +21,12 @@ namespace chldr_utils.Services
         public FileService(string basePath)
         {
             AppBaseDirectory = basePath;
+            //var a = FileSystem.AppDataDirectory;
 
             if (!Directory.Exists(EntrySoundsDirectory))
             {
                 Directory.CreateDirectory(EntrySoundsDirectory);
             }
-        }
-
-        async Task PrepareDatabaseFile_Android()
-        {
-            //AppDirectory = FileSystem.Current.AppDataDirectory;
-            //using (FileStream writeStream = new FileStream(DatabasePath, FileMode.Create, FileAccess.Write))
-            //{
-            //    // Gets the realm database file from assets 
-            //    using var dbFileStream = await FileSystem.OpenAppPackageFileAsync(DatabaseName);
-            //    // Copies to the device
-            //    dbFileStream.CopyTo(writeStream);
-            //}
         }
 
         public async Task SaveSoundAsync(IFormFile contents, string fileName)

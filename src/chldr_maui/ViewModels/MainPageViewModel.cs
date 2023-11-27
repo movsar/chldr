@@ -25,10 +25,7 @@ namespace dosham.ViewModels
             _filteredEntries = this.WhenAnyValue(x => x.SearchText)
                                    .Select(term => term?.Trim())
                                    .DistinctUntilChanged()
-                                   .SelectMany(searchTerm =>
-                                       string.IsNullOrEmpty(searchTerm)
-                                       ? Observable.Return(new List<EntryModel>())
-                                       : _searchCommand.Execute(searchTerm).Catch(Observable.Return(new List<EntryModel>())))
+                                   .SelectMany(searchTerm => _searchCommand.Execute(searchTerm).Catch(Observable.Return(new List<EntryModel>())))
                                    .ToProperty(this, x => x.FilteredEntries, out _filteredEntries);
         }
 
@@ -42,10 +39,12 @@ namespace dosham.ViewModels
 
         private async Task<IEnumerable<EntryModel>> SearchEntriesAsync(string searchTerm)
         {
-            if (String.IsNullOrEmpty(searchTerm))
+            if (searchTerm == null)
             {
-                return new List<EntryModel>();
+                var entries = await _contentStore.EntryService.GetRandomsAsync(50);
+                return entries;
             }
+
             try
             {
                 var entries = await _contentStore.EntryService.FindAsync(searchTerm);

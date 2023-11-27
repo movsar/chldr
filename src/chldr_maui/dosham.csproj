@@ -67,6 +67,7 @@
 
 	<ItemGroup>
 	  <None Remove="appsettings.json" />
+	  <None Remove="local.datx" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -93,9 +94,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="local.datx">
+	  <MauiAsset Update="Resources\Raw\local.datx">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
+	  </MauiAsset>
 	</ItemGroup>
 
 </Project>
