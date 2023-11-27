@@ -114,7 +114,7 @@ namespace chldr_data.realm.Services
             var entry = _dbContext.All<RealmEntry>().ToList()[0];
 
             var entryModels = EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
-            
+
 
             Realm.Compact(RealmDataProvider.OfflineDatabaseConfiguration);
             _dbContext.WriteCopy(new RealmConfiguration(_fileService.OfflineDatabaseFilePath + ".new"));
@@ -126,7 +126,6 @@ namespace chldr_data.realm.Services
 
         internal async Task Sync()
         {
-
             if (_isRunning)
             {
                 return;
@@ -172,8 +171,11 @@ namespace chldr_data.realm.Services
                     await PullRemoteDatabase();
                     return;
                 }
-
-                //ApplyChangeSets(latestRemoteChangeSets);
+                else
+                {
+                    // Update database
+                    // ApplyChangeSets(latestRemoteChangeSets);
+                }
             }
             catch (Exception ex)
             {

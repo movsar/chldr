@@ -57,6 +57,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AndroidResource Remove="Enums\**" />
+	  <Compile Remove="Enums\**" />
+	  <EmbeddedResource Remove="Enums\**" />
+	  <MauiCss Remove="Enums\**" />
+	  <MauiXaml Remove="Enums\**" />
+	  <None Remove="Enums\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Remove="appsettings.json" />
 	</ItemGroup>
 
@@ -80,7 +89,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Enums\" />
+	  <None Update="local.datx">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>
