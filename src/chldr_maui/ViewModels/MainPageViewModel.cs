@@ -2,28 +2,34 @@
 using dosham.Stores;
 using ReactiveUI;
 using System.Reactive.Linq;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace dosham.ViewModels
 {
     public class MainPageViewModel : ReactiveObject
     {
-        private const int SearchThrottleTime = 250;
+        private const int SearchDebounceTime = 250; // Time in milliseconds
         private string _searchText;
         private readonly ObservableAsPropertyHelper<IEnumerable<EntryModel>> _filteredEntries;
         private readonly ContentStore _contentStore;
+        private readonly ReactiveCommand<string, IEnumerable<EntryModel>> _searchCommand;
 
         public MainPageViewModel(ContentStore contentStore)
         {
             _contentStore = contentStore;
 
-            var searchCommand = ReactiveCommand.CreateFromTask<string, IEnumerable<EntryModel>>(SearchEntriesAsync);
+            _searchCommand = ReactiveCommand.CreateFromTask<string, IEnumerable<EntryModel>>(SearchEntriesAsync);
 
             _filteredEntries = this.WhenAnyValue(x => x.SearchText)
-                                  .Throttle(TimeSpan.FromMilliseconds(SearchThrottleTime))
-                                  .Select(term => term?.Trim())
-                                  .DistinctUntilChanged()
-                                  .SelectMany(searchTerm => searchCommand.Execute(searchTerm).Catch(Observable.Return(new List<EntryModel>())))
-                                  .ToProperty(this, x => x.FilteredEntries, out _filteredEntries);
+                                   .Select(term => term?.Trim())
+                                   .DistinctUntilChanged()
+                                   .SelectMany(searchTerm =>
+                                       string.IsNullOrEmpty(searchTerm)
+                                       ? Observable.Return(new List<EntryModel>())
+                                       : _searchCommand.Execute(searchTerm).Catch(Observable.Return(new List<EntryModel>())))
+                                   .ToProperty(this, x => x.FilteredEntries, out _filteredEntries);
         }
 
         public string SearchText
@@ -36,12 +42,21 @@ namespace dosham.ViewModels
 
         private async Task<IEnumerable<EntryModel>> SearchEntriesAsync(string searchTerm)
         {
-            if (searchTerm == null)
+            if (String.IsNullOrEmpty(searchTerm))
             {
-                return await _contentStore.EntryService.GetRandomsAsync(50);
+                return new List<EntryModel>();
             }
-            var entries = await _contentStore.EntryService.FindAsync(searchTerm);
-            return entries;
+            try
+            {
+                var entries = await _contentStore.EntryService.FindAsync(searchTerm);
+                return entries;
+            }
+            catch
+            {
+                // Handle or log the exception as needed
+                return new List<EntryModel>();
+            }
         }
+
     }
 }

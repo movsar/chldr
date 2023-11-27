@@ -9,6 +9,13 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="FrameStyle" TargetType="Frame">
+                <Setter Property="CornerRadius" Value="10"/>
+                <Setter Property="Margin" Value="5"/>
+                <!-- Add other properties -->
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

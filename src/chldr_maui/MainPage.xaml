@@ -10,7 +10,10 @@
         <Entry x:Name="SearchBox" Text="{Binding SearchText, Mode=TwoWay}" Placeholder="Search..." Margin="0,0,0,10" />
 
         <!-- Collection View for Entries -->
-        <CollectionView x:Name="EntriesCollectionView" ItemsSource="{Binding FilteredEntries}">
+        <CollectionView x:Name="EntriesCollectionView" 
+                        ItemsSource="{Binding FilteredEntries}"
+                        HeightRequest="300"
+                        >
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Frame CornerRadius="10" Margin="5" Padding="10" BorderColor="#CCCCCC" BackgroundColor="#F9F9F9">
