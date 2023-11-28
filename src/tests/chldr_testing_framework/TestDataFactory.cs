@@ -245,9 +245,9 @@ namespace chldr_test_utils
 
         public static IDataProvider CreatClientDataProvider()
         {
-            if (File.Exists(_fileService.OfflineDatabaseFilePath))
+            if (File.Exists(_fileService.DatabaseFilePath))
             {
-                File.Delete(_fileService.OfflineDatabaseFilePath);
+                File.Delete(_fileService.DatabaseFilePath);
             }
 
             //var syncService = new SyncService(_requestService, _fileService);

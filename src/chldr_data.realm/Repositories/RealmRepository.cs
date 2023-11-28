@@ -30,7 +30,7 @@ namespace chldr_data.Repositories
 
             _userId = userId;
 
-            _dbConfig = new RealmConfiguration(_fileService.OfflineDatabaseFilePath)
+            _dbConfig = new RealmConfiguration(_fileService.DatabaseFilePath)
             {
                 SchemaVersion = Constants.RealmSchemaVersion
             };

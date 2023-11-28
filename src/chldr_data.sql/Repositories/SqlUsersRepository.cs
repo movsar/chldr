@@ -8,20 +8,6 @@ using chldr_data.Interfaces.Repositories;
 using chldr_utils.Services;
 using chldr_data.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Text;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using chldr_shared.Models;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Localization;
-using chldr_data.Resources.Localizations;
-using Realms.Sync;
-using GraphQLParser;
-using chldr_data.DatabaseObjects.Interfaces;
-using System.Reactive.Subjects;
-using System.Security.Cryptography;
 
 namespace chldr_data.sql.Repositories
 {

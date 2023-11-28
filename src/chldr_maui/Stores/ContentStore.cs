@@ -67,10 +67,7 @@ namespace dosham.Stores
             _dataProvider = dataProvider;
             _environmentService = environmentService;
 
-            var unitOfWork = _dataProvider.Repositories(null);
-
             _dataProvider.DatabaseInitialized += DataAccess_DatasourceInitialized;
-            _dataProvider.Initialize();
 
             EntryService = entryService;
             SourceService = sourceService;
@@ -141,7 +138,11 @@ namespace dosham.Stores
             CachedResultsChanged?.Invoke();
         }
       
-        public void DataAccess_DatasourceInitialized()
+        public void Initialize()
+        {
+            _dataProvider.Initialize();
+        }
+        private void DataAccess_DatasourceInitialized()
         {
             ContentInitialized?.Invoke();
         }

@@ -1,21 +1,29 @@
 ﻿using chldr_data.DatabaseObjects.Models;
+using chldr_data.Interfaces;
+using chldr_utils.Services;
 using dosham.Stores;
 using ReactiveUI;
+using System.Diagnostics;
+using System.IO.Compression;
 using System.Reactive.Linq;
 
 namespace dosham.Pages
 {
     public class MainPageViewModel : ReactiveObject
     {
-        private const int SearchDebounceTime = 250; // Time in milliseconds
+        private const int SearchDebounceTime = 250;
         private string _searchText;
         private readonly ObservableAsPropertyHelper<IEnumerable<EntryModel>> _filteredEntries;
+        private readonly FileService _fileService;
         private readonly ContentStore _contentStore;
         private readonly ReactiveCommand<string, IEnumerable<EntryModel>> _searchCommand;
 
-        public MainPageViewModel(ContentStore contentStore)
+        public MainPageViewModel(ContentStore contentStore, FileService fileService)
         {
+            _fileService = fileService;
             _contentStore = contentStore;
+
+            _contentStore.Initialize();
 
             _searchCommand = ReactiveCommand.CreateFromTask<string, IEnumerable<EntryModel>>(SearchEntriesAsync);
 

@@ -117,7 +117,7 @@ namespace chldr_data.realm.Services
 
 
             Realm.Compact(RealmDataProvider.OfflineDatabaseConfiguration);
-            _dbContext.WriteCopy(new RealmConfiguration(_fileService.OfflineDatabaseFilePath + ".new"));
+            _dbContext.WriteCopy(new RealmConfiguration(_fileService.DatabaseFilePath + ".new"));
 
             sw.Stop();
             var savedIn = sw.ElapsedMilliseconds;
