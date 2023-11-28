@@ -43,27 +43,37 @@ namespace dosham
                     throw new Exception("Data file does not exist in the package");
                 }
 
-                using (var dataStream = await FileSystem.Current.OpenAppPackageFileAsync(FileService.DataArchiveName))
+                try
                 {
-                    try
+                    using (var dataStream = await FileSystem.Current.OpenAppPackageFileAsync(FileService.DataArchiveName))
                     {
-                        File.Delete(dataZipPath);
                         using (var fileStream = File.Create(dataZipPath))
                         {
-                            await dataStream.CopyToAsync(fileStream);
+                            await dataStream.CopyToAsync(fileStream).ConfigureAwait(false);
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex.Message);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error during file operation: {ex.Message}");
+                    return false; // Return false on exception
                 }
             }
 
-            Debug.WriteLine("Unpacking...");
-            ZipFile.ExtractToDirectory(dataZipPath, dataDirPath);
+            try
+            {
+                Debug.WriteLine("Unpacking...");
+                ZipFile.ExtractToDirectory(dataZipPath, dataDirPath);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error during unpacking: {ex.Message}");
+                return false; // Return false on exception
+            }
+
             return true;
         }
+
 
     }
 }
