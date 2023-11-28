@@ -19,20 +19,18 @@ namespace dosham
             var fileService = Services.GetRequiredService<FileService>();
             var environmentService = Services.GetRequiredService<IEnvironmentService>();
 
-            if (DeployInitialData(fileService, environmentService).Result == true)
-            {
-                MainPage = new AppShell();
-            }
+            DeployInitialData(fileService, environmentService).ConfigureAwait(false);
+            MainPage = new AppShell();
         }
 
-        public static async Task<bool> DeployInitialData(FileService fileService, IEnvironmentService environmentService)
+        public static async Task DeployInitialData(FileService fileService, IEnvironmentService environmentService)
         {
             var dataZipPath = fileService.DataArchiveFilePath;
             var dataDirPath = fileService.AppDataDirectory;
 
             if (File.Exists(fileService.DatabaseFilePath))
             {
-                return true;
+                return;
             }
 
             if (environmentService.CurrentPlatform != Enums.Platforms.Windows)
@@ -55,23 +53,18 @@ namespace dosham
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Error during file operation: {ex.Message}");
-                    return false; // Return false on exception
+                    throw new Exception($"Error during file operation: {ex.Message}");
                 }
             }
 
             try
             {
-                Debug.WriteLine("Unpacking...");
                 ZipFile.ExtractToDirectory(dataZipPath, dataDirPath);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error during unpacking: {ex.Message}");
-                return false; // Return false on exception
+                throw new Exception($"Error during unpacking: {ex.Message}");
             }
-
-            return true;
         }
 
 
