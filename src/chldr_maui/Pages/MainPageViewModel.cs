@@ -19,13 +19,14 @@ namespace dosham.Pages
         public MainPageViewModel(ContentStore contentStore)
         {
             _contentStore = contentStore;
-
+            _contentStore.SearchResultsReady += OnNewSearchResults;
+            _contentStore.ContentInitialized += OnContentInitialized;
             _contentStore.Initialize();
-            _contentStore.SearchResultsReady += EntryService_NewDeferredSearchResult;
 
             // React to changes in SearchText
             this.WhenAnyValue(x => x.SearchText)
                 .Throttle(TimeSpan.FromMilliseconds(SearchDebounceTime))
+                .Select(searchTerm => searchTerm?.Trim())
                 .DistinctUntilChanged()
                 .Subscribe(searchTerm =>
                 {
@@ -36,7 +37,12 @@ namespace dosham.Pages
                 });
         }
 
-        private void EntryService_NewDeferredSearchResult(List<EntryModel> entries)
+        private void OnContentInitialized()
+        {
+            _contentStore.RequestRandomEntries();
+        }
+
+        private void OnNewSearchResults(List<EntryModel> entries)
         {
             FilteredEntries = entries;
         }

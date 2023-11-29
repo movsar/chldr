@@ -19,9 +19,9 @@ namespace dosham.Services
 {
     public class EntryService : IDboService<EntryModel, EntryDto>
     {
-        internal event Func<EntryModel, Task> EntryUpdated;
-        internal event Func<EntryModel, Task> EntryInserted;
-        internal event Func<EntryModel, Task> EntryRemoved;
+        internal event Action<EntryModel> EntryUpdated;
+        internal event Action<EntryModel> EntryInserted;
+        internal event Action<EntryModel> EntryRemoved;
 
         private readonly IDataProvider _dataProvider;
         private readonly RequestService _requestService;
@@ -149,8 +149,7 @@ namespace dosham.Services
             await PromoteRequestAsync(entry, currentUser);
 
             // TODO: Upate local, if used
-
-            //EntryUpdated?.Invoke(entry);
+            EntryUpdated?.Invoke((EntryModel)entry);
         }
 
         private async Task UpdateInLocalDatabase(EntryDto newEntryDto, string userId, IEnumerable<ChangeSetDto> changeSets)

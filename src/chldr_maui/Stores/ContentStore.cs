@@ -13,7 +13,7 @@ namespace dosham.Stores
         #region Events, Fields, Properties and Constructors
         public event Action? ContentInitialized;
         public event Action<List<EntryModel>>? SearchResultsReady;
-        
+
         private readonly EntryCacheService _entryCache;
         private readonly ExceptionHandler _exceptionHandler;
         private readonly IDataProvider _dataProvider;
@@ -69,35 +69,43 @@ namespace dosham.Stores
             });
         }
 
-        private async Task OnEntryUpdated(EntryModel entry)
+        private void OnEntryUpdated(EntryModel entry)
         {
-            _entryCache.Update(entry);  
+            _entryCache.Update(entry);
         }
-        private async Task OnEntryRemoved(EntryModel entry)
+        private void OnEntryRemoved(EntryModel entry)
         {
-            _entryCache.Remove(entry); 
+            _entryCache.Remove(entry);
         }
-        private async Task OnEntryInserted(EntryModel entry)
+        private void OnEntryInserted(EntryModel entry)
         {
-            LoadLatestEntries();
-        }
-
-        public async Task LoadRandomEntries()
-        {
-            var entries = await EntryService.GetRandomsAsync(50);
-
-            SearchResultsReady?.Invoke(entries);
-        }
-        public async void LoadLatestEntries()
-        {
-            var entries = await _dataProvider.Repositories(null).Entries.GetLatestEntriesAsync(50);
-            SearchResultsReady?.Invoke(entries);
+            RequestLatestEntries();
         }
 
-        public async void LoadEntriesOnModeration()
+        public void RequestRandomEntries()
         {
-            var entries = await _dataProvider.Repositories(null).Entries.GetEntriesOnModerationAsync();
-            SearchResultsReady?.Invoke(entries);
+            _ = Task.Run(async () =>
+            {
+                var entries = await EntryService.GetRandomsAsync(50);
+                SearchResultsReady?.Invoke(entries);
+            });
+        }
+        public void RequestLatestEntries()
+        {
+            _ = Task.Run(async () =>
+            {
+                var entries = await _dataProvider.Repositories(null).Entries.GetLatestEntriesAsync(50);
+                SearchResultsReady?.Invoke(entries);
+            });
+        }
+
+        public void RequestEntriesOnModeration()
+        {
+            _ = Task.Run(async () =>
+            {
+                var entries = await _dataProvider.Repositories(null).Entries.GetEntriesOnModerationAsync();
+                SearchResultsReady?.Invoke(entries);
+            });
         }
 
         public void Initialize()
