@@ -1,57 +1,28 @@
 ﻿using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
-using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_utils;
-using chldr_utils.Services;
 using dosham.Services;
-using chldr_data.DatabaseObjects.Interfaces;
+using System.Collections.Specialized;
 
 namespace dosham.Stores
 {
     public class ContentStore
     {
-
-        #region Events
+        #region Events, Fields, Properties and Constructors
         public event Action? ContentInitialized;
-        public event Action? CachedResultsChanged;
-        #endregion
-
-        #region Fields and Properties
+        public event Action<List<EntryModel>>? SearchResultsReady;
+        
+        private readonly EntryCacheService _entryCache;
         private readonly ExceptionHandler _exceptionHandler;
         private readonly IDataProvider _dataProvider;
         private readonly IEnvironmentService _environmentService;
-
-        // ! This shouldn't be normally used, but only to request models that have already been loaded 
-        public SearchResultModel CachedSearchResult { get; set; } = new SearchResultModel(new List<EntryModel>());
         public readonly List<LanguageModel> Languages = LanguageModel.GetAvailableLanguages();
 
         public EntryService EntryService;
         public UserService UserService;
         public SourceService SourceService;
-        #endregion
-
-        #region EventHandlers
-        private void EntryService_OnNewSearchResults(SearchResultModel searchResult)
-        {
-            if (CachedSearchResult.SearchQuery == searchResult?.SearchQuery)
-            {
-                CachedSearchResult.Entries.Clear();
-
-                foreach (var entry in searchResult.Entries)
-                {
-                    CachedSearchResult.Entries.Add(entry);
-                }
-
-                CachedResultsChanged?.Invoke();
-                return;
-            }
-
-            CachedSearchResult = searchResult;
-            CachedResultsChanged?.Invoke();
-        }
-        #endregion
 
         public ContentStore(
             ExceptionHandler exceptionHandler,
@@ -60,12 +31,14 @@ namespace dosham.Stores
 
             SourceService sourceService,
             EntryService entryService,
-            UserService userService
+            UserService userService,
+            EntryCacheService entryCacheService
             )
         {
             _exceptionHandler = exceptionHandler;
             _dataProvider = dataProvider;
             _environmentService = environmentService;
+            _entryCache = entryCacheService;
 
             _dataProvider.DatabaseInitialized += DataAccess_DatasourceInitialized;
 
@@ -76,21 +49,33 @@ namespace dosham.Stores
             EntryService.EntryUpdated += OnEntryUpdated;
             EntryService.EntryInserted += OnEntryInserted;
             EntryService.EntryRemoved += OnEntryRemoved;
-            EntryService.NewDeferredSearchResult += EntryService_OnNewSearchResults;
+        }
+        #endregion
+
+        public void FindEntryDeferred(string inputText)
+        {
+            // Run asynchronously
+            _ = Task.Run(async () =>
+            {
+                // Check if the results are already in cache, if not, retrieve
+                var result = _entryCache.Get(inputText);
+                if (result == null)
+                {
+                    result = await EntryService.FindAsync(inputText);
+                    _entryCache.Add(inputText, result);
+                }
+
+                SearchResultsReady?.Invoke(result);
+            });
         }
 
         private async Task OnEntryUpdated(EntryModel entry)
         {
-            var existingEntry = CachedSearchResult.Entries.First(e => e.EntryId == entry.EntryId || e.EntryId == entry.ParentEntryId);
-            var entryIndex = CachedSearchResult.Entries.IndexOf(existingEntry);
-            CachedSearchResult.Entries[entryIndex] = await EntryService.GetAsync(entry.EntryId);
-            CachedResultsChanged?.Invoke();
+            _entryCache.Update(entry);  
         }
         private async Task OnEntryRemoved(EntryModel entry)
         {
-            // Update on UI
-            CachedSearchResult.Entries.Remove(CachedSearchResult.Entries.First(e => e.EntryId == entry.EntryId));
-            CachedResultsChanged?.Invoke();
+            _entryCache.Remove(entry); 
         }
         private async Task OnEntryInserted(EntryModel entry)
         {
@@ -100,67 +85,30 @@ namespace dosham.Stores
         public async Task LoadRandomEntries()
         {
             var entries = await EntryService.GetRandomsAsync(50);
-            
-            CachedSearchResult.Entries.Clear();
-            foreach (var entry in entries)
-            {
-                CachedSearchResult.Entries.Add(entry);
-            }
 
-            CachedResultsChanged?.Invoke();
+            SearchResultsReady?.Invoke(entries);
         }
         public async void LoadLatestEntries()
         {
-            var unitOfWork = _dataProvider.Repositories();
-            var entries = await unitOfWork.Entries.GetLatestEntriesAsync(50);
-
-            CachedSearchResult.Entries.Clear();
-            foreach (var entry in entries)
-            {
-                CachedSearchResult.Entries.Add(entry);
-            }
-
-            CachedResultsChanged?.Invoke();
+            var entries = await _dataProvider.Repositories(null).Entries.GetLatestEntriesAsync(50);
+            SearchResultsReady?.Invoke(entries);
         }
 
         public async void LoadEntriesOnModeration()
         {
-            CachedSearchResult.Entries.Clear();
-            var unitOfWork = _dataProvider.Repositories(null);
-            var entries = await unitOfWork.Entries.GetEntriesOnModerationAsync();
-
-            CachedSearchResult.Entries.Clear();
-            foreach (var entry in entries)
-            {
-                CachedSearchResult.Entries.Add(entry);
-            }
-
-            CachedResultsChanged?.Invoke();
+            var entries = await _dataProvider.Repositories(null).Entries.GetEntriesOnModerationAsync();
+            SearchResultsReady?.Invoke(entries);
         }
-      
+
         public void Initialize()
         {
             _dataProvider.Initialize();
         }
+
         private void DataAccess_DatasourceInitialized()
         {
             ContentInitialized?.Invoke();
         }
-             
-        public EntryModel GetCachedEntryById(string phraseId)
-        {
-            // Get current Phrase from cached results
-            var phrase = CachedSearchResult.Entries
-                .Where(e => e.Type == EntryType.Phrase)
-                .Cast<EntryModel>()
-                .FirstOrDefault(w => w.EntryId == phraseId);
 
-            if (phrase == null)
-            {
-                throw _exceptionHandler.Error("Error:Phrase_shouldn't_be_null");
-            }
-
-            return phrase;
-        }
     }
 }

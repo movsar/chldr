@@ -19,12 +19,16 @@ namespace dosham
             builder.Services.AddLocalization();
 
             // Data    
+            builder.Services.AddSingleton<IEnvironmentService>(x => new EnvironmentService(CurrentPlatform, IsDevelopment));
+            
             builder.Services.AddSingleton<IDataProvider, RealmDataProvider>();
             builder.Services.AddSingleton<SyncService>();
+
             builder.Services.AddSingleton<ContentStore>();
+
             builder.Services.AddSingleton<MainPageViewModel>();
             builder.Services.AddSingleton<IndexPageViewModel>();
-            builder.Services.AddSingleton<IEnvironmentService>(x => new EnvironmentService(CurrentPlatform, IsDevelopment));
+
 
             builder
                 .UseMauiApp<App>()

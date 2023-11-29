@@ -39,6 +39,7 @@ namespace dosham.Services
             // Shared
             services.AddScoped<ContentStore>();
 
+            services.AddScoped<EntryCacheService>();
             services.AddScoped<EntryService>();
             services.AddScoped<SourceService>();
             services.AddScoped<UserStore>();

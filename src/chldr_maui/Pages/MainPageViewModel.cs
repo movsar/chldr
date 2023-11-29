@@ -1,5 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Models;
 using chldr_data.Interfaces;
+using chldr_data.Models;
 using chldr_utils.Services;
 using dosham.Stores;
 using ReactiveUI;
@@ -13,25 +14,31 @@ namespace dosham.Pages
     {
         private const int SearchDebounceTime = 250;
         private string _searchText;
-        private readonly ObservableAsPropertyHelper<IEnumerable<EntryModel>> _filteredEntries;
-        private readonly FileService _fileService;
         private readonly ContentStore _contentStore;
-        private readonly ReactiveCommand<string, IEnumerable<EntryModel>> _searchCommand;
-
-        public MainPageViewModel(ContentStore contentStore, FileService fileService)
+        private IEnumerable<EntryModel> _filteredEntries;
+        public MainPageViewModel(ContentStore contentStore)
         {
-            _fileService = fileService;
             _contentStore = contentStore;
 
             _contentStore.Initialize();
+            _contentStore.SearchResultsReady += EntryService_NewDeferredSearchResult;
 
-            _searchCommand = ReactiveCommand.CreateFromTask<string, IEnumerable<EntryModel>>(SearchEntriesAsync);
+            // React to changes in SearchText
+            this.WhenAnyValue(x => x.SearchText)
+                .Throttle(TimeSpan.FromMilliseconds(SearchDebounceTime))
+                .DistinctUntilChanged()
+                .Subscribe(searchTerm =>
+                {
+                    if (!string.IsNullOrEmpty(searchTerm))
+                    {
+                        _contentStore.FindEntryDeferred(searchTerm);
+                    }
+                });
+        }
 
-            _filteredEntries = this.WhenAnyValue(x => x.SearchText)
-                                   .Select(term => term?.Trim())
-                                   .DistinctUntilChanged()
-                                   .SelectMany(searchTerm => _searchCommand.Execute(searchTerm).Catch(Observable.Return(new List<EntryModel>())))
-                                   .ToProperty(this, x => x.FilteredEntries, out _filteredEntries);
+        private void EntryService_NewDeferredSearchResult(List<EntryModel> entries)
+        {
+            FilteredEntries = entries;
         }
 
         public string SearchText
@@ -39,28 +46,10 @@ namespace dosham.Pages
             get => _searchText;
             set => this.RaiseAndSetIfChanged(ref _searchText, value);
         }
-
-        public IEnumerable<EntryModel> FilteredEntries => _filteredEntries.Value;
-
-        private async Task<IEnumerable<EntryModel>> SearchEntriesAsync(string searchTerm)
+        public IEnumerable<EntryModel> FilteredEntries
         {
-            if (searchTerm == null)
-            {
-                var entries = await _contentStore.EntryService.GetRandomsAsync(50);
-                return entries;
-            }
-
-            try
-            {
-                var entries = await _contentStore.EntryService.FindAsync(searchTerm);
-                return entries;
-            }
-            catch
-            {
-                // Handle or log the exception as needed
-                return new List<EntryModel>();
-            }
+            get => _filteredEntries;
+            set => this.RaiseAndSetIfChanged(ref _filteredEntries, value);
         }
-
     }
 }

@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Realms;
 using System.Diagnostics;
 using chldr_data.DatabaseObjects.Models;
+using chldr_data.Interfaces;
 
 namespace chldr_data.realm.Services
 {
@@ -15,13 +16,15 @@ namespace chldr_data.realm.Services
     {
         private readonly RequestService _requestService;
         private readonly FileService _fileService;
+        private readonly IEnvironmentService _environmentService;
         private Timer _timer;
 
         private readonly SemaphoreSlim _syncLock = new SemaphoreSlim(1);
-        public SyncService(RequestService requestService, FileService fileService)
+        public SyncService(RequestService requestService, FileService fileService, IEnvironmentService environmentService)
         {
             _requestService = requestService;
             _fileService = fileService;
+            _environmentService = environmentService;
         }
         private void SetPropertyValue(object obj, string propertyName, object value)
         {
@@ -126,7 +129,7 @@ namespace chldr_data.realm.Services
 
         internal async Task Sync()
         {
-            if (_isRunning)
+            if (_isRunning || !_environmentService.IsNetworkUp())
             {
                 return;
             }
@@ -179,7 +182,9 @@ namespace chldr_data.realm.Services
             }
             catch (Exception ex)
             {
-                throw;
+                Debug.WriteLine("Sync() Error occurred");
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
             }
             finally
             {
@@ -202,7 +207,7 @@ namespace chldr_data.realm.Services
                         case Operation.Delete:
                             break;
                         case Operation.Update:
-                            var changes = JsonConvert.DeserializeObject<System.Collections.Generic.List<Change>>(changeSet.RecordChanges);
+                            var changes = JsonConvert.DeserializeObject<List<Change>>(changeSet.RecordChanges);
                             if (changes == null || changes.Count == 0)
                             {
                                 continue;
