@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:dosham.Views"
              x:Class="dosham.Views.EntryView">
+    
     <StackLayout Orientation="Vertical">
         <Frame CornerRadius="10" Margin="5" Padding="10" BorderColor="#CACCaa" BackgroundColor="#f9F9F9">
             <StackLayout Orientation="Vertical" Spacing="5">

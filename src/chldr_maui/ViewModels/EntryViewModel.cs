@@ -7,11 +7,12 @@ namespace dosham.ViewModels
 {
     public class EntryViewModel : ViewModelBase
     {
-        #region Properties
+        #region Properties, Actions and Constructors
         public EntryModel Entry { get; set; }
+        public EntryViewModel(ContentStore contentStore, UserStore userStore) : base(contentStore, userStore)
+        { }
         #endregion
 
-        #region Actions
         public void ListenToPronunciation() { }
         public void NewTranslation() { }
         public void AddToFavorites() { }
@@ -31,7 +32,6 @@ namespace dosham.ViewModels
         public void Downvote() { }
         public void Flag() { }
 
-        #endregion
 
 
         public bool CanEdit()

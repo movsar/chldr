@@ -7,6 +7,6 @@ public partial class EntryView : ContentView
 	public EntryView()
 	{
 		InitializeComponent();
-        BindingContext = new EntryViewModel();
+        BindingContext = App.Services.GetRequiredService<EntryViewModel>();
     }
 }

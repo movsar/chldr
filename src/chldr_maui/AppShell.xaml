@@ -4,18 +4,18 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:dosham.Pages"
-    Shell.FlyoutBehavior="Flyout"
+    Shell.FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False"
     Title="dosham">
 
     <ShellContent
-        Title="Main"
+        Title="Поиск"
         ContentTemplate="{DataTemplate pages:MainPage}"
         Route="MainPage">
     </ShellContent>
 
     <ShellContent
-        Title="Index"
+        Title="Указатель"
         ContentTemplate="{DataTemplate pages:IndexPage}"
         Route="IndexPage">
     </ShellContent>

@@ -7,6 +7,6 @@ public partial class TranslationView : ContentView
 	public TranslationView()
 	{
 		InitializeComponent();
-        BindingContext = new TranslationViewModel();
+        BindingContext = App.Services.GetRequiredService<TranslationViewModel>();
     }
 }

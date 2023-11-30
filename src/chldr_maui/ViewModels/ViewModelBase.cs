@@ -8,15 +8,10 @@ namespace dosham.ViewModels
         protected ContentStore ContentStore { get; }
         protected UserStore UserStore { get; }
 
-        protected ViewModelBase()
+        protected ViewModelBase(ContentStore contentStore, UserStore userStore)
         {
-            ContentStore = GetService<ContentStore>();
-            UserStore = GetService<UserStore>();
-        }
-
-        protected T GetService<T>() where T : class
-        {
-            return App.Services.GetRequiredService<T>();
+            ContentStore = contentStore;
+            UserStore = userStore;
         }
     }
 }

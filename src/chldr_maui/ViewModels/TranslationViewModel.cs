@@ -1,16 +1,20 @@
 ﻿using chldr_data.DatabaseObjects.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using dosham.Stores;
+using ReactiveUI;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace dosham.ViewModels
 {
     public class TranslationViewModel : ViewModelBase
     {
-        public TranslationModel? Translation { get; set; }
+        public TranslationViewModel(ContentStore contentStore, UserStore userStore) : base(contentStore, userStore)
+        { }
+        private TranslationModel _translation;
+        public TranslationModel Translation
+        {
+            get => _translation;
+            set => this.RaiseAndSetIfChanged(ref _translation, value);
+        }
         public Action Promote { get; set; }
         public bool IsEditMode { get; set; }
 
