@@ -1,15 +1,12 @@
 ﻿using chldr_data.Interfaces;
 using chldr_utils.Services;
-using dosham.Services;
-using dosham.Stores;
-using System.Diagnostics;
 using System.IO.Compression;
 
 namespace dosham
 {
     public partial class App : Application
     {
-        public IServiceProvider Services { get; }
+        public static IServiceProvider Services { get; private set; }
         public App(IServiceProvider serviceProvider)
         {
             InitializeComponent();
