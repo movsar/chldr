@@ -18,7 +18,7 @@
                 <StackLayout BindableLayout.ItemsSource="{Binding Translations}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
-                            <!--<views:TranslationView Translation="{Binding .}" />-->
+                            <views:TranslationView Translation="{Binding .}" />
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </StackLayout>

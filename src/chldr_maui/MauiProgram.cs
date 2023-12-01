@@ -29,6 +29,8 @@ namespace dosham
 
             builder.Services.AddSingleton<MainPageViewModel>();
             builder.Services.AddSingleton<IndexPageViewModel>();
+            builder.Services.AddSingleton<EntryViewModel>();
+            builder.Services.AddSingleton<TranslationViewModel>();
 
 
             builder

@@ -1,11 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Models;
-using chldr_data.Interfaces;
-using chldr_data.Models;
-using chldr_utils.Services;
 using dosham.Stores;
 using ReactiveUI;
-using System.Diagnostics;
-using System.IO.Compression;
 using System.Reactive.Linq;
 
 namespace dosham.Pages

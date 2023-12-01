@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:vm="clr-namespace:dosham.ViewModels"
+             xmlns:views="clr-namespace:dosham.Views"
              x:Class="dosham.Pages.MainPage">
 
     <Grid Padding="10">
@@ -19,42 +20,9 @@
                         ItemsSource="{Binding FilteredEntries}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame CornerRadius="10" Margin="5" Padding="10" BorderColor="#CACCaa" BackgroundColor="#f9F9F9">
-                        <StackLayout Orientation="Vertical" Spacing="5">
-                            <!-- Entry Content -->
-                            <Label Text="{Binding Header}" FontSize="Medium" FontAttributes="Bold" TextColor="#000" />
 
-                            <!-- Source Name -->
-                            <Label Text="{Binding Subheader}" FontSize="Micro" TextColor="#cba" />
-
-                            <StackLayout BindableLayout.ItemsSource="{Binding Translations}">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate>
-                                        <!-- Use a Grid or another layout container if you need more control over the layout -->
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <!-- Language Code Label -->
-                                            <Label Grid.Column="0"
-                                                Text="{Binding LanguageCode, StringFormat='{0}:'}" 
-                                                FontSize="Small" 
-                                                FontAttributes="Italic" 
-                                                TextColor="#AA6666" />
-
-                                            <!-- Content Label -->
-                                            <Label Grid.Column="1"
-                                                Text="{Binding Content, StringFormat=' {0}'}" 
-                                                FontSize="Small" 
-                                                TextColor="#666666" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </StackLayout>
-                        </StackLayout>
-                    </Frame>
+                    <views:EntryView Entry="{Binding .}"></views:EntryView>
+                    
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
