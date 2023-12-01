@@ -5,20 +5,15 @@ namespace dosham.Views;
 
 public partial class EntryView : ContentView
 {
-    public static readonly BindableProperty EntryProperty =
-         BindableProperty.Create(nameof(Entry), typeof(EntryModel), typeof(EntryView));
+    private EntryViewModel _viewModel;
 
-    public EntryModel Entry
-    {
-        get => (EntryModel)GetValue(EntryProperty);
-        set => SetValue(EntryProperty, value);
-    }
+    public static readonly BindableProperty EntryProperty =
+         BindableProperty.Create(nameof(_viewModel.Entry), typeof(EntryModel), typeof(EntryView));
 
     public EntryView()
 	{
-        var viewModel = App.Services.GetRequiredService<EntryViewModel>();
-        viewModel.Entry = Entry;
-        BindingContext = viewModel;
+        _viewModel = App.Services.GetRequiredService<EntryViewModel>();
+        BindingContext = _viewModel;
 		InitializeComponent();
     }
 }

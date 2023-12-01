@@ -2,13 +2,20 @@
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using dosham.Stores;
+using ReactiveUI;
 
 namespace dosham.ViewModels
 {
     public class EntryViewModel : ViewModelBase
     {
         #region Properties, Actions and Constructors
-        public EntryModel Entry { get; set; }
+        private EntryModel _entry;
+        public EntryModel Entry
+        {
+            get => _entry;
+            set => this.RaiseAndSetIfChanged(ref _entry, value);
+        }
+
         public EntryViewModel(ContentStore contentStore, UserStore userStore) : base(contentStore, userStore)
         { }
         #endregion

@@ -5,20 +5,16 @@ namespace dosham.Views;
 
 public partial class TranslationView : ContentView
 {
-    public static readonly BindableProperty TranslationProperty =
-     BindableProperty.Create(nameof(Translation), typeof(TranslationModel), typeof(TranslationView));
+    private readonly TranslationViewModel _viewModel;
 
-    public TranslationModel Translation
-    {
-        get => (TranslationModel)GetValue(TranslationProperty);
-        set => SetValue(TranslationProperty, value);
-    }
+    public static readonly BindableProperty TranslationProperty =
+     BindableProperty.Create(nameof(_viewModel.Translation), typeof(TranslationModel), typeof(TranslationView));
 
     public TranslationView()
 	{
-        var viewModel = App.Services.GetRequiredService<TranslationViewModel>();
-        viewModel.Translation = Translation;
-        BindingContext = viewModel;
+        _viewModel = App.Services.GetRequiredService<TranslationViewModel>();
+        BindingContext = _viewModel;
+
 		InitializeComponent();
     }
 }
