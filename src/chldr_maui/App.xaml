@@ -8,6 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+                <ResourceDictionary Source="Resources/Templates/Templates.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="FrameStyle" TargetType="Frame">

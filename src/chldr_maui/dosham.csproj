@@ -103,10 +103,10 @@
 	  <MauiXaml Update="Pages\IndexPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\EntryView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
+	  <MauiXaml Update="Resources\Templates\Templates.xaml">
+	    <Generator></Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\TranslationView.xaml">
+	  <MauiXaml Update="Views\EntryView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

@@ -18,13 +18,10 @@
 
 
                 <!-- Translation views -->
-                <StackLayout BindableLayout.ItemsSource="{Binding Translations}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <views:TranslationView Translation="{Binding .}" />
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </StackLayout>
+                <CollectionView ItemTemplate="{StaticResource TranslationTemplate}"
+                                ItemsSource="{Binding Translations}">
+                </CollectionView>
+                
             </StackLayout>
         </Frame>
     </StackLayout>

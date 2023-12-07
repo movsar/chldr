@@ -3,6 +3,7 @@ using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using dosham.Stores;
 using ReactiveUI;
+using System.Text.RegularExpressions;
 
 namespace dosham.ViewModels
 {
@@ -40,7 +41,40 @@ namespace dosham.ViewModels
         public void Flag() { }
 
 
+        #region Actions
+        public void Upvote() { }
+        public void CurrentTranslationSelected()
+        {
+            var g = 2;
+        }
 
+        #endregion
+
+        public async Task DoSearch()
+        {
+            var translationText = "";//Translation?.Content.ToLower();
+
+            string[] prefixesToSearch = {
+                "см",
+                "понуд.? от",
+                "потенц.? от",
+                "прил.? к",
+                "масд.? от"
+            };
+
+            foreach (var prefix in prefixesToSearch)
+            {
+
+                string pattern = $"(?<={prefix}\\W?\\s?)[1ӀӏА-яA-z]+";
+                var match = Regex.Match(translationText, pattern, RegexOptions.CultureInvariant);
+
+                if (match.Success)
+                {
+                    await ContentStore.EntryService.FindAsync(match.ToString());
+                    return;
+                }
+            }
+        }
         public bool CanEdit()
         {
             // Anyone should be able to open an entry for edit mode, if they're logged in and active

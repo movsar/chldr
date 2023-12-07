@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:chldr_data.DatabaseObjects.Models;assembly=chldr_data">
+    
+    <DataTemplate x:Key="TranslationTemplate">
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Language Code Label -->
+            <Label Grid.Column="0"
+               Text="{Binding LanguageCode, StringFormat='{0}:'}" 
+               FontSize="Small" 
+               FontAttributes="Italic" 
+               TextColor="#AA6666" />
+
+            <!-- Content Label -->
+            <Label Grid.Column="1"
+               Text="{Binding Content, StringFormat=' {0}'}" 
+               FontSize="Small" 
+               TextColor="#666666" />
+        </Grid>
+    </DataTemplate>
+
+</ResourceDictionary>
