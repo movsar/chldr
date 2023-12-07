@@ -14,7 +14,7 @@ namespace dosham
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
-
+            
             ServiceRegistrator.RegisterCommonServices(builder.Services);
 
             builder.Services.AddLocalization();
@@ -24,12 +24,11 @@ namespace dosham
             
             builder.Services.AddSingleton<IDataProvider, RealmDataProvider>();
             builder.Services.AddSingleton<SyncService>();
-
             builder.Services.AddSingleton<ContentStore>();
-
             builder.Services.AddSingleton<MainPageViewModel>();
             builder.Services.AddSingleton<IndexPageViewModel>();
-            builder.Services.AddSingleton<EntryViewModel>();
+
+            builder.Services.AddTransient<EntriesViewModel>();
 
             builder
                 .UseMauiApp<App>()

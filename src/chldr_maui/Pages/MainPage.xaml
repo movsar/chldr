@@ -15,12 +15,13 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <views:EntriesPresenter Grid.Row="0" Entries ="{Binding FilteredEntries}"/>
+        <!-- Collection View for Entries -->
+        <views:EntriesView Entries = "{Binding FilteredEntries}"/>
 
         <!-- Search Box -->
         <Entry x:Name="SearchBox" Grid.Row="1"
-            Text="{Binding SearchText, Mode=TwoWay}" 
-            Placeholder="Начните писать..." 
-            Margin="0,0,0,10" />
+         Text="{Binding SearchText, Mode=TwoWay}" 
+         Placeholder="Начните писать..." 
+         Margin="0,0,0,10" />
     </Grid>
 </ContentPage>

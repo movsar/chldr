@@ -12,7 +12,6 @@ using chldr_utils;
 using chldr_utils.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Realms.Sync;
 
 namespace chldr_api.GraphQL.MutationResolvers
 {

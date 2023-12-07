@@ -17,7 +17,7 @@ namespace dosham.ViewModels
             set => this.RaiseAndSetIfChanged(ref _entry, value);
         }
 
-        public EntryViewModel(ContentStore contentStore, UserStore userStore) : base(contentStore, userStore)
+        public EntryViewModel()
         { }
         #endregion
 

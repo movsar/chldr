@@ -10,7 +10,7 @@ namespace dosham.Pages
         private const int SearchDebounceTime = 250;
         private string _searchText;
         private readonly ContentStore _contentStore;
-        private IEnumerable<EntryModel> _filteredEntries;
+        private IEnumerable<EntryModel> _filteredEntries = new List<EntryModel>();
         public MainPageViewModel(ContentStore contentStore)
         {
             _contentStore = contentStore;
