@@ -23,12 +23,9 @@ public partial class EntriesView : ReactiveContentView<EntriesViewModel>
     public EntriesView()
     {
         ViewModel = App.Services.GetRequiredService<EntriesViewModel>();
-
-        this.WhenActivated(disposables =>
-        {
-            this.OneWayBind(ViewModel, vm => vm.Entries, v => v.Entries);
-        });
-
         InitializeComponent();
+
+        this.OneWayBind(ViewModel, vm => vm.Entries, v => v.Entries);
+
     }
 }

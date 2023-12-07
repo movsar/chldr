@@ -1,10 +1,13 @@
+using dosham.ViewModels;
+using ReactiveUI.Maui;
+
 namespace dosham.Pages;
 
-public partial class IndexPage : ContentPage
+public partial class IndexPage : ReactiveContentPage<IndexPageViewModel>
 {
     public IndexPage()
     {
         InitializeComponent();
-        BindingContext = App.Services.GetRequiredService<IndexPageViewModel>();
+        // App.Services.GetRequiredService<IndexPageViewModel>();
     }
 }

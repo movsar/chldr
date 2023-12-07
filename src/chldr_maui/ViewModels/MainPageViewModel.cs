@@ -3,7 +3,7 @@ using dosham.Stores;
 using ReactiveUI;
 using System.Reactive.Linq;
 
-namespace dosham.Pages
+namespace dosham.ViewModels
 {
     public class MainPageViewModel : ReactiveObject
     {

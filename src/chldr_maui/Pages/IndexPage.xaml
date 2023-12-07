@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<reactive:ReactiveContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:reactive="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
+             xmlns:vm="clr-namespace:dosham.ViewModels"
+             xmlns:views="clr-namespace:dosham.Views"
              x:Class="dosham.Pages.IndexPage"
-             Title="IndexPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
-</ContentPage>
+             x:TypeArguments="vm:IndexPageViewModel">
+    
+    
+</reactive:ReactiveContentPage>

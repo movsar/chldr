@@ -57,24 +57,24 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <AndroidResource Remove="Enums\**" />
-	  <Compile Remove="Enums\**" />
-	  <EmbeddedResource Remove="Enums\**" />
-	  <MauiCss Remove="Enums\**" />
-	  <MauiXaml Remove="Enums\**" />
-	  <None Remove="Enums\**" />
+		<AndroidResource Remove="Enums\**" />
+		<Compile Remove="Enums\**" />
+		<EmbeddedResource Remove="Enums\**" />
+		<MauiCss Remove="Enums\**" />
+		<MauiXaml Remove="Enums\**" />
+		<None Remove="Enums\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="appsettings.json" />
+		<None Remove="appsettings.json" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="appsettings.json">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-	  </Content>
+		<Content Include="appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -83,38 +83,38 @@
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="ReactiveUI" Version="19.5.1" />
-		<PackageReference Include="ReactiveUI.Fody" Version="19.5.1" />
+		<PackageReference Include="ReactiveUI.Events.XamEssentials" Version="15.1.1" />
 		<PackageReference Include="ReactiveUI.Maui" Version="19.5.1" />
-		<PackageReference Include="ReactiveUI.XamForms" Version="19.5.1" />
 		<PackageReference Include="System.Collections.Specialized" Version="4.3.0" />
+		<PackageReference Include="Xamarin.Essentials" Version="1.8.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\chldr_data.realm\chldr_data.realm.csproj" />
+		<ProjectReference Include="..\chldr_data.realm\chldr_data.realm.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Views\EntriesView.xaml.cs">
-	    <DependentUpon>EntriesView.xaml</DependentUpon>
-	  </Compile>
+		<Compile Update="Views\EntriesView.xaml.cs">
+			<DependentUpon>EntriesView.xaml</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiAsset Update="Resources\Raw\data.zip">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </MauiAsset>
+		<MauiAsset Update="Resources\Raw\data.zip">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</MauiAsset>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Pages\IndexPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Resources\Templates\Templates.xaml">
-	    <Generator></Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\EntriesView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
+		<MauiXaml Update="Pages\IndexPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Templates\Templates.xaml">
+			<Generator></Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\EntriesView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 	</ItemGroup>
 
 </Project>

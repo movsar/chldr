@@ -14,7 +14,6 @@ namespace dosham
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
-            
             ServiceRegistrator.RegisterCommonServices(builder.Services);
 
             builder.Services.AddLocalization();

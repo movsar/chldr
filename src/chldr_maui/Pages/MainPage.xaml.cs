@@ -1,5 +1,8 @@
-﻿namespace dosham.Pages;
-public partial class MainPage : ContentPage
+﻿using dosham.ViewModels;
+using ReactiveUI.Maui;
+
+namespace dosham.Pages;
+public partial class MainPage : ReactiveContentPage<MainPageViewModel>
 {
     public MainPage()
     {
