@@ -15,22 +15,12 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Collection View for Entries -->
-        <CollectionView x:Name="EntriesCollectionView" Grid.Row="0"
-                        ItemsSource="{Binding FilteredEntries}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-
-                    <views:EntryView Entry="{Binding .}"></views:EntryView>
-                    
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+        <views:EntriesPresenter Grid.Row="0" Entries ="{Binding FilteredEntries}"/>
 
         <!-- Search Box -->
         <Entry x:Name="SearchBox" Grid.Row="1"
-         Text="{Binding SearchText, Mode=TwoWay}" 
-         Placeholder="Начните писать..." 
-         Margin="0,0,0,10" />
+            Text="{Binding SearchText, Mode=TwoWay}" 
+            Placeholder="Начните писать..." 
+            Margin="0,0,0,10" />
     </Grid>
 </ContentPage>

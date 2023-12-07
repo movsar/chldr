@@ -94,6 +94,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\EntriesView.xaml.cs">
+	    <DependentUpon>EntriesView.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
 	  <MauiAsset Update="Resources\Raw\data.zip">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </MauiAsset>
@@ -106,7 +112,7 @@
 	  <MauiXaml Update="Resources\Templates\Templates.xaml">
 	    <Generator></Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\EntryView.xaml">
+	  <MauiXaml Update="Views\EntriesView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
