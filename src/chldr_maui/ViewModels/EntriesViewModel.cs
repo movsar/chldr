@@ -14,12 +14,7 @@ namespace dosham.ViewModels
         
         public EntriesViewModel()
         {
-            // React to changes in SearchText
-            this.WhenAnyValue(x => x.Entries)
-                .Subscribe(searchTerm =>
-                {
-                   
-                });
+         
         }
     }
 }

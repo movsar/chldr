@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <reactive:ReactiveContentView   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-                                xmlns:viewModels ="clr-namespace:dosham.ViewModels"
-                                xmlns:reactive="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
                                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                xmlns:reactive="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
+                                xmlns:viewModels ="clr-namespace:dosham.ViewModels"
                                 x:TypeArguments="viewModels:EntriesViewModel"
+                                x:DataType="viewModels:EntriesViewModel"
                                 x:Class="dosham.Views.EntriesView">
 
-    <CollectionView x:Name="EntriesCollection"
+    <CollectionView x:Name="entriesCollection"
                     ItemTemplate="{StaticResource EntryTemplate}"
                     ItemsSource="{Binding Entries}">
     </CollectionView>
