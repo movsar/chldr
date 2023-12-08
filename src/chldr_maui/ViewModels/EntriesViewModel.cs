@@ -1,13 +1,12 @@
 ﻿using chldr_data.DatabaseObjects.Models;
-using dosham.Stores;
 using ReactiveUI;
 
 namespace dosham.ViewModels
 {
-    public class EntriesViewModel : ReactiveObject
+    public class EntriesViewModel : ViewModelBase
     {
-        private List<EntryModel> _entries;
-        public List<EntryModel> Entries
+        private IEnumerable<EntryModel> _entries;
+        public IEnumerable<EntryModel> Entries
         {
             get => _entries;
             set => this.RaiseAndSetIfChanged(ref _entries, value);
