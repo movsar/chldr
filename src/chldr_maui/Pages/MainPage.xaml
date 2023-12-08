@@ -5,6 +5,7 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:vm="clr-namespace:dosham.ViewModels"
              xmlns:views="clr-namespace:dosham.Views"
+             x:DataType="vm:MainPageViewModel"
              x:TypeArguments="vm:MainPageViewModel"
              x:Class="dosham.Pages.MainPage">
 

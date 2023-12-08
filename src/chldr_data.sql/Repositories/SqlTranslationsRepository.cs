@@ -14,7 +14,7 @@ using chldr_data.DatabaseObjects.Interfaces;
 namespace chldr_data.sql.Repositories
 {
     public class SqlTranslationsRepository : SqlRepository<SqlTranslation, TranslationModel, TranslationDto>, ITranslationsRepository
-    {
+    {    
         public SqlTranslationsRepository(SqlContext context, FileService fileService, string _userId) : base(context, fileService, _userId) { }
         protected override RecordType RecordType => RecordType.Translation;
      

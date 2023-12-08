@@ -1,4 +1,5 @@
 using dosham.ViewModels;
+using ReactiveUI;
 using ReactiveUI.Maui;
 
 namespace dosham.Pages;
@@ -7,7 +8,13 @@ public partial class IndexPage : ReactiveContentPage<IndexPageViewModel>
 {
     public IndexPage()
     {
+        ViewModel = App.Services.GetRequiredService<IndexPageViewModel>();
+
         InitializeComponent();
-        // App.Services.GetRequiredService<IndexPageViewModel>();
+
+        this.WhenActivated(disposable =>
+        {
+            this.OneWayBind(ViewModel, vm => vm.Entries, v => v.entriesView.ViewModel!.Entries);
+        });
     }
 }

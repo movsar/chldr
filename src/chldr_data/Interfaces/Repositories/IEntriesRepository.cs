@@ -2,6 +2,7 @@
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace chldr_data.Interfaces.Repositories
@@ -86,41 +87,7 @@ namespace chldr_data.Interfaces.Repositories
             }
 
             return resultingQuery;
-        }
-
-        public static IQueryable<TEntity> ApplyEntryFilters<TEntity>(IQueryable<TEntity> sourceEntries, EntryFilters? entryFilters)
-         where TEntity : IEntryEntity
-        {
-            if (entryFilters == null)
-            {
-                return sourceEntries;
-            }
-
-            // Must not initiate any asynchronous operations!
-
-            // Leave only selected entry types
-            var resultingEntries = sourceEntries;
-            if (entryFilters.EntryTypes != null && entryFilters.EntryTypes.Length > 0)
-            {
-                var entryTypes = entryFilters.EntryTypes.Select(et => (int)et).ToArray();
-                resultingEntries = sourceEntries.Where(e => entryTypes.Contains(e.Type));
-            }
-
-            // If StartsWith specified, remove all that don't start with that string
-            if (!string.IsNullOrWhiteSpace(entryFilters.StartsWith))
-            {
-                var str = entryFilters.StartsWith.ToLower();
-                resultingEntries = resultingEntries.Where(e => e.RawContents.StartsWith(str));
-            }
-
-            // Don't include entries on moderation, if not specified otherwise
-            if (entryFilters.IncludeOnModeration != null && entryFilters.IncludeOnModeration == false)
-            {
-                resultingEntries = resultingEntries.Where(e => e.Rate > UserModel.MemberRateRange.Upper);
-            }
-
-            return resultingEntries;
-        }
+        }            
 
         Task<int> CountAsync(FiltrationFlags? filtrationFlags = null);
         Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags? filtrationFlags = null);

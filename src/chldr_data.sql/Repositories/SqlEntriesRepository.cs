@@ -10,7 +10,6 @@ using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using chldr_data.DatabaseObjects.Interfaces;
 using System.Collections.Immutable;
-using System.Diagnostics;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("chldr_data.sql.tests")]
 
@@ -18,14 +17,82 @@ namespace chldr_data.sql.Repositories
 {
     public class SqlEntriesRepository : SqlRepository<SqlEntry, EntryModel, EntryDto>, IEntriesRepository
     {
+        public static IQueryable<TEntity> ApplyEntryFilters<TEntity>(IQueryable<TEntity> sourceEntries, EntryFilters? entryFilters)
+         where TEntity : IEntryEntity
+        {
+            if (entryFilters == null)
+            {
+                return sourceEntries;
+            }
+
+            // Must not initiate any asynchronous operations!
+
+            // Leave only selected entry types
+            var resultingEntries = sourceEntries;
+            if (entryFilters.EntryTypes != null && entryFilters.EntryTypes.Length > 0)
+            {
+                var entryTypes = entryFilters.EntryTypes.Select(et => (int)et).ToArray();
+                resultingEntries = sourceEntries.Where(e => entryTypes.Contains(e.Type));
+            }
+
+            // If StartsWith specified, remove all that don't start with that string
+            if (!string.IsNullOrWhiteSpace(entryFilters.StartsWith))
+            {
+                var str = entryFilters.StartsWith.ToLower();
+                resultingEntries = resultingEntries.Where(e => e.RawContents.StartsWith(str));
+            }
+
+            // Don't include entries on moderation, if not specified otherwise
+            if (entryFilters.IncludeOnModeration != null && entryFilters.IncludeOnModeration == false)
+            {
+                resultingEntries = resultingEntries.Where(e => e.Rate > UserModel.MemberRateRange.Upper);
+            }
+
+            return resultingEntries;
+        }
+
+        public static List<EntryModel> ApplyTranslationFilters(List<EntryModel> entryModels, TranslationFilters filters)
+        {
+            // Prepare language codes to look for
+            var languageCodes = new List<string>();
+            if (filters.LanguageCodes != null)
+            {
+                languageCodes = filters.LanguageCodes.Select(lc => lc.ToLower().Trim()).ToList();
+            }
+
+            foreach (var entry in entryModels)
+            {
+                var translationsToFilterOut = new List<string>();
+
+                foreach (var translation in entry.Translations)
+                {
+                    // If language codes are specified - filter by them
+                    if (languageCodes.Any() && !languageCodes.Contains(translation.LanguageCode.ToLower()))
+                    {
+                        translationsToFilterOut.Add(translation.TranslationId);
+                    }
+
+                    // Filter by rate
+                    if (filters.IncludeOnModeration == false && translation.Rate <= UserModel.MemberRateRange.Upper)
+                    {
+                        translationsToFilterOut.Add(translation.TranslationId);
+                    }
+                }
+
+                entry.Translations.RemoveAll(t => translationsToFilterOut.Contains(t.TranslationId));
+            }
+
+            return entryModels.Where(e => e.Translations.Any()).ToList();
+        }
+
         public async Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags? filtrationFlags = null)
         {
             try
             {
                 IQueryable<SqlEntry> entries = _dbContext.Entries;
-                if (filtrationFlags != null && filtrationFlags.EntryFilters != null)
+                if (filtrationFlags != null && filtrationFlags != null)
                 {
-                    entries = IEntriesRepository.ApplyEntryFilters(_dbContext.Entries, filtrationFlags.EntryFilters);
+                    entries = ApplyEntryFilters(_dbContext.Entries, filtrationFlags.EntryFilters);
                 }
 
                 var foundEntries = IEntriesRepository.Find(entries, inputText);
@@ -35,7 +102,7 @@ namespace chldr_data.sql.Repositories
 
                 if (filtrationFlags != null && filtrationFlags.TranslationFilters != null)
                 {
-                    entryModels = ITranslationsRepository.ApplyTranslationFilters(entryModels, filtrationFlags.TranslationFilters);
+                    entryModels = ApplyTranslationFilters(entryModels, filtrationFlags.TranslationFilters);
                 }
                 return entryModels;
             }
@@ -59,9 +126,9 @@ namespace chldr_data.sql.Repositories
         public async Task<List<EntryModel>> GetByIdsAsync(List<string> entryIds, FiltrationFlags? filtrationFlags = null)
         {
             IQueryable<SqlEntry> entries = _dbContext.Entries;
-            if (filtrationFlags != null && filtrationFlags.EntryFilters != null)
+            if (filtrationFlags != null && filtrationFlags != null)
             {
-                entries = IEntriesRepository.ApplyEntryFilters(_dbContext.Entries, filtrationFlags.EntryFilters);
+                entries = ApplyEntryFilters(_dbContext.Entries, filtrationFlags.EntryFilters);
             }
 
             var filteredEntries = entries.Where(e => entryIds.Contains(e.EntryId));
@@ -92,7 +159,7 @@ namespace chldr_data.sql.Repositories
         }
         public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
-            var filteredEntries = IEntriesRepository.ApplyEntryFilters(_dbContext.Entries, filtrationFlags?.EntryFilters);
+            var filteredEntries = ApplyEntryFilters(_dbContext.Entries, filtrationFlags?.EntryFilters);
             filteredEntries = filteredEntries
                       .OrderBy(e => e.RawContents)
                       .Skip(offset)
@@ -371,7 +438,7 @@ namespace chldr_data.sql.Repositories
 
         public async Task<int> CountAsync(FiltrationFlags filtrationFlags)
         {
-            var entries = IEntriesRepository.ApplyEntryFilters(_dbContext.Entries, filtrationFlags?.EntryFilters);
+            var entries = ApplyEntryFilters(_dbContext.Entries, filtrationFlags?.EntryFilters);
             var count = await entries.CountAsync();
 
             return count;

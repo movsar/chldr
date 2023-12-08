@@ -14,6 +14,8 @@ using chldr_data.Services;
 using chldr_data.Enums.WordDetails;
 using chldr_data.realm.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using Realms;
 
 namespace chldr_data.Repositories
 {
@@ -149,13 +151,75 @@ namespace chldr_data.Repositories
             throw new NotImplementedException();
         }
         #endregion
+        public static List<EntryModel> ApplyTranslationFilters(List<EntryModel> entryModels, TranslationFilters filters)
+        {
+            // Prepare language codes to look for
+            var languageCodes = new HashSet<string>();
+            if (filters.LanguageCodes != null)
+            {
+                foreach (var code in filters.LanguageCodes)
+                {
+                    languageCodes.Add(code.ToLower().Trim());
+                }
+            }
 
+            foreach (var entry in entryModels.ToList())
+            {
+                var translationsToKeep = new List<TranslationModel>();
+
+                foreach (var translation in entry.Translations)
+                {
+                    var languageCodeLower = translation.LanguageCode.ToLower();
+                    bool isLanguageMatch = languageCodes.Count == 0 || languageCodes.Contains(languageCodeLower);
+                    bool isRateMatch = !(filters.IncludeOnModeration == false && translation.Rate <= UserModel.MemberRateRange.Upper);
+
+                    if (isLanguageMatch && isRateMatch)
+                    {
+                        translationsToKeep.Add(translation);
+                    }
+                }
+
+                entry.Translations = translationsToKeep;
+            }
+
+            entryModels = entryModels.Where(e => e.Translations.Any()).ToList();
+            return entryModels;
+        }
+
+        public IEnumerable<RealmEntry> ApplyEntryFilters(IQueryable<RealmEntry> sourceEntries, EntryFilters? entryFilters)
+        {
+            // Leave only selected entry types
+            var resultingEntries = sourceEntries.AsQueryable();
+            if (entryFilters.EntryTypes != null && entryFilters.EntryTypes.Any())
+            {
+                var entryTypeQueries = entryFilters.EntryTypes.Select(et => $"Type == {(int)et}");
+                var combinedQuery = string.Join(" OR ", entryTypeQueries);
+                resultingEntries = resultingEntries.Filter(combinedQuery);
+            }
+
+            // If StartsWith specified, remove all that don't start with that string
+            if (!string.IsNullOrWhiteSpace(entryFilters.StartsWith))
+            {
+                var str = entryFilters.StartsWith.ToLower();
+                resultingEntries = resultingEntries.Filter($"RawContents BEGINSWITH[c] '{str}'");
+            }
+
+            // Don't include entries on moderation, if not specified otherwise
+            if (entryFilters.IncludeOnModeration != null && entryFilters.IncludeOnModeration == false)
+            {
+                var upperRate = UserModel.MemberRateRange.Upper;
+                resultingEntries = resultingEntries.Filter($"Rate > '{upperRate}'");
+            }
+
+            return resultingEntries;
+        }
         public async Task<int> CountAsync(FiltrationFlags filtrationFlags)
         {
-            //var entries = await IEntriesRepository.ApplyFiltrationFlags(_dbContext.All<RealmEntry>(), filtrationFlags);
-            //return await entries.CountAsync();
+            var a = _dbContext.All<RealmEntry>().Where(e => e.Content.StartsWith("а"));
 
-            throw new NotImplementedException();
+            var entries = ApplyEntryFilters(_dbContext.All<RealmEntry>(), filtrationFlags.EntryFilters);
+
+            return entries.TryGetNonEnumeratedCount(out var count) ? count : entries.Count();
         }
 
         public override EntryModel FromEntity(RealmEntry entry)

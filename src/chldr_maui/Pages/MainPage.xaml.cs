@@ -11,7 +11,6 @@ public partial class MainPage : ReactiveContentPage<MainPageViewModel>
         ViewModel = App.Services.GetRequiredService<MainPageViewModel>();
         InitializeComponent();
 
-        // Reactive bindings
         this.WhenActivated(disposable =>
         {
             this.OneWayBind(ViewModel, vm => vm.FilteredEntries, v => v.entriesView.ViewModel!.Entries);

@@ -5,8 +5,33 @@
              xmlns:reactive="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
              xmlns:vm="clr-namespace:dosham.ViewModels"
              xmlns:views="clr-namespace:dosham.Views"
+             x:DataType="vm:IndexPageViewModel"
              x:Class="dosham.Pages.IndexPage"
              x:TypeArguments="vm:IndexPageViewModel">
-    
-    
+
+    <Grid Padding="10">
+        <!-- Define the rows -->
+        <Grid.RowDefinitions>
+            <!-- For CollectionView, takes remaining space -->
+            <RowDefinition Height="*"/>
+            <!-- For Search Box -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Collection View for Entries -->
+        <views:EntriesView x:Name="entriesView"/>
+
+        <!-- Search Box -->
+
+        <HorizontalStackLayout Grid.Row="1">
+            <Button Text="Next">
+                
+            </Button>
+            <Button Text="Previous">
+                
+            </Button>
+        </HorizontalStackLayout>
+
+    </Grid>
+
 </reactive:ReactiveContentPage>
