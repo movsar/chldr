@@ -10,13 +10,14 @@ namespace dosham.ViewModels
 {
     public class IndexPageViewModel : ViewModelBase
     {
-        public List<string> Letters = new List<string>() {
+        public string[] Letters { get; } = {
               "Ӏ", "А", "Аь", "Б", "В", "Г", "ГӀ", "Д", "Е", "Ё", "Ж", "З", "И", "Й", "К", "Кх", "Къ", "КӀ",
               "Л", "М", "Н", "О", "Оь", "П", "ПӀ", "Р", "С", "Т", "ТӀ", "У", "Уь", "Ф", "Х", "Хь", "ХӀ",
               "Ц", "ЦӀ", "Ч", "ЧӀ", "Ш", "Э", "Ю", "Юь", "Я", "Яь"
         };
         public ReactiveCommand<Unit, Unit> BtnNextClickedCommand { get; }
         public ReactiveCommand<Unit, Unit> BtnPreviousClickedCommand { get; }
+        public ReactiveCommand<string, Unit> LetterSelectionCommand { get; set; }
 
         private IEnumerable<EntryModel> _entries;
         public IEnumerable<EntryModel> Entries
@@ -33,6 +34,7 @@ namespace dosham.ViewModels
         {
             BtnNextClickedCommand = ReactiveCommand.Create(OnNextPage);
             BtnPreviousClickedCommand = ReactiveCommand.Create(OnPreviousPage);
+            LetterSelectionCommand = ReactiveCommand.CreateFromTask<string>(LetterSelectionHandler);
 
             LetterSelectionHandler(Letters[0]).ConfigureAwait(false);
         }

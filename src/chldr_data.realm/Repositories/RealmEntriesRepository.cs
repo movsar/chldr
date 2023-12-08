@@ -21,6 +21,55 @@ namespace chldr_data.Repositories
 {
     public class RealmEntriesRepository : RealmRepository<RealmEntry, EntryModel, EntryDto>, IEntriesRepository
     {
+        public List<EntryModel> GroupWithSubentries(IQueryable<IEntryEntity> filteredEntries, Func<string, EntryModel> fromEntity)
+        {
+            // Convert filteredEntries to a list to prevent multiple enumeration
+            var filteredEntriesList = filteredEntries.ToList();
+
+            // Collect parent entry IDs
+            var subEntryParentIds = new HashSet<string>();
+            foreach (var entry in filteredEntriesList)
+            {
+                if (entry.ParentEntryId != null)
+                {
+                    subEntryParentIds.Add(entry.ParentEntryId);
+                }
+            }
+
+            // Filter parents from Realm database using Filter
+            var parents = new List<IEntryEntity>();
+            foreach (var parentId in subEntryParentIds)
+            {
+                var parent = _dbContext.All<RealmEntry>().Where(e => e.EntryId == parentId).FirstOrDefault();
+                if (parent != null)
+                {
+                    parents.Add(parent);
+                }
+            }
+
+            // Combine filtered entries with parents
+            var combinedEntries = new List<IEntryEntity>(filteredEntriesList);
+            combinedEntries.AddRange(parents);
+
+            // Collect subentry IDs
+            var subEntryIds = new HashSet<string>();
+            foreach (var entry in combinedEntries)
+            {
+                if (entry.ParentEntryId != null)
+                {
+                    subEntryIds.Add(entry.EntryId);
+                }
+            }
+
+            // Remove standalone subentries
+            combinedEntries.RemoveAll(e => subEntryIds.Contains(e.EntryId));
+
+            // Convert to EntryModel
+            var models = combinedEntries.Select(e => fromEntity(e.EntryId)).ToList();
+
+            return models;
+        }
+
         #region Get and Take
         public override async Task<List<EntryModel>> GetRandomsAsync(int limit)
         {
@@ -85,17 +134,14 @@ namespace chldr_data.Repositories
         }
         public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
-            //var entries = await ApplyFiltrationFlags(_dbContext.All<RealmEntry>(), filtrationFlags);
+            var filteredEntries = ApplyEntryFilters(_dbContext.All<RealmEntry>(), filtrationFlags?.EntryFilters);
+            var filteredEntriesAsQueriable = filteredEntries
+                      .OrderBy(e => e.RawContents)
+                      .Skip(offset)
+                      .Take(limit)
+                      .AsQueryable();
 
-            //var groupedEntries = await entries
-            //    .OrderBy(e => e.RawContents)
-            //    .Skip(offset)
-            //    .Take(limit)
-            //    .ToListAsync();
-
-            //return groupedEntries.Select(FromEntityWithSubEntries).ToList();
-
-            throw new NotImplementedException();
+            return GroupWithSubentries(filteredEntriesAsQueriable, FromEntry);
         }
 
         #endregion

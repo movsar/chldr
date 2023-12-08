@@ -10,6 +10,7 @@ using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 using chldr_data.DatabaseObjects.Interfaces;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("chldr_data.sql.tests")]
 
@@ -17,6 +18,40 @@ namespace chldr_data.sql.Repositories
 {
     public class SqlEntriesRepository : SqlRepository<SqlEntry, EntryModel, EntryDto>, IEntriesRepository
     {
+        public List<EntryModel> GroupWithSubentries(IQueryable<IEntryEntity> filteredEntries, Func<string, EntryModel> fromEntity)
+        {
+            /*
+             * This method looks for entries that have parents, and takes the parents instead
+             * with children added as subentries.
+             * 
+             * Should be called only on results after all the filtration has been done.
+             * 
+             * @param entries = all entries from database
+             * @param resultingEntries = those that have already been filtered by some criteria
+            */
+            var sw = Stopwatch.StartNew();
+            var subEntryParentIds = filteredEntries.Where(e => e.ParentEntryId != null)
+                .Select(e => e.ParentEntryId)
+                .ToArray();//81
+            var a = sw.ElapsedMilliseconds;
+
+            // Add subEntry parents
+            var parents = _dbContext.Entries.Where(e => subEntryParentIds.Contains(e.EntryId));
+
+            var resultingEntries = filteredEntries.Union(parents).ToList();//216
+            var c = sw.ElapsedMilliseconds;
+
+            // Get standalone entry ids
+            var subEntryIds = resultingEntries.Where(e => e.ParentEntryId != null).Select(e => e.EntryId).ToList();
+
+            // Remove standalone sub entries
+            resultingEntries.RemoveAll(e => subEntryIds.Contains(e.EntryId));
+
+            var models = resultingEntries.Select(e => fromEntity(e.EntryId)).ToList();//300ms
+            var f = sw.ElapsedMilliseconds;
+            sw.Stop();
+            return models;
+        }
         public static IQueryable<TEntity> ApplyEntryFilters<TEntity>(IQueryable<TEntity> sourceEntries, EntryFilters? entryFilters)
          where TEntity : IEntryEntity
         {
@@ -98,7 +133,7 @@ namespace chldr_data.sql.Repositories
                 var foundEntries = IEntriesRepository.Find(entries, inputText);
 
                 // TODO: Optimize this method
-                var entryModels = IEntriesRepository.GroupWithSubentries(_dbContext.Entries, foundEntries, FromEntry);
+                var entryModels = GroupWithSubentries(foundEntries, FromEntry);
 
                 if (filtrationFlags != null && filtrationFlags.TranslationFilters != null)
                 {
@@ -133,7 +168,7 @@ namespace chldr_data.sql.Repositories
 
             var filteredEntries = entries.Where(e => entryIds.Contains(e.EntryId));
 
-            var models = IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries, FromEntry);
+            var models = GroupWithSubentries(filteredEntries, FromEntry);
 
             // TODO: Move to a new ApplyTranslationFilters method
             foreach (var model in models)
@@ -155,7 +190,7 @@ namespace chldr_data.sql.Repositories
                 .Skip(offset)
                 .Take(limit);
 
-            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries, FromEntry);
+            return GroupWithSubentries(filteredEntries, FromEntry);
         }
         public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
@@ -165,13 +200,13 @@ namespace chldr_data.sql.Repositories
                       .Skip(offset)
                       .Take(limit);
 
-            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries, FromEntry);
+            return GroupWithSubentries(filteredEntries, FromEntry);
         }
         public override async Task<List<EntryModel>> GetRandomsAsync(int limit)
         {
             var filteredEntries = IEntriesRepository.GetRandomEntries(_dbContext.Entries, limit);
 
-            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries, FromEntry);
+            return GroupWithSubentries(filteredEntries, FromEntry);
         }
 
         public async Task<List<EntryModel>> GetLatestEntriesAsync(int count)
@@ -180,7 +215,7 @@ namespace chldr_data.sql.Repositories
                 .OrderByDescending(e => e.CreatedAt)
                 .Take(count);
 
-            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries, FromEntry);
+            return GroupWithSubentries(filteredEntries, FromEntry);
         }
 
         public async Task<List<EntryModel>> GetEntriesOnModerationAsync()
@@ -191,7 +226,7 @@ namespace chldr_data.sql.Repositories
                 .Where(entry => entry.Rate < UserModel.MemberRateRange.Lower)
                 .Take(count);
 
-            return IEntriesRepository.GroupWithSubentries(_dbContext.Entries, filteredEntries, FromEntry);
+            return GroupWithSubentries(filteredEntries, FromEntry);
         }
         public async Task<List<EntryModel>> GetChildEntriesAsync(string entryId)
         {

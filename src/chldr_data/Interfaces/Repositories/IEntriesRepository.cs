@@ -26,44 +26,7 @@ namespace chldr_data.Interfaces.Repositories
                 .Where(entry => randomlySelectedIds.Contains(entry.EntryId));
 
             return filteredEntries;
-        }
-
-        public static List<EntryModel> GroupWithSubentries(IQueryable<IEntryEntity> sourceEntries, IQueryable<IEntryEntity> filteredEntries, Func<string, EntryModel> fromEntity)
-        {
-            // Must not initiate any asynchronous operations!
-
-            /*
-             * This method looks for entries that have parents, and takes the parents instead
-             * with children added as subentries.
-             * 
-             * Should be called only on results after all the filtration has been done.
-             * 
-             * @param entries = all entries from database
-             * @param resultingEntries = those that have already been filtered by some criteria
-            */
-            var sw = Stopwatch.StartNew();
-            var subEntryParentIds = filteredEntries.Where(e => e.ParentEntryId != null)
-                .Select(e => e.ParentEntryId)
-                .ToArray();//81
-            var a = sw.ElapsedMilliseconds;
-
-            // Add subEntry parents
-            var parents = sourceEntries.Where(e => subEntryParentIds.Contains(e.EntryId));
-
-            var resultingEntries = filteredEntries.Union(parents).ToList();//216
-            var c = sw.ElapsedMilliseconds;
-
-            // Get standalone entry ids
-            var subEntryIds = resultingEntries.Where(e => e.ParentEntryId != null).Select(e => e.EntryId).ToList();
-
-            // Remove standalone sub entries
-            resultingEntries.RemoveAll(e => subEntryIds.Contains(e.EntryId));
-
-            var models = resultingEntries.Select(e => fromEntity(e.EntryId)).ToList();//300ms
-            var f = sw.ElapsedMilliseconds;
-            sw.Stop();
-            return models;
-        }
+        }      
 
         public static IQueryable<IEntryEntity> Find(IQueryable<IEntryEntity> sourceEntries, string inputText)
         {

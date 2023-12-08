@@ -10,26 +10,36 @@
              x:TypeArguments="vm:IndexPageViewModel">
 
     <Grid Padding="10">
-        <!-- Define the rows -->
         <Grid.RowDefinitions>
-            <!-- For CollectionView, takes remaining space -->
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <!-- For Search Box -->
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!--Letters-->
+        <StackLayout Grid.Row="0" Orientation="Horizontal" HorizontalOptions="Center">
+            <CollectionView ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:IndexPageViewModel}}, Path=Letters}" 
+                            SelectionMode="None"
+                            ItemsLayout="HorizontalList"
+                            >
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Button Text="{Binding .}" 
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:IndexPageViewModel}}, Path=LetterSelectionCommand}"
+                                CommandParameter="{Binding .}"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+
         <!-- Collection View for Entries -->
-        <views:EntriesView x:Name="entriesView"/>
+        <views:EntriesView Grid.Row="1" x:Name="entriesView"/>
 
         <!-- Search Box -->
 
-        <HorizontalStackLayout Grid.Row="1">
-            <Button Text="Next">
-                
-            </Button>
-            <Button Text="Previous">
-                
-            </Button>
+        <HorizontalStackLayout Grid.Row="2" Spacing="10" HorizontalOptions="Center">
+            <Button x:Name="BtnPrevious" Text="Previous"></Button>
+            <Button x:Name="BtnNext" Text="Next"></Button>
         </HorizontalStackLayout>
 
     </Grid>
