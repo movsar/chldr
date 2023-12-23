@@ -1,12 +1,12 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.realm.Services;
-using CommunityToolkit.Maui;
 using dosham.Enums;
 using dosham.Pages;
 using dosham.Services;
 using dosham.Stores;
 using dosham.ViewModels;
 using Microsoft.Extensions.Logging;
+using Plugin.Maui.Audio;
 
 namespace dosham
 {
@@ -28,12 +28,11 @@ namespace dosham
             builder.Services.AddSingleton<MainPageViewModel>();
             builder.Services.AddSingleton<IndexPageViewModel>();
             builder.Services.AddSingleton<AlphabetPageViewModel>();
-
+            builder.Services.AddSingleton(AudioManager.Current);
             builder.Services.AddTransient<EntriesViewModel>();
 
             builder
                 .UseMauiApp<App>()
-                .UseMauiCommunityToolkitMediaElement()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
