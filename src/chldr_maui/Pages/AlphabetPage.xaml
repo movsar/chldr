@@ -15,19 +15,21 @@
             <VerticalStackLayout>
 
                 <!-- Row 1 -->
-                <HorizontalStackLayout x:Name="slButtons" Margin="0,5,0,0">
-                    <ImageButton Source="a.png" BackgroundColor="#ff45de56"/>
-                    <ImageButton Source="a_one.png" BackgroundColor="#ff45de56" />
-                    <ImageButton Source="b.png" BackgroundColor="#ff45de56"/>
-                    <ImageButton Source="v.png" BackgroundColor="#ff45de56" />
-                    <ImageButton Source="g.png" BackgroundColor="#ff45de56" />
-                </HorizontalStackLayout>
+                <FlexLayout x:Name="slButtons" Margin="0,5,0,0">
+
+                    <ImageButton Source="Resources/Images/Alphabet/a.png" />
+                    <ImageButton Source="Resources/Images/Alphabet/a_one.png"/>
+                    <ImageButton Source="Resources/Images/Alphabet/b.png"/>
+                    <ImageButton Source="Resources/Images/Alphabet/v.png"/>
+                    <ImageButton Source="Resources/Images/Alphabet/g.png"/>
+
+                </FlexLayout>
 
                 <!-- Additional rows follow a similar pattern -->
 
                 <!-- Last Row with TextView -->
                 <HorizontalStackLayout Margin="0,5,0,0" HorizontalOptions="Center">
-                    
+
                 </HorizontalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
