@@ -17,11 +17,11 @@
                 <!-- Row 1 -->
                 <FlexLayout x:Name="slButtons" Margin="0,5,0,0">
 
-                    <ImageButton Source="Resources/Images/Alphabet/a.png" />
-                    <ImageButton Source="Resources/Images/Alphabet/a_one.png"/>
-                    <ImageButton Source="Resources/Images/Alphabet/b.png"/>
-                    <ImageButton Source="Resources/Images/Alphabet/v.png"/>
-                    <ImageButton Source="Resources/Images/Alphabet/g.png"/>
+                    <ImageButton Source="a" />
+                    <ImageButton Source="a_one.png"/>
+                    <ImageButton Source="b.png"/>
+                    <ImageButton Source="v.png"/>
+                    <ImageButton Source="g.png"/>
 
                 </FlexLayout>
 

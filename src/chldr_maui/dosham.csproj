@@ -47,7 +47,7 @@
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+		<MauiImage Include="Resources\Images\Alphabet*" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -67,62 +67,6 @@
 
 	<ItemGroup>
 		<None Remove="appsettings.json" />
-		<None Remove="Resources\Images\Alphabet\a.png" />
-		<None Remove="Resources\Images\Alphabet\ae.png" />
-		<None Remove="Resources\Images\Alphabet\a_one.png" />
-		<None Remove="Resources\Images\Alphabet\b.png" />
-		<None Remove="Resources\Images\Alphabet\c.png" />
-		<None Remove="Resources\Images\Alphabet\ch.png" />
-		<None Remove="Resources\Images\Alphabet\ch_one.png" />
-		<None Remove="Resources\Images\Alphabet\c_one.png" />
-		<None Remove="Resources\Images\Alphabet\d.png" />
-		<None Remove="Resources\Images\Alphabet\e.png" />
-		<None Remove="Resources\Images\Alphabet\element_one.png" />
-		<None Remove="Resources\Images\Alphabet\element_three.png" />
-		<None Remove="Resources\Images\Alphabet\element_two.png" />
-		<None Remove="Resources\Images\Alphabet\e_one.png" />
-		<None Remove="Resources\Images\Alphabet\g.png" />
-		<None Remove="Resources\Images\Alphabet\gh.png" />
-		<None Remove="Resources\Images\Alphabet\g_one.png" />
-		<None Remove="Resources\Images\Alphabet\h.png" />
-		<None Remove="Resources\Images\Alphabet\h_one.png" />
-		<None Remove="Resources\Images\Alphabet\h_two.png" />
-		<None Remove="Resources\Images\Alphabet\i.png" />
-		<None Remove="Resources\Images\Alphabet\k.png" />
-		<None Remove="Resources\Images\Alphabet\k_one.png" />
-		<None Remove="Resources\Images\Alphabet\k_three.png" />
-		<None Remove="Resources\Images\Alphabet\k_two.png" />
-		<None Remove="Resources\Images\Alphabet\l.png" />
-		<None Remove="Resources\Images\Alphabet\listen.png" />
-		<None Remove="Resources\Images\Alphabet\listen_two.png" />
-		<None Remove="Resources\Images\Alphabet\logo.png" />
-		<None Remove="Resources\Images\Alphabet\m.png" />
-		<None Remove="Resources\Images\Alphabet\n.png" />
-		<None Remove="Resources\Images\Alphabet\o.png" />
-		<None Remove="Resources\Images\Alphabet\o_one.png" />
-		<None Remove="Resources\Images\Alphabet\p.png" />
-		<None Remove="Resources\Images\Alphabet\ph.png" />
-		<None Remove="Resources\Images\Alphabet\p_one.png" />
-		<None Remove="Resources\Images\Alphabet\r.png" />
-		<None Remove="Resources\Images\Alphabet\reply.png" />
-		<None Remove="Resources\Images\Alphabet\s.png" />
-		<None Remove="Resources\Images\Alphabet\sh.png" />
-		<None Remove="Resources\Images\Alphabet\shtuka.png" />
-		<None Remove="Resources\Images\Alphabet\sh_one.png" />
-		<None Remove="Resources\Images\Alphabet\t.png" />
-		<None Remove="Resources\Images\Alphabet\t_one.png" />
-		<None Remove="Resources\Images\Alphabet\u.png" />
-		<None Remove="Resources\Images\Alphabet\u_one.png" />
-		<None Remove="Resources\Images\Alphabet\v.png" />
-		<None Remove="Resources\Images\Alphabet\wifi_fdark.png" />
-		<None Remove="Resources\Images\Alphabet\wifi_flight.png" />
-		<None Remove="Resources\Images\Alphabet\wifi_red.png" />
-		<None Remove="Resources\Images\Alphabet\y.png" />
-		<None Remove="Resources\Images\Alphabet\ya.png" />
-		<None Remove="Resources\Images\Alphabet\ya_one.png" />
-		<None Remove="Resources\Images\Alphabet\yu.png" />
-		<None Remove="Resources\Images\Alphabet\yu_one.png" />
-		<None Remove="Resources\Images\Alphabet\z.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -131,62 +75,6 @@
 			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiImage Include="Resources\Images\Alphabet\a.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\ae.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\a_one.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\b.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\c.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\ch.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\ch_one.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\c_one.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\d.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\e.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\element_one.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\element_three.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\element_two.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\e_one.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\g.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\gh.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\g_one.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\h.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\h_one.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\h_two.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\i.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\k.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\k_one.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\k_three.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\k_two.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\l.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\listen.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\listen_two.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\logo.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\m.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\n.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\o.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\o_one.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\p.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\ph.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\p_one.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\r.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\reply.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\s.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\sh.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\shtuka.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\sh_one.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\t.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\t_one.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\u.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\u_one.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\v.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\y.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\ya.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\ya_one.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\yu.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\yu_one.png" />
-	  <MauiImage Include="Resources\Images\Alphabet\z.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -233,6 +121,10 @@
 		<MauiXaml Update="Views\EntriesView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Resources\Images\" />
 	</ItemGroup>
 
 </Project>
