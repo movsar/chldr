@@ -17,20 +17,23 @@
         </Grid.RowDefinitions>
 
         <!--Letters-->
-        <StackLayout Grid.Row="0" Orientation="Horizontal" HorizontalOptions="Center">
-            <CollectionView ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:IndexPageViewModel}}, Path=Letters}" 
-                            SelectionMode="None"
-                            ItemsLayout="HorizontalList"
-                            >
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Button Text="{Binding .}" 
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:IndexPageViewModel}}, Path=LetterSelectionCommand}"
-                                CommandParameter="{Binding .}"/>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </StackLayout>
+        <ScrollView Orientation="Horizontal">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                <CollectionView ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:IndexPageViewModel}}, Path=Letters}" 
+                     SelectionMode="None"
+                     ItemsLayout="HorizontalList"
+                     >
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{StaticResource LetterButtonStyle}"
+                            Text="{Binding .}" 
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:IndexPageViewModel}}, Path=LetterSelectionCommand}"
+                            CommandParameter="{Binding .}"/>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+        </ScrollView>
 
         <!-- Collection View for Entries -->
         <views:EntriesView Grid.Row="1" x:Name="entriesView"/>
@@ -38,8 +41,8 @@
         <!-- Search Box -->
 
         <HorizontalStackLayout Grid.Row="2" Spacing="10" HorizontalOptions="Center">
-            <Button x:Name="BtnPrevious" Text="Previous"></Button>
-            <Button x:Name="BtnNext" Text="Next"></Button>
+            <Button Style="{StaticResource BaseButtonStyle}" x:Name="BtnPrevious" Text="Предыдущая"></Button>
+            <Button Style="{StaticResource BaseButtonStyle}" x:Name="BtnNext" Text="Следующая"></Button>
         </HorizontalStackLayout>
 
     </Grid>
