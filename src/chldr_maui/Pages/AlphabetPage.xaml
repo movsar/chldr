@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<reactive:ReactiveContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:reactive="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
+             xmlns:vm="clr-namespace:dosham.ViewModels"
+             xmlns:views="clr-namespace:dosham.Views"
+             x:DataType="vm:AlphabetPageViewModel"
+             x:Class="dosham.Pages.AlphabetPage"
+             x:TypeArguments="vm:AlphabetPageViewModel">
+
+    <VerticalStackLayout>
+
+        <ScrollView>
+            <VerticalStackLayout>
+
+                <!-- Row 1 -->
+                <HorizontalStackLayout x:Name="slButtons" Margin="0,5,0,0">
+                    <ImageButton Source="a.png" BackgroundColor="#ff45de56"/>
+                    <ImageButton Source="a_one.png" BackgroundColor="#ff45de56" />
+                    <ImageButton Source="b.png" BackgroundColor="#ff45de56"/>
+                    <ImageButton Source="v.png" BackgroundColor="#ff45de56" />
+                    <ImageButton Source="g.png" BackgroundColor="#ff45de56" />
+                </HorizontalStackLayout>
+
+                <!-- Additional rows follow a similar pattern -->
+
+                <!-- Last Row with TextView -->
+                <HorizontalStackLayout Margin="0,5,0,0" HorizontalOptions="Center">
+                    
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </VerticalStackLayout>
+
+</reactive:ReactiveContentPage>

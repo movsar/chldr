@@ -17,7 +17,7 @@ namespace dosham.ViewModels
         };
         public ReactiveCommand<Unit, Unit> BtnNextClickedCommand { get; }
         public ReactiveCommand<Unit, Unit> BtnPreviousClickedCommand { get; }
-        public ReactiveCommand<string, Unit> LetterSelectionCommand { get; set; }
+        public ReactiveCommand<string, Unit> LetterSelectionCommand { get; }
 
         private IEnumerable<EntryModel> _entries;
         public IEnumerable<EntryModel> Entries

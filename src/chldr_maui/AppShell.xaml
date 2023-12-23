@@ -15,6 +15,12 @@
     </ShellContent>
 
     <ShellContent
+        Title="Алфавит"
+        ContentTemplate="{DataTemplate pages:AlphabetPage}"
+        Route="AlphabetPage">
+    </ShellContent>
+
+    <ShellContent
         Title="Указатель"
         ContentTemplate="{DataTemplate pages:IndexPage}"
         Route="IndexPage">
