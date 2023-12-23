@@ -9,31 +9,79 @@
              x:Class="dosham.Pages.AlphabetPage"
              x:TypeArguments="vm:AlphabetPageViewModel">
 
-    <VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout>
+            <VerticalStackLayout.Resources>
+                <ResourceDictionary>
+                    <Style x:Key="ButtonStyle" TargetType="ImageButton">
+                        <Setter Property="WidthRequest" Value="30"/>
+                        <Setter Property="HeightRequest" Value="30"/>
+                        <Setter Property="Margin" Value="1"/>
+                        <Setter Property="BorderColor" Value="LightGray"/>
+                        <Setter Property="BorderWidth" Value="1"/>
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </ResourceDictionary>
+            </VerticalStackLayout.Resources>
 
-        <ScrollView>
-            <VerticalStackLayout>
 
-                <!-- Row 1 -->
-                <FlexLayout x:Name="slButtons" Margin="0,5,0,0">
+            <FlexLayout x:Name="slButtons" 
+                        Margin="10" Padding="10"
+                        Direction="Row" 
+                        Wrap="Wrap" 
+                        JustifyContent="Start" 
+                        AlignItems="Start" 
+                        AlignContent="Start">
 
-                    <ImageButton Source="a" />
-                    <ImageButton Source="a_one.png"/>
-                    <ImageButton Source="b.png"/>
-                    <ImageButton Source="v.png"/>
-                    <ImageButton Source="g.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_a_one.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_b.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_v.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_g.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_d.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_e.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_e_one.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_gh.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_i.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_y.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_k.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_k_one.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_k_three.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_l.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_m.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_n.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_o_one.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_p.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_p_one.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_r.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_t.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_t_one.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_u.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_u_one.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_h.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_h_one.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_h_two.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_c.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_ch.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_ch_one.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_sh.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_sh_one.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_element_two.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_element_three.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_ae.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_yu.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_ya.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_ya_one.png"/>
+                <ImageButton Style="{StaticResource ButtonStyle}" Source="alpha_shtuka.png"/>
 
-                </FlexLayout>
+            </FlexLayout>
 
-                <!-- Additional rows follow a similar pattern -->
+            <!-- Additional rows follow a similar pattern -->
 
-                <!-- Last Row with TextView -->
-                <HorizontalStackLayout Margin="0,5,0,0" HorizontalOptions="Center">
+            <!-- Last Row with TextView -->
+            <HorizontalStackLayout Margin="0,5,0,0" HorizontalOptions="Center">
 
-                </HorizontalStackLayout>
-            </VerticalStackLayout>
-        </ScrollView>
-
-    </VerticalStackLayout>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 
 </reactive:ReactiveContentPage>

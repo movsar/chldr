@@ -17,6 +17,7 @@ namespace chldr_utils.Services
         public string AppDataDirectory => Path.Combine(AppBaseDirectory, DataDirName);
         public string DatabaseFilePath => Path.Combine(AppDataDirectory, OfflineDatabaseFileName);
         public string EntrySoundsDirectory => Path.Combine(AppDataDirectory, "sounds");
+        public string AlphabetSoundsDirectory => Path.Combine(AppDataDirectory, "alphabet_sounds");
         #endregion
 
         public FileService() : this(AppContext.BaseDirectory) { }

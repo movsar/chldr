@@ -1,5 +1,6 @@
 ﻿using chldr_data.Interfaces;
 using chldr_data.realm.Services;
+using CommunityToolkit.Maui;
 using dosham.Enums;
 using dosham.Pages;
 using dosham.Services;
@@ -32,6 +33,7 @@ namespace dosham
 
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkitMediaElement()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
