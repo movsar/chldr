@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.nohchiyn" android:versionCode="1414733" android:versionName="7.3.3">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.nohchiyn" android:versionCode="1414735" android:versionName="7.3.5">
 	<application android:allowBackup="true" android:supportsRtl="true" android:label="Dosham" android:icon="@mipmap/appicon"></application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
-	<uses-sdk />
+	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="34" />
 </manifest>
