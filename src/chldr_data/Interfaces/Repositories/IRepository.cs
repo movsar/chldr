@@ -1,8 +1,4 @@
-﻿using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.DatabaseObjects.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace chldr_data.Interfaces.Repositories
+﻿namespace chldr_data.Interfaces.Repositories
 {
     public interface IRepository<TModel, TDto>
     {

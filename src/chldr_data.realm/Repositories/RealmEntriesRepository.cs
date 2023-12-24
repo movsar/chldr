@@ -13,7 +13,6 @@ using chldr_data.Responses;
 using chldr_data.Services;
 using chldr_data.Enums.WordDetails;
 using chldr_data.realm.Services;
-using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Realms;
 

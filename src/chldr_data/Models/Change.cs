@@ -1,6 +1,5 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace chldr_data.Models

@@ -2,12 +2,7 @@
 using chldr_data.Enums;
 using Realms;
 using chldr_utils.Services;
-using Microsoft.EntityFrameworkCore;
 using chldr_data.realm.Interfaces;
-using chldr_data.Interfaces.Repositories;
-using chldr_data.DatabaseObjects.Models;
-using chldr_data.Services;
-using MySqlX.XDevAPI.Common;
 
 namespace chldr_data.Repositories
 {
@@ -53,10 +48,10 @@ namespace chldr_data.Repositories
 
         public async Task<List<TModel>> TakeAsync(int offset, int limit)
         {
-            var entities = await _dbContext.All<TEntity>()
+            var entities = _dbContext.All<TEntity>()
                 .Skip(offset)
                 .Take(limit)
-                .ToListAsync();
+                .ToList();
             return entities.Select(FromEntity).ToList();
         }
         public virtual async Task<List<TModel>> GetRandomsAsync(int limit)

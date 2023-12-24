@@ -1,7 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using Realms;
 using chldr_data.DatabaseObjects.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using chldr_data.DatabaseObjects.Models;
 
 namespace chldr_data.realm.RealmEntities

@@ -2,8 +2,6 @@
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 
 namespace chldr_data.Interfaces.Repositories
 {

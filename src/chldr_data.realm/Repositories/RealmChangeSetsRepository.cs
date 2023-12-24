@@ -7,8 +7,6 @@ using chldr_tools;
 using chldr_utils;
 using Realms;
 using chldr_utils.Services;
-using Microsoft.EntityFrameworkCore;
-using chldr_data.Services;
 
 namespace chldr_data.Repositories
 {
@@ -51,10 +49,10 @@ namespace chldr_data.Repositories
 
         public async Task<List<ChangeSetModel>> TakeLastAsync(int count)
         {
-            var models = await _dbContext.All<RealmChangeSet>()
+            var models = _dbContext.All<RealmChangeSet>()
                 .OrderByDescending(c => c.ChangeSetIndex)
                 .TakeLast(count)
-                .ToListAsync();
+                .ToList();
 
             return models.AsEnumerable().Select(ChangeSetModel.FromEntity).ToList();
         }
