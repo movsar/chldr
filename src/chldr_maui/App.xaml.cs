@@ -56,7 +56,7 @@ namespace dosham
 
             try
             {
-                ZipFile.ExtractToDirectory(dataZipPath, dataDirPath);
+                ZipFile.ExtractToDirectory(dataZipPath, dataDirPath);                
             }
             catch (Exception ex)
             {
