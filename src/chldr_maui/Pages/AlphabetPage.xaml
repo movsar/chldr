@@ -20,7 +20,7 @@
                         AlignItems="Start" 
                         AlignContent="Start">
 
-                <ImageButton Style="{StaticResource LetterImageButtonStyle}" Source="alpha_a_one.png"/>
+                <ImageButton Style="{StaticResource LetterImageButtonStyle}" Command="{Binding ImageButtonClicked}" Source="alpha_a_one.png"/>
                 <ImageButton Style="{StaticResource LetterImageButtonStyle}" Source="alpha_b.png"/>
                 <ImageButton Style="{StaticResource LetterImageButtonStyle}" Source="alpha_v.png"/>
                 <ImageButton Style="{StaticResource LetterImageButtonStyle}" Source="alpha_g.png"/>

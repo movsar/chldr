@@ -5,47 +5,46 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:models="clr-namespace:chldr_data.DatabaseObjects.Models;assembly=chldr_data">
 
-    <DataTemplate x:Key="EntryTemplate">
-        <StackLayout Orientation="Vertical">
-            <Frame CornerRadius="10" Margin="5" Padding="10" BorderColor="#CACCaa" BackgroundColor="#f9F9F9">
-                <StackLayout Orientation="Vertical" Spacing="5">
-                    <!-- Entry Content -->
-                    <Label Text="{Binding Header}" FontSize="Medium" FontAttributes="Bold" TextColor="#000" />
+    <DataTemplate x:Key="EntryTemplate" x:DataType="models:EntryModel">
+        <Border Margin="5" Padding="10"  
+                Stroke="#CACCaa"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 10,10,10,10"
+                BackgroundColor="#f9F9F9">
 
-                    <!-- Source Name -->
-                    <Label Text="{Binding Subheader}" FontSize="Micro" TextColor="#cba" />
+            <VerticalStackLayout Spacing="5">
+                <!-- Entry Content -->
+                <Label Text="{Binding Header}" FontSize="Medium" FontAttributes="Bold" TextColor="#000" />
+
+                <!-- Source Name -->
+                <Label Text="{Binding Subheader}" FontSize="Micro" TextColor="#cba" />
 
 
-                    <!-- Translation views -->
-                    <CollectionView ItemTemplate="{StaticResource TranslationTemplate}"
-                             ItemsSource="{Binding Translations}">
-                    </CollectionView>
+                <!-- Translation views -->
+                <CollectionView ItemTemplate="{StaticResource TranslationTemplate}"
+                                ItemsSource="{Binding Translations}">
+                </CollectionView>
 
-                </StackLayout>
-            </Frame>
-        </StackLayout>
+            </VerticalStackLayout>
+
+        </Border>
     </DataTemplate>
-    
-    <DataTemplate x:Key="TranslationTemplate">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
 
+    <DataTemplate x:Key="TranslationTemplate" x:DataType="models:TranslationModel">
+        <VerticalStackLayout>
             <!-- Language Code Label -->
             <Label Grid.Column="0"
-               Text="{Binding LanguageCode, StringFormat='{0}:'}" 
-               FontSize="Small" 
-               FontAttributes="Italic" 
-               TextColor="#AA6666" />
+                Text="{Binding LanguageCode, StringFormat='{0}:'}" 
+                FontSize="Small" 
+                FontAttributes="Italic" 
+                TextColor="#AA6666" />
 
             <!-- Content Label -->
             <Label Grid.Column="1"
                Text="{Binding Content, StringFormat=' {0}'}" 
                FontSize="Small" 
                TextColor="#666666" />
-        </Grid>
+        </VerticalStackLayout>
     </DataTemplate>
 
 </ResourceDictionary>

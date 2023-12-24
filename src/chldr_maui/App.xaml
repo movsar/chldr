@@ -16,33 +16,25 @@
                 <Setter Property="CornerRadius" Value="5"/>
                 <Setter Property="BorderWidth" Value="1"/>
 
+                <Setter Property="Margin" Value="1"/>
                 <Setter Property="BackgroundColor" Value="Transparent"/>
                 <Setter Property="TextColor" Value="Black"/>
             </Style>
 
-            <Style x:Key="BaseLetterButtonStyle" TargetType="View">
+            <Style x:Key="LetterButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
                 <Setter Property="WidthRequest" Value="45"/>
                 <Setter Property="HeightRequest" Value="45"/>
-                <Setter Property="Margin" Value="1"/>
             </Style>
 
             <!-- Specific style for ImageButton -->
-            <Style x:Key="LetterImageButtonStyle" TargetType="ImageButton" BasedOn="{StaticResource BaseLetterButtonStyle}">
+            <Style x:Key="LetterImageButtonStyle" TargetType="ImageButton">
                 <Setter Property="BorderColor" Value="LightGray"/>
                 <Setter Property="CornerRadius" Value="5"/>
                 <Setter Property="BorderWidth" Value="1"/>
-            </Style>
-
-            <!-- Specific style for Button -->
-       
-            <!-- Specific style for Button -->
-            <Style x:Key="LetterButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseLetterButtonStyle}">
-                <Setter Property="BorderColor" Value="LightGray"/>
-                <Setter Property="CornerRadius" Value="5"/>
-                <Setter Property="BorderWidth" Value="1"/>
-
-                <Setter Property="BackgroundColor" Value="Transparent"/>
-                <Setter Property="TextColor" Value="Black"/>
+                
+                <Setter Property="WidthRequest" Value="45"/>
+                <Setter Property="HeightRequest" Value="45"/>
+                <Setter Property="Margin" Value="1"/>
             </Style>
 
             <Style x:Key="FrameStyle" TargetType="Frame">
