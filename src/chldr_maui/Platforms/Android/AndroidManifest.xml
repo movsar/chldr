@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.nohchiyn" android:versionCode="1414735" android:versionName="7.3.5">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.nohchiyn" android:versionCode="1414736" android:versionName="7.3.6">
 	<application android:allowBackup="true" android:supportsRtl="true" android:label="Dosham" android:icon="@mipmap/appicon"></application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
