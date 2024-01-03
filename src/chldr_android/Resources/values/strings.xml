@@ -1,4 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">chldr_android</string>
-    <string name="app_text">Hello, Android!</string>
+    <string name="app_name">Словарь Чеченского Языка</string>
+    <string name="prefs_show_on_start">Показывать случайные фразы при запуске</string>
+    <string name="prefs_load_randoms">Случайные выражения</string>
+    <string name="translate">Перевести</string>
+    <string name="vector">Направление Перевода</string>
+    <string name="cheru">Чеченско - Русский</string>
+    <string name="ruche">Русско - Чеченский</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+
+    <string-array name="napr">
+        <item>Русско - Чеченский</item>
+        <item>Чеченско - Русский</item>
+    </string-array>
+
+    <string name="not_found">Нет результатов для отображения.</string>
+    <string name="exit">Закрыть</string>
+    <string name="desc">Словарь Чеченского Языка\n\nВ приложении использованы словари А.Г. Мациева\n\nДругие версии программы можно найти на сайте http://nohchiyn–mott.com\n\nCopyright © 2012 – 2014 Movsar Bekaev</string>
+    <string name="please_wait_while_its_starts">Пожалуйста подождите, приложение запускается..</string>
+    <string name="purchase">Полная Версия</string>
+    <string name="about">О программе</string>
+    <string name="ads">Реклама</string>
+    <string name="help">Помощь</string>
+    <string name="show_latest_phrases">Недавно добавленные</string>
+
+    <string name="show_random_nt_phrases">Любые без перевода</string>
+    <string name="show_random_wt_phrases">Из Любых Выражений</string>
+    <string name="show">Показать:</string>
+    <string name="search_cond">Условия отображения</string>
+    <string name="is_it_improper_phrase">Вы считаете эту фразу неуместной?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="no_translation">[Я знаю перевод!]</string>
+    <string name="edit_translation">Исправление перевода</string>
+    <string name="please_wait_while_request_will_complete">Ождание выполнения предыдущего запроса, попробуйте позже</string>
+    <string name="edit_phrase">Редактирование фразы</string>
+    <string name="cancel">Отмена</string>
+    <string name="new_phrase">Добавить Фразу</string>
+    <string name="req_successful">Запрос выполнен</string>
+    <string name="req_crash">Неполадки с соединением</string>
+    <string name="please_wait">Пожалуйста подождите..</string>
+    <string name="thank_you">Спасибо!</string>
+    <string name="phrase_add">Добавить</string>
+    <string name="offline">Словарь</string>
+    <string name="phrases">Фразы</string>
+    <string name="input_words_to_find">Слова для поиска</string>
+    <string name="samples">Примеры</string>
+    <string name="hint_input_word">Слово для поиска</string>
+    <string name="hint_txtRuWord">Слово по-русски</string>
+    <string name="hint_txtChechen">Слово по-чеченски</string>
+    <string name="msg_thanks_for_translation">Спасибо за перевод!</string>
+    <string name="add_word">Добавить слово</string>
+    <string name="header_declensions">Склонения</string>
+    <string name="header_plural">Множественная форма</string>
+    <string name="phrase_addnew">Текст для перевода</string>
+    <string name="hint_rutext">На русском</string>
+    <string name="hint_engtext">In english</string>
+    <string name="hint_nohtext">Нохчийн маттахь</string>
+    <string name="fix_edit">Исправить фразу:</string>
+    <string name="myphrases">Мои Фразы</string>
+    <string name="hint_choose_browser">Чем открывать?</string>
+    <string name="mnu_our_site">Сайт</string>
+    <string name="mnu_settings">Настройки</string>
+    <string name="select_text_size">Выберите размер текста</string>
+    <string name="text_size">Размер текста</string>
+    <string name="size">Размер</string>
+    <string name="color">Цвет</string>
+    <string name="settings_reset">Сброс настроек</string>
+    <string name="settings_resetted">Настройки сброшены</string>
+    <string name="buttons_random_word">Случайное слово</string>
+    <string name="set_ui_language">Выберите язык интерфейса</string>
+    <string name="ui_language">Язык интерфейса</string>
+    <string name="after_restart">Изменения вступят в силу при следующем запуске</string>
+    <string name="language">Язык</string>
+    <string name="translate_to">Перевести на:</string>
+    <string name="russian">Русский</string>
+    <string name="chechen">Чеченский</string>
+    <string name="english">Английский</string>
+    <string name="add_translation">Добавить перевод</string>
+    <string name="i_know_translation">Я знаю перевод</string>
+    <string name="incorrect_vector">Неправильно выбрано направление перевода</string>
+    <string name="not_enough_long">Недостаточно длинное предложение (слово)</string>
+    <string name="btns_text_color">Цвет надписей на кнопках</string>
+    <string name="select_btns_text_color">Выберите цвет надписей на кнопках</string>
+    <string name="hint_input_here_to_be_translated">Текст для перевода</string>
+    <string name="hint_input_here_translation">Перевод на указанном языке</string>
+    <string name="translate_from">Перевести с:</string>
+    <string name="translations_history">История переводов</string>
+    <string name="user">Пользователь</string>
+    <string name="no_translations_created">История потерялася :(</string>
+
+    <string name="save">Сохранить</string>
+    <string name="audio">Аудио</string>
+    <string name="rec_start">Начать запись</string>
+    <string name="rec_stop">Остановить запись</string>
+    <string name="time_null">00:00</string>
+    <string name="rec_options">Запись аудиофайла</string>
+    <string name="recorded_files">Имеющиеся аудиозаписи</string>
+    <string name="upload_recording_or_not">Файл успешно записан, сохранить? Если вы уже записывали аудио для этой фразы, оно будет перезаписано</string>
+    <string name="ransw_audio_rec_ok">Аудиозапись успешно сохранена!</string>
+    <string name="ransw_audio_rec_fail">Ошибка при сохранении аудиозаписи!</string>
+    <string name="ransw_audio_rec_already_has">Вы уже записывали аудио для этой фразы</string>
+    <string name="ransw_audio_rec_rewrited">Аудиозапись успешно обновлена!</string>
+    <string name="ransw_audio_rec_how_to">Запись произношения\nЗапишите произношение на чеченском языке.\n Нажмите [Начать запись] и прочитайте вслух, внятно и четко!</string>
+    <string name="rec_no_phrase_or_translation">Вы не вписали выражение или перевод</string>
+    <string name="rec_access_denied">У вас недостаточно прав</string>
+    <string name="close">Закрыть</string>
+    <string name="clearcache">Очистить кэш</string>
+    <string name="rec_cache_cleaned">Кэш был жестоко уничтожен!</string>
+    <string name="ok">OK</string>
+    <string name="file_downloaded">Файл скачан</string>
+    <string name="err_when_downloading">Ошибка при скачивании файла</string>
+    <string name="phrase_added">Фраза добавлена</string>
+    <string name="wait">Выполняется операция..</string>
+    <string name="next">Дальше</string>
+    <string name="maybe_there_is_already_answered">Возможно на вашу фразу уже имеется перевод, проверьте пожалуйста, есть ли здесь то что вы ищите</string>
+    <string name="phrase_on_moderation">В связи с увеличением количества неадекватных пользователей, в приложении введана премодерация, т.е. ваша фраза добавлена, но появится только после проверки.</string>
+    <string name="moderation">Модерация</string>
+    <string name="title_activity_get_mod">GoMod</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="get_mod">Станьте модератором! \n\nСтав модератором, вы сможете добавлять и удалять выражения, переводы и аудиозаписи. \nЧтобы отослать заявку, введите перевод указанного ниже текста на чеченский, а затем нажмите на НАЧАТЬ ЗАПИСЬ, прочитайте переведенное вслух и нажмите ОТПРАВИТЬ ЗАЯВКУ. если ваша заявка будет одобрена, в разделе ПРОФИЛЬ появится надпись МОДЕРАТОР напротив поля РОЛЬ и будет вам счастье!</string>
+    <string name="txt_to_write">Я хочу стать модератором, чтобы улучшить это приложение и сделать чеченский язык популярным.Я буду писать только правильные вещи и не буду злоупотреблять своими правами.</string>
+    <string name="send">Отправить заявку</string>
+    <string name="access_denied">Недостаточно Прав</string>
+    <string name="file_downloading">Идет скачивание файла, подождите</string>
+    <string name="translation_direction">Направление перевода</string>
+    <string name="sort_options">Метод сортировки</string>
+    <string name="sort_alphabetical">По Алфавиту</string>
+    <string name="sort_date">По Дате</string>
+    <string name="sort_phrase_lenght">По Длине выражения</string>
+    <string name="sort_translation_lenght">По Длине перевода</string>
+    <string name="search_method">Метод поиска</string>
+    <string name="direct">Прямой</string>
+    <string name="recursive">Рекурсивный</string>
+    <string name="search_objects">Объекты поиска</string>
+    <string name="words">Слова</string>
+    <string name="search_settings">Настройки поиска</string>
+    <string name="now_you_are_online">Теперь вы в режиме онлайн</string>
+    <string name="now_you_are_offline">Вы переключились в оффлайн режим</string>
+    <string name="for_this_you_need_online_mode">Для этого нужно включить онлайн режим</string>
+    <string name="not_connected">Нет подключения к сети, проверьте ваше соединение</string>
+    <string name="choose_at_least_one_method">Выберите хотя бы один метод поиска</string>
+    <string name="choose_at_least_one_search_pattern">Выберите хотя бы один вид объектов поиска</string>
+    <string name="app_actions">Поведение программы</string>
+    <string name="what_to_do_after_edit">Редактирование выражений</string>
+    <string name="what_to_do_after_edit_summary">Действие после редактирования выражений</string>
+    <string name="profile">Профиль</string>
+    <string name="user_profile">Профиль пользователя</string>
+    <string name="user_id">Ваш ID</string>
+    <string name="name">Имя</string>
+    <string name="user_name_hint">Введите имя пользователя</string>
+    <string name="user_password">Пароль</string>
+    <string name="user_password_hint">Введите пароль для входа</string>
+    <string name="authorization">Авторизация</string>
+    <string name="role">Ваша Роль</string>
+    <string name="gopro">Сделать запрос на повышение прав</string>
+    <string name="user_translations_count">Переведено выражений</string>
+    <string name="user_phrases_count">Добавлено выражений</string>
+    <string name="user_audios_count">Озвучено выражений</string>
+    <string name="getting_information">Получаю информацию</string>
+    <string name="only_latin_letters_and_digits_supported">Допускается использование только букв английского алфавита, цифр, знака подчеркивания и тире</string>
+    <string name="you_can_attach_private_login_and_password_to_your_account">Вы можете привязать к аккаунту личный логин и пароль, или восстановить ранее привязанный аккаунт, также используя логин и пароль вы можете авторизоваться на нашем сайте</string>
+    <string name="login">Логин</string>
+    <string name="restore">Восстановить</string>
+    <string name="attach">Привязать</string>
+    <string name="need_restart">Ваш аккаунт восстановлен, для продолжения нужно перезапустить приложение</string>
+    <string name="admin">Администратор</string>
+    <string name="super_moderator">Супер-Модератор</string>
+    <string name="moderator">Модератор</string>
+    <string name="remove">Удалить?</string>
+    <string name="audio_recorded_successfully">Запись успешно сделана</string>
+    <string name="copy">Копировать</string>
+    <string name="edit">Редактировать</string>
+    <string name="share">Поделиться</string>
+    <string name="history">История</string>
+    <string name="audios">Аудиозаписи</string>
+    <string name="phrase">Выражение</string>
+    <string name="translation">Перевод</string>
+    <string name="phrase_copy_successfully_completed">Оригинал скопирован в буфер обмена</string>
+    <string name="translation_copy_successfully_completed">Перевод скопирован в буфер обмена</string>
+    <string name="main_settings">Главные настройки</string>
+    <string name="theme">Тема</string>
+    <string name="choose_theme">Выберите тему</string>
+    <string name="access_from_main">Доступ только через главный экран</string>
+    <string name="update_offline_database">Обновление оффлайн базы</string>
+    <string name="start_update_offline_database">Щелкните, чтобы проверить наличие обновленной базы данных</string>
+    <string name="you_have_the_last_version">У вас уже имеется самая последняя версия базы данных</string>
+    <string name="new_version_has_been_found">Имеется новая версия базы данных, обновить? Это может занять до десяти минут</string>
+    <string name="db_updated">База данных обновлена!</string>
+    <string name="search">Искать выбранное</string>
+    <string name="internet_access_speed">Скорость подключения</string>
+    <string name="choose_internet_access_speed">Если приложение часто разрывает подключение, выберите вариант (Медленный Интернет)</string>
+    <string name="found">Найдено</string>
+    <string name="req_successfully_done">Спасибо, заявка успешно отправлена!</string>
+    <string name="ruchemaciev">Русско - Чеченский словарь А.Г. Мациева</string>
+    <string name="cherumaciev">Чеченско - Русский словарь А.Г. Мациева</string>
+    <string name="ruchemacievappendix">Приложение к Русско - Чеченскому словарю А.Г. Мациева</string>
+    <string name="translit">Транслит</string>
+    <string name="translit_turn_on">Включить использование транслита вместо кириллицы</string>
+    <string name="turn_off">Выключить</string>
+    <string name="translit_che">Только чеченское направление</string>
+    <string name="translit_everything">В обеих направлениях</string>
+    <string name="text">Текст</string>
+    <string name="alphabet">Алфавит</string>
+
+    <string name="backward">Назад</string>
+    <string name="forward">Вперед</string>
+
+    <string name="ff_search">Ищите!</string>
+    <string name="ff_filtering">Фильтруйте!</string>
+    <string name="ff_asking">Спрашивайте!</string>
+    <string name="ff_translate">Переводите!</string>
+    <string name="ff_listeming">Слушайте!</string>
+    <string name="ff_recording">Озвучивайте!</string>
+
+    <string name="ask">Спросить</string>
+
+    <string name="welcome_one">Добро пожаловать!</string>
+    <string name="welcome_two">70 000 выражений и 5 лет работы\nБлагодарим за вашу покупку!</string>
+
+
+    <string name="ff_filtering_desc">Получите доступ к всевозможным функциям фильтрации выражений</string>
+    <string name="ff_searching_desc">Ищите среди тысяч слов и выражений чеченского языка</string>
+    <string name="ff_asking_desc">Добавляйте незнакомые слова и выражения которых еще нет в приложении. Мы обязательно переведем их для вас.</string>
+    <string name="ff_translate_desc">Делитесь своими знаниями помогая другим</string>
+    <string name="ff_listening_desc">Слушайте произношения выражений на чеченском языке добавленные нашими пользователями</string>
+
+    <string name="ff_recording_desc">Озвучивайте текст на чеченском языке. Помогите тем кто изучает язык реальным примером произношений слов и выражений</string>
+
+    <string name="about_alphabet">Красным отмечены буквы, которые лучше не использовать в данном приложении, следующие буквы заменяйте дифтонгами - так будет легче писать слова без привязки к роду: ю - йу, я - йа, юь - йуь, яь - йаь, остальные буквы помеченные красным, практически не используются в чеченском языке</string>
+
+    <string name="input_text_on_chechen_language">Текст на чеченском языке</string>
+
+
+    <string name="phrase_already_exists">Фраза уже существует</string>
+    <string name="phrase_has_been_updated">Выражение отредактировано</string>
+
+    <string name="select_a_language">Выберите язык</string>
+
+    <string name="rs_connection_error">Ошибка соединения</string>
+    <string name="rs_no_entries">Нет результатов для отображения</string>
+    <string name="rs_ok">Ок</string>
+    <string name="rs_phrase_saved">Выражение сохранено</string>
+    <string name="rs_phrase_added">Выражение добавлено</string>
+    <string name="rs_phrase_updated">Выражение обновлено</string>
+    <string name="rs_phrase_already_exists">Выражение уже существует</string>
+    <string name="rs_phrase_rate_changed">Рейтинг выражения изменен</string>
+
+    <string name="str_delete">Удалить</string>
+    <string name="str_edit">Изменить</string>
+
+    <string name="there_is_an_translation">Перевод на этот язык уже есть, удалите его или изменить язык</string>
+    <string name="add_translations">Вы можете добавить переводы выражения нажав на нижеследующую кнопку</string>
+
+    <string name="notes">Примечание на указанном языке</string>
+    <string name="precision_level">Точность поиска</string>
+    <string name="precision_level_high">Высокая</string>
+    <string name="precision_level_normal">Средняя</string>
+    <string name="precision_level_low">Низкая</string>
+
+    <string name="prhase_added_to_moderation">Ваше выражение принято к рассмотрению, оно появится после подтверждения модератором, статус вы можете просмотреть в \'Мои Фразы\'</string>
+    <string name="input_forms">Формы выражения</string>
+
+    <string name="choose_orientation_summary">Выберите ориентацию</string>
+    <string name="orientation">Ориентация</string>
+
+    <string name="grammar">Грамматика</string>
+
+    <string name="critical_error">Ошибка базы данных, пожалуйста переустановите приложение!</string>
+
+    <string name="lastTranslated">Из Недавно Переведенных</string>
+    <string name="any_official">Из Официальных Источников</string>
+    <string name="any_byusers">Из Добавленных пользователями</string>
+
+    <string name="added_by_users">Только Пользовательские</string>
+    <string name="che_notes">Примечание на чеченском языке</string>
+
+    <string name="malaev">Малаев Д.Б. Словарь Терминов По Физической Географии</string>
+    <string name="maciev">Мациев А.Г. Нохчийн-Оьрсийн Словарь.</string>
+    <string name="geo">Словарь Географических Наименований Населенных Пунктов ЧР</string>
+    <string name="karasaev">Карасаев А.Т., Мациев А.Г. Русско-Чеченский Словарь.</string>
+    <string name="yurslovar">Абдурашидов Э.Д. Чеченско-Русский Русско-Чеченский Словарь Юридических Терминов</string>
+    <string name="anatslovar">Берсанов Р.У. Адаман Анатоми. Нохчийн-Оьрсийн, Оьрсийн-Нохчийн Словарь. Грозный, 2011.</string>
+    <string name="matslovar">Умархаджиев С.М., Ахматукаев А.А. Нохчийн-Оьрсийн, Оьрсийн-Нохчийн Математикин Терминийн Словарь. Тбилиси, 2010.</string>
+
+    <string name="old_phrases">Пользовательские Выражения</string>
+    <string name="islam">Ислам Хасаханов</string>
+    <string name="movsar">Мовсар Бекаев</string>
+    <string name="last_revision">Пос.Ред:</string>
+
 </resources>

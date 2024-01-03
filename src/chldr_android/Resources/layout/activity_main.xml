@@ -1,13 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/app_text"
-    />
-</RelativeLayout>
+    android:layout_height="match_parent"
+    tools:context=".ui.home.HomeFragment">
+
+    <EditText
+        android:id="@+id/txtSearchPhrase"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/btns_height"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="1"
+        android:hint="@string/input_words_to_find"
+        android:importantForAutofill="no"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textSize="@dimen/n_textsize"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnRefresh"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rvMain" />
+
+
+    <!--        <RecycleView-->
+    <!--            android:id="@+id/expPhrases"-->
+    <!--            android:layout_width="fill_parent"-->
+    <!--            android:layout_height="0dp"-->
+    <!--            android:layout_gravity="left|center_vertical"-->
+    <!--            android:indicatorLeft="250dp"-->
+    <!--            android:indicatorRight="250dp"-->
+    <!--            android:layout_weight="1"-->
+
+    <!--            />-->
+
+
+    <ImageButton
+        android:id="@+id/ibtnFilers"
+        android:layout_width="@dimen/btns_height"
+        android:layout_height="@dimen/btns_height"
+        android:layout_marginEnd="8dp"
+
+        android:layout_marginBottom="8dp"
+        android:contentDescription=""
+        android:scaleType="centerCrop"
+       
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnSearchOpt" />
+
+    <ImageButton
+        android:id="@+id/btnRefresh"
+        android:layout_width="@dimen/btns_height"
+        android:layout_height="@dimen/btns_height"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription=""
+        android:scaleType="centerCrop"
+  
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ibtnFilers" />
+
+    <ImageButton
+        android:id="@+id/btnSearchOpt"
+        android:layout_width="@dimen/btns_height"
+        android:layout_height="@dimen/btns_height"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription=""
+        android:scaleType="centerCrop"
+        
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMain"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/txtSearchPhrase"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

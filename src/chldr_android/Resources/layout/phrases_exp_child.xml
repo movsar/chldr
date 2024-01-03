@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/phrasesChildLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:longClickable="true"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tvExpChildLg"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="ENG"
+        android:paddingTop="4dp"
+        android:textColor="@color/custom_color_violet"
+        android:textSize="@dimen/s_textsize"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tvTranslation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="translation"
+        android:textSize="@dimen/n_textsize"
+        app:layout_constraintStart_toStartOf="@+id/tvExpChildLg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTranslationNotes"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:text="notes"
+        android:textSize="@dimen/s_textsize"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTranslation" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
