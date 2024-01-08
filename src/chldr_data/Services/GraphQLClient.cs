@@ -40,6 +40,8 @@ namespace chldr_utils.Services
                     _graphQLClient.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", session.AccessToken);
                 }
 
+                _graphQLClient.HttpClient.DefaultRequestHeaders.Add("ApiKey", "Whatever");
+
                 var response = await _graphQLClient.SendMutationAsync<JObject>(request);
                 if (response.Errors?.Length > 0)
                 {

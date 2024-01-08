@@ -15,10 +15,24 @@ namespace chldr_api
          * By doing this we save on unecessary conversions and increase performance
          */
         private readonly IDataProvider _dataProvider;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public Query(IDataProvider dataProvider)
+        public Query(IDataProvider dataProvider, IHttpContextAccessor httpContextAccessor)
         {
             _dataProvider = dataProvider;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        private void ValidateProtectedAccess()
+        {
+            // Access the HTTP headers
+            var headers = _httpContextAccessor.HttpContext.Request.Headers;
+            string apiKey = headers["ApiKey"];
+
+            if (string.IsNullOrEmpty(apiKey) || apiKey != "Whatever")
+            {
+                throw new UnauthorizedAccessException("Invalid API Key");
+            }
         }
 
         public async Task<RequestResult> CountAsync(string recordTypeName, FiltrationFlags? filtrationFlags)
@@ -40,7 +54,7 @@ namespace chldr_api
                 SerializedData = JsonConvert.SerializeObject(count)
             };
         }
-        
+
         public async Task<RequestResult> GetLatestEntriesAsync(int count)
         {
             using var unitOfWork = (SqlDataAccessor)_dataProvider.Repositories();
@@ -116,6 +130,7 @@ namespace chldr_api
         {
             try
             {
+                ValidateProtectedAccess();
                 using var unitOfWork = (SqlDataAccessor)_dataProvider.Repositories();
 
                 object? models = null;
@@ -132,18 +147,17 @@ namespace chldr_api
                         break;
 
                     case RecordType.Entry:
-                        models = await unitOfWork.Entries.TakeAsync(offset, limit, filtrationFlags);                        
+                        models = await unitOfWork.Entries.TakeAsync(offset, limit, filtrationFlags);
                         break;
 
                     case RecordType.ChangeSet:
-                        models = await unitOfWork.ChangeSets.TakeAsync(offset, limit);                        
+                        models = await unitOfWork.ChangeSets.TakeAsync(offset, limit);
                         break;
 
 
                     default:
                         break;
                 }
-
                 return new RequestResult()
                 {
                     Success = true,
@@ -164,6 +178,7 @@ namespace chldr_api
         {
             try
             {
+                ValidateProtectedAccess();
                 using var unitOfWork = (SqlDataAccessor)_dataProvider.Repositories();
 
                 object? models = null;
