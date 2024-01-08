@@ -144,6 +144,12 @@ public class RealmEntry : RealmObject, IEntryEntity
             entry.Translations.Add(translation);
         }
 
+        // SubEntries
+        foreach (var subEntry in entryModel.SubEntries)
+        {
+
+        }
+
         return entry;
     }
 }
