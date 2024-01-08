@@ -35,6 +35,7 @@ public class RealmEntry : RealmObject, IEntryEntity
     public string? Details { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
+    public IList<RealmEntry> SubEntries { get; }
     public IList<RealmSound> Sounds { get; }
     public IList<RealmTranslation> Translations { get; }
 
@@ -145,9 +146,13 @@ public class RealmEntry : RealmObject, IEntryEntity
         }
 
         // SubEntries
-        foreach (var subEntry in entryModel.SubEntries)
+        entry.SubEntries.Clear();
+        foreach (var subEntryModel in entryModel.SubEntries)
         {
+            subEntryModel.ParentEntryId = entry.EntryId;
 
+            var subEntry = RealmEntry.FromModel(subEntryModel, user, source);
+            entry.SubEntries.Add(subEntry);
         }
 
         return entry;

@@ -21,7 +21,7 @@
         public const string ProdFrontHost = "https://dosham.app";
 
         public const int ChangeSetsToApply = 1000;
-        public const int RealmSchemaVersion = 17;
+        public const int RealmSchemaVersion = 18;
 
         public const string TestingDatabaseConnectionString = "server=localhost;port=3306;database=test_chldr;user=root;password=password;charset=utf8mb4";
         public const string TestsFileServicePath = "Temp";
