@@ -12,7 +12,6 @@ namespace chldr_data.realm.Services
         private readonly ExceptionHandler _exceptionHandler;
         private readonly FileService _fileService;
         private readonly SyncService _syncService;
-        private readonly RequestService _requestService;
         internal static RealmConfigurationBase? OfflineDatabaseConfiguration;
 
         public bool IsInitialized { get; set; }
@@ -34,13 +33,10 @@ namespace chldr_data.realm.Services
         public RealmDataProvider(
             FileService fileService,
             ExceptionHandler exceptionHandler,
-            RequestService requestService,
-            SyncService syncService
-            )
+            SyncService syncService)
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;
-            _requestService = requestService;
             _syncService = syncService;
         }
 
@@ -86,7 +82,7 @@ namespace chldr_data.realm.Services
         }
         public IDataAccessor Repositories(string? userId)
         {          
-            return new RealmDataAccessor(_exceptionHandler, _fileService, _requestService, userId);
+            return new RealmDataAccessor(_exceptionHandler, _fileService, userId);
         }
 
         public Realm GetContext()

@@ -1,4 +1,5 @@
-﻿using chldr_data.Interfaces;
+﻿using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_utils.Services;
 using System.IO.Compression;
 
@@ -30,7 +31,7 @@ namespace dosham
                 return;
             }
 
-            if (environmentService.CurrentPlatform != Enums.Platforms.Windows)
+            if (environmentService.CurrentPlatform != Platforms.Windows)
             {
                 var packagedDatafileExists = await FileSystem.Current.AppPackageFileExistsAsync(FileService.DataArchiveName);
                 if (!packagedDatafileExists)

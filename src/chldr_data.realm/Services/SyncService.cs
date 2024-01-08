@@ -16,15 +16,13 @@ namespace chldr_data.realm.Services
     {
         private readonly RequestService _requestService;
         private readonly FileService _fileService;
-        private readonly IEnvironmentService _environmentService;
         private Timer _timer;
 
         private readonly SemaphoreSlim _syncLock = new SemaphoreSlim(1);
-        public SyncService(RequestService requestService, FileService fileService, IEnvironmentService environmentService)
+        public SyncService(RequestService requestService, FileService fileService)
         {
             _requestService = requestService;
             _fileService = fileService;
-            _environmentService = environmentService;
         }
         private void SetPropertyValue(object obj, string propertyName, object value)
         {
@@ -129,7 +127,7 @@ namespace chldr_data.realm.Services
 
         internal async Task Sync()
         {
-            if (_isRunning || !_environmentService.IsNetworkUp())
+            if (_isRunning || !_requestService.IsNetworUp)
             {
                 return;
             }

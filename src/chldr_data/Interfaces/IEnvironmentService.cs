@@ -1,4 +1,4 @@
-﻿using dosham.Enums;
+﻿using chldr_data.Enums;
 
 namespace chldr_data.Interfaces
 {
@@ -6,6 +6,5 @@ namespace chldr_data.Interfaces
     {
         Platforms CurrentPlatform { get; set; }
         bool IsDevelopment { get; }
-        bool IsNetworkUp();
     }
 }

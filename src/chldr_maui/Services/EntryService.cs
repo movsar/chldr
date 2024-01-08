@@ -3,7 +3,6 @@ using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
-using chldr_data.realm.RealmEntities;
 using chldr_data.realm.Repositories;
 using chldr_data.realm.Services;
 using chldr_data.Models;
@@ -11,9 +10,6 @@ using chldr_data.Repositories;
 using chldr_data.Responses;
 using chldr_data.Services;
 using chldr_utils;
-using Microsoft.AspNetCore.Http;
-using Realms.Sync;
-using chldr_utils.Services;
 using IEntry = chldr_data.DatabaseObjects.Interfaces.IEntry;
 namespace dosham.Services
 {
@@ -247,7 +243,7 @@ namespace dosham.Services
         public async Task<List<EntryModel>> GetRandomsAsync(int count)
         {
             var entries = new List<EntryModel>();
-            if (_environmentService.CurrentPlatform == Enums.Platforms.Web)
+            if (_environmentService.CurrentPlatform == Platforms.Web)
             {
                 var response = await _requestService.GetRandomsAsync(count);
                 if (!response.Success)

@@ -1,0 +1,3 @@
+﻿Takes too long to deploy and run (2-3 minutes)
+Indescriptive errors
+Too many times crashes with no reasons making it close to impossible to debug

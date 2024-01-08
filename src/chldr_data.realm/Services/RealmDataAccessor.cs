@@ -24,7 +24,6 @@ namespace chldr_data.realm.Services
         public RealmDataAccessor(
             ExceptionHandler exceptionHandler,
             FileService fileService,
-            RequestService requestService,
             string? userId
             )
         {

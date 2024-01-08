@@ -1,7 +1,7 @@
-﻿using chldr_data.Interfaces;
-using dosham.Enums;
+﻿using chldr_data.Enums;
+using chldr_data.Interfaces;
 
-namespace dosham.Services
+namespace chldr_data.Services
 {
     public class EnvironmentService : IEnvironmentService
     {
@@ -10,19 +10,7 @@ namespace dosham.Services
             CurrentPlatform = platform;
             IsDevelopment = isDevelopment;
         }
-        private NetworkService _networkService;
         public bool IsDevelopment { get; private set; }
         public Platforms CurrentPlatform { get; set; }
-
-
-        public bool IsNetworkUp()
-        {
-            if (_networkService == null)
-            {
-                _networkService = new NetworkService();
-            }
-            return _networkService.IsNetworUp;
-        }
-
     }
 }

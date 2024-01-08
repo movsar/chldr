@@ -1,14 +1,17 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Models;
 using chldr_utils.Interfaces;
 using GraphQL;
+using System.Net.NetworkInformation;
 
 namespace chldr_data.Services
 {
     public class RequestService
     {
+        public event Action NetworkStateHasChanged;
+        public bool IsNetworUp => PingHost("8.8.8.8") || PingHost("168.63.129.16");
+
         public async Task<RequestResult> AddSoundAsync(PronunciationDto pronunciation)
         {
             var operation = "addSound";
@@ -303,9 +306,41 @@ namespace chldr_data.Services
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
             return response.Data;
         }
+     
+        private void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
+        {
+            NetworkStateHasChanged?.Invoke();
+        }
+
+        private bool PingHost(string nameOrAddress)
+        {
+            bool pingable = false;
+            Ping pinger = null;
+
+            try
+            {
+                pinger = new Ping();
+                PingReply reply = pinger.Send(nameOrAddress);
+                pingable = reply.Status == IPStatus.Success;
+            }
+            catch (PingException)
+            {
+                // Discard PingExceptions and return false;
+            }
+            finally
+            {
+                if (pinger != null)
+                {
+                    pinger.Dispose();
+                }
+            }
+
+            return pingable;
+        }
 
         public RequestService(IGraphQlClient graphQLRequestSender)
         {
+            NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
             _graphQLRequestSender = graphQLRequestSender;
         }
         private IGraphQlClient _graphQLRequestSender;
