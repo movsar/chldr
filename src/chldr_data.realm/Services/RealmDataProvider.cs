@@ -68,7 +68,7 @@ namespace chldr_data.realm.Services
             };
 
             DatabaseInitialized?.Invoke();
-            _syncService.BeginListening();
+            //_syncService.BeginListening();
         }
 
         public void TruncateDatabase()

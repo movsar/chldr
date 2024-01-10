@@ -15,9 +15,9 @@ namespace chldr_utils.Services
 
         public string DataArchiveFilePath => Path.Combine(AppBaseDirectory, DataArchiveName);
         public string AppDataDirectory => Path.Combine(AppBaseDirectory, DataDirName);
-        public string DatabaseFilePath => Path.Combine(AppDataDirectory, OfflineDatabaseFileName);
+        public string DatabaseFilePath => Path.Combine(AppDataDirectory, "database", OfflineDatabaseFileName);
         public string EntrySoundsDirectory => Path.Combine(AppDataDirectory, "sounds");
-        public string AlphabetSoundsDirectory => Path.Combine(AppDataDirectory, "alphabet_sounds");
+        public string AlphabetSoundsDirectory => Path.Combine(AppDataDirectory, "alpha");
         #endregion
 
         public FileService() : this(AppContext.BaseDirectory) { }
@@ -32,7 +32,7 @@ namespace chldr_utils.Services
                 Directory.CreateDirectory(EntrySoundsDirectory);
             }
         }
-       
+
         public async Task SaveSoundAsync(IFormFile contents, string fileName)
         {
             var filePath = Path.Combine(EntrySoundsDirectory, fileName);
