@@ -19,11 +19,11 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Entry Grid.Row="0" Placeholder="Username" Text="{Binding Username}" />
             <Entry Grid.Row="0" Placeholder="Email" Text="{Binding Email}" />
-            <Entry Grid.Row="1" Placeholder="Password" Text="{Binding Password}" IsPassword="True" />
-            <Entry Grid.Row="2" Placeholder="PasswordConfirmation" Text="{Binding PasswordConfirmation}" IsPassword="True" />
-            <Button Grid.Row="3" Text="Register" Command="{Binding RegisterCommand}" />
+            <Entry Grid.Row="1" Placeholder="Username" Text="{Binding Username}" />
+            <Entry Grid.Row="2" Placeholder="Password" Text="{Binding Password}" IsPassword="True" />
+            <Entry Grid.Row="3" Placeholder="Password Confirmation" Text="{Binding PasswordConfirmation}" IsPassword="True" />
+            <Button Grid.Row="4" Text="Register" Command="{Binding RegisterCommand}" />
 
         </Grid>
 

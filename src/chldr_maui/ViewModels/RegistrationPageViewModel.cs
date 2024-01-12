@@ -19,17 +19,7 @@ namespace dosham.ViewModels
 
         private async Task OnRegister()
         {
-            ErrorMessage = "";
-
-            try
-            {
-                await UserStore.RegisterNewUser(Email!, Password!);
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = ex.Message;
-            }
+            await ExecuteSafelyAsync(() => UserStore.RegisterNewUser(Email!, Password!));
         }
-
     }
 }

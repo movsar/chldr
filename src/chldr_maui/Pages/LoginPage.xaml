@@ -25,6 +25,8 @@
                 <Button  Text="Register" Command="{Binding RegisterCommand}" />
             </HorizontalStackLayout>
         </Grid>
+        
+        <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorMessageStyle}"/>
 
     </VerticalStackLayout>
 

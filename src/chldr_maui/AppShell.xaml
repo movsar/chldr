@@ -35,6 +35,7 @@
     <ShellContent
         Title="Регистрация"
         ContentTemplate="{DataTemplate pages:RegistrationPage}"
+        FlyoutItemIsVisible="False"
         Route="Register">
     </ShellContent>
     

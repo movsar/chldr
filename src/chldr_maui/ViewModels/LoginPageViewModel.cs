@@ -24,7 +24,7 @@ namespace dosham.ViewModels
 
         private async Task OnLogin()
         {
-            await ExecuteSafelyAsync(() => UserStore.LogInEmailPasswordAsync(Email!, Password!));
+            await ExecuteSafelyAsync(() => UserStore.LogInEmailPasswordAsync(Email!, Password!));            
         }
 
     }
