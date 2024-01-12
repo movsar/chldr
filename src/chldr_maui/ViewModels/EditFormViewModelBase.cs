@@ -1,14 +1,33 @@
-﻿using ReactiveUI.Fody.Helpers;
+﻿using chldr_data.DatabaseObjects.Models;
+using DynamicData;
+using FluentValidation;
+using FluentValidation.Results;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
+using System.Collections.ObjectModel;
 
 namespace dosham.ViewModels
 {
-    public abstract class EditFormViewModelBase: ViewModelBase
+    public abstract class EditFormViewModelBase<TFormDto, TFormValidator> : ViewModelBase
+        where TFormValidator : AbstractValidator<TFormDto>
     {
-        [Reactive] public string ErrorMessage { get; set; }
+        public EditFormViewModelBase()
+        {
+            DtoValidator = App.Services.GetRequiredService<TFormValidator>();
+        }
+
+        TFormValidator? DtoValidator { get; set; }
+
+        private ObservableCollection<string> _errorMessages = new ObservableCollection<string>();
+        public ObservableCollection<string> ErrorMessages {
+            get => _errorMessages;
+            set => this.RaiseAndSetIfChanged(ref _errorMessages, value);
+        } 
+
+        public bool FormSubmitted { get; set; } = false;
+
         protected bool ExecuteSafely(Action action)
         {
-            ErrorMessage = "";
-
             try
             {
                 action();
@@ -16,14 +35,13 @@ namespace dosham.ViewModels
             }
             catch (Exception ex)
             {
-                ErrorMessage = ex.Message;
+                ErrorMessages.Clear();
+                ErrorMessages.Add(ex.Message);
                 return false;
             }
         }
         protected async Task<bool> ExecuteSafelyAsync(Func<Task> func)
         {
-            ErrorMessage = "";
-
             try
             {
                 await func();
@@ -31,9 +49,48 @@ namespace dosham.ViewModels
             }
             catch (Exception ex)
             {
-                ErrorMessage = ex.Message;
+                ErrorMessages.Clear();
+                ErrorMessages.Add(ex.Message);
+
                 return false;
             }
+        }
+        private bool Validate(TFormDto? formDto, string[]? validationRuleSets)
+        {
+            if (formDto == null)
+            {
+                throw new NullReferenceException("formDto is null!");
+            }
+
+            // Form validation
+            ErrorMessages.Clear();
+
+            ValidationResult? result;
+            if (validationRuleSets == null)
+            {
+                result = DtoValidator?.Validate(formDto);
+            }
+            else
+            {
+                result = DtoValidator?.Validate(formDto, options => options.IncludeRuleSets(validationRuleSets));
+            }
+
+            if (result!.IsValid == false) { 
+                ErrorMessages.AddRange(result.Errors.Select(err => err.ErrorMessage));
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task ValidateAndSubmitAsync(TFormDto? formDto, Func<Task> func, string[]? validationRuleSets = null)
+        {
+            if (Validate(formDto, validationRuleSets) == false)
+            {
+                return;
+            }
+
+            await ExecuteSafelyAsync(func);
         }
     }
 }

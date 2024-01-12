@@ -13,5 +13,10 @@ namespace dosham.ViewModels
             ContentStore = App.Services.GetRequiredService<ContentStore>();
             UserStore = App.Services.GetRequiredService<UserStore>();
         }
+
+        protected async Task GoToAsync(string path)
+        {
+            await Shell.Current.GoToAsync($"//{path}");
+        }
     }
 }

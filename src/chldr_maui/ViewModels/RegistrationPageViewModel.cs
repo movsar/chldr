@@ -1,15 +1,14 @@
-﻿using ReactiveUI;
+﻿using chldr_data.DatabaseObjects.Dtos;
+using chldr_shared.Validators;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.Reactive;
 
 namespace dosham.ViewModels
 {
-    public class RegistrationPageViewModel : EditFormViewModelBase
+    public class RegistrationPageViewModel : EditFormViewModelBase<UserDto, UserInfoValidator>
     {
-        [Reactive] public string Username { get; set; }
-        [Reactive] public string Email { get; set; }
-        [Reactive] public string Password { get; set; }
-        [Reactive] public string PasswordConfirmation { get; set; }
+        [Reactive] public UserDto UserInfo { get; set; } = new();
         public ReactiveCommand<Unit, Unit> RegisterCommand { get; }
 
         public RegistrationPageViewModel()
@@ -19,7 +18,10 @@ namespace dosham.ViewModels
 
         private async Task OnRegister()
         {
-            await ExecuteSafelyAsync(() => UserStore.RegisterNewUser(Email!, Password!));
+            await ValidateAndSubmitAsync(UserInfo, async () =>
+            {
+                await UserStore.RegisterNewUser(UserInfo.Email!, UserInfo.Password!);
+            }, new string[] { "Email", "Name", "Password" });
         }
     }
 }
