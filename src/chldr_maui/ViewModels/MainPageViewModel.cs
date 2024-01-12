@@ -5,7 +5,7 @@ using System.Reactive.Linq;
 
 namespace dosham.ViewModels
 {
-    public class MainPageViewModel : ReactiveObject
+    public class MainPageViewModel : ViewModelBase
     {
         private const int SearchDebounceTime = 250;
         private string _searchText;

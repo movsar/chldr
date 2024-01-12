@@ -33,22 +33,12 @@ namespace chldr_android
                         foreach (ZipArchiveEntry entry in archive.Entries)
                         {
                             string fullPath = Path.Combine(appDataPath, entry.FullName);
+                            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
 
-                            // Check if the entry is a directory
-                            if (String.IsNullOrEmpty(entry.Name))
+                            // Extract the file asynchronously
+                            using (var fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
                             {
-                                Directory.CreateDirectory(fullPath);
-                            }
-                            else
-                            {
-                                // Ensure the directory for the file exists
-                                Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
-
-                                // Extract the file asynchronously
-                                using (var fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
-                                {
-                                    await entry.Open().CopyToAsync(fileStream);
-                                }
+                                await entry.Open().CopyToAsync(fileStream);
                             }
                         }
                     }

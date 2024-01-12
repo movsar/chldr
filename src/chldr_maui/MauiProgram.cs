@@ -26,6 +26,7 @@ namespace dosham
             builder.Services.AddSingleton<SyncService>();
             builder.Services.AddSingleton<ContentStore>();
             builder.Services.AddSingleton<MainPageViewModel>();
+            builder.Services.AddSingleton<LoginPageViewModel>();
             builder.Services.AddSingleton<IndexPageViewModel>();
             builder.Services.AddSingleton<AlphabetPageViewModel>();
             builder.Services.AddSingleton(AudioManager.Current);
