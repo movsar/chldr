@@ -11,25 +11,31 @@
     <ShellContent
         Title="Поиск"
         ContentTemplate="{DataTemplate pages:MainPage}"
-        Route="MainPage">
+        Route="Main">
     </ShellContent>
 
     <ShellContent
         Title="Указатель"
         ContentTemplate="{DataTemplate pages:IndexPage}"
-        Route="IndexPage">
+        Route="Index">
     </ShellContent>
 
     <ShellContent
         Title="Алфавит"
         ContentTemplate="{DataTemplate pages:AlphabetPage}"
-        Route="AlphabetPage">
+        Route="Alphabet">
     </ShellContent>
     
     <ShellContent
         Title="Вход"
         ContentTemplate="{DataTemplate pages:LoginPage}"
-        Route="LoginPage">
+        Route="Login">
     </ShellContent>
-
+    
+    <ShellContent
+        Title="Регистрация"
+        ContentTemplate="{DataTemplate pages:RegistrationPage}"
+        Route="Register">
+    </ShellContent>
+    
 </Shell>

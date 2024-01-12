@@ -5,9 +5,9 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:vm="clr-namespace:dosham.ViewModels"
              xmlns:views="clr-namespace:dosham.Views"
-             x:DataType="vm:LoginPageViewModel"
-             x:TypeArguments="vm:LoginPageViewModel"
-             x:Class="dosham.Pages.LoginPage">
+             x:DataType="vm:RegistrationPageViewModel"
+             x:TypeArguments="vm:RegistrationPageViewModel"
+             x:Class="dosham.Pages.RegistrationPage">
     <VerticalStackLayout>
 
         <Grid WidthRequest="400" RowSpacing="10" Margin="50">
@@ -15,16 +15,19 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
+            <Entry Grid.Row="0" Placeholder="Username" Text="{Binding Username}" />
             <Entry Grid.Row="0" Placeholder="Email" Text="{Binding Email}" />
             <Entry Grid.Row="1" Placeholder="Password" Text="{Binding Password}" IsPassword="True" />
+            <Entry Grid.Row="2" Placeholder="PasswordConfirmation" Text="{Binding PasswordConfirmation}" IsPassword="True" />
+            <Button Grid.Row="3" Text="Register" Command="{Binding RegisterCommand}" />
 
-            <HorizontalStackLayout Grid.Row="2">
-                <Button  Text="Login" Command="{Binding LoginCommand}" />
-                <Button  Text="Register" Command="{Binding RegisterCommand}" />
-            </HorizontalStackLayout>
         </Grid>
+
+        <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorMessageStyle}"/>
 
     </VerticalStackLayout>
 

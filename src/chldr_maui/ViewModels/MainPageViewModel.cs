@@ -1,16 +1,18 @@
 ﻿using chldr_data.DatabaseObjects.Models;
 using dosham.Stores;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using System.Reactive.Linq;
 
 namespace dosham.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
+        [Reactive] public string SearchText { get; set; }
+        [Reactive] public IEnumerable<EntryModel> FilteredEntries { get; set; }
+        
         private const int SearchDebounceTime = 250;
-        private string _searchText;
         private readonly ContentStore _contentStore;
-        private IEnumerable<EntryModel> _filteredEntries = new List<EntryModel>();
         public MainPageViewModel(ContentStore contentStore)
         {
             _contentStore = contentStore;
@@ -40,17 +42,6 @@ namespace dosham.ViewModels
         private void OnNewSearchResults(List<EntryModel> entries)
         {
             FilteredEntries = entries;
-        }
-
-        public string SearchText
-        {
-            get => _searchText;
-            set => this.RaiseAndSetIfChanged(ref _searchText, value);
-        }
-        public IEnumerable<EntryModel> FilteredEntries
-        {
-            get => _filteredEntries;
-            set => this.RaiseAndSetIfChanged(ref _filteredEntries, value);
         }
     }
 }

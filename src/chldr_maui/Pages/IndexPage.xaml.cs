@@ -9,7 +9,6 @@ public partial class IndexPage : ReactiveContentPage<IndexPageViewModel>
     public IndexPage()
     {
         ViewModel = App.Services.GetRequiredService<IndexPageViewModel>();
-
         InitializeComponent();
 
         this.WhenActivated(disposable =>

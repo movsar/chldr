@@ -24,7 +24,7 @@ namespace chldr_utils.Services
             )
         {
             var apiHost = environmentService.IsDevelopment ? Constants.DevApiHost : Constants.ProdApiHost;
-
+            
             _graphQLClient = new GraphQLHttpClient($"{apiHost}/graphql", new NewtonsoftJsonSerializer());
             _exceptionHandler = exceptionHandler;
             _localStorageService = localStorageService;

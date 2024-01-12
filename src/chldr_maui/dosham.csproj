@@ -114,6 +114,9 @@
 		<Compile Update="Pages\AlphabetPage.xaml.cs">
 		  <DependentUpon>AlphabetPage.xaml</DependentUpon>
 		</Compile>
+		<Compile Update="Pages\RegistrationPage.xaml.cs">
+		  <DependentUpon>RegistrationPage.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="Views\EntriesView.xaml.cs">
 			<DependentUpon>EntriesView.xaml</DependentUpon>
 		</Compile>
@@ -131,6 +134,9 @@
 		</MauiXaml>
 		<MauiXaml Update="Pages\IndexPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\RegistrationPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Pages\LoginPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
