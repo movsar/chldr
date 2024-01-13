@@ -20,7 +20,7 @@
             <Entry Grid.Row="0" Placeholder="Email" Text="{Binding UserInfo.Email}" />
             <Entry Grid.Row="1" Placeholder="Password" Text="{Binding UserInfo.Password}" IsPassword="True" />
 
-            <HorizontalStackLayout Grid.Row="2">
+            <HorizontalStackLayout Grid.Row="2" Spacing="10">
                 <Button  Text="Login" Command="{Binding LoginCommand}" />
                 <Button  Text="Register" Command="{Binding RegisterCommand}" />
             </HorizontalStackLayout>
