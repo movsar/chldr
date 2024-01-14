@@ -1,6 +1,7 @@
 ﻿using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_utils.Services;
+using dosham.Stores;
 using System.IO.Compression;
 
 namespace dosham
@@ -16,9 +17,10 @@ namespace dosham
 
             var fileService = Services.GetRequiredService<FileService>();
             var environmentService = Services.GetRequiredService<IEnvironmentService>();
+            var userStore = Services.GetRequiredService<UserStore>();
 
             DeployInitialData(fileService, environmentService).ConfigureAwait(false);
-            MainPage = new AppShell();
+            MainPage = new AppShell(userStore);
         }
 
         public static async Task DeployInitialData(FileService fileService, IEnvironmentService environmentService)

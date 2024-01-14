@@ -3,15 +3,23 @@
     x:Class="dosham.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:dosham"
     xmlns:pages="clr-namespace:dosham.Pages"
     Shell.FlyoutBehavior="Locked"
-    Shell.NavBarIsVisible="False"
+    Shell.NavBarIsVisible="True"
+    x:DataType="local:AppShell"
     Title="dosham">
+
+    <Shell.FlyoutHeader>
+        <Grid Padding="10">
+            <Label Text="{Binding UserEmail}" HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Grid>
+    </Shell.FlyoutHeader>
 
     <ShellContent
         Title="Поиск"
         ContentTemplate="{DataTemplate pages:MainPage}"
-        Route="Main">
+        Route="Search">
     </ShellContent>
 
     <ShellContent
@@ -25,18 +33,26 @@
         ContentTemplate="{DataTemplate pages:AlphabetPage}"
         Route="Alphabet">
     </ShellContent>
-    
+
     <ShellContent
+        x:Name="mnuLogin"
         Title="Вход"
         ContentTemplate="{DataTemplate pages:LoginPage}"
         Route="Login">
     </ShellContent>
-    
+
+    <ShellContent
+        Title="Профиль"
+        x:Name="mnuProfile"
+        FlyoutItemIsVisible="False"
+        Route="Profile">
+    </ShellContent>
+
+    <!-- Needed only to allow internal navigation -->
     <ShellContent
         Title="Регистрация"
         ContentTemplate="{DataTemplate pages:RegistrationPage}"
-        FlyoutItemIsVisible="False"
+        FlyoutItemIsVisible="false"
         Route="Register">
     </ShellContent>
-    
 </Shell>

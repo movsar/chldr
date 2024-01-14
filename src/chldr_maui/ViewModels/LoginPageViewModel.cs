@@ -21,13 +21,14 @@ namespace dosham.ViewModels
         private async Task SignInWithEmailPassword()
         {
             await UserStore.LogInEmailPasswordAsync(UserInfo.Email!, UserInfo.Password!);
-            await GoToAsync("Register");
+            await GoToAsync("Search");
         }
 
         private async Task OnRegister()
         {
             await GoToAsync("Register");
         }
+
         public async Task OnLogin()
         {
             await ValidateAndSubmitAsync(UserInfo, SignInWithEmailPassword, new string[] {

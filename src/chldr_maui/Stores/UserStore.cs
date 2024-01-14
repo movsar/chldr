@@ -15,7 +15,7 @@ namespace dosham.Stores
 
         private readonly UserService _userService;
         private readonly ExceptionHandler _exceptionHandler;
-        public Action UserStateHasChanged { get; set; }
+        public event Action UserStateHasChanged;
         public UserModel? CurrentUser { get; set; } = null;
         public bool IsLoggedIn => CurrentUser != null;
         #endregion
