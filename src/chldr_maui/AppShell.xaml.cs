@@ -10,10 +10,7 @@ namespace dosham
         private string? _userEmail;
         public string? UserEmail
         {
-            get
-            {
-                return _userEmail;
-            }
+            get => _userEmail;
             set
             {
                 _userEmail = value;
