@@ -12,7 +12,7 @@
 
     <Shell.FlyoutHeader>
         <Grid Padding="10">
-            <Label Text="{Binding UserEmail}" HorizontalOptions="Center" VerticalOptions="Center"/>
+            <Label Text="{Binding UserEmail}" VerticalOptions="Center"/>
         </Grid>
     </Shell.FlyoutHeader>
 

@@ -1,12 +1,25 @@
 ﻿using dosham.Stores;
 using ReactiveUI.Fody.Helpers;
+using System.ComponentModel;
 
 namespace dosham
 {
-    public partial class AppShell : Shell
+    public partial class AppShell : Shell, INotifyPropertyChanged
     {
         private readonly UserStore _store;
-        public string? UserEmail => _store?.CurrentUser?.Email;
+        private string? _userEmail;
+        public string? UserEmail
+        {
+            get
+            {
+                return _userEmail;
+            }
+            set
+            {
+                _userEmail = value;
+                OnPropertyChanged(nameof(UserEmail));
+            }
+        }
         public bool IsLoggedIn => _store != null && _store.IsLoggedIn;
         public AppShell(UserStore store)
         {
@@ -24,6 +37,7 @@ namespace dosham
             {
                 mnuProfile.FlyoutItemIsVisible = true;
                 mnuLogin.FlyoutItemIsVisible = false;
+                UserEmail = _store?.CurrentUser?.Email;
             }
         }
     }
