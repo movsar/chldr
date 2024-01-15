@@ -686,4 +686,7 @@
   <data name="Next" xml:space="preserve">
     <value>Next</value>
   </data>
+  <data name="Hello{0}!" xml:space="preserve">
+    <value>Hello{0}!</value>
+  </data>
 </root>

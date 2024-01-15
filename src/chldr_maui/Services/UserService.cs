@@ -19,13 +19,13 @@ namespace dosham.Services
 
         public event Action<SessionInformation>? UserStateHasChanged;
 
-        private readonly LocalStorageService _localStorageService;
+        private readonly MauiSettingsService _localStorageService;
         public SessionInformation CurrentSession = new SessionInformation();
 
         public UserService(
             IDataProvider dataProvider, 
             RequestService requestService,
-            LocalStorageService localStorageService)
+            MauiSettingsService localStorageService)
         {
             _requestService = requestService;
             _localStorageService = localStorageService;

@@ -44,7 +44,7 @@ namespace dosham.Services
             services.AddScoped<SourceService>();
             services.AddScoped<UserStore>();
 
-            services.AddScoped<LocalStorageService>();
+            services.AddScoped<MauiSettingsService>();
 
             services.AddScoped<EmailService>();
             services.AddScoped<FileService>();

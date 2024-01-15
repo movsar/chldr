@@ -1,26 +1,20 @@
-﻿using System.Text.Json;
-using Xamarin.Essentials;
+﻿using chldr_data.Interfaces;
+using System.Text.Json;
 
 namespace chldr_utils.Services
 {
-    public interface ILocalStorageService
-    {
-        Task<T> GetItem<T>(string key);
-        Task SetItem<T>(string key, T value);
-        Task RemoveItem(string key);
-    }
-
-    public class LocalStorageService : ILocalStorageService
+    public class MauiSettingsService : ISettingsService
     {
         private ExceptionHandler _exceptionHandler;
 
-        public LocalStorageService(ExceptionHandler exceptionHandler)
+        public MauiSettingsService
+            (ExceptionHandler exceptionHandler)
         {
             _exceptionHandler = exceptionHandler;
         }
 
         public async Task<T> GetItem<T>(string key)
-        {
+        {            
             try
             {
                 var json = Preferences.Get(key, null);

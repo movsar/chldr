@@ -694,4 +694,7 @@
   <data name="Next" xml:space="preserve">
     <value>Следующая</value>
   </data>
+  <data name="Hello{0}!" xml:space="preserve">
+    <value>Привет{0}!</value>
+  </data>
 </root>

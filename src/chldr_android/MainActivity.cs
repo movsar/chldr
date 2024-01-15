@@ -61,7 +61,7 @@ namespace chldr_android
             var exceptionHandler = new ExceptionHandler(fileService);
             var environmentService = new EnvironmentService(chldr_data.Enums.Platforms.Android, true);
 
-            var localStorageService = new LocalStorageService(exceptionHandler);
+            var localStorageService = new JsonFileSettingsService(fileService, exceptionHandler);
             var graphQl = new GraphQLClient(exceptionHandler, environmentService, localStorageService);
 
             var requestService = new RequestService(graphQl);

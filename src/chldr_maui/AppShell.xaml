@@ -8,12 +8,13 @@
     Shell.FlyoutBehavior="Locked"
     Shell.NavBarIsVisible="True"
     x:DataType="local:AppShell"
+    FlyoutWidth="200"
     Title="dosham">
 
-    <Shell.FlyoutHeader>
-        <Grid Padding="10">
-            <Label Text="{Binding UserEmail}" VerticalOptions="Center"/>
-        </Grid>
+    <Shell.FlyoutHeader>        
+        <HorizontalStackLayout Padding="10" Spacing="10" IsVisible="{Binding IsLoggedIn}">
+            <Label Text="{Binding Header}" TextDecorations="Underline" VerticalOptions="Center"/>
+        </HorizontalStackLayout>
     </Shell.FlyoutHeader>
 
     <ShellContent
@@ -44,6 +45,7 @@
     <ShellContent
         Title="Профиль"
         x:Name="mnuProfile"
+        ContentTemplate="{DataTemplate pages:ProfilePage}"
         FlyoutItemIsVisible="False"
         Route="Profile">
     </ShellContent>

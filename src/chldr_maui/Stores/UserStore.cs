@@ -26,18 +26,18 @@ namespace dosham.Stores
             _exceptionHandler = exceptionHandler;
             _userService = userService;
             _userService.UserStateHasChanged += UserStore_UserStateHasChanged;
+        }
 
-            Task.Run(async () =>
+        public async Task RestoreLastSession()
+        {
+            try
             {
-                try
-                {
-                    await _userService.RestoreLastSession();
-                }
-                catch (Exception ex)
-                {
-                    throw _exceptionHandler.Error(ex);
-                };
-            });
+                await _userService.RestoreLastSession();
+            }
+            catch (Exception ex)
+            {
+                throw _exceptionHandler.Error(ex);
+            };
         }
 
         private void UserStore_UserStateHasChanged(SessionInformation activeSession)
