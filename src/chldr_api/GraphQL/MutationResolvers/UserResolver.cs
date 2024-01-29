@@ -207,7 +207,7 @@ namespace chldr_api.GraphQL.MutationServices
             catch (Exception ex)
             {
                 unitOfWork.Rollback();
-                return new RequestResult() { ErrorMessage = ex.Message };
+                throw;
             }
         }
         internal async Task<RequestResult> RegisterAndLogInAsync(string email, string password, string? firstName, string? lastName, string? patronymic)
@@ -250,7 +250,7 @@ namespace chldr_api.GraphQL.MutationServices
                 // Send email confirmation link
                 var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdFrontHost}/login",
+                var confirmEmailLink = new Uri(QueryHelpers.AddQueryString($"{Constants.ProdApiHost}/user/confirm/",
                     new Dictionary<string, string?>() { { "token", confirmationToken }, })).ToString();
 
                 var message = new EmailMessage(new string[] { email! },

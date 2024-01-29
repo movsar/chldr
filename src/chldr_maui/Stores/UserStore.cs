@@ -15,7 +15,7 @@ namespace dosham.Stores
 
         private readonly UserService _userService;
         private readonly ExceptionHandler _exceptionHandler;
-        public Action UserStateHasChanged { get; set; }
+        public event Action UserStateHasChanged;
         public UserModel? CurrentUser { get; set; } = null;
         public bool IsLoggedIn => CurrentUser != null;
         #endregion
@@ -26,18 +26,18 @@ namespace dosham.Stores
             _exceptionHandler = exceptionHandler;
             _userService = userService;
             _userService.UserStateHasChanged += UserStore_UserStateHasChanged;
+        }
 
-            Task.Run(async () =>
+        public async Task RestoreLastSession()
+        {
+            try
             {
-                try
-                {
-                    await _userService.RestoreLastSession();
-                }
-                catch (Exception ex)
-                {
-                    throw _exceptionHandler.Error(ex);
-                };
-            });
+                await _userService.RestoreLastSession();
+            }
+            catch (Exception ex)
+            {
+                throw _exceptionHandler.Error(ex);
+            };
         }
 
         private void UserStore_UserStateHasChanged(SessionInformation activeSession)

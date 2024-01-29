@@ -93,16 +93,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.1" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.3" />
 		<PackageReference Include="Plugin.Maui.Audio" Version="2.1.0" />
-		<PackageReference Include="ReactiveUI" Version="19.5.1" />
+		<PackageReference Include="ReactiveUI" Version="19.5.39" />
 		<PackageReference Include="ReactiveUI.Events.XamEssentials" Version="15.1.1" />
-		<PackageReference Include="ReactiveUI.Maui" Version="19.5.1" />
+		<PackageReference Include="ReactiveUI.Fody" Version="19.5.39" />
+		<PackageReference Include="ReactiveUI.Maui" Version="19.5.39" />
 		<PackageReference Include="System.Collections.Specialized" Version="4.3.0" />
-		<PackageReference Include="Xamarin.Essentials" Version="1.8.0" />
+		<PackageReference Include="Xamarin.Essentials" Version="1.8.1" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -112,6 +114,12 @@
 	<ItemGroup>
 		<Compile Update="Pages\AlphabetPage.xaml.cs">
 		  <DependentUpon>AlphabetPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Pages\ProfilePage.xaml.cs">
+		  <DependentUpon>ProfilePage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Pages\RegistrationPage.xaml.cs">
+		  <DependentUpon>RegistrationPage.xaml</DependentUpon>
 		</Compile>
 		<Compile Update="Views\EntriesView.xaml.cs">
 			<DependentUpon>EntriesView.xaml</DependentUpon>
@@ -130,6 +138,15 @@
 		</MauiXaml>
 		<MauiXaml Update="Pages\IndexPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\ProfilePage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\RegistrationPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\LoginPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Resources\Templates\Templates.xaml">
 			<Generator></Generator>

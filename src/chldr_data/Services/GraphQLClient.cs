@@ -15,16 +15,16 @@ namespace chldr_utils.Services
     {
         private readonly GraphQLHttpClient _graphQLClient;
         private readonly ExceptionHandler _exceptionHandler;
-        private readonly LocalStorageService _localStorageService;
+        private readonly ISettingsService _localStorageService;
 
         public GraphQLClient(
             ExceptionHandler exceptionHandler,
             IEnvironmentService environmentService,
-            LocalStorageService localStorageService
+            ISettingsService localStorageService
             )
         {
             var apiHost = environmentService.IsDevelopment ? Constants.DevApiHost : Constants.ProdApiHost;
-
+            
             _graphQLClient = new GraphQLHttpClient($"{apiHost}/graphql", new NewtonsoftJsonSerializer());
             _exceptionHandler = exceptionHandler;
             _localStorageService = localStorageService;

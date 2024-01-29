@@ -41,8 +41,8 @@
         <!-- Search Box -->
 
         <HorizontalStackLayout Grid.Row="2" Spacing="10" HorizontalOptions="Center">
-            <Button Style="{StaticResource BaseButtonStyle}" x:Name="BtnPrevious" Text="Предыдущая"></Button>
-            <Button Style="{StaticResource BaseButtonStyle}" x:Name="BtnNext" Text="Следующая"></Button>
+            <Button Style="{StaticResource BaseButtonStyle}" Command="{Binding BtnPreviousClickedCommand}" Text="Предыдущая"></Button>
+            <Button Style="{StaticResource BaseButtonStyle}" Command="{Binding BtnNextClickedCommand}" Text="Следующая"></Button>
         </HorizontalStackLayout>
 
     </Grid>

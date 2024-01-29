@@ -528,6 +528,15 @@ namespace chldr_data.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hello{0}!.
+        /// </summary>
+        public static string Hello_0__ {
+            get {
+                return ResourceManager.GetString("Hello{0}!", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Home.
         /// </summary>
         public static string Home {

@@ -157,7 +157,7 @@ namespace chldr_data.DatabaseObjects.Models
                 ImagePath = user.ImagePath,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Patronymic = user.Patronymic,                
+                Patronymic = user.Patronymic,
             };
         }
 
@@ -180,7 +180,7 @@ namespace chldr_data.DatabaseObjects.Models
             {
                 throw new NullReferenceException("UserEntity is null");
             }
-            
+
             var userModel = FromBaseInterface(userEntity);
             userModel.Status = (UserStatus)userEntity.Status;
             userModel.Type = (UserType)userEntity.Type;
@@ -195,6 +195,22 @@ namespace chldr_data.DatabaseObjects.Models
             }
 
             return true;
+        }
+
+        public string GetFullName()
+        {
+            if (string.IsNullOrWhiteSpace(FirstName))
+            {
+                return "";
+            }
+            else if (string.IsNullOrWhiteSpace(LastName))
+            {
+                return FirstName;
+            }
+            else
+            {
+                return $"{FirstName} {LastName}";
+            }
         }
     }
 }

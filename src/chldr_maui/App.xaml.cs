@@ -1,6 +1,9 @@
 ﻿using chldr_data.Enums;
 using chldr_data.Interfaces;
+using chldr_data.Resources.Localizations;
 using chldr_utils.Services;
+using dosham.Stores;
+using Microsoft.Extensions.Localization;
 using System.IO.Compression;
 
 namespace dosham
@@ -16,9 +19,11 @@ namespace dosham
 
             var fileService = Services.GetRequiredService<FileService>();
             var environmentService = Services.GetRequiredService<IEnvironmentService>();
+            var stringLocalizer = Services.GetRequiredService<IStringLocalizer<AppLocalizations>>();
+            var userStore = Services.GetRequiredService<UserStore>();
 
             DeployInitialData(fileService, environmentService).ConfigureAwait(false);
-            MainPage = new AppShell();
+            MainPage = new AppShell(userStore, stringLocalizer);
         }
 
         public static async Task DeployInitialData(FileService fileService, IEnvironmentService environmentService)
