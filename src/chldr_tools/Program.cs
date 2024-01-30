@@ -1,17 +1,13 @@
 ﻿using chldr_data.Services;
 using chldr_utils.Services;
 using chldr_utils;
-using chldr_data.local.Services;
-using chldr_data.local.RealmEntities;
 using Realms;
-using chldr_data.remote.Services;
-using chldr_data.Interfaces;
-using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
-using chldr_data;
-using chldr_maintenance;
 using System.Text.RegularExpressions;
-using chldr_data.remote.SqlEntities;
+using chldr_data.realm.Services;
+using chldr_data.Enums;
+using chldr_data.sql.Services;
+using chldr_data.realm.RealmEntities;
+using chldr_data.sql.SqlEntities;
 
 namespace chldr_tools
 {
@@ -27,9 +23,9 @@ namespace chldr_tools
         {
             _fileService = new FileService(AppContext.BaseDirectory);
             _exceptionHandler = new ExceptionHandler(_fileService);
-            _environmentService = new EnvironmentService(chldr_shared.Enums.Platforms.Windows, true);
+            _environmentService = new EnvironmentService(Platforms.Windows, true);
 
-            var graphQlClient = new GraphQLClient(_exceptionHandler, _environmentService);
+            var graphQlClient = new GraphQLClient(_exceptionHandler, _environmentService, null);
             _requestService = new RequestService(graphQlClient);
 
             TrimDownTheSqlDatabaseForTesting();
@@ -38,8 +34,7 @@ namespace chldr_tools
         private static void TrimDownTheSqlDatabaseForTesting()
         {
             var sqlDataProvider = GetSqlDataProvider();
-            var unitOfWork = sqlDataProvider.CreateUnitOfWork(null);
-            var randomEntries = unitOfWork.Entries.GetRandomsAsync(100);
+            //var randomEntries = unitOfWork.Entries.GetRandomsAsync(100);
         }
 
         static void ContentUpdater(Realm realmDatabase, SqlContext sqlDatabase)
@@ -75,10 +70,10 @@ namespace chldr_tools
         {
             var connectionString = "My Mega Connection String";
 
-            var sqlContext = new SqlDataProvider(_fileService, _exceptionHandler, connectionString);
-            sqlContext.Initialize();
+            //var sqlContext = new SqlDataProvider(_fileService, _exceptionHandler, connectionString);
+            //sqlContext.Initialize();
 
-            return sqlContext;
+            return null;
         }
         static void LanguageCodeLocal(Realm realmDatabase)
         {
@@ -107,10 +102,10 @@ namespace chldr_tools
         }
         static RealmDataProvider GetRealmDataProvider()
         {
-            var localRealmContext = new RealmDataProvider(_fileService, _exceptionHandler, _requestService, _syncService);
-            localRealmContext.Initialize();
+            //var localRealmContext = new RealmDataProvider(_fileService, _exceptionHandler, _requestService, _syncService);
+            //localRealmContext.Initialize();
 
-            return localRealmContext;
+            return null;
         }
 
         private static void TrySetParentId(SqlEntry entry, string translation)

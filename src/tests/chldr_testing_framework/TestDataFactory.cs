@@ -64,8 +64,8 @@ namespace chldr_test_utils
 
             var jsRuntimeMock = new Mock<IJSRuntime>();
 
-            var localStorageService = new LocalStorageService( _exceptionHandler);
-            var graphQl = new GraphQLClient(_exceptionHandler, _environmentService, localStorageService);
+            //var localStorageService = new LocalStorageService( _exceptionHandler);
+            var graphQl = new GraphQLClient(_exceptionHandler, _environmentService, null);
 
             _requestService = new RequestService(graphQl);
             _entryDtoFaker = new EntryDtoFaker();

@@ -1,26 +1,14 @@
-﻿using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Models.Words;
-using chldr_data.DatabaseObjects.Models;
+﻿using chldr_data.DatabaseObjects.Models.Words;
 using chldr_data.Enums.WordDetails;
 using chldr_data.Enums;
-using chldr_data.remote.SqlEntities;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using chldr_data.local.Services;
-using chldr_data.remote.Services;
-using chldr_utils;
 using Microsoft.EntityFrameworkCore;
-using chldr_data;
 using Newtonsoft.Json;
-using chldr_data.Interfaces;
-using chldr_data.Helpers;
-using chldr_maintenance.Entities;
-using System.Formats.Asn1;
 using System.Diagnostics;
-using System.Security.AccessControl;
-using Org.BouncyCastle.Bcpg.OpenPgp;
+using chldr_data.sql.Services;
+using chldr_data.sql.SqlEntities;
 
 namespace chldr_maintenance
 {
