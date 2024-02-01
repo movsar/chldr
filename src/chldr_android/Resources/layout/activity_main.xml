@@ -26,19 +26,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rvMain" />
 
-
-    <!--        <RecycleView-->
-    <!--            android:id="@+id/expPhrases"-->
-    <!--            android:layout_width="fill_parent"-->
-    <!--            android:layout_height="0dp"-->
-    <!--            android:layout_gravity="left|center_vertical"-->
-    <!--            android:indicatorLeft="250dp"-->
-    <!--            android:indicatorRight="250dp"-->
-    <!--            android:layout_weight="1"-->
-
-    <!--            />-->
-
-
     <ImageButton
         android:id="@+id/ibtnFilers"
         android:layout_width="@dimen/btns_height"

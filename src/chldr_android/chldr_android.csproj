@@ -26,4 +26,7 @@
     <ProjectReference Include="..\chldr_data.realm\chldr_data.realm.csproj" />
     <ProjectReference Include="..\chldr_utils\chldr_utils.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
 </Project>

@@ -1,3 +1,4 @@
+using AndroidX.RecyclerView.Widget;
 using chldr_android.Services;
 using chldr_data.Interfaces;
 using chldr_data.realm.Interfaces;
@@ -8,6 +9,7 @@ using chldr_utils.Interfaces;
 using chldr_utils.Services;
 using System.Diagnostics;
 using System.IO.Compression;
+using static Android.Security.Identity.CredentialDataResult;
 using Activity = Android.App.Activity;
 
 namespace chldr_android
@@ -118,8 +120,17 @@ namespace chldr_android
         private async void DataProvider_DatabaseInitialized()
         {
             var repositories = _dataProvider.Repositories(null);
-            var a = await repositories.Entries.FindAsync("привет");
-            Debug.WriteLine($"a[0].Content = {a[0].Content}");
+            var foundEntries = await repositories.Entries.FindAsync("привет");
+
+            var rvEntries = FindViewById<RecyclerView>(Resource.Id.rvMain);
+
+            EntriesAdapter adapter = new EntriesAdapter(foundEntries);
+            rvEntries.SetAdapter(adapter);
+
+            // Optionally, if your RecyclerView doesn't set its LayoutManager in XML
+            rvEntries.SetLayoutManager(new LinearLayoutManager(this));
+            
+            Debug.WriteLine($"a[0].Content = {foundEntries[0].Content}");
         }
     }
 }
