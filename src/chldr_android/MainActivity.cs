@@ -1,3 +1,4 @@
+using AndroidX.Lifecycle.ViewModels;
 using AndroidX.RecyclerView.Widget;
 using chldr_android.Services;
 using chldr_data.Interfaces;
@@ -17,11 +18,11 @@ namespace chldr_android
     [Activity(Label = "@string/app_name", MainLauncher = true)]
     public class MainActivity : Activity
     {
-        static bool _isInitialized = false;
-        private RealmDataProvider _dataProvider;
-        private ServiceLocator _serviceLocator;
+        private static bool _isInitialized = false;
+        private static ServiceLocator _serviceLocator;
 
-        public void ExtractFileFromAssets(Activity activity, string zipName)
+        private RealmDataProvider _dataProvider;
+        public async Task ExtractFileFromAssets(Activity activity, string zipName)
         {
             if (Application.Context.FilesDir == null)
             {
@@ -62,25 +63,22 @@ namespace chldr_android
                         }
                     }
                 }
+
+                // Give it some time to unpack and rest :)
+                await Task.Delay(1000);
             }
             catch (Exception ex)
             {
-                // Handle exceptions
-                Console.WriteLine("Error extracting ZIP file: " + ex.Message);
+                throw new Exception("Error while extracting the data file", ex);
             }
         }
-        protected override async void OnCreate(Bundle? savedInstanceState)
+        private async Task Initialize()
         {
-            base.OnCreate(savedInstanceState);
-
-            // Set our view from the "main" layout resource
-            SetContentView(Resource.Layout.activity_main);
-
             if (!_isInitialized)
             {
                 _serviceLocator = new ServiceLocator();
 
-                // Register services
+                #region Register services
                 var fileService = new FileService(Application.Context.FilesDir!.AbsolutePath);
                 _serviceLocator.RegisterService<IFileService>(fileService);
 
@@ -104,17 +102,23 @@ namespace chldr_android
 
                 _dataProvider = new RealmDataProvider(fileService, exceptionHandler, syncService);
                 _serviceLocator.RegisterService<IDataProvider>(_dataProvider);
+                #endregion
 
-
-                ExtractFileFromAssets(this, "data.zip");
-                
-                _dataProvider.DatabaseInitialized += DataProvider_DatabaseInitialized;
-
+                await ExtractFileFromAssets(this, "data.zip");
                 _isInitialized = true;
-                await Task.Delay(1000);
 
+                _dataProvider.DatabaseInitialized += DataProvider_DatabaseInitialized;
                 _dataProvider.Initialize();
             }
+        }
+        protected override async void OnCreate(Bundle? savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+
+            // Set our view from the "main" layout resource
+            SetContentView(Resource.Layout.activity_main);
+
+            await Initialize();
         }
 
         private async void DataProvider_DatabaseInitialized()
@@ -129,7 +133,7 @@ namespace chldr_android
 
             // Optionally, if your RecyclerView doesn't set its LayoutManager in XML
             rvEntries.SetLayoutManager(new LinearLayoutManager(this));
-            
+
             Debug.WriteLine($"a[0].Content = {foundEntries[0].Content}");
         }
     }
