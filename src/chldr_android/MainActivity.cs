@@ -2,6 +2,7 @@ using AndroidX.Lifecycle.ViewModels;
 using AndroidX.RecyclerView.Widget;
 using chldr_android.Services;
 using chldr_data.Interfaces;
+using chldr_data.Models;
 using chldr_data.realm.Interfaces;
 using chldr_data.realm.Services;
 using chldr_data.Services;
@@ -22,6 +23,8 @@ namespace chldr_android
         private static ServiceLocator _serviceLocator;
 
         private RealmDataProvider _dataProvider;
+        private EntriesAdapter _adapter;
+
         public async Task ExtractFileFromAssets(Activity activity, string zipName)
         {
             if (Application.Context.FilesDir == null)
@@ -119,6 +122,35 @@ namespace chldr_android
             SetContentView(Resource.Layout.activity_main);
 
             await Initialize();
+
+            EditText txtSearch = FindViewById<EditText>(Resource.Id.txtSearchPhrase)!;
+            txtSearch.TextChanged += TxtSearch_TextChanged;
+        }
+
+        private async void TxtSearch_TextChanged(object? sender, Android.Text.TextChangedEventArgs e)
+        {
+            var searchTerm = e.Text?.ToString();
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return;
+            }
+
+            var filtrationFlags = new FiltrationFlags()
+            {
+                EntryFilters = new EntryFilters()
+                {
+                    IncludeOnModeration = false,
+                },
+                TranslationFilters = new TranslationFilters()
+                {
+                    IncludeOnModeration = false
+                }
+            };
+
+            var repositories = _dataProvider.Repositories(null);
+            var foundEntries = await repositories.Entries.FindAsync(searchTerm, filtrationFlags);
+
+            _adapter.UpdateEntries(foundEntries);
         }
 
         private async void DataProvider_DatabaseInitialized()
@@ -126,15 +158,13 @@ namespace chldr_android
             var repositories = _dataProvider.Repositories(null);
             var foundEntries = await repositories.Entries.FindAsync("привет");
 
-            var rvEntries = FindViewById<RecyclerView>(Resource.Id.rvMain);
+            var rvEntries = FindViewById<RecyclerView>(Resource.Id.rvMain)!;
 
-            EntriesAdapter adapter = new EntriesAdapter(foundEntries);
-            rvEntries.SetAdapter(adapter);
+            _adapter = new EntriesAdapter(foundEntries);
+            rvEntries.SetAdapter(_adapter);
 
             // Optionally, if your RecyclerView doesn't set its LayoutManager in XML
             rvEntries.SetLayoutManager(new LinearLayoutManager(this));
-
-            Debug.WriteLine($"a[0].Content = {foundEntries[0].Content}");
         }
     }
 }

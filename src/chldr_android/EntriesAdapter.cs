@@ -15,26 +15,40 @@
         {
             _entries = entries;
         }
-
+        public void UpdateEntries(List<EntryModel> newEntries)
+        {
+            _entries = newEntries;
+            NotifyDataSetChanged();
+        }
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
-            View itemView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.phrases_exp_group, parent, false);
+            View itemView = LayoutInflater.From(parent.Context)!.Inflate(Resource.Layout.phrases_exp_group, parent, false)!;
             return new EntryViewHolder(itemView);
         }
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             var entry = _entries[position];
-            var viewHolder = holder as EntryViewHolder;
+            var viewHolder = (EntryViewHolder)holder;
 
-            viewHolder.Phrase.Text = entry.Content;
+            viewHolder.Phrase.Text = entry.Header;
+            viewHolder.Source.Text = entry.Subheader;
+            if (entry.SubEntries.Any())
+            {
+                viewHolder.Forms.Text = $"[ {string.Join(", ", entry.SubEntries.Select(e => e.Content).ToArray())} ]";
+            }
+            else
+            {
+                viewHolder.Forms.Visibility = ViewStates.Gone;
+            }
+
             viewHolder.TranslationsAdapter = new TranslationsAdapter(entry.Translations);
-            viewHolder.TranslationsRecyclerView.SetAdapter(viewHolder.TranslationsAdapter);
+            viewHolder.TranslationsView.SetAdapter(viewHolder.TranslationsAdapter);
 
             // Set layout manager for nested RecyclerView
-            if (viewHolder.TranslationsRecyclerView.GetLayoutManager() == null)
+            if (viewHolder.TranslationsView.GetLayoutManager() == null)
             {
-                viewHolder.TranslationsRecyclerView.SetLayoutManager(new LinearLayoutManager(holder.ItemView.Context));
+                viewHolder.TranslationsView.SetLayoutManager(new LinearLayoutManager(holder.ItemView.Context));
             }
         }
 
@@ -43,13 +57,17 @@
         class EntryViewHolder : RecyclerView.ViewHolder
         {
             public TextView Phrase { get; private set; }
-            public RecyclerView TranslationsRecyclerView { get; private set; }
+            public TextView Source { get; private set; }
+            public TextView Forms { get; private set; }
+            public RecyclerView TranslationsView { get; private set; }
             public TranslationsAdapter TranslationsAdapter { get; set; }
 
             public EntryViewHolder(View itemView) : base(itemView)
             {
-                Phrase = itemView.FindViewById<TextView>(Resource.Id.tvPhrase);
-                TranslationsRecyclerView = itemView.FindViewById<RecyclerView>(Resource.Id.rvTranslations);
+                Phrase = itemView.FindViewById<TextView>(Resource.Id.tvPhrase)!;
+                Source = itemView.FindViewById<TextView>(Resource.Id.tvSource)!;
+                Forms = itemView.FindViewById<TextView>(Resource.Id.tvForms)!;
+                TranslationsView = itemView.FindViewById<RecyclerView>(Resource.Id.rvTranslations)!;
             }
         }
     }

@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-
     <TextView
         android:id="@+id/tvPhrase"
    
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="phrase"
         android:textSize="@dimen/n_textsize"
         android:layout_marginTop="8dp"
+        android:textColor="#6784AF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <TextView
         android:id="@+id/tvSource"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="source"
         android:textSize="@dimen/m_textsize"
@@ -31,12 +31,23 @@
         app:layout_constraintStart_toStartOf="parent"
         />
 
+    <TextView
+        android:id="@+id/tvForms"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="forms"
+        android:textSize="@dimen/m_textsize"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/tvSource"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTranslations"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:nestedScrollingEnabled="false"
-        app:layout_constraintTop_toBottomOf="@id/tvPhrase"
+        app:layout_constraintTop_toBottomOf="@id/tvForms"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
