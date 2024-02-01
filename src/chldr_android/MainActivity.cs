@@ -67,7 +67,7 @@ namespace chldr_android
                 Console.WriteLine("Error extracting ZIP file: " + ex.Message);
             }
         }
-        protected override void OnCreate(Bundle? savedInstanceState)
+        protected override async void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
@@ -105,8 +105,12 @@ namespace chldr_android
 
 
                 ExtractFileFromAssets(this, "data.zip");
-
+                
                 _dataProvider.DatabaseInitialized += DataProvider_DatabaseInitialized;
+
+                _isInitialized = true;
+                await Task.Delay(1000);
+
                 _dataProvider.Initialize();
             }
         }
