@@ -11,35 +11,47 @@ namespace chldr_android
     [Activity(Label = "@string/app_name", MainLauncher = true)]
     public class MainActivity : Activity
     {
+        static bool _isInitialized = false;
         private RealmDataProvider _dataProvider;
 
-        public async Task ExtractDataFiles(Activity activity)
+        public void ExtractFileFromAssets(Activity activity, string zipName)
         {
-            string appDataPath = Application.Context.FilesDir.AbsolutePath + Path.PathSeparator + "data";
-            Directory.CreateDirectory(appDataPath);
+            if (Application.Context.FilesDir == null)
+            {
+                throw new Exception("Files dir is null");
+            }
+
+            string appDataPath = $"{Application.Context.FilesDir.AbsolutePath}/data";
             if (File.Exists($"{appDataPath}/database/local.datx"))
             {
                 return;
             }
 
+            if (activity.Assets == null)
+            {
+                throw new Exception("Assets was null");
+            }
+
             try
             {
                 // Get the ZIP file as a stream from the raw resources
-                using (Stream zipStream = activity.Assets.Open("data.zip"))
+                using (Stream zipStream = activity.Assets.Open(zipName))
+                using (ZipArchive archive = new ZipArchive(zipStream))
                 {
-                    // Use ZipArchive to extract the ZIP file
-                    using (ZipArchive archive = new ZipArchive(zipStream))
+                    foreach (ZipArchiveEntry entry in archive.Entries)
                     {
-                        foreach (ZipArchiveEntry entry in archive.Entries)
+                        string entryPath = Path.Combine(appDataPath, entry.FullName);
+                        if (entry.FullName.EndsWith("/"))
                         {
-                            string fullPath = Path.Combine(appDataPath, entry.FullName);
-                            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+                            Directory.CreateDirectory(entryPath);
+                        }
+                        else
+                        {
+                            // Ensure the file's directory exists
+                            Directory.CreateDirectory(Path.GetDirectoryName(entryPath)!);
 
-                            // Extract the file asynchronously
-                            using (var fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
-                            {
-                                await entry.Open().CopyToAsync(fileStream);
-                            }
+                            // Extract the file
+                            entry.ExtractToFile(entryPath, overwrite: true);
                         }
                     }
                 }
@@ -57,20 +69,25 @@ namespace chldr_android
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.activity_main);
 
-            var fileService = new FileService(Application.Context.FilesDir!.AbsolutePath);
-            var exceptionHandler = new ExceptionHandler(fileService);
-            var environmentService = new EnvironmentService(chldr_data.Enums.Platforms.Android, true);
+            if (!_isInitialized)
+            {
+                var fileService = new FileService(Application.Context.FilesDir!.AbsolutePath);
+                var exceptionHandler = new ExceptionHandler(fileService);
+                var environmentService = new EnvironmentService(chldr_data.Enums.Platforms.Android, true);
 
-            var localStorageService = new JsonFileSettingsService(fileService, exceptionHandler);
-            var graphQl = new GraphQLClient(exceptionHandler, environmentService, localStorageService);
+                var localStorageService = new JsonFileSettingsService(fileService, exceptionHandler);
+                var graphQl = new GraphQLClient(exceptionHandler, environmentService, localStorageService);
 
-            var requestService = new RequestService(graphQl);
+                var requestService = new RequestService(graphQl);
 
-            var syncService = new SyncService(requestService, fileService);
-            _dataProvider = new RealmDataProvider(fileService, exceptionHandler, syncService);
+                var syncService = new SyncService(requestService, fileService);
+                _dataProvider = new RealmDataProvider(fileService, exceptionHandler, syncService);
 
-            _dataProvider.DatabaseInitialized += DataProvider_DatabaseInitialized;
-            _dataProvider.Initialize();
+                _dataProvider.DatabaseInitialized += DataProvider_DatabaseInitialized;
+
+                ExtractFileFromAssets(this, "data.zip");
+                _dataProvider.Initialize();
+            }
         }
 
         private async void DataProvider_DatabaseInitialized()
@@ -78,12 +95,6 @@ namespace chldr_android
             var repositories = _dataProvider.Repositories(null);
             var a = await repositories.Entries.FindAsync("привет");
             Debug.WriteLine($"a[0].Content = {a[0].Content}");
-        }
-
-        protected override async void OnResume()
-        {
-            base.OnResume();
-            await ExtractDataFiles(this);
         }
     }
 }
