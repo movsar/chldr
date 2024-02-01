@@ -1,4 +1,5 @@
-﻿using chldr_utils.Services;
+﻿using chldr_utils.Interfaces;
+using chldr_utils.Services;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Core;
@@ -6,20 +7,20 @@ using System.Text.RegularExpressions;
 
 namespace chldr_utils
 {
-    public class ExceptionHandler
+    public class ExceptionHandler : IExceptionHandler
     {
         private Logger _fileLogger;
         private ILogger<ExceptionHandler>? _consoleLogger;
 
         public event Action<Exception>? IncomingException;
-        public ExceptionHandler(ILogger<ExceptionHandler> consoleLogger, FileService fileService)
+        public ExceptionHandler(ILogger<ExceptionHandler> consoleLogger, IFileService fileService)
         {
             _consoleLogger = consoleLogger;
             _fileLogger = new LoggerConfiguration()
                          .WriteTo.File(Path.Combine(fileService.AppDataDirectory!, "logs", "log.txt"), rollingInterval: RollingInterval.Month)
                          .CreateLogger();
         }
-        public ExceptionHandler(FileService fileService)
+        public ExceptionHandler(IFileService fileService)
         {
             _fileLogger = new LoggerConfiguration()
                          .WriteTo.File(Path.Combine(fileService.AppDataDirectory!, "logs", "log.txt"), rollingInterval: RollingInterval.Month)

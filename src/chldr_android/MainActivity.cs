@@ -1,6 +1,10 @@
+using chldr_android.Services;
+using chldr_data.Interfaces;
+using chldr_data.realm.Interfaces;
 using chldr_data.realm.Services;
 using chldr_data.Services;
 using chldr_utils;
+using chldr_utils.Interfaces;
 using chldr_utils.Services;
 using System.Diagnostics;
 using System.IO.Compression;
@@ -13,6 +17,7 @@ namespace chldr_android
     {
         static bool _isInitialized = false;
         private RealmDataProvider _dataProvider;
+        private ServiceLocator _serviceLocator;
 
         public void ExtractFileFromAssets(Activity activity, string zipName)
         {
@@ -71,21 +76,37 @@ namespace chldr_android
 
             if (!_isInitialized)
             {
+                _serviceLocator = new ServiceLocator();
+
+                // Register services
                 var fileService = new FileService(Application.Context.FilesDir!.AbsolutePath);
-                var exceptionHandler = new ExceptionHandler(fileService);
+                _serviceLocator.RegisterService<IFileService>(fileService);
+
+                var exceptionHandler = new ExceptionHandler(_serviceLocator.GetService<IFileService>());
+                _serviceLocator.RegisterService<IExceptionHandler>(exceptionHandler);
+
                 var environmentService = new EnvironmentService(chldr_data.Enums.Platforms.Android, true);
+                _serviceLocator.RegisterService<IEnvironmentService>(environmentService);
 
                 var localStorageService = new JsonFileSettingsService(fileService, exceptionHandler);
+                _serviceLocator.RegisterService<ISettingsService>(localStorageService);
+
                 var graphQl = new GraphQLClient(exceptionHandler, environmentService, localStorageService);
+                _serviceLocator.RegisterService<IGraphQlClient>(graphQl);
 
                 var requestService = new RequestService(graphQl);
+                _serviceLocator.RegisterService<IRequestService>(requestService);
 
                 var syncService = new SyncService(requestService, fileService);
-                _dataProvider = new RealmDataProvider(fileService, exceptionHandler, syncService);
+                _serviceLocator.RegisterService<ISyncService>(syncService);
 
-                _dataProvider.DatabaseInitialized += DataProvider_DatabaseInitialized;
+                _dataProvider = new RealmDataProvider(fileService, exceptionHandler, syncService);
+                _serviceLocator.RegisterService<IDataProvider>(_dataProvider);
+
 
                 ExtractFileFromAssets(this, "data.zip");
+
+                _dataProvider.DatabaseInitialized += DataProvider_DatabaseInitialized;
                 _dataProvider.Initialize();
             }
         }

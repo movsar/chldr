@@ -1,17 +1,16 @@
 ﻿using chldr_data.Interfaces;
-using chldr_utils;
-using chldr_utils.Services;
 using Realms;
 using chldr_data.realm.RealmEntities;
-using chldr_data.Services;
+using chldr_utils.Interfaces;
+using chldr_data.realm.Interfaces;
 
 namespace chldr_data.realm.Services
 {
     public class RealmDataProvider : IDataProvider
     {
-        private readonly ExceptionHandler _exceptionHandler;
-        private readonly FileService _fileService;
-        private readonly SyncService _syncService;
+        private readonly IExceptionHandler _exceptionHandler;
+        private readonly IFileService _fileService;
+        private readonly ISyncService _syncService;
         internal static RealmConfigurationBase? OfflineDatabaseConfiguration;
 
         public bool IsInitialized { get; set; }
@@ -31,9 +30,9 @@ namespace chldr_data.realm.Services
         }
 
         public RealmDataProvider(
-            FileService fileService,
-            ExceptionHandler exceptionHandler,
-            SyncService syncService)
+            IFileService fileService,
+            IExceptionHandler exceptionHandler,
+            ISyncService syncService)
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;

@@ -1,5 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_utils.Interfaces;
 using GraphQL;
@@ -7,7 +8,7 @@ using System.Net.NetworkInformation;
 
 namespace chldr_data.Services
 {
-    public class RequestService
+    public class RequestService : IRequestService
     {
         public event Action NetworkStateHasChanged;
         public bool IsNetworUp => PingHost("8.8.8.8") || PingHost("168.63.129.16");
@@ -212,7 +213,7 @@ namespace chldr_data.Services
                         }}
                         ",
                 // ! The names here must exactly match the names defined in the graphql schema
-                Variables = new {  entryDto }
+                Variables = new { entryDto }
             };
 
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
@@ -241,7 +242,7 @@ namespace chldr_data.Services
             return response.Data;
         }
 
-        public async Task<RequestResult> UpdateEntry( EntryDto entryDto)
+        public async Task<RequestResult> UpdateEntry(EntryDto entryDto)
         {
             var operation = "updateEntry";
             var request = new GraphQLRequest
@@ -306,7 +307,7 @@ namespace chldr_data.Services
             var response = await _graphQLRequestSender.SendRequestAsync<RequestResult>(request, operation);
             return response.Data;
         }
-     
+
         private void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
         {
             NetworkStateHasChanged?.Invoke();

@@ -8,11 +8,11 @@ using Newtonsoft.Json;
 using Realms;
 using System.Diagnostics;
 using chldr_data.DatabaseObjects.Models;
-using chldr_data.Interfaces;
+using chldr_data.realm.Interfaces;
 
 namespace chldr_data.realm.Services
 {
-    public class SyncService
+    public class SyncService : ISyncService
     {
         private readonly RequestService _requestService;
         private readonly FileService _fileService;
@@ -125,7 +125,7 @@ namespace chldr_data.realm.Services
         }
         int i = 0;
 
-        internal async Task Sync()
+        public  async Task Sync()
         {
             if (_isRunning || !_requestService.IsNetworUp)
             {

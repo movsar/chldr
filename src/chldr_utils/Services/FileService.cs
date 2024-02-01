@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using chldr_utils.Interfaces;
+using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
 
 namespace chldr_utils.Services
 {
-    public class FileService
+    public class FileService : IFileService
     {
         public const string DataArchiveName = "data.zip";
 
