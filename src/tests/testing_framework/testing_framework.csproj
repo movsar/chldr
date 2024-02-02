@@ -18,10 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\api_server\api_server.csproj" />
-		<ProjectReference Include="..\..\api_application\api_application.csproj" />
-		<ProjectReference Include="..\..\core\core.csproj" />
-		<ProjectReference Include="..\..\utils\utils.csproj" />
+		<ProjectReference Include="..\..\server\api_server\api_server.csproj" />
 	</ItemGroup>
 
 </Project>

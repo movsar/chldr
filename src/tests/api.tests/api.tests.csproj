@@ -24,8 +24,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\api_server\api_server.csproj" />
-		<ProjectReference Include="..\..\core\core.csproj" />
 		<ProjectReference Include="..\testing_framework\testing_framework.csproj" />
 	</ItemGroup>
 
