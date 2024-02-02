@@ -1,4 +1,4 @@
-﻿using chldr_data.Interfaces;
+﻿using core.Interfaces;
 using Plugin.Maui.Audio;
 using ReactiveUI;
 using System.Reactive;

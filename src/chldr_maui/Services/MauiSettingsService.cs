@@ -1,4 +1,4 @@
-﻿using chldr_data.Interfaces;
+﻿using core.Interfaces;
 using System.Text.Json;
 
 namespace chldr_utils.Services

@@ -23,10 +23,9 @@
     <PackageReference Include="Xamarin.AndroidX.RecyclerView.Selection" Version="1.1.0.16" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\chldr_data.realm\chldr_domain.csproj" />
-    <ProjectReference Include="..\chldr_utils\utils.csproj" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
+    <ProjectReference Include="..\chldr_application\chldr_application.csproj" />
   </ItemGroup>
 </Project>

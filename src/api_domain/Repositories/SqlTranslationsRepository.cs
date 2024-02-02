@@ -1,14 +1,14 @@
-﻿using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Models;
+﻿using core.DatabaseObjects.Dtos;
+using core.DatabaseObjects.Models;
 using Microsoft.EntityFrameworkCore;
-using chldr_data.Enums;
-using chldr_data.Interfaces.Repositories;
+using core.Enums;
+using core.Interfaces.Repositories;
 using api_domain.SqlEntities;
 using api_domain.Services;
-using chldr_data.Models;
-using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.Interfaces;
-using chldr_data;
+using core.Models;
+using core.DatabaseObjects.Interfaces;
+using core.Interfaces;
+using core;
 
 namespace api_domain.Repositories
 {

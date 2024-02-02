@@ -1,4 +1,4 @@
-﻿using chldr_data.DatabaseObjects.Dtos;
+﻿using core.DatabaseObjects.Dtos;
 using chldr_shared.Validators;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;

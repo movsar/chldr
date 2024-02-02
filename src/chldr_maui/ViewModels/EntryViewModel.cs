@@ -1,6 +1,6 @@
-﻿using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.DatabaseObjects.Models;
-using chldr_data.Enums;
+﻿using core.DatabaseObjects.Interfaces;
+using core.DatabaseObjects.Models;
+using core.Enums;
 using ReactiveUI;
 using System.Text.RegularExpressions;
 

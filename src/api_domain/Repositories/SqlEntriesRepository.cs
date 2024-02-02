@@ -1,17 +1,17 @@
-﻿using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Models;
-using chldr_data.Enums;
-using chldr_data.Interfaces.Repositories;
-using chldr_data.Models;
+﻿using core.DatabaseObjects.Dtos;
+using core.DatabaseObjects.Models;
+using core.Enums;
+using core.Interfaces.Repositories;
+using core.Models;
 using api_domain.Services;
 using api_domain.SqlEntities;
 using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
-using chldr_data.DatabaseObjects.Interfaces;
+using core.DatabaseObjects.Interfaces;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using chldr_data.Interfaces;
+using core.Interfaces;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("api_domain.tests")]
 

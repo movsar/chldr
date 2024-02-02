@@ -1,7 +1,7 @@
 ﻿using chldr_app.Stores;
-using chldr_data.Enums;
-using chldr_data.Interfaces;
-using chldr_data.Resources.Localizations;
+using core.Enums;
+using core.Interfaces;
+using core.Resources.Localizations;
 using Microsoft.Extensions.Localization;
 using System.IO.Compression;
 

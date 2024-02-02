@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
-using chldr_data.Interfaces;
-using chldr_data.Interfaces.Repositories;
+using core.Interfaces;
+using core.Interfaces.Repositories;
 using api_domain.Services;
 using api_domain.Repositories;
 using api_domain.Interfaces;

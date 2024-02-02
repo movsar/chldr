@@ -1,7 +1,7 @@
-﻿using chldr_data.DatabaseObjects.Dtos;
+﻿using core.DatabaseObjects.Dtos;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
-using chldr_data.DatabaseObjects.Interfaces;
+using core.DatabaseObjects.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace api_domain.SqlEntities;

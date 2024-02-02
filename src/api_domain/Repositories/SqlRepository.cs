@@ -1,7 +1,7 @@
-﻿using chldr_data.DatabaseObjects.Models;
-using chldr_data.Enums;
-using chldr_data.Interfaces;
-using chldr_data.Models;
+﻿using core.DatabaseObjects.Models;
+using core.Enums;
+using core.Interfaces;
+using core.Models;
 using api_domain.Interfaces;
 using api_domain.Services;
 using api_domain.SqlEntities;

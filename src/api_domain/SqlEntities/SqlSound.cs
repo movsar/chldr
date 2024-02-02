@@ -1,5 +1,5 @@
-﻿using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Interfaces;
+﻿using core.DatabaseObjects.Dtos;
+using core.DatabaseObjects.Interfaces;
 using api_domain.Services;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;

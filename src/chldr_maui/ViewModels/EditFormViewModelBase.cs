@@ -1,4 +1,4 @@
-﻿using chldr_data.DatabaseObjects.Models;
+﻿using core.DatabaseObjects.Models;
 using DynamicData;
 using FluentValidation;
 using FluentValidation.Results;

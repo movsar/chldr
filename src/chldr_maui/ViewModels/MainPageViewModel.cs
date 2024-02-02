@@ -1,5 +1,5 @@
 ﻿using chldr_app.Stores;
-using chldr_data.DatabaseObjects.Models;
+using core.DatabaseObjects.Models;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.Reactive.Linq;

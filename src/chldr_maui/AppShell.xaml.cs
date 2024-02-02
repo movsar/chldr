@@ -1,5 +1,5 @@
 ﻿using chldr_app.Stores;
-using chldr_data.Resources.Localizations;
+using core.Resources.Localizations;
 using Microsoft.Extensions.Localization;
 using System.ComponentModel;
 
@@ -47,7 +47,7 @@ namespace dosham
         private void Store_UserStateHasChanged()
         {
             var user = _store.CurrentUser;
-            if (user != null && (user.Status == chldr_data.Enums.UserStatus.Active || user.Status == chldr_data.Enums.UserStatus.Unconfirmed))
+            if (user != null && (user.Status == core.Enums.UserStatus.Active || user.Status == core.Enums.UserStatus.Unconfirmed))
             {
                 Header = string.Format(_localizer["Hello{0}!"], _store?.CurrentUser?.GetFullName());
                 

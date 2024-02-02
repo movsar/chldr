@@ -1,11 +1,10 @@
 using AndroidX.RecyclerView.Widget;
 using chldr_android.Services;
-using chldr_data.Interfaces;
-using chldr_data.Models;
-using chldr_data.realm.Interfaces;
-using chldr_data.realm.Services;
-using chldr_data.Services;
-using chldr_infrastructure.Services;
+using core.Interfaces;
+using core.Models;
+using chldr_domain.Interfaces;
+using chldr_domain.Services;
+using core.Services;
 using chldr_utils.Services;
 using System.IO.Compression;
 using Activity = Android.App.Activity;
@@ -84,7 +83,7 @@ namespace chldr_android
                 var exceptionHandler = new ExceptionHandler(_serviceLocator.GetService<IFileService>());
                 _serviceLocator.RegisterService<IExceptionHandler>(exceptionHandler);
 
-                var environmentService = new EnvironmentService(chldr_data.Enums.Platforms.Android, true);
+                var environmentService = new EnvironmentService(core.Enums.Platforms.Android, true);
                 _serviceLocator.RegisterService<IEnvironmentService>(environmentService);
 
                 var localStorageService = new JsonFileSettingsService(fileService, exceptionHandler);

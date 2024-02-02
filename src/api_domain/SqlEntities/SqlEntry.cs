@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.Enums;
-using chldr_data.Exceptions;
+using core.DatabaseObjects.Dtos;
+using core.DatabaseObjects.Interfaces;
+using core.Enums;
+using core.Exceptions;
 using api_domain.Services;
 
 namespace api_domain.SqlEntities;

@@ -1,6 +1,6 @@
 ﻿using api_domain.Interfaces;
-using chldr_data.Interfaces;
-using chldr_data.Services;
+using core.Interfaces;
+using core.Services;
 
 namespace api_domain.Services
 {

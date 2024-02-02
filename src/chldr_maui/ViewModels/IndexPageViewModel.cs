@@ -1,6 +1,6 @@
-﻿using chldr_data.DatabaseObjects.Models;
-using chldr_data.Enums;
-using chldr_data.Models;
+﻿using core.DatabaseObjects.Models;
+using core.Enums;
+using core.Models;
 using ReactiveUI;
 using System.Reactive;
 using System.Reactive.Linq;

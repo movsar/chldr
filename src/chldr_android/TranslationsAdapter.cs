@@ -1,6 +1,6 @@
 ﻿using Android.Views;
 using AndroidX.RecyclerView.Widget;
-using chldr_data.DatabaseObjects.Models;
+using core.DatabaseObjects.Models;
 
 namespace chldr_android
 {

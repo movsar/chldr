@@ -1,6 +1,6 @@
-﻿using chldr_data.DatabaseObjects.Dtos;
+﻿using core.DatabaseObjects.Dtos;
 using Newtonsoft.Json;
-using chldr_data.DatabaseObjects.Interfaces;
+using core.DatabaseObjects.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace api_domain.SqlEntities

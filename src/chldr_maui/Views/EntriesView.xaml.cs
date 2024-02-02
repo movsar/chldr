@@ -1,4 +1,4 @@
-using chldr_data.DatabaseObjects.Models;
+using core.DatabaseObjects.Models;
 using dosham.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Maui;

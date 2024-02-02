@@ -1,14 +1,13 @@
 ﻿using chldr_app.Services;
-using chldr_data.Enums;
-using chldr_data.Interfaces;
-using chldr_data.Models;
-using chldr_data.Services;
-using chldr_infrastructure.Services;
-using chldr_utils;
+using core.Enums;
+using core.Interfaces;
+using core.Models;
+using core.Services;
 using chldr_utils.Services;
 using dosham.ViewModels;
 using Microsoft.Extensions.Logging;
 using Plugin.Maui.Audio;
+using chldr_application.Services;
 
 namespace dosham
 {

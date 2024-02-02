@@ -7,9 +7,7 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<ProjectReference Include="..\api_domain\api_domain.csproj" />
-		<ProjectReference Include="..\chldr_data\core.csproj" />
-		<ProjectReference Include="..\chldr_utils\utils.csproj" />
+		<ProjectReference Include="..\api_application\api_application.csproj" />
 	</ItemGroup>
 	
 	<ItemGroup>
