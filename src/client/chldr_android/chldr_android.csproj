@@ -1,14 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0-android</TargetFramework>
 		<SupportedOSPlatformVersion>26</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion>34</TargetPlatformMinVersion>
 		<OutputType>Exe</OutputType>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<ApplicationId>com.nohchiyn</ApplicationId>
-		<ApplicationVersion>1</ApplicationVersion>
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1414741</ApplicationVersion>
+		<ApplicationDisplayVersion>7.4.1</ApplicationDisplayVersion>
 	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<AndroidKeyStore>True</AndroidKeyStore>
+		<AndroidSigningKeyStore>C:\Users\xdr\source\repos\movsar\android_key</AndroidSigningKeyStore>
+		<AndroidSigningStorePass>135790!ы</AndroidSigningStorePass>
+		<AndroidSigningKeyAlias>key0</AndroidSigningKeyAlias>
+		<AndroidSigningKeyPass>135790!ы</AndroidSigningKeyPass>
+	</PropertyGroup>
+	
 	<ItemGroup>
 		<None Remove="Resources\layout\phrases_exp_child.xml" />
 		<None Remove="Resources\layout\phrases_exp_group.xml" />

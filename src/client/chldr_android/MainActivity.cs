@@ -1,15 +1,9 @@
 using Activity = Android.App.Activity;
 using AndroidX.RecyclerView.Widget;
 using chldr_android.Services;
-using core.Interfaces;
-using core.Models;
-using chldr_domain.Interfaces;
-using chldr_domain.Services;
-using core.Services;
-using chldr_utils.Services;
 using chldr_app.Stores;
 using core.DatabaseObjects.Models;
-using chldr_app.Services;
+using core.Models;
 using System.Diagnostics;
 
 namespace chldr_android
@@ -17,17 +11,19 @@ namespace chldr_android
     [Activity(Label = "@string/app_name", MainLauncher = true)]
     public class MainActivity : Activity
     {
+        // Making these static to persist across activity re-creation.
+        private static ContentStore _contentStore;
+        private static EntriesAdapter _adapter;
+
+        // No need for these to be static, they're re-assigned on each onCreate.
+        private EditText _txtSearch;
+        private RecyclerView _rvEntries;
+        private ImageButton _btnRefresh;
         private static bool _isInitialized = false;
         private static readonly ServiceLocator _serviceLocator = new ServiceLocator();
 
-        private ContentStore _contentStore;
-        private EntriesAdapter _adapter;
-        private EditText _txtSearch;
-        private RecyclerView _rvEntries;
-
         private async Task Initialize()
         {
-            // Make sure to run the following code only once
             if (_isInitialized)
             {
                 return;
@@ -40,65 +36,57 @@ namespace chldr_android
             }
 
             _serviceLocator.RegisterServices(ApplicationContext);
-
-            // First time offline database deployment
             await AssetsService.ExtractInitialDataFromAssets(this, "data.zip");
 
-            // Start
             _contentStore = _serviceLocator.GetService<ContentStore>();
             _contentStore.SearchResultsReady += OnNewSearchResults;
             _contentStore.ContentInitialized += OnContentInitialized;
             _contentStore.Initialize();
         }
+
         protected override void OnCreate(Bundle? savedInstanceState)
         {
-            try
+            base.OnCreate(savedInstanceState);
+            SetContentView(Resource.Layout.activity_main);
+
+            _txtSearch = FindViewById<EditText>(Resource.Id.txtSearchPhrase)!;
+            _rvEntries = FindViewById<RecyclerView>(Resource.Id.rvMain)!;
+            _btnRefresh = FindViewById<ImageButton>(Resource.Id.btnRefresh)!;
+
+            if (_adapter == null)
             {
-                base.OnCreate(savedInstanceState);
-                _ = Initialize().ConfigureAwait(false);
-
-                SetContentView(Resource.Layout.activity_main);
-
-                _txtSearch = FindViewById<EditText>(Resource.Id.txtSearchPhrase)!;
-                _rvEntries = FindViewById<RecyclerView>(Resource.Id.rvMain)!;
-                if (_adapter == null)
-                {
-                    _adapter = new EntriesAdapter(new List<EntryModel>());
-                    _rvEntries.SetAdapter(_adapter);
-                    _rvEntries.SetLayoutManager(new LinearLayoutManager(this));
-                }
-
-                _txtSearch.TextChanged += TxtSearch_TextChanged;
+                _adapter = new EntriesAdapter(new List<EntryModel>());
             }
-            catch (Exception ex)
+            _rvEntries.SetAdapter(_adapter);
+            _rvEntries.SetLayoutManager(new LinearLayoutManager(this));
+
+            _txtSearch.TextChanged += TxtSearch_TextChanged;
+            _btnRefresh.Click += _btnRefresh_Click;
+
+            if (!IsChangingConfigurations)
             {
-                Debug.WriteLine("AAAA! Oncreate");
+                // Only run initialization if we're not in the middle of a configuration change.
+                _ = Initialize().ConfigureAwait(false);
             }
         }
+
+        private void _btnRefresh_Click(object? sender, EventArgs e)
+        {
+            _btnRefresh.Enabled = false;
+            _contentStore.RequestRandomEntries();
+        }
+
         private void OnContentInitialized()
         {
-            try
-            {
-                _contentStore.RequestRandomEntries();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("AAAA! OnContentIntialized");
-            }
+            _contentStore.RequestRandomEntries();
         }
+
         private void OnNewSearchResults(List<EntryModel> entries)
         {
+            _btnRefresh.Enabled = true;
             RunOnUiThread(() =>
             {
-                try
-                {
-                    _adapter.UpdateEntries(entries);
-
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine("AAAA! OnNewSearchResults");
-                }
+                _adapter.UpdateEntries(entries);
             });
         }
 
@@ -130,6 +118,18 @@ namespace chldr_android
             {
                 Debug.WriteLine("AAAA! OnTextChanged");
             }
+        }
+
+        // Override to save the state of the application
+        protected override void OnSaveInstanceState(Bundle outState)
+        {
+            base.OnSaveInstanceState(outState);
+        }
+
+        // Override to restore state
+        protected override void OnRestoreInstanceState(Bundle savedInstanceState)
+        {
+            base.OnRestoreInstanceState(savedInstanceState);
         }
     }
 }
