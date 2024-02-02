@@ -14,6 +14,7 @@
         public EntriesAdapter(List<EntryModel> entries)
         {
             _entries = entries;
+            NotifyDataSetChanged();
         }
         public void UpdateEntries(List<EntryModel> newEntries)
         {

@@ -8,6 +8,11 @@ using core.Services;
 using chldr_utils.Services;
 using System.IO.Compression;
 using Activity = Android.App.Activity;
+using chldr_app.Stores;
+using core.DatabaseObjects.Models;
+using chldr_app.Services;
+using static Android.Security.Identity.CredentialDataResult;
+using System.Diagnostics;
 
 namespace chldr_android
 {
@@ -17,9 +22,10 @@ namespace chldr_android
         private static bool _isInitialized = false;
         private static ServiceLocator _serviceLocator;
 
-        private RealmDataProvider _dataProvider;
+        private ContentStore _contentStore;
         private EntriesAdapter _adapter;
-
+        private EditText _txtSearch;
+        private RecyclerView _rvEntries;
         public async Task ExtractFileFromAssets(Activity activity, string zipName)
         {
             if (Application.Context.FilesDir == null)
@@ -72,94 +78,137 @@ namespace chldr_android
         }
         private async Task Initialize()
         {
-            if (!_isInitialized)
+            // Make sure to run the following code only once
+            if (_isInitialized)
             {
-                _serviceLocator = new ServiceLocator();
+                return;
+            }
+            _isInitialized = true;
 
-                #region Register services
-                var fileService = new FileService(Application.Context.FilesDir!.AbsolutePath);
-                _serviceLocator.RegisterService<IFileService>(fileService);
+            #region Configure services
+            _serviceLocator = new ServiceLocator();
+            var fileService = new FileService(Application.Context.FilesDir!.AbsolutePath);
+            _serviceLocator.RegisterService<IFileService>(fileService);
 
-                var exceptionHandler = new ExceptionHandler(_serviceLocator.GetService<IFileService>());
-                _serviceLocator.RegisterService<IExceptionHandler>(exceptionHandler);
+            var exceptionHandler = new ExceptionHandler(_serviceLocator.GetService<IFileService>());
+            _serviceLocator.RegisterService<IExceptionHandler>(exceptionHandler);
 
-                var environmentService = new EnvironmentService(core.Enums.Platforms.Android, true);
-                _serviceLocator.RegisterService<IEnvironmentService>(environmentService);
+            var environmentService = new EnvironmentService(core.Enums.Platforms.Android, true);
+            _serviceLocator.RegisterService<IEnvironmentService>(environmentService);
 
-                var localStorageService = new JsonFileSettingsService(fileService, exceptionHandler);
-                _serviceLocator.RegisterService<ISettingsService>(localStorageService);
+            var localStorageService = new JsonFileSettingsService(fileService, exceptionHandler);
+            _serviceLocator.RegisterService<ISettingsService>(localStorageService);
 
-                var graphQl = new GraphQLClient(exceptionHandler, environmentService, localStorageService);
-                _serviceLocator.RegisterService<IGraphQlClient>(graphQl);
+            var graphQl = new GraphQLClient(exceptionHandler, environmentService, localStorageService);
+            _serviceLocator.RegisterService<IGraphQlClient>(graphQl);
 
-                var requestService = new RequestService(graphQl);
-                _serviceLocator.RegisterService<IRequestService>(requestService);
+            var requestService = new RequestService(graphQl);
+            _serviceLocator.RegisterService<IRequestService>(requestService);
 
-                var syncService = new SyncService(requestService, fileService);
-                _serviceLocator.RegisterService<ISyncService>(syncService);
+            var syncService = new SyncService(requestService, fileService);
+            _serviceLocator.RegisterService<ISyncService>(syncService);
 
-                _dataProvider = new RealmDataProvider(fileService, exceptionHandler, syncService);
-                _serviceLocator.RegisterService<IDataProvider>(_dataProvider);
-                #endregion
+            var dataProvider = new RealmDataProvider(fileService, exceptionHandler, syncService);
+            _serviceLocator.RegisterService<IDataProvider>(dataProvider);
 
-                await ExtractFileFromAssets(this, "data.zip");
-                _isInitialized = true;
+            var entryService = new EntryService(dataProvider, requestService, exceptionHandler, environmentService);
+            _serviceLocator.RegisterService<EntryService>(entryService);
 
-                _dataProvider.DatabaseInitialized += DataProvider_DatabaseInitialized;
-                _dataProvider.Initialize();
+            var sourceService = new SourceService(dataProvider, requestService, exceptionHandler);
+            _serviceLocator.RegisterService<SourceService>(sourceService);
+
+            var settingsService = new AndroidSettingsService(this.ApplicationContext);
+            _serviceLocator.RegisterService<ISettingsService>(settingsService);
+
+            var userService = new UserService(dataProvider, requestService, settingsService);
+            _serviceLocator.RegisterService<UserService>(userService);
+
+            var entryCacheService = new EntryCacheService();
+            _serviceLocator.RegisterService<EntryCacheService>(entryCacheService);
+
+            var contentStore = new ContentStore(exceptionHandler, dataProvider, environmentService, sourceService, entryService, userService, entryCacheService);
+            _serviceLocator.RegisterService<ContentStore>(contentStore);
+            #endregion
+
+            // First time offline database deployment
+            await ExtractFileFromAssets(this, "data.zip");
+
+            // Start
+            _contentStore = _serviceLocator.GetService<ContentStore>();
+            _contentStore.SearchResultsReady += OnNewSearchResults;
+            _contentStore.ContentInitialized += OnContentInitialized;
+            _contentStore.Initialize();
+        }
+        protected override void OnCreate(Bundle? savedInstanceState)
+        {
+            try
+            {
+
+                base.OnCreate(savedInstanceState);
+                _ = Initialize().ConfigureAwait(false);
+
+                SetContentView(Resource.Layout.activity_main);
+
+                _txtSearch = FindViewById<EditText>(Resource.Id.txtSearchPhrase)!;
+                _rvEntries = FindViewById<RecyclerView>(Resource.Id.rvMain)!;
+                if (_adapter == null)
+                {
+                    _adapter = new EntriesAdapter(new List<EntryModel>());
+                    _rvEntries.SetAdapter(_adapter);
+                    _rvEntries.SetLayoutManager(new LinearLayoutManager(this));
+                }
+
+                _txtSearch.TextChanged += TxtSearch_TextChanged;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("AAAA! Oncreate");
             }
         }
-        protected override async void OnCreate(Bundle? savedInstanceState)
+        private void OnContentInitialized()
         {
-            base.OnCreate(savedInstanceState);
+            try
+            {
+                _contentStore.RequestRandomEntries();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("AAAA! OnContentIntialized");
+            }
+        }
+        private void OnNewSearchResults(List<EntryModel> entries)
+        {
+            RunOnUiThread(() =>
+            {
+                try
+                {
+                    _adapter.UpdateEntries(entries);
 
-            // Set our view from the "main" layout resource
-            SetContentView(Resource.Layout.activity_main);
-
-            await Initialize();
-
-            EditText txtSearch = FindViewById<EditText>(Resource.Id.txtSearchPhrase)!;
-            txtSearch.TextChanged += TxtSearch_TextChanged;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("AAAA! OnNewSearchResults");
+                }
+            });
         }
 
         private async void TxtSearch_TextChanged(object? sender, Android.Text.TextChangedEventArgs e)
         {
-            var searchTerm = e.Text?.ToString();
-            if (string.IsNullOrEmpty(searchTerm))
+            try
             {
-                return;
-            }
 
-            var filtrationFlags = new FiltrationFlags()
-            {
-                EntryFilters = new EntryFilters()
+                var searchTerm = e.Text?.ToString();
+                if (string.IsNullOrEmpty(searchTerm))
                 {
-                    IncludeOnModeration = false,
-                },
-                TranslationFilters = new TranslationFilters()
-                {
-                    IncludeOnModeration = false
+                    return;
                 }
-            };
 
-            var repositories = _dataProvider.Repositories(null);
-            var foundEntries = await repositories.Entries.FindAsync(searchTerm, filtrationFlags);
-
-            _adapter.UpdateEntries(foundEntries);
-        }
-
-        private async void DataProvider_DatabaseInitialized()
-        {
-            var repositories = _dataProvider.Repositories(null);
-            var foundEntries = await repositories.Entries.FindAsync("привет");
-
-            var rvEntries = FindViewById<RecyclerView>(Resource.Id.rvMain)!;
-
-            _adapter = new EntriesAdapter(foundEntries);
-            rvEntries.SetAdapter(_adapter);
-
-            // Optionally, if your RecyclerView doesn't set its LayoutManager in XML
-            rvEntries.SetLayoutManager(new LinearLayoutManager(this));
+                _contentStore.FindEntryDeferred(searchTerm);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("AAAA! OnTextChanged");
+            }
         }
     }
 }
