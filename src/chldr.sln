@@ -7,14 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_data", "chldr_data\ch
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_utils", "chldr_utils\chldr_utils.csproj", "{3D211563-743F-41D0-BDB5-49BAD670BB6B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B8E27A14-49EB-49DC-8B77-EA52A38CDE7C}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		ProjectNotes.txt = ProjectNotes.txt
-		..\README.md = ..\README.md
-		ToDo.txt = ToDo.txt
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_maintenance", "chldr_tools\chldr_maintenance.csproj", "{42DAB62C-43FE-4164-BC15-0460A0D73288}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_api", "chldr_api\chldr_api.csproj", "{97E541F2-AB38-4EC8-8A84-F158B25B8CA6}"
