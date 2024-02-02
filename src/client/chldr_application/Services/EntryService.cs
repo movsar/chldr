@@ -45,10 +45,10 @@ namespace chldr_app.Services
             var repositories = _dataProvider.Repositories();
             return await repositories.Entries.CountAsync(filtrationFlags);
         }
-        public async Task<List<EntryModel>> FindAsync(string inputText)
+        public async Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags? filtrationFlags = null)
         {
             var repositories = _dataProvider.Repositories();
-            return (await repositories.Entries.FindAsync(inputText)).ToList();
+            return (await repositories.Entries.FindAsync(inputText, filtrationFlags)).ToList();
         }
 
         public async Task<EntryModel> GetAsync(string entryId)

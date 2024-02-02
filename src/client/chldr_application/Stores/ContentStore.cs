@@ -49,7 +49,7 @@ namespace chldr_app.Stores
         }
         #endregion
 
-        public void FindEntryDeferred(string inputText)
+        public void FindEntryDeferred(string inputText, FiltrationFlags? filtrationFlags)
         {
             // Run asynchronously
             _ = Task.Run(async () =>
@@ -58,7 +58,7 @@ namespace chldr_app.Stores
                 var result = _entryCache.Get(inputText);
                 if (result == null)
                 {
-                    result = await EntryService.FindAsync(inputText);
+                    result = await EntryService.FindAsync(inputText, filtrationFlags);
                     _entryCache.Add(inputText, result);
                 }
 

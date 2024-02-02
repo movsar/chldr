@@ -10,6 +10,7 @@ using core.Services;
 using chldr_domain.Services;
 using Realms;
 using core.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace core.Repositories
 {
@@ -105,30 +106,54 @@ namespace core.Repositories
 
         public async Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags? filtrationFlags = null)
         {
-            var result = new List<EntryModel>();
-            if (inputText == null)
+            var searchText = inputText.ToLowerInvariant();
+            searchText = searchText.Replace('1', 'ӏ');
+            searchText = searchText.Replace('|', 'ӏ');
+            searchText = Regex.Replace(searchText.Trim(), "[+!\"?^]*", string.Empty);
+
+            var resultingEntries = new List<EntryModel>();
+            if (string.IsNullOrEmpty(searchText))
             {
-                return result;
+                return resultingEntries;
             }
 
-            if (inputText.Length <= 3)
+            var fromRate = UserModel.MemberRateRange.Upper;
+            var limitBy = 100;
+
+            string entryStartsWithQuery = $"RawContents LIKE [c] '{searchText}*'";
+            string translationStartsWithQuery = $"SUBQUERY(Translations, $translation, $translation.RawContents LIKE [c] '{searchText}*' AND $translation.Rate > {fromRate}).@count > 0 LIMIT ({limitBy})";
+            string containsQuery = $"(RawContents LIKE [c] '*{searchText}*' AND Rate > {fromRate}) OR (SUBQUERY(Translations, $translation, $translation.RawContents LIKE [c] '*{searchText}*' AND $translation.Rate > {fromRate}).@count > 0) LIMIT ({limitBy})";
+
+            var realmEntries = GetFilteredEntries(filtrationFlags?.EntryFilters);
+            if (searchText.Length < 3)
             {
-                result.AddRange(RealmSearchHelper.DirectSearch(_dbContext, inputText, RealmSearchHelper.StartsWithFilter(inputText), 50));
+                // StartsWith for Entry
+                realmEntries = realmEntries.Filter(entryStartsWithQuery).Take(limitBy);
             }
-            else if (inputText.Length > 3)
+            else if (searchText.Length < 6)
             {
-                result.AddRange(RealmSearchHelper.DirectSearch(_dbContext, inputText, RealmSearchHelper.EntryFilter(inputText), 50));
-                result.AddRange(RealmSearchHelper.ReverseSearch(_dbContext, inputText, RealmSearchHelper.TranslationFilter(inputText), 50));
+                // StartsWith for Translation
+                realmEntries = realmEntries.Filter($"{entryStartsWithQuery} OR {translationStartsWithQuery}");
             }
+            else
+            {
+                // Contains
+                realmEntries = realmEntries.Filter(containsQuery);
+            }
+
+            resultingEntries = GroupWithSubentries(realmEntries, FromEntry);
+            resultingEntries = ApplyTranslationFilters(resultingEntries, filtrationFlags?.TranslationFilters);
+
+            var sortedResults = resultingEntries.OrderBy(entry => !entry.Content.StartsWith(searchText, StringComparison.OrdinalIgnoreCase))
+                                   .ThenBy(entry => entry.Content.Length)
+                                   .ToList();
 
             // Sort
-            SearchServiceHelper.PostProcessing(inputText, result);
-
-            return result;
+            return sortedResults;
         }
         public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
         {
-            var filteredEntries = ApplyEntryFilters(_dbContext.All<RealmEntry>(), filtrationFlags?.EntryFilters);
+            var filteredEntries = GetFilteredEntries(filtrationFlags?.EntryFilters);
             var filteredEntriesAsQueriable = filteredEntries
                       .OrderBy(e => e.RawContents)
                       .Skip(offset)
@@ -191,8 +216,13 @@ namespace core.Repositories
             throw new NotImplementedException();
         }
         #endregion
-        public static List<EntryModel> ApplyTranslationFilters(List<EntryModel> entryModels, TranslationFilters filters)
+        public static List<EntryModel> ApplyTranslationFilters(List<EntryModel> entryModels, TranslationFilters? filters)
         {
+            if (filters == null)
+            {
+                return entryModels;
+            }
+
             // Prepare language codes to look for
             var languageCodes = new HashSet<string>();
             if (filters.LanguageCodes != null)
@@ -226,10 +256,15 @@ namespace core.Repositories
             return entryModels;
         }
 
-        public IEnumerable<RealmEntry> ApplyEntryFilters(IQueryable<RealmEntry> sourceEntries, EntryFilters? entryFilters)
+        public IQueryable<RealmEntry> GetFilteredEntries(EntryFilters? entryFilters)
         {
+            var resultingEntries = _dbContext.All<RealmEntry>();
+            if (entryFilters == null)
+            {
+                return resultingEntries;
+            }
+
             // Leave only selected entry types
-            var resultingEntries = sourceEntries.AsQueryable();
             if (entryFilters.EntryTypes != null && entryFilters.EntryTypes.Any())
             {
                 var entryTypeQueries = entryFilters.EntryTypes.Select(et => $"Type == {(int)et}");
@@ -257,7 +292,7 @@ namespace core.Repositories
         {
             var a = _dbContext.All<RealmEntry>().Where(e => e.Content.StartsWith("а"));
 
-            var entries = ApplyEntryFilters(_dbContext.All<RealmEntry>(), filtrationFlags.EntryFilters);
+            var entries = GetFilteredEntries(filtrationFlags.EntryFilters);
 
             return entries.TryGetNonEnumeratedCount(out var count) ? count : entries.Count();
         }

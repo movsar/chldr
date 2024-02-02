@@ -143,7 +143,6 @@ namespace chldr_android
         {
             try
             {
-
                 base.OnCreate(savedInstanceState);
                 _ = Initialize().ConfigureAwait(false);
 
@@ -194,16 +193,27 @@ namespace chldr_android
 
         private async void TxtSearch_TextChanged(object? sender, Android.Text.TextChangedEventArgs e)
         {
+            var filtrationFlags = new FiltrationFlags()
+            {
+                EntryFilters = new EntryFilters()
+                {
+                    IncludeOnModeration = false,
+                },
+                TranslationFilters = new TranslationFilters()
+                {
+                    IncludeOnModeration = false
+                }
+            };
+
             try
             {
-
                 var searchTerm = e.Text?.ToString();
                 if (string.IsNullOrEmpty(searchTerm))
                 {
                     return;
                 }
 
-                _contentStore.FindEntryDeferred(searchTerm);
+                _contentStore.FindEntryDeferred(searchTerm, filtrationFlags);
             }
             catch (Exception ex)
             {
