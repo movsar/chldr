@@ -4,8 +4,10 @@
 				 android:label="@string/app_name" 
 				 android:icon="@drawable/ic_launcher"
 				 android:supportsRtl="true"
+				 android:versionCode="1414744"
+				 android:versionName="7.4.4"
 				 >
 	</application>
 	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-sdk />
+	<uses-sdk android:minSdkVersion="26" android:targetSdkVersion="34" />
 </manifest>

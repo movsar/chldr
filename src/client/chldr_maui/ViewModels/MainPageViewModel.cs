@@ -29,7 +29,7 @@ namespace dosham.ViewModels
                 {
                     if (!string.IsNullOrEmpty(searchTerm))
                     {
-                        _contentStore.FindEntryDeferred(searchTerm);
+                        _contentStore.FindEntryDeferred(searchTerm, null);
                     }
                 });
         }
