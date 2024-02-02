@@ -17,7 +17,9 @@
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" 
+        app:layout_constraintBottom_toTopOf="@id/txtSearchPhrase"
+        />
 
     <EditText
         android:id="@+id/txtSearchPhrase"
@@ -37,6 +39,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rvMain"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
     <ImageButton
@@ -48,8 +51,7 @@
         android:contentDescription=""
         android:scaleType="centerCrop"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnSearchOpt" />
+        />
 
     <ImageButton
         android:id="@+id/btnRefresh"
@@ -61,8 +63,7 @@
         android:scaleType="centerInside"
         android:background="@drawable/ic_action_refresh_flight"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/ibtnFilers" />
+        />
 
     <ImageButton
         android:id="@+id/btnSearchOpt"
@@ -72,10 +73,6 @@
         android:layout_marginBottom="8dp"
         android:contentDescription=""
         android:scaleType="centerCrop"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-
-
+        android:visibility="gone"        
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
