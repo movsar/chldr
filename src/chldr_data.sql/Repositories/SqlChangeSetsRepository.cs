@@ -1,6 +1,7 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.sql.Services;
 using chldr_data.sql.SqlEntities;
@@ -12,7 +13,7 @@ namespace chldr_data.sql.Repositories
     public class SqlChangeSetsRepository : SqlRepository<SqlChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {
         protected override RecordType RecordType => throw new Exception("Shouldn't be used");
-        public SqlChangeSetsRepository(SqlContext context, FileService fileService, string _userId) : base(context, fileService, _userId) { }
+        public SqlChangeSetsRepository(SqlContext context, IFileService fileService, string _userId) : base(context, fileService, _userId) { }
 
         public async Task<List<ChangeSetModel>> TakeLastAsync(int count)
         {
@@ -101,6 +102,11 @@ namespace chldr_data.sql.Repositories
                 .ToListAsync();
 
             return entities.Select(ChangeSetModel.FromEntity).ToList();
+        }
+
+        Task IChangeSetsRepository.AddRange(IEnumerable<ChangeSetDto> changeSets)
+        {
+            throw new NotImplementedException();
         }
     }
 }

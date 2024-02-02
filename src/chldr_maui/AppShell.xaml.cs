@@ -1,7 +1,6 @@
-﻿using chldr_data.Resources.Localizations;
-using dosham.Stores;
+﻿using chldr_app.Stores;
+using chldr_data.Resources.Localizations;
 using Microsoft.Extensions.Localization;
-using ReactiveUI.Fody.Helpers;
 using System.ComponentModel;
 
 namespace dosham

@@ -1,11 +1,5 @@
 ﻿using chldr_data.Interfaces;
-using chldr_utils;
-using chldr_utils.Services;
 using chldr_data.Services;
-using Microsoft.AspNetCore.Identity;
-using chldr_data.sql.SqlEntities;
-using chldr_data.Resources.Localizations;
-using Microsoft.Extensions.Localization;
 
 namespace chldr_data.sql.Services
 {
@@ -15,13 +9,13 @@ namespace chldr_data.sql.Services
         public event Action? DatabaseInitialized;
 
         private readonly SqlContext _context;
-        private readonly FileService _fileService;
-        private readonly ExceptionHandler _exceptionHandler;
+        private readonly IFileService _fileService;
+        private readonly IExceptionHandler _exceptionHandler;
 
         public SqlDataProvider(
             SqlContext context,
-            FileService fileService,
-            ExceptionHandler exceptionHandler)
+            IFileService fileService,
+            IExceptionHandler exceptionHandler)
         {
             _context = context;
             _fileService = fileService;

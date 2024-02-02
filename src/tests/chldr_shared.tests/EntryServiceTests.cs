@@ -1,13 +1,3 @@
-using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Models;
-using chldr_data.Interfaces;
-using chldr_data.sql.Repositories;
-using chldr_data.Services;
-using chldr_test_utils;
-using chldr_utils.Exceptions;
-using System.Reactive;
-using System.Transactions;
-
 namespace chldr_shared.tests
 {
     public class EntryServiceTests

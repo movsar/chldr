@@ -2,7 +2,6 @@
 using GraphQL.Client.Serializer.Newtonsoft;
 using GraphQL;
 using Newtonsoft.Json.Linq;
-using chldr_utils.Interfaces;
 using chldr_data;
 using Newtonsoft.Json;
 using chldr_data.Models;
@@ -14,11 +13,11 @@ namespace chldr_utils.Services
     public class GraphQLClient : IGraphQlClient
     {
         private readonly GraphQLHttpClient _graphQLClient;
-        private readonly ExceptionHandler _exceptionHandler;
+        private readonly IExceptionHandler _exceptionHandler;
         private readonly ISettingsService _localStorageService;
 
         public GraphQLClient(
-            ExceptionHandler exceptionHandler,
+            IExceptionHandler exceptionHandler,
             IEnvironmentService environmentService,
             ISettingsService localStorageService
             )

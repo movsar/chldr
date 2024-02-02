@@ -3,12 +3,14 @@ using chldr_data.Services;
 using chldr_data.Validators;
 using chldr_shared.Validators;
 using FluentValidation;
-using chldr_utils.Interfaces;
 using chldr_utils.Services;
-using dosham.Stores;
-using chldr_utils;
+using chldr_data.Interfaces;
+using chldr_app.Stores;
+using Microsoft.Extensions.DependencyInjection;
+using chldr_data.realm.Interfaces;
+using chldr_data.realm.Services;
 
-namespace dosham.Services
+namespace chldr_app.Services
 {
     public static class ServiceRegistrator
     {
@@ -32,7 +34,7 @@ namespace dosham.Services
         {
             // Data
             services.AddScoped<IGraphQlClient, GraphQLClient>();
-            services.AddScoped<RequestService>();
+            services.AddScoped<IRequestService, RequestService>();
 
             services.AddScoped<UserService>();
 
@@ -44,14 +46,9 @@ namespace dosham.Services
             services.AddScoped<SourceService>();
             services.AddScoped<UserStore>();
 
-            services.AddScoped<MauiSettingsService>();
-
-            services.AddScoped<EmailService>();
-            services.AddScoped<FileService>();
-
-            // Utils
-            services.AddScoped<ExceptionHandler>();
-            services.AddScoped<CultureService>();
+            services.AddSingleton<ISyncService, SyncService>();
+            services.AddSingleton<IDataProvider, RealmDataProvider>();
+            services.AddSingleton<ContentStore>();
         }
     }
 }

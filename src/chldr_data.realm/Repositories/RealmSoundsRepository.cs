@@ -6,14 +6,13 @@ using chldr_data.Interfaces.Repositories;
 using chldr_data.realm.RealmEntities;
 using chldr_data.Models;
 using chldr_data.Repositories;
-using chldr_utils;
-using chldr_utils.Services;
+using chldr_data.Interfaces;
 
 namespace chldr_data.realm.Repositories
 {
     public class RealmSoundsRepository : RealmRepository<RealmSound, PronunciationModel, PronunciationDto>, IPronunciationsRepository
     {
-        public RealmSoundsRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
+        public RealmSoundsRepository(IExceptionHandler exceptionHandler, IFileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
         protected override RecordType RecordType => RecordType.Sound;
         public override PronunciationModel FromEntity(RealmSound entity)
         {
@@ -78,6 +77,11 @@ namespace chldr_data.realm.Repositories
         }
 
         public Task<ChangeSetModel> Promote(IPronunciation sound)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveRange(string[] sounds)
         {
             throw new NotImplementedException();
         }

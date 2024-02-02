@@ -1,13 +1,10 @@
-﻿using chldr_data.Enums;
+﻿using chldr_app.Services;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
-using chldr_data.realm.Services;
-using chldr_data.Resources.Localizations;
 using chldr_data.Services;
+using chldr_utils;
 using chldr_utils.Services;
-using dosham.Services;
-using dosham.Stores;
 using dosham.ViewModels;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Plugin.Maui.Audio;
 
@@ -24,11 +21,12 @@ namespace dosham
 
             // Services
             builder.Services.AddSingleton<IEnvironmentService>(x => new EnvironmentService(CurrentPlatform, IsDevelopment));
-            builder.Services.AddSingleton<SyncService>();
-            builder.Services.AddSingleton<IDataProvider, RealmDataProvider>();
-            builder.Services.AddSingleton<ContentStore>();
             builder.Services.AddSingleton(AudioManager.Current);
-            builder.Services.AddSingleton<ISettingsService, MauiSettingsService>();   
+            builder.Services.AddSingleton<ISettingsService, MauiSettingsService>();
+            builder.Services.AddScoped<EmailService>();
+            builder.Services.AddScoped<IFileService, FileService>();
+            builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
+            builder.Services.AddScoped<CultureService>();
 
             // ViewModels
             builder.Services.AddSingleton<LoginPageViewModel>();

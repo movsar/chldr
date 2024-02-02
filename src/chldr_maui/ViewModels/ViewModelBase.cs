@@ -1,4 +1,4 @@
-﻿using dosham.Stores;
+﻿using chldr_app.Stores;
 using ReactiveUI;
 
 namespace dosham.ViewModels

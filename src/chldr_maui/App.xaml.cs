@@ -1,8 +1,7 @@
-﻿using chldr_data.Enums;
+﻿using chldr_app.Stores;
+using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Resources.Localizations;
-using chldr_utils.Services;
-using dosham.Stores;
 using Microsoft.Extensions.Localization;
 using System.IO.Compression;
 
@@ -17,7 +16,7 @@ namespace dosham
 
             Services = serviceProvider;
 
-            var fileService = Services.GetRequiredService<FileService>();
+            var fileService = Services.GetRequiredService<IFileService>();
             var environmentService = Services.GetRequiredService<IEnvironmentService>();
             var stringLocalizer = Services.GetRequiredService<IStringLocalizer<AppLocalizations>>();
             var userStore = Services.GetRequiredService<UserStore>();
@@ -26,7 +25,7 @@ namespace dosham
             MainPage = new AppShell(userStore, stringLocalizer);
         }
 
-        public static async Task DeployInitialData(FileService fileService, IEnvironmentService environmentService)
+        public static async Task DeployInitialData(IFileService fileService, IEnvironmentService environmentService)
         {
             var dataZipPath = fileService.DataArchiveFilePath;
             var dataDirPath = fileService.AppDataDirectory;
@@ -38,7 +37,7 @@ namespace dosham
 
             if (environmentService.CurrentPlatform != Platforms.Windows)
             {
-                var packagedDatafileExists = await FileSystem.Current.AppPackageFileExistsAsync(FileService.DataArchiveName);
+                var packagedDatafileExists = await FileSystem.Current.AppPackageFileExistsAsync(fileService.DataArchiveName);
                 if (!packagedDatafileExists)
                 {
                     throw new Exception("Data file does not exist in the package");
@@ -46,7 +45,7 @@ namespace dosham
 
                 try
                 {
-                    using (var dataStream = await FileSystem.Current.OpenAppPackageFileAsync(FileService.DataArchiveName))
+                    using (var dataStream = await FileSystem.Current.OpenAppPackageFileAsync(fileService.DataArchiveName))
                     {
                         using (var fileStream = File.Create(dataZipPath))
                         {

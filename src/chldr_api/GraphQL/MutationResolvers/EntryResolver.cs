@@ -4,14 +4,11 @@ using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.sql.Repositories;
-using chldr_data.sql.Services;
 using chldr_data.Responses;
 using chldr_data.Services;
-using chldr_tools;
 using chldr_utils;
-using chldr_utils.Exceptions;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using chldr_data.Exceptions;
 
 namespace chldr_api.GraphQL.MutationResolvers
 {

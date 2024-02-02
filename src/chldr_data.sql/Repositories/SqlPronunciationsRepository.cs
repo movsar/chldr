@@ -2,6 +2,7 @@
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.Models;
 using chldr_data.sql.Services;
@@ -13,7 +14,7 @@ namespace chldr_data.sql.Repositories
 {
     public class SqlPronunciationsRepository : SqlRepository<SqlSound, PronunciationModel, PronunciationDto>, IPronunciationsRepository
     {
-        public SqlPronunciationsRepository(SqlContext context, FileService fileService, string userId) : base(context, fileService, userId) { }
+        public SqlPronunciationsRepository(SqlContext context, IFileService fileService, string userId) : base(context, fileService, userId) { }
         protected override RecordType RecordType => RecordType.Sound;
         public override async Task<List<PronunciationModel>> GetRandomsAsync(int limit)
         {
@@ -141,6 +142,11 @@ namespace chldr_data.sql.Repositories
                 .ToListAsync();
 
             return entities.Select(PronunciationModel.FromEntity).ToList();
+        }
+
+        public Task RemoveRange(string[] sounds)
+        {
+            throw new NotImplementedException();
         }
     }
 }

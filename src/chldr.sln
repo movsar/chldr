@@ -39,6 +39,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{E766B828-08CC-49FE-8F3D-9FA7E508833F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chldr_app", "chldr_app\chldr_app.csproj", "{B1F5E151-CBF2-41C7-86FA-B018396676CB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interfaces", "Interfaces", "{396C001A-650E-4664-A296-95BF6234F0F6}"
+	ProjectSection(SolutionItems) = preProject
+		chldr_data\Interfaces\IDboService.cs = chldr_data\Interfaces\IDboService.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +108,10 @@ Global
 		{07C404A1-8510-4854-8320-0AE573E6BDC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07C404A1-8510-4854-8320-0AE573E6BDC0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{07C404A1-8510-4854-8320-0AE573E6BDC0}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{B1F5E151-CBF2-41C7-86FA-B018396676CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1F5E151-CBF2-41C7-86FA-B018396676CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1F5E151-CBF2-41C7-86FA-B018396676CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1F5E151-CBF2-41C7-86FA-B018396676CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -119,6 +130,8 @@ Global
 		{AD695F36-5FB8-4E13-8E82-3A2307ED956F} = {89611B95-8C5C-4E1E-BDEA-9A9F5382552C}
 		{F6572D21-21E9-4A8C-8DDB-332349D3D5A7} = {B245A51B-A1DD-4F26-B36E-FF6943A8170A}
 		{07C404A1-8510-4854-8320-0AE573E6BDC0} = {B245A51B-A1DD-4F26-B36E-FF6943A8170A}
+		{B1F5E151-CBF2-41C7-86FA-B018396676CB} = {E766B828-08CC-49FE-8F3D-9FA7E508833F}
+		{396C001A-650E-4664-A296-95BF6234F0F6} = {E766B828-08CC-49FE-8F3D-9FA7E508833F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}

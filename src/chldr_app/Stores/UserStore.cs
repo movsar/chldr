@@ -1,26 +1,22 @@
-﻿using chldr_data.DatabaseObjects.Models;
-using chldr_data.Enums;
+﻿using chldr_app.Services;
+using chldr_data.DatabaseObjects.Models;
 using chldr_data.Interfaces;
 using chldr_data.Models;
-using chldr_data.Services;
-using dosham.Services;
-using chldr_utils;
-using chldr_utils.Services;
 
-namespace dosham.Stores
+namespace chldr_app.Stores
 {
     public class UserStore
     {
         #region Properties, Events and Fields
 
         private readonly UserService _userService;
-        private readonly ExceptionHandler _exceptionHandler;
+        private readonly IExceptionHandler _exceptionHandler;
         public event Action UserStateHasChanged;
         public UserModel? CurrentUser { get; set; } = null;
         public bool IsLoggedIn => CurrentUser != null;
         #endregion
 
-        public UserStore(UserService userService, ExceptionHandler exceptionHandler)
+        public UserStore(UserService userService, IExceptionHandler exceptionHandler)
         {
             // Let people log in if they want (on prod turn off this for Web)
             _exceptionHandler = exceptionHandler;

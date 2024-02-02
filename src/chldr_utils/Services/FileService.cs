@@ -1,19 +1,18 @@
-﻿using chldr_utils.Interfaces;
+﻿using chldr_data.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
 
-namespace chldr_utils.Services
+namespace chldr_data.Services
 {
     public class FileService : IFileService
     {
-        public const string DataArchiveName = "data.zip";
-
         #region Fields
         private const string DataDirName = "data";
         private const string OfflineDatabaseFileName = "local.datx";
 
         public string AppBaseDirectory;
 
+        public string DataArchiveName => "data.zip";
         public string DataArchiveFilePath => Path.Combine(AppBaseDirectory, DataArchiveName);
         public string AppDataDirectory => Path.Combine(AppBaseDirectory, DataDirName);
         public string DatabaseFilePath => Path.Combine(AppDataDirectory, "database", OfflineDatabaseFileName);

@@ -27,10 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\chldr_utils\chldr_utils.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="Resources\Localizations\AppLocalizations.Designer.cs">
       <DependentUpon>AppLocalizations.resx</DependentUpon>
       <DesignTime>True</DesignTime>

@@ -3,6 +3,7 @@ using chldr_data.Enums;
 using Realms;
 using chldr_utils.Services;
 using chldr_data.realm.Interfaces;
+using chldr_data.Interfaces;
 
 namespace chldr_data.Repositories
 {
@@ -14,11 +15,11 @@ namespace chldr_data.Repositories
         protected abstract RecordType RecordType { get; }
         private readonly RealmConfiguration _dbConfig;
         protected Realm _dbContext => Realm.GetInstance(_dbConfig);
-        protected readonly ExceptionHandler _exceptionHandler;
-        protected readonly FileService _fileService;
+        protected readonly IExceptionHandler _exceptionHandler;
+        protected readonly IFileService _fileService;
         protected readonly string _userId;
 
-        public RealmRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId)
+        public RealmRepository(IExceptionHandler exceptionHandler, IFileService fileService, string userId)
         {
             _exceptionHandler = exceptionHandler;
             _fileService = fileService;

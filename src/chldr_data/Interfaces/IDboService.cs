@@ -1,4 +1,4 @@
-﻿namespace dosham.Services
+﻿namespace chldr_app.Services
 {
     public interface IDboService<TModel, TDto>
     {

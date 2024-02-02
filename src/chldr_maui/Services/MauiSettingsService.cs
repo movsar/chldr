@@ -5,10 +5,10 @@ namespace chldr_utils.Services
 {
     public class MauiSettingsService : ISettingsService
     {
-        private ExceptionHandler _exceptionHandler;
+        private IExceptionHandler _exceptionHandler;
 
         public MauiSettingsService
-            (ExceptionHandler exceptionHandler)
+            (IExceptionHandler exceptionHandler)
         {
             _exceptionHandler = exceptionHandler;
         }

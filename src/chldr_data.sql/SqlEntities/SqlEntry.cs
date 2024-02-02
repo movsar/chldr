@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.Enums;
+using chldr_data.Exceptions;
 using chldr_data.sql.Services;
-using chldr_utils.Exceptions;
 
 namespace chldr_data.sql.SqlEntities;
 [Table("Entry")]

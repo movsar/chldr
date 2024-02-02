@@ -1,21 +1,19 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
-using chldr_tools;
 using Microsoft.EntityFrameworkCore;
 using chldr_data.Enums;
-using chldr_data.Services;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.sql.SqlEntities;
 using chldr_data.sql.Services;
 using chldr_data.Models;
-using chldr_utils.Services;
 using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.Interfaces;
 
 namespace chldr_data.sql.Repositories
 {
     public class SqlTranslationsRepository : SqlRepository<SqlTranslation, TranslationModel, TranslationDto>, ITranslationsRepository
     {    
-        public SqlTranslationsRepository(SqlContext context, FileService fileService, string _userId) : base(context, fileService, _userId) { }
+        public SqlTranslationsRepository(SqlContext context, IFileService fileService, string _userId) : base(context, fileService, _userId) { }
         protected override RecordType RecordType => RecordType.Translation;
      
         public override async Task<List<TranslationModel>> GetRandomsAsync(int limit)
@@ -134,6 +132,11 @@ namespace chldr_data.sql.Repositories
              .ToListAsync();
 
             return entities.Select(TranslationModel.FromEntity).ToList();
+        }
+
+        public Task RemoveRange(string[] translations)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -3,8 +3,6 @@ using chldr_data.Interfaces;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.sql.Services;
 using chldr_data.sql.Repositories;
-using chldr_utils.Services;
-using chldr_utils;
 
 namespace chldr_data.Services
 {
@@ -12,8 +10,8 @@ namespace chldr_data.Services
     {
         private readonly string? _userId;
         private readonly SqlContext _context;
-        private readonly FileService _fileService;
-        private readonly ExceptionHandler _exceptionHandler;
+        private readonly IFileService _fileService;
+        private readonly IExceptionHandler _exceptionHandler;
         private IDbContextTransaction _transaction;
 
         private SqlChangeSetsRepository _changeSetsRepository;
@@ -24,8 +22,8 @@ namespace chldr_data.Services
         private SqlPronunciationsRepository _soundsRepository;
         public SqlDataAccessor(
             SqlContext context,
-            FileService fileService,
-            ExceptionHandler exceptionHandler,
+            IFileService fileService,
+            IExceptionHandler exceptionHandler,
             string userId)
         {
             _context = context;

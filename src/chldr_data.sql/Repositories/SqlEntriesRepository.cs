@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using chldr_data.DatabaseObjects.Interfaces;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using chldr_data.Interfaces;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("chldr_data.sql.tests")]
 
@@ -529,15 +530,30 @@ namespace chldr_data.sql.Repositories
                 );
         }
 
-        private readonly ExceptionHandler _exceptionHandler;
+        public Task Remove(string entryId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Add(EntryDto newEntryDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Update(EntryDto newEntryDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        private readonly IExceptionHandler _exceptionHandler;
         private readonly SqlTranslationsRepository _translations;
         private readonly SqlPronunciationsRepository _sounds;
         protected override RecordType RecordType => RecordType.Entry;
 
         public SqlEntriesRepository(
            SqlContext context,
-            FileService fileService,
-            ExceptionHandler exceptionHandler,
+            IFileService fileService,
+            IExceptionHandler exceptionHandler,
             ITranslationsRepository translationsRepository,
             IPronunciationsRepository soundsRepository,
             string userId) : base(context, fileService, userId)

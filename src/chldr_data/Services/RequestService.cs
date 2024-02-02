@@ -2,7 +2,6 @@
 using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
-using chldr_utils.Interfaces;
 using GraphQL;
 using System.Net.NetworkInformation;
 

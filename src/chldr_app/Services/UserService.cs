@@ -4,28 +4,26 @@ using chldr_data.Enums;
 using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.Services;
-using chldr_utils;
-using chldr_utils.Services;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace dosham.Services
+namespace chldr_app.Services
 {
     public class UserService : IDboService<UserModel, UserDto>
     {
         private readonly IDataProvider _dataProvider;
-        private readonly RequestService _requestService;
-        private readonly ExceptionHandler _exceptionHandler;
+        private readonly IRequestService _requestService;
+        private readonly IExceptionHandler _exceptionHandler;
 
         public event Action<SessionInformation>? UserStateHasChanged;
 
-        private readonly MauiSettingsService _localStorageService;
+        private readonly ISettingsService _localStorageService;
         public SessionInformation CurrentSession = new SessionInformation();
 
         public UserService(
             IDataProvider dataProvider, 
-            RequestService requestService,
-            MauiSettingsService localStorageService)
+            IRequestService requestService,
+            ISettingsService localStorageService)
         {
             _requestService = requestService;
             _localStorageService = localStorageService;

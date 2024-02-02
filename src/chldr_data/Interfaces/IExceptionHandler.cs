@@ -1,4 +1,4 @@
-﻿namespace chldr_utils.Interfaces
+﻿namespace chldr_data.Interfaces
 {
     public interface IExceptionHandler
     {

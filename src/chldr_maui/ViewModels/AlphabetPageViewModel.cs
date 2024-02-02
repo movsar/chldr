@@ -1,4 +1,4 @@
-﻿using chldr_utils.Services;
+﻿using chldr_data.Interfaces;
 using Plugin.Maui.Audio;
 using ReactiveUI;
 using System.Reactive;
@@ -8,14 +8,14 @@ namespace dosham.ViewModels
 {
     public class AlphabetPageViewModel : ViewModelBase
     {
-        private readonly FileService _fileService;
+        private readonly IFileService _fileService;
         private readonly IAudioManager _audioRecorder;
 
         public ReactiveCommand<ImageSource, Unit> ImageButtonClicked { get; }
 
         public AlphabetPageViewModel()
         {
-            _fileService = App.Services.GetRequiredService<FileService>();
+            _fileService = App.Services.GetRequiredService<IFileService>();
             _audioRecorder = App.Services.GetRequiredService<IAudioManager>();
 
             ImageButtonClicked = ReactiveCommand.CreateFromTask<ImageSource>(OnImageButtonClicked);

@@ -1,21 +1,16 @@
 ﻿using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Dtos;
-using chldr_tools;
 using chldr_data.Enums;
-using Realms;
 using chldr_data.realm.RealmEntities;
 using chldr_data.Interfaces.Repositories;
-using chldr_utils.Interfaces;
-using chldr_utils;
-using chldr_utils.Services;
 using chldr_data.Models;
-using chldr_data.Services;
+using chldr_data.Interfaces;
 
 namespace chldr_data.Repositories
 {
     public class RealmUsersRepository : RealmRepository<RealmUser, UserModel, UserDto>, IUsersRepository
     {
-        public RealmUsersRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
+        public RealmUsersRepository(IExceptionHandler exceptionHandler, IFileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
 
         protected override RecordType RecordType => RecordType.User;
         public override UserModel FromEntity(RealmUser entity)

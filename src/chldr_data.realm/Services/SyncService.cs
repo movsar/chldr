@@ -2,24 +2,23 @@
 using chldr_data.Enums;
 using chldr_data.realm.RealmEntities;
 using chldr_data.Models;
-using chldr_data.Services;
-using chldr_utils.Services;
 using Newtonsoft.Json;
 using Realms;
 using System.Diagnostics;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.realm.Interfaces;
+using chldr_data.Interfaces;
 
 namespace chldr_data.realm.Services
 {
     public class SyncService : ISyncService
     {
-        private readonly RequestService _requestService;
-        private readonly FileService _fileService;
+        private readonly IRequestService _requestService;
+        private readonly IFileService _fileService;
         private Timer _timer;
 
         private readonly SemaphoreSlim _syncLock = new SemaphoreSlim(1);
-        public SyncService(RequestService requestService, FileService fileService)
+        public SyncService(IRequestService requestService, IFileService fileService)
         {
             _requestService = requestService;
             _fileService = fileService;

@@ -2,21 +2,16 @@
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.realm.RealmEntities;
-using Realms;
 using chldr_data.Interfaces.Repositories;
-using chldr_utils.Interfaces;
-using chldr_utils;
-using chldr_utils.Services;
 using chldr_data.Models;
-using System.Threading.Channels;
-using chldr_data.Services;
 using chldr_data.DatabaseObjects.Interfaces;
+using chldr_data.Interfaces;
 
 namespace chldr_data.Repositories
 {
     public class RealmTranslationsRepository : RealmRepository<RealmTranslation, TranslationModel, TranslationDto>, ITranslationsRepository
     {
-        public RealmTranslationsRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
+        public RealmTranslationsRepository(IExceptionHandler exceptionHandler, IFileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
 
         protected override RecordType RecordType => RecordType.Translation;
         public override TranslationModel FromEntity(RealmTranslation entity)
@@ -60,6 +55,11 @@ namespace chldr_data.Repositories
         }
 
         public Task<ChangeSetModel> Promote(ITranslation translation)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveRange(string[] translations)
         {
             throw new NotImplementedException();
         }

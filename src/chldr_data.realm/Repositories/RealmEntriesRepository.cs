@@ -5,16 +5,11 @@ using chldr_data.Enums;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.realm.RealmEntities;
 using chldr_data.Models;
-using chldr_utils;
-using chldr_utils.Services;
-using chldr_data.realm.Repositories;
 using System.Collections.Immutable;
-using chldr_data.Responses;
 using chldr_data.Services;
-using chldr_data.Enums.WordDetails;
 using chldr_data.realm.Services;
-using System.Diagnostics;
 using Realms;
+using chldr_data.Interfaces;
 
 namespace chldr_data.Repositories
 {
@@ -307,8 +302,8 @@ namespace chldr_data.Repositories
         protected override RecordType RecordType => RecordType.Entry;
 
         public RealmEntriesRepository(
-            ExceptionHandler exceptionHandler,
-            FileService fileService,
+            IExceptionHandler exceptionHandler,
+            IFileService fileService,
             string userId) : base(exceptionHandler, fileService, userId) { }
 
 

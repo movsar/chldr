@@ -1,6 +1,6 @@
 ﻿using chldr_data.DatabaseObjects.Models;
 
-namespace dosham.Services
+namespace chldr_app.Services
 {
     public class EntryCacheService
     {

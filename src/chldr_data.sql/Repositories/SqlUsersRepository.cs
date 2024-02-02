@@ -1,13 +1,12 @@
 ﻿using chldr_data.DatabaseObjects.Models;
 using chldr_data.DatabaseObjects.Dtos;
-using chldr_tools;
 using chldr_data.Enums;
 using chldr_data.sql.Services;
 using chldr_data.sql.SqlEntities;
 using chldr_data.Interfaces.Repositories;
-using chldr_utils.Services;
 using chldr_data.Models;
 using Microsoft.EntityFrameworkCore;
+using chldr_data.Interfaces;
 
 namespace chldr_data.sql.Repositories
 {
@@ -15,7 +14,7 @@ namespace chldr_data.sql.Repositories
     {
         public SqlUsersRepository(
             SqlContext context,
-            FileService fileService,
+            IFileService fileService,
             string _userId) : base(context, fileService, _userId){}
 
 

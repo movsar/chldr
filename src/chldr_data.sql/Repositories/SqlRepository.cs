@@ -1,16 +1,10 @@
-﻿using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.DatabaseObjects.Interfaces;
-using chldr_data.DatabaseObjects.Models;
+﻿using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
-using chldr_data.Interfaces.Repositories;
 using chldr_data.Models;
 using chldr_data.sql.Interfaces;
 using chldr_data.sql.Services;
 using chldr_data.sql.SqlEntities;
-using chldr_utils.Exceptions;
-using chldr_utils.Services;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace chldr_data.sql.Repositories
@@ -20,7 +14,7 @@ namespace chldr_data.sql.Repositories
         where TModel : class
         where TEntity : class
     {
-        public SqlRepository(SqlContext context, FileService fileService, string userId)
+        public SqlRepository(SqlContext context, IFileService fileService, string userId)
         {
             _dbContext = context;
             _userId = userId ?? _dbContext.Users.First().Id;
@@ -28,7 +22,7 @@ namespace chldr_data.sql.Repositories
             _fileService = fileService;
         }
         protected SqlContext _dbContext { get; set; }
-        protected readonly FileService _fileService;
+        protected readonly IFileService _fileService;
         protected readonly string _userId;
         public abstract Task<TModel> GetAsync(string entityId);
         public abstract Task<List<ChangeSetModel>> AddAsync(TDto dto);

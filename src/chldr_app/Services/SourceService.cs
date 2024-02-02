@@ -4,14 +4,14 @@ using chldr_data.Interfaces;
 using chldr_data.Services;
 using chldr_utils;
 
-namespace dosham.Services
+namespace chldr_app.Services
 {
     public class SourceService : IDboService<SourceModel, SourceDto>
     {
         private readonly IDataProvider _dataProvider;
-        private readonly RequestService _requestService;
-        private readonly ExceptionHandler _exceptionHandler;
-        public SourceService(IDataProvider dataProvider, RequestService requestService, ExceptionHandler exceptionHandler)
+        private readonly IRequestService _requestService;
+        private readonly IExceptionHandler _exceptionHandler;
+        public SourceService(IDataProvider dataProvider, IRequestService requestService, IExceptionHandler exceptionHandler)
         {
             _dataProvider = dataProvider;
             _requestService = requestService;

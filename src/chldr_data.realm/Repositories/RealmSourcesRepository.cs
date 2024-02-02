@@ -1,23 +1,16 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
-using chldr_data.Interfaces;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.realm.RealmEntities;
-using chldr_tools;
-using chldr_utils.Interfaces;
-using chldr_utils;
-using Realms;
-using chldr_utils.Services;
 using chldr_data.Models;
-using System.Threading.Channels;
-using chldr_data.Services;
+using chldr_data.Interfaces;
 
 namespace chldr_data.Repositories
 {
     public class RealmSourcesRepository : RealmRepository<RealmSource, SourceModel, SourceDto>, ISourcesRepository
     {
-        public RealmSourcesRepository(ExceptionHandler exceptionHandler, FileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
+        public RealmSourcesRepository(IExceptionHandler exceptionHandler, IFileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
         protected override RecordType RecordType => RecordType.Source;
         public override SourceModel FromEntity(RealmSource entry)
         {

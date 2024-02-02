@@ -1,11 +1,10 @@
 ﻿using chldr_data.DatabaseObjects.Dtos;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
+using chldr_data.Interfaces;
 using chldr_data.Interfaces.Repositories;
 using chldr_data.sql.Services;
 using chldr_data.sql.SqlEntities;
-using chldr_tools;
-using chldr_utils.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace chldr_data.sql.Repositories
@@ -13,7 +12,7 @@ namespace chldr_data.sql.Repositories
     public class SqlSourcesRepository : SqlRepository<SqlSource, SourceModel, SourceDto>, ISourcesRepository
     {
         protected override RecordType RecordType => RecordType.Source;
-        public SqlSourcesRepository(SqlContext context, FileService fileService, string _userId) : base(context, fileService, _userId) { }
+        public SqlSourcesRepository(SqlContext context, IFileService fileService, string _userId) : base(context, fileService, _userId) { }
         public override async Task<List<SourceModel>> GetRandomsAsync(int limit)
         {
             var randomizer = new Random();

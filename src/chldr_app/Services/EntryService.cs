@@ -3,15 +3,11 @@ using chldr_data.DatabaseObjects.Interfaces;
 using chldr_data.DatabaseObjects.Models;
 using chldr_data.Enums;
 using chldr_data.Interfaces;
-using chldr_data.realm.Repositories;
-using chldr_data.realm.Services;
 using chldr_data.Models;
-using chldr_data.Repositories;
 using chldr_data.Responses;
 using chldr_data.Services;
-using chldr_utils;
 using IEntry = chldr_data.DatabaseObjects.Interfaces.IEntry;
-namespace dosham.Services
+namespace chldr_app.Services
 {
     public class EntryService : IDboService<EntryModel, EntryDto>
     {
@@ -21,13 +17,13 @@ namespace dosham.Services
 
         private readonly IDataProvider _dataProvider;
         private readonly RequestService _requestService;
-        private readonly ExceptionHandler _exceptionHandler;
+        private readonly IExceptionHandler _exceptionHandler;
         private readonly IEnvironmentService _environmentService;
 
         public EntryService(
             IDataProvider dataProvider,
             RequestService requestService,
-            ExceptionHandler exceptionHandler,
+            IExceptionHandler exceptionHandler,
             IEnvironmentService environmentService)
         {
             _dataProvider = dataProvider;
@@ -65,9 +61,9 @@ namespace dosham.Services
         #region Add
         private async Task AddToLocalDatabase(EntryDto newEntryDto, string userId, IEnumerable<ChangeSetDto> changeSets)
         {
-            var repositories = (RealmDataAccessor)_dataProvider.Repositories(userId);
-            var entriesRepository = (RealmEntriesRepository)repositories.Entries;
-            var changeSetsRepository = (RealmChangeSetsRepository)repositories.ChangeSets;
+            var repositories = _dataProvider.Repositories(userId);
+            var entriesRepository = repositories.Entries;
+            var changeSetsRepository = repositories.ChangeSets;
 
             await entriesRepository.Add(newEntryDto);
             await changeSetsRepository.AddRange(changeSets);
@@ -100,10 +96,7 @@ namespace dosham.Services
             {
                 var insertResponse = await AddToRemmoteDatabase(entryDto, userId);
 
-                if (_dataProvider is RealmDataProvider)
-                {
-                    await AddToLocalDatabase(entryDto, userId, insertResponse.ChangeSets.Select(ChangeSetDto.FromModel));
-                }
+                await AddToLocalDatabase(entryDto, userId, insertResponse.ChangeSets.Select(ChangeSetDto.FromModel));
 
                 var repositories = _dataProvider.Repositories();
                 var entry = await repositories.Entries.GetAsync(entryDto.EntryId);
@@ -150,9 +143,9 @@ namespace dosham.Services
 
         private async Task UpdateInLocalDatabase(EntryDto newEntryDto, string userId, IEnumerable<ChangeSetDto> changeSets)
         {
-            var repositories = (RealmDataAccessor)_dataProvider.Repositories(userId);
-            var entriesRepository = (RealmEntriesRepository)repositories.Entries;
-            var changeSetsRepository = (RealmChangeSetsRepository)repositories.ChangeSets;
+            var repositories = _dataProvider.Repositories(userId);
+            var entriesRepository = repositories.Entries;
+            var changeSetsRepository = repositories.ChangeSets;
 
             await entriesRepository.Update(newEntryDto);
             await changeSetsRepository.AddRange(changeSets);
@@ -176,10 +169,7 @@ namespace dosham.Services
             {
                 var updateResponse = await UpdateInRemmoteDatabase(entryDto, userId);
 
-                if (_dataProvider is RealmDataProvider)
-                {
-                    await UpdateInLocalDatabase(entryDto, userId, updateResponse.ChangeSets.Select(ChangeSetDto.FromModel));
-                }
+                await UpdateInLocalDatabase(entryDto, userId, updateResponse.ChangeSets.Select(ChangeSetDto.FromModel));
 
                 var repositories = _dataProvider.Repositories();
                 var updatedEntry = await repositories.Entries.GetAsync(entryDto.EntryId);
@@ -205,11 +195,11 @@ namespace dosham.Services
         }
         private async Task RemoveFromLocalDatabase(EntryModel entry, string userId, IEnumerable<ChangeSetDto> changeSets)
         {
-            var repositories = (RealmDataAccessor)_dataProvider.Repositories(userId);
-            var entriesRepository = (RealmEntriesRepository)repositories.Entries;
-            var soundsRepository = (RealmSoundsRepository)repositories.Sounds;
-            var translationsRepository = (RealmTranslationsRepository)repositories.Translations;
-            var changeSetsRepository = (RealmChangeSetsRepository)repositories.ChangeSets;
+            var repositories = _dataProvider.Repositories(userId);
+            var entriesRepository = repositories.Entries;
+            var soundsRepository = repositories.Sounds;
+            var translationsRepository = repositories.Translations;
+            var changeSetsRepository = repositories.ChangeSets;
 
             var sounds = entry.Sounds.Select(s => s.SoundId).ToArray();
             var translations = entry.Translations.Select(t => t.TranslationId).ToArray();
@@ -226,10 +216,7 @@ namespace dosham.Services
             {
                 var updateResponse = await RemoveFromRemmoteDatabase(entry, userId);
 
-                if (_dataProvider is RealmDataProvider)
-                {
-                    await RemoveFromLocalDatabase(entry, userId, updateResponse.ChangeSets.Select(ChangeSetDto.FromModel));
-                }
+                await RemoveFromLocalDatabase(entry, userId, updateResponse.ChangeSets.Select(ChangeSetDto.FromModel));
 
                 EntryRemoved?.Invoke(entry);
             }

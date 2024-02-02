@@ -8,9 +8,9 @@ namespace chldr_data.Services
     public class JsonFileSettingsService : ISettingsService
     {
         private readonly string _filePath;
-        private readonly ExceptionHandler _exceptionHandler;
+        private readonly IExceptionHandler _exceptionHandler;
 
-        public JsonFileSettingsService(FileService fileService, ExceptionHandler exceptionHandler)
+        public JsonFileSettingsService(IFileService fileService, IExceptionHandler exceptionHandler)
         {
             _exceptionHandler = exceptionHandler;
             _filePath = Path.Combine(fileService.AppDataDirectory, "settings.json");

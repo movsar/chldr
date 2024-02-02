@@ -58,5 +58,8 @@ namespace chldr_data.Interfaces.Repositories
         Task<ChangeSetModel> Promote(IEntry entry);
         Task<List<EntryModel>> GetEntriesOnModerationAsync();
         Task<List<EntryModel>> GetLatestEntriesAsync(int count);
+        Task Remove(string entryId);
+        Task Add(EntryDto newEntryDto);
+        Task Update(EntryDto newEntryDto);
     }
 }

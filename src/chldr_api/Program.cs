@@ -1,6 +1,7 @@
 using chldr_api.GraphQL.MutationResolvers;
 using chldr_api.GraphQL.MutationServices;
 using chldr_data.Interfaces;
+using chldr_data.Services;
 using chldr_data.sql.Services;
 using chldr_data.sql.SqlEntities;
 using chldr_utils;
@@ -35,8 +36,8 @@ namespace chldr_api
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingSecret));
 
             builder.Services.AddScoped<EmailService>();
-            builder.Services.AddScoped<FileService>();
-            builder.Services.AddScoped<ExceptionHandler>();
+            builder.Services.AddScoped<IFileService, FileService>();
+            builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
 
             builder.Services.AddTransient<UserResolver>();
             builder.Services.AddTransient<EntryResolver>();

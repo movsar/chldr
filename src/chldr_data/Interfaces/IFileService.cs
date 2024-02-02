@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace chldr_utils.Interfaces
+namespace chldr_data.Interfaces
 {
     public interface IFileService
     {
+        string DataArchiveName { get; }
         string AlphabetSoundsDirectory { get; }
         string AppDataDirectory { get; }
         string DataArchiveFilePath { get; }

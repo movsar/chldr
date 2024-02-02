@@ -1,4 +1,4 @@
-﻿namespace chldr_utils.Exceptions
+﻿namespace chldr_data.Exceptions
 {
     public class UnauthorizedException : Exception
     {

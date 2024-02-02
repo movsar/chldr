@@ -23,4 +23,8 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.8.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\chldr_data\chldr_data.csproj" />
+  </ItemGroup>
+
 </Project>

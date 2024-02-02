@@ -1,12 +1,9 @@
-﻿using chldr_data.Enums;
-using chldr_data.Interfaces;
+﻿using chldr_data.Interfaces;
 using chldr_data.Models;
 using chldr_data.DatabaseObjects.Models;
-using chldr_utils;
-using dosham.Services;
-using System.Collections.Specialized;
+using chldr_app.Services;
 
-namespace dosham.Stores
+namespace chldr_app.Stores
 {
     public class ContentStore
     {
@@ -15,7 +12,7 @@ namespace dosham.Stores
         public event Action<List<EntryModel>>? SearchResultsReady;
 
         private readonly EntryCacheService _entryCache;
-        private readonly ExceptionHandler _exceptionHandler;
+        private readonly IExceptionHandler _exceptionHandler;
         private readonly IDataProvider _dataProvider;
         private readonly IEnvironmentService _environmentService;
         public readonly List<LanguageModel> Languages = LanguageModel.GetAvailableLanguages();
@@ -25,7 +22,7 @@ namespace dosham.Stores
         public SourceService SourceService;
 
         public ContentStore(
-            ExceptionHandler exceptionHandler,
+            IExceptionHandler exceptionHandler,
             IDataProvider dataProvider,
             IEnvironmentService environmentService,
 
