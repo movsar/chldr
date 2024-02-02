@@ -16,13 +16,13 @@ namespace chldr_app.Services
         internal event Action<EntryModel> EntryRemoved;
 
         private readonly IDataProvider _dataProvider;
-        private readonly RequestService _requestService;
+        private readonly IRequestService _requestService;
         private readonly IExceptionHandler _exceptionHandler;
         private readonly IEnvironmentService _environmentService;
 
         public EntryService(
             IDataProvider dataProvider,
-            RequestService requestService,
+            IRequestService requestService,
             IExceptionHandler exceptionHandler,
             IEnvironmentService environmentService)
         {
