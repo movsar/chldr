@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\chldr_testing_framework\chldr_testing_framework.csproj" />
+    <ProjectReference Include="..\testing_framework\testing_framework.csproj" />
   </ItemGroup>
 
 </Project>

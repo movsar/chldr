@@ -1,14 +1,9 @@
 ﻿using chldr_utils.Services;
 using chldr_utils;
 using Microsoft.EntityFrameworkCore;
-using chldr_data.Interfaces;
-using chldr_data;
-using chldr_data.Services;
-using chldr_data.DatabaseObjects.Dtos;
 using api_domain.Services;
 using chldr_shared.Enums;
 using chldr_test_utils.Generators;
-using chldr_data.Resources.Localizations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -20,18 +15,22 @@ using api_domain.SqlEntities;
 using MimeKit;
 using MailKit.Net.Smtp;
 using chldr_testing_framework.Generators;
-using chldr_utils.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.AspNetCore.Identity;
 using Bogus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
-using System.Security.Claims;
-using chldr_data.DatabaseObjects.Interfaces;
 using chldr_api.GraphQL.MutationServices;
 using HotChocolate.Types.Descriptors.Definitions;
 using SQLitePCL;
 using Microsoft.JSInterop;
+using core.Resources.Localizations;
+using api_domain;
+using core.Services;
+using core.Interfaces;
+using core.Models;
+using core;
+using core.DatabaseObjects.Dtos;
 
 namespace chldr_test_utils
 {

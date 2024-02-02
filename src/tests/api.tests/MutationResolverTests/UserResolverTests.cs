@@ -1,8 +1,8 @@
 ﻿using chldr_api.GraphQL.MutationServices;
-using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.Enums;
-using chldr_data.Interfaces;
-using chldr_data.Models;
+using core.DatabaseObjects.Dtos;
+using core.Enums;
+using core.Interfaces;
+using core.Models;
 using chldr_test_utils;
 using Newtonsoft.Json;
 

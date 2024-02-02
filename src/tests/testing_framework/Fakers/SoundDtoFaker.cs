@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using chldr_data.DatabaseObjects.Dtos;
+using core.DatabaseObjects.Dtos;
 
 namespace chldr_testing_framework.Generators
 {

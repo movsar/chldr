@@ -18,10 +18,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\chldr_api\api_presentation.csproj" />
-		<ProjectReference Include="..\..\api_domain\api_application.csproj" />
-		<ProjectReference Include="..\..\chldr_data\chldr_data.csproj" />
-		<ProjectReference Include="..\..\chldr_utils\chldr_utils.csproj" />
+		<ProjectReference Include="..\..\api_server\api_server.csproj" />
+		<ProjectReference Include="..\..\api_application\api_application.csproj" />
+		<ProjectReference Include="..\..\core\core.csproj" />
+		<ProjectReference Include="..\..\utils\utils.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿using Bogus;
-using chldr_data.DatabaseObjects.Dtos;
-using chldr_data.Enums;
+using core.DatabaseObjects.Dtos;
+using core.Enums;
 
 namespace chldr_test_utils.Generators
 {
