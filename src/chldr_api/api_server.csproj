@@ -32,9 +32,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\api_infrastructure\api_infrastructure.csproj" />
-    <ProjectReference Include="..\chldr_data.realm\chldr_infrastructure.csproj" />
+    <ProjectReference Include="..\chldr_data.realm\chldr_domain.csproj" />
     <ProjectReference Include="..\chldr_data.sql\api_application.csproj" />
-    <ProjectReference Include="..\chldr_utils\chldr_utils.csproj" />
+    <ProjectReference Include="..\chldr_utils\utils.csproj" />
   </ItemGroup>
 
 </Project>

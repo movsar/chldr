@@ -8,7 +8,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\api_domain\api_domain.csproj" />
-		<ProjectReference Include="..\chldr_utils\chldr_utils.csproj" />
+		<ProjectReference Include="..\chldr_utils\utils.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

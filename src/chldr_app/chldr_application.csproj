@@ -11,7 +11,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\chldr_data.realm\chldr_infrastructure.csproj" />
+		<ProjectReference Include="..\chldr_data.realm\chldr_domain.csproj" />
 	</ItemGroup>
 
 </Project>

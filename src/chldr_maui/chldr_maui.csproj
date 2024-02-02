@@ -109,7 +109,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\chldr_app\chldr_application.csproj" />
-		<ProjectReference Include="..\chldr_utils\chldr_utils.csproj" />
+		<ProjectReference Include="..\chldr_utils\utils.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
