@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\chldr_data.sql\chldr_data.sql.csproj" />
+    <ProjectReference Include="..\..\api_domain\api_domain.csproj" />
   </ItemGroup>
 
 </Project>

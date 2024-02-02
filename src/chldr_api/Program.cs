@@ -2,8 +2,8 @@ using chldr_api.GraphQL.MutationResolvers;
 using chldr_api.GraphQL.MutationServices;
 using chldr_data.Interfaces;
 using chldr_data.Services;
-using chldr_data.sql.Services;
-using chldr_data.sql.SqlEntities;
+using api_domain.Services;
+using api_domain.SqlEntities;
 using chldr_utils;
 using chldr_utils.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,8 +14,12 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 using System.Text;
+using chldr_data.Models;
+using chldr_infrastructure.Services;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using api_domain;
 
-namespace chldr_api
+namespace api_presentation
 {
     public class Program
     {

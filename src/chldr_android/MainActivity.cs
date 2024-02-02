@@ -1,4 +1,3 @@
-using AndroidX.Lifecycle.ViewModels;
 using AndroidX.RecyclerView.Widget;
 using chldr_android.Services;
 using chldr_data.Interfaces;
@@ -6,12 +5,9 @@ using chldr_data.Models;
 using chldr_data.realm.Interfaces;
 using chldr_data.realm.Services;
 using chldr_data.Services;
-using chldr_utils;
-using chldr_utils.Interfaces;
+using chldr_infrastructure.Services;
 using chldr_utils.Services;
-using System.Diagnostics;
 using System.IO.Compression;
-using static Android.Security.Identity.CredentialDataResult;
 using Activity = Android.App.Activity;
 
 namespace chldr_android
