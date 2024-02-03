@@ -13,13 +13,13 @@ namespace chldr_android.Services
             _preferences = context.GetSharedPreferences("appSettings", FileCreationMode.Private)!;
         }
 
-        public async Task<T?> GetItem<T>(string key)
+        public T? GetItem<T>(string key)
         {
             var json = _preferences.GetString(key, null);
             return json == null ? default : JsonSerializer.Deserialize<T>(json);
         }
 
-        public async Task SetItem<T>(string key, T value)
+        public void SetItem<T>(string key, T value)
         {
             var editor = _preferences.Edit()!;
             var json = JsonSerializer.Serialize(value);
@@ -27,7 +27,7 @@ namespace chldr_android.Services
             editor.Apply();
         }
 
-        public async Task RemoveItem(string key)
+        public void RemoveItem(string key)
         {
             var editor = _preferences.Edit()!;
             editor.Remove(key);

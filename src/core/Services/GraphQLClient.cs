@@ -28,7 +28,7 @@ namespace chldr_utils.Services
             _exceptionHandler = exceptionHandler;
             _localStorageService = localStorageService;
 
-            var session = _localStorageService.GetItem<SessionInformation>("session").Result;
+            var session = _localStorageService.GetItem<SessionInformation>("session");
             if (session != null && !string.IsNullOrEmpty(session.AccessToken))
             {
                 _graphQLClient.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", session.AccessToken);

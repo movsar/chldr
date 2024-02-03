@@ -1,6 +1,4 @@
 ﻿using core.Interfaces;
-using chldr_utils;
-using chldr_utils.Services;
 using System.Text.Json;
 
 namespace core.Services
@@ -16,14 +14,14 @@ namespace core.Services
             _filePath = Path.Combine(fileService.AppDataDirectory, "settings.json");
         }
 
-        public async Task<T?> GetItem<T>(string key)
+        public T? GetItem<T>(string key)
         {
             try
             {
                 if (!File.Exists(_filePath))
                     return default;
 
-                var json = await File.ReadAllTextAsync(_filePath);
+                var json = File.ReadAllText(_filePath);
                 var settings = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
 
                 if (settings != null && settings.TryGetValue(key, out var value))
@@ -40,7 +38,7 @@ namespace core.Services
             }
         }
 
-        public async Task SetItem<T>(string key, T value)
+        public void SetItem<T>(string key, T value)
         {
             try
             {
@@ -48,7 +46,7 @@ namespace core.Services
 
                 if (File.Exists(_filePath))
                 {
-                    var json = await File.ReadAllTextAsync(_filePath);
+                    var json = File.ReadAllText(_filePath);
                     settings = JsonSerializer.Deserialize<Dictionary<string, string>>(json) ?? new Dictionary<string, string>();
                 }
                 else
@@ -58,7 +56,7 @@ namespace core.Services
 
                 settings[key] = JsonSerializer.Serialize(value);
                 var updatedJson = JsonSerializer.Serialize(settings);
-                await File.WriteAllTextAsync(_filePath, updatedJson);
+                File.WriteAllText(_filePath, updatedJson);
             }
             catch (Exception ex)
             {
@@ -66,20 +64,20 @@ namespace core.Services
             }
         }
 
-        public async Task RemoveItem(string key)
+        public void RemoveItem(string key)
         {
             try
             {
                 if (!File.Exists(_filePath))
                     return;
 
-                var json = await File.ReadAllTextAsync(_filePath);
+                var json = File.ReadAllText(_filePath);
                 var settings = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
 
                 if (settings != null && settings.Remove(key))
                 {
                     var updatedJson = JsonSerializer.Serialize(settings);
-                    await File.WriteAllTextAsync(_filePath, updatedJson);
+                    File.WriteAllText(_filePath, updatedJson);
                 }
             }
             catch (Exception ex)

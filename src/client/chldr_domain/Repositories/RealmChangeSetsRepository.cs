@@ -28,12 +28,16 @@ namespace core.Repositories
             return models;
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public override async Task<List<ChangeSetModel>> Update(ChangeSetDto dto)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             throw new Exception("This method should never be called for ChangeSets, they're immutable");
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public override async Task<List<ChangeSetModel>> Add(ChangeSetDto dto)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             // Store max 500 changesets
             _dbContext.Write(() =>
@@ -47,7 +51,9 @@ namespace core.Repositories
             return new List<ChangeSetModel>();
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<List<ChangeSetModel>> TakeLastAsync(int count)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var models = _dbContext.All<RealmChangeSet>()
                 .OrderByDescending(c => c.ChangeSetIndex)

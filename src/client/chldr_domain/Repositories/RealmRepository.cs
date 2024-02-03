@@ -36,7 +36,9 @@ namespace core.Repositories
         public abstract Task Add(TDto dto);
         public abstract Task Update(TDto EntryDto);
         public abstract Task Remove(string entityId);
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<TModel> GetAsync(string entityId)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var entry = _dbContext.Find<TEntity>(entityId);
             if (entry == null)
@@ -47,7 +49,9 @@ namespace core.Repositories
             return FromEntity(entry);
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<List<TModel>> TakeAsync(int offset, int limit)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var entities = _dbContext.All<TEntity>()
                 .Skip(offset)

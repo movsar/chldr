@@ -85,7 +85,9 @@ namespace core.Repositories
 
             return results;
         }
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<List<EntryModel>> GetLatestEntriesAsync(int count)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var entries = _dbContext.All<RealmEntry>().AsEnumerable().OrderByDescending(e => e.CreatedAt).Take(count);
 
@@ -93,7 +95,9 @@ namespace core.Repositories
 
             return entriesToReturn.ToList();
         }
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<List<EntryModel>> GetEntriesOnModerationAsync()
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var entries = _dbContext.All<RealmEntry>().AsEnumerable()
                 .Where(entry => entry.Rate < UserModel.EnthusiastRateRange.Lower)
@@ -104,7 +108,9 @@ namespace core.Repositories
             return entries;
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<List<EntryModel>> FindAsync(string inputText, FiltrationFlags? filtrationFlags = null)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var searchText = inputText.ToLowerInvariant();
             searchText = searchText.Replace('1', 'ӏ');
@@ -151,7 +157,9 @@ namespace core.Repositories
             // Sort
             return sortedResults;
         }
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags? filtrationFlags)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var filteredEntries = GetFilteredEntries(filtrationFlags?.EntryFilters);
             var filteredEntriesAsQueriable = filteredEntries
@@ -166,7 +174,9 @@ namespace core.Repositories
         #endregion
 
         #region Update
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public override async Task Add(EntryDto newEntryDto)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             // Insert Entry entity with translations
             RealmEntry entry = null!;
@@ -190,14 +200,18 @@ namespace core.Repositories
                 }
             }));
         }
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public override async Task Update(EntryDto updatedEntryDto)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             _dbContext.Write(() =>
             {
                 RealmEntry.FromDto(updatedEntryDto, _dbContext);
             });
         }
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public override async Task Remove(string entityId)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var entry = _dbContext.Find<RealmEntry>(entityId);
             if (entry == null)
@@ -288,7 +302,9 @@ namespace core.Repositories
 
             return resultingEntries;
         }
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<int> CountAsync(FiltrationFlags? filtrationFlags)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var a = _dbContext.All<RealmEntry>().Where(e => e.Content.StartsWith("а"));
 

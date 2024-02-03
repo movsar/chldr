@@ -17,7 +17,9 @@ namespace core.Repositories
         {
             return UserModel.FromEntity(entity);
         }
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public override async Task<List<ChangeSetModel>> Add(UserDto dto)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             _dbContext.Write(() =>
             {

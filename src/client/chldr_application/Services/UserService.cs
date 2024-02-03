@@ -20,7 +20,7 @@ namespace chldr_app.Services
         public SessionInformation CurrentSession = new SessionInformation();
 
         public UserService(
-            IDataProvider dataProvider, 
+            IDataProvider dataProvider,
             IRequestService requestService,
             ISettingsService localStorageService)
         {
@@ -73,7 +73,7 @@ namespace chldr_app.Services
         }
         private async Task SaveActiveSession()
         {
-            await _localStorageService.SetItem<SessionInformation>("session", CurrentSession);
+            _localStorageService.SetItem<SessionInformation>("session", CurrentSession);
         }
 
         public async Task LogInEmailPasswordAsync(string email, string password)
@@ -144,7 +144,7 @@ namespace chldr_app.Services
         public async Task RestoreLastSession()
         {
             // Get last session info from the local storage
-            var session = await _localStorageService.GetItem<SessionInformation>("session");
+            var session = _localStorageService.GetItem<SessionInformation>("session");
             if (session == null || string.IsNullOrEmpty(session.AccessToken))
             {
                 return;

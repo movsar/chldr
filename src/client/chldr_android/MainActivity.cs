@@ -90,7 +90,9 @@ namespace chldr_android
             });
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void TxtSearch_TextChanged(object? sender, Android.Text.TextChangedEventArgs e)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var filtrationFlags = new FiltrationFlags()
             {

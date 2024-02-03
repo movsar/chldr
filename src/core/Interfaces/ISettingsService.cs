@@ -2,8 +2,8 @@
 {
     public interface ISettingsService
     {
-        Task<T?> GetItem<T>(string key);
-        Task SetItem<T>(string key, T value);
-        Task RemoveItem(string key);
+        T? GetItem<T>(string key);
+        void SetItem<T>(string key, T value);
+        void RemoveItem(string key);
     }
 }

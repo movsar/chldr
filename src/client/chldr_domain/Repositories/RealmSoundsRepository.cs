@@ -18,7 +18,9 @@ namespace chldr_domain.Repositories
         {
             return PronunciationModel.FromEntity(entity);
         }
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public override async Task<List<ChangeSetModel>> Add(PronunciationDto dto)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var entry = _dbContext.Find<RealmEntry>(dto.EntryId);
 
