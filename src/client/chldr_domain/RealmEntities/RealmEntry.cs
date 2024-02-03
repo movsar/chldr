@@ -11,10 +11,10 @@ namespace chldr_domain.RealmEntities;
 public class RealmEntry : RealmObject, IEntryEntity
 {
     [MapTo("Content")]
-    private string? _content { get; set; }
+    private string _content { get; set; } = "";
 
     [PrimaryKey] public string EntryId { get; set; }
-    [Ignored] public string? SourceId => Source.SourceId;
+    [Ignored] public string SourceId => Source.SourceId;
     [Ignored] public string? UserId => User.Id;
     public string? ParentEntryId { get; set; }
     public RealmUser User { get; set; } = null!;
@@ -28,10 +28,10 @@ public class RealmEntry : RealmObject, IEntryEntity
         set
         {
             _content = value;
-            RawContents = string.IsNullOrEmpty(value) ? null : value.ToLower();
+            RawContents = string.IsNullOrEmpty(value) ? "" : value.ToLower();
         }
     }
-    public string? RawContents { get; private set; }
+    public string RawContents { get; private set; }
     public string? Details { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }

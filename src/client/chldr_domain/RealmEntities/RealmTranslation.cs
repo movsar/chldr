@@ -8,7 +8,7 @@ namespace chldr_domain.RealmEntities;
 public class RealmTranslation : RealmObject, ITranslationEntity
 {
     [MapTo("Content")]
-    private string? _content { get; set; }
+    private string _content { get; set; } = string.Empty;
 
     [PrimaryKey]
     public string TranslationId { get; set; }
@@ -20,10 +20,10 @@ public class RealmTranslation : RealmObject, ITranslationEntity
         set
         {
             _content = value;
-            RawContents = string.IsNullOrEmpty(value) ? null : value.ToLower();
+            RawContents = string.IsNullOrEmpty(value) ? "" : value.ToLower();
         }
     }
-    public string? RawContents { get; private set; }
+    public string RawContents { get; private set; }
     public string? Notes { get; set; }
     public int Rate { get; set; } = 0;
     public string LanguageCode { get; set; }

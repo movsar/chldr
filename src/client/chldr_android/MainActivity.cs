@@ -117,6 +117,7 @@ namespace chldr_android
             catch (Exception ex)
             {
                 Debug.WriteLine("AAAA! OnTextChanged");
+                Debug.WriteLine(ex.Message);
             }
         }
 

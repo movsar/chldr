@@ -13,7 +13,6 @@ namespace chldr_app.Services
     {
         private readonly IDataProvider _dataProvider;
         private readonly IRequestService _requestService;
-        private readonly IExceptionHandler _exceptionHandler;
 
         public event Action<SessionInformation>? UserStateHasChanged;
 

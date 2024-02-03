@@ -103,7 +103,7 @@ namespace chldr_domain.Services
                         continue;
                     }
 
-                    _dbContext.Add(RealmEntry.FromModel(entry, user, source));
+                    _dbContext.Add(RealmEntry.FromModel(entry, user!, source!));
                 }
 
                 foreach (var changeSet in changeSets)
@@ -123,7 +123,6 @@ namespace chldr_domain.Services
             sw.Stop();
             var savedIn = sw.ElapsedMilliseconds;
         }
-        int i = 0;
 
         public  async Task Sync()
         {

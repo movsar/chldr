@@ -16,7 +16,7 @@ namespace core.Services
             _filePath = Path.Combine(fileService.AppDataDirectory, "settings.json");
         }
 
-        public async Task<T> GetItem<T>(string key)
+        public async Task<T?> GetItem<T>(string key)
         {
             try
             {

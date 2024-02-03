@@ -2,8 +2,6 @@
 {
     public interface IExceptionHandler
     {
-        event Action<Exception>? IncomingException;
-
         Exception Error(Exception ex);
         Exception Error(string message);
         void LogDebug(string message);

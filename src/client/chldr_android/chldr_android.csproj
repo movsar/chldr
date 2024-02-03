@@ -5,16 +5,13 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<ApplicationId>com.nohchiyn</ApplicationId>
-		<ApplicationVersion>1414744</ApplicationVersion>
-		<ApplicationDisplayVersion>7.4.4</ApplicationDisplayVersion>
 		<SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion>34</TargetPlatformMinVersion>
+		<TargetPlatformMinVersion>26</TargetPlatformMinVersion>
+		<TargetOSPlatformVersion>34</TargetOSPlatformVersion>
 		<TargetPlatformVersion>34</TargetPlatformVersion>
 	</PropertyGroup>
 	
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<AndroidTargetSdkVersion>34</AndroidTargetSdkVersion>
-		<AndroidTargetVersion>34</AndroidTargetVersion>
 		<AndroidKeyStore>True</AndroidKeyStore>
 		<AndroidSigningKeyStore>C:\Users\xdr\source\repos\movsar\android_key</AndroidSigningKeyStore>
 		<AndroidSigningStorePass>135790!ы</AndroidSigningStorePass>

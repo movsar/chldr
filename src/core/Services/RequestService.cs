@@ -307,7 +307,7 @@ namespace core.Services
             return response.Data;
         }
 
-        private void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
+        private void NetworkChange_NetworkAvailabilityChanged(object? sender, NetworkAvailabilityEventArgs e)
         {
             NetworkStateHasChanged?.Invoke();
         }
@@ -315,7 +315,7 @@ namespace core.Services
         private bool PingHost(string nameOrAddress)
         {
             bool pingable = false;
-            Ping pinger = null;
+            Ping? pinger = null;
 
             try
             {

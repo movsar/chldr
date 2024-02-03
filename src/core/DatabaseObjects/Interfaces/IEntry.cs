@@ -3,7 +3,7 @@
     public interface IEntry
     {
         string EntryId { get; }
-        string UserId { get; }
+        string? UserId { get; }
         string SourceId { get; }
         string? ParentEntryId { get; }
         string Content { get; }

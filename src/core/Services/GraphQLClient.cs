@@ -55,31 +55,34 @@ namespace chldr_utils.Services
             }
             catch (GraphQLHttpRequestException graphQlException)
             {
-                var errorResponse = JsonConvert.DeserializeObject<GraphQlErrorResponse>(graphQlException.Content);
+                var errorResponse = JsonConvert.DeserializeObject<GraphQlErrorResponse>(graphQlException.Content!);
 
-                // Now you can access the deserialized data
-                foreach (var error in errorResponse.Errors)
+                if (errorResponse != null)
                 {
-                    var messageParts = new List<string>();
-
-                    var extensions = error.Extensions.Select(e => e.Value).ToArray();
-
-                    if (extensions.Count() == 0)
+                    // Now you can access the deserialized data
+                    foreach (var error in errorResponse.Errors)
                     {
-                        messageParts.Add(error.Message);
-                    }
-                    else if (extensions.Count() > 0)
-                    {
-                        messageParts.Add(extensions[0]);
-                    }
-                    else if (extensions.Count() > 1)
-                    {
-                        _exceptionHandler.LogError(extensions[1]);
-                    }
+                        var messageParts = new List<string>();
 
-                    var errorMessage = string.Join(", ", messageParts);
+                        var extensions = error.Extensions.Select(e => e.Value).ToArray();
 
-                    throw _exceptionHandler.Error(errorMessage);
+                        if (extensions.Count() == 0)
+                        {
+                            messageParts.Add(error.Message);
+                        }
+                        else if (extensions.Count() > 0)
+                        {
+                            messageParts.Add(extensions[0]);
+                        }
+                        else if (extensions.Count() > 1)
+                        {
+                            _exceptionHandler.LogError(extensions[1]);
+                        }
+
+                        var errorMessage = string.Join(", ", messageParts);
+
+                        throw _exceptionHandler.Error(errorMessage);
+                    }
                 }
 
                 throw new Exception("An unhandled error occurred");

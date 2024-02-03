@@ -82,7 +82,7 @@ namespace chldr_tools
             return jwtToken.ValidTo <= DateTime.UtcNow;
         }
 
-        public static ClaimsPrincipal ValidateToken(string token, string secret)
+        public static ClaimsPrincipal? ValidateToken(string token, string secret)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secret);

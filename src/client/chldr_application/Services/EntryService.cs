@@ -113,13 +113,13 @@ namespace chldr_app.Services
         public async Task PromoteTranslationAsync(ITranslation translationInfo, UserModel? currentUser)
         {
             // TODO: Use requestService
-            var repositories = _dataProvider.Repositories(currentUser.Id);
+            var repositories = _dataProvider.Repositories(currentUser!.Id);
             await repositories.Translations.Promote(translationInfo);
         }
 
         public async Task PromotePronunciationAsync(IPronunciation soundInfo, UserModel? currentUser)
         {
-            var repositories = _dataProvider.Repositories(currentUser.Id);
+            var repositories = _dataProvider.Repositories(currentUser!.Id);
             await repositories.Sounds.Promote(soundInfo);
         }
         private async Task<UpdateResponse> PromoteRequestAsync(IEntry entry, UserModel? currentUser)

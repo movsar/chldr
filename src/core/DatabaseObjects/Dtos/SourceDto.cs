@@ -7,7 +7,7 @@ namespace core.DatabaseObjects.Dtos
     {
         public string SourceId { get; set; } = Guid.NewGuid().ToString();
         public string Name { get; set; }
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
         public string? UserId { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }

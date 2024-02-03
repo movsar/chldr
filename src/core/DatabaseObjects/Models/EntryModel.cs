@@ -13,7 +13,7 @@ namespace core.DatabaseObjects.Models
     {
         public string EntryId { get; set; }
         public string UserId { get; set; }
-        public string? SourceId => Source.SourceId;
+        public string SourceId => Source.SourceId;
         public string? ParentEntryId { get; set; }
         public int Rate { get; set; }
         public EntryType Type { get; set; }
@@ -28,9 +28,9 @@ namespace core.DatabaseObjects.Models
 
         public List<EntryModel> SubEntries { get; set; } = new List<EntryModel>();
 
-        protected static string ParseSource(string sourceName)
+        protected static string? ParseSource(string sourceName)
         {
-            string sourceTitle = null;
+            string? sourceTitle = null;
             switch (sourceName)
             {
                 case "Maciev":
@@ -116,7 +116,7 @@ namespace core.DatabaseObjects.Models
             var entryModel = new EntryModel()
             {
                 EntryId = entry.EntryId,
-                UserId = entry.UserId,
+                UserId = entry.UserId!,
                 ParentEntryId = entry.ParentEntryId,
                 Rate = entry.Rate,
                 Type = (EntryType)entry.Type,

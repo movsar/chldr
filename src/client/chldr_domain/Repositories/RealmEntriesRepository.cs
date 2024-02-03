@@ -151,7 +151,7 @@ namespace core.Repositories
             // Sort
             return sortedResults;
         }
-        public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags filtrationFlags)
+        public async Task<List<EntryModel>> TakeAsync(int offset, int limit, FiltrationFlags? filtrationFlags)
         {
             var filteredEntries = GetFilteredEntries(filtrationFlags?.EntryFilters);
             var filteredEntriesAsQueriable = filteredEntries
@@ -288,11 +288,11 @@ namespace core.Repositories
 
             return resultingEntries;
         }
-        public async Task<int> CountAsync(FiltrationFlags filtrationFlags)
+        public async Task<int> CountAsync(FiltrationFlags? filtrationFlags)
         {
             var a = _dbContext.All<RealmEntry>().Where(e => e.Content.StartsWith("а"));
 
-            var entries = GetFilteredEntries(filtrationFlags.EntryFilters);
+            var entries = GetFilteredEntries(filtrationFlags?.EntryFilters);
 
             return entries.TryGetNonEnumeratedCount(out var count) ? count : entries.Count();
         }

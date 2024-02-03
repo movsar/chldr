@@ -23,10 +23,10 @@ namespace core.Services
         {
             var emailSettings = configuration.GetSection("Email");
 
-            SmtpServer = emailSettings["SmtpServer"];
-            Port = int.Parse(emailSettings["Port"]);
-            Username = emailSettings["Username"];
-            Password = emailSettings["Password"];
+            SmtpServer = emailSettings["SmtpServer"]!;
+            Port = int.Parse(emailSettings["Port"]!);
+            Username = emailSettings["Username"]!;
+            Password = emailSettings["Password"]!;
 
             _smtpClientFactory = () => new SmtpClientWrapper();
         }

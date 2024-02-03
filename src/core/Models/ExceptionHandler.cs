@@ -12,8 +12,6 @@ namespace core.Models
     {
         private Logger _fileLogger;
         private ILogger<ExceptionHandler>? _consoleLogger;
-
-        public event Action<Exception>? IncomingException;
         public ExceptionHandler(ILogger<ExceptionHandler> consoleLogger, IFileService fileService)
         {
             _consoleLogger = consoleLogger;
