@@ -4,11 +4,6 @@
 		<OutputType>Exe</OutputType>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<ApplicationId>com.nohchiyn</ApplicationId>
-		<SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion>26</TargetPlatformMinVersion>
-		<TargetOSPlatformVersion>34</TargetOSPlatformVersion>
-		<TargetPlatformVersion>34</TargetPlatformVersion>
 	</PropertyGroup>
 	
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
