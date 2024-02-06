@@ -9,7 +9,9 @@
 
     <CollectionView x:Name="entriesCollection"
                     ItemTemplate="{StaticResource EntryTemplate}"
-                    ItemsSource="{Binding Entries}">
+                    ItemsSource="{Binding Entries}"
+                    
+                    >
     </CollectionView>
 
 </reactive:ReactiveContentView>

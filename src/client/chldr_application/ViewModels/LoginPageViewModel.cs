@@ -4,6 +4,7 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.Reactive;
 using chldr_app.Stores;
+using chldr_domain.Interfaces;
 
 namespace chldr_application.ViewModels
 {
@@ -13,14 +14,16 @@ namespace chldr_application.ViewModels
         public static bool EmailConfirmationCompleted { get; private set; } = false;
 
         private readonly UserStore _userStore;
+        private readonly INavigationService _navigationService;
 
         public ReactiveCommand<Unit, Unit> LoginCommand { get; }
         public ReactiveCommand<Unit, Unit> RegisterCommand { get; }
 
-        public LoginPageViewModel(UserStore userStore, UserInfoValidator userValidator)
+        public LoginPageViewModel(UserStore userStore, UserInfoValidator userValidator, INavigationService navigationService)
         {
             DtoValidator = userValidator;
             _userStore = userStore;
+            _navigationService = navigationService;
 
             LoginCommand = ReactiveCommand.CreateFromTask(OnLogin);
             RegisterCommand = ReactiveCommand.CreateFromTask(OnRegister);
@@ -28,12 +31,12 @@ namespace chldr_application.ViewModels
         private async Task SignInWithEmailPassword()
         {
             await _userStore.LogInEmailPasswordAsync(UserInfo.Email!, UserInfo.Password!);
-            await GoToAsync("Search");
+            await _navigationService.GoToAsync("Search");
         }
 
         private async Task OnRegister()
         {
-            await GoToAsync("Register");
+            await _navigationService.GoToAsync("Register");
         }
 
         public async Task OnLogin()

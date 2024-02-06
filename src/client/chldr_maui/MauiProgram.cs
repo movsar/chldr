@@ -8,6 +8,8 @@ using chldr_application.ViewModels;
 using Microsoft.Extensions.Logging;
 using Plugin.Maui.Audio;
 using chldr_application.Services;
+using chldr_domain.Interfaces;
+using dosham.Services;
 
 namespace dosham
 {
@@ -24,6 +26,8 @@ namespace dosham
             builder.Services.AddSingleton<IEnvironmentService>(x => new EnvironmentService(CurrentPlatform, IsDevelopment));
             builder.Services.AddSingleton(AudioManager.Current);
             builder.Services.AddSingleton<ISettingsService, MauiSettingsService>();
+            builder.Services.AddSingleton<INavigationService, MauiNavigationService>();
+
             builder.Services.AddScoped<EmailService>();
             builder.Services.AddScoped<IFileService, FileService>();
             builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();

@@ -6,27 +6,31 @@
     xmlns:models="clr-namespace:core.DatabaseObjects.Models;assembly=core">
 
     <DataTemplate x:Key="EntryTemplate" x:DataType="models:EntryModel">
-        <Border Margin="5" Padding="10"  
-                Stroke="#CACCaa"
+        <Border Padding="5" StrokeThickness="0" BackgroundColor="Transparent" >
+
+            <Border Padding="10"
+                Stroke="AntiqueWhite"
                 StrokeThickness="1"
-                StrokeShape="RoundRectangle 10,10,10,10"
-                BackgroundColor="#f9F9F9">
+                StrokeShape="RoundRectangle 5">
 
-            <VerticalStackLayout Spacing="5">
-                <!-- Entry Content -->
-                <Label Text="{Binding Header}" FontSize="Medium" FontAttributes="Bold" TextColor="#000" />
+                <VerticalStackLayout Spacing="5">
+                    <!-- Entry Content -->
+                    <Label Text="{Binding Header}" FontSize="Medium" FontAttributes="Bold" TextColor="#000" />
 
-                <!-- Source Name -->
-                <Label Text="{Binding Subheader}" FontSize="Micro" TextColor="#cba" />
+                    <!-- Source Name -->
+                    <Label Text="{Binding Subheader}" FontSize="Micro" TextColor="#cba" />
 
 
-                <!-- Translation views -->
-                <CollectionView ItemTemplate="{StaticResource TranslationTemplate}"
+                    <!-- Translation views -->
+                    <CollectionView ItemTemplate="{StaticResource TranslationTemplate}"
                                 ItemsSource="{Binding Translations}">
-                </CollectionView>
+                    </CollectionView>
 
-            </VerticalStackLayout>
+                    <Button Text="Edit" HorizontalOptions="End"/>
 
+                </VerticalStackLayout>
+
+            </Border>
         </Border>
     </DataTemplate>
 
