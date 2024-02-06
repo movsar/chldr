@@ -1,7 +1,7 @@
 ﻿using chldr_app.Stores;
 using ReactiveUI;
 
-namespace dosham.ViewModels
+namespace chldr_application.ViewModels
 {
     public abstract class ViewModelBase : ReactiveObject
     {
@@ -10,13 +10,13 @@ namespace dosham.ViewModels
 
         protected ViewModelBase()
         {
-            ContentStore = App.Services.GetRequiredService<ContentStore>();
-            UserStore = App.Services.GetRequiredService<UserStore>();
+            //ContentStore = App.Services.GetRequiredService<ContentStore>();
+            //UserStore = App.Services.GetRequiredService<UserStore>();
         }
 
         protected async Task GoToAsync(string path)
         {
-            await Shell.Current.GoToAsync($"//{path}");
+            //await Shell.Current.GoToAsync($"//{path}");
         }
     }
 }

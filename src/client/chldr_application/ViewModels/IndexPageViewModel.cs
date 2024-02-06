@@ -5,7 +5,7 @@ using ReactiveUI;
 using System.Reactive;
 using System.Reactive.Linq;
 
-namespace dosham.ViewModels
+namespace chldr_application.ViewModels
 {
     public class IndexPageViewModel : ViewModelBase
     {

@@ -1,7 +1,7 @@
 ﻿using ReactiveUI;
 using System.Reactive;
 
-namespace dosham.ViewModels
+namespace chldr_application.ViewModels
 {
     public class ProfilePageViewModel : ViewModelBase
     {

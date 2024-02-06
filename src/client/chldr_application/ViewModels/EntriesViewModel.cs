@@ -1,7 +1,7 @@
 ﻿using core.DatabaseObjects.Models;
 using ReactiveUI;
 
-namespace dosham.ViewModels
+namespace chldr_application.ViewModels
 {
     public class EntriesViewModel : ViewModelBase
     {

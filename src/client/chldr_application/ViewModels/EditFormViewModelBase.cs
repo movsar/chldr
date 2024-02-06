@@ -6,14 +6,14 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.Collections.ObjectModel;
 
-namespace dosham.ViewModels
+namespace chldr_application.ViewModels
 {
     public abstract class EditFormViewModelBase<TFormDto, TFormValidator> : ViewModelBase
         where TFormValidator : AbstractValidator<TFormDto>
     {
         public EditFormViewModelBase()
         {
-            DtoValidator = App.Services.GetRequiredService<TFormValidator>();
+            //DtoValidator = App.Services.GetRequiredService<TFormValidator>();
         }
 
         TFormValidator? DtoValidator { get; set; }

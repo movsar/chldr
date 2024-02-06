@@ -3,7 +3,7 @@
              xmlns:reactive="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:vm="clr-namespace:dosham.ViewModels"
+             xmlns:vm="clr-namespace:chldr_application.ViewModels;assembly=chldr_application"
              xmlns:views="clr-namespace:dosham.Views"
              x:DataType="vm:LoginPageViewModel"
              x:TypeArguments="vm:LoginPageViewModel"

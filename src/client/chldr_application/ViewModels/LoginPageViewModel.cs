@@ -4,7 +4,7 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.Reactive;
 
-namespace dosham.ViewModels
+namespace chldr_application.ViewModels
 {
     public class LoginPageViewModel : EditFormViewModelBase<UserDto, UserInfoValidator>
     {

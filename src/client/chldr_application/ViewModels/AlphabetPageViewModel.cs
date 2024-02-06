@@ -4,21 +4,21 @@ using ReactiveUI;
 using System.Reactive;
 using System.Text.RegularExpressions;
 
-namespace dosham.ViewModels
+namespace chldr_application.ViewModels
 {
     public class AlphabetPageViewModel : ViewModelBase
     {
         private readonly IFileService _fileService;
         private readonly IAudioManager _audioRecorder;
 
-        public ReactiveCommand<ImageSource, Unit> ImageButtonClicked { get; }
+        public ReactiveCommand<object, Unit> ImageButtonClicked { get; }
 
-        public AlphabetPageViewModel()
+        public AlphabetPageViewModel(IFileService fileService, IAudioManager audioRecorder)
         {
-            _fileService = App.Services.GetRequiredService<IFileService>();
-            _audioRecorder = App.Services.GetRequiredService<IAudioManager>();
+            _fileService = fileService;
+            _audioRecorder = audioRecorder;
 
-            ImageButtonClicked = ReactiveCommand.CreateFromTask<ImageSource>(OnImageButtonClicked);
+            ImageButtonClicked = ReactiveCommand.CreateFromTask<object>(OnImageButtonClicked);
         }
 
         private async Task PlaySoundFile(string filePath)
@@ -44,7 +44,7 @@ namespace dosham.ViewModels
             }
         }
 
-        private async Task OnImageButtonClicked(ImageSource imageSource)
+        private async Task OnImageButtonClicked(object imageSource)
         {
             string imageFileName = (imageSource as dynamic).File;
             string audioFileName = Regex.Match(imageFileName, @"(?<=alpha_).*?(?=.png)").Value + ".flac";

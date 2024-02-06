@@ -4,7 +4,7 @@ using core.Enums;
 using ReactiveUI;
 using System.Text.RegularExpressions;
 
-namespace dosham.ViewModels
+namespace chldr_application.ViewModels
 {
     public class EntryViewModel : ViewModelBase
     {

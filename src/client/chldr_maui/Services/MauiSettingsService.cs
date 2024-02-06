@@ -13,7 +13,7 @@ namespace chldr_utils.Services
             _exceptionHandler = exceptionHandler;
         }
 
-        public async Task<T> GetItem<T>(string key)
+        public T? GetItem<T>(string key)
         {            
             try
             {
@@ -31,7 +31,7 @@ namespace chldr_utils.Services
             }
         }
 
-        public async Task SetItem<T>(string key, T value)
+        public void SetItem<T>(string key, T value)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace chldr_utils.Services
             }
         }
 
-        public async Task RemoveItem(string key)
+        public void RemoveItem(string key)
         {
             Preferences.Remove(key);
         }
