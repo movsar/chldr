@@ -163,12 +163,14 @@ namespace core.Repositories
         {
             var filteredEntries = GetFilteredEntries(filtrationFlags?.EntryFilters);
             var filteredEntriesAsQueriable = filteredEntries
+                      .AsEnumerable()
                       .OrderBy(e => e.RawContents)
                       .Skip(offset)
                       .Take(limit)
                       .AsQueryable();
 
-            return GroupWithSubentries(filteredEntriesAsQueriable, FromEntry);
+            var models = GroupWithSubentries(filteredEntriesAsQueriable, FromEntry);
+            return models;
         }
 
         #endregion
