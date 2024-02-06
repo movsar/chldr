@@ -3,16 +3,22 @@ using chldr_shared.Validators;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.Reactive;
+using chldr_app.Stores;
 
 namespace chldr_application.ViewModels
 {
     public class RegistrationPageViewModel : EditFormViewModelBase<UserDto, UserInfoValidator>
     {
+        private readonly UserStore _userStore;
+
         [Reactive] public UserDto UserInfo { get; set; } = new();
         public ReactiveCommand<Unit, Unit> RegisterCommand { get; }
 
-        public RegistrationPageViewModel()
+        public RegistrationPageViewModel(UserStore userStore, UserInfoValidator userValidator)
         {
+            _userStore = userStore;
+            DtoValidator = userValidator;
+
             RegisterCommand = ReactiveCommand.CreateFromTask(OnRegister);
         }
 
@@ -20,7 +26,7 @@ namespace chldr_application.ViewModels
         {
             await ValidateAndSubmitAsync(UserInfo, async () =>
             {
-                await UserStore.RegisterNewUser(UserInfo.Email!, UserInfo.Password!);
+                await _userStore.RegisterNewUser(UserInfo.Email!, UserInfo.Password!);
             }, new string[] { "Email", "Name", "Password" });
         }
     }

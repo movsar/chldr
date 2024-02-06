@@ -3,6 +3,7 @@ using chldr_shared.Validators;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.Reactive;
+using chldr_app.Stores;
 
 namespace chldr_application.ViewModels
 {
@@ -10,17 +11,23 @@ namespace chldr_application.ViewModels
     {
         [Reactive] public UserDto UserInfo { get; set; } = new();
         public static bool EmailConfirmationCompleted { get; private set; } = false;
+
+        private readonly UserStore _userStore;
+
         public ReactiveCommand<Unit, Unit> LoginCommand { get; }
         public ReactiveCommand<Unit, Unit> RegisterCommand { get; }
 
-        public LoginPageViewModel()
+        public LoginPageViewModel(UserStore userStore, UserInfoValidator userValidator)
         {
+            DtoValidator = userValidator;
+            _userStore = userStore;
+
             LoginCommand = ReactiveCommand.CreateFromTask(OnLogin);
             RegisterCommand = ReactiveCommand.CreateFromTask(OnRegister);
         }
         private async Task SignInWithEmailPassword()
         {
-            await UserStore.LogInEmailPasswordAsync(UserInfo.Email!, UserInfo.Password!);
+            await _userStore.LogInEmailPasswordAsync(UserInfo.Email!, UserInfo.Password!);
             await GoToAsync("Search");
         }
 

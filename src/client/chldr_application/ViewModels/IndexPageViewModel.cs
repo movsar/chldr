@@ -1,4 +1,5 @@
-﻿using core.DatabaseObjects.Models;
+﻿using chldr_app.Stores;
+using core.DatabaseObjects.Models;
 using core.Enums;
 using core.Models;
 using ReactiveUI;
@@ -14,6 +15,9 @@ namespace chldr_application.ViewModels
               "Л", "М", "Н", "О", "Оь", "П", "ПӀ", "Р", "С", "Т", "ТӀ", "У", "Уь", "Ф", "Х", "Хь", "ХӀ",
               "Ц", "ЦӀ", "Ч", "ЧӀ", "Ш", "Э", "Ю", "Юь", "Я", "Яь"
         };
+
+        private readonly ContentStore _contentStore;
+
         public ReactiveCommand<Unit, Unit> BtnNextClickedCommand { get; }
         public ReactiveCommand<Unit, Unit> BtnPreviousClickedCommand { get; }
         public ReactiveCommand<string, Unit> LetterSelectionCommand { get; }
@@ -29,8 +33,10 @@ namespace chldr_application.ViewModels
         public int TotalPages;
         public string CurrentLetter;
 
-        public IndexPageViewModel()
+        public IndexPageViewModel(ContentStore contentStore)
         {
+            _contentStore = contentStore;
+
             BtnNextClickedCommand = ReactiveCommand.Create(OnNextPage);
             BtnPreviousClickedCommand = ReactiveCommand.Create(OnPreviousPage);
             LetterSelectionCommand = ReactiveCommand.CreateFromTask<string>(LetterSelectionHandler);
@@ -53,7 +59,7 @@ namespace chldr_application.ViewModels
                 }
             };
 
-            var count = await ContentStore.EntryService.GetCountAsync(filtrationFlags);
+            var count = await _contentStore.EntryService.GetCountAsync(filtrationFlags);
             TotalPages = (int)Math.Ceiling((double)count / 50);
 
             await GetEntries();
@@ -71,7 +77,7 @@ namespace chldr_application.ViewModels
                 }
             };
 
-            var batch = await ContentStore.EntryService.TakeAsync((CurrentPage - 1) * 50, 50, filtrationFlags);
+            var batch = await _contentStore.EntryService.TakeAsync((CurrentPage - 1) * 50, 50, filtrationFlags);
             Entries = batch.ToList();
 
 

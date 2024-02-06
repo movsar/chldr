@@ -11,12 +11,7 @@ namespace chldr_application.ViewModels
     public abstract class EditFormViewModelBase<TFormDto, TFormValidator> : ViewModelBase
         where TFormValidator : AbstractValidator<TFormDto>
     {
-        public EditFormViewModelBase()
-        {
-            //DtoValidator = App.Services.GetRequiredService<TFormValidator>();
-        }
-
-        TFormValidator? DtoValidator { get; set; }
+        protected TFormValidator? DtoValidator { get; set; }
 
         private ObservableCollection<string> _errorMessages = new ObservableCollection<string>();
         public ObservableCollection<string> ErrorMessages {

@@ -1,4 +1,5 @@
-﻿using core.DatabaseObjects.Interfaces;
+﻿using chldr_app.Stores;
+using core.DatabaseObjects.Interfaces;
 using core.DatabaseObjects.Models;
 using core.Enums;
 using ReactiveUI;
@@ -10,14 +11,20 @@ namespace chldr_application.ViewModels
     {
         #region Properties, Actions and Constructors
         private EntryModel _entry;
+        private readonly ContentStore _contentStore;
+        private readonly UserStore _userStore;
+
         public EntryModel Entry
         {
             get => _entry;
             set => this.RaiseAndSetIfChanged(ref _entry, value);
         }
 
-        public EntryViewModel()
-        { }
+        public EntryViewModel(ContentStore contentStore, UserStore userStore)
+        {
+            _contentStore = contentStore;
+            _userStore = userStore;
+        }
         #endregion
 
         public void ListenToPronunciation() { }
@@ -25,16 +32,16 @@ namespace chldr_application.ViewModels
         public void AddToFavorites() { }
         public async Task Remove()
         {
-            await ContentStore.EntryService.RemoveAsync(Entry, UserStore.CurrentUser.Id!);
+            await _contentStore.EntryService.RemoveAsync(Entry, _userStore.CurrentUser.Id!);
         }
         public void Share() { }
         public async Task PromoteEntryAsync()
         {
-            await ContentStore.EntryService.PromoteAsync(Entry, UserStore.CurrentUser);
+            await _contentStore.EntryService.PromoteAsync(Entry, _userStore.CurrentUser);
         }
         public async Task PromoteTranslationAsync(ITranslation translation)
         {
-            await ContentStore.EntryService.PromoteTranslationAsync(translation, UserStore.CurrentUser);
+            await _contentStore.EntryService.PromoteTranslationAsync(translation, _userStore.CurrentUser);
         }
         public void Downvote() { }
         public void Flag() { }
@@ -69,7 +76,7 @@ namespace chldr_application.ViewModels
 
                 if (match.Success)
                 {
-                    await ContentStore.EntryService.FindAsync(match.ToString());
+                    await _contentStore.EntryService.FindAsync(match.ToString());
                     return;
                 }
             }
@@ -78,7 +85,7 @@ namespace chldr_application.ViewModels
         {
             // Anyone should be able to open an entry for edit mode, if they're logged in and active
             // However, they might not be able to change anything, that will be governed by CanEdit* methods
-            return UserStore.IsLoggedIn && UserStore.CurrentUser!.Status == UserStatus.Active;
+            return _userStore.IsLoggedIn && _userStore.CurrentUser!.Status == UserStatus.Active;
         }
 
     }
