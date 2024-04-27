@@ -21,16 +21,9 @@ namespace core.DatabaseObjects.Dtos
             set
             {
                 var trimmedValue = value.Trim();
-                if (trimmedValue.Contains(" ") || trimmedValue.Contains(".") || trimmedValue.Contains(","))
+                if (trimmedValue.Contains(' ') || trimmedValue.Contains('.') || trimmedValue.Contains(','))
                 {
-                    if (trimmedValue.Length > 255)
-                    {
-                        Type = (int)EntryType.Text;
-                    }
-                    else
-                    {
-                        Type = (int)EntryType.Phrase;
-                    }
+                    Type = (int)EntryType.Text;
                 }
                 else
                 {

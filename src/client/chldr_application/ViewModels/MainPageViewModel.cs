@@ -1,5 +1,7 @@
 ﻿using chldr_app.Stores;
 using core.DatabaseObjects.Models;
+using core.Enums;
+using core.Models;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.Reactive.Linq;
@@ -10,7 +12,7 @@ namespace chldr_application.ViewModels
     {
         [Reactive] public string SearchText { get; set; }
         [Reactive] public IEnumerable<EntryModel> FilteredEntries { get; set; }
-        
+
         private const int SearchDebounceTime = 250;
         private readonly ContentStore _contentStore;
         public MainPageViewModel(ContentStore contentStore)
@@ -34,7 +36,7 @@ namespace chldr_application.ViewModels
                 });
         }
 
-        private void OnContentInitialized()
+        private async void OnContentInitialized()
         {
             _contentStore.RequestRandomEntries();
         }

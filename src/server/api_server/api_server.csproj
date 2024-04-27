@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+	  <PackageReference Include="Serilog" Version="3.1.1" />
+	  <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 	  <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
 	  <PackageReference Include="HotChocolate.AspNetCore" Version="13.9.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
@@ -27,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\api_infrastructure\api_infrastructure.csproj" />
+    <ProjectReference Include="..\api_application\api_application.csproj" />
   </ItemGroup>
 
 </Project>

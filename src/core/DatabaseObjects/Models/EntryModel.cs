@@ -4,8 +4,6 @@ using core.DatabaseObjects.Models.Words;
 using core.Enums;
 using core.Enums.WordDetails;
 using core.Helpers;
-using core.Interfaces;
-using Newtonsoft.Json;
 
 namespace core.DatabaseObjects.Models
 {

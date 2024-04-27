@@ -23,6 +23,8 @@ namespace chldr_domain.Services
         {
             _requestService = requestService;
             _fileService = fileService;
+
+            BeginListening();
         }
         private void SetPropertyValue(object obj, string propertyName, object value)
         {

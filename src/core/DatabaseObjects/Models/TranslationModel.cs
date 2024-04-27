@@ -1,7 +1,4 @@
-﻿using core.DatabaseObjects.Dtos;
-using core.DatabaseObjects.Interfaces;
-using core.Models;
-using Newtonsoft.Json;
+﻿using core.DatabaseObjects.Interfaces;
 
 namespace core.DatabaseObjects.Models
 {
