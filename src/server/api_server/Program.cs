@@ -43,12 +43,12 @@ namespace api_server
             app.Map("/graphql", context =>
             {
                 // Redirect all requests to example.com/graphql
-                context.Response.Redirect("https://v1.api.chldr.movsar.dev/graphql/", permanent: true);
+                context.Response.Redirect("https://v1.api.chldr.movsar.dev/graphql", permanent: true, true);
                 return Task.CompletedTask;
             });
 
             app.MapGraphQL("/v2/graphql");
-            app.Run("http://*:5002");
+            app.Run("https://*:5002");
         }
     }
 }
