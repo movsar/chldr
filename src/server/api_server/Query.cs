@@ -7,7 +7,7 @@ using core.Services;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace api_presentation
+namespace api_server
 {
     public class Query
     {

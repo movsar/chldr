@@ -5,7 +5,7 @@ using core.Enums;
 using core.Models;
 using chldr_tools;
 
-namespace api_presentation
+namespace api_server
 {
     public class Mutation
     {
