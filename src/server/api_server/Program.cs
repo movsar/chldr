@@ -48,7 +48,7 @@ namespace api_server
             });
 
             app.MapGraphQL("/v2/graphql");
-            app.Run("https://*:5002");
+            app.Run("http://*:5002");
         }
     }
 }
