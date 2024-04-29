@@ -18,4 +18,4 @@ using System.Runtime.InteropServices;
 [assembly: Guid("8e681b26-dd8a-4630-bcc5-d75795e56d0f")]
 
 
-[assembly: InternalsVisibleTo("chldr_api.tests")]
+[assembly: InternalsVisibleTo("api_server.tests")]

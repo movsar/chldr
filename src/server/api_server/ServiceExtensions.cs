@@ -2,8 +2,8 @@
 using api_domain.SqlEntities;
 using api_domain;
 using api_server;
-using chldr_api.GraphQL.MutationResolvers;
-using chldr_api.GraphQL.MutationServices;
+using api_server.GraphQL.MutationResolvers;
+using api_server.GraphQL.MutationServices;
 using core.Interfaces;
 using core.Models;
 using core.Services;
@@ -38,7 +38,7 @@ namespace api_server
 
             // SQL Services
             services.AddDbContext<SqlContext>(options => options
-                .UseMySQL(connectionString, b => b.MigrationsAssembly("chldr_api")), ServiceLifetime.Transient);
+                .UseMySQL(connectionString, b => b.MigrationsAssembly("api_server")), ServiceLifetime.Transient);
 
             services.AddTransient<IDataProvider, SqlDataProvider>();
             services.AddDefaultIdentity<SqlUser>()

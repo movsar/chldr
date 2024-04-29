@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 using parsers;
 
-namespace chldr_api.GraphQL.MutationServices
+namespace api_server.GraphQL.MutationServices
 {
     public class UserResolver
     {

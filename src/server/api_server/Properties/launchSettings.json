@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "chldr_api": {
+    "api_server": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,

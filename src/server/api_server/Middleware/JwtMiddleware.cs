@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 
-namespace chldr_api
+namespace api_server
 {
     public class JwtMiddleware
     {

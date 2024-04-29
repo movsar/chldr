@@ -39,7 +39,7 @@ namespace api_server
             app.UseAuthorization();
 
             app.MapControllers();
-            app.MapGraphQL("/graphql");
+            app.MapGraphQL("/v2/graphql");
             app.Run();
         }
     }

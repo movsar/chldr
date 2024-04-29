@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using core.Exceptions;
 using api_domain.Services;
 
-namespace chldr_api.GraphQL.MutationResolvers
+namespace api_server.GraphQL.MutationResolvers
 {
     public class EntryResolver
     {

@@ -1,4 +1,4 @@
-﻿using chldr_api.GraphQL.MutationServices;
+﻿using api_server.GraphQL.MutationServices;
 using core.DatabaseObjects.Dtos;
 using core.Enums;
 using core.Interfaces;
@@ -6,7 +6,7 @@ using core.Models;
 using chldr_test_utils;
 using Newtonsoft.Json;
 
-namespace chldr_api.tests.ServiceResolverTests
+namespace api_server.tests.ServiceResolverTests
 {
     public class UserResolverTests
     {

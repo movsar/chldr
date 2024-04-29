@@ -20,7 +20,7 @@ using Microsoft.AspNetCore.Identity;
 using Bogus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
-using chldr_api.GraphQL.MutationServices;
+using api_server.GraphQL.MutationServices;
 using HotChocolate.Types.Descriptors.Definitions;
 using SQLitePCL;
 using Microsoft.JSInterop;

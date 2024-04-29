@@ -1,5 +1,5 @@
-﻿using chldr_api.GraphQL.MutationResolvers;
-using chldr_api.GraphQL.MutationServices;
+﻿using api_server.GraphQL.MutationResolvers;
+using api_server.GraphQL.MutationServices;
 using core.DatabaseObjects.Dtos;
 using core.Enums;
 using core.Models;
