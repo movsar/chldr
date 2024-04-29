@@ -40,7 +40,7 @@ namespace api_server
 
             app.MapControllers();
             app.MapGraphQL("/v2/graphql");
-            app.Run();
+            app.Run("http://*:5002");
         }
     }
 }
