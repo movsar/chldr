@@ -39,7 +39,6 @@ public class SqlContext : IdentityUserContext<SqlUser>
 
             entity.ToTable("entry");
 
-            entity.HasIndex(e => e.SourceId, "fk_entry_source_id");
             entity.HasIndex(e => e.UserId, "fk_entry_user_id");
             entity.HasIndex(e => e.ParentEntryId, "entry_parent_id_idx");
             entity.HasIndex(e => e.Rate, "entry_rate_idx");
@@ -56,10 +55,6 @@ public class SqlContext : IdentityUserContext<SqlUser>
             entity.Property(e => e.UserId)
                 .HasMaxLength(40)
                 .HasColumnName("user_id");
-
-            entity.Property(e => e.SourceId)
-                .HasMaxLength(40)
-                .HasColumnName("source_id");
 
             entity.Property(e => e.Type)
                 .HasColumnName("type");
@@ -91,11 +86,6 @@ public class SqlContext : IdentityUserContext<SqlUser>
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
-
-            entity.HasOne(d => d.Source).WithMany(p => p.Entries)
-                .HasForeignKey(d => d.SourceId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_entry_source_id");
 
             entity.HasOne(d => d.User).WithMany(p => p.Entries)
                 .HasForeignKey(d => d.UserId)
@@ -236,7 +226,11 @@ public class SqlContext : IdentityUserContext<SqlUser>
             entity.Property(e => e.UserId)
                 .HasMaxLength(40)
                 .HasColumnName("user_id");
-
+            
+            entity.Property(e => e.SourceId)
+                .HasMaxLength(40)
+                .HasColumnName("source_id");
+            
             entity.Property(e => e.Content)
                 .HasColumnName("content")
                 .HasColumnType("longtext");
@@ -269,9 +263,15 @@ public class SqlContext : IdentityUserContext<SqlUser>
 
 
             entity.HasIndex(e => e.EntryId, "fk_translation_entry_id");
+            entity.HasIndex(e => e.SourceId, "fk_translation_source_id");
             entity.HasIndex(e => e.LanguageCode, "fk_translation_language_id");
             entity.HasIndex(e => e.UserId, "fk_translation_user_id");
             entity.HasIndex(e => e.Rate, "translation_rate_idx");
+
+            entity.HasOne(d => d.Source).WithMany(p => p.Translations)
+                .HasForeignKey(d => d.SourceId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_translation_source_id");
 
             entity.HasOne(d => d.Entry).WithMany(p => p.Translations)
                 .HasForeignKey(d => d.EntryId)

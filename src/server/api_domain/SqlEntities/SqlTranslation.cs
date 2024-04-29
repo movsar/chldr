@@ -23,6 +23,8 @@ public class SqlTranslation : ITranslationEntity
     public string LanguageCode { get; set; } = null!;
     public string? Notes { get; set; }
     public int Rate { get; set; } = 0;
+    public string SourceId { get; set; } = null!;
+    public virtual SqlSource Source { get; set; } = null!;
     public virtual SqlEntry Entry { get; set; } = null!;
     public virtual SqlUser User { get; set; } = null!;
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
@@ -42,6 +44,7 @@ public class SqlTranslation : ITranslationEntity
             translationEntity = new SqlTranslation();
         }
 
+        translationEntity.SourceId = translationDto.SourceId!;
         translationEntity.EntryId = translationDto.EntryId;
         translationEntity.TranslationId = translationDto.TranslationId;
         translationEntity.LanguageCode = translationDto.LanguageCode!;

@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "core", "core\core.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "utils", "utils\utils.csproj", "{CE607A04-8144-403E-8EFF-9DAE894AA27D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tools", "tools\tools.csproj", "{16839C22-65B3-44BA-BA6D-C6EEBA28CCA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "parsers", "tools\parsers.csproj", "{16839C22-65B3-44BA-BA6D-C6EEBA28CCA7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{0834D52D-4C4F-487E-9D27-4A755BD1FDD2}"
 EndProject

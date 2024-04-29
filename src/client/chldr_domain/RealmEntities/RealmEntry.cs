@@ -14,11 +14,9 @@ public class RealmEntry : RealmObject, IEntryEntity
     private string _content { get; set; } = "";
 
     [PrimaryKey] public string EntryId { get; set; }
-    [Ignored] public string SourceId => Source.SourceId;
     [Ignored] public string? UserId => User.Id;
     public string? ParentEntryId { get; set; }
     public RealmUser User { get; set; } = null!;
-    public RealmSource Source { get; set; } = null!;
     public int Type { get; set; } = 0;
     public int Subtype { get; set; } = 0;
     public int Rate { get; set; } = 0;
@@ -42,9 +40,8 @@ public class RealmEntry : RealmObject, IEntryEntity
     internal static RealmEntry FromDto(EntryDto entryDto, Realm realm)
     {
         var user = realm.Find<RealmUser>(entryDto.UserId);
-        var source = realm.Find<RealmSource>(entryDto.SourceId);
 
-        if (user == null || source == null)
+        if (user == null)
         {
             throw new NullReferenceException();
         }
@@ -58,7 +55,6 @@ public class RealmEntry : RealmObject, IEntryEntity
 
         entry.EntryId = entryDto.EntryId;
         entry.User = user;
-        entry.Source = source;
         entry.ParentEntryId = entryDto.ParentEntryId;
 
         entry.Content = entryDto.Content;
@@ -97,11 +93,12 @@ public class RealmEntry : RealmObject, IEntryEntity
         return entry;
     }
 
-    internal static RealmEntry FromModel(EntryModel entryModel, RealmUser user, RealmSource source)
+    internal static RealmEntry FromModel(EntryModel entryModel, Realm context)
     {
-        if (string.IsNullOrEmpty(entryModel.UserId) || string.IsNullOrEmpty(entryModel.SourceId))
+        var user = context.Find<RealmUser>(entryModel.UserId);
+        if (user == null)
         {
-            throw new NullReferenceException();
+            throw new ArgumentNullException("Empty User");
         }
 
         // Entry
@@ -109,7 +106,6 @@ public class RealmEntry : RealmObject, IEntryEntity
 
         entry.EntryId = entryModel.EntryId;
         entry.User = user;
-        entry.Source = source;
         entry.ParentEntryId = entryModel.ParentEntryId;
 
         entry.Content = entryModel.Content;
@@ -140,8 +136,7 @@ public class RealmEntry : RealmObject, IEntryEntity
         {
             // If entry didn't exist, this will map its Id to translations
             translationDto.EntryId = entry.EntryId;
-
-            var translation = RealmTranslation.FromModel(translationDto, user, entry);
+            var translation = RealmTranslation.FromModel(translationDto, entry, context);
             entry.Translations.Add(translation);
         }
 
@@ -151,7 +146,7 @@ public class RealmEntry : RealmObject, IEntryEntity
         {
             subEntryModel.ParentEntryId = entry.EntryId;
 
-            var subEntry = RealmEntry.FromModel(subEntryModel, user, source);
+            var subEntry = FromModel(subEntryModel, context);
             entry.SubEntries.Add(subEntry);
         }
 

@@ -11,47 +11,19 @@ namespace core.DatabaseObjects.Models
     {
         public string EntryId { get; set; }
         public string UserId { get; set; }
-        public string SourceId => Source.SourceId;
         public string? ParentEntryId { get; set; }
         public int Rate { get; set; }
         public EntryType Type { get; set; }
         public int Subtype { get; set; }
         public string Content { get; set; }
         public object? Details { get; set; }
-        public SourceModel Source { get; set; }
         public List<TranslationModel> Translations { get; set; } = new List<TranslationModel>();
         public List<PronunciationModel> Sounds { get; set; } = new List<PronunciationModel>();
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
 
         public List<EntryModel> SubEntries { get; set; } = new List<EntryModel>();
-
-        protected static string? ParseSource(string sourceName)
-        {
-            string? sourceTitle = null;
-            switch (sourceName)
-            {
-                case "Maciev":
-                    sourceTitle = "Чеченско - русский словарь, А.Г.Мациева";
-                    break;
-                case "Karasaev":
-                    sourceTitle = "Русско - чеченский словарь, Карасаев А.Т., Мациев А.Г.";
-                    break;
-                case "User":
-                    sourceTitle = "Добавлено пользователем";
-                    break;
-                case "Malaev":
-                    sourceTitle = "Чеченско - русский словарь, Д.Б. Малаева";
-                    break;
-                case "Anatslovar":
-                    sourceTitle = "Чеченско-русский, русско-чеченский словарь анатомии человека, Р.У. Берсанова";
-                    break;
-                case "ikhasakhanov":
-                    sourceTitle = "Ислам Хасаханов";
-                    break;
-            }
-            return sourceTitle;
-        }
+        
         private string GetHeader()
         {
             string header = Content!;
@@ -85,8 +57,6 @@ namespace core.DatabaseObjects.Models
             return header;
         }
         public string? Header => GetHeader();
-
-        public string? Subheader => ParseSource(Source.Name);
         public static string GrammaticalClassToString(int grammaticalClass)
         {
             var ClassesMap = new Dictionary<int, string>()
@@ -109,7 +79,7 @@ namespace core.DatabaseObjects.Models
             }
         }
 
-        public static EntryModel FromEntity(IEntryEntity entry, ISourceEntity source, IEnumerable<ITranslationEntity> translations, IEnumerable<ISoundEntity> sounds)
+        public static EntryModel FromEntity(IEntryEntity entry, IEnumerable<ITranslationEntity> translations, IEnumerable<ISoundEntity> sounds)
         {
             var entryModel = new EntryModel()
             {
@@ -119,7 +89,6 @@ namespace core.DatabaseObjects.Models
                 Rate = entry.Rate,
                 Type = (EntryType)entry.Type,
                 Subtype = entry.Subtype,
-                Source = SourceModel.FromEntity(source),
                 Content = entry.Content,
                 CreatedAt = entry.CreatedAt,
                 UpdatedAt = entry.UpdatedAt
@@ -148,15 +117,15 @@ namespace core.DatabaseObjects.Models
             return entryModel;
         }
 
-        public static EntryModel FromEntity(IEntryEntity entry, ISourceEntity source, IEnumerable<ITranslationEntity> translations, IEnumerable<ISoundEntity> sounds,
-          IEnumerable<IEntryEntity> subEntries, Dictionary<string, ISourceEntity> subSources, Dictionary<string, IEnumerable<ITranslationEntity>> subTranslations, Dictionary<string, IEnumerable<ISoundEntity>> subSounds)
+        public static EntryModel FromEntity(IEntryEntity entry, IEnumerable<ITranslationEntity> translations, 
+            IEnumerable<ISoundEntity> sounds, IEnumerable<IEntryEntity> subEntries, Dictionary<string, IEnumerable<ITranslationEntity>> subTranslations, Dictionary<string, IEnumerable<ISoundEntity>> subSounds)
         {
-            var entryModel = FromEntity(entry, source, translations, sounds);
+            var entryModel = FromEntity(entry, translations, sounds);
 
 
             foreach (var subEntry in subEntries)
             {
-                var subEntryModel = FromEntity(subEntry, subSources[subEntry.EntryId], subTranslations[subEntry.EntryId], subSounds[subEntry.EntryId]);
+                var subEntryModel = FromEntity(subEntry, subTranslations[subEntry.EntryId], subSounds[subEntry.EntryId]);
 
                 entryModel.SubEntries.Add(subEntryModel);
             }

@@ -12,6 +12,8 @@ public class RealmTranslation : RealmObject, ITranslationEntity
 
     [PrimaryKey]
     public string TranslationId { get; set; }
+    [Ignored] public string SourceId => Source.SourceId;
+    public RealmSource Source { get; set; } = null!;
     public RealmEntry Entry { get; set; } = null!;
     public RealmUser User { get; set; } = null!;
     public string Content
@@ -58,8 +60,10 @@ public class RealmTranslation : RealmObject, ITranslationEntity
         {
             translation = new RealmTranslation();
         }
+        var source = context.Find<RealmSource>(translationDto.SourceId);
 
         translation.TranslationId = translationDto.TranslationId;
+        translation.Source = source;
         translation.LanguageCode = translationDto.LanguageCode;
         translation.Entry = entry;
         translation.User = user;
@@ -73,18 +77,26 @@ public class RealmTranslation : RealmObject, ITranslationEntity
         return translation;
     }
 
-    internal static RealmTranslation FromModel(TranslationModel translationDto, RealmUser user, RealmEntry entry)
+    internal static RealmTranslation FromModel(TranslationModel translationDto, RealmEntry entry, Realm context)
     {
+        var user = context.Find<RealmUser>(translationDto.UserId);
         if (string.IsNullOrEmpty(translationDto.LanguageCode) || user == null || entry == null || string.IsNullOrEmpty(translationDto.EntryId))
         {
-            throw new NullReferenceException();
+            throw new ArgumentNullException("Empty User");
+        }
+
+        var source = context.Find<RealmSource>(translationDto.SourceId);
+        if (source == null)
+        {
+            throw new ArgumentNullException("Empty Source");
         }
 
         // Translation
-        var translation = new RealmTranslation();        
+        var translation = new RealmTranslation();
 
         translation.TranslationId = translationDto.TranslationId;
         translation.LanguageCode = translationDto.LanguageCode;
+        translation.Source = source;
         translation.Entry = entry;
         translation.User = user;
         translation.Content = translationDto.Content;

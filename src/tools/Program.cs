@@ -12,7 +12,7 @@ using core.Interfaces;
 using core.Models;
 using api_domain;
 
-namespace chldr_tools
+namespace parsers
 {
     internal class Program
     {

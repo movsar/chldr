@@ -15,7 +15,7 @@ public class SqlSource : ISourceEntity
     public string? Notes { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
-    public virtual ICollection<SqlEntry> Entries { get; set; } = new List<SqlEntry>();
+    public virtual ICollection<SqlTranslation> Translations { get; set; } = new List<SqlTranslation>();
     public virtual SqlUser? User { get; set; }
     public static ISourceEntity FromDto(SourceDto source)
     {

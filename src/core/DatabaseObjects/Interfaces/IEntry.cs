@@ -4,7 +4,6 @@
     {
         string EntryId { get; }
         string? UserId { get; }
-        string SourceId { get; }
         string? ParentEntryId { get; }
         string Content { get; }
         int Rate { get; }

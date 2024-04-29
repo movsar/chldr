@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace chldr_tools
+namespace parsers
 {
     public static class JwtService
     {

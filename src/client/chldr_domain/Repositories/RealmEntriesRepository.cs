@@ -323,20 +323,17 @@ namespace core.Repositories
 
             if (!subEntries.Any())
             {
-                return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
+                return EntryModel.FromEntity(entry, entry.Translations, entry.Sounds);
             }
 
-            var subSources = subEntries.ToDictionary(e => e.EntryId, e => e.Source as ISourceEntity);
             var subSounds = subEntries.ToDictionary(e => e.EntryId, e => e.Sounds.ToList().Cast<ISoundEntity>());
             var subEntryTranslations = subEntries.ToDictionary(e => e.EntryId, e => e.Translations.ToList().Cast<ITranslationEntity>());
 
             return EntryModel.FromEntity(
                     entry,
-                    entry.Source,
                     entry.Translations,
                     entry.Sounds,
                     subEntries.Cast<IEntryEntity>(),
-                    subSources,
                     subEntryTranslations,
                     subSounds
                 );

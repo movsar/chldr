@@ -18,8 +18,7 @@
                     <Label Text="{Binding Header}" FontSize="Medium" FontAttributes="Bold" TextColor="#000" />
 
                     <!-- Source Name -->
-                    <Label Text="{Binding Subheader}" FontSize="Micro" TextColor="#cba" />
-
+                    <!--<Label Text="{Binding Subheader}" FontSize="Micro" TextColor="#cba" />-->
 
                     <!-- Translation views -->
                     <CollectionView ItemTemplate="{StaticResource TranslationTemplate}"

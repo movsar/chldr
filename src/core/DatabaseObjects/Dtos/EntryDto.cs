@@ -51,7 +51,6 @@ namespace core.DatabaseObjects.Dtos
             {
                 EntryId = entryModel.EntryId,
                 UserId = entryModel.UserId,
-                SourceId = entryModel.SourceId!,
                 ParentEntryId = entryModel.ParentEntryId,
                 SubEntries = entryModel.SubEntries.Select(FromModel).ToList(),
                 Type = (int)entryModel.Type,

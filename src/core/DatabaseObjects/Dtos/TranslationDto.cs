@@ -8,6 +8,7 @@ namespace core.DatabaseObjects.Dtos
     {
         public string UserId { get; set; }
         public string EntryId { get; set; }
+        public string SourceId { get; set; }
         public string LanguageCode { get; set; }
         public string Content { get; set; }
         public int Rate { get; set; } = 1;
@@ -34,6 +35,7 @@ namespace core.DatabaseObjects.Dtos
                 UserId = translation.UserId,
                 TranslationId = translation.TranslationId,
                 EntryId = translation.EntryId.ToString(),
+                SourceId = translation.SourceId.ToString(),
                 LanguageCode = translation.LanguageCode,                
                 Content = translation.Content,
                 Notes = translation.Notes,

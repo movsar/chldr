@@ -98,14 +98,13 @@ namespace chldr_domain.Services
                 foreach (var entry in entries)
                 {
                     var user = _dbContext.Find<RealmUser>(entry.UserId);
-                    var source = _dbContext.Find<RealmSource>(entry.SourceId);
 
                     if (_dbContext.Find<RealmEntry>(entry.EntryId) != null)
                     {
                         continue;
                     }
 
-                    _dbContext.Add(RealmEntry.FromModel(entry, user!, source!));
+                    _dbContext.Add(RealmEntry.FromModel(entry, _dbContext));
                 }
 
                 foreach (var changeSet in changeSets)
@@ -115,9 +114,7 @@ namespace chldr_domain.Services
             });
 
             var entry = _dbContext.All<RealmEntry>().ToList()[0];
-
-            var entryModels = EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
-
+            var entryModels = EntryModel.FromEntity(entry, entry.Translations, entry.Sounds);
 
             Realm.Compact(RealmDataProvider.OfflineDatabaseConfiguration);
             _dbContext.WriteCopy(new RealmConfiguration(_fileService.DatabaseFilePath + ".new"));

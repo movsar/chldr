@@ -4,6 +4,7 @@
     {
         string TranslationId { get; }
         string EntryId { get; }
+        string SourceId { get; }
         string UserId { get; }
         string LanguageCode { get; }
         string Content { get; }

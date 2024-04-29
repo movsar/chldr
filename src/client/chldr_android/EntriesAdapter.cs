@@ -33,7 +33,6 @@
             var viewHolder = (EntryViewHolder)holder;
 
             viewHolder.Phrase.Text = entry.Header;
-            viewHolder.Source.Text = entry.Subheader;
             if (entry.SubEntries.Any())
             {
                 viewHolder.Forms.Text = $"[ {string.Join(", ", entry.SubEntries.Select(e => e.Content).ToArray())} ]";

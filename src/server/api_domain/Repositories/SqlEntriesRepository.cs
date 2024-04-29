@@ -490,7 +490,6 @@ namespace api_domain.Repositories
              */
 
             var entry = _dbContext.Entries
-                .Include(e => e.Source)
                 .Include(e => e.User)
                 .Include(e => e.Translations)
                 .Include(e => e.Sounds)
@@ -503,7 +502,6 @@ namespace api_domain.Repositories
 
             var subEntries = _dbContext.Entries
              .Where(e => e.ParentEntryId != null && e.ParentEntryId.Equals(entry.EntryId))
-             .Include(e => e.Source)
              .Include(e => e.User)
              .Include(e => e.Translations)
              .Include(e => e.Sounds)
@@ -511,20 +509,17 @@ namespace api_domain.Repositories
 
             if (!subEntries.Any())
             {
-                return EntryModel.FromEntity(entry, entry.Source, entry.Translations, entry.Sounds);
+                return EntryModel.FromEntity(entry, entry.Translations, entry.Sounds);
             }
 
-            var subSources = subEntries.ToDictionary(e => e.EntryId, e => e.Source as ISourceEntity);
             var subSounds = subEntries.ToDictionary(e => e.EntryId, e => e.Sounds.ToList().Cast<ISoundEntity>());
             var subEntryTranslations = subEntries.ToDictionary(e => e.EntryId, e => e.Translations.ToList().Cast<ITranslationEntity>());
 
             return EntryModel.FromEntity(
                     entry,
-                    entry.Source,
                     entry.Translations,
                     entry.Sounds,
                     subEntries.Cast<IEntryEntity>(),
-                    subSources,
                     subEntryTranslations,
                     subSounds
                 );

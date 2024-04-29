@@ -4,7 +4,6 @@ using core.DatabaseObjects.Dtos;
 using core.DatabaseObjects.Interfaces;
 using core.Enums;
 using core.Exceptions;
-using api_domain.Services;
 
 namespace api_domain.SqlEntities;
 [Table("Entry")]
@@ -15,7 +14,6 @@ public class SqlEntry : IEntryEntity
     public string EntryId { get; set; }
     public string? ParentEntryId { get; set; }
     public string UserId { get; set; } = null!;
-    public string SourceId { get; set; } = null!;
     public int Type { get; set; } = 0;
     public int Rate { get; set; } = 0;
     public int Subtype { get; set; } = 0;
@@ -36,7 +34,6 @@ public class SqlEntry : IEntryEntity
     public string RawContents { get; private set; }
     public string? Details { get; set; }
     public virtual ICollection<SqlSound> Sounds { get; set; } = new List<SqlSound>();
-    public virtual SqlSource Source { get; set; } = null!;
     public virtual SqlUser User { get; set; } = null!;
     public virtual ICollection<SqlTranslation> Translations { get; set; } = new List<SqlTranslation>();
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
@@ -98,7 +95,6 @@ public class SqlEntry : IEntryEntity
         entry.EntryId = entryDto.EntryId;
         entry.ParentEntryId = entryDto.ParentEntryId;
         entry.UserId = entryDto.UserId;
-        entry.SourceId = entryDto.SourceId!;
 
         entry.Type = entryDto.Type;
         entry.Subtype = entryDto.Subtype;
