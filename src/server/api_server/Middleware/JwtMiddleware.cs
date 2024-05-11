@@ -17,7 +17,7 @@ namespace api_server
         {
             var requestedPath = context.Request.Path.Value;
             var r = context.Request;
-            var isLoginMutation = context.Request.Method == "POST" && requestedPath.StartsWith("/graphql") && requestedPath.EndsWith("/loginUser");
+            var isLoginMutation = context.Request.Method == "POST" && requestedPath.StartsWith("/v2/graphql") && requestedPath.EndsWith("/loginUser");
 
             StringValues authorizationHeader = string.Empty;
             if (!isLoginMutation && !context.Request.Headers.TryGetValue("Authorization", out authorizationHeader))

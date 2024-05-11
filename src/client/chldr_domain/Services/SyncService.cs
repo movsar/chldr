@@ -148,7 +148,7 @@ namespace chldr_domain.Services
                 // If there are no changesets available in local database - hardreset
                 if (latestlocalChangeSetIndex == 0)
                 {
-                    await PullRemoteDatabase();
+                    //await PullRemoteDatabase();
                     return;
                 }
 

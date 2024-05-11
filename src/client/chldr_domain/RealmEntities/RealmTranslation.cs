@@ -88,7 +88,8 @@ public class RealmTranslation : RealmObject, ITranslationEntity
         var source = context.Find<RealmSource>(translationDto.SourceId);
         if (source == null)
         {
-            throw new ArgumentNullException("Empty Source");
+            var userSourceId = "63a816205d1af0e432fba6de";
+            source = context.Find<RealmSource>(userSourceId);
         }
 
         // Translation
