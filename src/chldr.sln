@@ -37,7 +37,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_android", "client\chl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chldr_maui", "client\chldr_maui\chldr_maui.csproj", "{8FF24A33-6387-4C05-BA73-31FA5A1CDF39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api_tools", "api_tools\api_tools.csproj", "{017233BC-47D0-4CE8-AB01-FFB85A269465}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "api_tools", "api_tools\api_tools.csproj", "{017233BC-47D0-4CE8-AB01-FFB85A269465}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chldr_blazor", "chldr_blazor\chldr_blazor.csproj", "{92581DE0-FCF9-404D-9806-BD6C687153A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +107,10 @@ Global
 		{017233BC-47D0-4CE8-AB01-FFB85A269465}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{017233BC-47D0-4CE8-AB01-FFB85A269465}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{017233BC-47D0-4CE8-AB01-FFB85A269465}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92581DE0-FCF9-404D-9806-BD6C687153A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92581DE0-FCF9-404D-9806-BD6C687153A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92581DE0-FCF9-404D-9806-BD6C687153A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92581DE0-FCF9-404D-9806-BD6C687153A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,6 +131,7 @@ Global
 		{AF9A9AF3-9594-446A-8320-5EFB5647FA97} = {B245A51B-A1DD-4F26-B36E-FF6943A8170A}
 		{8FF24A33-6387-4C05-BA73-31FA5A1CDF39} = {B245A51B-A1DD-4F26-B36E-FF6943A8170A}
 		{017233BC-47D0-4CE8-AB01-FFB85A269465} = {725BC9D2-E135-4C74-BA38-DA38F41087F3}
+		{92581DE0-FCF9-404D-9806-BD6C687153A5} = {B245A51B-A1DD-4F26-B36E-FF6943A8170A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
