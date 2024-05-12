@@ -82,7 +82,7 @@ namespace chldr_app.Stores
         {
             _ = Task.Run(async () =>
             {
-                var entries = await EntryService.GetRandomsAsync(50);
+                var entries = await EntryService.GetRandomsEntriesAsync(50);
                 SearchResultsReady?.Invoke(entries);
             });
         }

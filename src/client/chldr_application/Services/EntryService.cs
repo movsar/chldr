@@ -227,7 +227,7 @@ namespace chldr_app.Services
         }
         #endregion
 
-        public async Task<List<EntryModel>> GetRandomsAsync(int count)
+        public async Task<List<EntryModel>> GetRandomsEntriesAsync(int count)
         {
             var entries = new List<EntryModel>();
             if (_environmentService.CurrentPlatform == Platforms.Web)

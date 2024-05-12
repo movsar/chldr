@@ -287,11 +287,11 @@ namespace core.Services
 
         public async Task<RequestResult> GetRandomsAsync(int count)
         {
-            var operation = "getRandoms";
+            var operation = "randomEntries";
             var request = new GraphQLRequest
             {
                 Query = $@"
-                        mutation {operation}($count: Int!) {{
+                        query {operation}($count: Int!) {{
                           {operation}(count: $count) {{
                             success
                             errorMessage
