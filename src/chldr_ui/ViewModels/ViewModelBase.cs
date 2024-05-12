@@ -12,6 +12,7 @@ using core.Models;
 using core.Services;
 using chldr_app.Stores;
 using chldr_application.Services;
+using core.Interfaces;
 
 namespace chldr_ui.ViewModels
 {
@@ -22,8 +23,8 @@ namespace chldr_ui.ViewModels
         [Inject] protected ContentStore ContentStore { get; set; }
         [Inject] protected UserStore UserStore { get; set; }
         [Inject] protected IStringLocalizer<AppLocalizations> Localizer { get; set; }
-        [Inject] protected EnvironmentService? EnvironmentService { get; set; }
-        [Inject] protected ExceptionHandler? ExceptionHandler { get; set; }
+        [Inject] protected IEnvironmentService? EnvironmentService { get; set; }
+        [Inject] protected IExceptionHandler? ExceptionHandler { get; set; }
         [Inject] protected NavigationManager NavigationManager { get; set; }
         [CascadingParameter] protected IModalService Modal { get; set; } = default!;
         protected async Task<bool> AskForConfirmation(string message)

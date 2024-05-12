@@ -46,9 +46,9 @@ namespace chldr_app.Services
             services.AddScoped<SourceService>();
             services.AddScoped<UserStore>();
 
-            services.AddSingleton<ISyncService, SyncService>();
-            services.AddSingleton<IDataProvider, RealmDataProvider>();
-            services.AddSingleton<ContentStore>();
+            services.AddScoped<ISyncService, SyncService>();
+            services.AddScoped<IDataProvider, RealmDataProvider>();
+            services.AddScoped<ContentStore>();
         }
     }
 }
