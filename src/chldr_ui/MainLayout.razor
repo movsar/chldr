@@ -1,0 +1,48 @@
+﻿
+@inject ExceptionHandler ExceptionHandler;
+@inherits LayoutComponentBase
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+    <main>
+        <article class="content px-4">
+            <ErrorBoundary>
+                @if (!Error)
+                {
+                    <CascadingBlazoredModal>
+                        @Body
+                    </CascadingBlazoredModal>
+                }
+                else
+                {
+                    <FormErrorsView ErrorMessages="@ErrorMessages"></FormErrorsView>
+                }
+            </ErrorBoundary>
+        </article>
+    </main>
+</div>
+
+@code {
+
+    public bool Error { get; set; } = false;
+    public List<string>? ErrorMessages { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        // ExceptionHandler.IncomingException += ExceptionHandler_IncomingException;
+    }
+
+    private void ExceptionHandler_IncomingException(Exception ex)
+    {
+        Error = true;
+        ErrorMessages = new List<string> { ex.Message };
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+
+            Error = false;
+            ErrorMessages = null;
+        });
+    }
+}

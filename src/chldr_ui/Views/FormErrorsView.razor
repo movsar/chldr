@@ -1,0 +1,16 @@
+﻿@if (ErrorMessages.Count() > 0)
+{
+    <div class="blazor-error-boundary mt-4">
+        <div class="chldr_registration_errors">
+            @foreach (var errorMessage in ErrorMessages)
+            {
+                <div>&bull; @errorMessage</div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public List<string> ErrorMessages { get; set; }
+}

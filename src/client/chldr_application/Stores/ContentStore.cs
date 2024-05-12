@@ -10,7 +10,6 @@ namespace chldr_app.Stores
         #region Events, Fields, Properties and Constructors
         public event Action? ContentInitialized;
         public event Action<List<EntryModel>>? SearchResultsReady;
-
         private readonly EntryCacheService _entryCache;
         private readonly IExceptionHandler _exceptionHandler;
         private readonly IDataProvider _dataProvider;

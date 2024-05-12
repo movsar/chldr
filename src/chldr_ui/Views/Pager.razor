@@ -1,0 +1,11 @@
+﻿@inherits PagerViewModel
+
+<div>
+    <button @onclick="() => OnPreviousPage()" disabled="@(CurrentPage == 1)">
+        @Localizer["Previous"]
+    </button>
+
+    <button @onclick="() => OnNextPage()" disabled="@(CurrentPage == TotalPages)">
+        @Localizer["Next"]
+    </button>
+</div>

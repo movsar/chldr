@@ -1,0 +1,36 @@
+﻿@inherits TranslationEditViewModel
+
+@if (TranslationDto == null)
+{
+    return;
+}
+<div class="row">
+    <div class="col-2">
+        <select @bind="@TranslationDto.LanguageCode" class="form-select" disabled="@(!CanEditTranslation)">
+            @foreach (var language in ContentStore.Languages)
+            {
+                <option value="@language.Code" class="form-control">@language.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-10">
+        <input type="text" class="form-control" autocomplete="off" disabled="@(!CanEditTranslation)"
+               placeholder="@Localizer["Enter_translation_text"]" required @bind="TranslationDto.Content" />
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col-10">
+        <input type="text" class="form-control" autocomplete="off" disabled="@(!CanEditTranslation)"
+               placeholder="@Localizer["Enter_translation_notes"]" @bind="TranslationDto.Notes" />
+    </div>
+
+    <div class="col-2 mt-2">
+        <TranslationActionButtonsView EditHandler="() => EditHandler()"
+                                      PromoteHandler="() => PromoteHandler()"
+                                      RemoveHandler="() => RemoveHandler()"
+                                      TranslationDto="@TranslationDto">
+        </TranslationActionButtonsView>
+    </div>
+</div>
