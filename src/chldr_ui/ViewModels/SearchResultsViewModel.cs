@@ -13,13 +13,7 @@ namespace chldr_ui.ViewModels
         {
             Console.WriteLine("OnInitialized");
 
-            //ContentStore.CachedResultsChanged += ContentStore_CachedResultsChanged;
-
-            //// If no new entries have been requested, show entries from the cache
-            //if (ContentStore.CachedSearchResult.Entries.Count > 0 && Entries.Count == 0)
-            //{
-            //    Entries.AddRange(ContentStore.CachedSearchResult.Entries);
-            //}
+            ContentStore.SearchResultsReady += ContentStore_SearchResultsReady; ;
 
             if (!isInitialized)
             {
@@ -29,14 +23,14 @@ namespace chldr_ui.ViewModels
 
             return base.OnInitializedAsync();
         }
-        private async void CultureService_CurrentCultureChanged(string cultureCode)
-        {
-            SetUiLanguage(cultureCode);
-            await RefreshUiAsync();
-        }
 
-        public void ContentStore_CachedResultsChanged()
+        private void ContentStore_SearchResultsReady(List<EntryModel> entries)
         {
+            if (entries.Count == 0)
+            {
+                return;
+            }
+
             new Task(async () =>
             {
                 Console.WriteLine("GotNewSearchResults");
@@ -47,18 +41,22 @@ namespace chldr_ui.ViewModels
                 // ! Without this the page doesn't refresh
                 Entries = null;
                 await RefreshUiAsync();
-                Entries = new List<EntryModel>();
-
-                //logger.StopSpeedTest($"Finished setting up");
-
-                //logger.StartSpeedTest();
-                //Entries.AddRange(ContentStore.CachedSearchResult.Entries);
+                Entries =
+                [
+                    .. entries,
+                ];
                 //logger.StopSpeedTest($"Finished adding entries to the collection");
 
                 //logger.StartSpeedTest();
                 await RefreshUiAsync();
                 //logger.StopSpeedTest($"Finished rendering");
             }).Start();
+        }
+
+        private async void CultureService_CurrentCultureChanged(string cultureCode)
+        {
+            SetUiLanguage(cultureCode);
+            await RefreshUiAsync();
         }
     }
 }

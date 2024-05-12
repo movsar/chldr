@@ -77,7 +77,7 @@ namespace chldr_ui.ViewModels
 
                     case WordType.Noun:
                         var details = Entry.Details as NounDetails;
-                        if (details?.Class != 0)
+                        if (details?.Class > 0)
                         {
                             className = @GrammaticalClassToString(details!.Class);
                         }
