@@ -1,4 +1,5 @@
-﻿using core.DatabaseObjects.Dtos;
+﻿using chldr_app.Stores;
+using core.DatabaseObjects.Dtos;
 using core.DatabaseObjects.Interfaces;
 using core.DatabaseObjects.Models;
 using core.DatabaseObjects.Models.Words;
@@ -8,6 +9,7 @@ using core.Interfaces;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace chldr_ui.ViewModels
 {
@@ -65,6 +67,32 @@ namespace chldr_ui.ViewModels
             }
             return sourceTitle;
         }
+        public async Task DoSearch()
+        {
+            var translationText = "";//Translation?.Content.ToLower();
+
+            string[] prefixesToSearch = {
+                "см",
+                "понуд.? от",
+                "потенц.? от",
+                "прил.? к",
+                "масд.? от"
+            };
+
+            foreach (var prefix in prefixesToSearch)
+            {
+
+                string pattern = $"(?<={prefix}\\W?\\s?)[1ӀӏА-яA-z]+";
+                var match = Regex.Match(translationText, pattern, RegexOptions.CultureInvariant);
+
+                if (match.Success)
+                {
+                    await ContentStore.EntryService.FindAsync(match.ToString());
+                    return;
+                }
+            }
+        }
+      
         private string GetHeader()
         {
             string header = Entry?.Content!;
