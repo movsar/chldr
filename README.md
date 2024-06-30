@@ -5,6 +5,12 @@ A project to build an interactive Chechen language dictionary. Started form scra
 ## Database model
 ![model](![model](https://github.com/movsar/chldr/blob/main/etc/mysql-database-backup/model.svg))
 
+## Contents
+1. API
+2. Blazor Web App
+3. Android app
+4. MAUI app (abandoned) 
+
 ## Roadmap
 1. Enable Api accounts with Add, Update, Remove operations
 3. Reenable sound recording for the web version
