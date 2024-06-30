@@ -14,6 +14,11 @@ A project to build an interactive Chechen language dictionary. Started form scra
 ## Roadmap
 1. Enable Api accounts with Add, Update, Remove operations
 3. Reenable sound recording for the web version
-4. Add donation page
-6. Get a new design for the web version
-7. Fix all the bugs
+3. Get a new design for the web version
+4. Fix all the bugs
+
+## Contribution
+1. You are welcome to contribute and develop this project, you can contact me at movsar.dev@gmail.com for more information
+
+## License
+* This is an open source project, but please put a link to dosham.app or put a credit to Movsar Bekaev when using these apps or code / services coming from this repository
