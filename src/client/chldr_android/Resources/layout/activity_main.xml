@@ -17,7 +17,7 @@
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" 
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/txtSearchPhrase"
         />
 
@@ -37,8 +37,7 @@
         android:singleLine="true"
         android:textSize="@dimen/n_textsize"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvMain"
+        app:layout_constraintTop_toBottomOf="@id/rvMain"
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
@@ -50,11 +49,13 @@
         android:layout_marginBottom="8dp"
         android:contentDescription=""
         android:scaleType="centerCrop"
-        android:visibility="gone"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@id/txtSearchPhrase"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
     <ImageButton
-        android:id="@+id/btnRefresh"
+        android:id="@+id/ibtnRefresh"
         android:layout_width="@dimen/btns_height"
         android:layout_height="@dimen/btns_height"
         android:layout_marginEnd="8dp"
@@ -62,11 +63,12 @@
         android:contentDescription=""
         android:scaleType="centerInside"
         android:background="@drawable/ic_action_refresh_flight"
-        android:visibility="gone"
-        />
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@id/ibtnFilers"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <ImageButton
-        android:id="@+id/btnSearchOpt"
+        android:id="@+id/ibtnSearchOpt"
         android:layout_width="@dimen/btns_height"
         android:layout_height="@dimen/btns_height"
         android:layout_marginEnd="8dp"
@@ -74,5 +76,7 @@
         android:contentDescription=""
         android:scaleType="centerCrop"
         android:visibility="gone"        
-        />
+        app:layout_constraintStart_toEndOf="@id/ibtnRefresh"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

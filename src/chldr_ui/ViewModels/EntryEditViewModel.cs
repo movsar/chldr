@@ -7,6 +7,7 @@ using chldr_utils.Services;
 using chldr_shared;
 using core.Services;
 using chldr_application.Services;
+using core.Interfaces;
 
 namespace chldr_ui.ViewModels
 {
@@ -38,7 +39,7 @@ namespace chldr_ui.ViewModels
         }
 
         [Parameter] public string? EntryId { get; set; }
-        [Inject] FileService FileService { get; set; }
+        [Inject] IFileService FileService { get; set; }
         public EntryDto EntryDto { get; set; } = new EntryDto();
         bool isRecording;
         bool existingSoundsRendered;

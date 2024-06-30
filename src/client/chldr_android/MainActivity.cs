@@ -51,7 +51,7 @@ namespace chldr_android
 
             _txtSearch = FindViewById<EditText>(Resource.Id.txtSearchPhrase)!;
             _rvEntries = FindViewById<RecyclerView>(Resource.Id.rvMain)!;
-            _btnRefresh = FindViewById<ImageButton>(Resource.Id.btnRefresh)!;
+            _btnRefresh = FindViewById<ImageButton>(Resource.Id.ibtnRefresh)!;
 
             if (_adapter == null)
             {
