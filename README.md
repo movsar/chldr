@@ -22,3 +22,7 @@ A project to build an interactive Chechen language dictionary. Started form scra
 
 ## License
 * This is an open source project, but please put a link to dosham.app or put a credit to Movsar Bekaev when using these apps or code / services coming from this repository
+
+---
+I rely on your integrity not to misuse anything in this repository :)
+(c) Movsar Bekaev
