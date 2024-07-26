@@ -21,13 +21,13 @@ namespace api_server
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
-                app.UseHttpsRedirection();
+                //app.UseHttpsRedirection();
                 app.UseForwardedHeaders(new ForwardedHeadersOptions
                 {
                     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
                 });
 
-                app.UseHsts();
+                //app.UseHsts();
             }
 
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
