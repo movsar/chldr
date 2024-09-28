@@ -121,7 +121,7 @@ namespace chldr_application.Services
             OnRemoveAudio?.Invoke(recordingId);
         }
 
-        public async Task AddExistingEntryRecording(PronunciationDto soundDto, bool canPromote, bool canRemove)
+        public async Task AddExistingEntryRecording(SoundDto soundDto, bool canPromote, bool canRemove)
         {
             var module = await moduleTask.Value;
             await module.InvokeVoidAsync("addExistingEntryRecording", soundDto);

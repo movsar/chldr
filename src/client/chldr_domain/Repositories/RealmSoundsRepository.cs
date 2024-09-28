@@ -10,16 +10,16 @@ using core.Interfaces;
 
 namespace chldr_domain.Repositories
 {
-    public class RealmSoundsRepository : RealmRepository<RealmSound, PronunciationModel, PronunciationDto>, IPronunciationsRepository
+    public class RealmSoundsRepository : RealmRepository<RealmSound, SoundModel, SoundDto>, ISoundsRepository
     {
         public RealmSoundsRepository(IExceptionHandler exceptionHandler, IFileService fileService, string userId) : base(exceptionHandler, fileService, userId) { }
         protected override RecordType RecordType => RecordType.Sound;
-        public override PronunciationModel FromEntity(RealmSound entity)
+        public override SoundModel FromEntity(RealmSound entity)
         {
-            return PronunciationModel.FromEntity(entity);
+            return SoundModel.FromEntity(entity);
         }
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public override async Task<List<ChangeSetModel>> Add(PronunciationDto dto)
+        public override async Task<List<ChangeSetModel>> Add(SoundDto dto)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var entry = _dbContext.Find<RealmEntry>(dto.EntryId);
@@ -35,10 +35,10 @@ namespace chldr_domain.Repositories
             // ! NOT IMPLEMENTED
             return new List<ChangeSetModel>();
         }
-        public override async Task<List<ChangeSetModel>> Update(PronunciationDto dto)
+        public override async Task<List<ChangeSetModel>> Update(SoundDto dto)
         {
             var existingEntity = await GetAsync(dto.SoundId);
-            var existingDto = PronunciationDto.FromModel(existingEntity);
+            var existingDto = SoundDto.FromModel(existingEntity);
 
             var changes = Change.GetChanges(dto, existingDto);
             if (changes.Count == 0)
@@ -78,7 +78,7 @@ namespace chldr_domain.Repositories
             return new List<ChangeSetModel>();
         }
 
-        public Task<ChangeSetModel> Promote(IPronunciation sound)
+        public Task<ChangeSetModel> Promote(ISound sound)
         {
             throw new NotImplementedException();
         }

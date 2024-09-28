@@ -3,7 +3,7 @@ using core.DatabaseObjects.Dtos;
 
 namespace chldr_testing_framework.Generators
 {
-    internal class SoundDtoFaker : Faker<PronunciationDto>
+    internal class SoundDtoFaker : Faker<SoundDto>
     {
         internal SoundDtoFaker()
         {

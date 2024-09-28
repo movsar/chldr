@@ -35,7 +35,7 @@ namespace api_server
         }
 
         // Entry mutations
-        public async Task<RequestResult> AddSoundAsync(PronunciationDto pronunciation)
+        public async Task<RequestResult> AddSoundAsync(SoundDto pronunciation)
         {
             var currentUserId = GetCurrentUserId();
             return await Execute(() => _entryResolver.AddSoundAsync(currentUserId, pronunciation));

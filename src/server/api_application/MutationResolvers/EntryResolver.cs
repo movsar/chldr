@@ -246,12 +246,12 @@ namespace api_server.GraphQL.MutationResolvers
             }
         }
 
-        public async Task<RequestResult> AddSoundAsync(string currentUserId, PronunciationDto pronunciation)
+        public async Task<RequestResult> AddSoundAsync(string currentUserId, SoundDto pronunciation)
         {
             using var unitOfWork = (SqlDataAccessor)_dataProvider.Repositories(currentUserId);
             unitOfWork.BeginTransaction();
             var entriesRepository = (SqlEntriesRepository)unitOfWork.Entries;
-            var soundsRepository = (SqlPronunciationsRepository)unitOfWork.Sounds;
+            var soundsRepository = (SqlSoundsRepository)unitOfWork.Sounds;
 
             try
             {

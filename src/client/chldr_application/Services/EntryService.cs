@@ -117,7 +117,7 @@ namespace chldr_app.Services
             await repositories.Translations.Promote(translationInfo);
         }
 
-        public async Task PromotePronunciationAsync(IPronunciation soundInfo, UserModel? currentUser)
+        public async Task PromotePronunciationAsync(ISound soundInfo, UserModel? currentUser)
         {
             var repositories = _dataProvider.Repositories(currentUser!.Id);
             await repositories.Sounds.Promote(soundInfo);

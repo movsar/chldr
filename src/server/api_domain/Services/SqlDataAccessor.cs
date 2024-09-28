@@ -20,7 +20,7 @@ namespace api_domain.Services
         private SqlEntriesRepository _entriesRepository;
         private SqlSourcesRepository _sourcesRepository;
         private SqlUsersRepository _usersRepository;
-        private SqlPronunciationsRepository _soundsRepository;
+        private SqlSoundsRepository _soundsRepository;
         public SqlDataAccessor(
             SqlContext context,
             IFileService fileService,
@@ -62,6 +62,6 @@ namespace api_domain.Services
         public IEntriesRepository Entries => _entriesRepository ??= new SqlEntriesRepository(_context, _fileService, _exceptionHandler, Translations, Sounds, _userId);
         public ISourcesRepository Sources => _sourcesRepository ??= new SqlSourcesRepository(_context, _fileService, _userId);
         public IUsersRepository Users => _usersRepository ??= new SqlUsersRepository(_context, _fileService, _userId);
-        public IPronunciationsRepository Sounds => _soundsRepository ?? new SqlPronunciationsRepository(_context, _fileService, _userId);
+        public ISoundsRepository Sounds => _soundsRepository ?? new SqlSoundsRepository(_context, _fileService, _userId);
     }
 }

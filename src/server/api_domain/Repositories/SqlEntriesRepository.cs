@@ -542,7 +542,7 @@ namespace api_domain.Repositories
 
         private readonly IExceptionHandler _exceptionHandler;
         private readonly SqlTranslationsRepository _translations;
-        private readonly SqlPronunciationsRepository _sounds;
+        private readonly SqlSoundsRepository _sounds;
         protected override RecordType RecordType => RecordType.Entry;
 
         public SqlEntriesRepository(
@@ -550,12 +550,12 @@ namespace api_domain.Repositories
             IFileService fileService,
             IExceptionHandler exceptionHandler,
             ITranslationsRepository translationsRepository,
-            IPronunciationsRepository soundsRepository,
+            ISoundsRepository soundsRepository,
             string userId) : base(context, fileService, userId)
         {
             _exceptionHandler = exceptionHandler;
             _translations = (SqlTranslationsRepository)translationsRepository;
-            _sounds = (SqlPronunciationsRepository)soundsRepository;
+            _sounds = (SqlSoundsRepository)soundsRepository;
         }
     }
 }

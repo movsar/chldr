@@ -13,11 +13,11 @@ using core;
 
 namespace api_domain.Repositories
 {
-    public class SqlPronunciationsRepository : SqlRepository<SqlSound, PronunciationModel, PronunciationDto>, IPronunciationsRepository
+    public class SqlSoundsRepository : SqlRepository<SqlSound, SoundModel, SoundDto>, ISoundsRepository
     {
-        public SqlPronunciationsRepository(SqlContext context, IFileService fileService, string userId) : base(context, fileService, userId) { }
+        public SqlSoundsRepository(SqlContext context, IFileService fileService, string userId) : base(context, fileService, userId) { }
         protected override RecordType RecordType => RecordType.Sound;
-        public override async Task<List<PronunciationModel>> GetRandomsAsync(int limit)
+        public override async Task<List<SoundModel>> GetRandomsAsync(int limit)
         {
             var randomizer = new Random();
             var ids = await _dbContext.Set<SqlSound>().Select(e => e.SoundId).ToListAsync();
@@ -28,10 +28,10 @@ namespace api_domain.Repositories
               .AsNoTracking()
               .ToListAsync();
 
-            var models = entities.Select(PronunciationModel.FromEntity).ToList();
+            var models = entities.Select(SoundModel.FromEntity).ToList();
             return models;
         }
-        public override async Task<List<ChangeSetModel>> AddAsync(PronunciationDto soundDto)
+        public override async Task<List<ChangeSetModel>> AddAsync(SoundDto soundDto)
         {
             if (string.IsNullOrEmpty(soundDto.RecordingB64))
             {
@@ -52,11 +52,11 @@ namespace api_domain.Repositories
             return new List<ChangeSetModel> { ChangeSetModel.FromEntity(changeSet) };
         }
 
-        public override async Task<List<ChangeSetModel>> UpdateAsync(PronunciationDto dto)
+        public override async Task<List<ChangeSetModel>> UpdateAsync(SoundDto dto)
         {
             // Find out what has been changed
             var existing = await GetAsync(dto.SoundId);
-            var existingDto = PronunciationDto.FromModel(existing);
+            var existingDto = SoundDto.FromModel(existing);
 
             var changes = Change.GetChanges(dto, existingDto);
             if (changes.Count == 0)
@@ -100,7 +100,7 @@ namespace api_domain.Repositories
             return await base.RemoveAsync(entityId);
         }
 
-        public async Task<ChangeSetModel> Promote(IPronunciation soundInfo)
+        public async Task<ChangeSetModel> Promote(ISound soundInfo)
         {
             var soundEntity = await _dbContext.Pronunciations.FindAsync(soundInfo.SoundId);
             if (soundEntity == null)
@@ -124,7 +124,7 @@ namespace api_domain.Repositories
             return ChangeSetModel.FromEntity(changeSet);
         }
 
-        public override async Task<PronunciationModel> GetAsync(string entityId)
+        public override async Task<SoundModel> GetAsync(string entityId)
         {
             var pronunciation = await _dbContext.Pronunciations.FirstOrDefaultAsync(t => t.SoundId!.Equals(entityId));
             if (pronunciation == null)
@@ -132,17 +132,17 @@ namespace api_domain.Repositories
                 throw new NullReferenceException();
             }
 
-            return PronunciationModel.FromEntity(pronunciation);
+            return SoundModel.FromEntity(pronunciation);
         }
 
-        public override async Task<List<PronunciationModel>> TakeAsync(int offset, int limit)
+        public override async Task<List<SoundModel>> TakeAsync(int offset, int limit)
         {
             var entities = await _dbContext.Pronunciations
                 .Skip(offset)
                 .Take(limit)
                 .ToListAsync();
 
-            return entities.Select(PronunciationModel.FromEntity).ToList();
+            return entities.Select(SoundModel.FromEntity).ToList();
         }
 
         public Task RemoveRange(string[] sounds)
