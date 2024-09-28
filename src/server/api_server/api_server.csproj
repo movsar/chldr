@@ -7,25 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <PackageReference Include="Serilog" Version="3.1.1" />
-	  <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 	  <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
-	  <PackageReference Include="HotChocolate.AspNetCore" Version="13.9.0" />
-	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
-	  <PackageReference Include="HotChocolate.Data.EntityFramework" Version="13.9.0" />
-	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
-	  <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.4" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
+	  <PackageReference Include="HotChocolate.AspNetCore" Version="13.9.13" />
+	  <PackageReference Include="HotChocolate.Data.EntityFramework" Version="13.9.13" />
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.4" />
-	  <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.4" />
-	  <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.4" />
-	  <PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.0" />
-	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.1" />
+	  <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.8" />
+	  <PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.5" />
+	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.0" />
   </ItemGroup>
 
   <ItemGroup>

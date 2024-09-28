@@ -7,11 +7,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.JSInterop" Version="8.0.4" />
-		<PackageReference Include="Plugin.Maui.Audio" Version="2.1.0" />
-		<PackageReference Include="ReactiveUI" Version="19.5.41" />
+		<PackageReference Include="Microsoft.JSInterop" Version="8.0.8" />
+		<PackageReference Include="Plugin.Maui.Audio" Version="3.0.1" />
+		<PackageReference Include="ReactiveUI" Version="20.1.63" />
 		<PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.3.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\chldr_domain\chldr_domain.csproj" />

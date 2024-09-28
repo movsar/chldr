@@ -7,11 +7,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Realm" Version="11.6.1" />
+		<PackageReference Include="Realm" Version="20.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\core\core.csproj" />
+		<ProjectReference Include="..\..\..\..\chldr.core\core.csproj" />
 	</ItemGroup>
 	
 </Project>
