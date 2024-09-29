@@ -4,9 +4,6 @@ using core.DatabaseObjects.Models;
 using core.Enums;
 using core.Interfaces;
 using core.Models;
-using api_domain.Repositories;
-using api_domain.Services;
-using api_domain.SqlEntities;
 using core.Resources.Localizations;
 using core.Services;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +13,8 @@ using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 using parsers;
+using core.SqlEntities;
+using core.Repositories;
 
 namespace api_server.GraphQL.MutationServices
 {

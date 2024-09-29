@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\api_domain\api_domain.csproj" />
+		<ProjectReference Include="..\..\..\..\chldr.core\core.csproj" />
 		<ProjectReference Include="..\..\utils\utils.csproj" />
 	</ItemGroup>
 
@@ -21,6 +21,16 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.5" />
+		<PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
+		<PackageReference Include="HotChocolate.AspNetCore" Version="13.9.13" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
+		<PackageReference Include="HotChocolate.Data.EntityFramework" Version="13.9.13" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.8" />
+		<PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.5" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.0" />
 		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
 		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.2" />
 	</ItemGroup>

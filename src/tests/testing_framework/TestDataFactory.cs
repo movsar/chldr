@@ -1,7 +1,6 @@
 ﻿using chldr_utils.Services;
 using chldr_utils;
 using Microsoft.EntityFrameworkCore;
-using api_domain.Services;
 using chldr_shared.Enums;
 using chldr_test_utils.Generators;
 using Microsoft.Extensions.Configuration;
@@ -11,7 +10,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Google.Protobuf.WellKnownTypes;
-using api_domain.SqlEntities;
 using MimeKit;
 using MailKit.Net.Smtp;
 using chldr_testing_framework.Generators;
@@ -25,12 +23,12 @@ using HotChocolate.Types.Descriptors.Definitions;
 using SQLitePCL;
 using Microsoft.JSInterop;
 using core.Resources.Localizations;
-using api_domain;
 using core.Services;
 using core.Interfaces;
 using core.Models;
 using core;
 using core.DatabaseObjects.Dtos;
+using core.SqlEntities;
 
 namespace chldr_test_utils
 {

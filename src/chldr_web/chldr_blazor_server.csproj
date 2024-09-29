@@ -15,7 +15,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\chldr_ui\chldr_ui.csproj" />
-		<ProjectReference Include="..\server\api_domain\api_domain.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

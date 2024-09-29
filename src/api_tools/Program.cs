@@ -1,10 +1,7 @@
-﻿using api_domain.Services;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using api_server;
-using api_domain;
-using Microsoft.EntityFrameworkCore;
-using api_domain.SqlEntities;
+using core;
 
 namespace api_tools
 {
