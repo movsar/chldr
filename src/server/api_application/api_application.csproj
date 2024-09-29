@@ -8,7 +8,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\..\chldr.core\core.csproj" />
-		<ProjectReference Include="..\..\utils\utils.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
