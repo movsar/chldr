@@ -183,35 +183,40 @@ namespace chldr_app.Services
         #endregion
 
         #region Remove
-      
+        private async Task<UpdateResponse> RemoveFromRemmoteDatabase(EntryModel entry, string userId)
+        {
+            var response = await _requestService.RemoveEntry(entry.EntryId);
+            if (!response.Success)
+            {
+                throw _exceptionHandler.Error(response.ErrorMessage);
+            }
+            var responseData = RequestResult.GetData<UpdateResponse>(response);
+            return responseData;
+        }
+        private async Task RemoveFromLocalDatabase(EntryModel entry, string userId, IEnumerable<ChangeSetDto> changeSets)
+        {
+            var repositories = _dataProvider.Repositories(userId);
+            var entriesRepository = repositories.Entries;
+            var soundsRepository = repositories.Sounds;
+            var translationsRepository = repositories.Translations;
+            var changeSetsRepository = repositories.ChangeSets;
+
+            var sounds = entry.Sounds.Select(s => s.SoundId).ToArray();
+            var translations = entry.Translations.Select(t => t.TranslationId).ToArray();
+
+            await soundsRepository.RemoveRange(sounds);
+            await translationsRepository.RemoveRange(translations);
+            await entriesRepository.Remove(entry.EntryId);
+
+            await changeSetsRepository.AddRange(changeSets);
+        }
         public async Task RemoveAsync(EntryModel entry, string userId)
         {
             try
             {
-                var repositories = _dataProvider.Repositories(userId);
-                var entriesRepository = repositories.Entries;
-                var soundsRepository = repositories.Sounds;
-                var translationsRepository = repositories.Translations;
-                var changeSetsRepository = repositories.ChangeSets;
+                var updateResponse = await RemoveFromRemmoteDatabase(entry, userId);
 
-                var sounds = entry.Sounds.Select(s => s.SoundId).ToArray();
-                var translations = entry.Translations.Select(t => t.TranslationId).ToArray();
-
-                await soundsRepository.RemoveRange(sounds);
-                await translationsRepository.RemoveRange(translations);
-                await entriesRepository.Remove(entry.EntryId);
-
-                if (_environmentService.CurrentPlatform != Platforms.Web)
-                {
-                    var response = await _requestService.RemoveEntry(entry.EntryId);
-                    if (!response.Success)
-                    {
-                        throw _exceptionHandler.Error(response.ErrorMessage);
-                    }
-                    var updateResponse = RequestResult.GetData<UpdateResponse>(response);
-
-                    await changeSetsRepository.AddRange(updateResponse.ChangeSets.Select(ChangeSetDto.FromModel));
-                }
+                await RemoveFromLocalDatabase(entry, userId, updateResponse.ChangeSets.Select(ChangeSetDto.FromModel));
 
                 EntryRemoved?.Invoke(entry);
             }
@@ -224,21 +229,8 @@ namespace chldr_app.Services
 
         public async Task<List<EntryModel>> GetRandomsEntriesAsync(int count)
         {
-            var entries = new List<EntryModel>();
-            if (_environmentService.CurrentPlatform == Platforms.Web)
-            {
-                var response = await _requestService.GetRandomsAsync(count);
-                if (!response.Success)
-                {
-                    throw _exceptionHandler.Error(response.ErrorMessage);
-                }
-                entries = RequestResult.GetData<List<EntryModel>>(response);
-            }
-            else
-            {
-                var repositories = _dataProvider.Repositories(null);
-                entries = await repositories.Entries.GetRandomsAsync(50);
-            }
+            var repositories = _dataProvider.Repositories(null);
+            var entries = await repositories.Entries.GetRandomsAsync(50);
 
             return entries;
         }

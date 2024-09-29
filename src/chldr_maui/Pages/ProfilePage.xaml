@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<reactive:ReactiveContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:reactive="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:vm="clr-namespace:chldr_application.ViewModels;assembly=chldr_application"
+             xmlns:views="clr-namespace:dosham.Views"
+             x:DataType="vm:ProfilePageViewModel"
+             x:TypeArguments="vm:ProfilePageViewModel"
+             x:Class="dosham.Pages.ProfilePage">
+
+    <VerticalStackLayout>
+        <Button Text="Log out" Command="{Binding LogoutCommand}" WidthRequest="100"/>
+    </VerticalStackLayout>
+
+</reactive:ReactiveContentPage>

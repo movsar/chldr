@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
-namespace chldr_web
+namespace chldr_blazor_server
 {
     public class Program
     {

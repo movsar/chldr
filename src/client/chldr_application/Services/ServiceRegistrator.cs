@@ -7,14 +7,16 @@ using chldr_utils.Services;
 using core.Interfaces;
 using chldr_app.Stores;
 using Microsoft.Extensions.DependencyInjection;
-using chldr_domain.Interfaces;
-using chldr_domain.Services;
+using chldr_application.ApiDataProvider.Services;
+using core.Enums;
+using core.Models;
+using chldr_application.Services;
 
 namespace chldr_app.Services
 {
     public static class ServiceRegistrator
     {
-   
+
         public static void RegisterCommonServices(IServiceCollection services)
         {
             RegisterValidators(services);
@@ -39,16 +41,21 @@ namespace chldr_app.Services
             services.AddScoped<UserService>();
 
             // Shared
-            services.AddScoped<ContentStore>();
-
             services.AddScoped<EntryCacheService>();
             services.AddScoped<EntryService>();
             services.AddScoped<SourceService>();
             services.AddScoped<UserStore>();
-
-            services.AddScoped<ISyncService, SyncService>();
-            services.AddScoped<IDataProvider, RealmDataProvider>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<EmailService>();
+            services.AddScoped<IDataProvider, ApiDataProvider>();
             services.AddScoped<ContentStore>();
+
+            // Web
+            services.AddScoped<CultureService>();
+            services.AddScoped<IExceptionHandler, ExceptionHandler>();
+            services.AddScoped<IEnvironmentService>(x => new EnvironmentService(Platforms.Web, true));
+            services.AddScoped<ISettingsService, JsonFileSettingsService>();
+            services.AddScoped<JsInteropService, JsInteropService>();
         }
     }
 }

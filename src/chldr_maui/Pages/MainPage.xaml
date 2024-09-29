@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<reactive:ReactiveContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:reactive="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:vm="clr-namespace:chldr_application.ViewModels;assembly=chldr_application"
+             xmlns:views="clr-namespace:dosham.Views"
+             x:DataType="vm:MainPageViewModel"
+             x:TypeArguments="vm:MainPageViewModel"
+             x:Class="dosham.Pages.MainPage">
+
+    <Grid Padding="10">
+        <!-- Define the rows -->
+        <Grid.RowDefinitions>
+            <!-- For CollectionView, takes remaining space -->
+            <RowDefinition Height="*"/>
+            <!-- For Search Box -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Collection View for Entries -->
+        <views:EntriesView x:Name="entriesView"/>
+
+        <!-- Search Box -->
+        <Entry x:Name="SearchBox" Grid.Row="1"
+         Text="{Binding SearchText, Mode=TwoWay}" 
+         Placeholder="Начните писать..." 
+         Margin="0,0,0,10" />
+    </Grid>
+</reactive:ReactiveContentPage>
