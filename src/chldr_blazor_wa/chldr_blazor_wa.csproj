@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\chldr.core\data\api_dl\api_dl.csproj" />
     <ProjectReference Include="..\..\..\chldr.core\ui\chldr_ui.csproj" />
   </ItemGroup>
 

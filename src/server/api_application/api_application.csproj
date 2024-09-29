@@ -33,6 +33,7 @@
 
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\..\..\chldr.core\data\sql_dl\sql_dl.csproj" />
 	  <ProjectReference Include="..\..\..\..\chldr.core\domain\domain.csproj" />
 	</ItemGroup>
 </Project>

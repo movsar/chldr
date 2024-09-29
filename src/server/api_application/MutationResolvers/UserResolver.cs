@@ -12,9 +12,11 @@ using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 using parsers;
-using domain.SqlEntities;
-using domain.Repositories;
 using domain.Resources.Localizations;
+using sql_dl.SqlEntities;
+using sql_dl.Services;
+using sql_dl.Repositories;
+using domain.Enums;
 
 namespace api_server.GraphQL.MutationServices
 {

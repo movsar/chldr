@@ -1,8 +1,8 @@
 ﻿using Android.Content;
 using chldr_app.Services;
 using chldr_app.Stores;
-using chldr_domain.Interfaces;
-using chldr_domain.Services;
+using realm_dl.Interfaces;
+using realm_dl.Services;
 using chldr_utils.Services;
 using domain.Interfaces;
 using domain.Models;

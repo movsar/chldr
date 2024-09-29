@@ -14,6 +14,7 @@ namespace chldr_blazor_wa
             builder.Services.AddLocalization();
             builder.Services.AddBlazoredModal(); 
             ServiceRegistrator.RegisterCommonServices(builder.Services);
+            builder.Services.AddScoped<IDataProvider, ApiDataProvider>();
           
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after"); 

@@ -20,6 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\..\chldr.core\data\sql_dl\sql_dl.csproj" />
 	  <ProjectReference Include="..\..\..\chldr.core\ui\chldr_ui.csproj" />
 	</ItemGroup>
 
