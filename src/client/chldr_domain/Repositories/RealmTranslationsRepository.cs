@@ -1,13 +1,13 @@
-﻿using core.DatabaseObjects.Dtos;
-using core.DatabaseObjects.Models;
-using core.Enums;
+﻿using domain.DatabaseObjects.Dtos;
+using domain.DatabaseObjects.Models;
+using domain;
 using chldr_domain.RealmEntities;
-using core.Interfaces.Repositories;
-using core.Models;
-using core.DatabaseObjects.Interfaces;
-using core.Interfaces;
+using domain.Interfaces.Repositories;
+using domain.Models;
+using domain.DatabaseObjects.Interfaces;
+using domain.Interfaces;
 
-namespace core.Repositories
+namespace domain.Repositories
 {
     public class RealmTranslationsRepository : RealmRepository<RealmTranslation, TranslationModel, TranslationDto>, ITranslationsRepository
     {

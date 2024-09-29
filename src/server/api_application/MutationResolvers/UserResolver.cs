@@ -1,11 +1,10 @@
-﻿using core;
-using core.DatabaseObjects.Dtos;
-using core.DatabaseObjects.Models;
-using core.Enums;
-using core.Interfaces;
-using core.Models;
-using core.Resources.Localizations;
-using core.Services;
+﻿using domain;
+using domain.DatabaseObjects.Dtos;
+using domain.DatabaseObjects.Models;
+using domain;
+using domain.Interfaces;
+using domain.Models;
+using domain.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
@@ -13,8 +12,9 @@ using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 using parsers;
-using core.SqlEntities;
-using core.Repositories;
+using domain.SqlEntities;
+using domain.Repositories;
+using domain.Resources.Localizations;
 
 namespace api_server.GraphQL.MutationServices
 {

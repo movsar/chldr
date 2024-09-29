@@ -1,8 +1,8 @@
 ﻿using api_server.GraphQL.MutationServices;
-using core.DatabaseObjects.Dtos;
-using core.Enums;
-using core.Interfaces;
-using core.Models;
+using domain.DatabaseObjects.Dtos;
+using domain;
+using domain.Interfaces;
+using domain.Models;
 using chldr_test_utils;
 using Newtonsoft.Json;
 

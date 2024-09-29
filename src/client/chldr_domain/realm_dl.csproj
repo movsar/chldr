@@ -11,7 +11,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\..\chldr.core\core.csproj" />
+	  <ProjectReference Include="..\..\..\..\chldr.core\domain\domain.csproj" />
 	</ItemGroup>
-	
+
+
 </Project>

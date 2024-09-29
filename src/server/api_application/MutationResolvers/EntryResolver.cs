@@ -1,14 +1,14 @@
-﻿using core.DatabaseObjects.Dtos;
-using core.DatabaseObjects.Models;
-using core.Enums;
-using core.Interfaces;
-using core.Models;
-using core.Responses;
-using core.Services;
+﻿using domain.DatabaseObjects.Dtos;
+using domain.DatabaseObjects.Models;
+using domain;
+using domain.Interfaces;
+using domain.Models;
+using domain.Responses;
+using domain.Services;
 using chldr_utils;
 using Newtonsoft.Json;
-using core.Exceptions;
-using core.Repositories;
+using domain.Exceptions;
+using domain.Repositories;
 
 namespace api_server.GraphQL.MutationResolvers
 {

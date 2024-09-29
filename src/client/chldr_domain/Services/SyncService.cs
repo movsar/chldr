@@ -1,14 +1,14 @@
-﻿using core.DatabaseObjects.Dtos;
-using core.Enums;
+﻿using domain.DatabaseObjects.Dtos;
+using domain;
 using chldr_domain.RealmEntities;
-using core.Models;
+using domain.Models;
 using Newtonsoft.Json;
 using Realms;
 using System.Diagnostics;
-using core.DatabaseObjects.Models;
+using domain.DatabaseObjects.Models;
 using chldr_domain.Interfaces;
-using core.Interfaces;
-using core;
+using domain.Interfaces;
+using domain;
 
 namespace chldr_domain.Services
 {

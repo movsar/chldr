@@ -1,14 +1,12 @@
 ﻿using Blazored.Modal;
 using chldr_app.Services;
 using chldr_application.Services;
-using chldr_domain.Interfaces;
-using chldr_domain.Services;
-using core;
-using core.Enums;
-using core.Interfaces;
-using core.Models;
-using core.Services;
-using core.SqlEntities;
+using domain;
+using domain;
+using domain.Interfaces;
+using domain.Models;
+using domain.Services;
+using domain.SqlEntities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
@@ -39,8 +37,6 @@ namespace chldr_blazor_server
             builder.Services.AddScoped<IFileService, FileService>();
             builder.Services.AddScoped<CultureService>();
             builder.Services.AddScoped<JsInteropService, JsInteropService>();
-
-            builder.Services.AddTransient<ISyncService, SyncService>();
 
             // SQL Services **************************************************************
             var connectionString = builder.Configuration.GetConnectionString("SqlContext");

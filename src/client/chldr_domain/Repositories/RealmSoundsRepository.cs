@@ -1,12 +1,12 @@
-﻿using core.DatabaseObjects.Dtos;
-using core.DatabaseObjects.Interfaces;
-using core.DatabaseObjects.Models;
-using core.Enums;
-using core.Interfaces.Repositories;
+﻿using domain.DatabaseObjects.Dtos;
+using domain.DatabaseObjects.Interfaces;
+using domain.DatabaseObjects.Models;
+using domain;
+using domain.Interfaces.Repositories;
 using chldr_domain.RealmEntities;
-using core.Models;
-using core.Repositories;
-using core.Interfaces;
+using domain.Models;
+using domain.Repositories;
+using domain.Interfaces;
 
 namespace chldr_domain.Repositories
 {

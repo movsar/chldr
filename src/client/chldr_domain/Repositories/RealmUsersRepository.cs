@@ -1,12 +1,12 @@
-﻿using core.DatabaseObjects.Models;
-using core.DatabaseObjects.Dtos;
-using core.Enums;
+﻿using domain.DatabaseObjects.Models;
+using domain.DatabaseObjects.Dtos;
+using domain;
 using chldr_domain.RealmEntities;
-using core.Interfaces.Repositories;
-using core.Models;
-using core.Interfaces;
+using domain.Interfaces.Repositories;
+using domain.Models;
+using domain.Interfaces;
 
-namespace core.Repositories
+namespace domain.Repositories
 {
     public class RealmUsersRepository : RealmRepository<RealmUser, UserModel, UserDto>, IUsersRepository
     {

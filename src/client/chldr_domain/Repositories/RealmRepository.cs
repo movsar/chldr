@@ -1,11 +1,12 @@
 ﻿using chldr_utils;
-using core.Enums;
+using domain;
 using Realms;
 using chldr_utils.Services;
 using chldr_domain.Interfaces;
-using core.Interfaces;
+using domain.Interfaces;
+using domain;
 
-namespace core.Repositories
+namespace domain.Repositories
 {
     public abstract class RealmRepository<TEntity, TModel, TDto> : IRealmRepository<TModel, TDto>
         where TEntity : RealmObject, new()

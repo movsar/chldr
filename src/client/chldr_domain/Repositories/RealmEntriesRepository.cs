@@ -1,18 +1,19 @@
-﻿using core.DatabaseObjects.Dtos;
-using core.DatabaseObjects.Interfaces;
-using core.DatabaseObjects.Models;
-using core.Enums;
-using core.Interfaces.Repositories;
+﻿using domain.DatabaseObjects.Dtos;
+using domain.DatabaseObjects.Interfaces;
+using domain.DatabaseObjects.Models;
+using domain;
+using domain.Interfaces.Repositories;
 using chldr_domain.RealmEntities;
-using core.Models;
+using domain.Models;
 using System.Collections.Immutable;
-using core.Services;
+using domain.Services;
 using chldr_domain.Services;
 using Realms;
-using core.Interfaces;
+using domain.Interfaces;
 using System.Text.RegularExpressions;
+using domain;
 
-namespace core.Repositories
+namespace domain.Repositories
 {
     public class RealmEntriesRepository : RealmRepository<RealmEntry, EntryModel, EntryDto>, IEntriesRepository
     {

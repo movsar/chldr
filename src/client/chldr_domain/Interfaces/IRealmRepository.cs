@@ -1,5 +1,5 @@
-﻿using core.DatabaseObjects.Models;
-using core.Interfaces.Repositories;
+﻿using domain.DatabaseObjects.Models;
+using domain.Interfaces.Repositories;
 
 namespace chldr_domain.Interfaces
 {

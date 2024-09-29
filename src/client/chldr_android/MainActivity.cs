@@ -1,10 +1,10 @@
 using Activity = Android.App.Activity;
 using AndroidX.RecyclerView.Widget;
 using chldr_android.Services;
-using chldr_app.Stores;
-using core.DatabaseObjects.Models;
-using core.Models;
+using domain.DatabaseObjects.Models;
+using domain.Models;
 using System.Diagnostics;
+using chldr_app.Stores;
 
 namespace chldr_android
 {

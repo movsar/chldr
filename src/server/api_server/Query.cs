@@ -1,8 +1,8 @@
-﻿using core.DatabaseObjects.Models;
-using core.Enums;
-using core.Interfaces;
-using core.Models;
-using core.Services;
+﻿using domain.DatabaseObjects.Models;
+using domain;
+using domain.Interfaces;
+using domain.Models;
+using domain.Services;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 

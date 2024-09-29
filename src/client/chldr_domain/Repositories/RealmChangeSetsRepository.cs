@@ -1,14 +1,14 @@
-﻿using core.DatabaseObjects.Dtos;
-using core.DatabaseObjects.Models;
-using core.Enums;
-using core.Interfaces.Repositories;
+﻿using domain.DatabaseObjects.Dtos;
+using domain.DatabaseObjects.Models;
+using domain;
+using domain.Interfaces.Repositories;
 using chldr_domain.RealmEntities;
 using chldr_utils;
 using Realms;
 using chldr_utils.Services;
-using core.Interfaces;
+using domain.Interfaces;
 
-namespace core.Repositories
+namespace domain.Repositories
 {
     public class RealmChangeSetsRepository : RealmRepository<RealmChangeSet, ChangeSetModel, ChangeSetDto>, IChangeSetsRepository
     {

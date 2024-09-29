@@ -4,9 +4,9 @@ using chldr_app.Stores;
 using chldr_domain.Interfaces;
 using chldr_domain.Services;
 using chldr_utils.Services;
-using core.Interfaces;
-using core.Models;
-using core.Services;
+using domain.Interfaces;
+using domain.Models;
+using domain.Services;
 using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace chldr_android.Services
@@ -28,7 +28,7 @@ namespace chldr_android.Services
             var exceptionHandler = new ExceptionHandler(GetService<IFileService>());
             RegisterService<IExceptionHandler>(exceptionHandler);
 
-            var environmentService = new EnvironmentService(core.Enums.Platforms.Android, true);
+            var environmentService = new EnvironmentService(domain.Platforms.Android, true);
             RegisterService<IEnvironmentService>(environmentService);
 
             var localStorageService = new JsonFileSettingsService(fileService, exceptionHandler);

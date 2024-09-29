@@ -1,7 +1,7 @@
 ﻿using chldr_utils.Services;
 using chldr_utils;
 using Microsoft.EntityFrameworkCore;
-using chldr_shared.Enums;
+using domain;
 using chldr_test_utils.Generators;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,13 +22,13 @@ using api_server.GraphQL.MutationServices;
 using HotChocolate.Types.Descriptors.Definitions;
 using SQLitePCL;
 using Microsoft.JSInterop;
-using core.Resources.Localizations;
-using core.Services;
-using core.Interfaces;
-using core.Models;
-using core;
-using core.DatabaseObjects.Dtos;
-using core.SqlEntities;
+using domain.Resources.Localizations;
+using domain.Services;
+using domain.Interfaces;
+using domain.Models;
+using domain;
+using domain.DatabaseObjects.Dtos;
+using domain.SqlEntities;
 
 namespace chldr_test_utils
 {

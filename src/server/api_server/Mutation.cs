@@ -1,8 +1,8 @@
 ﻿using api_server.GraphQL.MutationResolvers;
 using api_server.GraphQL.MutationServices;
-using core.DatabaseObjects.Dtos;
-using core.Enums;
-using core.Models;
+using domain.DatabaseObjects.Dtos;
+using domain;
+using domain.Models;
 using parsers;
 
 namespace api_server

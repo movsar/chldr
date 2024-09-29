@@ -1,6 +1,6 @@
-﻿using core.DatabaseObjects.Dtos;
-using core.DatabaseObjects.Interfaces;
-using core.DatabaseObjects.Models;
+﻿using domain.DatabaseObjects.Dtos;
+using domain.DatabaseObjects.Interfaces;
+using domain.DatabaseObjects.Models;
 using Realms;
 
 namespace chldr_domain.RealmEntities;

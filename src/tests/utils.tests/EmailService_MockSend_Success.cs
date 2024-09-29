@@ -1,7 +1,7 @@
 using chldr_shared.Models;
 using chldr_test_utils;
 using chldr_utils.Services;
-using core.Models;
+using domain.Models;
 
 namespace chldr_utils.tests
 {

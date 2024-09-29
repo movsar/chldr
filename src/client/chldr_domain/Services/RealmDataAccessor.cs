@@ -1,6 +1,6 @@
-﻿using core.Interfaces;
-using core.Interfaces.Repositories;
-using core.Repositories;
+﻿using domain.Interfaces;
+using domain.Interfaces.Repositories;
+using domain.Repositories;
 using chldr_domain.Repositories;
 
 namespace chldr_domain.Services

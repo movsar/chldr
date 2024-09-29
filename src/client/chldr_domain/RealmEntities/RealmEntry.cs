@@ -1,7 +1,7 @@
-﻿using core.DatabaseObjects.Dtos;
-using core.DatabaseObjects.Interfaces;
-using core.DatabaseObjects.Models;
-using core.Enums;
+﻿using domain.DatabaseObjects.Dtos;
+using domain.DatabaseObjects.Interfaces;
+using domain.DatabaseObjects.Models;
+using domain;
 using Newtonsoft.Json;
 using Realms;
 

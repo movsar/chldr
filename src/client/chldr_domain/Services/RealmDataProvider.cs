@@ -1,8 +1,8 @@
-﻿using core.Interfaces;
+﻿using domain.Interfaces;
 using Realms;
 using chldr_domain.RealmEntities;
 using chldr_domain.Interfaces;
-using core;
+using domain;
 
 namespace chldr_domain.Services
 {

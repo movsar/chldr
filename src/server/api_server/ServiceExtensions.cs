@@ -1,17 +1,17 @@
 ﻿using api_server;
 using api_server.GraphQL.MutationResolvers;
 using api_server.GraphQL.MutationServices;
-using core.Interfaces;
-using core.Models;
-using core.Services;
+using domain.Interfaces;
+using domain.Models;
+using domain.Services;
 using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using core;
-using core.SqlEntities;
+using domain;
+using domain.SqlEntities;
 
 namespace api_server
 {

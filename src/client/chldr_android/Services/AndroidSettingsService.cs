@@ -1,5 +1,5 @@
 ﻿using Android.Content;
-using core.Interfaces;
+using domain.Interfaces;
 using System.Text.Json;
 
 namespace chldr_android.Services

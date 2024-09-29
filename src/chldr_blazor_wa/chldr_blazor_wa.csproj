@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\chldr_ui\chldr_ui.csproj" />
+    <ProjectReference Include="..\..\..\chldr.core\ui\chldr_ui.csproj" />
   </ItemGroup>
 
 </Project>

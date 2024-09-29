@@ -7,7 +7,7 @@
 		<ApplicationId>com.nohchiyn</ApplicationId>
 		<SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
-	
+
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<AndroidKeyStore>True</AndroidKeyStore>
 		<AndroidSigningKeyStore>C:\Users\xdr\source\repos\movsar\android_key</AndroidSigningKeyStore>
@@ -15,19 +15,19 @@
 		<AndroidSigningKeyAlias>key0</AndroidSigningKeyAlias>
 		<AndroidSigningKeyPass>135790!ы</AndroidSigningKeyPass>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
-	  <AndroidJavaSource Remove="Models\**" />
-	  <AndroidLibrary Remove="Models\**" />
-	  <AndroidNativeLibrary Remove="Models\**" />
-	  <Compile Remove="Models\**" />
-	  <EmbeddedResource Remove="Models\**" />
-	  <JavaSourceJar Remove="Models\**" />
-	  <None Remove="Models\**" />
-	  <ProguardConfiguration Remove="Models\**" />
-	  <TransformFile Remove="Models\**" />
+		<AndroidJavaSource Remove="Models\**" />
+		<AndroidLibrary Remove="Models\**" />
+		<AndroidNativeLibrary Remove="Models\**" />
+		<Compile Remove="Models\**" />
+		<EmbeddedResource Remove="Models\**" />
+		<JavaSourceJar Remove="Models\**" />
+		<None Remove="Models\**" />
+		<ProguardConfiguration Remove="Models\**" />
+		<TransformFile Remove="Models\**" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<None Remove="Resources\layout\phrases_exp_child.xml" />
 		<None Remove="Resources\layout\phrases_exp_group.xml" />
@@ -41,7 +41,10 @@
 		<PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.3.2.8" />
 		<PackageReference Include="Xamarin.AndroidX.RecyclerView.Selection" Version="1.1.0.23" />
 	</ItemGroup>
+	
 	<ItemGroup>
-		<ProjectReference Include="..\chldr_application\chldr_application.csproj" />
+		<ProjectReference Include="..\..\..\..\chldr.core\application\chldr_application.csproj" />
+		<ProjectReference Include="..\chldr_domain\realm_dl.csproj" />
 	</ItemGroup>
+
 </Project>

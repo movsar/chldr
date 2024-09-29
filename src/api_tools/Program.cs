@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using api_server;
-using core;
+using domain;
 
 namespace api_tools
 {
