@@ -8,6 +8,7 @@ using domain.Interfaces;
 using domain.Models;
 using domain.Services;
 using Org.BouncyCastle.Asn1.Ocsp;
+using domain.Enums;
 
 namespace chldr_android.Services
 {
@@ -28,7 +29,7 @@ namespace chldr_android.Services
             var exceptionHandler = new ExceptionHandler(GetService<IFileService>());
             RegisterService<IExceptionHandler>(exceptionHandler);
 
-            var environmentService = new EnvironmentService(domain.Platforms.Android, true);
+            var environmentService = new EnvironmentService(Platforms.Android, true);
             RegisterService<IEnvironmentService>(environmentService);
 
             var localStorageService = new JsonFileSettingsService(fileService, exceptionHandler);

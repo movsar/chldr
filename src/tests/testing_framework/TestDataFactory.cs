@@ -1,5 +1,4 @@
 ﻿using chldr_utils.Services;
-using chldr_utils;
 using Microsoft.EntityFrameworkCore;
 using domain;
 using chldr_test_utils.Generators;
@@ -9,26 +8,21 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
-using Google.Protobuf.WellKnownTypes;
 using MimeKit;
-using MailKit.Net.Smtp;
 using chldr_testing_framework.Generators;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.AspNetCore.Identity;
-using Bogus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
 using api_server.GraphQL.MutationServices;
-using HotChocolate.Types.Descriptors.Definitions;
-using SQLitePCL;
 using Microsoft.JSInterop;
 using domain.Resources.Localizations;
 using domain.Services;
 using domain.Interfaces;
 using domain.Models;
-using domain;
 using domain.DatabaseObjects.Dtos;
-using domain.SqlEntities;
+using sql_dl.SqlEntities;
+using sql_dl.Services;
+using sql_dl;
 
 namespace chldr_test_utils
 {

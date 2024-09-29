@@ -1,5 +1,4 @@
-﻿using api_server;
-using api_server.GraphQL.MutationResolvers;
+﻿using api_server.GraphQL.MutationResolvers;
 using api_server.GraphQL.MutationServices;
 using domain.Interfaces;
 using domain.Models;
@@ -10,8 +9,9 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using domain;
-using domain.SqlEntities;
+using sql_dl.SqlEntities;
+using sql_dl.Services;
+using sql_dl;
 
 namespace api_server
 {

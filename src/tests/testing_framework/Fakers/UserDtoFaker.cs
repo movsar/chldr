@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using domain.DatabaseObjects.Dtos;
 using domain;
+using domain.Enums;
 
 namespace chldr_test_utils.Generators
 {

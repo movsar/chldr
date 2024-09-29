@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using api_server;
 using domain;
+using sql_dl;
 
 namespace api_tools
 {

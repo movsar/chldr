@@ -5,6 +5,7 @@ using domain.Interfaces;
 using domain.Models;
 using chldr_test_utils;
 using Newtonsoft.Json;
+using domain.Enums;
 
 namespace api_server.tests.ServiceResolverTests
 {

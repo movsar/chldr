@@ -1,14 +1,15 @@
 ﻿using Blazored.Modal;
 using chldr_app.Services;
 using chldr_application.Services;
-using domain;
-using domain;
+using domain.Enums;
 using domain.Interfaces;
 using domain.Models;
 using domain.Services;
-using domain.SqlEntities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using sql_dl;
+using sql_dl.Services;
+using sql_dl.SqlEntities;
 using System.Globalization;
 
 namespace chldr_blazor_server

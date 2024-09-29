@@ -4,6 +4,7 @@ using domain.DatabaseObjects.Dtos;
 using domain;
 using domain.Models;
 using parsers;
+using domain.Enums;
 
 namespace api_server
 {
