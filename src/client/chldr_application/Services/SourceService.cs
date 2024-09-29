@@ -28,12 +28,6 @@ namespace chldr_app.Services
             throw new NotImplementedException();
         }
 
-        public async Task<SourceModel> GetRandomSource()
-        {
-            var unitOfWork = _dataProvider.Repositories();
-            var randomSources = await unitOfWork.Sources.GetRandomsAsync(1);
-            return randomSources.First();
-        }
 
         public Task RemoveAsync(SourceModel entry, string userId)
         {
