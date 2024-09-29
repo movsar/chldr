@@ -1,0 +1,65 @@
+﻿@page "/login";
+@inherits LoginPageViewModel;
+
+@if (EmailConfirmationCompleted)
+{
+    <div class="alert alert-success" role="alert">
+        @Localizer["Your_account_is_activated_you_can_now_log_in"]
+    </div>
+}
+
+<div class="col-12 d-flex justify-content-center mt-lg-5">
+    @if (!FormSubmitted)
+    {
+        <form class="col-6">
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+                <input type="email" name="email" class="form-control" 
+                       placeholder="@Localizer["Email"]" @bind="UserInfo.Email" />
+            </div>
+
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+                <input type="password" class="form-control" 
+                       placeholder="@Localizer["Password"]" @bind="UserInfo.Password" />
+            </div>
+
+            <div class="row d-flex">
+                <div class="col">
+                    <button type="button" class="btn btn-primary btn-block mb-4"
+                             @onclick="ValidateAndSubmitAsync">
+                        @Localizer["Log_in"]
+                    </button>
+                    <a href="/registration">
+                        <button type="button" class="btn btn-primary btn-block mb-4">@Localizer["Register"]</button>
+                    </a>
+                </div>
+            </div>
+
+            <a href="/password-reset">@Localizer["Forgot_password"]?</a>
+            <!-- Submit button -->
+            <!-- Register buttons -->
+            @*  <div class="text-center">
+        <p>@Localizer["Or_sign_up_with:"]</p>
+        <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fab fa-facebook-f"></i>
+        </button>
+
+        <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fab fa-google"></i>
+        </button>
+
+        <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fab fa-twitter"></i>
+        </button>
+
+        <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fab fa-github"></i>
+        </button>
+        </div>*@
+
+            <FormErrorsView ErrorMessages="@ErrorMessages" />
+
+        </form>
+    }
+</div>

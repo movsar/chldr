@@ -1,0 +1,692 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="App_title" xml:space="preserve">
+    <value>Chechen Language Dictionary</value>
+  </data>
+  <data name="Basic_form" xml:space="preserve">
+    <value>Basic form</value>
+  </data>
+  <data name="Check_your_email_and_follow_instructions" xml:space="preserve">
+    <value>Please check your email and follow the instructions</value>
+  </data>
+  <data name="Choose_language" xml:space="preserve">
+    <value>Choose language</value>
+  </data>
+  <data name="Class:1_v_b" xml:space="preserve">
+    <value>1 - Vu, Bu / Du</value>
+  </data>
+  <data name="Class:2_y_b" xml:space="preserve">
+    <value>2 - Yu, Bu / Du</value>
+  </data>
+  <data name="Class:3_y_y" xml:space="preserve">
+    <value>3 - Yu, Yu</value>
+  </data>
+  <data name="Class:6_b_d" xml:space="preserve">
+    <value>6 - Bu, Du</value>
+  </data>
+  <data name="Class:4_d_d" xml:space="preserve">
+    <value>4 - Du, Du</value>
+  </data>
+  <data name="Class:5_b_b" xml:space="preserve">
+    <value>5 - Bu, Bu / Yu</value>
+  </data>
+  <data name="Confirm_password" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Email:Confirm_email_html" xml:space="preserve">
+    <value>&lt;h2&gt;&lt;span style='font-family:Lucida Sans Unicode,Lucida Grande,sans-serif'&gt;Hello and Welcome!&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;&lt;span style='font-size:14px'&gt;We&amp;#39;re delighted to have you on board with us! Let&amp;#39;s make Chechen great again!&lt;br /&gt;\r\nTo activate your account, please follow &lt;a href='{0}'&gt;this link&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style='font-size:12px'&gt;This email is auto-generated, do not reply to it, you can always reach us via support@dosham.app&lt;/span&gt;&lt;/p&gt;</value>
+  </data>
+  <data name="Email:Confirm_email_subject" xml:space="preserve">
+    <value>Please confirm your email</value>
+  </data>
+  <data name="Email:Reset_password_html" xml:space="preserve">
+    <value>&lt;h2&gt;&lt;span style='font-family:Lucida Sans Unicode,Lucida Grande,sans-serif'&gt;Password reset request&lt;/span&gt;&lt;/h2&gt;
+
+&lt;p&gt;&lt;span style='font-family:Lucida Sans Unicode,Lucida Grande,sans-serif'&gt;We&amp;#39;have received a request to reset your password, please proceed with the link to set a new password, or ignore the message if you didn&amp;#39;t start this process.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;span style='font-family:Lucida Sans Unicode,Lucida Grande,sans-serif'&gt;&lt;a href='{0}'&gt;Set a new password&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+
+&lt;p&gt;&lt;span style='font-size:12px'&gt;&lt;span style='font-family:Lucida Sans Unicode,Lucida Grande,sans-serif'&gt;This email is auto-generated, do not reply to it, you can always reach us via support@dosham.app&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</value>
+  </data>
+  <data name="Email:Reset_password_subject" xml:space="preserve">
+    <value>Password reset</value>
+  </data>
+  <data name="Email_address" xml:space="preserve">
+    <value>email address</value>
+  </data>
+  <data name="Email_sent" xml:space="preserve">
+    <value>Email sent</value>
+  </data>
+  <data name="Error:Email_not_valid" xml:space="preserve">
+    <value>Email is not valid</value>
+  </data>
+  <data name="Error:Invalid_name" xml:space="preserve">
+    <value>Invalid name</value>
+  </data>
+  <data name="Error:Invalid_username" xml:space="preserve">
+    <value>Username can only have latin letters and digits</value>
+  </data>
+  <data name="Error:Passwords_dont_match" xml:space="preserve">
+    <value>Passwords don't match</value>
+  </data>
+  <data name="Error:Passwords_is_not_valid" xml:space="preserve">
+    <value>Password must be at least 6 characters long</value>
+  </data>
+  <data name="Error:Password_too_long" xml:space="preserve">
+    <value>Password is too long</value>
+  </data>
+  <data name="Error:Translation_language_must_be_set" xml:space="preserve">
+    <value>Translation language must be set</value>
+  </data>
+  <data name="Error:Translation_text_must_be_set" xml:space="preserve">
+    <value>Translation text must be set</value>
+  </data>
+  <data name="Error:Word_content_must_be_set" xml:space="preserve">
+    <value>Word content must be set</value>
+  </data>
+  <data name="Expression" xml:space="preserve">
+    <value>Expression</value>
+  </data>
+  <data name="First_name" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="Forgot_password" xml:space="preserve">
+    <value>Forgot Password</value>
+  </data>
+  <data name="Go_back" xml:space="preserve">
+    <value>Go back</value>
+  </data>
+  <data name="Grammatical_class" xml:space="preserve">
+    <value>Grammatical class</value>
+  </data>
+  <data name="Guest" xml:space="preserve">
+    <value>Guest</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Index" xml:space="preserve">
+    <value>Index</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Language_code" xml:space="preserve">
+    <value>Language code</value>
+  </data>
+  <data name="Last_name" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="Log_in" xml:space="preserve">
+    <value>Log In</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Or_sign_up_with:" xml:space="preserve">
+    <value>or sign up with:</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Password_reset" xml:space="preserve">
+    <value>Password Reset</value>
+  </data>
+  <data name="Phrase" xml:space="preserve">
+    <value>Phrase</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Registration" xml:space="preserve">
+    <value>Registration</value>
+  </data>
+  <data name="Registration_email_sent_message" xml:space="preserve">
+    <value>Registration has been successful, please check your email and follow the included link to activate your profile.</value>
+  </data>
+  <data name="Reset_password" xml:space="preserve">
+    <value>Reset password</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Set_new_password" xml:space="preserve">
+    <value>Set new password</value>
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="Start_typing" xml:space="preserve">
+    <value>Start typing ...</value>
+  </data>
+  <data name="Update_password" xml:space="preserve">
+    <value>Update password</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Word" xml:space="preserve">
+    <value>Word</value>
+  </data>
+  <data name="Your_password_has_been_updated" xml:space="preserve">
+    <value>Your password has been successfully updated</value>
+  </data>
+  <data name="You_can_reset_your_password_here" xml:space="preserve">
+    <value>You can reset your password here</value>
+  </data>
+  <data name="Error:Phrase_shouldn't_be_null" xml:space="preserve">
+    <value>Phrase shouldn't be null</value>
+  </data>
+  <data name="Enter_translation_notes" xml:space="preserve">
+    <value>Enter translation notes</value>
+  </data>
+  <data name="Enter_translation_text" xml:space="preserve">
+    <value>Enter translation text</value>
+  </data>
+  <data name="PageTitle:EditWord" xml:space="preserve">
+    <value>Edit word</value>
+  </data>
+  <data name="Authorized" xml:space="preserve">
+    <value>Authorized</value>
+  </data>
+  <data name="Contributor" xml:space="preserve">
+    <value>Contributor</value>
+  </data>
+  <data name="Editor" xml:space="preserve">
+    <value>Editor</value>
+  </data>
+  <data name="Enthusiast" xml:space="preserve">
+    <value>Enthusiast</value>
+  </data>
+  <data name="LoggedIn" xml:space="preserve">
+    <value>Logged In</value>
+  </data>
+  <data name="LoggingIn" xml:space="preserve">
+    <value>Logging In</value>
+  </data>
+  <data name="Maintainer" xml:space="preserve">
+    <value>Maintainer</value>
+  </data>
+  <data name="Member" xml:space="preserve">
+    <value>Member</value>
+  </data>
+  <data name="Unauthorized" xml:space="preserve">
+    <value>Unauthorized</value>
+  </data>
+  <data name="Word:Undefined" xml:space="preserve">
+    <value> - </value>
+  </data>
+  <data name="Word:Case:Absolutive" xml:space="preserve">
+    <value>AbsolutiveSingular</value>
+  </data>
+  <data name="Word:Adjective" xml:space="preserve">
+    <value>Adjective</value>
+  </data>
+  <data name="Word:Adverb" xml:space="preserve">
+    <value>Adverb</value>
+  </data>
+  <data name="Word:Case:Allative" xml:space="preserve">
+    <value>Allative</value>
+  </data>
+  <data name="Word:Conjugation:Causative" xml:space="preserve">
+    <value>Causative</value>
+  </data>
+  <data name="Word:Name:Common" xml:space="preserve">
+    <value>Common</value>
+  </data>
+  <data name="Word:NumericalComplexity:Complex" xml:space="preserve">
+    <value>Complex</value>
+  </data>
+  <data name="Word:NumericalComplexity:Composite" xml:space="preserve">
+    <value>Composite</value>
+  </data>
+  <data name="Word:Degree:Concessive" xml:space="preserve">
+    <value>Concessive</value>
+  </data>
+  <data name="Word:Conjunction" xml:space="preserve">
+    <value>Conjunction</value>
+  </data>
+  <data name="Word:Case:Dative" xml:space="preserve">
+    <value>Dative</value>
+  </data>
+  <data name="Word:Dependent" xml:space="preserve">
+    <value>Dependent</value>
+  </data>
+  <data name="Word:NumericalCategory:Derivative" xml:space="preserve">
+    <value>Derivative</value>
+  </data>
+  <data name="Word:Case:Ergative" xml:space="preserve">
+    <value>Ergative</value>
+  </data>
+  <data name="Word:Declension:First" xml:space="preserve">
+    <value>First</value>
+  </data>
+  <data name="Word:Declension:Fourth" xml:space="preserve">
+    <value>Fourth</value>
+  </data>
+  <data name="Word:Tense:FutureContinuous" xml:space="preserve">
+    <value>Future continuous</value>
+  </data>
+  <data name="Word:Case:Genitive" xml:space="preserve">
+    <value>Genitive</value>
+  </data>
+  <data name="Word:Gerund" xml:space="preserve">
+    <value>Gerund</value>
+  </data>
+  <data name="Word:Mood:Imperative" xml:space="preserve">
+    <value>Imperative</value>
+  </data>
+  <data name="Word:Conjugation:Inceptive" xml:space="preserve">
+    <value>Inceptive</value>
+  </data>
+  <data name="Word:Independent" xml:space="preserve">
+    <value>Independent</value>
+  </data>
+  <data name="Word:Mood:Indicative" xml:space="preserve">
+    <value>Indicative</value>
+  </data>
+  <data name="Word:Case:Instrumental" xml:space="preserve">
+    <value>Instrumental</value>
+  </data>
+  <data name="Word:Interjection" xml:space="preserve">
+    <value>Interjection</value>
+  </data>
+  <data name="Word:Mood:InterrogativeIndicative" xml:space="preserve">
+    <value>InterrogativeIndicative</value>
+  </data>
+  <data name="Word:Intransitive" xml:space="preserve">
+    <value>Intransitive</value>
+  </data>
+  <data name="Word:Case:Locative" xml:space="preserve">
+    <value>Locative</value>
+  </data>
+  <data name="Word:Masdar" xml:space="preserve">
+    <value>Masdar</value>
+  </data>
+  <data name="Word:NumericalCategory:Multiplicative" xml:space="preserve">
+    <value>Multiplicative</value>
+  </data>
+  <data name="Word:Noun" xml:space="preserve">
+    <value>Noun</value>
+  </data>
+  <data name="Word:NumeralType" xml:space="preserve">
+    <value>Numeral type</value>
+  </data>
+  <data name="Word:NumericalCategory:Ordinal" xml:space="preserve">
+    <value>Ordinal</value>
+  </data>
+  <data name="Word:Particle" xml:space="preserve">
+    <value>Particle</value>
+  </data>
+  <data name="Word:Tense:PastImperfect" xml:space="preserve">
+    <value>PastImperfect</value>
+  </data>
+  <data name="Word:Tense:PastPerfect" xml:space="preserve">
+    <value>PastPerfect</value>
+  </data>
+  <data name="Word:Tense:PastRecent" xml:space="preserve">
+    <value>PastRecent</value>
+  </data>
+  <data name="Word:Tense:PastRemote" xml:space="preserve">
+    <value>PastRemote</value>
+  </data>
+  <data name="Word:Tense:PastWitnessed" xml:space="preserve">
+    <value>PastWitnessed</value>
+  </data>
+  <data name="Word:Conjugation:Permissive" xml:space="preserve">
+    <value>Permissive</value>
+  </data>
+  <data name="Word:Conjugation:PermissiveCausative" xml:space="preserve">
+    <value>PermissiveCausative</value>
+  </data>
+  <data name="Word:NumeralType:Plural" xml:space="preserve">
+    <value>Plural</value>
+  </data>
+  <data name="Word:Conjugation:Potential" xml:space="preserve">
+    <value>Potential</value>
+  </data>
+  <data name="Word:Tense:PresentContinuous" xml:space="preserve">
+    <value>PresentContinuous</value>
+  </data>
+  <data name="Word:Tense:PresentSimple" xml:space="preserve">
+    <value>PresentSimple</value>
+  </data>
+  <data name="Word:Pronoun" xml:space="preserve">
+    <value>Pronoun</value>
+  </data>
+  <data name="Word:Name:Proper" xml:space="preserve">
+    <value>Proper</value>
+  </data>
+  <data name="Word:SemanticType" xml:space="preserve">
+    <value>SemanticType</value>
+  </data>
+  <data name="Word:NumericalCategory:Quantitative" xml:space="preserve">
+    <value>Qualitive</value>
+  </data>
+  <data name="Word:Mood:RealConditional" xml:space="preserve">
+    <value>RealConditional</value>
+  </data>
+  <data name="Word:Mood:RealDesiderative" xml:space="preserve">
+    <value>RealDesiderative</value>
+  </data>
+  <data name="Word:Declension:Second" xml:space="preserve">
+    <value>Second</value>
+  </data>
+  <data name="Word:NumericalComplexity:Simple" xml:space="preserve">
+    <value>Simple</value>
+  </data>
+  <data name="Word:NumeralType:Singular" xml:space="preserve">
+    <value>Singular</value>
+  </data>
+  <data name="Word:Degree:Superlative" xml:space="preserve">
+    <value>Superlative</value>
+  </data>
+  <data name="Word:Declension:Third" xml:space="preserve">
+    <value>Third</value>
+  </data>
+  <data name="Word:Transitiveness:Transitive" xml:space="preserve">
+    <value>Transitive</value>
+  </data>
+  <data name="Word:Mood:UnrealConditional" xml:space="preserve">
+    <value>UnrealConditional</value>
+  </data>
+  <data name="Word:Mood:UnrealDesiderative" xml:space="preserve">
+    <value>UnrealDesiderative</value>
+  </data>
+  <data name="Word:Verb" xml:space="preserve">
+    <value>Verb</value>
+  </data>
+  <data name="Word:Degree:Comparative" xml:space="preserve">
+    <value>Comparative</value>
+  </data>
+  <data name="Word:Characteristics" xml:space="preserve">
+    <value>Characteristics</value>
+  </data>
+  <data name="Word:Transitiveness:Intransitive" xml:space="preserve">
+    <value>Intransitive</value>
+  </data>
+  <data name="Word:Degree" xml:space="preserve">
+    <value>Degree</value>
+  </data>
+  <data name="Word:Person" xml:space="preserve">
+    <value>Person</value>
+  </data>
+  <data name="Word:Class" xml:space="preserve">
+    <value>Class</value>
+  </data>
+  <data name="Word:Classes" xml:space="preserve">
+    <value>Classes</value>
+  </data>
+  <data name="Word:Conjugation" xml:space="preserve">
+    <value>Conjugation</value>
+  </data>
+  <data name="Word:Mood" xml:space="preserve">
+    <value>Mood</value>
+  </data>
+  <data name="Word:Declension" xml:space="preserve">
+    <value>Declension</value>
+  </data>
+  <data name="Word:Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="EnterWord" xml:space="preserve">
+    <value>Enter word</value>
+  </data>
+  <data name="Entry_type" xml:space="preserve">
+    <value>Entry type</value>
+  </data>
+  <data name="Translations" xml:space="preserve">
+    <value>Translations</value>
+  </data>
+  <data name="Word:Transitiveness" xml:space="preserve">
+    <value>Transitiveness</value>
+  </data>
+  <data name="Word:SemanticType:Qualitive" xml:space="preserve">
+    <value>Qualitive</value>
+  </data>
+  <data name="Word:SemanticType:Relative" xml:space="preserve">
+    <value>Relative</value>
+  </data>
+  <data name="Error:Content_must_be_set" xml:space="preserve">
+    <value>Content must be set</value>
+  </data>
+  <data name="Word:Tense" xml:space="preserve">
+    <value>Tense</value>
+  </data>
+  <data name="Error:Only_one_translation_per_language_is_allowed" xml:space="preserve">
+    <value>Only one translation per language is allowed</value>
+  </data>
+  <data name="Error:There_must_be_at_least_one_translation" xml:space="preserve">
+    <value>There must be at least one translation for the entry</value>
+  </data>
+  <data name="Word:NounDeclension" xml:space="preserve">
+    <value>Склонение</value>
+  </data>
+  <data name="Word:Case:Comparative" xml:space="preserve">
+    <value>Comparative</value>
+  </data>
+  <data name="Word:Singular" xml:space="preserve">
+    <value>sing.</value>
+  </data>
+  <data name="Word:Plural" xml:space="preserve">
+    <value>plur.</value>
+  </data>
+  <data name="Word:NumericalComplexity" xml:space="preserve">
+    <value>Complexity</value>
+  </data>
+  <data name="Word:NumericalCategory" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Word:Case" xml:space="preserve">
+    <value>Case</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Number</value>
+  </data>
+  <data name="Word:Numeral" xml:space="preserve">
+    <value>Numeral</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="AddAsk" xml:space="preserve">
+    <value>Add / Ask</value>
+  </data>
+  <data name="OnModeration" xml:space="preserve">
+    <value>on moderation</value>
+  </data>
+  <data name="Latest" xml:space="preserve">
+    <value>latest</value>
+  </data>
+  <data name="Question:Do_you_really_want_to_add_new_entry_without_a_translation?" xml:space="preserve">
+    <value>Do you really want to add new entry without a translation?</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Word:Link_to_another_entry" xml:space="preserve">
+    <value>Link to another word</value>
+  </data>
+  <data name="References" xml:space="preserve">
+    <value>References</value>
+  </data>
+  <data name="Pronunciation" xml:space="preserve">
+    <value>Pronunciation</value>
+  </data>
+  <data name="StopRecording" xml:space="preserve">
+    <value>Stop recording</value>
+  </data>
+  <data name="Select_the_parent_word" xml:space="preserve">
+    <value>Select the parent word</value>
+  </data>
+  <data name="Translation" xml:space="preserve">
+    <value>Translation</value>
+  </data>
+  <data name="Log_out" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Your_account_is_activated_you_can_now_log_in" xml:space="preserve">
+    <value>Your account is activated you can now log in</value>
+  </data>
+  <data name="Error:Invalid_arguments_check_your_input" xml:space="preserve">
+    <value>Invalid arguments, please check the input</value>
+  </data>
+  <data name="Error:You_are_not_authorized_for_this_operation" xml:space="preserve">
+    <value>You are not allowed to perform this operation</value>
+  </data>
+  <data name="Word:Tense:FutureSimple" xml:space="preserve">
+    <value>Future simple</value>
+  </data>
+  <data name="Word:Tense:Infinitive" xml:space="preserve">
+    <value>Infinitive</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Hello{0}!" xml:space="preserve">
+    <value>Hello{0}!</value>
+  </data>
+</root>

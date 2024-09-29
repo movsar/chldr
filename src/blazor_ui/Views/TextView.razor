@@ -1,0 +1,40 @@
+﻿@inherits EntryViewModel;
+
+<div class="chldr_entry">
+    <div class="card card-body">
+
+        <div class="chldr_entry_header card-title">
+            @Header
+            @if (Entry?.Sounds.Count() > 0)
+            {
+                <span class="oi oi-volume-high" @onclick="ListenToPronunciation"></span>
+            }
+            @if (CanEdit())
+            {
+                <a href="/entry/edit/@Entry!.EntryId"><i class="bi bi-pencil ms-2"></i></a>
+            }
+        </div>
+
+        @if (!String.IsNullOrWhiteSpace(Subheader))
+        {
+            <div class="chldr_entry_sub-header">
+                @Subheader
+            </div>
+        }
+
+        <div class="chldr_entry_translations mt-2">
+            @foreach (var translation in @Entry.Translations)
+            {
+                <TranslationView Translation="@translation"
+                                 Promote="@(async () => await PromoteTranslationAsync(translation))">
+                </TranslationView>
+            }
+        </div>
+
+        <EntryActionButtonsView Entry="Entry"
+                                PromoteHandler="() => PromoteEntryAsync()"
+                                ShareHandler="() => Share()"
+                                RemoveHandler="async() => await Remove()">
+        </EntryActionButtonsView>
+    </div>
+</div>

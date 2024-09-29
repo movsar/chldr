@@ -20,8 +20,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\chldr.core\data\sql_dl\sql_dl.csproj" />
-	  <ProjectReference Include="..\..\..\chldr.core\ui\chldr_ui.csproj" />
+	  <ProjectReference Include="..\data\sql_dl\sql_dl.csproj" />
+	  <ProjectReference Include="..\blazor_ui\chldr_ui.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

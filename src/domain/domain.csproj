@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>net8.0</TargetFramework>
+	  <Nullable>enable</Nullable>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Bogus" Version="35.6.1" />
+	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.1.0" />
+	  <PackageReference Include="Serilog" Version="4.0.1" />
+	  <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+
+	  <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+	  <PackageReference Include="MailKit" Version="4.7.1.1" />
+	  <PackageReference Include="MimeKit" Version="4.7.1" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
+
+	  <PackageReference Include="FluentValidation" Version="11.10.0" />
+	  <PackageReference Include="GraphQL.Client" Version="6.1.0" />
+	  <PackageReference Include="GraphQL.Client.Abstractions" Version="6.1.0" />
+	  <PackageReference Include="GraphQL.Client.Abstractions.Websocket" Version="6.1.0" />
+	  <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.1.0" />
+	  <PackageReference Include="GraphQL.NewtonsoftJson" Version="8.1.0" />
+
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+
+	  <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.0" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Localizations\AppLocalizations.Designer.cs">
+      <DependentUpon>AppLocalizations.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Localizations\AppLocalizations.resx">
+      <SubType>Designer</SubType>
+      <LastGenOutput>AppLocalizations.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

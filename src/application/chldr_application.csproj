@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.JSInterop" Version="8.0.8" />
+		<PackageReference Include="Plugin.Maui.Audio" Version="3.0.1" />
+		<PackageReference Include="ReactiveUI" Version="20.1.63" />
+		<PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\domain\domain.csproj" />
+	</ItemGroup>
+</Project>
+ 

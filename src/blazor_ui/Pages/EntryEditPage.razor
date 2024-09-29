@@ -1,0 +1,111 @@
+﻿@inherits EntryEditViewModel
+
+@page "/entry/edit/{EntryId?}"
+
+<style>
+    .remove-button, .promote-button {
+     /*   font-size: 24px;
+        background-color: transparent;
+        border-radius: 4px;
+        border: none;
+        color: #000;*/
+        cursor: pointer;
+        /*padding: 5px;*/
+    }
+
+    .stop {
+        background-color: #ff9800;
+    }
+
+    .audio {
+        flex-shrink: 5;
+        margin-bottom: 15px;
+    }
+
+    #recordings-list {
+        width: 30%;
+        min-width: 350px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .recording-list-item {
+        margin-bottom: 5px;
+        width: 30%;
+        min-width: 350px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+
+</style>
+
+<div data-id="form_container">
+    @Localizer["Type"]:&nbsp;
+    @switch ((EntryType)EntryDto.Type)
+    {
+        case EntryType.Word:
+            @Localizer["Word"]
+            break;
+        case EntryType.Text:
+            @Localizer["Text"]
+            break;
+    }
+    <div class="row">
+        <div class="col-10">
+            <div class="mt-2">
+                <textarea class="form-control" disabled="@(!CanEditEntry)" placeholder="@Localizer["EnterWord"]" @bind="EntryDto.Content"></textarea>
+            </div>
+        </div>
+
+        <div class="col-2">
+            <button class="form-control col-12 btn btn-success mt-2" type="button" @onclick="@(() => NewTranslationAsync())">+ @Localizer["Translation"]</button>
+            @*<button class="form-control col-12 btn btn-warning mt-2" id="recordButton" @onclick="ToggleRecording" disabled="@(!UserStore.CurrentUser?.CanAddSound(EntryDto))">+ @Localizer["Pronunciation"]</button>*@
+        </div>
+    </div>
+
+
+
+    @switch ((EntryType)EntryDto.Type)
+    {
+        case EntryType.Word:
+            <WordDetailsEditView EntryDto="@EntryDto" Disabled="@(!CanEditEntry)"></WordDetailsEditView>
+            break;
+
+        case EntryType.Text:
+            <h1>Text</h1>
+            break;
+
+        default:
+            break;
+    }
+
+    <div class="mt-2">
+        <div id="recordings-list" class="mt-2"></div>
+    </div>
+
+    <div class="mt-2">
+        @foreach (var translation in EntryDto.Translations)
+        {
+            <div class="mb-4">
+                <TranslationEditView 
+                    TranslationDto="@translation"
+                    Promote="@(async (translation) => await PromoteTranslationAsync(translation))"
+                    Remove="@(async (translationId) => await DeleteTranslationAsync(translationId))"                
+                >
+                
+                </TranslationEditView>
+                @*<hr/>*@
+            </div>
+        }
+    </div>
+
+    <FormErrorsView ErrorMessages="@ErrorMessages" />
+
+    <div class="mt-3 mb-3 float-end">
+        <button class="btn btn-light" @onclick="@(()=>NavigationManager.NavigateTo("/"))">@Localizer["Cancel"]</button>
+        <button class="btn btn-primary" @onclick="@SaveClickHandler">@Localizer["Save"]</button>
+        @*<button class="btn btn-primary">Save and add another</button>*@
+    </div>
+</div>
