@@ -66,7 +66,7 @@ namespace chldr_test_utils
             //var localStorageService = new LocalStorageService( _exceptionHandler);
             var graphQl = new GraphQLClient(_exceptionHandler, _environmentService, null);
 
-            _requestService = new RequestService(graphQl);
+            _requestService = new RequestService(graphQl, _environmentService);
             _entryDtoFaker = new EntryDtoFaker();
             _translationDtoFaker = new TranslationDtoFaker();
             _soundDtoFaker = new SoundDtoFaker();

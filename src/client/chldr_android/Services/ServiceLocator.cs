@@ -37,7 +37,7 @@ namespace chldr_android.Services
             var graphQl = new GraphQLClient(exceptionHandler, environmentService, localStorageService);
             RegisterService<IGraphQlClient>(graphQl);
 
-            var requestService = new RequestService(graphQl);
+            var requestService = new RequestService(graphQl, environmentService);
             RegisterService<IRequestService>(requestService);
 
             var syncService = new SyncService(requestService, fileService);
