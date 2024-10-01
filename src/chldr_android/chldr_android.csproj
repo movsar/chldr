@@ -44,7 +44,7 @@
 	
 	<ItemGroup>
 		<ProjectReference Include="..\application\chldr_application.csproj" />
-		<ProjectReference Include="..\data\realm_dl\realm_dl.csproj" />
+		<ProjectReference Include="..\..\..\chldr.core\data\realm_dl\realm_dl.csproj" />
 	</ItemGroup>
 
 </Project>

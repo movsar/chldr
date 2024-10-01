@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\data\api_dl\api_dl.csproj" />
+    <ProjectReference Include="..\..\..\chldr.core\data\api_dl\api_dl.csproj" />
     <ProjectReference Include="..\blazor_ui\chldr_ui.csproj" />
   </ItemGroup>
 

@@ -13,7 +13,7 @@
 		<PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\domain\domain.csproj" />
+		<ProjectReference Include="..\..\..\chldr.core\domain\domain.csproj" />
 	</ItemGroup>
 </Project>
  
