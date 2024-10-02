@@ -145,7 +145,7 @@ namespace chldr_app.Services
         public async Task RestoreLastSession()
         {
             // Get last session info from the local storage
-            var session = _localStorageService.GetItem<SessionInformation>("session");
+            var session = await _localStorageService.GetItem<SessionInformation>("session");
             if (session == null || string.IsNullOrEmpty(session.AccessToken))
             {
                 return;

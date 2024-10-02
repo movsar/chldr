@@ -1,6 +1,7 @@
 ﻿using Blazored.Modal;
 using chldr_app.Services;
 using chldr_application.Services;
+using chldr_blazor_server.Services;
 using domain.Enums;
 using domain.Interfaces;
 using domain.Models;
@@ -30,9 +31,8 @@ namespace chldr_blazor_server
             builder.Services.AddLocalization();
             builder.Services.AddBlazoredModal();
 
-            builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
             builder.Services.AddScoped<IEnvironmentService>(x => new EnvironmentService(Platforms.Web, builder.Environment.IsDevelopment()));
-            builder.Services.AddScoped<ISettingsService, JsonFileSettingsService>();
+            builder.Services.AddScoped<ISettingsService, LocalStorageSettingsService >();
 
             builder.Services.AddScoped<EmailService>();
             builder.Services.AddScoped<IFileService, FileService>();

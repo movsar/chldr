@@ -22,6 +22,8 @@ namespace chldr_app.Stores
             _exceptionHandler = exceptionHandler;
             _userService = userService;
             _userService.UserStateHasChanged += UserStore_UserStateHasChanged;
+
+            Task.Run(() => RestoreLastSession());
         }
 
         public async Task RestoreLastSession()

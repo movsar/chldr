@@ -51,9 +51,6 @@ namespace chldr_app.Services
             // Web
             services.AddScoped<CultureService>();
             services.AddScoped<IExceptionHandler, ExceptionHandler>();
-            services.AddScoped<IEnvironmentService>(x => new EnvironmentService(Platforms.Web, true));
-            services.AddScoped<ISettingsService, JsonFileSettingsService>();
-            services.AddScoped<JsInteropService, JsInteropService>();
         }
     }
 }
