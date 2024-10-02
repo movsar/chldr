@@ -11,13 +11,10 @@ namespace chldr_ui.ViewModels
         static bool isInitialized = false;
         protected override Task OnInitializedAsync()
         {
-            Console.WriteLine("OnInitialized");
-
-            ContentStore.SearchResultsReady += ContentStore_SearchResultsReady; ;
-
             if (!isInitialized)
             {
                 CultureService.CurrentCultureChanged += CultureService_CurrentCultureChanged;
+                ContentStore.SearchResultsReady += ContentStore_SearchResultsReady;
                 isInitialized = true;
             }
 

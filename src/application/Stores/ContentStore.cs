@@ -2,6 +2,7 @@
 using domain.Models;
 using domain.DatabaseObjects.Models;
 using chldr_app.Services;
+using MailKit.Search;
 
 namespace chldr_app.Stores
 {
@@ -10,11 +11,24 @@ namespace chldr_app.Stores
         #region Events, Fields, Properties and Constructors
         public event Action? ContentInitialized;
         public event Action<List<EntryModel>>? SearchResultsReady;
+
         private readonly EntryCacheService _entryCache;
         private readonly IExceptionHandler _exceptionHandler;
         private readonly IDataProvider _dataProvider;
         private readonly IEnvironmentService _environmentService;
+
         public readonly List<LanguageModel> Languages = LanguageModel.GetAvailableLanguages();
+
+        private List<EntryModel> _searchResults = new List<EntryModel>();
+        public List<EntryModel> SearchResults
+        {
+            get => _searchResults;
+            set
+            {
+                _searchResults = value;
+                SearchResultsReady?.Invoke(_searchResults);
+            }
+        }
 
         public EntryService EntryService;
         public UserService UserService;
@@ -54,14 +68,14 @@ namespace chldr_app.Stores
             _ = Task.Run(async () =>
             {
                 // Check if the results are already in cache, if not, retrieve
-                var result = _entryCache.Get(inputText);
-                if (result == null)
+                var entries = _entryCache.Get(inputText);
+                if (entries == null)
                 {
-                    result = await EntryService.FindAsync(inputText, filtrationFlags);
-                    _entryCache.Add(inputText, result);
+                    entries = await EntryService.FindAsync(inputText, filtrationFlags);
+                    _entryCache.Add(inputText, entries);
                 }
 
-                SearchResultsReady?.Invoke(result);
+                SearchResults = entries;
             });
         }
 
@@ -82,16 +96,14 @@ namespace chldr_app.Stores
         {
             _ = Task.Run(async () =>
             {
-                var entries = await EntryService.GetRandomsEntriesAsync(50);
-                SearchResultsReady?.Invoke(entries);
+                SearchResults = await EntryService.GetRandomsEntriesAsync(50);
             });
         }
         public void RequestLatestEntries()
         {
             _ = Task.Run(async () =>
             {
-                var entries = await _dataProvider.Repositories(null).Entries.GetLatestEntriesAsync(50);
-                SearchResultsReady?.Invoke(entries);
+                SearchResults = await _dataProvider.Repositories(null).Entries.GetLatestEntriesAsync(50);
             });
         }
 
@@ -99,8 +111,7 @@ namespace chldr_app.Stores
         {
             _ = Task.Run(async () =>
             {
-                var entries = await _dataProvider.Repositories(null).Entries.GetEntriesOnModerationAsync();
-                SearchResultsReady?.Invoke(entries);
+                SearchResults = await _dataProvider.Repositories(null).Entries.GetEntriesOnModerationAsync();
             });
         }
 

@@ -10,10 +10,10 @@ namespace chldr_ui.ViewModels
         [Inject] JsInteropService? JsInteropService { get; set; }
         private async Task ShowRandoms()
         {
-            //if (ContentStore.CachedSearchResult.Entries.Count > 0)
-            //{
-            //    return;
-            //}
+            if (ContentStore.SearchResults.Count > 0)
+            {
+                return;
+            }
 
             if (EnvironmentService?.CurrentPlatform != Platforms.Web)
             {

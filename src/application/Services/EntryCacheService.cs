@@ -8,7 +8,7 @@ namespace chldr_app.Services
 
         private Dictionary<string, List<EntryModel>> _cache;
         private Queue<string> _usageQueue;
-        private int Capacity { get; set; } = 50;
+        private int Capacity { get; set; } = 500;
         public List<EntryModel> Entries => _cache.Last().Value;
         public EntryCacheService()
         {
